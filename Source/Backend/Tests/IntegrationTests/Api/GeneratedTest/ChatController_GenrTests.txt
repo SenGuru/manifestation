@@ -1,0 +1,252 @@
+public void GetChats_WithValidData_ReturnsValidData()
+{
+    var model = new ChatSearchCriteria();
+    var r = GetChats();
+}
+public void GetChats_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChat_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetChat();
+}
+public void GetChat_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateChat_WithValidData_ReturnsValidData()
+{
+    var model = new ChatCreateModel();
+    var r = CreateChat();
+}
+public void CreateChat_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleChat_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleChatCreateModel();
+    var r = CreateMultipleChat();
+}
+public void CreateMultipleChat_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateChat_WithValidData_ReturnsValidData()
+{
+    var model = new ChatUpdateModel();
+    var r = UpdateChat();
+}
+public void UpdateChat_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatAsDeleted();
+}
+public void MarkChatAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatAsNotDeleted();
+}
+public void MarkChatAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChatMessages_WithValidData_ReturnsValidData()
+{
+    var model = new ChatMessageSearchCriteria();
+    var r = GetChatMessages();
+}
+public void GetChatMessages_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChatMessage_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetChatMessage();
+}
+public void GetChatMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateChatMessage_WithValidData_ReturnsValidData()
+{
+    var model = new ChatMessageCreateModel();
+    var r = CreateChatMessage();
+}
+public void CreateChatMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleChatMessage_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleChatMessageCreateModel();
+    var r = CreateMultipleChatMessage();
+}
+public void CreateMultipleChatMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateChatMessage_WithValidData_ReturnsValidData()
+{
+    var model = new ChatMessageUpdateModel();
+    var r = UpdateChatMessage();
+}
+public void UpdateChatMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatMessageAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatMessageAsDeleted();
+}
+public void MarkChatMessageAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatMessageAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatMessageAsNotDeleted();
+}
+public void MarkChatMessageAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChatMessageStatuss_WithValidData_ReturnsValidData()
+{
+    var model = new ChatMessageStatusSearchCriteria();
+    var r = GetChatMessageStatuss();
+}
+public void GetChatMessageStatuss_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChatMessageStatus_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetChatMessageStatus();
+}
+public void GetChatMessageStatus_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateChatMessageStatus_WithValidData_ReturnsValidData()
+{
+    var model = new ChatMessageStatusCreateModel();
+    var r = CreateChatMessageStatus();
+}
+public void CreateChatMessageStatus_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleChatMessageStatus_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleChatMessageStatusCreateModel();
+    var r = CreateMultipleChatMessageStatus();
+}
+public void CreateMultipleChatMessageStatus_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateChatMessageStatus_WithValidData_ReturnsValidData()
+{
+    var model = new ChatMessageStatusUpdateModel();
+    var r = UpdateChatMessageStatus();
+}
+public void UpdateChatMessageStatus_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatMessageStatusAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatMessageStatusAsDeleted();
+}
+public void MarkChatMessageStatusAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatMessageStatusAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatMessageStatusAsNotDeleted();
+}
+public void MarkChatMessageStatusAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChatUsers_WithValidData_ReturnsValidData()
+{
+    var model = new ChatUserSearchCriteria();
+    var r = GetChatUsers();
+}
+public void GetChatUsers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetChatUser_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetChatUser();
+}
+public void GetChatUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateChatUser_WithValidData_ReturnsValidData()
+{
+    var model = new ChatUserCreateModel();
+    var r = CreateChatUser();
+}
+public void CreateChatUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleChatUser_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleChatUserCreateModel();
+    var r = CreateMultipleChatUser();
+}
+public void CreateMultipleChatUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateChatUser_WithValidData_ReturnsValidData()
+{
+    var model = new ChatUserUpdateModel();
+    var r = UpdateChatUser();
+}
+public void UpdateChatUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatUserAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatUserAsDeleted();
+}
+public void MarkChatUserAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkChatUserAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkChatUserAsNotDeleted();
+}
+public void MarkChatUserAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

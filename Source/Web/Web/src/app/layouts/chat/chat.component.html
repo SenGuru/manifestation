@@ -1,0 +1,557 @@
+<div class="aduo-chat-container aduo-hide-arrow">
+    <div class="chat-wrapper d-lg-flex gap-1 mx-n4 mt-n4 p-1">
+        <div class="chat-leftsidebar minimal-border">
+            <div class="px-4 pt-4 mb-3">
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1">
+                        <h5 class="mb-4">Chats</h5>
+                    </div>
+                </div>
+                <div class="search-box">
+                    <input type="text" class="form-control bg-light border-light" placeholder="Search here..."
+                        name="search" id="searchContact" autocomplete="off" (keyup)="contactGroupSearch()">
+                    <i class="ri-search-2-line search-icon"></i>
+                </div>
+
+            </div> <!-- .p-4 -->
+
+            <ul #nav="ngbNav" ngbNav class="nav nav-tabs nav-tabs-custom nav-success nav-justified" role="tablist"
+                [activeId]="1">
+                <li class="nav-item" [ngbNavItem]="1">
+                    <ng-template ngbNavContent>
+                        <ngx-simplebar class="chat-room-list">
+                            <div class="d-flex align-items-center px-4 mt-1 pt-2 mb-2">
+                                <div class="flex-grow-1">
+                                    <h4 class="mb-0 fs-11 text-muted text-uppercase">Groups</h4>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <div data-bs-toggle="tooltip" data-bs-trigger="hover" ngbTooltip="Create group"
+                                        placement="bottom">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-soft-success btn-sm shadow-none">
+                                            <i class="ri-add-line align-bottom"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-message-list" style="min-height: 200px;">
+                                <ul class="list-unstyled chat-list chat-user-list mb-0" id="channelList">
+                                    <li *ngFor="let data of chats" [class.active]="selectedChat.chatId === data.chatId"
+                                        (click)="changeChat(data)">
+                                        <a *ngIf="!(isUpdateGroupName && selectedChat && selectedChat.chatId === data.chatId)"
+                                            href="javascript: void(0);" class="unread-msg-user">
+                                            <div class="d-flex align-items-center">
+                                                <div
+                                                    class="flex-shrink-0 chat-user-img online align-self-center me-2 ms-0">
+                                                    <div class="avatar-xxs">
+                                                        <!-- <div class="avatar-title bg-light rounded-circle text-body">
+                                                            #
+                                                        </div> -->
+                                                        <div class="avatar-title bg-light rounded-circle text-body">
+                                                            <img class="rounded-circle avatar-xs" alt=""
+                                                                src="{{isProfile}}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1  overflow-hidden">
+                                                    <p class="text-truncate mb-0">{{data.chatName}}</p>
+                                                </div>
+                                                <div class="flex-shrink-0">
+                                                    <!-- <span
+                                                        class="badge bg-dark-subtle text-body rounded p-1">{{data.unread}}</span> -->
+                                                </div>
+                                                <div class="dropdown" ngbDropdown>
+                                                    <a href="javascript:void(0);"
+                                                        class="text-muted arrow-none px-2 bg-transparent"
+                                                        data-bs-toggle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false" ngbDropdownToggle>
+                                                        <i class="bx bx-dots-vertical"></i>
+                                                    </a>
+                                                    <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                                                        <a class="dropdown-item bg-white text-black"
+                                                            href="javascript:void(0);">
+                                                            <i
+                                                                class="ri-user-add-line text-muted me-2 align-bottom"></i>Add
+                                                            User
+                                                        </a>
+                                                        <a class="dropdown-item bg-white text-black"
+                                                            href="javascript:void(0);"
+                                                            (click)="enableUpdateGroupName(data)">
+                                                            <i
+                                                                class="ri-pencil-line text-muted me-2 align-bottom"></i>Update
+                                                            Group Name
+                                                        </a>
+                                                        <a class="dropdown-item bg-white text-black"
+                                                            href="javascript:void(0);" (click)="deleteChat(data)">
+                                                            <i
+                                                                class="ri-delete-bin-6-line text-muted me-2 align-bottom"></i>Remove
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div *ngIf="(isUpdateGroupName && selectedChat?.chatId === data.chatId)"
+                                            class="d-flex justify-content-center align-items-center mt-2">
+                                            <input #lvChatGroupName="ngModel" type="text" name="chatName" required
+                                                id="chatName" class="form-control" ngbAutoFocus
+                                                placeholder="Chat Group Name" maxlength="{{ chatGroupName__size }}"
+                                                [(ngModel)]="selectedChat.chatName">
+                                            <button type="button"
+                                                class="ri-check-fill btn btn-sm fs-20 btn-soft-success"
+                                                (click)="updateGroupName()"></button>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- End chat-message-list -->
+                        </ngx-simplebar>
+                    </ng-template>
+                </li>
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content  text-muted">
+                <div [ngbNavOutlet]="nav"></div>
+            </div>
+
+        </div>
+        <!-- end chat leftsidebar -->
+        <!-- Start User chat -->
+        <div *ngIf="chats && chats.length > 0; else chatWelcomePage"
+            class="user-chat w-100 overflow-hidden minimal-border">
+
+            <div class="chat-content d-lg-flex">
+                <!-- start chat conversation section -->
+                <div class="w-100 overflow-hidden position-relative">
+                    <!-- conversation user -->
+                    <div class="position-relative">
+                        <div class="p-3 user-chat-topbar">
+                            <div class="row align-items-center">
+                                <div class="col-sm-4 col-8">
+                                    <div class="d-flex align-items-center">
+                                        <div class="flex-shrink-0 d-block d-lg-none me-3">
+                                            <a href="javascript: void(0);" class="user-chat-remove fs-18 p-1"
+                                                (click)="hideChat();"><i
+                                                    class="ri-arrow-left-s-line align-bottom"></i></a>
+                                        </div>
+                                        <div class="flex-grow-1 overflow-hidden">
+                                            <div class="d-flex align-items-center">
+                                                <div class="flex-shrink-0 chat-user-img user-own-img align-self-center me-3 ms-0"
+                                                    [ngClass]="{'away': isStatus === 'away', 'online': isStatus === 'online'}">
+                                                    <img class="rounded-circle avatar-xs" alt="" src="{{isProfile}}">
+                                                    <span class="user-status"></span>
+                                                </div>
+                                                <div class="flex-grow-1 overflow-hidden">
+                                                    <h5 class="text-truncate mb-0 fs-16"><a class="text-reset username"
+                                                            data-bs-toggle="offcanvas" href="javascript:void(0);"
+                                                            aria-controls="userProfileCanvasExample"
+                                                            (click)="openEnd(userInfo)">{{selectedChat.chatName}}</a>
+                                                    </h5>
+                                                    <p class="text-truncate text-muted fs-14 mb-0 userStatus"><small>{{
+                                                            isStatus | titlecase }}</small></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-8 col-4">
+                                    <ul class="list-inline user-chat-nav text-end mb-0">
+                                        <li class="list-inline-item m-0">
+                                            <div class="dropdown" ngbDropdown>
+                                                <button
+                                                    class="btn btn-ghost-secondary btn-icon material-shadow-none arrow-none d-block"
+                                                    type="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false" ngbDropdownToggle>
+                                                    <i class="ri-search-2-line search-icon"></i>
+                                                </button>
+                                                <div class="dropdown-menu p-0 dropdown-menu-end dropdown-menu-lg"
+                                                    ngbDropdownMenu>
+                                                    <div class="p-2">
+                                                        <div class="search-box">
+                                                            <input type="text"
+                                                                class="form-control bg-light border-light"
+                                                                placeholder="Search here..." id="searchMessage"
+                                                                autocomplete="off" (keyup)="messageSearch()">
+                                                            <i class="ri-search-2-line search-icon"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+
+                                        <li class="list-inline-item d-none d-lg-inline-block m-0">
+                                            <button type="button"
+                                                class="btn btn-ghost-secondary btn-icon material-shadow-none"
+                                                data-bs-toggle="offcanvas" data-bs-target="#userProfileCanvasExample"
+                                                aria-controls="userProfileCanvasExample" (click)="openEnd(userInfo)">
+                                                <i class="ri-information-line"></i>
+                                            </button>
+                                        </li>
+
+                                        <li class="list-inline-item m-0">
+                                            <div class="dropdown" ngbDropdown>
+                                                <button
+                                                    class="btn btn-ghost-secondary btn-icon material-shadow-none arrow-none d-block"
+                                                    type="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false" ngbDropdownToggle>
+                                                    <i class="bx bx-dots-vertical"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                                                    <a class="dropdown-item d-block d-lg-none user-profile-show"
+                                                        href="javascript:void(0);"><i
+                                                            class="ri-user-2-fill align-bottom text-muted me-2 float-start"></i>
+                                                        View
+                                                        Profile</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);"><i
+                                                            class="ri-inbox-archive-line align-bottom text-muted me-2 float-start"></i>
+                                                        Archive</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);"><i
+                                                            class="ri-mic-off-line align-bottom text-muted me-2 float-start"></i>
+                                                        Muted</a>
+                                                    <a class="dropdown-item" href="javascript:void(0);"
+                                                        (click)="deleteAllMessage()"><i
+                                                            class="ri-delete-bin-5-line align-bottom text-muted me-2 float-start"></i>
+                                                        Clear</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end chat user head -->
+
+                        <div class="position-relative" id="users-chat">
+                            <ngx-simplebar #scrollRef class="chat-conversation p-3 p-lg-4">
+                                <ul class="list-unstyled chat-conversation-list" id="users-conversation">
+                                    <li *ngFor="let message of chatMessages" class="chat-list left"
+                                        [ngClass]="{ 'right': message.createdByUserId !== currentUser?.userId }">
+                                        <div class="conversation-list">
+                                            <div class="chat-avatar">
+                                                <img alt="" [src]="getuserPictureUrl(message.userId, this.currentUser?.userProfileGuid ?? '', this.currentUser?.token ?? '')">
+                                            </div>
+
+                                            <div class="user-chat-content">
+                                                <div class="ctext-wrap">
+                                                    <div class="ctext-wrap-content">
+                                                        <!-- @if(data.replayName){
+                                                        <div class="replymessage-block mb-0 d-flex align-items-start">
+                                                            <div class="flex-grow-1">
+                                                                <h5 class="conversation-name">{{data.replayName}}</h5>
+                                                                <p class="mb-0">{{data.replaymsg}}</p>
+                                                            </div>
+                                                            <div class="flex-shrink-0">
+                                                                <button type="button" class="btn btn-sm aduo-btn-sm btn-link mt-n2 me-n3 font-size-18">
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        } -->
+
+                                                        <p class="mb-0 ctext-content">{{message.chatMessageText}}
+                                                        </p>
+                                                        <!-- <ul class="list-inline message-img mt-3  mb-0">
+                                                            <li class="list-inline-item message-img-list">
+                                                                <a class="d-inline-block m-1">
+                                                                    <img [src]="getuserPictureUrl(chat.userId)" alt=""
+                                                                        class="rounded img-thumbnail">
+                                                                    (click)="open($index)" 
+                                                                </a>
+                                                            </li>
+                                                        </ul> -->
+                                                    </div>
+                                                    <div class="dropdown align-self-start message-box-drop" ngbDropdown>
+                                                        <a class="dropdown-toggle" href="javascript:void(0);"
+                                                            role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                            aria-expanded="false" ngbDropdownToggle>
+                                                            <i class="ri-more-2-fill"></i>
+                                                        </a>
+                                                        <div class="dropdown-menu" ngbDropdownMenu>
+                                                            <a class="dropdown-item reply-message"
+                                                                href="javascript:void(0);"><i
+                                                                    class="ri-reply-line me-2 text-muted align-bottom float-start"></i>Reply</a>
+                                                            <!-- (click)="replyMessage()" -->
+                                                            <a class="dropdown-item" href="javascript:void(0);"><i
+                                                                    class="ri-share-line me-2 text-muted align-bottom float-start"></i>Forward</a>
+                                                            <a class="dropdown-item copy-message"
+                                                                href="javascript:void(0);"><i
+                                                                    class="ri-file-copy-line me-2 text-muted align-bottom float-start"></i>Copy</a>
+                                                            <!--  (click)="copyMessage($event)" -->
+                                                            <a class="dropdown-item" href="javascript:void(0);"><i
+                                                                    class="ri-bookmark-line me-2 text-muted align-bottom float-start"></i>Bookmark</a>
+                                                            <a class="dropdown-item delete-item"
+                                                                href="javascript:void(0);"
+                                                                (click)="deleteUserMessage(message)"><i
+                                                                    class="ri-delete-bin-5-line me-2 text-muted align-bottom float-start"></i>Delete</a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="conversation-name"><small class="text-muted time">{{
+                                                        message.createdDate | date: 'shortTime' }}</small> <span
+                                                        class="text-success check-message-icon"><i
+                                                            class="ri-check-double-line align-bottom"></i></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- end chat-conversation-list -->
+                            </ngx-simplebar>
+                            <div class="alert alert-warning alert-dismissible copyclipboard-alert px-4 fade show"
+                                id="copyClipBoard" role="alert">
+                                Message copied
+                            </div>
+                        </div>
+
+                        <!-- end chat-conversation -->
+
+                        <div class="chat-input-section p-3 p-lg-4">
+
+                            <form #lvChatMessageForm="ngForm" appFocusOnError id="chatinput-form"
+                                enctype="multipart/form-data" (ngSubmit)="messageSave(lvChatMessageForm)">
+                                <div class="row g-0 align-items-center">
+                                    <div class="col-auto">
+                                        <div class="chat-input-links me-2">
+                                            <div class="links-list-item">
+                                                <button type="button"
+                                                    class="btn btn-link text-decoration-none emoji-btn" id="emoji-btn"
+                                                    (click)="toggleEmojiPicker()">
+                                                    <i class="bx bx-smile align-middle"></i>
+                                                </button>
+                                                <emoji-mart class="emoji-mart" title="Pick your emoji…"
+                                                    (emojiSelect)="addEmoji($event)"></emoji-mart>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col">
+                                        <div class="text-danger aduo-chat-error-message">
+                                            <span
+                                                *ngIf="(lvChatMessageForm.submitted) && lvMessageInput.errors?.['required']">Please
+                                                Enter a Message</span>
+                                        </div>
+                                        <input #lvMessageInput="ngModel" type="text"
+                                            class="form-control chat-input bg-light border-light" id="chat-input"
+                                            placeholder="Type your message..." autocomplete="off" name="messageInput"
+                                            required
+                                            [ngClass]="{'is-invalid': lvChatMessageForm.submitted && lvMessageInput.invalid }"
+                                            [(ngModel)]="userMessage" (blur)="onBlur()" (focus)="onFocus()">
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="chat-input-links ms-2">
+                                            <div class="links-list-item">
+                                                <button type="submit"
+                                                    class="btn btn-success chat-send waves-effect waves-light shadow">
+                                                    <i class="ri-send-plane-2-fill align-bottom"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="replyCard">
+                            <div class="card mb-0">
+                                <div class="card-body py-3">
+                                    <div class="replymessage-block mb-0 d-flex align-items-start text-start">
+                                        <div class="flex-grow-1">
+                                            <h5 class="conversation-name"></h5>
+                                            <p class="mb-0"></p>
+                                        </div>
+                                        <div class="flex-shrink-0">
+                                            <button type="button" id="close_toggle"
+                                                class="btn btn-sm aduo-btn-sm btn-link mt-n2 me-n3 fs-18 shadow-none"
+                                                (click)="closeReplay()">
+                                                <i class="bx bx-x align-middle"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #chatWelcomePage>
+            <div class="user-chat w-100 overflow-hidden minimal-border">
+
+                <div class="chat-content d-lg-flex">
+                    <!-- header section -->
+                    <div class="w-100 overflow-hidden position-relative">
+                        <!-- conversation user -->
+                        <div class="position-relative">
+                            <div class="p-3 user-chat-topbar">
+                                <div class="row align-items-center">
+                                </div>
+                            </div>
+                            <!-- end chat user head -->
+                            <div *ngIf="!isLoading" class="text-center mt-5 container">
+                                <h2>Welcome to our real-time chat service!</h2>
+                                <p class="mt-3">We’re here to help you with anything you need. Just let us know how we
+                                    can assist you today!</p>
+                                <p class="mb-3">You can create chat groups to start a conversation.</p>
+                                <div class="mt-4">
+                                    <img src="assets/images/message.svg" class="realtime-chat-message-img" alt="" />
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center align-items-center mt-5 pt-2">
+                                <div *ngIf="isLoading" class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+
+    <!-- Chat Info Sidebar -->
+    <ng-template #userInfo let-offcanvas>
+        <div class="offcanvas-body profile-offcanvas p-0 aduo-hide-arrow">
+            <div class="team-cover">
+                <img src="assets/images/img-9.jpg" alt="" class="img-fluid" />
+            </div>
+            <div class="p-1 pb-4 pt-0">
+                <div class="team-settings">
+                    <div class="row g-0">
+                        <div class="col">
+                            <div class="btn nav-btn">
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"
+                                    aria-label="Close" (click)="closeSidebar()"></button>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <div class="user-chat-nav d-flex">
+                                <button type="button" class="btn nav-btn favourite-btn active">
+                                    <i class="ri-star-fill"></i>
+                                </button>
+
+                                <div class="dropdown" ngbDropdown>
+                                    <a class="btn nav-btn arrow-none" href="javascript:void(0);"
+                                        data-bs-toggle="dropdown" aria-expanded="false" ngbDropdownToggle>
+                                        <i class="ri-more-2-fill"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                                        <li><a class="dropdown-item" href="javascript:void(0);  ">
+                                                <i
+                                                    class=" ri-user-add-line align-bottom text-muted me-2 float-start"></i>Add
+                                                User</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);"><i
+                                                    class="ri-inbox-archive-line align-bottom text-muted me-2 float-start"></i>Archive</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);"><i
+                                                    class="ri-mic-off-line align-bottom text-muted me-2 float-start"></i>Muted</a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);"
+                                                (click)="deleteChat(selectedChat)"><i
+                                                    class="ri-delete-bin-5-line align-bottom text-muted me-2 float-start"></i>Delete</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div><!--end col-->
+            </div>
+            <div class="p-3 text-center">
+                <img alt="" class="avatar-lg img-thumbnail rounded-circle mx-auto" src="{{isProfile}}">
+                <div class="mt-3">
+                    <h5 *ngIf="!isProfileUpdateGroupName" class="fs-16 mb-1"><a href="javascript:void(0);"
+                            class="link-primary username me-2">{{selectedChat.chatName}}</a>
+                        <i class="ri-pencil-line cursor-pointer fs-18" title="Update Group Name"
+                            (click)="enableProfileUpdateGroupName()"></i>
+                    </h5>
+                    <div *ngIf="isProfileUpdateGroupName" class="d-flex justify-content-center align-items-center mt-2">
+                        <input #lvChatGroupName="ngModel" type="text" name="chatName" required id="chatName"
+                            class="form-control" ngbAutoFocus placeholder="Chat Group Name"
+                            maxlength="{{ chatGroupName__size }}" [(ngModel)]="selectedChat.chatName">
+                        <button type="button" class="ri-check-fill btn btn-sm fs-20 btn-soft-success"
+                            (click)="updateGroupName()"></button>
+                    </div>
+                    <p class="text-muted"><i
+                            class="ri-checkbox-blank-circle-fill me-1 align-bottom text-success"></i>Online
+                    </p>
+                </div>
+            </div>
+
+            <div class="border-top border-top-dashed p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fs-16 mb-3 me-3 text-decoration-underline">Group Users:</h5>
+                    <div class="add">
+                        <i class=" ri-user-add-line cursor-pointer fs-18" title="Add User"></i>
+                    </div>
+                </div>
+                <div *ngFor="let item of chatGroupUsers" class="mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6>{{item.userFirstName}} {{item.userLastName}}</h6>
+                            <p class="text-muted text-uppercase fw-medium fs-12 mb-1">{{item.predefinedUserTypeName}}
+                            </p>
+                        </div>
+                        <div class="remove">
+                            <i class="ri-delete-bin-6-line cursor-pointer fs-18"
+                                title="Remove {{item.userFirstName}} {{item.userLastName}}"
+                                (click)=deleteContact(item)></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-top border-top-dashed p-3">
+                <h5 class="fs-15 mb-3">Attached Files</h5>
+
+                <div class="vstack gap-2">
+                    <div class="border rounded border-dashed p-2">
+                        <div class="d-flex align-items-center">
+                            <div class="flex-shrink-0 me-3">
+                                <div class="avatar-xs">
+                                    <div class="avatar-title bg-light text-secondary rounded fs-20">
+                                        <i class="ri-folder-zip-line"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex-grow-1 overflow-hidden">
+                                <h5 class="fs-13 mb-1"><a href="javascript:void(0);"
+                                        class="text-body text-truncate d-block">App pages.zip</a></h5>
+                                <div class="text-muted">2.2MB</div>
+                            </div>
+                            <div class="flex-shrink-0 ms-2">
+                                <div class="d-flex gap-1">
+                                    <button type="button"
+                                        class="btn btn-icon text-muted btn-sm fs-18 material-shadow-none"><i
+                                            class="ri-download-2-line"></i></button>
+                                    <div class="dropdown" ngbDropdown>
+                                        <button
+                                            class="btn btn-icon text-muted btn-sm fs-18 dropdown material-shadow-none arrow-none"
+                                            type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                            ngbDropdownToggle>
+                                            <i class="ri-more-fill"></i>
+                                        </button>
+                                        <ul class="dropdown-menu" ngbDropdownMenu>
+                                            <li><a class="dropdown-item" href="javascript:void(0);"><i
+                                                        class="ri-share-line align-bottom me-2 text-muted float-start"></i>
+                                                    Share</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="javascript:void(0);"><i
+                                                        class="ri-bookmark-line align-bottom me-2 text-muted float-start"></i>
+                                                    Bookmark</a></li>
+                                            <li><a class="dropdown-item" href="javascript:void(0);"><i
+                                                        class="ri-delete-bin-line align-bottom me-2 text-muted float-start"></i>
+                                                    Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!--end offcanvas-body-->
+    </ng-template>
+</div>

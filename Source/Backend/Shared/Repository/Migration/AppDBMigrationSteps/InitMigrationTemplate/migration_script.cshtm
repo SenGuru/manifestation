@@ -1,0 +1,256 @@
+﻿@model Framework.Utilities.PocoGenerator.TemplateData
+@functions
+{
+    public static string GetNullableValueAsString(bool value)
+    {
+        if (value == true)
+            return "true";
+        return "false";
+    }
+
+    public static string AsString(string value)
+    {
+        return value;
+    }
+
+    public static string GetIdentity(DatabaseSchemaReader.DataSchema.DatabaseColumn col)
+    {
+        if (col.IsAutoNumber)
+            return ".Identity()";
+        return "";
+    }
+
+    public static string GetNullable(DatabaseSchemaReader.DataSchema.DatabaseColumn col)
+    {
+        if (col.Nullable)
+            return ".Nullable()";
+        return ".NotNullable()";
+    }
+
+    public static string GetPrimaryKey(DatabaseSchemaReader.DataSchema.DatabaseTable tbl, DatabaseSchemaReader.DataSchema.DatabaseColumn col)
+    {
+        if (col.IsPrimaryKey)
+        {
+            if (tbl.PrimaryKey == null)
+                return ".PrimaryKey()";
+            else
+                return $".PrimaryKey(\"{tbl.PrimaryKey.Name}\")";
+        }
+        return "";
+    }
+
+    public static string GetColSize(DatabaseSchemaReader.DataSchema.DatabaseColumn col)
+    {
+        if (col.DataType.IsString && col.Length > 0)
+            return col.Length.ToString();
+        else if(col.DataType.IsString && col.Length == -1)
+            return Int32.MaxValue.ToString();
+
+        return "";
+    }
+
+    public static string GetSchemaCode(string schema, List<string> inbuiltSchema)
+    {
+        if (inbuiltSchema.Contains(schema.ToUpper()))
+            return "";
+        else
+            return $".InSchema(\"{schema}\")";
+    }
+    
+    public static string GetSchemaString(string schema, List<string> inbuiltSchema)
+    {
+        if (inbuiltSchema.Contains(schema.ToUpper()))
+            return "";
+        else
+            return $"{schema})";
+    }
+}
+#pragma warning disable SA1310
+#pragma warning disable SA1516
+#pragma warning disable SA1028 // Code should not contain trailing whitespace
+#pragma warning disable SA1402
+#pragma warning disable SA1124
+#pragma warning disable SA1507
+#pragma warning disable S1481
+#pragma warning disable CS0168
+#pragma warning disable SA1505
+#pragma warning disable SA1649
+#pragma warning disable SA1601
+using FluentMigrator;
+
+namespace @Model.Config.Namespace
+{
+    [Migration(001)]
+#pragma warning disable S101 // Types should be named in PascalCase
+    public class Mig_001 : BaseMigration
+#pragma warning restore S101 // Types should be named in PascalCase
+    {
+        public override void Up()
+        {
+@{ var lst = new List<string>(); }
+@foreach (var tbl in Model.DatabaseSchema.Tables)
+{
+    if (Model.Config.InbuiltSchema.Contains(tbl.SchemaOwner.ToUpper()))
+    {
+        continue;
+    }
+    if (lst.Contains(tbl.SchemaOwner))
+    {
+        continue;
+    }
+    lst.Add(tbl.SchemaOwner);
+            @:Create.Schema("@tbl.SchemaOwner");
+}
+            //Table definitions
+@foreach (var tbl in Model.DatabaseSchema.Tables)
+{
+    string pkColumn = null;
+    if (tbl.Name == "")
+    {
+        continue;
+    }
+            @:Create.Table("@tbl.Name")@GetSchemaCode(tbl.SchemaOwner,Model.Config.InbuiltSchema)
+
+    @foreach (var col in tbl.Columns)
+    {
+        if (col.DataType == null)
+        {
+            continue;
+        }
+
+        if (col.IsAutoNumber)
+        {
+            pkColumn = col.Name;
+        }
+                @:.WithColumn("@col.Name").As@(col.DataType.NetDataType.Replace("TimeSpan", "Time").Replace("System.", "").Replace("Byte[]", "Binary"))(@Raw(GetColSize(col)))@Raw(GetPrimaryKey(tbl, col))@Raw(GetIdentity(col))@Raw(GetNullable(col))
+    }@:;
+    @Raw("\n")
+
+    @if(pkColumn != null)
+    {
+	    if(!Model.Config.IgnoredTablesForUpdateSequence.Exists(x => x.ToLower() == tbl.Name.ToLower()))
+		{
+            @:UpdateSequenceStartValue("@GetSchemaString(tbl.SchemaOwner,Model.Config.InbuiltSchema)", "@tbl.Name", "@pkColumn", 1000);
+        @Raw("\n")
+		}
+    }
+}
+
+            //Indexes definitions
+@foreach (var tbl in Model.DatabaseSchema.Tables)
+{
+    if (tbl.Name == "")
+    {
+        continue;
+    }
+    int itemsAdd = 0;
+    @foreach (var indx in tbl.Indexes)
+    {
+        @if (indx.IndexType == "PRIMARY")
+        {
+            continue;
+        }
+        itemsAdd++;
+        var hasAscStr = indx.Columns.Count > 1 ? ".Ascending()" : "";
+            @:Create.Index("@indx.Name").OnTable("@tbl.Name")@GetSchemaCode(tbl.SchemaOwner, Model.Config.InbuiltSchema)
+        @foreach (var col in indx.Columns)
+        {
+                @:.OnColumn("@col.Name")@hasAscStr
+        }
+            @:@(indx.IsUnique ? ".Unique()" : "")
+            @:;
+        @Raw("\n")
+    }
+    @if (itemsAdd > 0)
+    {
+        @Raw("\n")
+    }
+}
+
+            //UniqueKeys definitions
+@foreach (var tbl in Model.DatabaseSchema.Tables)
+{
+    if (tbl.Name == "")
+    {
+        continue;
+    }
+    @foreach (var uk in tbl.UniqueKeys)
+    {
+        if (tbl.Indexes.Select(x => x.Name).Any(x => x == uk.Name))
+        {
+            continue; // we have added the unique property when creating the FKey so we dont have to create it here again.
+        }
+            @:Create.UniqueConstraint("@uk.Name").OnTable("@uk.TableName")@GetSchemaCode(tbl.SchemaOwner,Model.Config.InbuiltSchema)
+        @foreach (var col in uk.Columns)
+        {
+                @:.OnColumn("@col")
+        }
+            @:;
+        @Raw("\n")
+    }
+    @if (tbl.UniqueKeys.Count > 0)
+    {
+        @Raw("\n")
+    }
+}
+
+            //ForeignKeys definitions
+@foreach (var tbl in Model.DatabaseSchema.Tables)
+{
+    if (tbl.Name == "")
+    {
+        continue;
+    }
+    @foreach (var fk in tbl.ForeignKeys)
+    {
+        var refTableColumn = "";
+        var otherTbl = Model.DatabaseSchema.Tables.FirstOrDefault(x => x.Name == fk.RefersToTable);
+        if (otherTbl != null)
+        {
+            foreach (var i1 in otherTbl.Indexes)
+            {
+                if (@i1.Name != fk.RefersToConstraint)
+                {
+                    continue;
+                }
+                refTableColumn = @String.Join(",", i1.Columns.Select(x => x.Name));
+                break;
+            }
+
+            if (refTableColumn == "")
+            {
+                foreach (var c1 in otherTbl.UniqueKeys.Union(otherTbl.ForeignKeys).Union(otherTbl.CheckConstraints).Union(otherTbl.DefaultConstraints))
+                {
+                    if (@c1.Name != fk.RefersToConstraint)
+                    {
+                        continue;
+                    }
+                    refTableColumn = @String.Join(",", c1.Columns);
+                    break;
+                }
+            }
+        }
+        else
+        {
+            @:Skipped
+        }
+            @:Create.ForeignKey("@fk.Name").FromTable("@tbl.Name")@(GetSchemaCode(tbl.SchemaOwner,Model.Config.InbuiltSchema)).ForeignColumns("@String.Join(",", fk.Columns)")
+            @:    .ToTable("@fk.RefersToTable")@(GetSchemaCode(fk.RefersToSchema,Model.Config.InbuiltSchema)).PrimaryColumns("@refTableColumn");
+        @Raw("\n")
+    }
+    @Raw("\n")
+    }
+        }
+    }
+}
+#pragma warning restore SA1601
+#pragma warning restore SA1649
+#pragma warning restore SA1505
+#pragma warning restore CS0168
+#pragma warning restore S1481
+#pragma warning restore SA1507
+#pragma warning restore SA1402
+#pragma warning restore SA1124
+#pragma warning restore SA1028
+#pragma warning restore SA1516
+#pragma warning restore SA1310

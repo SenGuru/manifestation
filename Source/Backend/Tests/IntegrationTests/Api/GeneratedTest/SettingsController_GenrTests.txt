@@ -1,0 +1,102 @@
+public void GetLogConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetLogConfigurationAsync();
+}
+public void GetLogConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveLogConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new LogConfigurationModel();
+    var r = SaveLogConfigurationAsync();
+}
+public void SaveLogConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetWebConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetWebConfigurationAsync();
+}
+public void GetWebConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveWebConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new OpWebConfigurationModel();
+    var r = SaveWebConfigurationAsync();
+}
+public void SaveWebConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAppConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetAppConfigurationAsync();
+}
+public void GetAppConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveAppConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new AppConfigurationModel();
+    var r = SaveAppConfigurationAsync();
+}
+public void SaveAppConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCommonConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetCommonConfigurationAsync();
+}
+public void GetCommonConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveCommonConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new CommonConfigurationModel();
+    var r = SaveCommonConfigurationAsync();
+}
+public void SaveCommonConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCoordinatorConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetCoordinatorConfigurationAsync();
+}
+public void GetCoordinatorConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveCoordinatorConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new CoordinatorConfigurationModel();
+    var r = SaveCoordinatorConfigurationAsync();
+}
+public void SaveCoordinatorConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetReportServerConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetReportServerConfigurationAsync();
+}
+public void GetReportServerConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveReportServerConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new ReportServerConfigurationModel();
+    var r = SaveReportServerConfigurationAsync();
+}
+public void SaveReportServerConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

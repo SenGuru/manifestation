@@ -1,0 +1,33 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+<div class="opnt-content-pane">
+    <div class="opnt-page">
+        <div class="page-content px-3">
+            <div class="page-scroll-woSidebar">
+
+                <div class="page-header">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                            <!-- Page pre-title -->
+                            <h1 class="page-title">@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName))</h1>
+                        </div>
+                        <!-- Page title Edit Jobs -->
+                        <div class="col-auto ml-auto d-print-none">
+                            <a (click)="show@(Model.CapitalizeEntityName)CrudModal()"
+                               class="btn btn-primary ml-3 d-none text-white d-sm-inline-block btn-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                                Add @(StringUtils.SplitCamelCase(Model.CapitalizeEntityName)) Info
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <app-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-list-screen></app-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-list-screen>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+.bkgrnd {
+    -webkit-box-direction: normal;
+    box-sizing: border-box;
+    background: no-repeat center, radial-gradient(circle farthest-corner at 10% 20%, rgb(117 166 205) 50%, rgb(193, 235, 243) 90.1%);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 20;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}

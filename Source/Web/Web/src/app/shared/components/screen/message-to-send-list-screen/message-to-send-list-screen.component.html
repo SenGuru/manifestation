@@ -1,0 +1,130 @@
+<app-super-admin-header></app-super-admin-header>
+<div class="page-header px-3 py-2">
+  <div class="d-flex align-items-center">
+    <div class="col-sm-auto">
+      <!-- Page title -->
+      <h3 class="card-title mb-0 flex-grow-1 mt-2">
+        Messages To Send
+      </h3>
+    </div>
+    <!-- add message To Send btn -->
+    <!-- <div class="d-flex justify-content-sm-end col-sm"> 
+          <button type="button" class="btn btn-success btn-sm aduo-btn-sm"  (click)="showAddMessageToSendModal();" data-bs-toggle="modal" id="create-user-btn"><i class="ri-add-line align-bottom me-1"></i> Add User</button>
+      </div> -->
+  </div>
+</div>
+<div class="card mb-2">
+  <div class="card-header py-2">
+    <form #messageToSendSearch="ngForm" novalidate focusOnError (ngSubmit)="onSearch(messageToSendSearch)">
+
+      <div class="row">
+        <div class="col-md-2 pr-0">
+          <input type="text" class="form-control" name="example-text-input" placeholder="Search Text"
+            [(ngModel)]="this.searchModel.keyword" />
+        </div>
+        <div class="col-md-2">
+          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
+            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
+            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
+          </ng-select>
+        </div>
+        <div class="col-md-2 pr-0">
+          <ng-select name="selectedPredefinedMessageToSendTypes" bindLabel="type" placeholder="Type"
+            [items]="predefinedMessageToSendTypes" [multiple]="true" [clearable]="true"
+            [(ngModel)]="selectedPredefinedMessageToSendTypes">
+            <ng-template let-item="item" let-index="index" let-search="searchTerm" ng-option-tmp>
+              <div style="margin: 4px;" title="{{item.type}}">
+                <div> {{item.type}}</div>
+              </div>
+            </ng-template>
+            <ng-template let-items="items" let-clear="clear" ng-multi-label-tmp>
+              <div *ngFor="let item of selectedPredefinedMessageToSendTypes | slice:-1:1" class="ng-value">
+                <span class="ng-value-label truncate cursor-pointer" title="{{item.type}}">{{item.type}}</span>
+                <span class="ng-value-icon right" aria-hidden="true" (click)="clear(item)">×</span>
+              </div>
+              <div *ngIf="items.length > 1" class="ng-value">
+                <span class="ng-value-label">{{items.length - 0}} Selected...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="d-flex justify-content-sm-end col-sm">
+          <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal"
+            id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+          <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(messageToSendSearch)">
+            Reset
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-body">
+    <div class="table-responsive table-card auditduo-table">
+      <table *ngIf="listData.length > 0; else nodata" class="table">
+        <thead class="auditduo-table-header">
+          <tr>
+            <th *ngFor="let column of columns" class="text-left" [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }" (click)="changeSort(column)">
+              <span class="mr-1" [innerHTML]="column.text"></span>
+              <i [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "></i>
+            </th>
+            <th class="text-left w-1 last-col-floating-container">
+              <span class="mr-1">ACTION</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of listData">
+            <td class="text-left">
+              {{ item.predefinedMessageToSendTypeName }}
+            </td>
+            <td class="text-left">
+              <!-- {{ item.realtimeMessageName  }} -->
+            </td>
+            <td class="text-left">
+              {{ item.messageFrom }}
+            </td>
+            <td class="text-left">
+              {{ item.messageTo }}
+            </td>
+            <td class="text-left">
+              {{ item.messageSubject }}
+            </td>
+            <td class="text-left">
+              {{ item.messageBody }}
+            </td>
+            <td class="text-left">
+              {{ item.modifiedDate | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.modifiedByUserFirstName }} {{ item.modifiedByUserLastName }}
+            </td>
+            <td class="text-left last-col-floating-container">
+              <div class="action-col-wrap">
+                <span class="mx-1">
+                  <a>
+                    <span class="text-dark" title="View MessageToSend" (click)="showViewMessageToSendModal(item)">
+                      <app-icon-view></app-icon-view>
+                    </span>
+                  </a>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #nodata>
+        <app-no-data-found></app-no-data-found>
+      </ng-template>
+    </div>
+    <app-pagination #pagination [totalItems]="totalItems" [currentPage]="searchModel.page"
+      (pageOptionChanged)="paginationChange($event)"></app-pagination>
+  </div>
+</div>

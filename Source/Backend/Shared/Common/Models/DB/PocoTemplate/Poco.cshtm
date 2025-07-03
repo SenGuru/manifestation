@@ -1,0 +1,271 @@
+﻿@model Framework.Utilities.PocoGenerator.TemplateData
+using System;
+@*using System.Collections.Generic;*@
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using System.Text.Json.Serialization;
+@*using Framework.Infrastructure.Exceptions;*@
+using Framework.Infrastructure.Interfaces.DbAccess;
+using LinqToDB.Mapping;
+@functions
+{
+public static string GetNullableValueAsString(bool value)
+{
+    if (value == true)
+        return "true";
+    return "false";
+}
+
+public static bool DoesColumnExist(List<string> columnNames, string tableName, string columnName)
+{
+    tableName = tableName.ToLower();
+    columnName = columnName.ToLower();
+
+    return columnNames.Any(cn =>
+    {
+        if (string.IsNullOrEmpty(cn))
+		{
+			return false;
+		}
+
+        var parts = cn.Split('.');
+        if (parts.Length == 2)
+        {
+            return parts[0].ToLower() == tableName && parts[1].ToLower() == columnName;
+        }
+        else if (parts.Length == 1)
+        {
+            return parts[0].ToLower() == columnName;
+        }
+        return false;
+    });
+}
+
+public static string GetDataType(bool isNullable, string dataType)
+{
+    if(dataType == "String" || dataType == "string" || dataType == "System.Byte[]"|| dataType == "System.byte[]")
+            return dataType;
+    if (isNullable)
+        return dataType + "?";
+    return dataType ;
+}
+
+public static string AsString(string value)
+{
+    return value;
+}
+
+public static string GetSchemaCode(string schema, List<string> inbuiltSchema)
+{
+    if (inbuiltSchema.Contains(schema.ToUpper()))
+        return "";
+    else
+        return $",Schema =(\"{schema}\"";
+}
+
+public static string GetTenantIdInterfaceCode(DatabaseSchemaReader.DataSchema.DatabaseTable table)
+{
+    if (table == null || table.Tag == null || (string)table.Tag != "CompanyId")
+    {
+        return "";
+    }
+    return $", ITenantModel";
+}
+
+public static string GetTenantItselfIdInterfaceCode(DatabaseSchemaReader.DataSchema.DatabaseTable table)
+{
+    if (table == null || table.Name != "Company")
+    {
+        return "";
+    }
+    return $", ITenantItselfModel";
+}
+
+}
+
+#pragma warning disable SA1310
+#pragma warning disable SA1516
+#pragma warning disable SA1028 // Code should not contain trailing whitespace
+#pragma warning disable SA1402
+#pragma warning disable SA1124
+#pragma warning disable SA1505
+#pragma warning disable SA1121
+#pragma warning disable SA1649
+#pragma warning disable SA1601
+#pragma warning disable CC0021
+#pragma warning disable CC0065
+#pragma warning disable SA1204
+
+namespace @Model.Config.Namespace
+{
+@foreach (var tbl in Model.DatabaseSchema.Tables)
+{
+    if(tbl.Name == "")
+    {
+        continue;
+    }
+<text>
+    [Table("@tbl.Name"@GetSchemaCode(tbl.SchemaOwner,Model.Config.InbuiltSchema))]
+    [Serializable]
+    public partial class @tbl.NetName : IAuditableModel, INewObject<@tbl.NetName>@GetTenantIdInterfaceCode(tbl)@GetTenantItselfIdInterfaceCode(tbl)
+    {
+        public const string TABLE_NAME = "@tbl.Name";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+    @foreach (var col in tbl.Columns)
+    {
+        @:public const string COLUMN_@col.NetName = "@col.Name";
+
+        @*@:public const string FULL_COLUMN_@col.NetName = "@col.TableName.@col.Name";*@
+    }
+        #endregion
+
+        #region ColumnSize
+    @foreach (var col in tbl.Columns)
+    {
+        if (col.DataType.IsString & col.Length > 0)
+        {
+        @:public const int COLUMN_SIZE_@col.NetName = @col.Length;
+        }
+    }
+        #endregion
+
+        #region ColumnNull
+    @foreach (var col in tbl.Columns)
+    {
+        @:public const bool COLUMN_NULLABLE_@col.NetName = @GetNullableValueAsString(col.Nullable);
+
+    }
+        #endregion
+
+    @foreach (var col in tbl.Columns)
+    {
+
+            if (col.DataType == null)
+            {
+                continue;
+            }
+
+        bool shouldIgnore = @DoesColumnExist(Model.Config.ColumnsToJsonIgnore, tbl.Name, col.Name);
+
+        if (shouldIgnore)
+        {
+        @:[JsonIgnore]
+        }
+        @:[Column("@col.Name")]
+        @if (col.IsPrimaryKey)
+        {
+        @:[LinqToDB.Mapping.PrimaryKey]
+        @:[Identity]
+        }
+        @if (col.Nullable == false)
+        {
+        @:[NotNull]
+        }
+        @if (col.DataType.IsString && col.Length > 0)
+        {
+        @:[StringLength(@col.Length)]
+        }
+        @:public @GetDataType(col.Nullable, col.DataType.NetDataTypeCSharpName) @col.NetName { get; set; }
+        @:
+        }
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+        @foreach (var col in tbl.Columns)
+        {
+            if (col.DataType == null)
+            {
+                continue;
+            }
+            @:sb.AppendLine($"@col.NetName = {@col.NetName} , ");
+        }
+            return sb.ToString();
+        }
+        @*
+        public void AssignValues(@tbl.NetName value)
+        {
+        @foreach (var col in tbl.Columns)
+        {
+            if (col.DataType == null)
+            {
+                continue;
+            }
+            @:this.@col.NetName = value.@col.NetName;
+        }
+        }
+        *@
+
+        public @tbl.NetName New(@tbl.NetName item)
+        {
+            if (item == null)
+                return null;
+
+            return new @tbl.NetName
+            {
+        @foreach (var col in tbl.Columns)
+        {
+            if (col.DataType == null)
+            {
+                continue;
+            }
+            @:@col.NetName = item.@col.NetName,
+        }
+            };
+        }
+
+        public @tbl.NetName NewFromObject()
+        {
+            return New(this);
+        }
+        @*
+        public List<ReturnErrorItem> IsValidate()
+        {
+            var result = new List<ReturnErrorItem>();
+        @foreach (var col in tbl.Columns)
+        {
+            if (col.DataType == null)
+            {
+                continue;
+            }
+            if (col.Nullable == false)
+            {
+                if (col.DataType.IsString)
+                {
+            @:if (@col.NetName == null)
+            @:{
+                @:result.Add(new ReturnErrorItem("@col.NetName","@col.NetName is required"));
+            @:}
+            @:
+                }
+            }
+
+            if (col.DataType.IsString & col.Length > 0)
+            {
+            @:if (@col.NetName != null && @(col.NetName).Length > @col.Length)
+            @:{
+                @:result.Add(new ReturnErrorItem("@col.NetName",$"@col.NetName size should not exceed {COLUMN_SIZE_@col.NetName} characters"));
+            @:}
+            @:
+            }
+         }
+            return result;
+        }*@
+    }
+    </text>
+}
+}
+#pragma warning restore SA1204
+#pragma warning restore CC0021
+#pragma warning restore CC0065
+#pragma warning restore SA1601
+#pragma warning restore SA1649
+#pragma warning restore SA1121
+#pragma warning restore SA1505
+#pragma warning restore SA1402
+#pragma warning restore SA1124
+#pragma warning restore SA1028
+#pragma warning restore SA1516
+#pragma warning restore SA1310

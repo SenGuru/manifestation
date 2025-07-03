@@ -1,0 +1,17226 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using Framework.Infrastructure.Attributes;
+using Framework.Infrastructure.Models.FileInput;
+namespace Manifest.Tests.Common
+{
+    public class LoggedInUserModel
+    {
+
+        public LoggedInUserModel()
+        {
+        }
+        [JsonPropertyName("userProfileGuid")]
+        public Guid? UserProfileGuid {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("userTypeId")]
+        public Int64 UserTypeId {set; get;}
+        [JsonPropertyName("userTypeName")]
+        public String UserTypeName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedCurrencyTypeId")]
+        public Int64 PredefinedCurrencyTypeId {set; get;}
+        [JsonPropertyName("token")]
+        public String Token {set; get;}
+        [JsonPropertyName("permissions")]
+        public List<Int64> Permissions {set; get;}
+
+        public LoggedInUserModel GetCopy()
+        {
+            var obj = new LoggedInUserModel();
+            obj.UserProfileGuid = UserProfileGuid;
+            obj.UserName = UserName;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.UserTypeId = UserTypeId;
+            obj.UserTypeName = UserTypeName;
+            obj.UserId = UserId;
+            obj.PredefinedCurrencyTypeId = PredefinedCurrencyTypeId;
+            obj.Token = Token;
+            obj.Permissions = Permissions;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserProfileGuid__Name = "UserProfileGuid";
+        public const string UserName__Name = "UserName";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string UserTypeId__Name = "UserTypeId";
+        public const string UserTypeName__Name = "UserTypeName";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedCurrencyTypeId__Name = "PredefinedCurrencyTypeId";
+        public const string Token__Name = "Token";
+        public const string Permissions__Name = "Permissions";
+    }
+
+    public class LoginModel
+    {
+
+        public LoginModel()
+        {
+        }
+        [JsonPropertyName("username")]
+        public String Username {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("rememberMe")]
+        public Boolean RememberMe {set; get;}
+
+        public LoginModel GetCopy()
+        {
+            var obj = new LoginModel();
+            obj.Username = Username;
+            obj.Password = Password;
+            obj.RememberMe = RememberMe;
+            return obj;
+        }
+
+        // Property Names
+        public const string Username__Name = "Username";
+        public const string Password__Name = "Password";
+        public const string RememberMe__Name = "RememberMe";
+    }
+
+    public class ResetPasswordRequestModel
+    {
+
+        public ResetPasswordRequestModel()
+        {
+        }
+        [JsonPropertyName("loginRedirecturl")]
+        public String LoginRedirecturl {set; get;}
+        [JsonPropertyName("token")]
+        public String Token {set; get;}
+        [JsonPropertyName("newPassword")]
+        public String NewPassword {set; get;}
+        [JsonPropertyName("confirmPassword")]
+        public String ConfirmPassword {set; get;}
+
+        public ResetPasswordRequestModel GetCopy()
+        {
+            var obj = new ResetPasswordRequestModel();
+            obj.LoginRedirecturl = LoginRedirecturl;
+            obj.Token = Token;
+            obj.NewPassword = NewPassword;
+            obj.ConfirmPassword = ConfirmPassword;
+            return obj;
+        }
+
+        // Property Names
+        public const string LoginRedirecturl__Name = "LoginRedirecturl";
+        public const string Token__Name = "Token";
+        public const string NewPassword__Name = "NewPassword";
+        public const string ConfirmPassword__Name = "ConfirmPassword";
+    }
+
+    public class RecoverPasswordRequestModel
+    {
+
+        public RecoverPasswordRequestModel()
+        {
+        }
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("clientRedirectURL")]
+        public String ClientRedirectURL {set; get;}
+
+        public RecoverPasswordRequestModel GetCopy()
+        {
+            var obj = new RecoverPasswordRequestModel();
+            obj.UserName = UserName;
+            obj.ClientRedirectURL = ClientRedirectURL;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string ClientRedirectURL__Name = "ClientRedirectURL";
+    }
+
+    public class AnonymousLoginModel
+    {
+
+        public AnonymousLoginModel()
+        {
+        }
+        [JsonPropertyName("authValue")]
+        public String AuthValue {set; get;}
+        [JsonPropertyName("authCode")]
+        public Int64 AuthCode {set; get;}
+        [JsonPropertyName("isEmail")]
+        public Boolean IsEmail {set; get;}
+
+        public AnonymousLoginModel GetCopy()
+        {
+            var obj = new AnonymousLoginModel();
+            obj.AuthValue = AuthValue;
+            obj.AuthCode = AuthCode;
+            obj.IsEmail = IsEmail;
+            return obj;
+        }
+
+        // Property Names
+        public const string AuthValue__Name = "AuthValue";
+        public const string AuthCode__Name = "AuthCode";
+        public const string IsEmail__Name = "IsEmail";
+    }
+
+    public class GlobalConfigurationModel
+    {
+
+        public GlobalConfigurationModel()
+        {
+        }
+        [JsonPropertyName("isUserLoggedIn")]
+        public Boolean IsUserLoggedIn {set; get;}
+        [JsonPropertyName("loginOptionModel")]
+        public LoginOptionModel LoginOptionModel {set; get;}
+        [JsonPropertyName("appVersion")]
+        public String AppVersion {set; get;}
+        [JsonPropertyName("dBVersion")]
+        public String DBVersion {set; get;}
+        [JsonPropertyName("appReleaseDate")]
+        public DateTime? AppReleaseDate {set; get;}
+        [JsonPropertyName("helpUrl")]
+        public String HelpUrl {set; get;}
+        [JsonPropertyName("onboardingCodes")]
+        public List<TextWithValue> OnboardingCodes {set; get;}
+        [JsonPropertyName("useMP")]
+        public Boolean UseMP {set; get;}
+        [JsonPropertyName("enableNewFeatures")]
+        public Boolean EnableNewFeatures {set; get;}
+        [JsonPropertyName("showAllLinksWithoutPermissionCheck")]
+        public Boolean ShowAllLinksWithoutPermissionCheck {set; get;}
+
+        public GlobalConfigurationModel GetCopy()
+        {
+            var obj = new GlobalConfigurationModel();
+            obj.IsUserLoggedIn = IsUserLoggedIn;
+            obj.LoginOptionModel = LoginOptionModel;
+            obj.AppVersion = AppVersion;
+            obj.DBVersion = DBVersion;
+            obj.AppReleaseDate = AppReleaseDate;
+            obj.HelpUrl = HelpUrl;
+            obj.OnboardingCodes = OnboardingCodes;
+            obj.UseMP = UseMP;
+            obj.EnableNewFeatures = EnableNewFeatures;
+            obj.ShowAllLinksWithoutPermissionCheck = ShowAllLinksWithoutPermissionCheck;
+            return obj;
+        }
+
+        // Property Names
+        public const string IsUserLoggedIn__Name = "IsUserLoggedIn";
+        public const string LoginOptionModel__Name = "LoginOptionModel";
+        public const string AppVersion__Name = "AppVersion";
+        public const string DBVersion__Name = "DBVersion";
+        public const string AppReleaseDate__Name = "AppReleaseDate";
+        public const string HelpUrl__Name = "HelpUrl";
+        public const string OnboardingCodes__Name = "OnboardingCodes";
+        public const string UseMP__Name = "UseMP";
+        public const string EnableNewFeatures__Name = "EnableNewFeatures";
+        public const string ShowAllLinksWithoutPermissionCheck__Name = "ShowAllLinksWithoutPermissionCheck";
+    }
+
+    public class LoginOptionModel
+    {
+
+        public LoginOptionModel()
+        {
+        }
+        [JsonPropertyName("useBuiltInAuthentication")]
+        public Boolean UseBuiltInAuthentication {set; get;}
+        [JsonPropertyName("signInUrl")]
+        public String SignInUrl {set; get;}
+        [JsonPropertyName("companyDesktopUrl")]
+        public String CompanyDesktopUrl {set; get;}
+        [JsonPropertyName("companyMobileUrl")]
+        public String CompanyMobileUrl {set; get;}
+        [JsonPropertyName("companySlogan")]
+        public String CompanySlogan {set; get;}
+        [JsonPropertyName("companyEntityName")]
+        public String CompanyEntityName {set; get;}
+
+        public LoginOptionModel GetCopy()
+        {
+            var obj = new LoginOptionModel();
+            obj.UseBuiltInAuthentication = UseBuiltInAuthentication;
+            obj.SignInUrl = SignInUrl;
+            obj.CompanyDesktopUrl = CompanyDesktopUrl;
+            obj.CompanyMobileUrl = CompanyMobileUrl;
+            obj.CompanySlogan = CompanySlogan;
+            obj.CompanyEntityName = CompanyEntityName;
+            return obj;
+        }
+
+        // Property Names
+        public const string UseBuiltInAuthentication__Name = "UseBuiltInAuthentication";
+        public const string SignInUrl__Name = "SignInUrl";
+        public const string CompanyDesktopUrl__Name = "CompanyDesktopUrl";
+        public const string CompanyMobileUrl__Name = "CompanyMobileUrl";
+        public const string CompanySlogan__Name = "CompanySlogan";
+        public const string CompanyEntityName__Name = "CompanyEntityName";
+    }
+
+    public class AlternateLoginModel
+    {
+
+        public AlternateLoginModel()
+        {
+        }
+        [JsonPropertyName("loginInAsUsername")]
+        public String LoginInAsUsername {set; get;}
+        [JsonPropertyName("username")]
+        public String Username {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+
+        public AlternateLoginModel GetCopy()
+        {
+            var obj = new AlternateLoginModel();
+            obj.LoginInAsUsername = LoginInAsUsername;
+            obj.Username = Username;
+            obj.Password = Password;
+            return obj;
+        }
+
+        // Property Names
+        public const string LoginInAsUsername__Name = "LoginInAsUsername";
+        public const string Username__Name = "Username";
+        public const string Password__Name = "Password";
+    }
+
+    public class ExternalLoginCallBackModel
+    {
+
+        public ExternalLoginCallBackModel()
+        {
+        }
+        [JsonPropertyName("provider")]
+        public String Provider {set; get;}
+        [JsonPropertyName("callBackUri")]
+        public String CallBackUri {set; get;}
+        [JsonPropertyName("singleSignOnIdentifier")]
+        public String SingleSignOnIdentifier {set; get;}
+        [JsonPropertyName("code")]
+        public String Code {set; get;}
+        [JsonPropertyName("id_token")]
+        public String Id_token {set; get;}
+        [JsonPropertyName("access_token")]
+        public String Access_token {set; get;}
+        [JsonPropertyName("error")]
+        public String Error {set; get;}
+        [JsonPropertyName("state")]
+        public Guid State {set; get;}
+
+        public ExternalLoginCallBackModel GetCopy()
+        {
+            var obj = new ExternalLoginCallBackModel();
+            obj.Provider = Provider;
+            obj.CallBackUri = CallBackUri;
+            obj.SingleSignOnIdentifier = SingleSignOnIdentifier;
+            obj.Code = Code;
+            obj.Id_token = Id_token;
+            obj.Access_token = Access_token;
+            obj.Error = Error;
+            obj.State = State;
+            return obj;
+        }
+
+        // Property Names
+        public const string Provider__Name = "Provider";
+        public const string CallBackUri__Name = "CallBackUri";
+        public const string SingleSignOnIdentifier__Name = "SingleSignOnIdentifier";
+        public const string Code__Name = "Code";
+        public const string Id_token__Name = "Id_token";
+        public const string Access_token__Name = "Access_token";
+        public const string Error__Name = "Error";
+        public const string State__Name = "State";
+    }
+
+    public class ChangeForgotPasswordModel
+    {
+
+        public ChangeForgotPasswordModel()
+        {
+        }
+        [JsonPropertyName("userLogin")]
+        public String UserLogin {set; get;}
+        [JsonPropertyName("sessionId")]
+        public String SessionId {set; get;}
+        [JsonPropertyName("currentPassword")]
+        public String CurrentPassword {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("retypedPassword")]
+        public String RetypedPassword {set; get;}
+
+        public ChangeForgotPasswordModel GetCopy()
+        {
+            var obj = new ChangeForgotPasswordModel();
+            obj.UserLogin = UserLogin;
+            obj.SessionId = SessionId;
+            obj.CurrentPassword = CurrentPassword;
+            obj.Password = Password;
+            obj.RetypedPassword = RetypedPassword;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserLogin__Name = "UserLogin";
+        public const string SessionId__Name = "SessionId";
+        public const string CurrentPassword__Name = "CurrentPassword";
+        public const string Password__Name = "Password";
+        public const string RetypedPassword__Name = "RetypedPassword";
+    }
+
+    public class ForgotPasswordModel
+    {
+
+        public ForgotPasswordModel()
+        {
+        }
+        [JsonPropertyName("userLogin")]
+        public String UserLogin {set; get;}
+        [JsonPropertyName("token")]
+        public Guid Token {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("retypedPassword")]
+        public String RetypedPassword {set; get;}
+
+        public ForgotPasswordModel GetCopy()
+        {
+            var obj = new ForgotPasswordModel();
+            obj.UserLogin = UserLogin;
+            obj.Token = Token;
+            obj.Password = Password;
+            obj.RetypedPassword = RetypedPassword;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserLogin__Name = "UserLogin";
+        public const string Token__Name = "Token";
+        public const string Password__Name = "Password";
+        public const string RetypedPassword__Name = "RetypedPassword";
+    }
+
+    public class ChangePasswordModel
+    {
+
+        public ChangePasswordModel()
+        {
+        }
+        [JsonPropertyName("currentPassword")]
+        public String CurrentPassword {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("retypedPassword")]
+        public String RetypedPassword {set; get;}
+
+        public ChangePasswordModel GetCopy()
+        {
+            var obj = new ChangePasswordModel();
+            obj.CurrentPassword = CurrentPassword;
+            obj.Password = Password;
+            obj.RetypedPassword = RetypedPassword;
+            return obj;
+        }
+
+        // Property Names
+        public const string CurrentPassword__Name = "CurrentPassword";
+        public const string Password__Name = "Password";
+        public const string RetypedPassword__Name = "RetypedPassword";
+    }
+
+    public class GlobalSettingModel
+    {
+
+        public GlobalSettingModel()
+        {
+        }
+        [JsonPropertyName("html5DocumentViewerPath")]
+        public String Html5DocumentViewerPath {set; get;}
+        [JsonPropertyName("html5SupportedDocTypes")]
+        public List<String> Html5SupportedDocTypes {set; get;}
+        [JsonPropertyName("mobileTheme")]
+        public String MobileTheme {set; get;}
+        [JsonPropertyName("mobileTitle")]
+        public String MobileTitle {set; get;}
+        [JsonPropertyName("mobileCopyright")]
+        public String MobileCopyright {set; get;}
+        [JsonPropertyName("desktopTheme")]
+        public String DesktopTheme {set; get;}
+        [JsonPropertyName("desktopCourtUrl")]
+        public String DesktopCourtUrl {set; get;}
+        [JsonPropertyName("desktopTitle")]
+        public String DesktopTitle {set; get;}
+        [JsonPropertyName("desktopCopyright")]
+        public String DesktopCopyright {set; get;}
+        [JsonPropertyName("applicationVersion")]
+        public String ApplicationVersion {set; get;}
+        [JsonPropertyName("databaseVersion")]
+        public String DatabaseVersion {set; get;}
+        [JsonPropertyName("enableNewFeatures")]
+        public Boolean EnableNewFeatures {set; get;}
+        [JsonPropertyName("enableFrontPageDisplayMessage")]
+        public Boolean EnableFrontPageDisplayMessage {set; get;}
+        [JsonPropertyName("frontPageDisplayMessage")]
+        public String FrontPageDisplayMessage {set; get;}
+        [JsonPropertyName("frontPageDisplayMessageTitle")]
+        public String FrontPageDisplayMessageTitle {set; get;}
+        [JsonPropertyName("frontPageDisplayMessageDisplayTime")]
+        public Int32 FrontPageDisplayMessageDisplayTime {set; get;}
+        [JsonPropertyName("frontPageDisplayMessageUntilDate")]
+        public DateTime? FrontPageDisplayMessageUntilDate {set; get;}
+        [JsonPropertyName("readOnlyAccess")]
+        public Boolean ReadOnlyAccess {set; get;}
+        [JsonPropertyName("readOnlyAccessMessage")]
+        public String ReadOnlyAccessMessage {set; get;}
+        [JsonPropertyName("isProduction")]
+        public Boolean IsProduction {set; get;}
+        [JsonPropertyName("showAllLinksWithoutPermissionCheck")]
+        public Boolean ShowAllLinksWithoutPermissionCheck {set; get;}
+
+        public GlobalSettingModel GetCopy()
+        {
+            var obj = new GlobalSettingModel();
+            obj.Html5DocumentViewerPath = Html5DocumentViewerPath;
+            obj.Html5SupportedDocTypes = Html5SupportedDocTypes;
+            obj.MobileTheme = MobileTheme;
+            obj.MobileTitle = MobileTitle;
+            obj.MobileCopyright = MobileCopyright;
+            obj.DesktopTheme = DesktopTheme;
+            obj.DesktopCourtUrl = DesktopCourtUrl;
+            obj.DesktopTitle = DesktopTitle;
+            obj.DesktopCopyright = DesktopCopyright;
+            obj.ApplicationVersion = ApplicationVersion;
+            obj.DatabaseVersion = DatabaseVersion;
+            obj.EnableNewFeatures = EnableNewFeatures;
+            obj.EnableFrontPageDisplayMessage = EnableFrontPageDisplayMessage;
+            obj.FrontPageDisplayMessage = FrontPageDisplayMessage;
+            obj.FrontPageDisplayMessageTitle = FrontPageDisplayMessageTitle;
+            obj.FrontPageDisplayMessageDisplayTime = FrontPageDisplayMessageDisplayTime;
+            obj.FrontPageDisplayMessageUntilDate = FrontPageDisplayMessageUntilDate;
+            obj.ReadOnlyAccess = ReadOnlyAccess;
+            obj.ReadOnlyAccessMessage = ReadOnlyAccessMessage;
+            obj.IsProduction = IsProduction;
+            obj.ShowAllLinksWithoutPermissionCheck = ShowAllLinksWithoutPermissionCheck;
+            return obj;
+        }
+
+        // Property Names
+        public const string Html5DocumentViewerPath__Name = "Html5DocumentViewerPath";
+        public const string Html5SupportedDocTypes__Name = "Html5SupportedDocTypes";
+        public const string MobileTheme__Name = "MobileTheme";
+        public const string MobileTitle__Name = "MobileTitle";
+        public const string MobileCopyright__Name = "MobileCopyright";
+        public const string DesktopTheme__Name = "DesktopTheme";
+        public const string DesktopCourtUrl__Name = "DesktopCourtUrl";
+        public const string DesktopTitle__Name = "DesktopTitle";
+        public const string DesktopCopyright__Name = "DesktopCopyright";
+        public const string ApplicationVersion__Name = "ApplicationVersion";
+        public const string DatabaseVersion__Name = "DatabaseVersion";
+        public const string EnableNewFeatures__Name = "EnableNewFeatures";
+        public const string EnableFrontPageDisplayMessage__Name = "EnableFrontPageDisplayMessage";
+        public const string FrontPageDisplayMessage__Name = "FrontPageDisplayMessage";
+        public const string FrontPageDisplayMessageTitle__Name = "FrontPageDisplayMessageTitle";
+        public const string FrontPageDisplayMessageDisplayTime__Name = "FrontPageDisplayMessageDisplayTime";
+        public const string FrontPageDisplayMessageUntilDate__Name = "FrontPageDisplayMessageUntilDate";
+        public const string ReadOnlyAccess__Name = "ReadOnlyAccess";
+        public const string ReadOnlyAccessMessage__Name = "ReadOnlyAccessMessage";
+        public const string IsProduction__Name = "IsProduction";
+        public const string ShowAllLinksWithoutPermissionCheck__Name = "ShowAllLinksWithoutPermissionCheck";
+    }
+
+    public class AppLogModel
+    {
+
+        public AppLogModel()
+        {
+        }
+        [JsonPropertyName("logDate")]
+        public DateTime? LogDate {set; get;}
+        [JsonPropertyName("activityId")]
+        public String ActivityId {set; get;}
+        [JsonPropertyName("machineName")]
+        public String MachineName {set; get;}
+        [JsonPropertyName("userIdentity")]
+        public String UserIdentity {set; get;}
+        [JsonPropertyName("appName")]
+        public String AppName {set; get;}
+        [JsonPropertyName("severity")]
+        public String Severity {set; get;}
+        [JsonPropertyName("processId")]
+        public String ProcessId {set; get;}
+        [JsonPropertyName("threadId")]
+        public String ThreadId {set; get;}
+        [JsonPropertyName("currentFunction")]
+        public String CurrentFunction {set; get;}
+        [JsonPropertyName("currentSourceFileName")]
+        public String CurrentSourceFileName {set; get;}
+        [JsonPropertyName("currentSourceLineNumber")]
+        public String CurrentSourceLineNumber {set; get;}
+        [JsonPropertyName("elaspedTime")]
+        public Single? ElaspedTime {set; get;}
+        [JsonPropertyName("result")]
+        public String Result {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("iPAddress")]
+        public String IPAddress {set; get;}
+
+        public AppLogModel GetCopy()
+        {
+            var obj = new AppLogModel();
+            obj.LogDate = LogDate;
+            obj.ActivityId = ActivityId;
+            obj.MachineName = MachineName;
+            obj.UserIdentity = UserIdentity;
+            obj.AppName = AppName;
+            obj.Severity = Severity;
+            obj.ProcessId = ProcessId;
+            obj.ThreadId = ThreadId;
+            obj.CurrentFunction = CurrentFunction;
+            obj.CurrentSourceFileName = CurrentSourceFileName;
+            obj.CurrentSourceLineNumber = CurrentSourceLineNumber;
+            obj.ElaspedTime = ElaspedTime;
+            obj.Result = Result;
+            obj.Message = Message;
+            obj.IPAddress = IPAddress;
+            return obj;
+        }
+
+        // Property Names
+        public const string LogDate__Name = "LogDate";
+        public const string ActivityId__Name = "ActivityId";
+        public const string MachineName__Name = "MachineName";
+        public const string UserIdentity__Name = "UserIdentity";
+        public const string AppName__Name = "AppName";
+        public const string Severity__Name = "Severity";
+        public const string ProcessId__Name = "ProcessId";
+        public const string ThreadId__Name = "ThreadId";
+        public const string CurrentFunction__Name = "CurrentFunction";
+        public const string CurrentSourceFileName__Name = "CurrentSourceFileName";
+        public const string CurrentSourceLineNumber__Name = "CurrentSourceLineNumber";
+        public const string ElaspedTime__Name = "ElaspedTime";
+        public const string Result__Name = "Result";
+        public const string Message__Name = "Message";
+        public const string IPAddress__Name = "IPAddress";
+    }
+
+    public class AppLogSearchCriteria
+    {
+
+        public AppLogSearchCriteria()
+        {
+        }
+        [JsonPropertyName("activityIds")]
+        public List<String> ActivityIds {set; get;}
+        [JsonPropertyName("machineName")]
+        public String MachineName {set; get;}
+        [JsonPropertyName("userIdentity")]
+        public String UserIdentity {set; get;}
+        [JsonPropertyName("appName")]
+        public String AppName {set; get;}
+        [JsonPropertyName("severityLevels")]
+        public List<String> SeverityLevels {set; get;}
+        [JsonPropertyName("processIds")]
+        public List<String> ProcessIds {set; get;}
+        [JsonPropertyName("threadIds")]
+        public List<String> ThreadIds {set; get;}
+        [JsonPropertyName("currentFunctions")]
+        public List<String> CurrentFunctions {set; get;}
+        [JsonPropertyName("currentSourceLine")]
+        public String CurrentSourceLine {set; get;}
+        [JsonPropertyName("result")]
+        public String Result {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("iPAddress")]
+        public String IPAddress {set; get;}
+        [JsonPropertyName("elaspedTime")]
+        public Single? ElaspedTime {set; get;}
+        [JsonPropertyName("logDate")]
+        public DateTime? LogDate {set; get;}
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public AppLogSearchCriteria GetCopy()
+        {
+            var obj = new AppLogSearchCriteria();
+            obj.ActivityIds = ActivityIds;
+            obj.MachineName = MachineName;
+            obj.UserIdentity = UserIdentity;
+            obj.AppName = AppName;
+            obj.SeverityLevels = SeverityLevels;
+            obj.ProcessIds = ProcessIds;
+            obj.ThreadIds = ThreadIds;
+            obj.CurrentFunctions = CurrentFunctions;
+            obj.CurrentSourceLine = CurrentSourceLine;
+            obj.Result = Result;
+            obj.Message = Message;
+            obj.IPAddress = IPAddress;
+            obj.ElaspedTime = ElaspedTime;
+            obj.LogDate = LogDate;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ActivityIds__Name = "ActivityIds";
+        public const string MachineName__Name = "MachineName";
+        public const string UserIdentity__Name = "UserIdentity";
+        public const string AppName__Name = "AppName";
+        public const string SeverityLevels__Name = "SeverityLevels";
+        public const string ProcessIds__Name = "ProcessIds";
+        public const string ThreadIds__Name = "ThreadIds";
+        public const string CurrentFunctions__Name = "CurrentFunctions";
+        public const string CurrentSourceLine__Name = "CurrentSourceLine";
+        public const string Result__Name = "Result";
+        public const string Message__Name = "Message";
+        public const string IPAddress__Name = "IPAddress";
+        public const string ElaspedTime__Name = "ElaspedTime";
+        public const string LogDate__Name = "LogDate";
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class PerfLogModel
+    {
+
+        public PerfLogModel()
+        {
+        }
+        [JsonPropertyName("logDate")]
+        public DateTime? LogDate {set; get;}
+        [JsonPropertyName("activityId")]
+        public String ActivityId {set; get;}
+        [JsonPropertyName("machineName")]
+        public String MachineName {set; get;}
+        [JsonPropertyName("userIdentity")]
+        public String UserIdentity {set; get;}
+        [JsonPropertyName("appName")]
+        public String AppName {set; get;}
+        [JsonPropertyName("appModule")]
+        public String AppModule {set; get;}
+        [JsonPropertyName("appFunction")]
+        public String AppFunction {set; get;}
+        [JsonPropertyName("httpVerb")]
+        public String HttpVerb {set; get;}
+        [JsonPropertyName("statusCode")]
+        public String StatusCode {set; get;}
+        [JsonPropertyName("startTime")]
+        public String StartTime {set; get;}
+        [JsonPropertyName("endTime")]
+        public String EndTime {set; get;}
+        [JsonPropertyName("elapsedTimeInMs")]
+        public Single? ElapsedTimeInMs {set; get;}
+        [JsonPropertyName("iPAddress")]
+        public String IPAddress {set; get;}
+        [JsonPropertyName("elapsedTimeInSeconds")]
+        public Single? ElapsedTimeInSeconds {set; get;}
+
+        public PerfLogModel GetCopy()
+        {
+            var obj = new PerfLogModel();
+            obj.LogDate = LogDate;
+            obj.ActivityId = ActivityId;
+            obj.MachineName = MachineName;
+            obj.UserIdentity = UserIdentity;
+            obj.AppName = AppName;
+            obj.AppModule = AppModule;
+            obj.AppFunction = AppFunction;
+            obj.HttpVerb = HttpVerb;
+            obj.StatusCode = StatusCode;
+            obj.StartTime = StartTime;
+            obj.EndTime = EndTime;
+            obj.ElapsedTimeInMs = ElapsedTimeInMs;
+            obj.IPAddress = IPAddress;
+            obj.ElapsedTimeInSeconds = ElapsedTimeInSeconds;
+            return obj;
+        }
+
+        // Property Names
+        public const string LogDate__Name = "LogDate";
+        public const string ActivityId__Name = "ActivityId";
+        public const string MachineName__Name = "MachineName";
+        public const string UserIdentity__Name = "UserIdentity";
+        public const string AppName__Name = "AppName";
+        public const string AppModule__Name = "AppModule";
+        public const string AppFunction__Name = "AppFunction";
+        public const string HttpVerb__Name = "HttpVerb";
+        public const string StatusCode__Name = "StatusCode";
+        public const string StartTime__Name = "StartTime";
+        public const string EndTime__Name = "EndTime";
+        public const string ElapsedTimeInMs__Name = "ElapsedTimeInMs";
+        public const string IPAddress__Name = "IPAddress";
+        public const string ElapsedTimeInSeconds__Name = "ElapsedTimeInSeconds";
+    }
+
+    public class PerfLogSearchCriteria
+    {
+
+        public PerfLogSearchCriteria()
+        {
+        }
+        [JsonPropertyName("logDate")]
+        public DateTime? LogDate {set; get;}
+        [JsonPropertyName("activityIds")]
+        public List<String> ActivityIds {set; get;}
+        [JsonPropertyName("machineName")]
+        public String MachineName {set; get;}
+        [JsonPropertyName("userIdentity")]
+        public String UserIdentity {set; get;}
+        [JsonPropertyName("appName")]
+        public String AppName {set; get;}
+        [JsonPropertyName("appModule")]
+        public String AppModule {set; get;}
+        [JsonPropertyName("appFunctions")]
+        public List<String> AppFunctions {set; get;}
+        [JsonPropertyName("httpVerb")]
+        public String HttpVerb {set; get;}
+        [JsonPropertyName("statusCode")]
+        public String StatusCode {set; get;}
+        [JsonPropertyName("startTime")]
+        public String StartTime {set; get;}
+        [JsonPropertyName("endTime")]
+        public String EndTime {set; get;}
+        [JsonPropertyName("elapsedTimeMs")]
+        public Single? ElapsedTimeMs {set; get;}
+        [JsonPropertyName("lesserThanMS")]
+        public Single? LesserThanMS {set; get;}
+        [JsonPropertyName("greaterThanMS")]
+        public Single? GreaterThanMS {set; get;}
+        [JsonPropertyName("equalToMs")]
+        public Single? EqualToMs {set; get;}
+        [JsonPropertyName("iPAddress")]
+        public String IPAddress {set; get;}
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public PerfLogSearchCriteria GetCopy()
+        {
+            var obj = new PerfLogSearchCriteria();
+            obj.LogDate = LogDate;
+            obj.ActivityIds = ActivityIds;
+            obj.MachineName = MachineName;
+            obj.UserIdentity = UserIdentity;
+            obj.AppName = AppName;
+            obj.AppModule = AppModule;
+            obj.AppFunctions = AppFunctions;
+            obj.HttpVerb = HttpVerb;
+            obj.StatusCode = StatusCode;
+            obj.StartTime = StartTime;
+            obj.EndTime = EndTime;
+            obj.ElapsedTimeMs = ElapsedTimeMs;
+            obj.LesserThanMS = LesserThanMS;
+            obj.GreaterThanMS = GreaterThanMS;
+            obj.EqualToMs = EqualToMs;
+            obj.IPAddress = IPAddress;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string LogDate__Name = "LogDate";
+        public const string ActivityIds__Name = "ActivityIds";
+        public const string MachineName__Name = "MachineName";
+        public const string UserIdentity__Name = "UserIdentity";
+        public const string AppName__Name = "AppName";
+        public const string AppModule__Name = "AppModule";
+        public const string AppFunctions__Name = "AppFunctions";
+        public const string HttpVerb__Name = "HttpVerb";
+        public const string StatusCode__Name = "StatusCode";
+        public const string StartTime__Name = "StartTime";
+        public const string EndTime__Name = "EndTime";
+        public const string ElapsedTimeMs__Name = "ElapsedTimeMs";
+        public const string LesserThanMS__Name = "LesserThanMS";
+        public const string GreaterThanMS__Name = "GreaterThanMS";
+        public const string EqualToMs__Name = "EqualToMs";
+        public const string IPAddress__Name = "IPAddress";
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class AppFunctionAggregateSearchCriteria
+    {
+
+        public AppFunctionAggregateSearchCriteria()
+        {
+        }
+        [JsonPropertyName("appFunction")]
+        public String AppFunction {set; get;}
+        [JsonPropertyName("lesserThanMedianTimeElapsed")]
+        public Single? LesserThanMedianTimeElapsed {set; get;}
+        [JsonPropertyName("greaterThanMedianTimeElapsed")]
+        public Single? GreaterThanMedianTimeElapsed {set; get;}
+        [JsonPropertyName("lesserThanMeanTimeElapsed")]
+        public Single? LesserThanMeanTimeElapsed {set; get;}
+        [JsonPropertyName("greaterThanMeanTimeElapsed")]
+        public Single? GreaterThanMeanTimeElapsed {set; get;}
+        [JsonPropertyName("lesserThanAppFunctionCount")]
+        public Single? LesserThanAppFunctionCount {set; get;}
+        [JsonPropertyName("greaterThanAppFunctionCount")]
+        public Single? GreaterThanAppFunctionCount {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public AppFunctionAggregateSearchCriteria GetCopy()
+        {
+            var obj = new AppFunctionAggregateSearchCriteria();
+            obj.AppFunction = AppFunction;
+            obj.LesserThanMedianTimeElapsed = LesserThanMedianTimeElapsed;
+            obj.GreaterThanMedianTimeElapsed = GreaterThanMedianTimeElapsed;
+            obj.LesserThanMeanTimeElapsed = LesserThanMeanTimeElapsed;
+            obj.GreaterThanMeanTimeElapsed = GreaterThanMeanTimeElapsed;
+            obj.LesserThanAppFunctionCount = LesserThanAppFunctionCount;
+            obj.GreaterThanAppFunctionCount = GreaterThanAppFunctionCount;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string AppFunction__Name = "AppFunction";
+        public const string LesserThanMedianTimeElapsed__Name = "LesserThanMedianTimeElapsed";
+        public const string GreaterThanMedianTimeElapsed__Name = "GreaterThanMedianTimeElapsed";
+        public const string LesserThanMeanTimeElapsed__Name = "LesserThanMeanTimeElapsed";
+        public const string GreaterThanMeanTimeElapsed__Name = "GreaterThanMeanTimeElapsed";
+        public const string LesserThanAppFunctionCount__Name = "LesserThanAppFunctionCount";
+        public const string GreaterThanAppFunctionCount__Name = "GreaterThanAppFunctionCount";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ChatModel
+    {
+
+        public ChatModel()
+        {
+        }
+
+        public ChatModel(Int64 chatId,String chatName,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ChatId = chatId;
+            ChatName = chatName;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("chatName")]
+        public String ChatName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ChatCreateModel GetAsCreateModel()
+        {
+            var obj = new ChatCreateModel();
+            obj.ChatName = ChatName;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ChatCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatName == ChatName);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public ChatUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ChatUpdateModel();
+            obj.ChatId = ChatId;
+            obj.ChatName = ChatName;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ChatUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatId == ChatId);
+            result = result && (obj.ChatName == ChatName);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public ChatModel GetCopy()
+        {
+            var obj = new ChatModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ChatId = ChatId;
+            obj.ChatName = ChatName;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ChatId__Name = "ChatId";
+        public const string ChatName__Name = "ChatName";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int ChatName__Size = 500;
+    }
+
+    public class ChatSearchCriteria
+    {
+
+        public ChatSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ChatSearchCriteria GetCopy()
+        {
+            var obj = new ChatSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ChatCreateModel
+    {
+
+        public ChatCreateModel()
+        {
+        }
+
+        public ChatCreateModel(String chatName,Int64 userId)
+        {
+            ChatName = chatName;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("newChatUsers")]
+        public List<ChatUserCreateModel> NewChatUsers {set; get;}
+        [JsonPropertyName("existingChatUsers")]
+        public List<ChatUserUpdateModel> ExistingChatUsers {set; get;}
+        [JsonPropertyName("chatName")]
+        public String ChatName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public ChatCreateModel GetCopy()
+        {
+            var obj = new ChatCreateModel();
+            obj.NewChatUsers = NewChatUsers;
+            obj.ExistingChatUsers = ExistingChatUsers;
+            obj.ChatName = ChatName;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewChatUsers__Name = "NewChatUsers";
+        public const string ExistingChatUsers__Name = "ExistingChatUsers";
+        public const string ChatName__Name = "ChatName";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int ChatName__Size = 500;
+    }
+
+    public class MultipleChatCreateModel
+    {
+
+        public MultipleChatCreateModel()
+        {
+        }
+        [JsonPropertyName("newChats")]
+        public List<ChatCreateModel> NewChats {set; get;}
+
+        public MultipleChatCreateModel GetCopy()
+        {
+            var obj = new MultipleChatCreateModel();
+            obj.NewChats = NewChats;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewChats__Name = "NewChats";
+    }
+
+    public class ChatUpdateModel
+    {
+
+        public ChatUpdateModel()
+        {
+        }
+
+        public ChatUpdateModel(Int64 chatId,String chatName,Int64 userId)
+        {
+            ChatId = chatId;
+            ChatName = chatName;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("newChatUsers")]
+        public List<ChatUserCreateModel> NewChatUsers {set; get;}
+        [JsonPropertyName("existingChatUsers")]
+        public List<ChatUserUpdateModel> ExistingChatUsers {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("chatName")]
+        public String ChatName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public ChatUpdateModel GetCopy()
+        {
+            var obj = new ChatUpdateModel();
+            obj.NewChatUsers = NewChatUsers;
+            obj.ExistingChatUsers = ExistingChatUsers;
+            obj.ChatId = ChatId;
+            obj.ChatName = ChatName;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewChatUsers__Name = "NewChatUsers";
+        public const string ExistingChatUsers__Name = "ExistingChatUsers";
+        public const string ChatId__Name = "ChatId";
+        public const string ChatName__Name = "ChatName";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int ChatName__Size = 500;
+    }
+
+    public class ChatMessageModel
+    {
+
+        public ChatMessageModel()
+        {
+        }
+
+        public ChatMessageModel(Int64 chatMessageId,Int64 chatId,Int64 userId,String chatMessageText,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ChatMessageId = chatMessageId;
+            ChatId = chatId;
+            UserId = userId;
+            ChatMessageText = chatMessageText;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("chatMessageId")]
+        public Int64 ChatMessageId {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("chatMessageText")]
+        public String ChatMessageText {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ChatMessageCreateModel GetAsCreateModel()
+        {
+            var obj = new ChatMessageCreateModel();
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.ChatMessageText = ChatMessageText;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ChatMessageCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatId == ChatId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.ChatMessageText == ChatMessageText);
+            return result;
+        }
+
+
+        public ChatMessageUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ChatMessageUpdateModel();
+            obj.ChatMessageId = ChatMessageId;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.ChatMessageText = ChatMessageText;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ChatMessageUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatMessageId == ChatMessageId);
+            result = result && (obj.ChatId == ChatId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.ChatMessageText == ChatMessageText);
+            return result;
+        }
+
+
+        public ChatMessageModel GetCopy()
+        {
+            var obj = new ChatMessageModel();
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ChatMessageId = ChatMessageId;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.ChatMessageText = ChatMessageText;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ChatMessageId__Name = "ChatMessageId";
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+        public const string ChatMessageText__Name = "ChatMessageText";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int ChatMessageText__Size = 2000;
+    }
+
+    public class ChatMessageSearchCriteria
+    {
+
+        public ChatMessageSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64? ChatId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ChatMessageSearchCriteria GetCopy()
+        {
+            var obj = new ChatMessageSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.ChatId = ChatId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string ChatId__Name = "ChatId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ChatMessageCreateModel
+    {
+
+        public ChatMessageCreateModel()
+        {
+        }
+
+        public ChatMessageCreateModel(Int64 chatId,Int64 userId,String chatMessageText)
+        {
+            ChatId = chatId;
+            UserId = userId;
+            ChatMessageText = chatMessageText;
+        }
+
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("chatMessageText")]
+        public String ChatMessageText {set; get;}
+
+        public ChatMessageCreateModel GetCopy()
+        {
+            var obj = new ChatMessageCreateModel();
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.ChatMessageText = ChatMessageText;
+            return obj;
+        }
+
+        // Property Names
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+        public const string ChatMessageText__Name = "ChatMessageText";
+        // String Column Sizes
+        public const int ChatMessageText__Size = 2000;
+    }
+
+    public class MultipleChatMessageCreateModel
+    {
+
+        public MultipleChatMessageCreateModel()
+        {
+        }
+        [JsonPropertyName("newChatMessages")]
+        public List<ChatMessageCreateModel> NewChatMessages {set; get;}
+
+        public MultipleChatMessageCreateModel GetCopy()
+        {
+            var obj = new MultipleChatMessageCreateModel();
+            obj.NewChatMessages = NewChatMessages;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewChatMessages__Name = "NewChatMessages";
+    }
+
+    public class ChatMessageUpdateModel
+    {
+
+        public ChatMessageUpdateModel()
+        {
+        }
+
+        public ChatMessageUpdateModel(Int64 chatMessageId,Int64 chatId,Int64 userId,String chatMessageText)
+        {
+            ChatMessageId = chatMessageId;
+            ChatId = chatId;
+            UserId = userId;
+            ChatMessageText = chatMessageText;
+        }
+
+        [JsonPropertyName("chatMessageId")]
+        public Int64 ChatMessageId {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("chatMessageText")]
+        public String ChatMessageText {set; get;}
+
+        public ChatMessageUpdateModel GetCopy()
+        {
+            var obj = new ChatMessageUpdateModel();
+            obj.ChatMessageId = ChatMessageId;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.ChatMessageText = ChatMessageText;
+            return obj;
+        }
+
+        // Property Names
+        public const string ChatMessageId__Name = "ChatMessageId";
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+        public const string ChatMessageText__Name = "ChatMessageText";
+        // String Column Sizes
+        public const int ChatMessageText__Size = 2000;
+    }
+
+    public class ChatMessageStatusModel
+    {
+
+        public ChatMessageStatusModel()
+        {
+        }
+
+        public ChatMessageStatusModel(Int64 chatMessageStatusId,Int64 chatMessageId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ChatMessageStatusId = chatMessageStatusId;
+            ChatMessageId = chatMessageId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("userFirstName")]
+        public String UserFirstName {set; get;}
+        [JsonPropertyName("userLastName")]
+        public String UserLastName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("chatMessageStatusId")]
+        public Int64 ChatMessageStatusId {set; get;}
+        [JsonPropertyName("chatMessageId")]
+        public Int64 ChatMessageId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("chatMessageViewedDate")]
+        public DateTime? ChatMessageViewedDate {set; get;}
+        [JsonPropertyName("chatMessageSentDate")]
+        public DateTime? ChatMessageSentDate {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ChatMessageStatusCreateModel GetAsCreateModel()
+        {
+            var obj = new ChatMessageStatusCreateModel();
+            obj.ChatMessageId = ChatMessageId;
+            obj.UserId = UserId;
+            obj.ChatMessageViewedDate = ChatMessageViewedDate;
+            obj.ChatMessageSentDate = ChatMessageSentDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ChatMessageStatusCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatMessageId == ChatMessageId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.ChatMessageViewedDate == ChatMessageViewedDate);
+            result = result && (obj.ChatMessageSentDate == ChatMessageSentDate);
+            return result;
+        }
+
+
+        public ChatMessageStatusUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ChatMessageStatusUpdateModel();
+            obj.ChatMessageStatusId = ChatMessageStatusId;
+            obj.ChatMessageId = ChatMessageId;
+            obj.UserId = UserId;
+            obj.ChatMessageViewedDate = ChatMessageViewedDate;
+            obj.ChatMessageSentDate = ChatMessageSentDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ChatMessageStatusUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatMessageStatusId == ChatMessageStatusId);
+            result = result && (obj.ChatMessageId == ChatMessageId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.ChatMessageViewedDate == ChatMessageViewedDate);
+            result = result && (obj.ChatMessageSentDate == ChatMessageSentDate);
+            return result;
+        }
+
+
+        public ChatMessageStatusModel GetCopy()
+        {
+            var obj = new ChatMessageStatusModel();
+            obj.UserName = UserName;
+            obj.UserFirstName = UserFirstName;
+            obj.UserLastName = UserLastName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ChatMessageStatusId = ChatMessageStatusId;
+            obj.ChatMessageId = ChatMessageId;
+            obj.UserId = UserId;
+            obj.ChatMessageViewedDate = ChatMessageViewedDate;
+            obj.ChatMessageSentDate = ChatMessageSentDate;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string UserFirstName__Name = "UserFirstName";
+        public const string UserLastName__Name = "UserLastName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ChatMessageStatusId__Name = "ChatMessageStatusId";
+        public const string ChatMessageId__Name = "ChatMessageId";
+        public const string UserId__Name = "UserId";
+        public const string ChatMessageViewedDate__Name = "ChatMessageViewedDate";
+        public const string ChatMessageSentDate__Name = "ChatMessageSentDate";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class ChatMessageStatusSearchCriteria
+    {
+
+        public ChatMessageStatusSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("chatMessageId")]
+        public Int64? ChatMessageId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ChatMessageStatusSearchCriteria GetCopy()
+        {
+            var obj = new ChatMessageStatusSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.ChatMessageId = ChatMessageId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string ChatMessageId__Name = "ChatMessageId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ChatMessageStatusCreateModel
+    {
+
+        public ChatMessageStatusCreateModel()
+        {
+        }
+
+        public ChatMessageStatusCreateModel(Int64 chatMessageId,Int64 userId)
+        {
+            ChatMessageId = chatMessageId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("chatMessageId")]
+        public Int64 ChatMessageId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("chatMessageViewedDate")]
+        public DateTime? ChatMessageViewedDate {set; get;}
+        [JsonPropertyName("chatMessageSentDate")]
+        public DateTime? ChatMessageSentDate {set; get;}
+
+        public ChatMessageStatusCreateModel GetCopy()
+        {
+            var obj = new ChatMessageStatusCreateModel();
+            obj.ChatMessageId = ChatMessageId;
+            obj.UserId = UserId;
+            obj.ChatMessageViewedDate = ChatMessageViewedDate;
+            obj.ChatMessageSentDate = ChatMessageSentDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string ChatMessageId__Name = "ChatMessageId";
+        public const string UserId__Name = "UserId";
+        public const string ChatMessageViewedDate__Name = "ChatMessageViewedDate";
+        public const string ChatMessageSentDate__Name = "ChatMessageSentDate";
+    }
+
+    public class MultipleChatMessageStatusCreateModel
+    {
+
+        public MultipleChatMessageStatusCreateModel()
+        {
+        }
+        [JsonPropertyName("newChatMessageStatuss")]
+        public List<ChatMessageStatusCreateModel> NewChatMessageStatuss {set; get;}
+
+        public MultipleChatMessageStatusCreateModel GetCopy()
+        {
+            var obj = new MultipleChatMessageStatusCreateModel();
+            obj.NewChatMessageStatuss = NewChatMessageStatuss;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewChatMessageStatuss__Name = "NewChatMessageStatuss";
+    }
+
+    public class ChatMessageStatusUpdateModel
+    {
+
+        public ChatMessageStatusUpdateModel()
+        {
+        }
+
+        public ChatMessageStatusUpdateModel(Int64 chatMessageStatusId,Int64 chatMessageId,Int64 userId)
+        {
+            ChatMessageStatusId = chatMessageStatusId;
+            ChatMessageId = chatMessageId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("chatMessageStatusId")]
+        public Int64 ChatMessageStatusId {set; get;}
+        [JsonPropertyName("chatMessageId")]
+        public Int64 ChatMessageId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("chatMessageViewedDate")]
+        public DateTime? ChatMessageViewedDate {set; get;}
+        [JsonPropertyName("chatMessageSentDate")]
+        public DateTime? ChatMessageSentDate {set; get;}
+
+        public ChatMessageStatusUpdateModel GetCopy()
+        {
+            var obj = new ChatMessageStatusUpdateModel();
+            obj.ChatMessageStatusId = ChatMessageStatusId;
+            obj.ChatMessageId = ChatMessageId;
+            obj.UserId = UserId;
+            obj.ChatMessageViewedDate = ChatMessageViewedDate;
+            obj.ChatMessageSentDate = ChatMessageSentDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string ChatMessageStatusId__Name = "ChatMessageStatusId";
+        public const string ChatMessageId__Name = "ChatMessageId";
+        public const string UserId__Name = "UserId";
+        public const string ChatMessageViewedDate__Name = "ChatMessageViewedDate";
+        public const string ChatMessageSentDate__Name = "ChatMessageSentDate";
+    }
+
+    public class ChatUserModel
+    {
+
+        public ChatUserModel()
+        {
+        }
+
+        public ChatUserModel(Int64 chatUserId,Int64 chatId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ChatUserId = chatUserId;
+            ChatId = chatId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedUserTypeId")]
+        public Int64 PredefinedUserTypeId {set; get;}
+        [JsonPropertyName("predefinedUserTypeName")]
+        public String PredefinedUserTypeName {set; get;}
+        [JsonPropertyName("userFirstName")]
+        public String UserFirstName {set; get;}
+        [JsonPropertyName("userLastName")]
+        public String UserLastName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("chatUserId")]
+        public Int64 ChatUserId {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ChatUserCreateModel GetAsCreateModel()
+        {
+            var obj = new ChatUserCreateModel();
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ChatUserCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatId == ChatId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public ChatUserUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ChatUserUpdateModel();
+            obj.ChatUserId = ChatUserId;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ChatUserUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ChatUserId == ChatUserId);
+            result = result && (obj.ChatId == ChatId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public ChatUserModel GetCopy()
+        {
+            var obj = new ChatUserModel();
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.PredefinedUserTypeName = PredefinedUserTypeName;
+            obj.UserFirstName = UserFirstName;
+            obj.UserLastName = UserLastName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ChatUserId = ChatUserId;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string PredefinedUserTypeId__Name = "PredefinedUserTypeId";
+        public const string PredefinedUserTypeName__Name = "PredefinedUserTypeName";
+        public const string UserFirstName__Name = "UserFirstName";
+        public const string UserLastName__Name = "UserLastName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ChatUserId__Name = "ChatUserId";
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class ChatUserSearchCriteria
+    {
+
+        public ChatUserSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64? ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ChatUserSearchCriteria GetCopy()
+        {
+            var obj = new ChatUserSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ChatUserCreateModel
+    {
+
+        public ChatUserCreateModel()
+        {
+        }
+
+        public ChatUserCreateModel(Int64 chatId,Int64 userId)
+        {
+            ChatId = chatId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public ChatUserCreateModel GetCopy()
+        {
+            var obj = new ChatUserCreateModel();
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class MultipleChatUserCreateModel
+    {
+
+        public MultipleChatUserCreateModel()
+        {
+        }
+        [JsonPropertyName("newChatUsers")]
+        public List<ChatUserCreateModel> NewChatUsers {set; get;}
+
+        public MultipleChatUserCreateModel GetCopy()
+        {
+            var obj = new MultipleChatUserCreateModel();
+            obj.NewChatUsers = NewChatUsers;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewChatUsers__Name = "NewChatUsers";
+    }
+
+    public class ChatUserUpdateModel
+    {
+
+        public ChatUserUpdateModel()
+        {
+        }
+
+        public ChatUserUpdateModel(Int64 chatUserId,Int64 chatId,Int64 userId)
+        {
+            ChatUserId = chatUserId;
+            ChatId = chatId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("chatUserId")]
+        public Int64 ChatUserId {set; get;}
+        [JsonPropertyName("chatId")]
+        public Int64 ChatId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public ChatUserUpdateModel GetCopy()
+        {
+            var obj = new ChatUserUpdateModel();
+            obj.ChatUserId = ChatUserId;
+            obj.ChatId = ChatId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string ChatUserId__Name = "ChatUserId";
+        public const string ChatId__Name = "ChatId";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class UserPictureWithFileFormModel
+    {
+
+        public UserPictureWithFileFormModel()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
+
+        public UserPictureWithFileFormModel GetCopy()
+        {
+            var obj = new UserPictureWithFileFormModel();
+            obj.UserId = UserId;
+            obj.UploadedFile = UploadedFile;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string UploadedFile__Name = "UploadedFile";
+    }
+
+    public class UserModel
+    {
+
+        public UserModel()
+        {
+        }
+
+        public UserModel(Int64 userId,Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            UserId = userId;
+            UserGuid = userGuid;
+            UserName = userName;
+            PredefinedUserTypeId = predefinedUserTypeId;
+            Email = email;
+            FirstName = firstName;
+            Active = active;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("existingPermissionTypeIds")]
+        public List<Int64> ExistingPermissionTypeIds {set; get;}
+        [JsonPropertyName("predefinedUserTypeName")]
+        public String PredefinedUserTypeName {set; get;}
+        [JsonPropertyName("companyCode")]
+        public String CompanyCode {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("userGuid")]
+        public Guid UserGuid {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedUserTypeId")]
+        public Int64 PredefinedUserTypeId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("workPhone")]
+        public String WorkPhone {set; get;}
+        [JsonPropertyName("workPhoneExt")]
+        public String WorkPhoneExt {set; get;}
+        [JsonPropertyName("cellPhone")]
+        public String CellPhone {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("notificationThroughEmail")]
+        public Boolean? NotificationThroughEmail {set; get;}
+        [JsonPropertyName("isAccountLocked")]
+        public Boolean? IsAccountLocked {set; get;}
+        [JsonPropertyName("accountLockedUntil")]
+        public DateTime? AccountLockedUntil {set; get;}
+        [JsonPropertyName("profileImageGuid")]
+        public Guid? ProfileImageGuid {set; get;}
+        [JsonPropertyName("profileImageActualFileName")]
+        public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public UserCreateWithFileFormModel GetAsCreateModel()
+        {
+            var obj = new UserCreateWithFileFormModel();
+            obj.CompanyCode = CompanyCode;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.UserGuid = UserGuid;
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.WorkPhone = WorkPhone;
+            obj.WorkPhoneExt = WorkPhoneExt;
+            obj.CellPhone = CellPhone;
+            obj.Active = Active;
+            obj.NotificationThroughEmail = NotificationThroughEmail;
+            obj.IsAccountLocked = IsAccountLocked;
+            obj.AccountLockedUntil = AccountLockedUntil;
+            obj.ProfileImageGuid = ProfileImageGuid;
+            obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.IsDeleted = IsDeleted;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(UserCreateWithFileFormModel obj)
+        {
+            var result = true;
+            result = result && (obj.CompanyCode == CompanyCode);
+            result = result && (obj.ModifiedByUserFirstName == ModifiedByUserFirstName);
+            result = result && (obj.ModifiedByUserLastName == ModifiedByUserLastName);
+            result = result && (obj.ModifiedByUserEmail == ModifiedByUserEmail);
+            result = result && (obj.UserGuid == UserGuid);
+            result = result && (obj.UserName == UserName);
+            result = result && (obj.PredefinedUserTypeId == PredefinedUserTypeId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.FirstName == FirstName);
+            result = result && (obj.LastName == LastName);
+            result = result && (obj.WorkPhone == WorkPhone);
+            result = result && (obj.WorkPhoneExt == WorkPhoneExt);
+            result = result && (obj.CellPhone == CellPhone);
+            result = result && (obj.Active == Active);
+            result = result && (obj.NotificationThroughEmail == NotificationThroughEmail);
+            result = result && (obj.IsAccountLocked == IsAccountLocked);
+            result = result && (obj.AccountLockedUntil == AccountLockedUntil);
+            result = result && (obj.ProfileImageGuid == ProfileImageGuid);
+            result = result && (obj.ProfileImageActualFileName == ProfileImageActualFileName);
+            result = result && (obj.IsDeleted == IsDeleted);
+            return result;
+        }
+
+
+        public UserUpdateWithFileFormModel GetAsUpdateModel()
+        {
+            var obj = new UserUpdateWithFileFormModel();
+            obj.ExistingPermissionTypeIds = ExistingPermissionTypeIds;
+            obj.PredefinedUserTypeName = PredefinedUserTypeName;
+            obj.CompanyCode = CompanyCode;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.UserId = UserId;
+            obj.UserGuid = UserGuid;
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.WorkPhone = WorkPhone;
+            obj.WorkPhoneExt = WorkPhoneExt;
+            obj.CellPhone = CellPhone;
+            obj.Active = Active;
+            obj.NotificationThroughEmail = NotificationThroughEmail;
+            obj.IsAccountLocked = IsAccountLocked;
+            obj.AccountLockedUntil = AccountLockedUntil;
+            obj.ProfileImageGuid = ProfileImageGuid;
+            obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(UserUpdateWithFileFormModel obj)
+        {
+            var result = true;
+            result = result && (obj.ExistingPermissionTypeIds == ExistingPermissionTypeIds);
+            result = result && (obj.PredefinedUserTypeName == PredefinedUserTypeName);
+            result = result && (obj.CompanyCode == CompanyCode);
+            result = result && (obj.ModifiedByUserFirstName == ModifiedByUserFirstName);
+            result = result && (obj.ModifiedByUserLastName == ModifiedByUserLastName);
+            result = result && (obj.ModifiedByUserEmail == ModifiedByUserEmail);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.UserGuid == UserGuid);
+            result = result && (obj.UserName == UserName);
+            result = result && (obj.PredefinedUserTypeId == PredefinedUserTypeId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.FirstName == FirstName);
+            result = result && (obj.LastName == LastName);
+            result = result && (obj.WorkPhone == WorkPhone);
+            result = result && (obj.WorkPhoneExt == WorkPhoneExt);
+            result = result && (obj.CellPhone == CellPhone);
+            result = result && (obj.Active == Active);
+            result = result && (obj.NotificationThroughEmail == NotificationThroughEmail);
+            result = result && (obj.IsAccountLocked == IsAccountLocked);
+            result = result && (obj.AccountLockedUntil == AccountLockedUntil);
+            result = result && (obj.ProfileImageGuid == ProfileImageGuid);
+            result = result && (obj.ProfileImageActualFileName == ProfileImageActualFileName);
+            result = result && (obj.IsDeleted == IsDeleted);
+            result = result && (obj.CreatedDate == CreatedDate);
+            result = result && (obj.CreatedByUserId == CreatedByUserId);
+            result = result && (obj.ModifiedDate == ModifiedDate);
+            result = result && (obj.ModifiedByUserId == ModifiedByUserId);
+            return result;
+        }
+
+
+        public UserModel GetCopy()
+        {
+            var obj = new UserModel();
+            obj.ExistingPermissionTypeIds = ExistingPermissionTypeIds;
+            obj.PredefinedUserTypeName = PredefinedUserTypeName;
+            obj.CompanyCode = CompanyCode;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.UserId = UserId;
+            obj.UserGuid = UserGuid;
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.WorkPhone = WorkPhone;
+            obj.WorkPhoneExt = WorkPhoneExt;
+            obj.CellPhone = CellPhone;
+            obj.Active = Active;
+            obj.NotificationThroughEmail = NotificationThroughEmail;
+            obj.IsAccountLocked = IsAccountLocked;
+            obj.AccountLockedUntil = AccountLockedUntil;
+            obj.ProfileImageGuid = ProfileImageGuid;
+            obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string ExistingPermissionTypeIds__Name = "ExistingPermissionTypeIds";
+        public const string PredefinedUserTypeName__Name = "PredefinedUserTypeName";
+        public const string CompanyCode__Name = "CompanyCode";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string UserId__Name = "UserId";
+        public const string UserGuid__Name = "UserGuid";
+        public const string UserName__Name = "UserName";
+        public const string PredefinedUserTypeId__Name = "PredefinedUserTypeId";
+        public const string PasswordHash__Name = "PasswordHash";
+        public const string PasswordChangedDate__Name = "PasswordChangedDate";
+        public const string Email__Name = "Email";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string WorkPhone__Name = "WorkPhone";
+        public const string WorkPhoneExt__Name = "WorkPhoneExt";
+        public const string CellPhone__Name = "CellPhone";
+        public const string Active__Name = "Active";
+        public const string NotificationThroughEmail__Name = "NotificationThroughEmail";
+        public const string OneTimeToken__Name = "OneTimeToken";
+        public const string OneTimeExpireDateTime__Name = "OneTimeExpireDateTime";
+        public const string LoginFailedAttempt__Name = "LoginFailedAttempt";
+        public const string IsAccountLocked__Name = "IsAccountLocked";
+        public const string AccountLockedUntil__Name = "AccountLockedUntil";
+        public const string NewUserActivationGuid__Name = "NewUserActivationGuid";
+        public const string NewUserActivationCompletedOn__Name = "NewUserActivationCompletedOn";
+        public const string ProfileImageGuid__Name = "ProfileImageGuid";
+        public const string ProfileImageLocation__Name = "ProfileImageLocation";
+        public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int UserName__Size = 50;
+        public const int Email__Size = 100;
+        public const int FirstName__Size = 100;
+        public const int LastName__Size = 100;
+        public const int WorkPhone__Size = 20;
+        public const int WorkPhoneExt__Size = 10;
+        public const int CellPhone__Size = 20;
+        public const int ProfileImageActualFileName__Size = 125;
+    }
+
+    public class UserSearchCriteria
+    {
+
+        public UserSearchCriteria()
+        {
+        }
+        [JsonPropertyName("active")]
+        public Boolean? Active {set; get;}
+        [JsonPropertyName("predefinedUserTypeIds")]
+        public List<Int64> PredefinedUserTypeIds {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean? ShowDeleted {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserSearchCriteria GetCopy()
+        {
+            var obj = new UserSearchCriteria();
+            obj.Active = Active;
+            obj.PredefinedUserTypeIds = PredefinedUserTypeIds;
+            obj.ShowDeleted = ShowDeleted;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string Active__Name = "Active";
+        public const string PredefinedUserTypeIds__Name = "PredefinedUserTypeIds";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserCreateWithFileFormModel
+    {
+
+        public UserCreateWithFileFormModel()
+        {
+        }
+
+        public UserCreateWithFileFormModel(Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted)
+        {
+            UserGuid = userGuid;
+            UserName = userName;
+            PredefinedUserTypeId = predefinedUserTypeId;
+            Email = email;
+            FirstName = firstName;
+            Active = active;
+            IsDeleted = isDeleted;
+        }
+
+        [JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
+        [JsonPropertyName("newPermissionTypeIds")]
+        public List<Int64> NewPermissionTypeIds {set; get;}
+        [JsonPropertyName("initialPassword")]
+        public String InitialPassword {set; get;}
+        [JsonPropertyName("companyCode")]
+        public String CompanyCode {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("userGuid")]
+        public Guid UserGuid {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedUserTypeId")]
+        public Int64 PredefinedUserTypeId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("workPhone")]
+        public String WorkPhone {set; get;}
+        [JsonPropertyName("workPhoneExt")]
+        public String WorkPhoneExt {set; get;}
+        [JsonPropertyName("cellPhone")]
+        public String CellPhone {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("notificationThroughEmail")]
+        public Boolean? NotificationThroughEmail {set; get;}
+        [JsonPropertyName("isAccountLocked")]
+        public Boolean? IsAccountLocked {set; get;}
+        [JsonPropertyName("accountLockedUntil")]
+        public DateTime? AccountLockedUntil {set; get;}
+        [JsonPropertyName("profileImageGuid")]
+        public Guid? ProfileImageGuid {set; get;}
+        [JsonPropertyName("profileImageActualFileName")]
+        public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+
+        public UserCreateWithFileFormModel GetCopy()
+        {
+            var obj = new UserCreateWithFileFormModel();
+            obj.UploadedFile = UploadedFile;
+            obj.NewPermissionTypeIds = NewPermissionTypeIds;
+            obj.InitialPassword = InitialPassword;
+            obj.CompanyCode = CompanyCode;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.UserGuid = UserGuid;
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.WorkPhone = WorkPhone;
+            obj.WorkPhoneExt = WorkPhoneExt;
+            obj.CellPhone = CellPhone;
+            obj.Active = Active;
+            obj.NotificationThroughEmail = NotificationThroughEmail;
+            obj.IsAccountLocked = IsAccountLocked;
+            obj.AccountLockedUntil = AccountLockedUntil;
+            obj.ProfileImageGuid = ProfileImageGuid;
+            obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.IsDeleted = IsDeleted;
+            return obj;
+        }
+
+        // Property Names
+        public const string UploadedFile__Name = "UploadedFile";
+        public const string NewPermissionTypeIds__Name = "NewPermissionTypeIds";
+        public const string InitialPassword__Name = "InitialPassword";
+        public const string CompanyCode__Name = "CompanyCode";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string UserGuid__Name = "UserGuid";
+        public const string UserName__Name = "UserName";
+        public const string PredefinedUserTypeId__Name = "PredefinedUserTypeId";
+        public const string PasswordHash__Name = "PasswordHash";
+        public const string PasswordChangedDate__Name = "PasswordChangedDate";
+        public const string Email__Name = "Email";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string WorkPhone__Name = "WorkPhone";
+        public const string WorkPhoneExt__Name = "WorkPhoneExt";
+        public const string CellPhone__Name = "CellPhone";
+        public const string Active__Name = "Active";
+        public const string NotificationThroughEmail__Name = "NotificationThroughEmail";
+        public const string OneTimeToken__Name = "OneTimeToken";
+        public const string OneTimeExpireDateTime__Name = "OneTimeExpireDateTime";
+        public const string LoginFailedAttempt__Name = "LoginFailedAttempt";
+        public const string IsAccountLocked__Name = "IsAccountLocked";
+        public const string AccountLockedUntil__Name = "AccountLockedUntil";
+        public const string NewUserActivationGuid__Name = "NewUserActivationGuid";
+        public const string NewUserActivationCompletedOn__Name = "NewUserActivationCompletedOn";
+        public const string ProfileImageGuid__Name = "ProfileImageGuid";
+        public const string ProfileImageLocation__Name = "ProfileImageLocation";
+        public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string IsDeleted__Name = "IsDeleted";
+        // String Column Sizes
+        public const int UserName__Size = 50;
+        public const int Email__Size = 100;
+        public const int FirstName__Size = 100;
+        public const int LastName__Size = 100;
+        public const int WorkPhone__Size = 20;
+        public const int WorkPhoneExt__Size = 10;
+        public const int CellPhone__Size = 20;
+        public const int ProfileImageActualFileName__Size = 125;
+    }
+
+    public class UserUpdateWithFileFormModel
+    {
+
+        public UserUpdateWithFileFormModel()
+        {
+        }
+
+        public UserUpdateWithFileFormModel(Int64 userId,Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            UserId = userId;
+            UserGuid = userGuid;
+            UserName = userName;
+            PredefinedUserTypeId = predefinedUserTypeId;
+            Email = email;
+            FirstName = firstName;
+            Active = active;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
+        [JsonPropertyName("existingPermissionTypeIds")]
+        public List<Int64> ExistingPermissionTypeIds {set; get;}
+        [JsonPropertyName("predefinedUserTypeName")]
+        public String PredefinedUserTypeName {set; get;}
+        [JsonPropertyName("companyCode")]
+        public String CompanyCode {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("userGuid")]
+        public Guid UserGuid {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedUserTypeId")]
+        public Int64 PredefinedUserTypeId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("workPhone")]
+        public String WorkPhone {set; get;}
+        [JsonPropertyName("workPhoneExt")]
+        public String WorkPhoneExt {set; get;}
+        [JsonPropertyName("cellPhone")]
+        public String CellPhone {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("notificationThroughEmail")]
+        public Boolean? NotificationThroughEmail {set; get;}
+        [JsonPropertyName("isAccountLocked")]
+        public Boolean? IsAccountLocked {set; get;}
+        [JsonPropertyName("accountLockedUntil")]
+        public DateTime? AccountLockedUntil {set; get;}
+        [JsonPropertyName("profileImageGuid")]
+        public Guid? ProfileImageGuid {set; get;}
+        [JsonPropertyName("profileImageActualFileName")]
+        public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public UserUpdateWithFileFormModel GetCopy()
+        {
+            var obj = new UserUpdateWithFileFormModel();
+            obj.UploadedFile = UploadedFile;
+            obj.ExistingPermissionTypeIds = ExistingPermissionTypeIds;
+            obj.PredefinedUserTypeName = PredefinedUserTypeName;
+            obj.CompanyCode = CompanyCode;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.UserId = UserId;
+            obj.UserGuid = UserGuid;
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.WorkPhone = WorkPhone;
+            obj.WorkPhoneExt = WorkPhoneExt;
+            obj.CellPhone = CellPhone;
+            obj.Active = Active;
+            obj.NotificationThroughEmail = NotificationThroughEmail;
+            obj.IsAccountLocked = IsAccountLocked;
+            obj.AccountLockedUntil = AccountLockedUntil;
+            obj.ProfileImageGuid = ProfileImageGuid;
+            obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UploadedFile__Name = "UploadedFile";
+        public const string ExistingPermissionTypeIds__Name = "ExistingPermissionTypeIds";
+        public const string PredefinedUserTypeName__Name = "PredefinedUserTypeName";
+        public const string CompanyCode__Name = "CompanyCode";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string UserId__Name = "UserId";
+        public const string UserGuid__Name = "UserGuid";
+        public const string UserName__Name = "UserName";
+        public const string PredefinedUserTypeId__Name = "PredefinedUserTypeId";
+        public const string PasswordHash__Name = "PasswordHash";
+        public const string PasswordChangedDate__Name = "PasswordChangedDate";
+        public const string Email__Name = "Email";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string WorkPhone__Name = "WorkPhone";
+        public const string WorkPhoneExt__Name = "WorkPhoneExt";
+        public const string CellPhone__Name = "CellPhone";
+        public const string Active__Name = "Active";
+        public const string NotificationThroughEmail__Name = "NotificationThroughEmail";
+        public const string OneTimeToken__Name = "OneTimeToken";
+        public const string OneTimeExpireDateTime__Name = "OneTimeExpireDateTime";
+        public const string LoginFailedAttempt__Name = "LoginFailedAttempt";
+        public const string IsAccountLocked__Name = "IsAccountLocked";
+        public const string AccountLockedUntil__Name = "AccountLockedUntil";
+        public const string NewUserActivationGuid__Name = "NewUserActivationGuid";
+        public const string NewUserActivationCompletedOn__Name = "NewUserActivationCompletedOn";
+        public const string ProfileImageGuid__Name = "ProfileImageGuid";
+        public const string ProfileImageLocation__Name = "ProfileImageLocation";
+        public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int UserName__Size = 50;
+        public const int Email__Size = 100;
+        public const int FirstName__Size = 100;
+        public const int LastName__Size = 100;
+        public const int WorkPhone__Size = 20;
+        public const int WorkPhoneExt__Size = 10;
+        public const int CellPhone__Size = 20;
+        public const int ProfileImageActualFileName__Size = 125;
+    }
+
+    public class UserPermissionModel
+    {
+
+        public UserPermissionModel()
+        {
+        }
+
+        public UserPermissionModel(Int64 userPermissionId,Int64 userId,Int64 predefinedUserPermissionTypeId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            UserPermissionId = userPermissionId;
+            UserId = userId;
+            PredefinedUserPermissionTypeId = predefinedUserPermissionTypeId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedUserPermissionTypeName")]
+        public String PredefinedUserPermissionTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("userPermissionId")]
+        public Int64 UserPermissionId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedUserPermissionTypeId")]
+        public Int64 PredefinedUserPermissionTypeId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public UserPermissionCreateModel GetAsCreateModel()
+        {
+            var obj = new UserPermissionCreateModel();
+            obj.UserId = UserId;
+            obj.PredefinedUserPermissionTypeId = PredefinedUserPermissionTypeId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(UserPermissionCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.PredefinedUserPermissionTypeId == PredefinedUserPermissionTypeId);
+            return result;
+        }
+
+
+        public UserPermissionUpdateModel GetAsUpdateModel()
+        {
+            var obj = new UserPermissionUpdateModel();
+            obj.UserPermissionId = UserPermissionId;
+            obj.UserId = UserId;
+            obj.PredefinedUserPermissionTypeId = PredefinedUserPermissionTypeId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(UserPermissionUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.UserPermissionId == UserPermissionId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.PredefinedUserPermissionTypeId == PredefinedUserPermissionTypeId);
+            return result;
+        }
+
+
+        public UserPermissionModel GetCopy()
+        {
+            var obj = new UserPermissionModel();
+            obj.UserName = UserName;
+            obj.PredefinedUserPermissionTypeName = PredefinedUserPermissionTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.UserPermissionId = UserPermissionId;
+            obj.UserId = UserId;
+            obj.PredefinedUserPermissionTypeId = PredefinedUserPermissionTypeId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string PredefinedUserPermissionTypeName__Name = "PredefinedUserPermissionTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string UserPermissionId__Name = "UserPermissionId";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedUserPermissionTypeId__Name = "PredefinedUserPermissionTypeId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class UserPermissionSearchCriteria
+    {
+
+        public UserPermissionSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("predefinedUserPermissionTypeIds")]
+        public List<Int64> PredefinedUserPermissionTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserPermissionSearchCriteria GetCopy()
+        {
+            var obj = new UserPermissionSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.PredefinedUserPermissionTypeIds = PredefinedUserPermissionTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedUserPermissionTypeIds__Name = "PredefinedUserPermissionTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserPermissionCreateModel
+    {
+
+        public UserPermissionCreateModel()
+        {
+        }
+
+        public UserPermissionCreateModel(Int64 userId,Int64 predefinedUserPermissionTypeId)
+        {
+            UserId = userId;
+            PredefinedUserPermissionTypeId = predefinedUserPermissionTypeId;
+        }
+
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedUserPermissionTypeId")]
+        public Int64 PredefinedUserPermissionTypeId {set; get;}
+
+        public UserPermissionCreateModel GetCopy()
+        {
+            var obj = new UserPermissionCreateModel();
+            obj.UserId = UserId;
+            obj.PredefinedUserPermissionTypeId = PredefinedUserPermissionTypeId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string PredefinedUserPermissionTypeId__Name = "PredefinedUserPermissionTypeId";
+    }
+
+    public class UserPermissionUpdateModel
+    {
+
+        public UserPermissionUpdateModel()
+        {
+        }
+
+        public UserPermissionUpdateModel(Int64 userPermissionId,Int64 userId,Int64 predefinedUserPermissionTypeId)
+        {
+            UserPermissionId = userPermissionId;
+            UserId = userId;
+            PredefinedUserPermissionTypeId = predefinedUserPermissionTypeId;
+        }
+
+        [JsonPropertyName("userPermissionId")]
+        public Int64 UserPermissionId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedUserPermissionTypeId")]
+        public Int64 PredefinedUserPermissionTypeId {set; get;}
+
+        public UserPermissionUpdateModel GetCopy()
+        {
+            var obj = new UserPermissionUpdateModel();
+            obj.UserPermissionId = UserPermissionId;
+            obj.UserId = UserId;
+            obj.PredefinedUserPermissionTypeId = PredefinedUserPermissionTypeId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserPermissionId__Name = "UserPermissionId";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedUserPermissionTypeId__Name = "PredefinedUserPermissionTypeId";
+    }
+
+    public class UserGroupModel
+    {
+
+        public UserGroupModel()
+        {
+        }
+
+        public UserGroupModel(Int64 userGroupId,String userGroupName,Int64 companyEntityId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            UserGroupId = userGroupId;
+            UserGroupName = userGroupName;
+            CompanyEntityId = companyEntityId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("companyEntityName")]
+        public String CompanyEntityName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("userGroupId")]
+        public Int64 UserGroupId {set; get;}
+        [JsonPropertyName("userGroupName")]
+        public String UserGroupName {set; get;}
+        [JsonPropertyName("companyEntityId")]
+        public Int64 CompanyEntityId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public UserGroupCreateModel GetAsCreateModel()
+        {
+            var obj = new UserGroupCreateModel();
+            obj.UserGroupName = UserGroupName;
+            obj.CompanyEntityId = CompanyEntityId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(UserGroupCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.UserGroupName == UserGroupName);
+            result = result && (obj.CompanyEntityId == CompanyEntityId);
+            return result;
+        }
+
+
+        public UserGroupUpdateModel GetAsUpdateModel()
+        {
+            var obj = new UserGroupUpdateModel();
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupName = UserGroupName;
+            obj.CompanyEntityId = CompanyEntityId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(UserGroupUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.UserGroupId == UserGroupId);
+            result = result && (obj.UserGroupName == UserGroupName);
+            result = result && (obj.CompanyEntityId == CompanyEntityId);
+            return result;
+        }
+
+
+        public UserGroupModel GetCopy()
+        {
+            var obj = new UserGroupModel();
+            obj.CompanyEntityName = CompanyEntityName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupName = UserGroupName;
+            obj.CompanyEntityId = CompanyEntityId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CompanyEntityName__Name = "CompanyEntityName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string UserGroupId__Name = "UserGroupId";
+        public const string UserGroupName__Name = "UserGroupName";
+        public const string CompanyEntityId__Name = "CompanyEntityId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int UserGroupName__Size = 100;
+    }
+
+    public class UserGroupSearchCriteria
+    {
+
+        public UserGroupSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("companyEntityId")]
+        public Int64? CompanyEntityId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserGroupSearchCriteria GetCopy()
+        {
+            var obj = new UserGroupSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CompanyEntityId = CompanyEntityId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CompanyEntityId__Name = "CompanyEntityId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserGroupCreateModel
+    {
+
+        public UserGroupCreateModel()
+        {
+        }
+
+        public UserGroupCreateModel(String userGroupName,Int64 companyEntityId)
+        {
+            UserGroupName = userGroupName;
+            CompanyEntityId = companyEntityId;
+        }
+
+        [JsonPropertyName("userGroupName")]
+        public String UserGroupName {set; get;}
+        [JsonPropertyName("companyEntityId")]
+        public Int64 CompanyEntityId {set; get;}
+
+        public UserGroupCreateModel GetCopy()
+        {
+            var obj = new UserGroupCreateModel();
+            obj.UserGroupName = UserGroupName;
+            obj.CompanyEntityId = CompanyEntityId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserGroupName__Name = "UserGroupName";
+        public const string CompanyEntityId__Name = "CompanyEntityId";
+        // String Column Sizes
+        public const int UserGroupName__Size = 100;
+    }
+
+    public class MultipleUserGroupCreateModel
+    {
+
+        public MultipleUserGroupCreateModel()
+        {
+        }
+        [JsonPropertyName("newUserGroups")]
+        public List<UserGroupCreateModel> NewUserGroups {set; get;}
+
+        public MultipleUserGroupCreateModel GetCopy()
+        {
+            var obj = new MultipleUserGroupCreateModel();
+            obj.NewUserGroups = NewUserGroups;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewUserGroups__Name = "NewUserGroups";
+    }
+
+    public class UserGroupUpdateModel
+    {
+
+        public UserGroupUpdateModel()
+        {
+        }
+
+        public UserGroupUpdateModel(Int64 userGroupId,String userGroupName,Int64 companyEntityId)
+        {
+            UserGroupId = userGroupId;
+            UserGroupName = userGroupName;
+            CompanyEntityId = companyEntityId;
+        }
+
+        [JsonPropertyName("userGroupId")]
+        public Int64 UserGroupId {set; get;}
+        [JsonPropertyName("userGroupName")]
+        public String UserGroupName {set; get;}
+        [JsonPropertyName("companyEntityId")]
+        public Int64 CompanyEntityId {set; get;}
+
+        public UserGroupUpdateModel GetCopy()
+        {
+            var obj = new UserGroupUpdateModel();
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupName = UserGroupName;
+            obj.CompanyEntityId = CompanyEntityId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserGroupId__Name = "UserGroupId";
+        public const string UserGroupName__Name = "UserGroupName";
+        public const string CompanyEntityId__Name = "CompanyEntityId";
+        // String Column Sizes
+        public const int UserGroupName__Size = 100;
+    }
+
+    public class FileAttachmentFolderModel
+    {
+
+        public FileAttachmentFolderModel()
+        {
+        }
+
+        public FileAttachmentFolderModel(Int64 fileAttachmentFolderId,String fileAttachmentFolderName,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            FileAttachmentFolderId = fileAttachmentFolderId;
+            FileAttachmentFolderName = fileAttachmentFolderName;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("parentFileAttachmentFolderName")]
+        public String ParentFileAttachmentFolderName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("fileAttachmentFolderId")]
+        public Int64 FileAttachmentFolderId {set; get;}
+        [JsonPropertyName("fileAttachmentFolderName")]
+        public String FileAttachmentFolderName {set; get;}
+        [JsonPropertyName("parentFileAttachmentFolderId")]
+        public Int64? ParentFileAttachmentFolderId {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public FileAttachmentFolderCreateModel GetAsCreateModel()
+        {
+            var obj = new FileAttachmentFolderCreateModel();
+            obj.FileAttachmentFolderName = FileAttachmentFolderName;
+            obj.ParentFileAttachmentFolderId = ParentFileAttachmentFolderId;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(FileAttachmentFolderCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.FileAttachmentFolderName == FileAttachmentFolderName);
+            result = result && (obj.ParentFileAttachmentFolderId == ParentFileAttachmentFolderId);
+            result = result && (obj.Description == Description);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public FileAttachmentFolderUpdateModel GetAsUpdateModel()
+        {
+            var obj = new FileAttachmentFolderUpdateModel();
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFolderName = FileAttachmentFolderName;
+            obj.ParentFileAttachmentFolderId = ParentFileAttachmentFolderId;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(FileAttachmentFolderUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.FileAttachmentFolderId == FileAttachmentFolderId);
+            result = result && (obj.FileAttachmentFolderName == FileAttachmentFolderName);
+            result = result && (obj.ParentFileAttachmentFolderId == ParentFileAttachmentFolderId);
+            result = result && (obj.Description == Description);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public FileAttachmentFolderModel GetCopy()
+        {
+            var obj = new FileAttachmentFolderModel();
+            obj.ParentFileAttachmentFolderName = ParentFileAttachmentFolderName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFolderName = FileAttachmentFolderName;
+            obj.ParentFileAttachmentFolderId = ParentFileAttachmentFolderId;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string ParentFileAttachmentFolderName__Name = "ParentFileAttachmentFolderName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string FileAttachmentFolderId__Name = "FileAttachmentFolderId";
+        public const string FileAttachmentFolderName__Name = "FileAttachmentFolderName";
+        public const string ParentFileAttachmentFolderId__Name = "ParentFileAttachmentFolderId";
+        public const string Description__Name = "Description";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int FileAttachmentFolderName__Size = 128;
+        public const int Description__Size = 200;
+    }
+
+    public class FileAttachmentFolderSearchCriteria
+    {
+
+        public FileAttachmentFolderSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("parentFileAttachmentFolderId")]
+        public Int64? ParentFileAttachmentFolderId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FileAttachmentFolderSearchCriteria GetCopy()
+        {
+            var obj = new FileAttachmentFolderSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.ParentFileAttachmentFolderId = ParentFileAttachmentFolderId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string ParentFileAttachmentFolderId__Name = "ParentFileAttachmentFolderId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FileAttachmentFolderCreateModel
+    {
+
+        public FileAttachmentFolderCreateModel()
+        {
+        }
+
+        public FileAttachmentFolderCreateModel(String fileAttachmentFolderName,Int64 userId)
+        {
+            FileAttachmentFolderName = fileAttachmentFolderName;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("fileAttachmentFolderName")]
+        public String FileAttachmentFolderName {set; get;}
+        [JsonPropertyName("parentFileAttachmentFolderId")]
+        public Int64? ParentFileAttachmentFolderId {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public FileAttachmentFolderCreateModel GetCopy()
+        {
+            var obj = new FileAttachmentFolderCreateModel();
+            obj.FileAttachmentFolderName = FileAttachmentFolderName;
+            obj.ParentFileAttachmentFolderId = ParentFileAttachmentFolderId;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string FileAttachmentFolderName__Name = "FileAttachmentFolderName";
+        public const string ParentFileAttachmentFolderId__Name = "ParentFileAttachmentFolderId";
+        public const string Description__Name = "Description";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int FileAttachmentFolderName__Size = 128;
+        public const int Description__Size = 200;
+    }
+
+    public class MultipleFileAttachmentFolderCreateModel
+    {
+
+        public MultipleFileAttachmentFolderCreateModel()
+        {
+        }
+        [JsonPropertyName("newFileAttachmentFolders")]
+        public List<FileAttachmentFolderCreateModel> NewFileAttachmentFolders {set; get;}
+
+        public MultipleFileAttachmentFolderCreateModel GetCopy()
+        {
+            var obj = new MultipleFileAttachmentFolderCreateModel();
+            obj.NewFileAttachmentFolders = NewFileAttachmentFolders;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewFileAttachmentFolders__Name = "NewFileAttachmentFolders";
+    }
+
+    public class FileAttachmentFolderUpdateModel
+    {
+
+        public FileAttachmentFolderUpdateModel()
+        {
+        }
+
+        public FileAttachmentFolderUpdateModel(Int64 fileAttachmentFolderId,String fileAttachmentFolderName,Int64 userId)
+        {
+            FileAttachmentFolderId = fileAttachmentFolderId;
+            FileAttachmentFolderName = fileAttachmentFolderName;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("fileAttachmentFolderId")]
+        public Int64 FileAttachmentFolderId {set; get;}
+        [JsonPropertyName("fileAttachmentFolderName")]
+        public String FileAttachmentFolderName {set; get;}
+        [JsonPropertyName("parentFileAttachmentFolderId")]
+        public Int64? ParentFileAttachmentFolderId {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public FileAttachmentFolderUpdateModel GetCopy()
+        {
+            var obj = new FileAttachmentFolderUpdateModel();
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFolderName = FileAttachmentFolderName;
+            obj.ParentFileAttachmentFolderId = ParentFileAttachmentFolderId;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string FileAttachmentFolderId__Name = "FileAttachmentFolderId";
+        public const string FileAttachmentFolderName__Name = "FileAttachmentFolderName";
+        public const string ParentFileAttachmentFolderId__Name = "ParentFileAttachmentFolderId";
+        public const string Description__Name = "Description";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int FileAttachmentFolderName__Size = 128;
+        public const int Description__Size = 200;
+    }
+
+    public class FileAttachmentModel
+    {
+
+        public FileAttachmentModel()
+        {
+        }
+
+        public FileAttachmentModel(Int64 fileAttachmentId,String fileAttachmentFileName,String fileAttachmentFileLocation,Boolean fileAttachmentHasPreview,Int64 fileAttachmentFileSizeInBytes,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            FileAttachmentId = fileAttachmentId;
+            FileAttachmentFileName = fileAttachmentFileName;
+            FileAttachmentFileLocation = fileAttachmentFileLocation;
+            FileAttachmentHasPreview = fileAttachmentHasPreview;
+            FileAttachmentFileSizeInBytes = fileAttachmentFileSizeInBytes;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("fileAttachmentId")]
+        public Int64 FileAttachmentId {set; get;}
+        [JsonPropertyName("fileAttachmentFolderId")]
+        public Int64? FileAttachmentFolderId {set; get;}
+        [JsonPropertyName("fileAttachmentFileName")]
+        public String FileAttachmentFileName {set; get;}
+        [JsonPropertyName("fileAttachmentFileLocation")]
+        public String FileAttachmentFileLocation {set; get;}
+        [JsonPropertyName("fileAttachmentPreviewFileLocation")]
+        public String FileAttachmentPreviewFileLocation {set; get;}
+        [JsonPropertyName("fileAttachmentHasPreview")]
+        public Boolean FileAttachmentHasPreview {set; get;}
+        [JsonPropertyName("fileAttachmentFileSizeInBytes")]
+        public Int64 FileAttachmentFileSizeInBytes {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public FileAttachmentCreateWithFileFormModel GetAsCreateModel()
+        {
+            var obj = new FileAttachmentCreateWithFileFormModel();
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFileName = FileAttachmentFileName;
+            obj.FileAttachmentFileLocation = FileAttachmentFileLocation;
+            obj.FileAttachmentPreviewFileLocation = FileAttachmentPreviewFileLocation;
+            obj.FileAttachmentHasPreview = FileAttachmentHasPreview;
+            obj.FileAttachmentFileSizeInBytes = FileAttachmentFileSizeInBytes;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(FileAttachmentCreateWithFileFormModel obj)
+        {
+            var result = true;
+            result = result && (obj.FileAttachmentFolderId == FileAttachmentFolderId);
+            result = result && (obj.FileAttachmentFileName == FileAttachmentFileName);
+            result = result && (obj.FileAttachmentFileLocation == FileAttachmentFileLocation);
+            result = result && (obj.FileAttachmentPreviewFileLocation == FileAttachmentPreviewFileLocation);
+            result = result && (obj.FileAttachmentHasPreview == FileAttachmentHasPreview);
+            result = result && (obj.FileAttachmentFileSizeInBytes == FileAttachmentFileSizeInBytes);
+            result = result && (obj.Description == Description);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public FileAttachmentUpdateModel GetAsUpdateModel()
+        {
+            var obj = new FileAttachmentUpdateModel();
+            obj.FileAttachmentId = FileAttachmentId;
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFileName = FileAttachmentFileName;
+            obj.FileAttachmentFileLocation = FileAttachmentFileLocation;
+            obj.FileAttachmentPreviewFileLocation = FileAttachmentPreviewFileLocation;
+            obj.FileAttachmentHasPreview = FileAttachmentHasPreview;
+            obj.FileAttachmentFileSizeInBytes = FileAttachmentFileSizeInBytes;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(FileAttachmentUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.FileAttachmentId == FileAttachmentId);
+            result = result && (obj.FileAttachmentFolderId == FileAttachmentFolderId);
+            result = result && (obj.FileAttachmentFileName == FileAttachmentFileName);
+            result = result && (obj.FileAttachmentFileLocation == FileAttachmentFileLocation);
+            result = result && (obj.FileAttachmentPreviewFileLocation == FileAttachmentPreviewFileLocation);
+            result = result && (obj.FileAttachmentHasPreview == FileAttachmentHasPreview);
+            result = result && (obj.FileAttachmentFileSizeInBytes == FileAttachmentFileSizeInBytes);
+            result = result && (obj.Description == Description);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public FileAttachmentModel GetCopy()
+        {
+            var obj = new FileAttachmentModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.FileAttachmentId = FileAttachmentId;
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFileName = FileAttachmentFileName;
+            obj.FileAttachmentFileLocation = FileAttachmentFileLocation;
+            obj.FileAttachmentPreviewFileLocation = FileAttachmentPreviewFileLocation;
+            obj.FileAttachmentHasPreview = FileAttachmentHasPreview;
+            obj.FileAttachmentFileSizeInBytes = FileAttachmentFileSizeInBytes;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string FileAttachmentId__Name = "FileAttachmentId";
+        public const string FileAttachmentFolderId__Name = "FileAttachmentFolderId";
+        public const string FileAttachmentFileName__Name = "FileAttachmentFileName";
+        public const string FileAttachmentFileLocation__Name = "FileAttachmentFileLocation";
+        public const string FileAttachmentPreviewFileLocation__Name = "FileAttachmentPreviewFileLocation";
+        public const string FileAttachmentHasPreview__Name = "FileAttachmentHasPreview";
+        public const string FileAttachmentFileSizeInBytes__Name = "FileAttachmentFileSizeInBytes";
+        public const string Description__Name = "Description";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int FileAttachmentFileName__Size = 128;
+        public const int FileAttachmentFileLocation__Size = 512;
+        public const int FileAttachmentPreviewFileLocation__Size = 512;
+        public const int Description__Size = 200;
+    }
+
+    public class FileAttachmentSearchCriteria
+    {
+
+        public FileAttachmentSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showOnlyDeleted")]
+        public Boolean ShowOnlyDeleted {set; get;}
+        [JsonPropertyName("showModeTypeId")]
+        public Int64 ShowModeTypeId {set; get;}
+        [JsonPropertyName("fileAttachmentIds")]
+        public List<Int64> FileAttachmentIds {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("fileAttachmentFolderId")]
+        public Int64? FileAttachmentFolderId {set; get;}
+        [JsonPropertyName("movieId")]
+        public Int64? MovieId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("artistId")]
+        public Int64? ArtistId {set; get;}
+        [JsonPropertyName("vendorId")]
+        public Int64? VendorId {set; get;}
+        [JsonPropertyName("equipmentId")]
+        public Int64? EquipmentId {set; get;}
+        [JsonPropertyName("technicianId")]
+        public Int64? TechnicianId {set; get;}
+        [JsonPropertyName("movieArtistId")]
+        public Int64? MovieArtistId {set; get;}
+        [JsonPropertyName("contractId")]
+        public Int64? ContractId {set; get;}
+        [JsonPropertyName("movieEquipmentId")]
+        public Int64? MovieEquipmentId {set; get;}
+        [JsonPropertyName("movieLocationId")]
+        public Int64? MovieLocationId {set; get;}
+        [JsonPropertyName("movieSceneId")]
+        public Int64? MovieSceneId {set; get;}
+        [JsonPropertyName("movieSceneArtistId")]
+        public Int64? MovieSceneArtistId {set; get;}
+        [JsonPropertyName("movieSceneEquipmentId")]
+        public Int64? MovieSceneEquipmentId {set; get;}
+        [JsonPropertyName("movieSceneTechnicianId")]
+        public Int64? MovieSceneTechnicianId {set; get;}
+        [JsonPropertyName("movieShootDayId")]
+        public Int64? MovieShootDayId {set; get;}
+        [JsonPropertyName("movieShootDayArtistId")]
+        public Int64? MovieShootDayArtistId {set; get;}
+        [JsonPropertyName("movieShootDayBudgetId")]
+        public Int64? MovieShootDayBudgetId {set; get;}
+        [JsonPropertyName("movieShootDayEquipmentId")]
+        public Int64? MovieShootDayEquipmentId {set; get;}
+        [JsonPropertyName("movieShootDayExpenseId")]
+        public Int64? MovieShootDayExpenseId {set; get;}
+        [JsonPropertyName("movieShootDayRequirementId")]
+        public Int64? MovieShootDayRequirementId {set; get;}
+        [JsonPropertyName("movieShootDayVendorId")]
+        public Int64? MovieShootDayVendorId {set; get;}
+        [JsonPropertyName("movieShootDaySceneId")]
+        public Int64? MovieShootDaySceneId {set; get;}
+        [JsonPropertyName("movieShootDayTechnicianId")]
+        public Int64? MovieShootDayTechnicianId {set; get;}
+        [JsonPropertyName("movieTechnicianId")]
+        public Int64? MovieTechnicianId {set; get;}
+        [JsonPropertyName("movieUnitId")]
+        public Int64? MovieUnitId {set; get;}
+        [JsonPropertyName("movieUserId")]
+        public Int64? MovieUserId {set; get;}
+        [JsonPropertyName("movieVendorId")]
+        public Int64? MovieVendorId {set; get;}
+        [JsonPropertyName("moviePropertyId")]
+        public Int64? MoviePropertyId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FileAttachmentSearchCriteria GetCopy()
+        {
+            var obj = new FileAttachmentSearchCriteria();
+            obj.ShowOnlyDeleted = ShowOnlyDeleted;
+            obj.ShowModeTypeId = ShowModeTypeId;
+            obj.FileAttachmentIds = FileAttachmentIds;
+            obj.ShowDeleted = ShowDeleted;
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.MovieId = MovieId;
+            obj.UserId = UserId;
+            obj.ArtistId = ArtistId;
+            obj.VendorId = VendorId;
+            obj.EquipmentId = EquipmentId;
+            obj.TechnicianId = TechnicianId;
+            obj.MovieArtistId = MovieArtistId;
+            obj.ContractId = ContractId;
+            obj.MovieEquipmentId = MovieEquipmentId;
+            obj.MovieLocationId = MovieLocationId;
+            obj.MovieSceneId = MovieSceneId;
+            obj.MovieSceneArtistId = MovieSceneArtistId;
+            obj.MovieSceneEquipmentId = MovieSceneEquipmentId;
+            obj.MovieSceneTechnicianId = MovieSceneTechnicianId;
+            obj.MovieShootDayId = MovieShootDayId;
+            obj.MovieShootDayArtistId = MovieShootDayArtistId;
+            obj.MovieShootDayBudgetId = MovieShootDayBudgetId;
+            obj.MovieShootDayEquipmentId = MovieShootDayEquipmentId;
+            obj.MovieShootDayExpenseId = MovieShootDayExpenseId;
+            obj.MovieShootDayRequirementId = MovieShootDayRequirementId;
+            obj.MovieShootDayVendorId = MovieShootDayVendorId;
+            obj.MovieShootDaySceneId = MovieShootDaySceneId;
+            obj.MovieShootDayTechnicianId = MovieShootDayTechnicianId;
+            obj.MovieTechnicianId = MovieTechnicianId;
+            obj.MovieUnitId = MovieUnitId;
+            obj.MovieUserId = MovieUserId;
+            obj.MovieVendorId = MovieVendorId;
+            obj.MoviePropertyId = MoviePropertyId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowOnlyDeleted__Name = "ShowOnlyDeleted";
+        public const string ShowModeTypeId__Name = "ShowModeTypeId";
+        public const string FileAttachmentIds__Name = "FileAttachmentIds";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string FileAttachmentFolderId__Name = "FileAttachmentFolderId";
+        public const string MovieId__Name = "MovieId";
+        public const string UserId__Name = "UserId";
+        public const string ArtistId__Name = "ArtistId";
+        public const string VendorId__Name = "VendorId";
+        public const string EquipmentId__Name = "EquipmentId";
+        public const string TechnicianId__Name = "TechnicianId";
+        public const string MovieArtistId__Name = "MovieArtistId";
+        public const string ContractId__Name = "ContractId";
+        public const string MovieEquipmentId__Name = "MovieEquipmentId";
+        public const string MovieLocationId__Name = "MovieLocationId";
+        public const string MovieSceneId__Name = "MovieSceneId";
+        public const string MovieSceneArtistId__Name = "MovieSceneArtistId";
+        public const string MovieSceneEquipmentId__Name = "MovieSceneEquipmentId";
+        public const string MovieSceneTechnicianId__Name = "MovieSceneTechnicianId";
+        public const string MovieShootDayId__Name = "MovieShootDayId";
+        public const string MovieShootDayArtistId__Name = "MovieShootDayArtistId";
+        public const string MovieShootDayBudgetId__Name = "MovieShootDayBudgetId";
+        public const string MovieShootDayEquipmentId__Name = "MovieShootDayEquipmentId";
+        public const string MovieShootDayExpenseId__Name = "MovieShootDayExpenseId";
+        public const string MovieShootDayRequirementId__Name = "MovieShootDayRequirementId";
+        public const string MovieShootDayVendorId__Name = "MovieShootDayVendorId";
+        public const string MovieShootDaySceneId__Name = "MovieShootDaySceneId";
+        public const string MovieShootDayTechnicianId__Name = "MovieShootDayTechnicianId";
+        public const string MovieTechnicianId__Name = "MovieTechnicianId";
+        public const string MovieUnitId__Name = "MovieUnitId";
+        public const string MovieUserId__Name = "MovieUserId";
+        public const string MovieVendorId__Name = "MovieVendorId";
+        public const string MoviePropertyId__Name = "MoviePropertyId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FileAttachmentCreateWithFileFormModel
+    {
+
+        public FileAttachmentCreateWithFileFormModel()
+        {
+        }
+
+        public FileAttachmentCreateWithFileFormModel(String fileAttachmentFileName,String fileAttachmentFileLocation,Boolean fileAttachmentHasPreview,Int64 fileAttachmentFileSizeInBytes,Int64 userId)
+        {
+            FileAttachmentFileName = fileAttachmentFileName;
+            FileAttachmentFileLocation = fileAttachmentFileLocation;
+            FileAttachmentHasPreview = fileAttachmentHasPreview;
+            FileAttachmentFileSizeInBytes = fileAttachmentFileSizeInBytes;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
+        [JsonPropertyName("fileAttachmentFolderId")]
+        public Int64? FileAttachmentFolderId {set; get;}
+        [JsonPropertyName("fileAttachmentFileName")]
+        public String FileAttachmentFileName {set; get;}
+        [JsonPropertyName("fileAttachmentFileLocation")]
+        public String FileAttachmentFileLocation {set; get;}
+        [JsonPropertyName("fileAttachmentPreviewFileLocation")]
+        public String FileAttachmentPreviewFileLocation {set; get;}
+        [JsonPropertyName("fileAttachmentHasPreview")]
+        public Boolean FileAttachmentHasPreview {set; get;}
+        [JsonPropertyName("fileAttachmentFileSizeInBytes")]
+        public Int64 FileAttachmentFileSizeInBytes {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public FileAttachmentCreateWithFileFormModel GetCopy()
+        {
+            var obj = new FileAttachmentCreateWithFileFormModel();
+            obj.UploadedFile = UploadedFile;
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFileName = FileAttachmentFileName;
+            obj.FileAttachmentFileLocation = FileAttachmentFileLocation;
+            obj.FileAttachmentPreviewFileLocation = FileAttachmentPreviewFileLocation;
+            obj.FileAttachmentHasPreview = FileAttachmentHasPreview;
+            obj.FileAttachmentFileSizeInBytes = FileAttachmentFileSizeInBytes;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UploadedFile__Name = "UploadedFile";
+        public const string FileAttachmentFolderId__Name = "FileAttachmentFolderId";
+        public const string FileAttachmentFileName__Name = "FileAttachmentFileName";
+        public const string FileAttachmentFileLocation__Name = "FileAttachmentFileLocation";
+        public const string FileAttachmentPreviewFileLocation__Name = "FileAttachmentPreviewFileLocation";
+        public const string FileAttachmentHasPreview__Name = "FileAttachmentHasPreview";
+        public const string FileAttachmentFileSizeInBytes__Name = "FileAttachmentFileSizeInBytes";
+        public const string Description__Name = "Description";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int FileAttachmentFileName__Size = 128;
+        public const int FileAttachmentFileLocation__Size = 512;
+        public const int FileAttachmentPreviewFileLocation__Size = 512;
+        public const int Description__Size = 200;
+    }
+
+    public class FileAttachmentUpdateModel
+    {
+
+        public FileAttachmentUpdateModel()
+        {
+        }
+
+        public FileAttachmentUpdateModel(Int64 fileAttachmentId,String fileAttachmentFileName,String fileAttachmentFileLocation,Boolean fileAttachmentHasPreview,Int64 fileAttachmentFileSizeInBytes,Int64 userId)
+        {
+            FileAttachmentId = fileAttachmentId;
+            FileAttachmentFileName = fileAttachmentFileName;
+            FileAttachmentFileLocation = fileAttachmentFileLocation;
+            FileAttachmentHasPreview = fileAttachmentHasPreview;
+            FileAttachmentFileSizeInBytes = fileAttachmentFileSizeInBytes;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("fileAttachmentId")]
+        public Int64 FileAttachmentId {set; get;}
+        [JsonPropertyName("fileAttachmentFolderId")]
+        public Int64? FileAttachmentFolderId {set; get;}
+        [JsonPropertyName("fileAttachmentFileName")]
+        public String FileAttachmentFileName {set; get;}
+        [JsonPropertyName("fileAttachmentFileLocation")]
+        public String FileAttachmentFileLocation {set; get;}
+        [JsonPropertyName("fileAttachmentPreviewFileLocation")]
+        public String FileAttachmentPreviewFileLocation {set; get;}
+        [JsonPropertyName("fileAttachmentHasPreview")]
+        public Boolean FileAttachmentHasPreview {set; get;}
+        [JsonPropertyName("fileAttachmentFileSizeInBytes")]
+        public Int64 FileAttachmentFileSizeInBytes {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public FileAttachmentUpdateModel GetCopy()
+        {
+            var obj = new FileAttachmentUpdateModel();
+            obj.FileAttachmentId = FileAttachmentId;
+            obj.FileAttachmentFolderId = FileAttachmentFolderId;
+            obj.FileAttachmentFileName = FileAttachmentFileName;
+            obj.FileAttachmentFileLocation = FileAttachmentFileLocation;
+            obj.FileAttachmentPreviewFileLocation = FileAttachmentPreviewFileLocation;
+            obj.FileAttachmentHasPreview = FileAttachmentHasPreview;
+            obj.FileAttachmentFileSizeInBytes = FileAttachmentFileSizeInBytes;
+            obj.Description = Description;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string FileAttachmentId__Name = "FileAttachmentId";
+        public const string FileAttachmentFolderId__Name = "FileAttachmentFolderId";
+        public const string FileAttachmentFileName__Name = "FileAttachmentFileName";
+        public const string FileAttachmentFileLocation__Name = "FileAttachmentFileLocation";
+        public const string FileAttachmentPreviewFileLocation__Name = "FileAttachmentPreviewFileLocation";
+        public const string FileAttachmentHasPreview__Name = "FileAttachmentHasPreview";
+        public const string FileAttachmentFileSizeInBytes__Name = "FileAttachmentFileSizeInBytes";
+        public const string Description__Name = "Description";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int FileAttachmentFileName__Size = 128;
+        public const int FileAttachmentFileLocation__Size = 512;
+        public const int FileAttachmentPreviewFileLocation__Size = 512;
+        public const int Description__Size = 200;
+    }
+
+    public class CountryModel
+    {
+
+        public CountryModel()
+        {
+        }
+
+        public CountryModel(Int64 countryId,String countryName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            CountryId = countryId;
+            CountryName = countryName;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("countryId")]
+        public Int64 CountryId {set; get;}
+        [JsonPropertyName("countryName")]
+        public String CountryName {set; get;}
+        [JsonPropertyName("alternateCountryName1")]
+        public String AlternateCountryName1 {set; get;}
+        [JsonPropertyName("alternateCountryName2")]
+        public String AlternateCountryName2 {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public CountryModel GetCopy()
+        {
+            var obj = new CountryModel();
+            obj.CountryId = CountryId;
+            obj.CountryName = CountryName;
+            obj.AlternateCountryName1 = AlternateCountryName1;
+            obj.AlternateCountryName2 = AlternateCountryName2;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CountryId__Name = "CountryId";
+        public const string CountryName__Name = "CountryName";
+        public const string AlternateCountryName1__Name = "AlternateCountryName1";
+        public const string AlternateCountryName2__Name = "AlternateCountryName2";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int CountryName__Size = 255;
+        public const int AlternateCountryName1__Size = 255;
+        public const int AlternateCountryName2__Size = 255;
+    }
+
+    public class StateModel
+    {
+
+        public StateModel()
+        {
+        }
+
+        public StateModel(Int64 stateId,String stateName,String stateCode,Int64 countryId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            StateId = stateId;
+            StateName = stateName;
+            StateCode = stateCode;
+            CountryId = countryId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("countryName")]
+        public String CountryName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("stateId")]
+        public Int64 StateId {set; get;}
+        [JsonPropertyName("stateName")]
+        public String StateName {set; get;}
+        [JsonPropertyName("stateCode")]
+        public String StateCode {set; get;}
+        [JsonPropertyName("countryId")]
+        public Int64 CountryId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public StateModel GetCopy()
+        {
+            var obj = new StateModel();
+            obj.CountryName = CountryName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.StateId = StateId;
+            obj.StateName = StateName;
+            obj.StateCode = StateCode;
+            obj.CountryId = CountryId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CountryName__Name = "CountryName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string StateId__Name = "StateId";
+        public const string StateName__Name = "StateName";
+        public const string StateCode__Name = "StateCode";
+        public const string CountryId__Name = "CountryId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int StateName__Size = 255;
+        public const int StateCode__Size = 255;
+    }
+
+    public class StateSearchCriteria
+    {
+
+        public StateSearchCriteria()
+        {
+        }
+        [JsonPropertyName("countryId")]
+        public Int64? CountryId {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public StateSearchCriteria GetCopy()
+        {
+            var obj = new StateSearchCriteria();
+            obj.CountryId = CountryId;
+            obj.ShowDeleted = ShowDeleted;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string CountryId__Name = "CountryId";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class LogConfigurationModel
+    {
+
+        public LogConfigurationModel()
+        {
+        }
+        [JsonPropertyName("logTrace")]
+        public Boolean LogTrace {set; get;}
+        [JsonPropertyName("logDebug")]
+        public Boolean LogDebug {set; get;}
+        [JsonPropertyName("logInfo")]
+        public Boolean LogInfo {set; get;}
+        [JsonPropertyName("logSql")]
+        public Boolean LogSql {set; get;}
+        [JsonPropertyName("logWarn")]
+        public Boolean LogWarn {set; get;}
+        [JsonPropertyName("logError")]
+        public Boolean LogError {set; get;}
+        [JsonPropertyName("logPerformance")]
+        public Boolean LogPerformance {set; get;}
+        [JsonPropertyName("logLocation")]
+        public String LogLocation {set; get;}
+        [JsonPropertyName("logToFile")]
+        public Boolean LogToFile {set; get;}
+        [JsonPropertyName("logToConsole")]
+        public Boolean LogToConsole {set; get;}
+        [JsonPropertyName("logToDebugger")]
+        public Boolean LogToDebugger {set; get;}
+        [JsonPropertyName("logToServer")]
+        public Boolean LogToServer {set; get;}
+        [JsonPropertyName("logServerHost")]
+        public String LogServerHost {set; get;}
+        [JsonPropertyName("logServerPort")]
+        public Int32 LogServerPort {set; get;}
+        [JsonPropertyName("logServerUserName")]
+        public String LogServerUserName {set; get;}
+        [JsonPropertyName("logServerPassword")]
+        public String LogServerPassword {set; get;}
+        [JsonPropertyName("logServerAccessKey")]
+        public String LogServerAccessKey {set; get;}
+        [JsonPropertyName("logPerformanceToMainLogger")]
+        public Boolean LogPerformanceToMainLogger {set; get;}
+
+        public LogConfigurationModel GetCopy()
+        {
+            var obj = new LogConfigurationModel();
+            obj.LogTrace = LogTrace;
+            obj.LogDebug = LogDebug;
+            obj.LogInfo = LogInfo;
+            obj.LogSql = LogSql;
+            obj.LogWarn = LogWarn;
+            obj.LogError = LogError;
+            obj.LogPerformance = LogPerformance;
+            obj.LogLocation = LogLocation;
+            obj.LogToFile = LogToFile;
+            obj.LogToConsole = LogToConsole;
+            obj.LogToDebugger = LogToDebugger;
+            obj.LogToServer = LogToServer;
+            obj.LogServerHost = LogServerHost;
+            obj.LogServerPort = LogServerPort;
+            obj.LogServerUserName = LogServerUserName;
+            obj.LogServerPassword = LogServerPassword;
+            obj.LogServerAccessKey = LogServerAccessKey;
+            obj.LogPerformanceToMainLogger = LogPerformanceToMainLogger;
+            return obj;
+        }
+
+        // Property Names
+        public const string LogTrace__Name = "LogTrace";
+        public const string LogDebug__Name = "LogDebug";
+        public const string LogInfo__Name = "LogInfo";
+        public const string LogSql__Name = "LogSql";
+        public const string LogWarn__Name = "LogWarn";
+        public const string LogError__Name = "LogError";
+        public const string LogPerformance__Name = "LogPerformance";
+        public const string LogLocation__Name = "LogLocation";
+        public const string LogToFile__Name = "LogToFile";
+        public const string LogToConsole__Name = "LogToConsole";
+        public const string LogToDebugger__Name = "LogToDebugger";
+        public const string LogToServer__Name = "LogToServer";
+        public const string LogServerHost__Name = "LogServerHost";
+        public const string LogServerPort__Name = "LogServerPort";
+        public const string LogServerUserName__Name = "LogServerUserName";
+        public const string LogServerPassword__Name = "LogServerPassword";
+        public const string LogServerAccessKey__Name = "LogServerAccessKey";
+        public const string LogPerformanceToMainLogger__Name = "LogPerformanceToMainLogger";
+    }
+
+    public class ManifestWebConfigurationModel
+    {
+
+        public ManifestWebConfigurationModel()
+        {
+        }
+        [JsonPropertyName("opWebServerPort")]
+        public Int32 OpWebServerPort {set; get;}
+        [JsonPropertyName("desktopSocialLoginErrorUrlPath")]
+        public String DesktopSocialLoginErrorUrlPath {set; get;}
+        [JsonPropertyName("desktopSocialLoginSuccessUrlPath")]
+        public String DesktopSocialLoginSuccessUrlPath {set; get;}
+        [JsonPropertyName("viewUrl")]
+        public String ViewUrl {set; get;}
+        [JsonPropertyName("readOnlyViewUrl")]
+        public String ReadOnlyViewUrl {set; get;}
+        [JsonPropertyName("enableFrontPageDisplayMessage")]
+        public Boolean EnableFrontPageDisplayMessage {set; get;}
+        [JsonPropertyName("frontPageDisplayMessage")]
+        public String FrontPageDisplayMessage {set; get;}
+        [JsonPropertyName("frontPageDisplayMessageTitle")]
+        public String FrontPageDisplayMessageTitle {set; get;}
+        [JsonPropertyName("frontPageDisplayMessageDisplayTime")]
+        public Int32 FrontPageDisplayMessageDisplayTime {set; get;}
+        [JsonPropertyName("frontPageDisplayMessageUntilDate")]
+        public DateTime? FrontPageDisplayMessageUntilDate {set; get;}
+        [JsonPropertyName("readOnlyAccess")]
+        public Boolean ReadOnlyAccess {set; get;}
+        [JsonPropertyName("readOnlyAccessMessage")]
+        public String ReadOnlyAccessMessage {set; get;}
+        [JsonPropertyName("isProduction")]
+        public Boolean IsProduction {set; get;}
+        [JsonPropertyName("websiteUrl")]
+        public String WebsiteUrl {set; get;}
+        [JsonPropertyName("letterTemplateFileStorageConnectionString")]
+        public String LetterTemplateFileStorageConnectionString {set; get;}
+
+        public ManifestWebConfigurationModel GetCopy()
+        {
+            var obj = new ManifestWebConfigurationModel();
+            obj.OpWebServerPort = OpWebServerPort;
+            obj.DesktopSocialLoginErrorUrlPath = DesktopSocialLoginErrorUrlPath;
+            obj.DesktopSocialLoginSuccessUrlPath = DesktopSocialLoginSuccessUrlPath;
+            obj.ViewUrl = ViewUrl;
+            obj.ReadOnlyViewUrl = ReadOnlyViewUrl;
+            obj.EnableFrontPageDisplayMessage = EnableFrontPageDisplayMessage;
+            obj.FrontPageDisplayMessage = FrontPageDisplayMessage;
+            obj.FrontPageDisplayMessageTitle = FrontPageDisplayMessageTitle;
+            obj.FrontPageDisplayMessageDisplayTime = FrontPageDisplayMessageDisplayTime;
+            obj.FrontPageDisplayMessageUntilDate = FrontPageDisplayMessageUntilDate;
+            obj.ReadOnlyAccess = ReadOnlyAccess;
+            obj.ReadOnlyAccessMessage = ReadOnlyAccessMessage;
+            obj.IsProduction = IsProduction;
+            obj.WebsiteUrl = WebsiteUrl;
+            obj.LetterTemplateFileStorageConnectionString = LetterTemplateFileStorageConnectionString;
+            return obj;
+        }
+
+        // Property Names
+        public const string OpWebServerPort__Name = "OpWebServerPort";
+        public const string DesktopSocialLoginErrorUrlPath__Name = "DesktopSocialLoginErrorUrlPath";
+        public const string DesktopSocialLoginSuccessUrlPath__Name = "DesktopSocialLoginSuccessUrlPath";
+        public const string ViewUrl__Name = "ViewUrl";
+        public const string ReadOnlyViewUrl__Name = "ReadOnlyViewUrl";
+        public const string EnableFrontPageDisplayMessage__Name = "EnableFrontPageDisplayMessage";
+        public const string FrontPageDisplayMessage__Name = "FrontPageDisplayMessage";
+        public const string FrontPageDisplayMessageTitle__Name = "FrontPageDisplayMessageTitle";
+        public const string FrontPageDisplayMessageDisplayTime__Name = "FrontPageDisplayMessageDisplayTime";
+        public const string FrontPageDisplayMessageUntilDate__Name = "FrontPageDisplayMessageUntilDate";
+        public const string ReadOnlyAccess__Name = "ReadOnlyAccess";
+        public const string ReadOnlyAccessMessage__Name = "ReadOnlyAccessMessage";
+        public const string IsProduction__Name = "IsProduction";
+        public const string WebsiteUrl__Name = "WebsiteUrl";
+        public const string LetterTemplateFileStorageConnectionString__Name = "LetterTemplateFileStorageConnectionString";
+    }
+
+    public class AppConfigurationModel
+    {
+
+        public AppConfigurationModel()
+        {
+        }
+        [JsonPropertyName("enableNewFeatures")]
+        public Boolean EnableNewFeatures {set; get;}
+        [JsonPropertyName("logSettings")]
+        public LogSettings LogSettings {set; get;}
+        [JsonPropertyName("cacheHighRefreshInMinutes")]
+        public Int32 CacheHighRefreshInMinutes {set; get;}
+        [JsonPropertyName("cachMediumRefreshInMinutes")]
+        public Int32 CachMediumRefreshInMinutes {set; get;}
+        [JsonPropertyName("cachLowRefreshInMinutes")]
+        public Int32 CachLowRefreshInMinutes {set; get;}
+        [JsonPropertyName("useMiniProfiler")]
+        public Boolean UseMiniProfiler {set; get;}
+        [JsonPropertyName("showAllLinksWithoutPermissionCheck")]
+        public Boolean ShowAllLinksWithoutPermissionCheck {set; get;}
+
+        public AppConfigurationModel GetCopy()
+        {
+            var obj = new AppConfigurationModel();
+            obj.EnableNewFeatures = EnableNewFeatures;
+            obj.LogSettings = LogSettings;
+            obj.CacheHighRefreshInMinutes = CacheHighRefreshInMinutes;
+            obj.CachMediumRefreshInMinutes = CachMediumRefreshInMinutes;
+            obj.CachLowRefreshInMinutes = CachLowRefreshInMinutes;
+            obj.UseMiniProfiler = UseMiniProfiler;
+            obj.ShowAllLinksWithoutPermissionCheck = ShowAllLinksWithoutPermissionCheck;
+            return obj;
+        }
+
+        // Property Names
+        public const string AppVersion__Name = "AppVersion";
+        public const string AppName__Name = "AppName";
+        public const string ApplicationVersion__Name = "ApplicationVersion";
+        public const string DatabaseVersion__Name = "DatabaseVersion";
+        public const string EnableNewFeatures__Name = "EnableNewFeatures";
+        public const string LogSettings__Name = "LogSettings";
+        public const string CacheHighRefreshInMinutes__Name = "CacheHighRefreshInMinutes";
+        public const string CachMediumRefreshInMinutes__Name = "CachMediumRefreshInMinutes";
+        public const string CachLowRefreshInMinutes__Name = "CachLowRefreshInMinutes";
+        public const string UseMiniProfiler__Name = "UseMiniProfiler";
+        public const string ShowAllLinksWithoutPermissionCheck__Name = "ShowAllLinksWithoutPermissionCheck";
+    }
+
+    public class CommonConfigurationModel
+    {
+
+        public CommonConfigurationModel()
+        {
+        }
+        [JsonPropertyName("privacyPolicyUrl")]
+        public String PrivacyPolicyUrl {set; get;}
+        [JsonPropertyName("termsOfUseUrl")]
+        public String TermsOfUseUrl {set; get;}
+        [JsonPropertyName("helpUrl")]
+        public String HelpUrl {set; get;}
+        [JsonPropertyName("supportEmail")]
+        public String SupportEmail {set; get;}
+        [JsonPropertyName("copyrightInfo")]
+        public String CopyrightInfo {set; get;}
+        [JsonPropertyName("jwtSecretKey")]
+        public String JwtSecretKey {set; get;}
+        [JsonPropertyName("useLocalNppesServer")]
+        public Boolean UseLocalNppesServer {set; get;}
+        [JsonPropertyName("localLogServerUrl")]
+        public String LocalLogServerUrl {set; get;}
+        [JsonPropertyName("forceSSL")]
+        public Boolean ForceSSL {set; get;}
+        [JsonPropertyName("emailServer")]
+        public String EmailServer {set; get;}
+        [JsonPropertyName("emailServerPort")]
+        public Int32 EmailServerPort {set; get;}
+        [JsonPropertyName("emailServerUserName")]
+        public String EmailServerUserName {set; get;}
+        [JsonPropertyName("emailServerPassword")]
+        public String EmailServerPassword {set; get;}
+        [JsonPropertyName("emailUseSSL")]
+        public Boolean EmailUseSSL {set; get;}
+        [JsonPropertyName("emailFromName")]
+        public String EmailFromName {set; get;}
+        [JsonPropertyName("emailFromEmail")]
+        public String EmailFromEmail {set; get;}
+        [JsonPropertyName("adminNameForEmail")]
+        public String AdminNameForEmail {set; get;}
+        [JsonPropertyName("adminEmailForEmail")]
+        public String AdminEmailForEmail {set; get;}
+        [JsonPropertyName("defaultCommonEmailDomain")]
+        public String DefaultCommonEmailDomain {set; get;}
+        [JsonPropertyName("maxZipFileSizeinMB")]
+        public Int32 MaxZipFileSizeinMB {set; get;}
+        [JsonPropertyName("nativeTempFileLocation")]
+        public String NativeTempFileLocation {set; get;}
+        [JsonPropertyName("zipFileDownloadFileStorageConnectionString")]
+        public String ZipFileDownloadFileStorageConnectionString {set; get;}
+        [JsonPropertyName("isDedicatedQueue")]
+        public Boolean IsDedicatedQueue {set; get;}
+        [JsonPropertyName("activeMQHost")]
+        public String ActiveMQHost {set; get;}
+        [JsonPropertyName("activeMQUsername")]
+        public String ActiveMQUsername {set; get;}
+        [JsonPropertyName("activeMQPassword")]
+        public String ActiveMQPassword {set; get;}
+        [JsonPropertyName("aPIServerUrl")]
+        public String APIServerUrl {set; get;}
+        [JsonPropertyName("whatsAppGraphAPIServerUrl")]
+        public String WhatsAppGraphAPIServerUrl {set; get;}
+        [JsonPropertyName("webApplicationServerUrl")]
+        public String WebApplicationServerUrl {set; get;}
+
+        public CommonConfigurationModel GetCopy()
+        {
+            var obj = new CommonConfigurationModel();
+            obj.PrivacyPolicyUrl = PrivacyPolicyUrl;
+            obj.TermsOfUseUrl = TermsOfUseUrl;
+            obj.HelpUrl = HelpUrl;
+            obj.SupportEmail = SupportEmail;
+            obj.CopyrightInfo = CopyrightInfo;
+            obj.JwtSecretKey = JwtSecretKey;
+            obj.UseLocalNppesServer = UseLocalNppesServer;
+            obj.LocalLogServerUrl = LocalLogServerUrl;
+            obj.ForceSSL = ForceSSL;
+            obj.EmailServer = EmailServer;
+            obj.EmailServerPort = EmailServerPort;
+            obj.EmailServerUserName = EmailServerUserName;
+            obj.EmailServerPassword = EmailServerPassword;
+            obj.EmailUseSSL = EmailUseSSL;
+            obj.EmailFromName = EmailFromName;
+            obj.EmailFromEmail = EmailFromEmail;
+            obj.AdminNameForEmail = AdminNameForEmail;
+            obj.AdminEmailForEmail = AdminEmailForEmail;
+            obj.DefaultCommonEmailDomain = DefaultCommonEmailDomain;
+            obj.MaxZipFileSizeinMB = MaxZipFileSizeinMB;
+            obj.NativeTempFileLocation = NativeTempFileLocation;
+            obj.ZipFileDownloadFileStorageConnectionString = ZipFileDownloadFileStorageConnectionString;
+            obj.IsDedicatedQueue = IsDedicatedQueue;
+            obj.ActiveMQHost = ActiveMQHost;
+            obj.ActiveMQUsername = ActiveMQUsername;
+            obj.ActiveMQPassword = ActiveMQPassword;
+            obj.APIServerUrl = APIServerUrl;
+            obj.WhatsAppGraphAPIServerUrl = WhatsAppGraphAPIServerUrl;
+            obj.WebApplicationServerUrl = WebApplicationServerUrl;
+            return obj;
+        }
+
+        // Property Names
+        public const string PrivacyPolicyUrl__Name = "PrivacyPolicyUrl";
+        public const string TermsOfUseUrl__Name = "TermsOfUseUrl";
+        public const string HelpUrl__Name = "HelpUrl";
+        public const string SupportEmail__Name = "SupportEmail";
+        public const string CopyrightInfo__Name = "CopyrightInfo";
+        public const string JwtSecretKey__Name = "JwtSecretKey";
+        public const string UseLocalNppesServer__Name = "UseLocalNppesServer";
+        public const string LocalLogServerUrl__Name = "LocalLogServerUrl";
+        public const string ForceSSL__Name = "ForceSSL";
+        public const string EmailServer__Name = "EmailServer";
+        public const string EmailServerPort__Name = "EmailServerPort";
+        public const string EmailServerUserName__Name = "EmailServerUserName";
+        public const string EmailServerPassword__Name = "EmailServerPassword";
+        public const string EmailUseSSL__Name = "EmailUseSSL";
+        public const string EmailFromName__Name = "EmailFromName";
+        public const string EmailFromEmail__Name = "EmailFromEmail";
+        public const string AdminNameForEmail__Name = "AdminNameForEmail";
+        public const string AdminEmailForEmail__Name = "AdminEmailForEmail";
+        public const string DefaultCommonEmailDomain__Name = "DefaultCommonEmailDomain";
+        public const string MaxZipFileSizeinMB__Name = "MaxZipFileSizeinMB";
+        public const string NativeTempFileLocation__Name = "NativeTempFileLocation";
+        public const string ZipFileDownloadFileStorageConnectionString__Name = "ZipFileDownloadFileStorageConnectionString";
+        public const string IsDedicatedQueue__Name = "IsDedicatedQueue";
+        public const string ActiveMQHost__Name = "ActiveMQHost";
+        public const string ActiveMQUsername__Name = "ActiveMQUsername";
+        public const string ActiveMQPassword__Name = "ActiveMQPassword";
+        public const string APIServerUrl__Name = "APIServerUrl";
+        public const string WhatsAppGraphAPIServerUrl__Name = "WhatsAppGraphAPIServerUrl";
+        public const string WebApplicationServerUrl__Name = "WebApplicationServerUrl";
+    }
+
+    public class CoordinatorConfigurationModel
+    {
+
+        public CoordinatorConfigurationModel()
+        {
+        }
+        [JsonPropertyName("coordinatorServerPort")]
+        public Int32 CoordinatorServerPort {set; get;}
+        [JsonPropertyName("coordinatorServerName")]
+        public Int32 CoordinatorServerName {set; get;}
+        [JsonPropertyName("coordinatorLockTimeoutInSeconds")]
+        public Int32 CoordinatorLockTimeoutInSeconds {set; get;}
+        [JsonPropertyName("retryQueueConnectionString")]
+        public String RetryQueueConnectionString {set; get;}
+        [JsonPropertyName("configNotificationQueueConnectionString")]
+        public String ConfigNotificationQueueConnectionString {set; get;}
+
+        public CoordinatorConfigurationModel GetCopy()
+        {
+            var obj = new CoordinatorConfigurationModel();
+            obj.CoordinatorServerPort = CoordinatorServerPort;
+            obj.CoordinatorServerName = CoordinatorServerName;
+            obj.CoordinatorLockTimeoutInSeconds = CoordinatorLockTimeoutInSeconds;
+            obj.RetryQueueConnectionString = RetryQueueConnectionString;
+            obj.ConfigNotificationQueueConnectionString = ConfigNotificationQueueConnectionString;
+            return obj;
+        }
+
+        // Property Names
+        public const string CoordinatorServerPort__Name = "CoordinatorServerPort";
+        public const string CoordinatorServerName__Name = "CoordinatorServerName";
+        public const string CoordinatorLockTimeoutInSeconds__Name = "CoordinatorLockTimeoutInSeconds";
+        public const string RetryQueueConnectionString__Name = "RetryQueueConnectionString";
+        public const string ConfigNotificationQueueConnectionString__Name = "ConfigNotificationQueueConnectionString";
+    }
+
+    public class ReportServerConfigurationModel
+    {
+
+        public ReportServerConfigurationModel()
+        {
+        }
+        [JsonPropertyName("reportServerFileStorageConnectionString")]
+        public String ReportServerFileStorageConnectionString {set; get;}
+        [JsonPropertyName("reportServerQueueConnectionString")]
+        public String ReportServerQueueConnectionString {set; get;}
+        [JsonPropertyName("reportServerProcessThreadCount")]
+        public Int32 ReportServerProcessThreadCount {set; get;}
+        [JsonPropertyName("enableReportServerAutoCleanup")]
+        public Boolean EnableReportServerAutoCleanup {set; get;}
+        [JsonPropertyName("reportServerAutoCleanUpAfterDays")]
+        public Int32 ReportServerAutoCleanUpAfterDays {set; get;}
+        [JsonPropertyName("reportServerViewerWebPath")]
+        public String ReportServerViewerWebPath {set; get;}
+        [JsonPropertyName("reportStoragePrefix")]
+        public String ReportStoragePrefix {set; get;}
+        [JsonPropertyName("reportIntermediateDataFilePath")]
+        public String ReportIntermediateDataFilePath {set; get;}
+
+        public ReportServerConfigurationModel GetCopy()
+        {
+            var obj = new ReportServerConfigurationModel();
+            obj.ReportServerFileStorageConnectionString = ReportServerFileStorageConnectionString;
+            obj.ReportServerQueueConnectionString = ReportServerQueueConnectionString;
+            obj.ReportServerProcessThreadCount = ReportServerProcessThreadCount;
+            obj.EnableReportServerAutoCleanup = EnableReportServerAutoCleanup;
+            obj.ReportServerAutoCleanUpAfterDays = ReportServerAutoCleanUpAfterDays;
+            obj.ReportServerViewerWebPath = ReportServerViewerWebPath;
+            obj.ReportStoragePrefix = ReportStoragePrefix;
+            obj.ReportIntermediateDataFilePath = ReportIntermediateDataFilePath;
+            return obj;
+        }
+
+        // Property Names
+        public const string ReportServerFileStorageConnectionString__Name = "ReportServerFileStorageConnectionString";
+        public const string ReportServerQueueConnectionString__Name = "ReportServerQueueConnectionString";
+        public const string ReportServerProcessThreadCount__Name = "ReportServerProcessThreadCount";
+        public const string EnableReportServerAutoCleanup__Name = "EnableReportServerAutoCleanup";
+        public const string ReportServerAutoCleanUpAfterDays__Name = "ReportServerAutoCleanUpAfterDays";
+        public const string ReportServerViewerWebPath__Name = "ReportServerViewerWebPath";
+        public const string ReportStoragePrefix__Name = "ReportStoragePrefix";
+        public const string ReportIntermediateDataFilePath__Name = "ReportIntermediateDataFilePath";
+    }
+
+    public class ConfigurationGroupModel
+    {
+
+        public ConfigurationGroupModel()
+        {
+        }
+
+        public ConfigurationGroupModel(Int64 configurationGroupId,String groupName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ConfigurationGroupId = configurationGroupId;
+            GroupName = groupName;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("configurationGroupId")]
+        public Int64 ConfigurationGroupId {set; get;}
+        [JsonPropertyName("groupName")]
+        public String GroupName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ConfigurationGroupCreateModel GetAsCreateModel()
+        {
+            var obj = new ConfigurationGroupCreateModel();
+            obj.GroupName = GroupName;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ConfigurationGroupCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.GroupName == GroupName);
+            return result;
+        }
+
+
+        public ConfigurationGroupUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ConfigurationGroupUpdateModel();
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.GroupName = GroupName;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ConfigurationGroupUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ConfigurationGroupId == ConfigurationGroupId);
+            result = result && (obj.GroupName == GroupName);
+            return result;
+        }
+
+
+        public ConfigurationGroupModel GetCopy()
+        {
+            var obj = new ConfigurationGroupModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.GroupName = GroupName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ConfigurationGroupId__Name = "ConfigurationGroupId";
+        public const string GroupName__Name = "GroupName";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int GroupName__Size = 200;
+    }
+
+    public class ConfigurationGroupSearchCriteria
+    {
+
+        public ConfigurationGroupSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ConfigurationGroupSearchCriteria GetCopy()
+        {
+            var obj = new ConfigurationGroupSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ConfigurationGroupCreateModel
+    {
+
+        public ConfigurationGroupCreateModel()
+        {
+        }
+
+        public ConfigurationGroupCreateModel(String groupName)
+        {
+            GroupName = groupName;
+        }
+
+        [JsonPropertyName("groupName")]
+        public String GroupName {set; get;}
+
+        public ConfigurationGroupCreateModel GetCopy()
+        {
+            var obj = new ConfigurationGroupCreateModel();
+            obj.GroupName = GroupName;
+            return obj;
+        }
+
+        // Property Names
+        public const string GroupName__Name = "GroupName";
+        // String Column Sizes
+        public const int GroupName__Size = 200;
+    }
+
+    public class ConfigurationGroupUpdateModel
+    {
+
+        public ConfigurationGroupUpdateModel()
+        {
+        }
+
+        public ConfigurationGroupUpdateModel(Int64 configurationGroupId,String groupName)
+        {
+            ConfigurationGroupId = configurationGroupId;
+            GroupName = groupName;
+        }
+
+        [JsonPropertyName("configurationGroupId")]
+        public Int64 ConfigurationGroupId {set; get;}
+        [JsonPropertyName("groupName")]
+        public String GroupName {set; get;}
+
+        public ConfigurationGroupUpdateModel GetCopy()
+        {
+            var obj = new ConfigurationGroupUpdateModel();
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.GroupName = GroupName;
+            return obj;
+        }
+
+        // Property Names
+        public const string ConfigurationGroupId__Name = "ConfigurationGroupId";
+        public const string GroupName__Name = "GroupName";
+        // String Column Sizes
+        public const int GroupName__Size = 200;
+    }
+
+    public class ConfigurationItemModel
+    {
+
+        public ConfigurationItemModel()
+        {
+        }
+
+        public ConfigurationItemModel(Int64 configurationItemId,Int64 configurationGroupId,String key,String value,Boolean required,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ConfigurationItemId = configurationItemId;
+            ConfigurationGroupId = configurationGroupId;
+            Key = key;
+            Value = value;
+            Required = required;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("configurationItemId")]
+        public Int64 ConfigurationItemId {set; get;}
+        [JsonPropertyName("configurationGroupId")]
+        public Int64 ConfigurationGroupId {set; get;}
+        [JsonPropertyName("key")]
+        public String Key {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("defaultValue")]
+        public String DefaultValue {set; get;}
+        [JsonPropertyName("required")]
+        public Boolean Required {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ConfigurationItemCreateModel GetAsCreateModel()
+        {
+            var obj = new ConfigurationItemCreateModel();
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.Key = Key;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.Required = Required;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ConfigurationItemCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ConfigurationGroupId == ConfigurationGroupId);
+            result = result && (obj.Key == Key);
+            result = result && (obj.Value == Value);
+            result = result && (obj.DefaultValue == DefaultValue);
+            result = result && (obj.Required == Required);
+            return result;
+        }
+
+
+        public ConfigurationItemUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ConfigurationItemUpdateModel();
+            obj.ConfigurationItemId = ConfigurationItemId;
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.Key = Key;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.Required = Required;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ConfigurationItemUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ConfigurationItemId == ConfigurationItemId);
+            result = result && (obj.ConfigurationGroupId == ConfigurationGroupId);
+            result = result && (obj.Key == Key);
+            result = result && (obj.Value == Value);
+            result = result && (obj.DefaultValue == DefaultValue);
+            result = result && (obj.Required == Required);
+            return result;
+        }
+
+
+        public ConfigurationItemModel GetCopy()
+        {
+            var obj = new ConfigurationItemModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ConfigurationItemId = ConfigurationItemId;
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.Key = Key;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.Required = Required;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ConfigurationItemId__Name = "ConfigurationItemId";
+        public const string ConfigurationGroupId__Name = "ConfigurationGroupId";
+        public const string Key__Name = "Key";
+        public const string Value__Name = "Value";
+        public const string DefaultValue__Name = "DefaultValue";
+        public const string Required__Name = "Required";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Key__Size = 200;
+        public const int Value__Size = 2000;
+        public const int DefaultValue__Size = 2000;
+    }
+
+    public class ConfigurationItemSearchCriteria
+    {
+
+        public ConfigurationItemSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("configurationGroupId")]
+        public Int64? ConfigurationGroupId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ConfigurationItemSearchCriteria GetCopy()
+        {
+            var obj = new ConfigurationItemSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string ConfigurationGroupId__Name = "ConfigurationGroupId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ConfigurationItemCreateModel
+    {
+
+        public ConfigurationItemCreateModel()
+        {
+        }
+
+        public ConfigurationItemCreateModel(Int64 configurationGroupId,String key,String value,Boolean required)
+        {
+            ConfigurationGroupId = configurationGroupId;
+            Key = key;
+            Value = value;
+            Required = required;
+        }
+
+        [JsonPropertyName("configurationGroupId")]
+        public Int64 ConfigurationGroupId {set; get;}
+        [JsonPropertyName("key")]
+        public String Key {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("defaultValue")]
+        public String DefaultValue {set; get;}
+        [JsonPropertyName("required")]
+        public Boolean Required {set; get;}
+
+        public ConfigurationItemCreateModel GetCopy()
+        {
+            var obj = new ConfigurationItemCreateModel();
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.Key = Key;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.Required = Required;
+            return obj;
+        }
+
+        // Property Names
+        public const string ConfigurationGroupId__Name = "ConfigurationGroupId";
+        public const string Key__Name = "Key";
+        public const string Value__Name = "Value";
+        public const string DefaultValue__Name = "DefaultValue";
+        public const string Required__Name = "Required";
+        // String Column Sizes
+        public const int Key__Size = 200;
+        public const int Value__Size = 2000;
+        public const int DefaultValue__Size = 2000;
+    }
+
+    public class ConfigurationItemUpdateModel
+    {
+
+        public ConfigurationItemUpdateModel()
+        {
+        }
+
+        public ConfigurationItemUpdateModel(Int64 configurationItemId,Int64 configurationGroupId,String key,String value,Boolean required)
+        {
+            ConfigurationItemId = configurationItemId;
+            ConfigurationGroupId = configurationGroupId;
+            Key = key;
+            Value = value;
+            Required = required;
+        }
+
+        [JsonPropertyName("configurationItemId")]
+        public Int64 ConfigurationItemId {set; get;}
+        [JsonPropertyName("configurationGroupId")]
+        public Int64 ConfigurationGroupId {set; get;}
+        [JsonPropertyName("key")]
+        public String Key {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("defaultValue")]
+        public String DefaultValue {set; get;}
+        [JsonPropertyName("required")]
+        public Boolean Required {set; get;}
+
+        public ConfigurationItemUpdateModel GetCopy()
+        {
+            var obj = new ConfigurationItemUpdateModel();
+            obj.ConfigurationItemId = ConfigurationItemId;
+            obj.ConfigurationGroupId = ConfigurationGroupId;
+            obj.Key = Key;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.Required = Required;
+            return obj;
+        }
+
+        // Property Names
+        public const string ConfigurationItemId__Name = "ConfigurationItemId";
+        public const string ConfigurationGroupId__Name = "ConfigurationGroupId";
+        public const string Key__Name = "Key";
+        public const string Value__Name = "Value";
+        public const string DefaultValue__Name = "DefaultValue";
+        public const string Required__Name = "Required";
+        // String Column Sizes
+        public const int Key__Size = 200;
+        public const int Value__Size = 2000;
+        public const int DefaultValue__Size = 2000;
+    }
+
+    public class EnumGroupModel
+    {
+
+        public EnumGroupModel()
+        {
+        }
+
+        public EnumGroupModel(Int64 enumGroupId,String enumGroupName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            EnumGroupId = enumGroupId;
+            EnumGroupName = enumGroupName;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("enumGroupId")]
+        public Int64 EnumGroupId {set; get;}
+        [JsonPropertyName("enumGroupName")]
+        public String EnumGroupName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public EnumGroupCreateModel GetAsCreateModel()
+        {
+            var obj = new EnumGroupCreateModel();
+            obj.EnumGroupName = EnumGroupName;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(EnumGroupCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.EnumGroupName == EnumGroupName);
+            return result;
+        }
+
+
+        public EnumGroupUpdateModel GetAsUpdateModel()
+        {
+            var obj = new EnumGroupUpdateModel();
+            obj.EnumGroupId = EnumGroupId;
+            obj.EnumGroupName = EnumGroupName;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(EnumGroupUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.EnumGroupId == EnumGroupId);
+            result = result && (obj.EnumGroupName == EnumGroupName);
+            return result;
+        }
+
+
+        public EnumGroupModel GetCopy()
+        {
+            var obj = new EnumGroupModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.EnumGroupId = EnumGroupId;
+            obj.EnumGroupName = EnumGroupName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string EnumGroupId__Name = "EnumGroupId";
+        public const string EnumGroupName__Name = "EnumGroupName";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int EnumGroupName__Size = 100;
+    }
+
+    public class EnumGroupSearchCriteria
+    {
+
+        public EnumGroupSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public EnumGroupSearchCriteria GetCopy()
+        {
+            var obj = new EnumGroupSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class EnumGroupCreateModel
+    {
+
+        public EnumGroupCreateModel()
+        {
+        }
+
+        public EnumGroupCreateModel(String enumGroupName)
+        {
+            EnumGroupName = enumGroupName;
+        }
+
+        [JsonPropertyName("enumGroupName")]
+        public String EnumGroupName {set; get;}
+
+        public EnumGroupCreateModel GetCopy()
+        {
+            var obj = new EnumGroupCreateModel();
+            obj.EnumGroupName = EnumGroupName;
+            return obj;
+        }
+
+        // Property Names
+        public const string EnumGroupName__Name = "EnumGroupName";
+        // String Column Sizes
+        public const int EnumGroupName__Size = 100;
+    }
+
+    public class EnumGroupUpdateModel
+    {
+
+        public EnumGroupUpdateModel()
+        {
+        }
+
+        public EnumGroupUpdateModel(Int64 enumGroupId,String enumGroupName)
+        {
+            EnumGroupId = enumGroupId;
+            EnumGroupName = enumGroupName;
+        }
+
+        [JsonPropertyName("enumGroupId")]
+        public Int64 EnumGroupId {set; get;}
+        [JsonPropertyName("enumGroupName")]
+        public String EnumGroupName {set; get;}
+
+        public EnumGroupUpdateModel GetCopy()
+        {
+            var obj = new EnumGroupUpdateModel();
+            obj.EnumGroupId = EnumGroupId;
+            obj.EnumGroupName = EnumGroupName;
+            return obj;
+        }
+
+        // Property Names
+        public const string EnumGroupId__Name = "EnumGroupId";
+        public const string EnumGroupName__Name = "EnumGroupName";
+        // String Column Sizes
+        public const int EnumGroupName__Size = 100;
+    }
+
+    public class EnumTypeModel
+    {
+
+        public EnumTypeModel()
+        {
+        }
+
+        public EnumTypeModel(Int64 enumTypeId,Int64 internalValue,Int64 enumGroupId,String enumTypeName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            EnumTypeId = enumTypeId;
+            InternalValue = internalValue;
+            EnumGroupId = enumGroupId;
+            EnumTypeName = enumTypeName;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("enumGroupName")]
+        public String EnumGroupName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("enumTypeId")]
+        public Int64 EnumTypeId {set; get;}
+        [JsonPropertyName("internalValue")]
+        public Int64 InternalValue {set; get;}
+        [JsonPropertyName("enumGroupId")]
+        public Int64 EnumGroupId {set; get;}
+        [JsonPropertyName("parentEnumTypeId")]
+        public Int64? ParentEnumTypeId {set; get;}
+        [JsonPropertyName("enumTypeName")]
+        public String EnumTypeName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public EnumTypeCreateModel GetAsCreateModel()
+        {
+            var obj = new EnumTypeCreateModel();
+            obj.InternalValue = InternalValue;
+            obj.EnumGroupId = EnumGroupId;
+            obj.ParentEnumTypeId = ParentEnumTypeId;
+            obj.EnumTypeName = EnumTypeName;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(EnumTypeCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.InternalValue == InternalValue);
+            result = result && (obj.EnumGroupId == EnumGroupId);
+            result = result && (obj.ParentEnumTypeId == ParentEnumTypeId);
+            result = result && (obj.EnumTypeName == EnumTypeName);
+            return result;
+        }
+
+
+        public EnumTypeUpdateModel GetAsUpdateModel()
+        {
+            var obj = new EnumTypeUpdateModel();
+            obj.EnumTypeId = EnumTypeId;
+            obj.InternalValue = InternalValue;
+            obj.EnumGroupId = EnumGroupId;
+            obj.ParentEnumTypeId = ParentEnumTypeId;
+            obj.EnumTypeName = EnumTypeName;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(EnumTypeUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.EnumTypeId == EnumTypeId);
+            result = result && (obj.InternalValue == InternalValue);
+            result = result && (obj.EnumGroupId == EnumGroupId);
+            result = result && (obj.ParentEnumTypeId == ParentEnumTypeId);
+            result = result && (obj.EnumTypeName == EnumTypeName);
+            return result;
+        }
+
+
+        public EnumTypeModel GetCopy()
+        {
+            var obj = new EnumTypeModel();
+            obj.EnumGroupName = EnumGroupName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.EnumTypeId = EnumTypeId;
+            obj.InternalValue = InternalValue;
+            obj.EnumGroupId = EnumGroupId;
+            obj.ParentEnumTypeId = ParentEnumTypeId;
+            obj.EnumTypeName = EnumTypeName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string EnumGroupName__Name = "EnumGroupName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string EnumTypeId__Name = "EnumTypeId";
+        public const string InternalValue__Name = "InternalValue";
+        public const string EnumGroupId__Name = "EnumGroupId";
+        public const string ParentEnumTypeId__Name = "ParentEnumTypeId";
+        public const string EnumTypeName__Name = "EnumTypeName";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int EnumTypeName__Size = 100;
+    }
+
+    public class EnumTypeSearchCriteria
+    {
+
+        public EnumTypeSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("enumGroupId")]
+        public Int64? EnumGroupId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public EnumTypeSearchCriteria GetCopy()
+        {
+            var obj = new EnumTypeSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.EnumGroupId = EnumGroupId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string EnumGroupId__Name = "EnumGroupId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class EnumTypeCreateModel
+    {
+
+        public EnumTypeCreateModel()
+        {
+        }
+
+        public EnumTypeCreateModel(Int64 internalValue,Int64 enumGroupId,String enumTypeName)
+        {
+            InternalValue = internalValue;
+            EnumGroupId = enumGroupId;
+            EnumTypeName = enumTypeName;
+        }
+
+        [JsonPropertyName("internalValue")]
+        public Int64 InternalValue {set; get;}
+        [JsonPropertyName("enumGroupId")]
+        public Int64 EnumGroupId {set; get;}
+        [JsonPropertyName("parentEnumTypeId")]
+        public Int64? ParentEnumTypeId {set; get;}
+        [JsonPropertyName("enumTypeName")]
+        public String EnumTypeName {set; get;}
+
+        public EnumTypeCreateModel GetCopy()
+        {
+            var obj = new EnumTypeCreateModel();
+            obj.InternalValue = InternalValue;
+            obj.EnumGroupId = EnumGroupId;
+            obj.ParentEnumTypeId = ParentEnumTypeId;
+            obj.EnumTypeName = EnumTypeName;
+            return obj;
+        }
+
+        // Property Names
+        public const string InternalValue__Name = "InternalValue";
+        public const string EnumGroupId__Name = "EnumGroupId";
+        public const string ParentEnumTypeId__Name = "ParentEnumTypeId";
+        public const string EnumTypeName__Name = "EnumTypeName";
+        // String Column Sizes
+        public const int EnumTypeName__Size = 100;
+    }
+
+    public class EnumTypeUpdateModel
+    {
+
+        public EnumTypeUpdateModel()
+        {
+        }
+
+        public EnumTypeUpdateModel(Int64 enumTypeId,Int64 internalValue,Int64 enumGroupId,String enumTypeName)
+        {
+            EnumTypeId = enumTypeId;
+            InternalValue = internalValue;
+            EnumGroupId = enumGroupId;
+            EnumTypeName = enumTypeName;
+        }
+
+        [JsonPropertyName("enumTypeId")]
+        public Int64 EnumTypeId {set; get;}
+        [JsonPropertyName("internalValue")]
+        public Int64 InternalValue {set; get;}
+        [JsonPropertyName("enumGroupId")]
+        public Int64 EnumGroupId {set; get;}
+        [JsonPropertyName("parentEnumTypeId")]
+        public Int64? ParentEnumTypeId {set; get;}
+        [JsonPropertyName("enumTypeName")]
+        public String EnumTypeName {set; get;}
+
+        public EnumTypeUpdateModel GetCopy()
+        {
+            var obj = new EnumTypeUpdateModel();
+            obj.EnumTypeId = EnumTypeId;
+            obj.InternalValue = InternalValue;
+            obj.EnumGroupId = EnumGroupId;
+            obj.ParentEnumTypeId = ParentEnumTypeId;
+            obj.EnumTypeName = EnumTypeName;
+            return obj;
+        }
+
+        // Property Names
+        public const string EnumTypeId__Name = "EnumTypeId";
+        public const string InternalValue__Name = "InternalValue";
+        public const string EnumGroupId__Name = "EnumGroupId";
+        public const string ParentEnumTypeId__Name = "ParentEnumTypeId";
+        public const string EnumTypeName__Name = "EnumTypeName";
+        // String Column Sizes
+        public const int EnumTypeName__Size = 100;
+    }
+
+    public class JobModel
+    {
+
+        public JobModel()
+        {
+        }
+
+        public JobModel(Int64 jobId,Int64 jobTemplateId,DateTime submittedDate,Int64 predefinedJobStatusTypeId,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean includeDataSourceFile,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            JobId = jobId;
+            JobTemplateId = jobTemplateId;
+            SubmittedDate = submittedDate;
+            PredefinedJobStatusTypeId = predefinedJobStatusTypeId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            IncludeDataSourceFile = includeDataSourceFile;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("attachments")]
+        public List<JobAttachmentModel> Attachments {set; get;}
+        [JsonPropertyName("notificationEmails")]
+        public List<JobNotificationEmailModel> NotificationEmails {set; get;}
+        [JsonPropertyName("predefinedJobTypeName")]
+        public String PredefinedJobTypeName {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeName")]
+        public String PredefinedJobOrReportTypeName {set; get;}
+        [JsonPropertyName("predefinedJobStatusTypeName")]
+        public String PredefinedJobStatusTypeName {set; get;}
+        [JsonPropertyName("submittedByUserName")]
+        public String SubmittedByUserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64? PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("completedDate")]
+        public DateTime? CompletedDate {set; get;}
+        [JsonPropertyName("submittedDate")]
+        public DateTime SubmittedDate {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("predefinedJobStatusTypeId")]
+        public Int64 PredefinedJobStatusTypeId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("pickupTime")]
+        public Int64? PickupTime {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("executionAppName")]
+        public String ExecutionAppName {set; get;}
+        [JsonPropertyName("executionAppId")]
+        public String ExecutionAppId {set; get;}
+        [JsonPropertyName("executionHostName")]
+        public String ExecutionHostName {set; get;}
+        [JsonPropertyName("executionAppCheckPort")]
+        public Int64? ExecutionAppCheckPort {set; get;}
+        [JsonPropertyName("executionProcessId")]
+        public Int64? ExecutionProcessId {set; get;}
+        [JsonPropertyName("executionThreadId")]
+        public Int64? ExecutionThreadId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public JobCreateModel GetAsCreateModel()
+        {
+            var obj = new JobCreateModel();
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.Message = Message;
+            obj.PredefinedJobStatusTypeId = PredefinedJobStatusTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.ExecutionAppName = ExecutionAppName;
+            obj.ExecutionAppId = ExecutionAppId;
+            obj.ExecutionHostName = ExecutionHostName;
+            obj.ExecutionAppCheckPort = ExecutionAppCheckPort;
+            obj.ExecutionProcessId = ExecutionProcessId;
+            obj.ExecutionThreadId = ExecutionThreadId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(JobCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.CompletedDate == CompletedDate);
+            result = result && (obj.SubmittedDate == SubmittedDate);
+            result = result && (obj.Message == Message);
+            result = result && (obj.PredefinedJobStatusTypeId == PredefinedJobStatusTypeId);
+            result = result && (obj.SubmittedByUserId == SubmittedByUserId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.SerializedJobParameter == SerializedJobParameter);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.ExportDoc == ExportDoc);
+            result = result && (obj.ExportXls == ExportXls);
+            result = result && (obj.ExportPpt == ExportPpt);
+            result = result && (obj.ExportCsv == ExportCsv);
+            result = result && (obj.ExportXml == ExportXml);
+            result = result && (obj.ExportPdf == ExportPdf);
+            result = result && (obj.ExportCustom == ExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.PickupTime == PickupTime);
+            result = result && (obj.JobName == JobName);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            result = result && (obj.ExecutionAppName == ExecutionAppName);
+            result = result && (obj.ExecutionAppId == ExecutionAppId);
+            result = result && (obj.ExecutionHostName == ExecutionHostName);
+            result = result && (obj.ExecutionAppCheckPort == ExecutionAppCheckPort);
+            result = result && (obj.ExecutionProcessId == ExecutionProcessId);
+            result = result && (obj.ExecutionThreadId == ExecutionThreadId);
+            return result;
+        }
+
+
+        public JobUpdateModel GetAsUpdateModel()
+        {
+            var obj = new JobUpdateModel();
+            obj.JobId = JobId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.Message = Message;
+            obj.PredefinedJobStatusTypeId = PredefinedJobStatusTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.ExecutionAppName = ExecutionAppName;
+            obj.ExecutionAppId = ExecutionAppId;
+            obj.ExecutionHostName = ExecutionHostName;
+            obj.ExecutionAppCheckPort = ExecutionAppCheckPort;
+            obj.ExecutionProcessId = ExecutionProcessId;
+            obj.ExecutionThreadId = ExecutionThreadId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(JobUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobId == JobId);
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.CompletedDate == CompletedDate);
+            result = result && (obj.SubmittedDate == SubmittedDate);
+            result = result && (obj.Message == Message);
+            result = result && (obj.PredefinedJobStatusTypeId == PredefinedJobStatusTypeId);
+            result = result && (obj.SubmittedByUserId == SubmittedByUserId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.SerializedJobParameter == SerializedJobParameter);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.ExportDoc == ExportDoc);
+            result = result && (obj.ExportXls == ExportXls);
+            result = result && (obj.ExportPpt == ExportPpt);
+            result = result && (obj.ExportCsv == ExportCsv);
+            result = result && (obj.ExportXml == ExportXml);
+            result = result && (obj.ExportPdf == ExportPdf);
+            result = result && (obj.ExportCustom == ExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.PickupTime == PickupTime);
+            result = result && (obj.JobName == JobName);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            result = result && (obj.ExecutionAppName == ExecutionAppName);
+            result = result && (obj.ExecutionAppId == ExecutionAppId);
+            result = result && (obj.ExecutionHostName == ExecutionHostName);
+            result = result && (obj.ExecutionAppCheckPort == ExecutionAppCheckPort);
+            result = result && (obj.ExecutionProcessId == ExecutionProcessId);
+            result = result && (obj.ExecutionThreadId == ExecutionThreadId);
+            return result;
+        }
+
+
+        public JobModel GetCopy()
+        {
+            var obj = new JobModel();
+            obj.Attachments = Attachments;
+            obj.NotificationEmails = NotificationEmails;
+            obj.PredefinedJobTypeName = PredefinedJobTypeName;
+            obj.PredefinedJobOrReportTypeName = PredefinedJobOrReportTypeName;
+            obj.PredefinedJobStatusTypeName = PredefinedJobStatusTypeName;
+            obj.SubmittedByUserName = SubmittedByUserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.JobId = JobId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.Message = Message;
+            obj.PredefinedJobStatusTypeId = PredefinedJobStatusTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.ExecutionAppName = ExecutionAppName;
+            obj.ExecutionAppId = ExecutionAppId;
+            obj.ExecutionHostName = ExecutionHostName;
+            obj.ExecutionAppCheckPort = ExecutionAppCheckPort;
+            obj.ExecutionProcessId = ExecutionProcessId;
+            obj.ExecutionThreadId = ExecutionThreadId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string Attachments__Name = "Attachments";
+        public const string NotificationEmails__Name = "NotificationEmails";
+        public const string PredefinedJobTypeName__Name = "PredefinedJobTypeName";
+        public const string PredefinedJobOrReportTypeName__Name = "PredefinedJobOrReportTypeName";
+        public const string PredefinedJobStatusTypeName__Name = "PredefinedJobStatusTypeName";
+        public const string SubmittedByUserName__Name = "SubmittedByUserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string JobId__Name = "JobId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string CompletedDate__Name = "CompletedDate";
+        public const string SubmittedDate__Name = "SubmittedDate";
+        public const string Message__Name = "Message";
+        public const string PredefinedJobStatusTypeId__Name = "PredefinedJobStatusTypeId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupTime__Name = "PickupTime";
+        public const string JobName__Name = "JobName";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string ExecutionAppName__Name = "ExecutionAppName";
+        public const string ExecutionAppId__Name = "ExecutionAppId";
+        public const string ExecutionHostName__Name = "ExecutionHostName";
+        public const string ExecutionAppCheckPort__Name = "ExecutionAppCheckPort";
+        public const string ExecutionProcessId__Name = "ExecutionProcessId";
+        public const string ExecutionThreadId__Name = "ExecutionThreadId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Message__Size = 1000;
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+        public const int ExecutionAppName__Size = 100;
+        public const int ExecutionAppId__Size = 100;
+        public const int ExecutionHostName__Size = 100;
+    }
+
+    public class JobSearchCriteria
+    {
+
+        public JobSearchCriteria()
+        {
+        }
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedJobTypeIds")]
+        public List<Int64> PredefinedJobTypeIds {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64? JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeIds")]
+        public List<Int64> PredefinedJobOrReportTypeIds {set; get;}
+        [JsonPropertyName("predefinedJobStatusTypeIds")]
+        public List<Int64> PredefinedJobStatusTypeIds {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executionProcessId")]
+        public Int64? ExecutionProcessId {set; get;}
+        [JsonPropertyName("executionThreadId")]
+        public Int64? ExecutionThreadId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public JobSearchCriteria GetCopy()
+        {
+            var obj = new JobSearchCriteria();
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedJobTypeIds = PredefinedJobTypeIds;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeIds = PredefinedJobOrReportTypeIds;
+            obj.PredefinedJobStatusTypeIds = PredefinedJobStatusTypeIds;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutionProcessId = ExecutionProcessId;
+            obj.ExecutionThreadId = ExecutionThreadId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedJobTypeIds__Name = "PredefinedJobTypeIds";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobOrReportTypeIds__Name = "PredefinedJobOrReportTypeIds";
+        public const string PredefinedJobStatusTypeIds__Name = "PredefinedJobStatusTypeIds";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutionProcessId__Name = "ExecutionProcessId";
+        public const string ExecutionThreadId__Name = "ExecutionThreadId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class JobCreateModel
+    {
+
+        public JobCreateModel()
+        {
+        }
+
+        public JobCreateModel(Int64 jobTemplateId,DateTime submittedDate,Int64 predefinedJobStatusTypeId,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean includeDataSourceFile)
+        {
+            JobTemplateId = jobTemplateId;
+            SubmittedDate = submittedDate;
+            PredefinedJobStatusTypeId = predefinedJobStatusTypeId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            IncludeDataSourceFile = includeDataSourceFile;
+        }
+
+        [JsonPropertyName("emails")]
+        public List<JobNotificationEmailCreateModel> Emails {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64? PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("completedDate")]
+        public DateTime? CompletedDate {set; get;}
+        [JsonPropertyName("submittedDate")]
+        public DateTime SubmittedDate {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("predefinedJobStatusTypeId")]
+        public Int64 PredefinedJobStatusTypeId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("pickupTime")]
+        public Int64? PickupTime {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("executionAppName")]
+        public String ExecutionAppName {set; get;}
+        [JsonPropertyName("executionAppId")]
+        public String ExecutionAppId {set; get;}
+        [JsonPropertyName("executionHostName")]
+        public String ExecutionHostName {set; get;}
+        [JsonPropertyName("executionAppCheckPort")]
+        public Int64? ExecutionAppCheckPort {set; get;}
+        [JsonPropertyName("executionProcessId")]
+        public Int64? ExecutionProcessId {set; get;}
+        [JsonPropertyName("executionThreadId")]
+        public Int64? ExecutionThreadId {set; get;}
+
+        public JobCreateModel GetCopy()
+        {
+            var obj = new JobCreateModel();
+            obj.Emails = Emails;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.Message = Message;
+            obj.PredefinedJobStatusTypeId = PredefinedJobStatusTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.ExecutionAppName = ExecutionAppName;
+            obj.ExecutionAppId = ExecutionAppId;
+            obj.ExecutionHostName = ExecutionHostName;
+            obj.ExecutionAppCheckPort = ExecutionAppCheckPort;
+            obj.ExecutionProcessId = ExecutionProcessId;
+            obj.ExecutionThreadId = ExecutionThreadId;
+            return obj;
+        }
+
+        // Property Names
+        public const string Emails__Name = "Emails";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string CompletedDate__Name = "CompletedDate";
+        public const string SubmittedDate__Name = "SubmittedDate";
+        public const string Message__Name = "Message";
+        public const string PredefinedJobStatusTypeId__Name = "PredefinedJobStatusTypeId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupTime__Name = "PickupTime";
+        public const string JobName__Name = "JobName";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string ExecutionAppName__Name = "ExecutionAppName";
+        public const string ExecutionAppId__Name = "ExecutionAppId";
+        public const string ExecutionHostName__Name = "ExecutionHostName";
+        public const string ExecutionAppCheckPort__Name = "ExecutionAppCheckPort";
+        public const string ExecutionProcessId__Name = "ExecutionProcessId";
+        public const string ExecutionThreadId__Name = "ExecutionThreadId";
+        // String Column Sizes
+        public const int Message__Size = 1000;
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+        public const int ExecutionAppName__Size = 100;
+        public const int ExecutionAppId__Size = 100;
+        public const int ExecutionHostName__Size = 100;
+    }
+
+    public class JobUpdateModel
+    {
+
+        public JobUpdateModel()
+        {
+        }
+
+        public JobUpdateModel(Int64 jobId,Int64 jobTemplateId,DateTime submittedDate,Int64 predefinedJobStatusTypeId,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean includeDataSourceFile)
+        {
+            JobId = jobId;
+            JobTemplateId = jobTemplateId;
+            SubmittedDate = submittedDate;
+            PredefinedJobStatusTypeId = predefinedJobStatusTypeId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            IncludeDataSourceFile = includeDataSourceFile;
+        }
+
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64? PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("completedDate")]
+        public DateTime? CompletedDate {set; get;}
+        [JsonPropertyName("submittedDate")]
+        public DateTime SubmittedDate {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("predefinedJobStatusTypeId")]
+        public Int64 PredefinedJobStatusTypeId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("pickupTime")]
+        public Int64? PickupTime {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("executionAppName")]
+        public String ExecutionAppName {set; get;}
+        [JsonPropertyName("executionAppId")]
+        public String ExecutionAppId {set; get;}
+        [JsonPropertyName("executionHostName")]
+        public String ExecutionHostName {set; get;}
+        [JsonPropertyName("executionAppCheckPort")]
+        public Int64? ExecutionAppCheckPort {set; get;}
+        [JsonPropertyName("executionProcessId")]
+        public Int64? ExecutionProcessId {set; get;}
+        [JsonPropertyName("executionThreadId")]
+        public Int64? ExecutionThreadId {set; get;}
+
+        public JobUpdateModel GetCopy()
+        {
+            var obj = new JobUpdateModel();
+            obj.JobId = JobId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.Message = Message;
+            obj.PredefinedJobStatusTypeId = PredefinedJobStatusTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.ExecutionAppName = ExecutionAppName;
+            obj.ExecutionAppId = ExecutionAppId;
+            obj.ExecutionHostName = ExecutionHostName;
+            obj.ExecutionAppCheckPort = ExecutionAppCheckPort;
+            obj.ExecutionProcessId = ExecutionProcessId;
+            obj.ExecutionThreadId = ExecutionThreadId;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobId__Name = "JobId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string CompletedDate__Name = "CompletedDate";
+        public const string SubmittedDate__Name = "SubmittedDate";
+        public const string Message__Name = "Message";
+        public const string PredefinedJobStatusTypeId__Name = "PredefinedJobStatusTypeId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupTime__Name = "PickupTime";
+        public const string JobName__Name = "JobName";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string ExecutionAppName__Name = "ExecutionAppName";
+        public const string ExecutionAppId__Name = "ExecutionAppId";
+        public const string ExecutionHostName__Name = "ExecutionHostName";
+        public const string ExecutionAppCheckPort__Name = "ExecutionAppCheckPort";
+        public const string ExecutionProcessId__Name = "ExecutionProcessId";
+        public const string ExecutionThreadId__Name = "ExecutionThreadId";
+        // String Column Sizes
+        public const int Message__Size = 1000;
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+        public const int ExecutionAppName__Size = 100;
+        public const int ExecutionAppId__Size = 100;
+        public const int ExecutionHostName__Size = 100;
+    }
+
+    public class JobAttachmentModel
+    {
+
+        public JobAttachmentModel()
+        {
+        }
+
+        public JobAttachmentModel(Int64 jobAttachmentId,Int64 jobId,String fileName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate,String storedFilePath)
+        {
+            JobAttachmentId = jobAttachmentId;
+            JobId = jobId;
+            FileName = fileName;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+            StoredFilePath = storedFilePath;
+        }
+
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("jobAttachmentId")]
+        public Int64 JobAttachmentId {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("storedFilePath")]
+        public String StoredFilePath {set; get;}
+
+        public JobAttachmentCreateModel GetAsCreateModel()
+        {
+            var obj = new JobAttachmentCreateModel();
+            obj.JobId = JobId;
+            obj.FileName = FileName;
+            obj.StoredFilePath = StoredFilePath;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(JobAttachmentCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobId == JobId);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.StoredFilePath == StoredFilePath);
+            return result;
+        }
+
+
+        public JobAttachmentUpdateModel GetAsUpdateModel()
+        {
+            var obj = new JobAttachmentUpdateModel();
+            obj.JobAttachmentId = JobAttachmentId;
+            obj.JobId = JobId;
+            obj.FileName = FileName;
+            obj.StoredFilePath = StoredFilePath;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(JobAttachmentUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobAttachmentId == JobAttachmentId);
+            result = result && (obj.JobId == JobId);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.StoredFilePath == StoredFilePath);
+            return result;
+        }
+
+
+        public JobAttachmentModel GetCopy()
+        {
+            var obj = new JobAttachmentModel();
+            obj.JobName = JobName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.JobAttachmentId = JobAttachmentId;
+            obj.JobId = JobId;
+            obj.FileName = FileName;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.StoredFilePath = StoredFilePath;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobName__Name = "JobName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string JobAttachmentId__Name = "JobAttachmentId";
+        public const string JobId__Name = "JobId";
+        public const string FileName__Name = "FileName";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string StoredFilePath__Name = "StoredFilePath";
+        // String Column Sizes
+        public const int FileName__Size = 200;
+        public const int StoredFilePath__Size = 1000;
+    }
+
+    public class JobAttachmentSearchCriteria
+    {
+
+        public JobAttachmentSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64? JobId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public JobAttachmentSearchCriteria GetCopy()
+        {
+            var obj = new JobAttachmentSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.JobId = JobId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string JobId__Name = "JobId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class JobAttachmentCreateModel
+    {
+
+        public JobAttachmentCreateModel()
+        {
+        }
+
+        public JobAttachmentCreateModel(Int64 jobId,String fileName,String storedFilePath)
+        {
+            JobId = jobId;
+            FileName = fileName;
+            StoredFilePath = storedFilePath;
+        }
+
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("storedFilePath")]
+        public String StoredFilePath {set; get;}
+
+        public JobAttachmentCreateModel GetCopy()
+        {
+            var obj = new JobAttachmentCreateModel();
+            obj.JobId = JobId;
+            obj.FileName = FileName;
+            obj.StoredFilePath = StoredFilePath;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobId__Name = "JobId";
+        public const string FileName__Name = "FileName";
+        public const string StoredFilePath__Name = "StoredFilePath";
+        // String Column Sizes
+        public const int FileName__Size = 200;
+        public const int StoredFilePath__Size = 1000;
+    }
+
+    public class JobAttachmentUpdateModel
+    {
+
+        public JobAttachmentUpdateModel()
+        {
+        }
+
+        public JobAttachmentUpdateModel(Int64 jobAttachmentId,Int64 jobId,String fileName,String storedFilePath)
+        {
+            JobAttachmentId = jobAttachmentId;
+            JobId = jobId;
+            FileName = fileName;
+            StoredFilePath = storedFilePath;
+        }
+
+        [JsonPropertyName("jobAttachmentId")]
+        public Int64 JobAttachmentId {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("storedFilePath")]
+        public String StoredFilePath {set; get;}
+
+        public JobAttachmentUpdateModel GetCopy()
+        {
+            var obj = new JobAttachmentUpdateModel();
+            obj.JobAttachmentId = JobAttachmentId;
+            obj.JobId = JobId;
+            obj.FileName = FileName;
+            obj.StoredFilePath = StoredFilePath;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobAttachmentId__Name = "JobAttachmentId";
+        public const string JobId__Name = "JobId";
+        public const string FileName__Name = "FileName";
+        public const string StoredFilePath__Name = "StoredFilePath";
+        // String Column Sizes
+        public const int FileName__Size = 200;
+        public const int StoredFilePath__Size = 1000;
+    }
+
+    public class JobNotificationEmailModel
+    {
+
+        public JobNotificationEmailModel()
+        {
+        }
+
+        public JobNotificationEmailModel(Int64 jobNotificationEmailId,Int64 jobId,String email,Int64 sendStatus,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            JobNotificationEmailId = jobNotificationEmailId;
+            JobId = jobId;
+            Email = email;
+            SendStatus = sendStatus;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("jobNotificationEmailId")]
+        public Int64 JobNotificationEmailId {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public JobNotificationEmailCreateModel GetAsCreateModel()
+        {
+            var obj = new JobNotificationEmailCreateModel();
+            obj.JobId = JobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(JobNotificationEmailCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobId == JobId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.SendStatus == SendStatus);
+            result = result && (obj.Message == Message);
+            return result;
+        }
+
+
+        public JobNotificationEmailUpdateModel GetAsUpdateModel()
+        {
+            var obj = new JobNotificationEmailUpdateModel();
+            obj.JobNotificationEmailId = JobNotificationEmailId;
+            obj.JobId = JobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(JobNotificationEmailUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobNotificationEmailId == JobNotificationEmailId);
+            result = result && (obj.JobId == JobId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.SendStatus == SendStatus);
+            result = result && (obj.Message == Message);
+            return result;
+        }
+
+
+        public JobNotificationEmailModel GetCopy()
+        {
+            var obj = new JobNotificationEmailModel();
+            obj.JobName = JobName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.JobNotificationEmailId = JobNotificationEmailId;
+            obj.JobId = JobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobName__Name = "JobName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string JobNotificationEmailId__Name = "JobNotificationEmailId";
+        public const string JobId__Name = "JobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class JobNotificationEmailSearchCriteria
+    {
+
+        public JobNotificationEmailSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64? JobId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public JobNotificationEmailSearchCriteria GetCopy()
+        {
+            var obj = new JobNotificationEmailSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.JobId = JobId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string JobId__Name = "JobId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class JobNotificationEmailCreateModel
+    {
+
+        public JobNotificationEmailCreateModel()
+        {
+        }
+
+        public JobNotificationEmailCreateModel(Int64 jobId,String email,Int64 sendStatus)
+        {
+            JobId = jobId;
+            Email = email;
+            SendStatus = sendStatus;
+        }
+
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+
+        public JobNotificationEmailCreateModel GetCopy()
+        {
+            var obj = new JobNotificationEmailCreateModel();
+            obj.JobId = JobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobId__Name = "JobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class JobNotificationEmailUpdateModel
+    {
+
+        public JobNotificationEmailUpdateModel()
+        {
+        }
+
+        public JobNotificationEmailUpdateModel(Int64 jobNotificationEmailId,Int64 jobId,String email,Int64 sendStatus)
+        {
+            JobNotificationEmailId = jobNotificationEmailId;
+            JobId = jobId;
+            Email = email;
+            SendStatus = sendStatus;
+        }
+
+        [JsonPropertyName("jobNotificationEmailId")]
+        public Int64 JobNotificationEmailId {set; get;}
+        [JsonPropertyName("jobId")]
+        public Int64 JobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+
+        public JobNotificationEmailUpdateModel GetCopy()
+        {
+            var obj = new JobNotificationEmailUpdateModel();
+            obj.JobNotificationEmailId = JobNotificationEmailId;
+            obj.JobId = JobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobNotificationEmailId__Name = "JobNotificationEmailId";
+        public const string JobId__Name = "JobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class JobTemplateCategoryModel
+    {
+
+        public JobTemplateCategoryModel()
+        {
+        }
+
+        public JobTemplateCategoryModel(Int64 jobTemplateCategoryId,String name,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            JobTemplateCategoryId = jobTemplateCategoryId;
+            Name = name;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("jobTemplateCategoryId")]
+        public Int64 JobTemplateCategoryId {set; get;}
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public JobTemplateCategoryCreateModel GetAsCreateModel()
+        {
+            var obj = new JobTemplateCategoryCreateModel();
+            obj.Name = Name;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(JobTemplateCategoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.Name == Name);
+            return result;
+        }
+
+
+        public JobTemplateCategoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new JobTemplateCategoryUpdateModel();
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.Name = Name;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(JobTemplateCategoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobTemplateCategoryId == JobTemplateCategoryId);
+            result = result && (obj.Name == Name);
+            return result;
+        }
+
+
+        public JobTemplateCategoryModel GetCopy()
+        {
+            var obj = new JobTemplateCategoryModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.Name = Name;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string JobTemplateCategoryId__Name = "JobTemplateCategoryId";
+        public const string Name__Name = "Name";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Name__Size = 100;
+    }
+
+    public class JobTemplateCategorySearchCriteria
+    {
+
+        public JobTemplateCategorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public JobTemplateCategorySearchCriteria GetCopy()
+        {
+            var obj = new JobTemplateCategorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class JobTemplateCategoryCreateModel
+    {
+
+        public JobTemplateCategoryCreateModel()
+        {
+        }
+
+        public JobTemplateCategoryCreateModel(String name)
+        {
+            Name = name;
+        }
+
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+
+        public JobTemplateCategoryCreateModel GetCopy()
+        {
+            var obj = new JobTemplateCategoryCreateModel();
+            obj.Name = Name;
+            return obj;
+        }
+
+        // Property Names
+        public const string Name__Name = "Name";
+        // String Column Sizes
+        public const int Name__Size = 100;
+    }
+
+    public class JobTemplateCategoryUpdateModel
+    {
+
+        public JobTemplateCategoryUpdateModel()
+        {
+        }
+
+        public JobTemplateCategoryUpdateModel(Int64 jobTemplateCategoryId,String name)
+        {
+            JobTemplateCategoryId = jobTemplateCategoryId;
+            Name = name;
+        }
+
+        [JsonPropertyName("jobTemplateCategoryId")]
+        public Int64 JobTemplateCategoryId {set; get;}
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+
+        public JobTemplateCategoryUpdateModel GetCopy()
+        {
+            var obj = new JobTemplateCategoryUpdateModel();
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.Name = Name;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobTemplateCategoryId__Name = "JobTemplateCategoryId";
+        public const string Name__Name = "Name";
+        // String Column Sizes
+        public const int Name__Size = 100;
+    }
+
+    public class JobTemplateModel
+    {
+
+        public JobTemplateModel()
+        {
+        }
+
+        public JobTemplateModel(Int64 jobTemplateId,Int64 predefinedJobTypeId,String description,Int64 jobTemplateCategoryId,String executableFolder,String executableName,Boolean canExportDoc,Boolean canExportXls,Boolean canExportPpt,Boolean canExportCsv,Boolean canExportXml,Boolean canExportPdf,Boolean canExportCustom,String templateName,Boolean canExportDocDefaultValue,Boolean canExportXlsDefaultValue,Boolean canExportPptDefaultValue,Boolean canExportCsvDefaultValue,Boolean canExportXmlDefaultValue,Boolean canExportPdfDefaultValue,Boolean canExportCustomDefaultValue,String taskIdentifierName,String reportTemplateFile,String defaultOutputFileName,Boolean includeDataSourceFile,Boolean includeDataSourceFileDefaultValue,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            JobTemplateId = jobTemplateId;
+            PredefinedJobTypeId = predefinedJobTypeId;
+            Description = description;
+            JobTemplateCategoryId = jobTemplateCategoryId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            CanExportDoc = canExportDoc;
+            CanExportXls = canExportXls;
+            CanExportPpt = canExportPpt;
+            CanExportCsv = canExportCsv;
+            CanExportXml = canExportXml;
+            CanExportPdf = canExportPdf;
+            CanExportCustom = canExportCustom;
+            TemplateName = templateName;
+            CanExportDocDefaultValue = canExportDocDefaultValue;
+            CanExportXlsDefaultValue = canExportXlsDefaultValue;
+            CanExportPptDefaultValue = canExportPptDefaultValue;
+            CanExportCsvDefaultValue = canExportCsvDefaultValue;
+            CanExportXmlDefaultValue = canExportXmlDefaultValue;
+            CanExportPdfDefaultValue = canExportPdfDefaultValue;
+            CanExportCustomDefaultValue = canExportCustomDefaultValue;
+            TaskIdentifierName = taskIdentifierName;
+            ReportTemplateFile = reportTemplateFile;
+            DefaultOutputFileName = defaultOutputFileName;
+            IncludeDataSourceFile = includeDataSourceFile;
+            IncludeDataSourceFileDefaultValue = includeDataSourceFileDefaultValue;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("parameters")]
+        public List<JobTemplateParameterModel> Parameters {set; get;}
+        [JsonPropertyName("predefinedJobTypeName")]
+        public String PredefinedJobTypeName {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeName")]
+        public String PredefinedJobOrReportTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64 PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("predefinedJobUsageForTypeId")]
+        public Int64? PredefinedJobUsageForTypeId {set; get;}
+        [JsonPropertyName("jobTemplateCategoryId")]
+        public Int64 JobTemplateCategoryId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("canExportDoc")]
+        public Boolean CanExportDoc {set; get;}
+        [JsonPropertyName("canExportXls")]
+        public Boolean CanExportXls {set; get;}
+        [JsonPropertyName("canExportPpt")]
+        public Boolean CanExportPpt {set; get;}
+        [JsonPropertyName("canExportCsv")]
+        public Boolean CanExportCsv {set; get;}
+        [JsonPropertyName("canExportXml")]
+        public Boolean CanExportXml {set; get;}
+        [JsonPropertyName("canExportPdf")]
+        public Boolean CanExportPdf {set; get;}
+        [JsonPropertyName("canExportCustom")]
+        public Boolean CanExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("templateName")]
+        public String TemplateName {set; get;}
+        [JsonPropertyName("canExportDocDefaultValue")]
+        public Boolean CanExportDocDefaultValue {set; get;}
+        [JsonPropertyName("canExportXlsDefaultValue")]
+        public Boolean CanExportXlsDefaultValue {set; get;}
+        [JsonPropertyName("canExportPptDefaultValue")]
+        public Boolean CanExportPptDefaultValue {set; get;}
+        [JsonPropertyName("canExportCsvDefaultValue")]
+        public Boolean CanExportCsvDefaultValue {set; get;}
+        [JsonPropertyName("canExportXmlDefaultValue")]
+        public Boolean CanExportXmlDefaultValue {set; get;}
+        [JsonPropertyName("canExportPdfDefaultValue")]
+        public Boolean CanExportPdfDefaultValue {set; get;}
+        [JsonPropertyName("canExportCustomDefaultValue")]
+        public Boolean CanExportCustomDefaultValue {set; get;}
+        [JsonPropertyName("taskIdentifierName")]
+        public String TaskIdentifierName {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("defaultOutputFileName")]
+        public String DefaultOutputFileName {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("includeDataSourceFileDefaultValue")]
+        public Boolean IncludeDataSourceFileDefaultValue {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public JobTemplateCreateModel GetAsCreateModel()
+        {
+            var obj = new JobTemplateCreateModel();
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.Description = Description;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.PredefinedJobUsageForTypeId = PredefinedJobUsageForTypeId;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.CanExportDoc = CanExportDoc;
+            obj.CanExportXls = CanExportXls;
+            obj.CanExportPpt = CanExportPpt;
+            obj.CanExportCsv = CanExportCsv;
+            obj.CanExportXml = CanExportXml;
+            obj.CanExportPdf = CanExportPdf;
+            obj.CanExportCustom = CanExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.TemplateName = TemplateName;
+            obj.CanExportDocDefaultValue = CanExportDocDefaultValue;
+            obj.CanExportXlsDefaultValue = CanExportXlsDefaultValue;
+            obj.CanExportPptDefaultValue = CanExportPptDefaultValue;
+            obj.CanExportCsvDefaultValue = CanExportCsvDefaultValue;
+            obj.CanExportXmlDefaultValue = CanExportXmlDefaultValue;
+            obj.CanExportPdfDefaultValue = CanExportPdfDefaultValue;
+            obj.CanExportCustomDefaultValue = CanExportCustomDefaultValue;
+            obj.TaskIdentifierName = TaskIdentifierName;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.DefaultOutputFileName = DefaultOutputFileName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.IncludeDataSourceFileDefaultValue = IncludeDataSourceFileDefaultValue;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(JobTemplateCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.Description == Description);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.PredefinedJobUsageForTypeId == PredefinedJobUsageForTypeId);
+            result = result && (obj.JobTemplateCategoryId == JobTemplateCategoryId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.CanExportDoc == CanExportDoc);
+            result = result && (obj.CanExportXls == CanExportXls);
+            result = result && (obj.CanExportPpt == CanExportPpt);
+            result = result && (obj.CanExportCsv == CanExportCsv);
+            result = result && (obj.CanExportXml == CanExportXml);
+            result = result && (obj.CanExportPdf == CanExportPdf);
+            result = result && (obj.CanExportCustom == CanExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.TemplateName == TemplateName);
+            result = result && (obj.CanExportDocDefaultValue == CanExportDocDefaultValue);
+            result = result && (obj.CanExportXlsDefaultValue == CanExportXlsDefaultValue);
+            result = result && (obj.CanExportPptDefaultValue == CanExportPptDefaultValue);
+            result = result && (obj.CanExportCsvDefaultValue == CanExportCsvDefaultValue);
+            result = result && (obj.CanExportXmlDefaultValue == CanExportXmlDefaultValue);
+            result = result && (obj.CanExportPdfDefaultValue == CanExportPdfDefaultValue);
+            result = result && (obj.CanExportCustomDefaultValue == CanExportCustomDefaultValue);
+            result = result && (obj.TaskIdentifierName == TaskIdentifierName);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.DefaultOutputFileName == DefaultOutputFileName);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            result = result && (obj.IncludeDataSourceFileDefaultValue == IncludeDataSourceFileDefaultValue);
+            return result;
+        }
+
+
+        public JobTemplateUpdateModel GetAsUpdateModel()
+        {
+            var obj = new JobTemplateUpdateModel();
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.Description = Description;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.PredefinedJobUsageForTypeId = PredefinedJobUsageForTypeId;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.CanExportDoc = CanExportDoc;
+            obj.CanExportXls = CanExportXls;
+            obj.CanExportPpt = CanExportPpt;
+            obj.CanExportCsv = CanExportCsv;
+            obj.CanExportXml = CanExportXml;
+            obj.CanExportPdf = CanExportPdf;
+            obj.CanExportCustom = CanExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.TemplateName = TemplateName;
+            obj.CanExportDocDefaultValue = CanExportDocDefaultValue;
+            obj.CanExportXlsDefaultValue = CanExportXlsDefaultValue;
+            obj.CanExportPptDefaultValue = CanExportPptDefaultValue;
+            obj.CanExportCsvDefaultValue = CanExportCsvDefaultValue;
+            obj.CanExportXmlDefaultValue = CanExportXmlDefaultValue;
+            obj.CanExportPdfDefaultValue = CanExportPdfDefaultValue;
+            obj.CanExportCustomDefaultValue = CanExportCustomDefaultValue;
+            obj.TaskIdentifierName = TaskIdentifierName;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.DefaultOutputFileName = DefaultOutputFileName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.IncludeDataSourceFileDefaultValue = IncludeDataSourceFileDefaultValue;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(JobTemplateUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.Description == Description);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.PredefinedJobUsageForTypeId == PredefinedJobUsageForTypeId);
+            result = result && (obj.JobTemplateCategoryId == JobTemplateCategoryId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.CanExportDoc == CanExportDoc);
+            result = result && (obj.CanExportXls == CanExportXls);
+            result = result && (obj.CanExportPpt == CanExportPpt);
+            result = result && (obj.CanExportCsv == CanExportCsv);
+            result = result && (obj.CanExportXml == CanExportXml);
+            result = result && (obj.CanExportPdf == CanExportPdf);
+            result = result && (obj.CanExportCustom == CanExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.TemplateName == TemplateName);
+            result = result && (obj.CanExportDocDefaultValue == CanExportDocDefaultValue);
+            result = result && (obj.CanExportXlsDefaultValue == CanExportXlsDefaultValue);
+            result = result && (obj.CanExportPptDefaultValue == CanExportPptDefaultValue);
+            result = result && (obj.CanExportCsvDefaultValue == CanExportCsvDefaultValue);
+            result = result && (obj.CanExportXmlDefaultValue == CanExportXmlDefaultValue);
+            result = result && (obj.CanExportPdfDefaultValue == CanExportPdfDefaultValue);
+            result = result && (obj.CanExportCustomDefaultValue == CanExportCustomDefaultValue);
+            result = result && (obj.TaskIdentifierName == TaskIdentifierName);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.DefaultOutputFileName == DefaultOutputFileName);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            result = result && (obj.IncludeDataSourceFileDefaultValue == IncludeDataSourceFileDefaultValue);
+            return result;
+        }
+
+
+        public JobTemplateModel GetCopy()
+        {
+            var obj = new JobTemplateModel();
+            obj.Parameters = Parameters;
+            obj.PredefinedJobTypeName = PredefinedJobTypeName;
+            obj.PredefinedJobOrReportTypeName = PredefinedJobOrReportTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.Description = Description;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.PredefinedJobUsageForTypeId = PredefinedJobUsageForTypeId;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.CanExportDoc = CanExportDoc;
+            obj.CanExportXls = CanExportXls;
+            obj.CanExportPpt = CanExportPpt;
+            obj.CanExportCsv = CanExportCsv;
+            obj.CanExportXml = CanExportXml;
+            obj.CanExportPdf = CanExportPdf;
+            obj.CanExportCustom = CanExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.TemplateName = TemplateName;
+            obj.CanExportDocDefaultValue = CanExportDocDefaultValue;
+            obj.CanExportXlsDefaultValue = CanExportXlsDefaultValue;
+            obj.CanExportPptDefaultValue = CanExportPptDefaultValue;
+            obj.CanExportCsvDefaultValue = CanExportCsvDefaultValue;
+            obj.CanExportXmlDefaultValue = CanExportXmlDefaultValue;
+            obj.CanExportPdfDefaultValue = CanExportPdfDefaultValue;
+            obj.CanExportCustomDefaultValue = CanExportCustomDefaultValue;
+            obj.TaskIdentifierName = TaskIdentifierName;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.DefaultOutputFileName = DefaultOutputFileName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.IncludeDataSourceFileDefaultValue = IncludeDataSourceFileDefaultValue;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string Parameters__Name = "Parameters";
+        public const string PredefinedJobTypeName__Name = "PredefinedJobTypeName";
+        public const string PredefinedJobOrReportTypeName__Name = "PredefinedJobOrReportTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string Description__Name = "Description";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string PredefinedJobUsageForTypeId__Name = "PredefinedJobUsageForTypeId";
+        public const string JobTemplateCategoryId__Name = "JobTemplateCategoryId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string CanExportDoc__Name = "CanExportDoc";
+        public const string CanExportXls__Name = "CanExportXls";
+        public const string CanExportPpt__Name = "CanExportPpt";
+        public const string CanExportCsv__Name = "CanExportCsv";
+        public const string CanExportXml__Name = "CanExportXml";
+        public const string CanExportPdf__Name = "CanExportPdf";
+        public const string CanExportCustom__Name = "CanExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string TemplateName__Name = "TemplateName";
+        public const string CanExportDocDefaultValue__Name = "CanExportDocDefaultValue";
+        public const string CanExportXlsDefaultValue__Name = "CanExportXlsDefaultValue";
+        public const string CanExportPptDefaultValue__Name = "CanExportPptDefaultValue";
+        public const string CanExportCsvDefaultValue__Name = "CanExportCsvDefaultValue";
+        public const string CanExportXmlDefaultValue__Name = "CanExportXmlDefaultValue";
+        public const string CanExportPdfDefaultValue__Name = "CanExportPdfDefaultValue";
+        public const string CanExportCustomDefaultValue__Name = "CanExportCustomDefaultValue";
+        public const string TaskIdentifierName__Name = "TaskIdentifierName";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string DefaultOutputFileName__Name = "DefaultOutputFileName";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string IncludeDataSourceFileDefaultValue__Name = "IncludeDataSourceFileDefaultValue";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Description__Size = 200;
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int TemplateName__Size = 50;
+        public const int TaskIdentifierName__Size = 200;
+        public const int ReportTemplateFile__Size = 100;
+        public const int DefaultOutputFileName__Size = 200;
+    }
+
+    public class JobTemplateSearchCriteria
+    {
+
+        public JobTemplateSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedJobTypeIds")]
+        public List<Int64> PredefinedJobTypeIds {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeIds")]
+        public List<Int64> PredefinedJobOrReportTypeIds {set; get;}
+        [JsonPropertyName("jobTemplateCategoryId")]
+        public Int64? JobTemplateCategoryId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public JobTemplateSearchCriteria GetCopy()
+        {
+            var obj = new JobTemplateSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedJobTypeIds = PredefinedJobTypeIds;
+            obj.PredefinedJobOrReportTypeIds = PredefinedJobOrReportTypeIds;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedJobTypeIds__Name = "PredefinedJobTypeIds";
+        public const string PredefinedJobOrReportTypeIds__Name = "PredefinedJobOrReportTypeIds";
+        public const string JobTemplateCategoryId__Name = "JobTemplateCategoryId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class JobTemplateCreateModel
+    {
+
+        public JobTemplateCreateModel()
+        {
+        }
+
+        public JobTemplateCreateModel(Int64 predefinedJobTypeId,String description,Int64 jobTemplateCategoryId,String executableFolder,String executableName,Boolean canExportDoc,Boolean canExportXls,Boolean canExportPpt,Boolean canExportCsv,Boolean canExportXml,Boolean canExportPdf,Boolean canExportCustom,String templateName,Boolean canExportDocDefaultValue,Boolean canExportXlsDefaultValue,Boolean canExportPptDefaultValue,Boolean canExportCsvDefaultValue,Boolean canExportXmlDefaultValue,Boolean canExportPdfDefaultValue,Boolean canExportCustomDefaultValue,String taskIdentifierName,String reportTemplateFile,String defaultOutputFileName,Boolean includeDataSourceFile,Boolean includeDataSourceFileDefaultValue)
+        {
+            PredefinedJobTypeId = predefinedJobTypeId;
+            Description = description;
+            JobTemplateCategoryId = jobTemplateCategoryId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            CanExportDoc = canExportDoc;
+            CanExportXls = canExportXls;
+            CanExportPpt = canExportPpt;
+            CanExportCsv = canExportCsv;
+            CanExportXml = canExportXml;
+            CanExportPdf = canExportPdf;
+            CanExportCustom = canExportCustom;
+            TemplateName = templateName;
+            CanExportDocDefaultValue = canExportDocDefaultValue;
+            CanExportXlsDefaultValue = canExportXlsDefaultValue;
+            CanExportPptDefaultValue = canExportPptDefaultValue;
+            CanExportCsvDefaultValue = canExportCsvDefaultValue;
+            CanExportXmlDefaultValue = canExportXmlDefaultValue;
+            CanExportPdfDefaultValue = canExportPdfDefaultValue;
+            CanExportCustomDefaultValue = canExportCustomDefaultValue;
+            TaskIdentifierName = taskIdentifierName;
+            ReportTemplateFile = reportTemplateFile;
+            DefaultOutputFileName = defaultOutputFileName;
+            IncludeDataSourceFile = includeDataSourceFile;
+            IncludeDataSourceFileDefaultValue = includeDataSourceFileDefaultValue;
+        }
+
+        [JsonPropertyName("newParameters")]
+        public List<JobTemplateParameterCreateModel> NewParameters {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64 PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("predefinedJobUsageForTypeId")]
+        public Int64? PredefinedJobUsageForTypeId {set; get;}
+        [JsonPropertyName("jobTemplateCategoryId")]
+        public Int64 JobTemplateCategoryId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("canExportDoc")]
+        public Boolean CanExportDoc {set; get;}
+        [JsonPropertyName("canExportXls")]
+        public Boolean CanExportXls {set; get;}
+        [JsonPropertyName("canExportPpt")]
+        public Boolean CanExportPpt {set; get;}
+        [JsonPropertyName("canExportCsv")]
+        public Boolean CanExportCsv {set; get;}
+        [JsonPropertyName("canExportXml")]
+        public Boolean CanExportXml {set; get;}
+        [JsonPropertyName("canExportPdf")]
+        public Boolean CanExportPdf {set; get;}
+        [JsonPropertyName("canExportCustom")]
+        public Boolean CanExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("templateName")]
+        public String TemplateName {set; get;}
+        [JsonPropertyName("canExportDocDefaultValue")]
+        public Boolean CanExportDocDefaultValue {set; get;}
+        [JsonPropertyName("canExportXlsDefaultValue")]
+        public Boolean CanExportXlsDefaultValue {set; get;}
+        [JsonPropertyName("canExportPptDefaultValue")]
+        public Boolean CanExportPptDefaultValue {set; get;}
+        [JsonPropertyName("canExportCsvDefaultValue")]
+        public Boolean CanExportCsvDefaultValue {set; get;}
+        [JsonPropertyName("canExportXmlDefaultValue")]
+        public Boolean CanExportXmlDefaultValue {set; get;}
+        [JsonPropertyName("canExportPdfDefaultValue")]
+        public Boolean CanExportPdfDefaultValue {set; get;}
+        [JsonPropertyName("canExportCustomDefaultValue")]
+        public Boolean CanExportCustomDefaultValue {set; get;}
+        [JsonPropertyName("taskIdentifierName")]
+        public String TaskIdentifierName {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("defaultOutputFileName")]
+        public String DefaultOutputFileName {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("includeDataSourceFileDefaultValue")]
+        public Boolean IncludeDataSourceFileDefaultValue {set; get;}
+
+        public JobTemplateCreateModel GetCopy()
+        {
+            var obj = new JobTemplateCreateModel();
+            obj.NewParameters = NewParameters;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.Description = Description;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.PredefinedJobUsageForTypeId = PredefinedJobUsageForTypeId;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.CanExportDoc = CanExportDoc;
+            obj.CanExportXls = CanExportXls;
+            obj.CanExportPpt = CanExportPpt;
+            obj.CanExportCsv = CanExportCsv;
+            obj.CanExportXml = CanExportXml;
+            obj.CanExportPdf = CanExportPdf;
+            obj.CanExportCustom = CanExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.TemplateName = TemplateName;
+            obj.CanExportDocDefaultValue = CanExportDocDefaultValue;
+            obj.CanExportXlsDefaultValue = CanExportXlsDefaultValue;
+            obj.CanExportPptDefaultValue = CanExportPptDefaultValue;
+            obj.CanExportCsvDefaultValue = CanExportCsvDefaultValue;
+            obj.CanExportXmlDefaultValue = CanExportXmlDefaultValue;
+            obj.CanExportPdfDefaultValue = CanExportPdfDefaultValue;
+            obj.CanExportCustomDefaultValue = CanExportCustomDefaultValue;
+            obj.TaskIdentifierName = TaskIdentifierName;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.DefaultOutputFileName = DefaultOutputFileName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.IncludeDataSourceFileDefaultValue = IncludeDataSourceFileDefaultValue;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewParameters__Name = "NewParameters";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string Description__Name = "Description";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string PredefinedJobUsageForTypeId__Name = "PredefinedJobUsageForTypeId";
+        public const string JobTemplateCategoryId__Name = "JobTemplateCategoryId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string CanExportDoc__Name = "CanExportDoc";
+        public const string CanExportXls__Name = "CanExportXls";
+        public const string CanExportPpt__Name = "CanExportPpt";
+        public const string CanExportCsv__Name = "CanExportCsv";
+        public const string CanExportXml__Name = "CanExportXml";
+        public const string CanExportPdf__Name = "CanExportPdf";
+        public const string CanExportCustom__Name = "CanExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string TemplateName__Name = "TemplateName";
+        public const string CanExportDocDefaultValue__Name = "CanExportDocDefaultValue";
+        public const string CanExportXlsDefaultValue__Name = "CanExportXlsDefaultValue";
+        public const string CanExportPptDefaultValue__Name = "CanExportPptDefaultValue";
+        public const string CanExportCsvDefaultValue__Name = "CanExportCsvDefaultValue";
+        public const string CanExportXmlDefaultValue__Name = "CanExportXmlDefaultValue";
+        public const string CanExportPdfDefaultValue__Name = "CanExportPdfDefaultValue";
+        public const string CanExportCustomDefaultValue__Name = "CanExportCustomDefaultValue";
+        public const string TaskIdentifierName__Name = "TaskIdentifierName";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string DefaultOutputFileName__Name = "DefaultOutputFileName";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string IncludeDataSourceFileDefaultValue__Name = "IncludeDataSourceFileDefaultValue";
+        // String Column Sizes
+        public const int Description__Size = 200;
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int TemplateName__Size = 50;
+        public const int TaskIdentifierName__Size = 200;
+        public const int ReportTemplateFile__Size = 100;
+        public const int DefaultOutputFileName__Size = 200;
+    }
+
+    public class JobTemplateUpdateModel
+    {
+
+        public JobTemplateUpdateModel()
+        {
+        }
+
+        public JobTemplateUpdateModel(Int64 jobTemplateId,Int64 predefinedJobTypeId,String description,Int64 jobTemplateCategoryId,String executableFolder,String executableName,Boolean canExportDoc,Boolean canExportXls,Boolean canExportPpt,Boolean canExportCsv,Boolean canExportXml,Boolean canExportPdf,Boolean canExportCustom,String templateName,Boolean canExportDocDefaultValue,Boolean canExportXlsDefaultValue,Boolean canExportPptDefaultValue,Boolean canExportCsvDefaultValue,Boolean canExportXmlDefaultValue,Boolean canExportPdfDefaultValue,Boolean canExportCustomDefaultValue,String taskIdentifierName,String reportTemplateFile,String defaultOutputFileName,Boolean includeDataSourceFile,Boolean includeDataSourceFileDefaultValue)
+        {
+            JobTemplateId = jobTemplateId;
+            PredefinedJobTypeId = predefinedJobTypeId;
+            Description = description;
+            JobTemplateCategoryId = jobTemplateCategoryId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            CanExportDoc = canExportDoc;
+            CanExportXls = canExportXls;
+            CanExportPpt = canExportPpt;
+            CanExportCsv = canExportCsv;
+            CanExportXml = canExportXml;
+            CanExportPdf = canExportPdf;
+            CanExportCustom = canExportCustom;
+            TemplateName = templateName;
+            CanExportDocDefaultValue = canExportDocDefaultValue;
+            CanExportXlsDefaultValue = canExportXlsDefaultValue;
+            CanExportPptDefaultValue = canExportPptDefaultValue;
+            CanExportCsvDefaultValue = canExportCsvDefaultValue;
+            CanExportXmlDefaultValue = canExportXmlDefaultValue;
+            CanExportPdfDefaultValue = canExportPdfDefaultValue;
+            CanExportCustomDefaultValue = canExportCustomDefaultValue;
+            TaskIdentifierName = taskIdentifierName;
+            ReportTemplateFile = reportTemplateFile;
+            DefaultOutputFileName = defaultOutputFileName;
+            IncludeDataSourceFile = includeDataSourceFile;
+            IncludeDataSourceFileDefaultValue = includeDataSourceFileDefaultValue;
+        }
+
+        [JsonPropertyName("existingParameters")]
+        public List<JobTemplateParameterUpdateModel> ExistingParameters {set; get;}
+        [JsonPropertyName("newParameters")]
+        public List<JobTemplateParameterCreateModel> NewParameters {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64 PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("predefinedJobUsageForTypeId")]
+        public Int64? PredefinedJobUsageForTypeId {set; get;}
+        [JsonPropertyName("jobTemplateCategoryId")]
+        public Int64 JobTemplateCategoryId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("canExportDoc")]
+        public Boolean CanExportDoc {set; get;}
+        [JsonPropertyName("canExportXls")]
+        public Boolean CanExportXls {set; get;}
+        [JsonPropertyName("canExportPpt")]
+        public Boolean CanExportPpt {set; get;}
+        [JsonPropertyName("canExportCsv")]
+        public Boolean CanExportCsv {set; get;}
+        [JsonPropertyName("canExportXml")]
+        public Boolean CanExportXml {set; get;}
+        [JsonPropertyName("canExportPdf")]
+        public Boolean CanExportPdf {set; get;}
+        [JsonPropertyName("canExportCustom")]
+        public Boolean CanExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("templateName")]
+        public String TemplateName {set; get;}
+        [JsonPropertyName("canExportDocDefaultValue")]
+        public Boolean CanExportDocDefaultValue {set; get;}
+        [JsonPropertyName("canExportXlsDefaultValue")]
+        public Boolean CanExportXlsDefaultValue {set; get;}
+        [JsonPropertyName("canExportPptDefaultValue")]
+        public Boolean CanExportPptDefaultValue {set; get;}
+        [JsonPropertyName("canExportCsvDefaultValue")]
+        public Boolean CanExportCsvDefaultValue {set; get;}
+        [JsonPropertyName("canExportXmlDefaultValue")]
+        public Boolean CanExportXmlDefaultValue {set; get;}
+        [JsonPropertyName("canExportPdfDefaultValue")]
+        public Boolean CanExportPdfDefaultValue {set; get;}
+        [JsonPropertyName("canExportCustomDefaultValue")]
+        public Boolean CanExportCustomDefaultValue {set; get;}
+        [JsonPropertyName("taskIdentifierName")]
+        public String TaskIdentifierName {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("defaultOutputFileName")]
+        public String DefaultOutputFileName {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("includeDataSourceFileDefaultValue")]
+        public Boolean IncludeDataSourceFileDefaultValue {set; get;}
+
+        public JobTemplateUpdateModel GetCopy()
+        {
+            var obj = new JobTemplateUpdateModel();
+            obj.ExistingParameters = ExistingParameters;
+            obj.NewParameters = NewParameters;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.Description = Description;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.PredefinedJobUsageForTypeId = PredefinedJobUsageForTypeId;
+            obj.JobTemplateCategoryId = JobTemplateCategoryId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.CanExportDoc = CanExportDoc;
+            obj.CanExportXls = CanExportXls;
+            obj.CanExportPpt = CanExportPpt;
+            obj.CanExportCsv = CanExportCsv;
+            obj.CanExportXml = CanExportXml;
+            obj.CanExportPdf = CanExportPdf;
+            obj.CanExportCustom = CanExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.TemplateName = TemplateName;
+            obj.CanExportDocDefaultValue = CanExportDocDefaultValue;
+            obj.CanExportXlsDefaultValue = CanExportXlsDefaultValue;
+            obj.CanExportPptDefaultValue = CanExportPptDefaultValue;
+            obj.CanExportCsvDefaultValue = CanExportCsvDefaultValue;
+            obj.CanExportXmlDefaultValue = CanExportXmlDefaultValue;
+            obj.CanExportPdfDefaultValue = CanExportPdfDefaultValue;
+            obj.CanExportCustomDefaultValue = CanExportCustomDefaultValue;
+            obj.TaskIdentifierName = TaskIdentifierName;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.DefaultOutputFileName = DefaultOutputFileName;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.IncludeDataSourceFileDefaultValue = IncludeDataSourceFileDefaultValue;
+            return obj;
+        }
+
+        // Property Names
+        public const string ExistingParameters__Name = "ExistingParameters";
+        public const string NewParameters__Name = "NewParameters";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string Description__Name = "Description";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string PredefinedJobUsageForTypeId__Name = "PredefinedJobUsageForTypeId";
+        public const string JobTemplateCategoryId__Name = "JobTemplateCategoryId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string CanExportDoc__Name = "CanExportDoc";
+        public const string CanExportXls__Name = "CanExportXls";
+        public const string CanExportPpt__Name = "CanExportPpt";
+        public const string CanExportCsv__Name = "CanExportCsv";
+        public const string CanExportXml__Name = "CanExportXml";
+        public const string CanExportPdf__Name = "CanExportPdf";
+        public const string CanExportCustom__Name = "CanExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string TemplateName__Name = "TemplateName";
+        public const string CanExportDocDefaultValue__Name = "CanExportDocDefaultValue";
+        public const string CanExportXlsDefaultValue__Name = "CanExportXlsDefaultValue";
+        public const string CanExportPptDefaultValue__Name = "CanExportPptDefaultValue";
+        public const string CanExportCsvDefaultValue__Name = "CanExportCsvDefaultValue";
+        public const string CanExportXmlDefaultValue__Name = "CanExportXmlDefaultValue";
+        public const string CanExportPdfDefaultValue__Name = "CanExportPdfDefaultValue";
+        public const string CanExportCustomDefaultValue__Name = "CanExportCustomDefaultValue";
+        public const string TaskIdentifierName__Name = "TaskIdentifierName";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string DefaultOutputFileName__Name = "DefaultOutputFileName";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string IncludeDataSourceFileDefaultValue__Name = "IncludeDataSourceFileDefaultValue";
+        // String Column Sizes
+        public const int Description__Size = 200;
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int TemplateName__Size = 50;
+        public const int TaskIdentifierName__Size = 200;
+        public const int ReportTemplateFile__Size = 100;
+        public const int DefaultOutputFileName__Size = 200;
+    }
+
+    public class JobTemplateParameterModel
+    {
+
+        public JobTemplateParameterModel()
+        {
+        }
+
+        public JobTemplateParameterModel(Int64 jobTemplateParameterId,Int64 jobTemplateId,String name,String value,String defaultValue,Int64 predefinedFieldControlTypeId,Int64 predefinedFieldTypeId,Int64 predefinedFieldPopulatorTypeId,Int64 position,Boolean isVisible,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            JobTemplateParameterId = jobTemplateParameterId;
+            JobTemplateId = jobTemplateId;
+            Name = name;
+            Value = value;
+            DefaultValue = defaultValue;
+            PredefinedFieldControlTypeId = predefinedFieldControlTypeId;
+            PredefinedFieldTypeId = predefinedFieldTypeId;
+            PredefinedFieldPopulatorTypeId = predefinedFieldPopulatorTypeId;
+            Position = position;
+            IsVisible = isVisible;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedFieldControlTypeName")]
+        public String PredefinedFieldControlTypeName {set; get;}
+        [JsonPropertyName("predefinedFieldTypeName")]
+        public String PredefinedFieldTypeName {set; get;}
+        [JsonPropertyName("predefinedFieldPopulatorTypeName")]
+        public String PredefinedFieldPopulatorTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("jobTemplateParameterId")]
+        public Int64 JobTemplateParameterId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("defaultValue")]
+        public String DefaultValue {set; get;}
+        [JsonPropertyName("predefinedFieldControlTypeId")]
+        public Int64 PredefinedFieldControlTypeId {set; get;}
+        [JsonPropertyName("predefinedFieldTypeId")]
+        public Int64 PredefinedFieldTypeId {set; get;}
+        [JsonPropertyName("predefinedFieldPopulatorTypeId")]
+        public Int64 PredefinedFieldPopulatorTypeId {set; get;}
+        [JsonPropertyName("caption")]
+        public String Caption {set; get;}
+        [JsonPropertyName("populatorSource")]
+        public String PopulatorSource {set; get;}
+        [JsonPropertyName("size")]
+        public Int64? Size {set; get;}
+        [JsonPropertyName("empty")]
+        public Boolean? Empty {set; get;}
+        [JsonPropertyName("position")]
+        public Int64 Position {set; get;}
+        [JsonPropertyName("isVisible")]
+        public Boolean IsVisible {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public JobTemplateParameterCreateModel GetAsCreateModel()
+        {
+            var obj = new JobTemplateParameterCreateModel();
+            obj.JobTemplateId = JobTemplateId;
+            obj.Name = Name;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.PredefinedFieldControlTypeId = PredefinedFieldControlTypeId;
+            obj.PredefinedFieldTypeId = PredefinedFieldTypeId;
+            obj.PredefinedFieldPopulatorTypeId = PredefinedFieldPopulatorTypeId;
+            obj.Caption = Caption;
+            obj.PopulatorSource = PopulatorSource;
+            obj.Size = Size;
+            obj.Empty = Empty;
+            obj.Position = Position;
+            obj.IsVisible = IsVisible;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(JobTemplateParameterCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.Name == Name);
+            result = result && (obj.Value == Value);
+            result = result && (obj.DefaultValue == DefaultValue);
+            result = result && (obj.PredefinedFieldControlTypeId == PredefinedFieldControlTypeId);
+            result = result && (obj.PredefinedFieldTypeId == PredefinedFieldTypeId);
+            result = result && (obj.PredefinedFieldPopulatorTypeId == PredefinedFieldPopulatorTypeId);
+            result = result && (obj.Caption == Caption);
+            result = result && (obj.PopulatorSource == PopulatorSource);
+            result = result && (obj.Size == Size);
+            result = result && (obj.Empty == Empty);
+            result = result && (obj.Position == Position);
+            result = result && (obj.IsVisible == IsVisible);
+            return result;
+        }
+
+
+        public JobTemplateParameterUpdateModel GetAsUpdateModel()
+        {
+            var obj = new JobTemplateParameterUpdateModel();
+            obj.JobTemplateParameterId = JobTemplateParameterId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.Name = Name;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.PredefinedFieldControlTypeId = PredefinedFieldControlTypeId;
+            obj.PredefinedFieldTypeId = PredefinedFieldTypeId;
+            obj.PredefinedFieldPopulatorTypeId = PredefinedFieldPopulatorTypeId;
+            obj.Caption = Caption;
+            obj.PopulatorSource = PopulatorSource;
+            obj.Size = Size;
+            obj.Empty = Empty;
+            obj.Position = Position;
+            obj.IsVisible = IsVisible;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(JobTemplateParameterUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobTemplateParameterId == JobTemplateParameterId);
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.Name == Name);
+            result = result && (obj.Value == Value);
+            result = result && (obj.DefaultValue == DefaultValue);
+            result = result && (obj.PredefinedFieldControlTypeId == PredefinedFieldControlTypeId);
+            result = result && (obj.PredefinedFieldTypeId == PredefinedFieldTypeId);
+            result = result && (obj.PredefinedFieldPopulatorTypeId == PredefinedFieldPopulatorTypeId);
+            result = result && (obj.Caption == Caption);
+            result = result && (obj.PopulatorSource == PopulatorSource);
+            result = result && (obj.Size == Size);
+            result = result && (obj.Empty == Empty);
+            result = result && (obj.Position == Position);
+            result = result && (obj.IsVisible == IsVisible);
+            return result;
+        }
+
+
+        public JobTemplateParameterModel GetCopy()
+        {
+            var obj = new JobTemplateParameterModel();
+            obj.PredefinedFieldControlTypeName = PredefinedFieldControlTypeName;
+            obj.PredefinedFieldTypeName = PredefinedFieldTypeName;
+            obj.PredefinedFieldPopulatorTypeName = PredefinedFieldPopulatorTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.JobTemplateParameterId = JobTemplateParameterId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.Name = Name;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.PredefinedFieldControlTypeId = PredefinedFieldControlTypeId;
+            obj.PredefinedFieldTypeId = PredefinedFieldTypeId;
+            obj.PredefinedFieldPopulatorTypeId = PredefinedFieldPopulatorTypeId;
+            obj.Caption = Caption;
+            obj.PopulatorSource = PopulatorSource;
+            obj.Size = Size;
+            obj.Empty = Empty;
+            obj.Position = Position;
+            obj.IsVisible = IsVisible;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedFieldControlTypeName__Name = "PredefinedFieldControlTypeName";
+        public const string PredefinedFieldTypeName__Name = "PredefinedFieldTypeName";
+        public const string PredefinedFieldPopulatorTypeName__Name = "PredefinedFieldPopulatorTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string JobTemplateParameterId__Name = "JobTemplateParameterId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string Name__Name = "Name";
+        public const string Value__Name = "Value";
+        public const string DefaultValue__Name = "DefaultValue";
+        public const string PredefinedFieldControlTypeId__Name = "PredefinedFieldControlTypeId";
+        public const string PredefinedFieldTypeId__Name = "PredefinedFieldTypeId";
+        public const string PredefinedFieldPopulatorTypeId__Name = "PredefinedFieldPopulatorTypeId";
+        public const string Caption__Name = "Caption";
+        public const string PopulatorSource__Name = "PopulatorSource";
+        public const string Size__Name = "Size";
+        public const string Empty__Name = "Empty";
+        public const string Position__Name = "Position";
+        public const string IsVisible__Name = "IsVisible";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Name__Size = 100;
+        public const int Value__Size = 250;
+        public const int DefaultValue__Size = 250;
+        public const int Caption__Size = 200;
+        public const int PopulatorSource__Size = 500;
+    }
+
+    public class JobTemplateParameterSearchCriteria
+    {
+
+        public JobTemplateParameterSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64? JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedFieldControlTypeIds")]
+        public List<Int64> PredefinedFieldControlTypeIds {set; get;}
+        [JsonPropertyName("predefinedFieldTypeIds")]
+        public List<Int64> PredefinedFieldTypeIds {set; get;}
+        [JsonPropertyName("predefinedFieldPopulatorTypeIds")]
+        public List<Int64> PredefinedFieldPopulatorTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public JobTemplateParameterSearchCriteria GetCopy()
+        {
+            var obj = new JobTemplateParameterSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedFieldControlTypeIds = PredefinedFieldControlTypeIds;
+            obj.PredefinedFieldTypeIds = PredefinedFieldTypeIds;
+            obj.PredefinedFieldPopulatorTypeIds = PredefinedFieldPopulatorTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedFieldControlTypeIds__Name = "PredefinedFieldControlTypeIds";
+        public const string PredefinedFieldTypeIds__Name = "PredefinedFieldTypeIds";
+        public const string PredefinedFieldPopulatorTypeIds__Name = "PredefinedFieldPopulatorTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class JobTemplateParameterCreateModel
+    {
+
+        public JobTemplateParameterCreateModel()
+        {
+        }
+
+        public JobTemplateParameterCreateModel(Int64 jobTemplateId,String name,String value,String defaultValue,Int64 predefinedFieldControlTypeId,Int64 predefinedFieldTypeId,Int64 predefinedFieldPopulatorTypeId,Int64 position,Boolean isVisible)
+        {
+            JobTemplateId = jobTemplateId;
+            Name = name;
+            Value = value;
+            DefaultValue = defaultValue;
+            PredefinedFieldControlTypeId = predefinedFieldControlTypeId;
+            PredefinedFieldTypeId = predefinedFieldTypeId;
+            PredefinedFieldPopulatorTypeId = predefinedFieldPopulatorTypeId;
+            Position = position;
+            IsVisible = isVisible;
+        }
+
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("defaultValue")]
+        public String DefaultValue {set; get;}
+        [JsonPropertyName("predefinedFieldControlTypeId")]
+        public Int64 PredefinedFieldControlTypeId {set; get;}
+        [JsonPropertyName("predefinedFieldTypeId")]
+        public Int64 PredefinedFieldTypeId {set; get;}
+        [JsonPropertyName("predefinedFieldPopulatorTypeId")]
+        public Int64 PredefinedFieldPopulatorTypeId {set; get;}
+        [JsonPropertyName("caption")]
+        public String Caption {set; get;}
+        [JsonPropertyName("populatorSource")]
+        public String PopulatorSource {set; get;}
+        [JsonPropertyName("size")]
+        public Int64? Size {set; get;}
+        [JsonPropertyName("empty")]
+        public Boolean? Empty {set; get;}
+        [JsonPropertyName("position")]
+        public Int64 Position {set; get;}
+        [JsonPropertyName("isVisible")]
+        public Boolean IsVisible {set; get;}
+
+        public JobTemplateParameterCreateModel GetCopy()
+        {
+            var obj = new JobTemplateParameterCreateModel();
+            obj.JobTemplateId = JobTemplateId;
+            obj.Name = Name;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.PredefinedFieldControlTypeId = PredefinedFieldControlTypeId;
+            obj.PredefinedFieldTypeId = PredefinedFieldTypeId;
+            obj.PredefinedFieldPopulatorTypeId = PredefinedFieldPopulatorTypeId;
+            obj.Caption = Caption;
+            obj.PopulatorSource = PopulatorSource;
+            obj.Size = Size;
+            obj.Empty = Empty;
+            obj.Position = Position;
+            obj.IsVisible = IsVisible;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string Name__Name = "Name";
+        public const string Value__Name = "Value";
+        public const string DefaultValue__Name = "DefaultValue";
+        public const string PredefinedFieldControlTypeId__Name = "PredefinedFieldControlTypeId";
+        public const string PredefinedFieldTypeId__Name = "PredefinedFieldTypeId";
+        public const string PredefinedFieldPopulatorTypeId__Name = "PredefinedFieldPopulatorTypeId";
+        public const string Caption__Name = "Caption";
+        public const string PopulatorSource__Name = "PopulatorSource";
+        public const string Size__Name = "Size";
+        public const string Empty__Name = "Empty";
+        public const string Position__Name = "Position";
+        public const string IsVisible__Name = "IsVisible";
+        // String Column Sizes
+        public const int Name__Size = 100;
+        public const int Value__Size = 250;
+        public const int DefaultValue__Size = 250;
+        public const int Caption__Size = 200;
+        public const int PopulatorSource__Size = 500;
+    }
+
+    public class JobTemplateParameterUpdateModel
+    {
+
+        public JobTemplateParameterUpdateModel()
+        {
+        }
+
+        public JobTemplateParameterUpdateModel(Int64 jobTemplateParameterId,Int64 jobTemplateId,String name,String value,String defaultValue,Int64 predefinedFieldControlTypeId,Int64 predefinedFieldTypeId,Int64 predefinedFieldPopulatorTypeId,Int64 position,Boolean isVisible)
+        {
+            JobTemplateParameterId = jobTemplateParameterId;
+            JobTemplateId = jobTemplateId;
+            Name = name;
+            Value = value;
+            DefaultValue = defaultValue;
+            PredefinedFieldControlTypeId = predefinedFieldControlTypeId;
+            PredefinedFieldTypeId = predefinedFieldTypeId;
+            PredefinedFieldPopulatorTypeId = predefinedFieldPopulatorTypeId;
+            Position = position;
+            IsVisible = isVisible;
+        }
+
+        [JsonPropertyName("jobTemplateParameterId")]
+        public Int64 JobTemplateParameterId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("defaultValue")]
+        public String DefaultValue {set; get;}
+        [JsonPropertyName("predefinedFieldControlTypeId")]
+        public Int64 PredefinedFieldControlTypeId {set; get;}
+        [JsonPropertyName("predefinedFieldTypeId")]
+        public Int64 PredefinedFieldTypeId {set; get;}
+        [JsonPropertyName("predefinedFieldPopulatorTypeId")]
+        public Int64 PredefinedFieldPopulatorTypeId {set; get;}
+        [JsonPropertyName("caption")]
+        public String Caption {set; get;}
+        [JsonPropertyName("populatorSource")]
+        public String PopulatorSource {set; get;}
+        [JsonPropertyName("size")]
+        public Int64? Size {set; get;}
+        [JsonPropertyName("empty")]
+        public Boolean? Empty {set; get;}
+        [JsonPropertyName("position")]
+        public Int64 Position {set; get;}
+        [JsonPropertyName("isVisible")]
+        public Boolean IsVisible {set; get;}
+
+        public JobTemplateParameterUpdateModel GetCopy()
+        {
+            var obj = new JobTemplateParameterUpdateModel();
+            obj.JobTemplateParameterId = JobTemplateParameterId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.Name = Name;
+            obj.Value = Value;
+            obj.DefaultValue = DefaultValue;
+            obj.PredefinedFieldControlTypeId = PredefinedFieldControlTypeId;
+            obj.PredefinedFieldTypeId = PredefinedFieldTypeId;
+            obj.PredefinedFieldPopulatorTypeId = PredefinedFieldPopulatorTypeId;
+            obj.Caption = Caption;
+            obj.PopulatorSource = PopulatorSource;
+            obj.Size = Size;
+            obj.Empty = Empty;
+            obj.Position = Position;
+            obj.IsVisible = IsVisible;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobTemplateParameterId__Name = "JobTemplateParameterId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string Name__Name = "Name";
+        public const string Value__Name = "Value";
+        public const string DefaultValue__Name = "DefaultValue";
+        public const string PredefinedFieldControlTypeId__Name = "PredefinedFieldControlTypeId";
+        public const string PredefinedFieldTypeId__Name = "PredefinedFieldTypeId";
+        public const string PredefinedFieldPopulatorTypeId__Name = "PredefinedFieldPopulatorTypeId";
+        public const string Caption__Name = "Caption";
+        public const string PopulatorSource__Name = "PopulatorSource";
+        public const string Size__Name = "Size";
+        public const string Empty__Name = "Empty";
+        public const string Position__Name = "Position";
+        public const string IsVisible__Name = "IsVisible";
+        // String Column Sizes
+        public const int Name__Size = 100;
+        public const int Value__Size = 250;
+        public const int DefaultValue__Size = 250;
+        public const int Caption__Size = 200;
+        public const int PopulatorSource__Size = 500;
+    }
+
+    public class MessageToSendModel
+    {
+
+        public MessageToSendModel()
+        {
+        }
+
+        public MessageToSendModel(Int64 messageToSendId,Int64 predefinedMessageToSendTypeId,String messageFrom,String messageTo,String messageFromName,String messageToName,String messageBody,Int64 retryCount,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            MessageToSendId = messageToSendId;
+            PredefinedMessageToSendTypeId = predefinedMessageToSendTypeId;
+            MessageFrom = messageFrom;
+            MessageTo = messageTo;
+            MessageFromName = messageFromName;
+            MessageToName = messageToName;
+            MessageBody = messageBody;
+            RetryCount = retryCount;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedMessageToSendTypeName")]
+        public String PredefinedMessageToSendTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("messageToSendId")]
+        public Int64 MessageToSendId {set; get;}
+        [JsonPropertyName("predefinedMessageToSendTypeId")]
+        public Int64 PredefinedMessageToSendTypeId {set; get;}
+        [JsonPropertyName("realtimeMessageId")]
+        public Int64? RealtimeMessageId {set; get;}
+        [JsonPropertyName("messageFrom")]
+        public String MessageFrom {set; get;}
+        [JsonPropertyName("messageTo")]
+        public String MessageTo {set; get;}
+        [JsonPropertyName("messageFromName")]
+        public String MessageFromName {set; get;}
+        [JsonPropertyName("messageToName")]
+        public String MessageToName {set; get;}
+        [JsonPropertyName("messageSubject")]
+        public String MessageSubject {set; get;}
+        [JsonPropertyName("messageBody")]
+        public String MessageBody {set; get;}
+        [JsonPropertyName("sentDate")]
+        public DateTime? SentDate {set; get;}
+        [JsonPropertyName("sent")]
+        public Boolean? Sent {set; get;}
+        [JsonPropertyName("isSentError")]
+        public Boolean? IsSentError {set; get;}
+        [JsonPropertyName("sentErrorMessage")]
+        public String SentErrorMessage {set; get;}
+        [JsonPropertyName("sentErrorDate")]
+        public DateTime? SentErrorDate {set; get;}
+        [JsonPropertyName("retryCount")]
+        public Int64 RetryCount {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public MessageToSendCreateModel GetAsCreateModel()
+        {
+            var obj = new MessageToSendCreateModel();
+            obj.PredefinedMessageToSendTypeId = PredefinedMessageToSendTypeId;
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.MessageFrom = MessageFrom;
+            obj.MessageTo = MessageTo;
+            obj.MessageFromName = MessageFromName;
+            obj.MessageToName = MessageToName;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageBody = MessageBody;
+            obj.SentDate = SentDate;
+            obj.Sent = Sent;
+            obj.IsSentError = IsSentError;
+            obj.SentErrorMessage = SentErrorMessage;
+            obj.SentErrorDate = SentErrorDate;
+            obj.RetryCount = RetryCount;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(MessageToSendCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedMessageToSendTypeId == PredefinedMessageToSendTypeId);
+            result = result && (obj.RealtimeMessageId == RealtimeMessageId);
+            result = result && (obj.MessageFrom == MessageFrom);
+            result = result && (obj.MessageTo == MessageTo);
+            result = result && (obj.MessageFromName == MessageFromName);
+            result = result && (obj.MessageToName == MessageToName);
+            result = result && (obj.MessageSubject == MessageSubject);
+            result = result && (obj.MessageBody == MessageBody);
+            result = result && (obj.SentDate == SentDate);
+            result = result && (obj.Sent == Sent);
+            result = result && (obj.IsSentError == IsSentError);
+            result = result && (obj.SentErrorMessage == SentErrorMessage);
+            result = result && (obj.SentErrorDate == SentErrorDate);
+            result = result && (obj.RetryCount == RetryCount);
+            return result;
+        }
+
+
+        public MessageToSendModel GetCopy()
+        {
+            var obj = new MessageToSendModel();
+            obj.PredefinedMessageToSendTypeName = PredefinedMessageToSendTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.MessageToSendId = MessageToSendId;
+            obj.PredefinedMessageToSendTypeId = PredefinedMessageToSendTypeId;
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.MessageFrom = MessageFrom;
+            obj.MessageTo = MessageTo;
+            obj.MessageFromName = MessageFromName;
+            obj.MessageToName = MessageToName;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageBody = MessageBody;
+            obj.SentDate = SentDate;
+            obj.Sent = Sent;
+            obj.IsSentError = IsSentError;
+            obj.SentErrorMessage = SentErrorMessage;
+            obj.SentErrorDate = SentErrorDate;
+            obj.RetryCount = RetryCount;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMessageToSendTypeName__Name = "PredefinedMessageToSendTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string MessageToSendId__Name = "MessageToSendId";
+        public const string PredefinedMessageToSendTypeId__Name = "PredefinedMessageToSendTypeId";
+        public const string RealtimeMessageId__Name = "RealtimeMessageId";
+        public const string MessageFrom__Name = "MessageFrom";
+        public const string MessageTo__Name = "MessageTo";
+        public const string MessageFromName__Name = "MessageFromName";
+        public const string MessageToName__Name = "MessageToName";
+        public const string MessageSubject__Name = "MessageSubject";
+        public const string MessageBody__Name = "MessageBody";
+        public const string SentDate__Name = "SentDate";
+        public const string Sent__Name = "Sent";
+        public const string IsSentError__Name = "IsSentError";
+        public const string SentErrorMessage__Name = "SentErrorMessage";
+        public const string SentErrorDate__Name = "SentErrorDate";
+        public const string RetryCount__Name = "RetryCount";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int MessageFrom__Size = 500;
+        public const int MessageTo__Size = 500;
+        public const int MessageFromName__Size = 500;
+        public const int MessageToName__Size = 500;
+        public const int MessageSubject__Size = 500;
+        public const int MessageBody__Size = 2000;
+        public const int SentErrorMessage__Size = 500;
+    }
+
+    public class MessageToSendSearchCriteria
+    {
+
+        public MessageToSendSearchCriteria()
+        {
+        }
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("isSent")]
+        public Boolean? IsSent {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedMessageToSendTypeIds")]
+        public List<Int64> PredefinedMessageToSendTypeIds {set; get;}
+        [JsonPropertyName("realtimeMessageId")]
+        public Int64? RealtimeMessageId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MessageToSendSearchCriteria GetCopy()
+        {
+            var obj = new MessageToSendSearchCriteria();
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.IsSent = IsSent;
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedMessageToSendTypeIds = PredefinedMessageToSendTypeIds;
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string IsSent__Name = "IsSent";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedMessageToSendTypeIds__Name = "PredefinedMessageToSendTypeIds";
+        public const string RealtimeMessageId__Name = "RealtimeMessageId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MessageToSendCreateModel
+    {
+
+        public MessageToSendCreateModel()
+        {
+        }
+
+        public MessageToSendCreateModel(Int64 predefinedMessageToSendTypeId,String messageFrom,String messageTo,String messageFromName,String messageToName,String messageBody,Int64 retryCount)
+        {
+            PredefinedMessageToSendTypeId = predefinedMessageToSendTypeId;
+            MessageFrom = messageFrom;
+            MessageTo = messageTo;
+            MessageFromName = messageFromName;
+            MessageToName = messageToName;
+            MessageBody = messageBody;
+            RetryCount = retryCount;
+        }
+
+        [JsonPropertyName("predefinedMessageToSendTypeId")]
+        public Int64 PredefinedMessageToSendTypeId {set; get;}
+        [JsonPropertyName("realtimeMessageId")]
+        public Int64? RealtimeMessageId {set; get;}
+        [JsonPropertyName("messageFrom")]
+        public String MessageFrom {set; get;}
+        [JsonPropertyName("messageTo")]
+        public String MessageTo {set; get;}
+        [JsonPropertyName("messageFromName")]
+        public String MessageFromName {set; get;}
+        [JsonPropertyName("messageToName")]
+        public String MessageToName {set; get;}
+        [JsonPropertyName("messageSubject")]
+        public String MessageSubject {set; get;}
+        [JsonPropertyName("messageBody")]
+        public String MessageBody {set; get;}
+        [JsonPropertyName("sentDate")]
+        public DateTime? SentDate {set; get;}
+        [JsonPropertyName("sent")]
+        public Boolean? Sent {set; get;}
+        [JsonPropertyName("isSentError")]
+        public Boolean? IsSentError {set; get;}
+        [JsonPropertyName("sentErrorMessage")]
+        public String SentErrorMessage {set; get;}
+        [JsonPropertyName("sentErrorDate")]
+        public DateTime? SentErrorDate {set; get;}
+        [JsonPropertyName("retryCount")]
+        public Int64 RetryCount {set; get;}
+
+        public MessageToSendCreateModel GetCopy()
+        {
+            var obj = new MessageToSendCreateModel();
+            obj.PredefinedMessageToSendTypeId = PredefinedMessageToSendTypeId;
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.MessageFrom = MessageFrom;
+            obj.MessageTo = MessageTo;
+            obj.MessageFromName = MessageFromName;
+            obj.MessageToName = MessageToName;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageBody = MessageBody;
+            obj.SentDate = SentDate;
+            obj.Sent = Sent;
+            obj.IsSentError = IsSentError;
+            obj.SentErrorMessage = SentErrorMessage;
+            obj.SentErrorDate = SentErrorDate;
+            obj.RetryCount = RetryCount;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMessageToSendTypeId__Name = "PredefinedMessageToSendTypeId";
+        public const string RealtimeMessageId__Name = "RealtimeMessageId";
+        public const string MessageFrom__Name = "MessageFrom";
+        public const string MessageTo__Name = "MessageTo";
+        public const string MessageFromName__Name = "MessageFromName";
+        public const string MessageToName__Name = "MessageToName";
+        public const string MessageSubject__Name = "MessageSubject";
+        public const string MessageBody__Name = "MessageBody";
+        public const string SentDate__Name = "SentDate";
+        public const string Sent__Name = "Sent";
+        public const string IsSentError__Name = "IsSentError";
+        public const string SentErrorMessage__Name = "SentErrorMessage";
+        public const string SentErrorDate__Name = "SentErrorDate";
+        public const string RetryCount__Name = "RetryCount";
+        // String Column Sizes
+        public const int MessageFrom__Size = 500;
+        public const int MessageTo__Size = 500;
+        public const int MessageFromName__Size = 500;
+        public const int MessageToName__Size = 500;
+        public const int MessageSubject__Size = 500;
+        public const int MessageBody__Size = 2000;
+        public const int SentErrorMessage__Size = 500;
+    }
+
+    public class RealtimeMessageModel
+    {
+
+        public RealtimeMessageModel()
+        {
+        }
+
+        public RealtimeMessageModel(Int64 realtimeMessageId,Int64 predefinedMessagePriorityTypeId,DateTime messageDateTime,String messageSubject,String messageContent,Int64 predefinedRealtimeMessageStatusTypeId,Int64 predefinedNotificationMessageTypeId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            RealtimeMessageId = realtimeMessageId;
+            PredefinedMessagePriorityTypeId = predefinedMessagePriorityTypeId;
+            MessageDateTime = messageDateTime;
+            MessageSubject = messageSubject;
+            MessageContent = messageContent;
+            PredefinedRealtimeMessageStatusTypeId = predefinedRealtimeMessageStatusTypeId;
+            PredefinedNotificationMessageTypeId = predefinedNotificationMessageTypeId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedMessagePriorityTypeName")]
+        public String PredefinedMessagePriorityTypeName {set; get;}
+        [JsonPropertyName("predefinedRealtimeMessageStatusTypeName")]
+        public String PredefinedRealtimeMessageStatusTypeName {set; get;}
+        [JsonPropertyName("predefinedNotificationMessageTypeName")]
+        public String PredefinedNotificationMessageTypeName {set; get;}
+        [JsonPropertyName("predefinedResourceTypeName")]
+        public String PredefinedResourceTypeName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("realtimeMessageId")]
+        public Int64 RealtimeMessageId {set; get;}
+        [JsonPropertyName("predefinedMessagePriorityTypeId")]
+        public Int64 PredefinedMessagePriorityTypeId {set; get;}
+        [JsonPropertyName("messageDateTime")]
+        public DateTime MessageDateTime {set; get;}
+        [JsonPropertyName("messageSubject")]
+        public String MessageSubject {set; get;}
+        [JsonPropertyName("messageContent")]
+        public String MessageContent {set; get;}
+        [JsonPropertyName("messageSentDateTime")]
+        public DateTime? MessageSentDateTime {set; get;}
+        [JsonPropertyName("messageViewedDateTime")]
+        public DateTime? MessageViewedDateTime {set; get;}
+        [JsonPropertyName("predefinedRealtimeMessageStatusTypeId")]
+        public Int64 PredefinedRealtimeMessageStatusTypeId {set; get;}
+        [JsonPropertyName("predefinedNotificationMessageTypeId")]
+        public Int64 PredefinedNotificationMessageTypeId {set; get;}
+        [JsonPropertyName("resourceName")]
+        public String ResourceName {set; get;}
+        [JsonPropertyName("predefinedResourceTypeId")]
+        public Int64? PredefinedResourceTypeId {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("errorMessage")]
+        public String ErrorMessage {set; get;}
+        [JsonPropertyName("errorOccurredOn")]
+        public DateTime? ErrorOccurredOn {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public RealtimeMessageCreateModel GetAsCreateModel()
+        {
+            var obj = new RealtimeMessageCreateModel();
+            obj.PredefinedMessagePriorityTypeId = PredefinedMessagePriorityTypeId;
+            obj.MessageDateTime = MessageDateTime;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageContent = MessageContent;
+            obj.MessageSentDateTime = MessageSentDateTime;
+            obj.MessageViewedDateTime = MessageViewedDateTime;
+            obj.PredefinedRealtimeMessageStatusTypeId = PredefinedRealtimeMessageStatusTypeId;
+            obj.PredefinedNotificationMessageTypeId = PredefinedNotificationMessageTypeId;
+            obj.ResourceName = ResourceName;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.ErrorMessage = ErrorMessage;
+            obj.ErrorOccurredOn = ErrorOccurredOn;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(RealtimeMessageCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedMessagePriorityTypeId == PredefinedMessagePriorityTypeId);
+            result = result && (obj.MessageDateTime == MessageDateTime);
+            result = result && (obj.MessageSubject == MessageSubject);
+            result = result && (obj.MessageContent == MessageContent);
+            result = result && (obj.MessageSentDateTime == MessageSentDateTime);
+            result = result && (obj.MessageViewedDateTime == MessageViewedDateTime);
+            result = result && (obj.PredefinedRealtimeMessageStatusTypeId == PredefinedRealtimeMessageStatusTypeId);
+            result = result && (obj.PredefinedNotificationMessageTypeId == PredefinedNotificationMessageTypeId);
+            result = result && (obj.ResourceName == ResourceName);
+            result = result && (obj.PredefinedResourceTypeId == PredefinedResourceTypeId);
+            result = result && (obj.ResourceId == ResourceId);
+            result = result && (obj.ErrorMessage == ErrorMessage);
+            result = result && (obj.ErrorOccurredOn == ErrorOccurredOn);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public RealtimeMessageUpdateModel GetAsUpdateModel()
+        {
+            var obj = new RealtimeMessageUpdateModel();
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.PredefinedMessagePriorityTypeId = PredefinedMessagePriorityTypeId;
+            obj.MessageDateTime = MessageDateTime;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageContent = MessageContent;
+            obj.MessageSentDateTime = MessageSentDateTime;
+            obj.MessageViewedDateTime = MessageViewedDateTime;
+            obj.PredefinedRealtimeMessageStatusTypeId = PredefinedRealtimeMessageStatusTypeId;
+            obj.PredefinedNotificationMessageTypeId = PredefinedNotificationMessageTypeId;
+            obj.ResourceName = ResourceName;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.ErrorMessage = ErrorMessage;
+            obj.ErrorOccurredOn = ErrorOccurredOn;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(RealtimeMessageUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.RealtimeMessageId == RealtimeMessageId);
+            result = result && (obj.PredefinedMessagePriorityTypeId == PredefinedMessagePriorityTypeId);
+            result = result && (obj.MessageDateTime == MessageDateTime);
+            result = result && (obj.MessageSubject == MessageSubject);
+            result = result && (obj.MessageContent == MessageContent);
+            result = result && (obj.MessageSentDateTime == MessageSentDateTime);
+            result = result && (obj.MessageViewedDateTime == MessageViewedDateTime);
+            result = result && (obj.PredefinedRealtimeMessageStatusTypeId == PredefinedRealtimeMessageStatusTypeId);
+            result = result && (obj.PredefinedNotificationMessageTypeId == PredefinedNotificationMessageTypeId);
+            result = result && (obj.ResourceName == ResourceName);
+            result = result && (obj.PredefinedResourceTypeId == PredefinedResourceTypeId);
+            result = result && (obj.ResourceId == ResourceId);
+            result = result && (obj.ErrorMessage == ErrorMessage);
+            result = result && (obj.ErrorOccurredOn == ErrorOccurredOn);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public RealtimeMessageModel GetCopy()
+        {
+            var obj = new RealtimeMessageModel();
+            obj.PredefinedMessagePriorityTypeName = PredefinedMessagePriorityTypeName;
+            obj.PredefinedRealtimeMessageStatusTypeName = PredefinedRealtimeMessageStatusTypeName;
+            obj.PredefinedNotificationMessageTypeName = PredefinedNotificationMessageTypeName;
+            obj.PredefinedResourceTypeName = PredefinedResourceTypeName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.PredefinedMessagePriorityTypeId = PredefinedMessagePriorityTypeId;
+            obj.MessageDateTime = MessageDateTime;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageContent = MessageContent;
+            obj.MessageSentDateTime = MessageSentDateTime;
+            obj.MessageViewedDateTime = MessageViewedDateTime;
+            obj.PredefinedRealtimeMessageStatusTypeId = PredefinedRealtimeMessageStatusTypeId;
+            obj.PredefinedNotificationMessageTypeId = PredefinedNotificationMessageTypeId;
+            obj.ResourceName = ResourceName;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.ErrorMessage = ErrorMessage;
+            obj.ErrorOccurredOn = ErrorOccurredOn;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMessagePriorityTypeName__Name = "PredefinedMessagePriorityTypeName";
+        public const string PredefinedRealtimeMessageStatusTypeName__Name = "PredefinedRealtimeMessageStatusTypeName";
+        public const string PredefinedNotificationMessageTypeName__Name = "PredefinedNotificationMessageTypeName";
+        public const string PredefinedResourceTypeName__Name = "PredefinedResourceTypeName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string RealtimeMessageId__Name = "RealtimeMessageId";
+        public const string PredefinedMessagePriorityTypeId__Name = "PredefinedMessagePriorityTypeId";
+        public const string MessageDateTime__Name = "MessageDateTime";
+        public const string MessageSubject__Name = "MessageSubject";
+        public const string MessageContent__Name = "MessageContent";
+        public const string MessageSentDateTime__Name = "MessageSentDateTime";
+        public const string MessageViewedDateTime__Name = "MessageViewedDateTime";
+        public const string PredefinedRealtimeMessageStatusTypeId__Name = "PredefinedRealtimeMessageStatusTypeId";
+        public const string PredefinedNotificationMessageTypeId__Name = "PredefinedNotificationMessageTypeId";
+        public const string ResourceName__Name = "ResourceName";
+        public const string PredefinedResourceTypeId__Name = "PredefinedResourceTypeId";
+        public const string ResourceId__Name = "ResourceId";
+        public const string ErrorMessage__Name = "ErrorMessage";
+        public const string ErrorOccurredOn__Name = "ErrorOccurredOn";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int MessageSubject__Size = 255;
+        public const int MessageContent__Size = 255;
+        public const int ResourceName__Size = 100;
+        public const int ErrorMessage__Size = 2000;
+    }
+
+    public class RealtimeMessageSearchCriteria
+    {
+
+        public RealtimeMessageSearchCriteria()
+        {
+        }
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedMessagePriorityTypeIds")]
+        public List<Int64> PredefinedMessagePriorityTypeIds {set; get;}
+        [JsonPropertyName("predefinedRealtimeMessageStatusTypeIds")]
+        public List<Int64> PredefinedRealtimeMessageStatusTypeIds {set; get;}
+        [JsonPropertyName("predefinedNotificationMessageTypeIds")]
+        public List<Int64> PredefinedNotificationMessageTypeIds {set; get;}
+        [JsonPropertyName("predefinedResourceTypeIds")]
+        public List<Int64> PredefinedResourceTypeIds {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public RealtimeMessageSearchCriteria GetCopy()
+        {
+            var obj = new RealtimeMessageSearchCriteria();
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedMessagePriorityTypeIds = PredefinedMessagePriorityTypeIds;
+            obj.PredefinedRealtimeMessageStatusTypeIds = PredefinedRealtimeMessageStatusTypeIds;
+            obj.PredefinedNotificationMessageTypeIds = PredefinedNotificationMessageTypeIds;
+            obj.PredefinedResourceTypeIds = PredefinedResourceTypeIds;
+            obj.ResourceId = ResourceId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedMessagePriorityTypeIds__Name = "PredefinedMessagePriorityTypeIds";
+        public const string PredefinedRealtimeMessageStatusTypeIds__Name = "PredefinedRealtimeMessageStatusTypeIds";
+        public const string PredefinedNotificationMessageTypeIds__Name = "PredefinedNotificationMessageTypeIds";
+        public const string PredefinedResourceTypeIds__Name = "PredefinedResourceTypeIds";
+        public const string ResourceId__Name = "ResourceId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class RealtimeMessageCreateModel
+    {
+
+        public RealtimeMessageCreateModel()
+        {
+        }
+
+        public RealtimeMessageCreateModel(Int64 predefinedMessagePriorityTypeId,DateTime messageDateTime,String messageSubject,String messageContent,Int64 predefinedRealtimeMessageStatusTypeId,Int64 predefinedNotificationMessageTypeId,Int64 userId)
+        {
+            PredefinedMessagePriorityTypeId = predefinedMessagePriorityTypeId;
+            MessageDateTime = messageDateTime;
+            MessageSubject = messageSubject;
+            MessageContent = messageContent;
+            PredefinedRealtimeMessageStatusTypeId = predefinedRealtimeMessageStatusTypeId;
+            PredefinedNotificationMessageTypeId = predefinedNotificationMessageTypeId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("predefinedMessagePriorityTypeId")]
+        public Int64 PredefinedMessagePriorityTypeId {set; get;}
+        [JsonPropertyName("messageDateTime")]
+        public DateTime MessageDateTime {set; get;}
+        [JsonPropertyName("messageSubject")]
+        public String MessageSubject {set; get;}
+        [JsonPropertyName("messageContent")]
+        public String MessageContent {set; get;}
+        [JsonPropertyName("messageSentDateTime")]
+        public DateTime? MessageSentDateTime {set; get;}
+        [JsonPropertyName("messageViewedDateTime")]
+        public DateTime? MessageViewedDateTime {set; get;}
+        [JsonPropertyName("predefinedRealtimeMessageStatusTypeId")]
+        public Int64 PredefinedRealtimeMessageStatusTypeId {set; get;}
+        [JsonPropertyName("predefinedNotificationMessageTypeId")]
+        public Int64 PredefinedNotificationMessageTypeId {set; get;}
+        [JsonPropertyName("resourceName")]
+        public String ResourceName {set; get;}
+        [JsonPropertyName("predefinedResourceTypeId")]
+        public Int64? PredefinedResourceTypeId {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("errorMessage")]
+        public String ErrorMessage {set; get;}
+        [JsonPropertyName("errorOccurredOn")]
+        public DateTime? ErrorOccurredOn {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public RealtimeMessageCreateModel GetCopy()
+        {
+            var obj = new RealtimeMessageCreateModel();
+            obj.PredefinedMessagePriorityTypeId = PredefinedMessagePriorityTypeId;
+            obj.MessageDateTime = MessageDateTime;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageContent = MessageContent;
+            obj.MessageSentDateTime = MessageSentDateTime;
+            obj.MessageViewedDateTime = MessageViewedDateTime;
+            obj.PredefinedRealtimeMessageStatusTypeId = PredefinedRealtimeMessageStatusTypeId;
+            obj.PredefinedNotificationMessageTypeId = PredefinedNotificationMessageTypeId;
+            obj.ResourceName = ResourceName;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.ErrorMessage = ErrorMessage;
+            obj.ErrorOccurredOn = ErrorOccurredOn;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMessagePriorityTypeId__Name = "PredefinedMessagePriorityTypeId";
+        public const string MessageDateTime__Name = "MessageDateTime";
+        public const string MessageSubject__Name = "MessageSubject";
+        public const string MessageContent__Name = "MessageContent";
+        public const string MessageSentDateTime__Name = "MessageSentDateTime";
+        public const string MessageViewedDateTime__Name = "MessageViewedDateTime";
+        public const string PredefinedRealtimeMessageStatusTypeId__Name = "PredefinedRealtimeMessageStatusTypeId";
+        public const string PredefinedNotificationMessageTypeId__Name = "PredefinedNotificationMessageTypeId";
+        public const string ResourceName__Name = "ResourceName";
+        public const string PredefinedResourceTypeId__Name = "PredefinedResourceTypeId";
+        public const string ResourceId__Name = "ResourceId";
+        public const string ErrorMessage__Name = "ErrorMessage";
+        public const string ErrorOccurredOn__Name = "ErrorOccurredOn";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int MessageSubject__Size = 255;
+        public const int MessageContent__Size = 255;
+        public const int ResourceName__Size = 100;
+        public const int ErrorMessage__Size = 2000;
+    }
+
+    public class RealtimeMessageUpdateModel
+    {
+
+        public RealtimeMessageUpdateModel()
+        {
+        }
+
+        public RealtimeMessageUpdateModel(Int64 realtimeMessageId,Int64 predefinedMessagePriorityTypeId,DateTime messageDateTime,String messageSubject,String messageContent,Int64 predefinedRealtimeMessageStatusTypeId,Int64 predefinedNotificationMessageTypeId,Int64 userId)
+        {
+            RealtimeMessageId = realtimeMessageId;
+            PredefinedMessagePriorityTypeId = predefinedMessagePriorityTypeId;
+            MessageDateTime = messageDateTime;
+            MessageSubject = messageSubject;
+            MessageContent = messageContent;
+            PredefinedRealtimeMessageStatusTypeId = predefinedRealtimeMessageStatusTypeId;
+            PredefinedNotificationMessageTypeId = predefinedNotificationMessageTypeId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("realtimeMessageId")]
+        public Int64 RealtimeMessageId {set; get;}
+        [JsonPropertyName("predefinedMessagePriorityTypeId")]
+        public Int64 PredefinedMessagePriorityTypeId {set; get;}
+        [JsonPropertyName("messageDateTime")]
+        public DateTime MessageDateTime {set; get;}
+        [JsonPropertyName("messageSubject")]
+        public String MessageSubject {set; get;}
+        [JsonPropertyName("messageContent")]
+        public String MessageContent {set; get;}
+        [JsonPropertyName("messageSentDateTime")]
+        public DateTime? MessageSentDateTime {set; get;}
+        [JsonPropertyName("messageViewedDateTime")]
+        public DateTime? MessageViewedDateTime {set; get;}
+        [JsonPropertyName("predefinedRealtimeMessageStatusTypeId")]
+        public Int64 PredefinedRealtimeMessageStatusTypeId {set; get;}
+        [JsonPropertyName("predefinedNotificationMessageTypeId")]
+        public Int64 PredefinedNotificationMessageTypeId {set; get;}
+        [JsonPropertyName("resourceName")]
+        public String ResourceName {set; get;}
+        [JsonPropertyName("predefinedResourceTypeId")]
+        public Int64? PredefinedResourceTypeId {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("errorMessage")]
+        public String ErrorMessage {set; get;}
+        [JsonPropertyName("errorOccurredOn")]
+        public DateTime? ErrorOccurredOn {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public RealtimeMessageUpdateModel GetCopy()
+        {
+            var obj = new RealtimeMessageUpdateModel();
+            obj.RealtimeMessageId = RealtimeMessageId;
+            obj.PredefinedMessagePriorityTypeId = PredefinedMessagePriorityTypeId;
+            obj.MessageDateTime = MessageDateTime;
+            obj.MessageSubject = MessageSubject;
+            obj.MessageContent = MessageContent;
+            obj.MessageSentDateTime = MessageSentDateTime;
+            obj.MessageViewedDateTime = MessageViewedDateTime;
+            obj.PredefinedRealtimeMessageStatusTypeId = PredefinedRealtimeMessageStatusTypeId;
+            obj.PredefinedNotificationMessageTypeId = PredefinedNotificationMessageTypeId;
+            obj.ResourceName = ResourceName;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.ErrorMessage = ErrorMessage;
+            obj.ErrorOccurredOn = ErrorOccurredOn;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string RealtimeMessageId__Name = "RealtimeMessageId";
+        public const string PredefinedMessagePriorityTypeId__Name = "PredefinedMessagePriorityTypeId";
+        public const string MessageDateTime__Name = "MessageDateTime";
+        public const string MessageSubject__Name = "MessageSubject";
+        public const string MessageContent__Name = "MessageContent";
+        public const string MessageSentDateTime__Name = "MessageSentDateTime";
+        public const string MessageViewedDateTime__Name = "MessageViewedDateTime";
+        public const string PredefinedRealtimeMessageStatusTypeId__Name = "PredefinedRealtimeMessageStatusTypeId";
+        public const string PredefinedNotificationMessageTypeId__Name = "PredefinedNotificationMessageTypeId";
+        public const string ResourceName__Name = "ResourceName";
+        public const string PredefinedResourceTypeId__Name = "PredefinedResourceTypeId";
+        public const string ResourceId__Name = "ResourceId";
+        public const string ErrorMessage__Name = "ErrorMessage";
+        public const string ErrorOccurredOn__Name = "ErrorOccurredOn";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int MessageSubject__Size = 255;
+        public const int MessageContent__Size = 255;
+        public const int ResourceName__Size = 100;
+        public const int ErrorMessage__Size = 2000;
+    }
+
+    public class SavedJobModel
+    {
+
+        public SavedJobModel()
+        {
+        }
+
+        public SavedJobModel(Int64 savedJobId,Int64 predefinedJobTypeId,Int64 jobTemplateId,DateTime submittedDate,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean includeDataSourceFile,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            SavedJobId = savedJobId;
+            PredefinedJobTypeId = predefinedJobTypeId;
+            JobTemplateId = jobTemplateId;
+            SubmittedDate = submittedDate;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            IncludeDataSourceFile = includeDataSourceFile;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("savedNotificationEmails")]
+        public List<SavedJobNotificationEmailModel> SavedNotificationEmails {set; get;}
+        [JsonPropertyName("predefinedJobTypeName")]
+        public String PredefinedJobTypeName {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeName")]
+        public String PredefinedJobOrReportTypeName {set; get;}
+        [JsonPropertyName("submittedByUserName")]
+        public String SubmittedByUserName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("savedJobId")]
+        public Int64 SavedJobId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64 PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("completedDate")]
+        public DateTime? CompletedDate {set; get;}
+        [JsonPropertyName("submittedDate")]
+        public DateTime SubmittedDate {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public SavedJobCreateModel GetAsCreateModel()
+        {
+            var obj = new SavedJobCreateModel();
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.JobName = JobName;
+            obj.UserId = UserId;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(SavedJobCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.CompletedDate == CompletedDate);
+            result = result && (obj.SubmittedDate == SubmittedDate);
+            result = result && (obj.SubmittedByUserId == SubmittedByUserId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.SerializedJobParameter == SerializedJobParameter);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.ExportDoc == ExportDoc);
+            result = result && (obj.ExportXls == ExportXls);
+            result = result && (obj.ExportPpt == ExportPpt);
+            result = result && (obj.ExportCsv == ExportCsv);
+            result = result && (obj.ExportXml == ExportXml);
+            result = result && (obj.ExportPdf == ExportPdf);
+            result = result && (obj.ExportCustom == ExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.JobName == JobName);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            return result;
+        }
+
+
+        public SavedJobUpdateModel GetAsUpdateModel()
+        {
+            var obj = new SavedJobUpdateModel();
+            obj.SavedJobId = SavedJobId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.JobName = JobName;
+            obj.UserId = UserId;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(SavedJobUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SavedJobId == SavedJobId);
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.CompletedDate == CompletedDate);
+            result = result && (obj.SubmittedDate == SubmittedDate);
+            result = result && (obj.SubmittedByUserId == SubmittedByUserId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.SerializedJobParameter == SerializedJobParameter);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.ExportDoc == ExportDoc);
+            result = result && (obj.ExportXls == ExportXls);
+            result = result && (obj.ExportPpt == ExportPpt);
+            result = result && (obj.ExportCsv == ExportCsv);
+            result = result && (obj.ExportXml == ExportXml);
+            result = result && (obj.ExportPdf == ExportPdf);
+            result = result && (obj.ExportCustom == ExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.JobName == JobName);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            return result;
+        }
+
+
+        public SavedJobModel GetCopy()
+        {
+            var obj = new SavedJobModel();
+            obj.SavedNotificationEmails = SavedNotificationEmails;
+            obj.PredefinedJobTypeName = PredefinedJobTypeName;
+            obj.PredefinedJobOrReportTypeName = PredefinedJobOrReportTypeName;
+            obj.SubmittedByUserName = SubmittedByUserName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.SavedJobId = SavedJobId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.JobName = JobName;
+            obj.UserId = UserId;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string SavedNotificationEmails__Name = "SavedNotificationEmails";
+        public const string PredefinedJobTypeName__Name = "PredefinedJobTypeName";
+        public const string PredefinedJobOrReportTypeName__Name = "PredefinedJobOrReportTypeName";
+        public const string SubmittedByUserName__Name = "SubmittedByUserName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string SavedJobId__Name = "SavedJobId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string CompletedDate__Name = "CompletedDate";
+        public const string SubmittedDate__Name = "SubmittedDate";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string JobName__Name = "JobName";
+        public const string UserId__Name = "UserId";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+    }
+
+    public class SavedJobSearchCriteria
+    {
+
+        public SavedJobSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedJobTypeIds")]
+        public List<Int64> PredefinedJobTypeIds {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeIds")]
+        public List<Int64> PredefinedJobOrReportTypeIds {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64? JobTemplateId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public SavedJobSearchCriteria GetCopy()
+        {
+            var obj = new SavedJobSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedJobTypeIds = PredefinedJobTypeIds;
+            obj.PredefinedJobOrReportTypeIds = PredefinedJobOrReportTypeIds;
+            obj.JobTemplateId = JobTemplateId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedJobTypeIds__Name = "PredefinedJobTypeIds";
+        public const string PredefinedJobOrReportTypeIds__Name = "PredefinedJobOrReportTypeIds";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class SavedJobCreateModel
+    {
+
+        public SavedJobCreateModel()
+        {
+        }
+
+        public SavedJobCreateModel(Int64 predefinedJobTypeId,Int64 jobTemplateId,DateTime submittedDate,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean includeDataSourceFile)
+        {
+            PredefinedJobTypeId = predefinedJobTypeId;
+            JobTemplateId = jobTemplateId;
+            SubmittedDate = submittedDate;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            IncludeDataSourceFile = includeDataSourceFile;
+        }
+
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64 PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("completedDate")]
+        public DateTime? CompletedDate {set; get;}
+        [JsonPropertyName("submittedDate")]
+        public DateTime SubmittedDate {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+
+        public SavedJobCreateModel GetCopy()
+        {
+            var obj = new SavedJobCreateModel();
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.JobName = JobName;
+            obj.UserId = UserId;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string CompletedDate__Name = "CompletedDate";
+        public const string SubmittedDate__Name = "SubmittedDate";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string JobName__Name = "JobName";
+        public const string UserId__Name = "UserId";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        // String Column Sizes
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+    }
+
+    public class SavedJobUpdateModel
+    {
+
+        public SavedJobUpdateModel()
+        {
+        }
+
+        public SavedJobUpdateModel(Int64 savedJobId,Int64 predefinedJobTypeId,Int64 jobTemplateId,DateTime submittedDate,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean includeDataSourceFile)
+        {
+            SavedJobId = savedJobId;
+            PredefinedJobTypeId = predefinedJobTypeId;
+            JobTemplateId = jobTemplateId;
+            SubmittedDate = submittedDate;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            IncludeDataSourceFile = includeDataSourceFile;
+        }
+
+        [JsonPropertyName("savedJobId")]
+        public Int64 SavedJobId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64 PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("completedDate")]
+        public DateTime? CompletedDate {set; get;}
+        [JsonPropertyName("submittedDate")]
+        public DateTime SubmittedDate {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+
+        public SavedJobUpdateModel GetCopy()
+        {
+            var obj = new SavedJobUpdateModel();
+            obj.SavedJobId = SavedJobId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.CompletedDate = CompletedDate;
+            obj.SubmittedDate = SubmittedDate;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.JobName = JobName;
+            obj.UserId = UserId;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            return obj;
+        }
+
+        // Property Names
+        public const string SavedJobId__Name = "SavedJobId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string CompletedDate__Name = "CompletedDate";
+        public const string SubmittedDate__Name = "SubmittedDate";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string JobName__Name = "JobName";
+        public const string UserId__Name = "UserId";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        // String Column Sizes
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+    }
+
+    public class ScheduledJobModel
+    {
+
+        public ScheduledJobModel()
+        {
+        }
+
+        public ScheduledJobModel(Int64 scheduledJobId,Int64 jobTemplateId,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean recurring,Boolean runMonday,Boolean runTuesday,Boolean runWednesday,Boolean runThursday,Boolean runFriday,Boolean runSaturday,Boolean runSunday,Boolean active,Boolean isMonthly,Boolean isHourly,Boolean isDaily,Boolean isWeekly,Boolean includeDataSourceFile,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ScheduledJobId = scheduledJobId;
+            JobTemplateId = jobTemplateId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            Recurring = recurring;
+            RunMonday = runMonday;
+            RunTuesday = runTuesday;
+            RunWednesday = runWednesday;
+            RunThursday = runThursday;
+            RunFriday = runFriday;
+            RunSaturday = runSaturday;
+            RunSunday = runSunday;
+            Active = active;
+            IsMonthly = isMonthly;
+            IsHourly = isHourly;
+            IsDaily = isDaily;
+            IsWeekly = isWeekly;
+            IncludeDataSourceFile = includeDataSourceFile;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("notificationEmails")]
+        public List<ScheduledJobNotificationEmailModel> NotificationEmails {set; get;}
+        [JsonPropertyName("enumTypeName")]
+        public String EnumTypeName {set; get;}
+        [JsonPropertyName("submittedByUserName")]
+        public String SubmittedByUserName {set; get;}
+        [JsonPropertyName("runAsUserName")]
+        public String RunAsUserName {set; get;}
+        [JsonPropertyName("predefinedJobTypeName")]
+        public String PredefinedJobTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64? PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("pickupTime")]
+        public Int64? PickupTime {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("runAsUserId")]
+        public Int64? RunAsUserId {set; get;}
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("startTime")]
+        public DateTime? StartTime {set; get;}
+        [JsonPropertyName("recurring")]
+        public Boolean Recurring {set; get;}
+        [JsonPropertyName("runMonday")]
+        public Boolean RunMonday {set; get;}
+        [JsonPropertyName("runTuesday")]
+        public Boolean RunTuesday {set; get;}
+        [JsonPropertyName("runWednesday")]
+        public Boolean RunWednesday {set; get;}
+        [JsonPropertyName("runThursday")]
+        public Boolean RunThursday {set; get;}
+        [JsonPropertyName("runFriday")]
+        public Boolean RunFriday {set; get;}
+        [JsonPropertyName("runSaturday")]
+        public Boolean RunSaturday {set; get;}
+        [JsonPropertyName("runSunday")]
+        public Boolean RunSunday {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("isMonthly")]
+        public Boolean IsMonthly {set; get;}
+        [JsonPropertyName("runMonthlyDay")]
+        public Int64? RunMonthlyDay {set; get;}
+        [JsonPropertyName("runMonthlyTime")]
+        public DateTime? RunMonthlyTime {set; get;}
+        [JsonPropertyName("isHourly")]
+        public Boolean IsHourly {set; get;}
+        [JsonPropertyName("isDaily")]
+        public Boolean IsDaily {set; get;}
+        [JsonPropertyName("runDailyTime")]
+        public DateTime? RunDailyTime {set; get;}
+        [JsonPropertyName("isWeekly")]
+        public Boolean IsWeekly {set; get;}
+        [JsonPropertyName("runHourlyMinute")]
+        public Int64? RunHourlyMinute {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("runOnWeekNumber")]
+        public Int64? RunOnWeekNumber {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ScheduledJobCreateModel GetAsCreateModel()
+        {
+            var obj = new ScheduledJobCreateModel();
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.RunAsUserId = RunAsUserId;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.StartTime = StartTime;
+            obj.Recurring = Recurring;
+            obj.RunMonday = RunMonday;
+            obj.RunTuesday = RunTuesday;
+            obj.RunWednesday = RunWednesday;
+            obj.RunThursday = RunThursday;
+            obj.RunFriday = RunFriday;
+            obj.RunSaturday = RunSaturday;
+            obj.RunSunday = RunSunday;
+            obj.Active = Active;
+            obj.IsMonthly = IsMonthly;
+            obj.RunMonthlyDay = RunMonthlyDay;
+            obj.RunMonthlyTime = RunMonthlyTime;
+            obj.IsHourly = IsHourly;
+            obj.IsDaily = IsDaily;
+            obj.RunDailyTime = RunDailyTime;
+            obj.IsWeekly = IsWeekly;
+            obj.RunHourlyMinute = RunHourlyMinute;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.RunOnWeekNumber = RunOnWeekNumber;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ScheduledJobCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.SubmittedByUserId == SubmittedByUserId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.SerializedJobParameter == SerializedJobParameter);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.ExportDoc == ExportDoc);
+            result = result && (obj.ExportXls == ExportXls);
+            result = result && (obj.ExportPpt == ExportPpt);
+            result = result && (obj.ExportCsv == ExportCsv);
+            result = result && (obj.ExportXml == ExportXml);
+            result = result && (obj.ExportPdf == ExportPdf);
+            result = result && (obj.ExportCustom == ExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.PickupTime == PickupTime);
+            result = result && (obj.JobName == JobName);
+            result = result && (obj.RunAsUserId == RunAsUserId);
+            result = result && (obj.StartDate == StartDate);
+            result = result && (obj.EndDate == EndDate);
+            result = result && (obj.StartTime == StartTime);
+            result = result && (obj.Recurring == Recurring);
+            result = result && (obj.RunMonday == RunMonday);
+            result = result && (obj.RunTuesday == RunTuesday);
+            result = result && (obj.RunWednesday == RunWednesday);
+            result = result && (obj.RunThursday == RunThursday);
+            result = result && (obj.RunFriday == RunFriday);
+            result = result && (obj.RunSaturday == RunSaturday);
+            result = result && (obj.RunSunday == RunSunday);
+            result = result && (obj.Active == Active);
+            result = result && (obj.IsMonthly == IsMonthly);
+            result = result && (obj.RunMonthlyDay == RunMonthlyDay);
+            result = result && (obj.RunMonthlyTime == RunMonthlyTime);
+            result = result && (obj.IsHourly == IsHourly);
+            result = result && (obj.IsDaily == IsDaily);
+            result = result && (obj.RunDailyTime == RunDailyTime);
+            result = result && (obj.IsWeekly == IsWeekly);
+            result = result && (obj.RunHourlyMinute == RunHourlyMinute);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            result = result && (obj.RunOnWeekNumber == RunOnWeekNumber);
+            return result;
+        }
+
+
+        public ScheduledJobUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ScheduledJobUpdateModel();
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.RunAsUserId = RunAsUserId;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.StartTime = StartTime;
+            obj.Recurring = Recurring;
+            obj.RunMonday = RunMonday;
+            obj.RunTuesday = RunTuesday;
+            obj.RunWednesday = RunWednesday;
+            obj.RunThursday = RunThursday;
+            obj.RunFriday = RunFriday;
+            obj.RunSaturday = RunSaturday;
+            obj.RunSunday = RunSunday;
+            obj.Active = Active;
+            obj.IsMonthly = IsMonthly;
+            obj.RunMonthlyDay = RunMonthlyDay;
+            obj.RunMonthlyTime = RunMonthlyTime;
+            obj.IsHourly = IsHourly;
+            obj.IsDaily = IsDaily;
+            obj.RunDailyTime = RunDailyTime;
+            obj.IsWeekly = IsWeekly;
+            obj.RunHourlyMinute = RunHourlyMinute;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.RunOnWeekNumber = RunOnWeekNumber;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ScheduledJobUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ScheduledJobId == ScheduledJobId);
+            result = result && (obj.JobTemplateId == JobTemplateId);
+            result = result && (obj.PredefinedJobTypeId == PredefinedJobTypeId);
+            result = result && (obj.PredefinedJobOrReportTypeId == PredefinedJobOrReportTypeId);
+            result = result && (obj.SubmittedByUserId == SubmittedByUserId);
+            result = result && (obj.ExecutableFolder == ExecutableFolder);
+            result = result && (obj.ExecutableName == ExecutableName);
+            result = result && (obj.ExecutableParameter == ExecutableParameter);
+            result = result && (obj.SerializedJobParameter == SerializedJobParameter);
+            result = result && (obj.ReportTemplateFile == ReportTemplateFile);
+            result = result && (obj.ExportDoc == ExportDoc);
+            result = result && (obj.ExportXls == ExportXls);
+            result = result && (obj.ExportPpt == ExportPpt);
+            result = result && (obj.ExportCsv == ExportCsv);
+            result = result && (obj.ExportXml == ExportXml);
+            result = result && (obj.ExportPdf == ExportPdf);
+            result = result && (obj.ExportCustom == ExportCustom);
+            result = result && (obj.CustomExportName == CustomExportName);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.PickupTime == PickupTime);
+            result = result && (obj.JobName == JobName);
+            result = result && (obj.RunAsUserId == RunAsUserId);
+            result = result && (obj.StartDate == StartDate);
+            result = result && (obj.EndDate == EndDate);
+            result = result && (obj.StartTime == StartTime);
+            result = result && (obj.Recurring == Recurring);
+            result = result && (obj.RunMonday == RunMonday);
+            result = result && (obj.RunTuesday == RunTuesday);
+            result = result && (obj.RunWednesday == RunWednesday);
+            result = result && (obj.RunThursday == RunThursday);
+            result = result && (obj.RunFriday == RunFriday);
+            result = result && (obj.RunSaturday == RunSaturday);
+            result = result && (obj.RunSunday == RunSunday);
+            result = result && (obj.Active == Active);
+            result = result && (obj.IsMonthly == IsMonthly);
+            result = result && (obj.RunMonthlyDay == RunMonthlyDay);
+            result = result && (obj.RunMonthlyTime == RunMonthlyTime);
+            result = result && (obj.IsHourly == IsHourly);
+            result = result && (obj.IsDaily == IsDaily);
+            result = result && (obj.RunDailyTime == RunDailyTime);
+            result = result && (obj.IsWeekly == IsWeekly);
+            result = result && (obj.RunHourlyMinute == RunHourlyMinute);
+            result = result && (obj.IncludeDataSourceFile == IncludeDataSourceFile);
+            result = result && (obj.RunOnWeekNumber == RunOnWeekNumber);
+            return result;
+        }
+
+
+        public ScheduledJobModel GetCopy()
+        {
+            var obj = new ScheduledJobModel();
+            obj.NotificationEmails = NotificationEmails;
+            obj.EnumTypeName = EnumTypeName;
+            obj.SubmittedByUserName = SubmittedByUserName;
+            obj.RunAsUserName = RunAsUserName;
+            obj.PredefinedJobTypeName = PredefinedJobTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.RunAsUserId = RunAsUserId;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.StartTime = StartTime;
+            obj.Recurring = Recurring;
+            obj.RunMonday = RunMonday;
+            obj.RunTuesday = RunTuesday;
+            obj.RunWednesday = RunWednesday;
+            obj.RunThursday = RunThursday;
+            obj.RunFriday = RunFriday;
+            obj.RunSaturday = RunSaturday;
+            obj.RunSunday = RunSunday;
+            obj.Active = Active;
+            obj.IsMonthly = IsMonthly;
+            obj.RunMonthlyDay = RunMonthlyDay;
+            obj.RunMonthlyTime = RunMonthlyTime;
+            obj.IsHourly = IsHourly;
+            obj.IsDaily = IsDaily;
+            obj.RunDailyTime = RunDailyTime;
+            obj.IsWeekly = IsWeekly;
+            obj.RunHourlyMinute = RunHourlyMinute;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.RunOnWeekNumber = RunOnWeekNumber;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string NotificationEmails__Name = "NotificationEmails";
+        public const string EnumTypeName__Name = "EnumTypeName";
+        public const string SubmittedByUserName__Name = "SubmittedByUserName";
+        public const string RunAsUserName__Name = "RunAsUserName";
+        public const string PredefinedJobTypeName__Name = "PredefinedJobTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupTime__Name = "PickupTime";
+        public const string JobName__Name = "JobName";
+        public const string RunAsUserId__Name = "RunAsUserId";
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string StartTime__Name = "StartTime";
+        public const string Recurring__Name = "Recurring";
+        public const string RunMonday__Name = "RunMonday";
+        public const string RunTuesday__Name = "RunTuesday";
+        public const string RunWednesday__Name = "RunWednesday";
+        public const string RunThursday__Name = "RunThursday";
+        public const string RunFriday__Name = "RunFriday";
+        public const string RunSaturday__Name = "RunSaturday";
+        public const string RunSunday__Name = "RunSunday";
+        public const string Active__Name = "Active";
+        public const string IsMonthly__Name = "IsMonthly";
+        public const string RunMonthlyDay__Name = "RunMonthlyDay";
+        public const string RunMonthlyTime__Name = "RunMonthlyTime";
+        public const string IsHourly__Name = "IsHourly";
+        public const string IsDaily__Name = "IsDaily";
+        public const string RunDailyTime__Name = "RunDailyTime";
+        public const string IsWeekly__Name = "IsWeekly";
+        public const string RunHourlyMinute__Name = "RunHourlyMinute";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string RunOnWeekNumber__Name = "RunOnWeekNumber";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+    }
+
+    public class ScheduledJobSearchCriteria
+    {
+
+        public ScheduledJobSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64? JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeIds")]
+        public List<Int64> PredefinedJobOrReportTypeIds {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("runAsUserId")]
+        public Int64? RunAsUserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ScheduledJobSearchCriteria GetCopy()
+        {
+            var obj = new ScheduledJobSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobOrReportTypeIds = PredefinedJobOrReportTypeIds;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.RunAsUserId = RunAsUserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobOrReportTypeIds__Name = "PredefinedJobOrReportTypeIds";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string RunAsUserId__Name = "RunAsUserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ScheduledJobCreateModel
+    {
+
+        public ScheduledJobCreateModel()
+        {
+        }
+
+        public ScheduledJobCreateModel(Int64 jobTemplateId,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean recurring,Boolean runMonday,Boolean runTuesday,Boolean runWednesday,Boolean runThursday,Boolean runFriday,Boolean runSaturday,Boolean runSunday,Boolean active,Boolean isMonthly,Boolean isHourly,Boolean isDaily,Boolean isWeekly,Boolean includeDataSourceFile)
+        {
+            JobTemplateId = jobTemplateId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            Recurring = recurring;
+            RunMonday = runMonday;
+            RunTuesday = runTuesday;
+            RunWednesday = runWednesday;
+            RunThursday = runThursday;
+            RunFriday = runFriday;
+            RunSaturday = runSaturday;
+            RunSunday = runSunday;
+            Active = active;
+            IsMonthly = isMonthly;
+            IsHourly = isHourly;
+            IsDaily = isDaily;
+            IsWeekly = isWeekly;
+            IncludeDataSourceFile = includeDataSourceFile;
+        }
+
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64? PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("pickupTime")]
+        public Int64? PickupTime {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("runAsUserId")]
+        public Int64? RunAsUserId {set; get;}
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("startTime")]
+        public DateTime? StartTime {set; get;}
+        [JsonPropertyName("recurring")]
+        public Boolean Recurring {set; get;}
+        [JsonPropertyName("runMonday")]
+        public Boolean RunMonday {set; get;}
+        [JsonPropertyName("runTuesday")]
+        public Boolean RunTuesday {set; get;}
+        [JsonPropertyName("runWednesday")]
+        public Boolean RunWednesday {set; get;}
+        [JsonPropertyName("runThursday")]
+        public Boolean RunThursday {set; get;}
+        [JsonPropertyName("runFriday")]
+        public Boolean RunFriday {set; get;}
+        [JsonPropertyName("runSaturday")]
+        public Boolean RunSaturday {set; get;}
+        [JsonPropertyName("runSunday")]
+        public Boolean RunSunday {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("isMonthly")]
+        public Boolean IsMonthly {set; get;}
+        [JsonPropertyName("runMonthlyDay")]
+        public Int64? RunMonthlyDay {set; get;}
+        [JsonPropertyName("runMonthlyTime")]
+        public DateTime? RunMonthlyTime {set; get;}
+        [JsonPropertyName("isHourly")]
+        public Boolean IsHourly {set; get;}
+        [JsonPropertyName("isDaily")]
+        public Boolean IsDaily {set; get;}
+        [JsonPropertyName("runDailyTime")]
+        public DateTime? RunDailyTime {set; get;}
+        [JsonPropertyName("isWeekly")]
+        public Boolean IsWeekly {set; get;}
+        [JsonPropertyName("runHourlyMinute")]
+        public Int64? RunHourlyMinute {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("runOnWeekNumber")]
+        public Int64? RunOnWeekNumber {set; get;}
+
+        public ScheduledJobCreateModel GetCopy()
+        {
+            var obj = new ScheduledJobCreateModel();
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.RunAsUserId = RunAsUserId;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.StartTime = StartTime;
+            obj.Recurring = Recurring;
+            obj.RunMonday = RunMonday;
+            obj.RunTuesday = RunTuesday;
+            obj.RunWednesday = RunWednesday;
+            obj.RunThursday = RunThursday;
+            obj.RunFriday = RunFriday;
+            obj.RunSaturday = RunSaturday;
+            obj.RunSunday = RunSunday;
+            obj.Active = Active;
+            obj.IsMonthly = IsMonthly;
+            obj.RunMonthlyDay = RunMonthlyDay;
+            obj.RunMonthlyTime = RunMonthlyTime;
+            obj.IsHourly = IsHourly;
+            obj.IsDaily = IsDaily;
+            obj.RunDailyTime = RunDailyTime;
+            obj.IsWeekly = IsWeekly;
+            obj.RunHourlyMinute = RunHourlyMinute;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.RunOnWeekNumber = RunOnWeekNumber;
+            return obj;
+        }
+
+        // Property Names
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupTime__Name = "PickupTime";
+        public const string JobName__Name = "JobName";
+        public const string RunAsUserId__Name = "RunAsUserId";
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string StartTime__Name = "StartTime";
+        public const string Recurring__Name = "Recurring";
+        public const string RunMonday__Name = "RunMonday";
+        public const string RunTuesday__Name = "RunTuesday";
+        public const string RunWednesday__Name = "RunWednesday";
+        public const string RunThursday__Name = "RunThursday";
+        public const string RunFriday__Name = "RunFriday";
+        public const string RunSaturday__Name = "RunSaturday";
+        public const string RunSunday__Name = "RunSunday";
+        public const string Active__Name = "Active";
+        public const string IsMonthly__Name = "IsMonthly";
+        public const string RunMonthlyDay__Name = "RunMonthlyDay";
+        public const string RunMonthlyTime__Name = "RunMonthlyTime";
+        public const string IsHourly__Name = "IsHourly";
+        public const string IsDaily__Name = "IsDaily";
+        public const string RunDailyTime__Name = "RunDailyTime";
+        public const string IsWeekly__Name = "IsWeekly";
+        public const string RunHourlyMinute__Name = "RunHourlyMinute";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string RunOnWeekNumber__Name = "RunOnWeekNumber";
+        // String Column Sizes
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+    }
+
+    public class ScheduledJobUpdateModel
+    {
+
+        public ScheduledJobUpdateModel()
+        {
+        }
+
+        public ScheduledJobUpdateModel(Int64 scheduledJobId,Int64 jobTemplateId,String executableFolder,String executableName,Boolean exportDoc,Boolean exportXls,Boolean exportPpt,Boolean exportCsv,Boolean exportXml,Boolean exportPdf,Boolean exportCustom,Boolean recurring,Boolean runMonday,Boolean runTuesday,Boolean runWednesday,Boolean runThursday,Boolean runFriday,Boolean runSaturday,Boolean runSunday,Boolean active,Boolean isMonthly,Boolean isHourly,Boolean isDaily,Boolean isWeekly,Boolean includeDataSourceFile)
+        {
+            ScheduledJobId = scheduledJobId;
+            JobTemplateId = jobTemplateId;
+            ExecutableFolder = executableFolder;
+            ExecutableName = executableName;
+            ExportDoc = exportDoc;
+            ExportXls = exportXls;
+            ExportPpt = exportPpt;
+            ExportCsv = exportCsv;
+            ExportXml = exportXml;
+            ExportPdf = exportPdf;
+            ExportCustom = exportCustom;
+            Recurring = recurring;
+            RunMonday = runMonday;
+            RunTuesday = runTuesday;
+            RunWednesday = runWednesday;
+            RunThursday = runThursday;
+            RunFriday = runFriday;
+            RunSaturday = runSaturday;
+            RunSunday = runSunday;
+            Active = active;
+            IsMonthly = isMonthly;
+            IsHourly = isHourly;
+            IsDaily = isDaily;
+            IsWeekly = isWeekly;
+            IncludeDataSourceFile = includeDataSourceFile;
+        }
+
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("jobTemplateId")]
+        public Int64 JobTemplateId {set; get;}
+        [JsonPropertyName("predefinedJobTypeId")]
+        public Int64? PredefinedJobTypeId {set; get;}
+        [JsonPropertyName("predefinedJobOrReportTypeId")]
+        public Int64? PredefinedJobOrReportTypeId {set; get;}
+        [JsonPropertyName("submittedByUserId")]
+        public Int64? SubmittedByUserId {set; get;}
+        [JsonPropertyName("executableFolder")]
+        public String ExecutableFolder {set; get;}
+        [JsonPropertyName("executableName")]
+        public String ExecutableName {set; get;}
+        [JsonPropertyName("executableParameter")]
+        public String ExecutableParameter {set; get;}
+        [JsonPropertyName("serializedJobParameter")]
+        public String SerializedJobParameter {set; get;}
+        [JsonPropertyName("reportTemplateFile")]
+        public String ReportTemplateFile {set; get;}
+        [JsonPropertyName("exportDoc")]
+        public Boolean ExportDoc {set; get;}
+        [JsonPropertyName("exportXls")]
+        public Boolean ExportXls {set; get;}
+        [JsonPropertyName("exportPpt")]
+        public Boolean ExportPpt {set; get;}
+        [JsonPropertyName("exportCsv")]
+        public Boolean ExportCsv {set; get;}
+        [JsonPropertyName("exportXml")]
+        public Boolean ExportXml {set; get;}
+        [JsonPropertyName("exportPdf")]
+        public Boolean ExportPdf {set; get;}
+        [JsonPropertyName("exportCustom")]
+        public Boolean ExportCustom {set; get;}
+        [JsonPropertyName("customExportName")]
+        public String CustomExportName {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime? PickupDate {set; get;}
+        [JsonPropertyName("pickupTime")]
+        public Int64? PickupTime {set; get;}
+        [JsonPropertyName("jobName")]
+        public String JobName {set; get;}
+        [JsonPropertyName("runAsUserId")]
+        public Int64? RunAsUserId {set; get;}
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("startTime")]
+        public DateTime? StartTime {set; get;}
+        [JsonPropertyName("recurring")]
+        public Boolean Recurring {set; get;}
+        [JsonPropertyName("runMonday")]
+        public Boolean RunMonday {set; get;}
+        [JsonPropertyName("runTuesday")]
+        public Boolean RunTuesday {set; get;}
+        [JsonPropertyName("runWednesday")]
+        public Boolean RunWednesday {set; get;}
+        [JsonPropertyName("runThursday")]
+        public Boolean RunThursday {set; get;}
+        [JsonPropertyName("runFriday")]
+        public Boolean RunFriday {set; get;}
+        [JsonPropertyName("runSaturday")]
+        public Boolean RunSaturday {set; get;}
+        [JsonPropertyName("runSunday")]
+        public Boolean RunSunday {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("isMonthly")]
+        public Boolean IsMonthly {set; get;}
+        [JsonPropertyName("runMonthlyDay")]
+        public Int64? RunMonthlyDay {set; get;}
+        [JsonPropertyName("runMonthlyTime")]
+        public DateTime? RunMonthlyTime {set; get;}
+        [JsonPropertyName("isHourly")]
+        public Boolean IsHourly {set; get;}
+        [JsonPropertyName("isDaily")]
+        public Boolean IsDaily {set; get;}
+        [JsonPropertyName("runDailyTime")]
+        public DateTime? RunDailyTime {set; get;}
+        [JsonPropertyName("isWeekly")]
+        public Boolean IsWeekly {set; get;}
+        [JsonPropertyName("runHourlyMinute")]
+        public Int64? RunHourlyMinute {set; get;}
+        [JsonPropertyName("includeDataSourceFile")]
+        public Boolean IncludeDataSourceFile {set; get;}
+        [JsonPropertyName("runOnWeekNumber")]
+        public Int64? RunOnWeekNumber {set; get;}
+
+        public ScheduledJobUpdateModel GetCopy()
+        {
+            var obj = new ScheduledJobUpdateModel();
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.JobTemplateId = JobTemplateId;
+            obj.PredefinedJobTypeId = PredefinedJobTypeId;
+            obj.PredefinedJobOrReportTypeId = PredefinedJobOrReportTypeId;
+            obj.SubmittedByUserId = SubmittedByUserId;
+            obj.ExecutableFolder = ExecutableFolder;
+            obj.ExecutableName = ExecutableName;
+            obj.ExecutableParameter = ExecutableParameter;
+            obj.SerializedJobParameter = SerializedJobParameter;
+            obj.ReportTemplateFile = ReportTemplateFile;
+            obj.ExportDoc = ExportDoc;
+            obj.ExportXls = ExportXls;
+            obj.ExportPpt = ExportPpt;
+            obj.ExportCsv = ExportCsv;
+            obj.ExportXml = ExportXml;
+            obj.ExportPdf = ExportPdf;
+            obj.ExportCustom = ExportCustom;
+            obj.CustomExportName = CustomExportName;
+            obj.PickupDate = PickupDate;
+            obj.PickupTime = PickupTime;
+            obj.JobName = JobName;
+            obj.RunAsUserId = RunAsUserId;
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.StartTime = StartTime;
+            obj.Recurring = Recurring;
+            obj.RunMonday = RunMonday;
+            obj.RunTuesday = RunTuesday;
+            obj.RunWednesday = RunWednesday;
+            obj.RunThursday = RunThursday;
+            obj.RunFriday = RunFriday;
+            obj.RunSaturday = RunSaturday;
+            obj.RunSunday = RunSunday;
+            obj.Active = Active;
+            obj.IsMonthly = IsMonthly;
+            obj.RunMonthlyDay = RunMonthlyDay;
+            obj.RunMonthlyTime = RunMonthlyTime;
+            obj.IsHourly = IsHourly;
+            obj.IsDaily = IsDaily;
+            obj.RunDailyTime = RunDailyTime;
+            obj.IsWeekly = IsWeekly;
+            obj.RunHourlyMinute = RunHourlyMinute;
+            obj.IncludeDataSourceFile = IncludeDataSourceFile;
+            obj.RunOnWeekNumber = RunOnWeekNumber;
+            return obj;
+        }
+
+        // Property Names
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string JobTemplateId__Name = "JobTemplateId";
+        public const string PredefinedJobTypeId__Name = "PredefinedJobTypeId";
+        public const string PredefinedJobOrReportTypeId__Name = "PredefinedJobOrReportTypeId";
+        public const string SubmittedByUserId__Name = "SubmittedByUserId";
+        public const string ExecutableFolder__Name = "ExecutableFolder";
+        public const string ExecutableName__Name = "ExecutableName";
+        public const string ExecutableParameter__Name = "ExecutableParameter";
+        public const string SerializedJobParameter__Name = "SerializedJobParameter";
+        public const string ReportTemplateFile__Name = "ReportTemplateFile";
+        public const string ExportDoc__Name = "ExportDoc";
+        public const string ExportXls__Name = "ExportXls";
+        public const string ExportPpt__Name = "ExportPpt";
+        public const string ExportCsv__Name = "ExportCsv";
+        public const string ExportXml__Name = "ExportXml";
+        public const string ExportPdf__Name = "ExportPdf";
+        public const string ExportCustom__Name = "ExportCustom";
+        public const string CustomExportName__Name = "CustomExportName";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupTime__Name = "PickupTime";
+        public const string JobName__Name = "JobName";
+        public const string RunAsUserId__Name = "RunAsUserId";
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string StartTime__Name = "StartTime";
+        public const string Recurring__Name = "Recurring";
+        public const string RunMonday__Name = "RunMonday";
+        public const string RunTuesday__Name = "RunTuesday";
+        public const string RunWednesday__Name = "RunWednesday";
+        public const string RunThursday__Name = "RunThursday";
+        public const string RunFriday__Name = "RunFriday";
+        public const string RunSaturday__Name = "RunSaturday";
+        public const string RunSunday__Name = "RunSunday";
+        public const string Active__Name = "Active";
+        public const string IsMonthly__Name = "IsMonthly";
+        public const string RunMonthlyDay__Name = "RunMonthlyDay";
+        public const string RunMonthlyTime__Name = "RunMonthlyTime";
+        public const string IsHourly__Name = "IsHourly";
+        public const string IsDaily__Name = "IsDaily";
+        public const string RunDailyTime__Name = "RunDailyTime";
+        public const string IsWeekly__Name = "IsWeekly";
+        public const string RunHourlyMinute__Name = "RunHourlyMinute";
+        public const string IncludeDataSourceFile__Name = "IncludeDataSourceFile";
+        public const string RunOnWeekNumber__Name = "RunOnWeekNumber";
+        // String Column Sizes
+        public const int ExecutableFolder__Size = 200;
+        public const int ExecutableName__Size = 200;
+        public const int ExecutableParameter__Size = 200;
+        public const int SerializedJobParameter__Size = 200;
+        public const int ReportTemplateFile__Size = 200;
+        public const int CustomExportName__Size = 20;
+        public const int JobName__Size = 200;
+    }
+
+    public class AuditOperationModel
+    {
+
+        public AuditOperationModel()
+        {
+        }
+
+        public AuditOperationModel(Int64 auditOperationId,DateTime auditDateTime,Int64 predefinedAuditOperationTypeId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            AuditOperationId = auditOperationId;
+            AuditDateTime = auditDateTime;
+            PredefinedAuditOperationTypeId = predefinedAuditOperationTypeId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedAuditOperationTypeName")]
+        public String PredefinedAuditOperationTypeName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("predefinedResourceTypeName")]
+        public String PredefinedResourceTypeName {set; get;}
+        [JsonPropertyName("resourceName")]
+        public String ResourceName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("auditOperationId")]
+        public Int64 AuditOperationId {set; get;}
+        [JsonPropertyName("auditDateTime")]
+        public DateTime AuditDateTime {set; get;}
+        [JsonPropertyName("predefinedAuditOperationTypeId")]
+        public Int64 PredefinedAuditOperationTypeId {set; get;}
+        [JsonPropertyName("changeDiff")]
+        public String ChangeDiff {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("userGroupId")]
+        public Int64? UserGroupId {set; get;}
+        [JsonPropertyName("userGroupUserId")]
+        public Int64? UserGroupUserId {set; get;}
+        [JsonPropertyName("userPermissionId")]
+        public Int64? UserPermissionId {set; get;}
+        [JsonPropertyName("predefinedResourceTypeId")]
+        public Int64? PredefinedResourceTypeId {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("ipAddress")]
+        public String IpAddress {set; get;}
+        [JsonPropertyName("browserName")]
+        public String BrowserName {set; get;}
+        [JsonPropertyName("operatingSystemName")]
+        public String OperatingSystemName {set; get;}
+        [JsonPropertyName("deviceName")]
+        public String DeviceName {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public AuditOperationCreateModel GetAsCreateModel()
+        {
+            var obj = new AuditOperationCreateModel();
+            obj.AuditDateTime = AuditDateTime;
+            obj.PredefinedAuditOperationTypeId = PredefinedAuditOperationTypeId;
+            obj.ChangeDiff = ChangeDiff;
+            obj.UserId = UserId;
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupUserId = UserGroupUserId;
+            obj.UserPermissionId = UserPermissionId;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.IpAddress = IpAddress;
+            obj.BrowserName = BrowserName;
+            obj.OperatingSystemName = OperatingSystemName;
+            obj.DeviceName = DeviceName;
+            obj.Description = Description;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(AuditOperationCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.AuditDateTime == AuditDateTime);
+            result = result && (obj.PredefinedAuditOperationTypeId == PredefinedAuditOperationTypeId);
+            result = result && (obj.ChangeDiff == ChangeDiff);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.UserGroupId == UserGroupId);
+            result = result && (obj.UserGroupUserId == UserGroupUserId);
+            result = result && (obj.UserPermissionId == UserPermissionId);
+            result = result && (obj.PredefinedResourceTypeId == PredefinedResourceTypeId);
+            result = result && (obj.ResourceId == ResourceId);
+            result = result && (obj.IpAddress == IpAddress);
+            result = result && (obj.BrowserName == BrowserName);
+            result = result && (obj.OperatingSystemName == OperatingSystemName);
+            result = result && (obj.DeviceName == DeviceName);
+            result = result && (obj.Description == Description);
+            return result;
+        }
+
+
+        public AuditOperationUpdateModel GetAsUpdateModel()
+        {
+            var obj = new AuditOperationUpdateModel();
+            obj.AuditOperationId = AuditOperationId;
+            obj.AuditDateTime = AuditDateTime;
+            obj.PredefinedAuditOperationTypeId = PredefinedAuditOperationTypeId;
+            obj.ChangeDiff = ChangeDiff;
+            obj.UserId = UserId;
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupUserId = UserGroupUserId;
+            obj.UserPermissionId = UserPermissionId;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.IpAddress = IpAddress;
+            obj.BrowserName = BrowserName;
+            obj.OperatingSystemName = OperatingSystemName;
+            obj.DeviceName = DeviceName;
+            obj.Description = Description;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(AuditOperationUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.AuditOperationId == AuditOperationId);
+            result = result && (obj.AuditDateTime == AuditDateTime);
+            result = result && (obj.PredefinedAuditOperationTypeId == PredefinedAuditOperationTypeId);
+            result = result && (obj.ChangeDiff == ChangeDiff);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.UserGroupId == UserGroupId);
+            result = result && (obj.UserGroupUserId == UserGroupUserId);
+            result = result && (obj.UserPermissionId == UserPermissionId);
+            result = result && (obj.PredefinedResourceTypeId == PredefinedResourceTypeId);
+            result = result && (obj.ResourceId == ResourceId);
+            result = result && (obj.IpAddress == IpAddress);
+            result = result && (obj.BrowserName == BrowserName);
+            result = result && (obj.OperatingSystemName == OperatingSystemName);
+            result = result && (obj.DeviceName == DeviceName);
+            result = result && (obj.Description == Description);
+            return result;
+        }
+
+
+        public AuditOperationModel GetCopy()
+        {
+            var obj = new AuditOperationModel();
+            obj.PredefinedAuditOperationTypeName = PredefinedAuditOperationTypeName;
+            obj.UserName = UserName;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.PredefinedResourceTypeName = PredefinedResourceTypeName;
+            obj.ResourceName = ResourceName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.AuditOperationId = AuditOperationId;
+            obj.AuditDateTime = AuditDateTime;
+            obj.PredefinedAuditOperationTypeId = PredefinedAuditOperationTypeId;
+            obj.ChangeDiff = ChangeDiff;
+            obj.UserId = UserId;
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupUserId = UserGroupUserId;
+            obj.UserPermissionId = UserPermissionId;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.IpAddress = IpAddress;
+            obj.BrowserName = BrowserName;
+            obj.OperatingSystemName = OperatingSystemName;
+            obj.DeviceName = DeviceName;
+            obj.Description = Description;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedAuditOperationTypeName__Name = "PredefinedAuditOperationTypeName";
+        public const string UserName__Name = "UserName";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string PredefinedResourceTypeName__Name = "PredefinedResourceTypeName";
+        public const string ResourceName__Name = "ResourceName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string AuditOperationId__Name = "AuditOperationId";
+        public const string AuditDateTime__Name = "AuditDateTime";
+        public const string PredefinedAuditOperationTypeId__Name = "PredefinedAuditOperationTypeId";
+        public const string ChangeDiff__Name = "ChangeDiff";
+        public const string UserId__Name = "UserId";
+        public const string UserGroupId__Name = "UserGroupId";
+        public const string UserGroupUserId__Name = "UserGroupUserId";
+        public const string UserPermissionId__Name = "UserPermissionId";
+        public const string PredefinedResourceTypeId__Name = "PredefinedResourceTypeId";
+        public const string ResourceId__Name = "ResourceId";
+        public const string IpAddress__Name = "IpAddress";
+        public const string BrowserName__Name = "BrowserName";
+        public const string OperatingSystemName__Name = "OperatingSystemName";
+        public const string DeviceName__Name = "DeviceName";
+        public const string Description__Name = "Description";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int IpAddress__Size = 100;
+        public const int BrowserName__Size = 200;
+        public const int OperatingSystemName__Size = 200;
+        public const int DeviceName__Size = 200;
+        public const int Description__Size = 500;
+    }
+
+    public class AuditOperationSearchCriteria
+    {
+
+        public AuditOperationSearchCriteria()
+        {
+        }
+        [JsonPropertyName("fromDate")]
+        public DateTime? FromDate {set; get;}
+        [JsonPropertyName("toDate")]
+        public DateTime? ToDate {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedAuditOperationTypeIds")]
+        public List<Int64> PredefinedAuditOperationTypeIds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("movieId")]
+        public Int64? MovieId {set; get;}
+        [JsonPropertyName("predefinedResourceTypeIds")]
+        public List<Int64> PredefinedResourceTypeIds {set; get;}
+        [JsonPropertyName("userIds")]
+        public List<Int64> UserIds {set; get;}
+        [JsonPropertyName("ipAddress")]
+        public String IpAddress {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public AuditOperationSearchCriteria GetCopy()
+        {
+            var obj = new AuditOperationSearchCriteria();
+            obj.FromDate = FromDate;
+            obj.ToDate = ToDate;
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedAuditOperationTypeIds = PredefinedAuditOperationTypeIds;
+            obj.UserId = UserId;
+            obj.MovieId = MovieId;
+            obj.PredefinedResourceTypeIds = PredefinedResourceTypeIds;
+            obj.UserIds = UserIds;
+            obj.IpAddress = IpAddress;
+            obj.ResourceId = ResourceId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FromDate__Name = "FromDate";
+        public const string ToDate__Name = "ToDate";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedAuditOperationTypeIds__Name = "PredefinedAuditOperationTypeIds";
+        public const string UserId__Name = "UserId";
+        public const string MovieId__Name = "MovieId";
+        public const string PredefinedResourceTypeIds__Name = "PredefinedResourceTypeIds";
+        public const string UserIds__Name = "UserIds";
+        public const string IpAddress__Name = "IpAddress";
+        public const string ResourceId__Name = "ResourceId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class AuditOperationCreateModel
+    {
+
+        public AuditOperationCreateModel()
+        {
+        }
+
+        public AuditOperationCreateModel(DateTime auditDateTime,Int64 predefinedAuditOperationTypeId)
+        {
+            AuditDateTime = auditDateTime;
+            PredefinedAuditOperationTypeId = predefinedAuditOperationTypeId;
+        }
+
+        [JsonPropertyName("auditDateTime")]
+        public DateTime AuditDateTime {set; get;}
+        [JsonPropertyName("predefinedAuditOperationTypeId")]
+        public Int64 PredefinedAuditOperationTypeId {set; get;}
+        [JsonPropertyName("changeDiff")]
+        public String ChangeDiff {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("userGroupId")]
+        public Int64? UserGroupId {set; get;}
+        [JsonPropertyName("userGroupUserId")]
+        public Int64? UserGroupUserId {set; get;}
+        [JsonPropertyName("userPermissionId")]
+        public Int64? UserPermissionId {set; get;}
+        [JsonPropertyName("predefinedResourceTypeId")]
+        public Int64? PredefinedResourceTypeId {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("ipAddress")]
+        public String IpAddress {set; get;}
+        [JsonPropertyName("browserName")]
+        public String BrowserName {set; get;}
+        [JsonPropertyName("operatingSystemName")]
+        public String OperatingSystemName {set; get;}
+        [JsonPropertyName("deviceName")]
+        public String DeviceName {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+
+        public AuditOperationCreateModel GetCopy()
+        {
+            var obj = new AuditOperationCreateModel();
+            obj.AuditDateTime = AuditDateTime;
+            obj.PredefinedAuditOperationTypeId = PredefinedAuditOperationTypeId;
+            obj.ChangeDiff = ChangeDiff;
+            obj.UserId = UserId;
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupUserId = UserGroupUserId;
+            obj.UserPermissionId = UserPermissionId;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.IpAddress = IpAddress;
+            obj.BrowserName = BrowserName;
+            obj.OperatingSystemName = OperatingSystemName;
+            obj.DeviceName = DeviceName;
+            obj.Description = Description;
+            return obj;
+        }
+
+        // Property Names
+        public const string AuditDateTime__Name = "AuditDateTime";
+        public const string PredefinedAuditOperationTypeId__Name = "PredefinedAuditOperationTypeId";
+        public const string ChangeDiff__Name = "ChangeDiff";
+        public const string UserId__Name = "UserId";
+        public const string UserGroupId__Name = "UserGroupId";
+        public const string UserGroupUserId__Name = "UserGroupUserId";
+        public const string UserPermissionId__Name = "UserPermissionId";
+        public const string PredefinedResourceTypeId__Name = "PredefinedResourceTypeId";
+        public const string ResourceId__Name = "ResourceId";
+        public const string IpAddress__Name = "IpAddress";
+        public const string BrowserName__Name = "BrowserName";
+        public const string OperatingSystemName__Name = "OperatingSystemName";
+        public const string DeviceName__Name = "DeviceName";
+        public const string Description__Name = "Description";
+        // String Column Sizes
+        public const int IpAddress__Size = 100;
+        public const int BrowserName__Size = 200;
+        public const int OperatingSystemName__Size = 200;
+        public const int DeviceName__Size = 200;
+        public const int Description__Size = 500;
+    }
+
+    public class AuditOperationUpdateModel
+    {
+
+        public AuditOperationUpdateModel()
+        {
+        }
+
+        public AuditOperationUpdateModel(Int64 auditOperationId,DateTime auditDateTime,Int64 predefinedAuditOperationTypeId)
+        {
+            AuditOperationId = auditOperationId;
+            AuditDateTime = auditDateTime;
+            PredefinedAuditOperationTypeId = predefinedAuditOperationTypeId;
+        }
+
+        [JsonPropertyName("auditOperationId")]
+        public Int64 AuditOperationId {set; get;}
+        [JsonPropertyName("auditDateTime")]
+        public DateTime AuditDateTime {set; get;}
+        [JsonPropertyName("predefinedAuditOperationTypeId")]
+        public Int64 PredefinedAuditOperationTypeId {set; get;}
+        [JsonPropertyName("changeDiff")]
+        public String ChangeDiff {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("userGroupId")]
+        public Int64? UserGroupId {set; get;}
+        [JsonPropertyName("userGroupUserId")]
+        public Int64? UserGroupUserId {set; get;}
+        [JsonPropertyName("userPermissionId")]
+        public Int64? UserPermissionId {set; get;}
+        [JsonPropertyName("predefinedResourceTypeId")]
+        public Int64? PredefinedResourceTypeId {set; get;}
+        [JsonPropertyName("resourceId")]
+        public Int64? ResourceId {set; get;}
+        [JsonPropertyName("ipAddress")]
+        public String IpAddress {set; get;}
+        [JsonPropertyName("browserName")]
+        public String BrowserName {set; get;}
+        [JsonPropertyName("operatingSystemName")]
+        public String OperatingSystemName {set; get;}
+        [JsonPropertyName("deviceName")]
+        public String DeviceName {set; get;}
+        [JsonPropertyName("description")]
+        public String Description {set; get;}
+
+        public AuditOperationUpdateModel GetCopy()
+        {
+            var obj = new AuditOperationUpdateModel();
+            obj.AuditOperationId = AuditOperationId;
+            obj.AuditDateTime = AuditDateTime;
+            obj.PredefinedAuditOperationTypeId = PredefinedAuditOperationTypeId;
+            obj.ChangeDiff = ChangeDiff;
+            obj.UserId = UserId;
+            obj.UserGroupId = UserGroupId;
+            obj.UserGroupUserId = UserGroupUserId;
+            obj.UserPermissionId = UserPermissionId;
+            obj.PredefinedResourceTypeId = PredefinedResourceTypeId;
+            obj.ResourceId = ResourceId;
+            obj.IpAddress = IpAddress;
+            obj.BrowserName = BrowserName;
+            obj.OperatingSystemName = OperatingSystemName;
+            obj.DeviceName = DeviceName;
+            obj.Description = Description;
+            return obj;
+        }
+
+        // Property Names
+        public const string AuditOperationId__Name = "AuditOperationId";
+        public const string AuditDateTime__Name = "AuditDateTime";
+        public const string PredefinedAuditOperationTypeId__Name = "PredefinedAuditOperationTypeId";
+        public const string ChangeDiff__Name = "ChangeDiff";
+        public const string UserId__Name = "UserId";
+        public const string UserGroupId__Name = "UserGroupId";
+        public const string UserGroupUserId__Name = "UserGroupUserId";
+        public const string UserPermissionId__Name = "UserPermissionId";
+        public const string PredefinedResourceTypeId__Name = "PredefinedResourceTypeId";
+        public const string ResourceId__Name = "ResourceId";
+        public const string IpAddress__Name = "IpAddress";
+        public const string BrowserName__Name = "BrowserName";
+        public const string OperatingSystemName__Name = "OperatingSystemName";
+        public const string DeviceName__Name = "DeviceName";
+        public const string Description__Name = "Description";
+        // String Column Sizes
+        public const int IpAddress__Size = 100;
+        public const int BrowserName__Size = 200;
+        public const int OperatingSystemName__Size = 200;
+        public const int DeviceName__Size = 200;
+        public const int Description__Size = 500;
+    }
+
+    public class AuditOperationDetailModel
+    {
+
+        public AuditOperationDetailModel()
+        {
+        }
+
+        public AuditOperationDetailModel(Int64 auditOperationDetailId,Int64 auditOperationId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            AuditOperationDetailId = auditOperationDetailId;
+            AuditOperationId = auditOperationId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("auditOperationDetailId")]
+        public Int64 AuditOperationDetailId {set; get;}
+        [JsonPropertyName("auditOperationId")]
+        public Int64 AuditOperationId {set; get;}
+        [JsonPropertyName("differenceJson")]
+        public String DifferenceJson {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public AuditOperationDetailCreateModel GetAsCreateModel()
+        {
+            var obj = new AuditOperationDetailCreateModel();
+            obj.AuditOperationId = AuditOperationId;
+            obj.DifferenceJson = DifferenceJson;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(AuditOperationDetailCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.AuditOperationId == AuditOperationId);
+            result = result && (obj.DifferenceJson == DifferenceJson);
+            return result;
+        }
+
+
+        public AuditOperationDetailUpdateModel GetAsUpdateModel()
+        {
+            var obj = new AuditOperationDetailUpdateModel();
+            obj.AuditOperationDetailId = AuditOperationDetailId;
+            obj.AuditOperationId = AuditOperationId;
+            obj.DifferenceJson = DifferenceJson;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(AuditOperationDetailUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.AuditOperationDetailId == AuditOperationDetailId);
+            result = result && (obj.AuditOperationId == AuditOperationId);
+            result = result && (obj.DifferenceJson == DifferenceJson);
+            return result;
+        }
+
+
+        public AuditOperationDetailModel GetCopy()
+        {
+            var obj = new AuditOperationDetailModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.AuditOperationDetailId = AuditOperationDetailId;
+            obj.AuditOperationId = AuditOperationId;
+            obj.DifferenceJson = DifferenceJson;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string AuditOperationDetailId__Name = "AuditOperationDetailId";
+        public const string AuditOperationId__Name = "AuditOperationId";
+        public const string DifferenceJson__Name = "DifferenceJson";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class AuditOperationDetailSearchCriteria
+    {
+
+        public AuditOperationDetailSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("auditOperationId")]
+        public Int64? AuditOperationId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public AuditOperationDetailSearchCriteria GetCopy()
+        {
+            var obj = new AuditOperationDetailSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.AuditOperationId = AuditOperationId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string AuditOperationId__Name = "AuditOperationId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class AuditOperationDetailCreateModel
+    {
+
+        public AuditOperationDetailCreateModel()
+        {
+        }
+
+        public AuditOperationDetailCreateModel(Int64 auditOperationId)
+        {
+            AuditOperationId = auditOperationId;
+        }
+
+        [JsonPropertyName("auditOperationId")]
+        public Int64 AuditOperationId {set; get;}
+        [JsonPropertyName("differenceJson")]
+        public String DifferenceJson {set; get;}
+
+        public AuditOperationDetailCreateModel GetCopy()
+        {
+            var obj = new AuditOperationDetailCreateModel();
+            obj.AuditOperationId = AuditOperationId;
+            obj.DifferenceJson = DifferenceJson;
+            return obj;
+        }
+
+        // Property Names
+        public const string AuditOperationId__Name = "AuditOperationId";
+        public const string DifferenceJson__Name = "DifferenceJson";
+    }
+
+    public class AuditOperationDetailUpdateModel
+    {
+
+        public AuditOperationDetailUpdateModel()
+        {
+        }
+
+        public AuditOperationDetailUpdateModel(Int64 auditOperationDetailId,Int64 auditOperationId)
+        {
+            AuditOperationDetailId = auditOperationDetailId;
+            AuditOperationId = auditOperationId;
+        }
+
+        [JsonPropertyName("auditOperationDetailId")]
+        public Int64 AuditOperationDetailId {set; get;}
+        [JsonPropertyName("auditOperationId")]
+        public Int64 AuditOperationId {set; get;}
+        [JsonPropertyName("differenceJson")]
+        public String DifferenceJson {set; get;}
+
+        public AuditOperationDetailUpdateModel GetCopy()
+        {
+            var obj = new AuditOperationDetailUpdateModel();
+            obj.AuditOperationDetailId = AuditOperationDetailId;
+            obj.AuditOperationId = AuditOperationId;
+            obj.DifferenceJson = DifferenceJson;
+            return obj;
+        }
+
+        // Property Names
+        public const string AuditOperationDetailId__Name = "AuditOperationDetailId";
+        public const string AuditOperationId__Name = "AuditOperationId";
+        public const string DifferenceJson__Name = "DifferenceJson";
+    }
+
+    public class SavedJobNotificationEmailModel
+    {
+
+        public SavedJobNotificationEmailModel()
+        {
+        }
+
+        public SavedJobNotificationEmailModel(Int64 savedJobNotificationEmailId,Int64 savedJobId,String email,Int64 sendStatus,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            SavedJobNotificationEmailId = savedJobNotificationEmailId;
+            SavedJobId = savedJobId;
+            Email = email;
+            SendStatus = sendStatus;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("companyId")]
+        public Int64 CompanyId {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("savedJobNotificationEmailId")]
+        public Int64 SavedJobNotificationEmailId {set; get;}
+        [JsonPropertyName("savedJobId")]
+        public Int64 SavedJobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public SavedJobNotificationEmailCreateModel GetAsCreateModel()
+        {
+            var obj = new SavedJobNotificationEmailCreateModel();
+            obj.SavedJobId = SavedJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(SavedJobNotificationEmailCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SavedJobId == SavedJobId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.SendStatus == SendStatus);
+            result = result && (obj.Message == Message);
+            return result;
+        }
+
+
+        public SavedJobNotificationEmailUpdateModel GetAsUpdateModel()
+        {
+            var obj = new SavedJobNotificationEmailUpdateModel();
+            obj.SavedJobNotificationEmailId = SavedJobNotificationEmailId;
+            obj.SavedJobId = SavedJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(SavedJobNotificationEmailUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SavedJobNotificationEmailId == SavedJobNotificationEmailId);
+            result = result && (obj.SavedJobId == SavedJobId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.SendStatus == SendStatus);
+            result = result && (obj.Message == Message);
+            return result;
+        }
+
+
+        public SavedJobNotificationEmailModel GetCopy()
+        {
+            var obj = new SavedJobNotificationEmailModel();
+            obj.CompanyId = CompanyId;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.SavedJobNotificationEmailId = SavedJobNotificationEmailId;
+            obj.SavedJobId = SavedJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CompanyId__Name = "CompanyId";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string SavedJobNotificationEmailId__Name = "SavedJobNotificationEmailId";
+        public const string SavedJobId__Name = "SavedJobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class SavedJobNotificationEmailSearchCriteria
+    {
+
+        public SavedJobNotificationEmailSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("savedJobId")]
+        public Int64? SavedJobId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public SavedJobNotificationEmailSearchCriteria GetCopy()
+        {
+            var obj = new SavedJobNotificationEmailSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.SavedJobId = SavedJobId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string SavedJobId__Name = "SavedJobId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class SavedJobNotificationEmailCreateModel
+    {
+
+        public SavedJobNotificationEmailCreateModel()
+        {
+        }
+
+        public SavedJobNotificationEmailCreateModel(Int64 savedJobId,String email,Int64 sendStatus)
+        {
+            SavedJobId = savedJobId;
+            Email = email;
+            SendStatus = sendStatus;
+        }
+
+        [JsonPropertyName("savedJobId")]
+        public Int64 SavedJobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+
+        public SavedJobNotificationEmailCreateModel GetCopy()
+        {
+            var obj = new SavedJobNotificationEmailCreateModel();
+            obj.SavedJobId = SavedJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        // Property Names
+        public const string SavedJobId__Name = "SavedJobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class SavedJobNotificationEmailUpdateModel
+    {
+
+        public SavedJobNotificationEmailUpdateModel()
+        {
+        }
+
+        public SavedJobNotificationEmailUpdateModel(Int64 savedJobNotificationEmailId,Int64 savedJobId,String email,Int64 sendStatus)
+        {
+            SavedJobNotificationEmailId = savedJobNotificationEmailId;
+            SavedJobId = savedJobId;
+            Email = email;
+            SendStatus = sendStatus;
+        }
+
+        [JsonPropertyName("savedJobNotificationEmailId")]
+        public Int64 SavedJobNotificationEmailId {set; get;}
+        [JsonPropertyName("savedJobId")]
+        public Int64 SavedJobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+
+        public SavedJobNotificationEmailUpdateModel GetCopy()
+        {
+            var obj = new SavedJobNotificationEmailUpdateModel();
+            obj.SavedJobNotificationEmailId = SavedJobNotificationEmailId;
+            obj.SavedJobId = SavedJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        // Property Names
+        public const string SavedJobNotificationEmailId__Name = "SavedJobNotificationEmailId";
+        public const string SavedJobId__Name = "SavedJobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class ScheduledJobHistoryModel
+    {
+
+        public ScheduledJobHistoryModel()
+        {
+        }
+
+        public ScheduledJobHistoryModel(Int64 scheduledJobHistoryId,Int64 scheduledJobId,DateTime pickupDate,String pickupMachineName,Int64 pickupProcessId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ScheduledJobHistoryId = scheduledJobHistoryId;
+            ScheduledJobId = scheduledJobId;
+            PickupDate = pickupDate;
+            PickupMachineName = pickupMachineName;
+            PickupProcessId = pickupProcessId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("pickupProcessName")]
+        public String PickupProcessName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("scheduledJobHistoryId")]
+        public Int64 ScheduledJobHistoryId {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime PickupDate {set; get;}
+        [JsonPropertyName("pickupMachineName")]
+        public String PickupMachineName {set; get;}
+        [JsonPropertyName("pickupProcessId")]
+        public Int64 PickupProcessId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ScheduledJobHistoryCreateModel GetAsCreateModel()
+        {
+            var obj = new ScheduledJobHistoryCreateModel();
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.PickupDate = PickupDate;
+            obj.PickupMachineName = PickupMachineName;
+            obj.PickupProcessId = PickupProcessId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ScheduledJobHistoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ScheduledJobId == ScheduledJobId);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.PickupMachineName == PickupMachineName);
+            result = result && (obj.PickupProcessId == PickupProcessId);
+            return result;
+        }
+
+
+        public ScheduledJobHistoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ScheduledJobHistoryUpdateModel();
+            obj.ScheduledJobHistoryId = ScheduledJobHistoryId;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.PickupDate = PickupDate;
+            obj.PickupMachineName = PickupMachineName;
+            obj.PickupProcessId = PickupProcessId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ScheduledJobHistoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ScheduledJobHistoryId == ScheduledJobHistoryId);
+            result = result && (obj.ScheduledJobId == ScheduledJobId);
+            result = result && (obj.PickupDate == PickupDate);
+            result = result && (obj.PickupMachineName == PickupMachineName);
+            result = result && (obj.PickupProcessId == PickupProcessId);
+            return result;
+        }
+
+
+        public ScheduledJobHistoryModel GetCopy()
+        {
+            var obj = new ScheduledJobHistoryModel();
+            obj.PickupProcessName = PickupProcessName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ScheduledJobHistoryId = ScheduledJobHistoryId;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.PickupDate = PickupDate;
+            obj.PickupMachineName = PickupMachineName;
+            obj.PickupProcessId = PickupProcessId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PickupProcessName__Name = "PickupProcessName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ScheduledJobHistoryId__Name = "ScheduledJobHistoryId";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupMachineName__Name = "PickupMachineName";
+        public const string PickupProcessId__Name = "PickupProcessId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int PickupMachineName__Size = 200;
+    }
+
+    public class ScheduledJobHistorySearchCriteria
+    {
+
+        public ScheduledJobHistorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64? ScheduledJobId {set; get;}
+        [JsonPropertyName("pickupProcessId")]
+        public Int64? PickupProcessId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ScheduledJobHistorySearchCriteria GetCopy()
+        {
+            var obj = new ScheduledJobHistorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.PickupProcessId = PickupProcessId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string PickupProcessId__Name = "PickupProcessId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ScheduledJobHistoryCreateModel
+    {
+
+        public ScheduledJobHistoryCreateModel()
+        {
+        }
+
+        public ScheduledJobHistoryCreateModel(Int64 scheduledJobId,DateTime pickupDate,String pickupMachineName,Int64 pickupProcessId)
+        {
+            ScheduledJobId = scheduledJobId;
+            PickupDate = pickupDate;
+            PickupMachineName = pickupMachineName;
+            PickupProcessId = pickupProcessId;
+        }
+
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime PickupDate {set; get;}
+        [JsonPropertyName("pickupMachineName")]
+        public String PickupMachineName {set; get;}
+        [JsonPropertyName("pickupProcessId")]
+        public Int64 PickupProcessId {set; get;}
+
+        public ScheduledJobHistoryCreateModel GetCopy()
+        {
+            var obj = new ScheduledJobHistoryCreateModel();
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.PickupDate = PickupDate;
+            obj.PickupMachineName = PickupMachineName;
+            obj.PickupProcessId = PickupProcessId;
+            return obj;
+        }
+
+        // Property Names
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupMachineName__Name = "PickupMachineName";
+        public const string PickupProcessId__Name = "PickupProcessId";
+        // String Column Sizes
+        public const int PickupMachineName__Size = 200;
+    }
+
+    public class ScheduledJobHistoryUpdateModel
+    {
+
+        public ScheduledJobHistoryUpdateModel()
+        {
+        }
+
+        public ScheduledJobHistoryUpdateModel(Int64 scheduledJobHistoryId,Int64 scheduledJobId,DateTime pickupDate,String pickupMachineName,Int64 pickupProcessId)
+        {
+            ScheduledJobHistoryId = scheduledJobHistoryId;
+            ScheduledJobId = scheduledJobId;
+            PickupDate = pickupDate;
+            PickupMachineName = pickupMachineName;
+            PickupProcessId = pickupProcessId;
+        }
+
+        [JsonPropertyName("scheduledJobHistoryId")]
+        public Int64 ScheduledJobHistoryId {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("pickupDate")]
+        public DateTime PickupDate {set; get;}
+        [JsonPropertyName("pickupMachineName")]
+        public String PickupMachineName {set; get;}
+        [JsonPropertyName("pickupProcessId")]
+        public Int64 PickupProcessId {set; get;}
+
+        public ScheduledJobHistoryUpdateModel GetCopy()
+        {
+            var obj = new ScheduledJobHistoryUpdateModel();
+            obj.ScheduledJobHistoryId = ScheduledJobHistoryId;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.PickupDate = PickupDate;
+            obj.PickupMachineName = PickupMachineName;
+            obj.PickupProcessId = PickupProcessId;
+            return obj;
+        }
+
+        // Property Names
+        public const string ScheduledJobHistoryId__Name = "ScheduledJobHistoryId";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string PickupDate__Name = "PickupDate";
+        public const string PickupMachineName__Name = "PickupMachineName";
+        public const string PickupProcessId__Name = "PickupProcessId";
+        // String Column Sizes
+        public const int PickupMachineName__Size = 200;
+    }
+
+    public class ScheduledJobNotificationEmailModel
+    {
+
+        public ScheduledJobNotificationEmailModel()
+        {
+        }
+
+        public ScheduledJobNotificationEmailModel(Int64 scheduledJobNotificationEmailId,Int64 scheduledJobId,String email,Int64 sendStatus,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            ScheduledJobNotificationEmailId = scheduledJobNotificationEmailId;
+            ScheduledJobId = scheduledJobId;
+            Email = email;
+            SendStatus = sendStatus;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("companyId")]
+        public Int64 CompanyId {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("scheduledJobNotificationEmailId")]
+        public Int64 ScheduledJobNotificationEmailId {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public ScheduledJobNotificationEmailCreateModel GetAsCreateModel()
+        {
+            var obj = new ScheduledJobNotificationEmailCreateModel();
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(ScheduledJobNotificationEmailCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ScheduledJobId == ScheduledJobId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.SendStatus == SendStatus);
+            result = result && (obj.Message == Message);
+            return result;
+        }
+
+
+        public ScheduledJobNotificationEmailUpdateModel GetAsUpdateModel()
+        {
+            var obj = new ScheduledJobNotificationEmailUpdateModel();
+            obj.ScheduledJobNotificationEmailId = ScheduledJobNotificationEmailId;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(ScheduledJobNotificationEmailUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.ScheduledJobNotificationEmailId == ScheduledJobNotificationEmailId);
+            result = result && (obj.ScheduledJobId == ScheduledJobId);
+            result = result && (obj.Email == Email);
+            result = result && (obj.SendStatus == SendStatus);
+            result = result && (obj.Message == Message);
+            return result;
+        }
+
+
+        public ScheduledJobNotificationEmailModel GetCopy()
+        {
+            var obj = new ScheduledJobNotificationEmailModel();
+            obj.CompanyId = CompanyId;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.ScheduledJobNotificationEmailId = ScheduledJobNotificationEmailId;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CompanyId__Name = "CompanyId";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string ScheduledJobNotificationEmailId__Name = "ScheduledJobNotificationEmailId";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class ScheduledJobNotificationEmailSearchCriteria
+    {
+
+        public ScheduledJobNotificationEmailSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64? ScheduledJobId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public ScheduledJobNotificationEmailSearchCriteria GetCopy()
+        {
+            var obj = new ScheduledJobNotificationEmailSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class ScheduledJobNotificationEmailCreateModel
+    {
+
+        public ScheduledJobNotificationEmailCreateModel()
+        {
+        }
+
+        public ScheduledJobNotificationEmailCreateModel(Int64 scheduledJobId,String email,Int64 sendStatus)
+        {
+            ScheduledJobId = scheduledJobId;
+            Email = email;
+            SendStatus = sendStatus;
+        }
+
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+
+        public ScheduledJobNotificationEmailCreateModel GetCopy()
+        {
+            var obj = new ScheduledJobNotificationEmailCreateModel();
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        // Property Names
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class ScheduledJobNotificationEmailUpdateModel
+    {
+
+        public ScheduledJobNotificationEmailUpdateModel()
+        {
+        }
+
+        public ScheduledJobNotificationEmailUpdateModel(Int64 scheduledJobNotificationEmailId,Int64 scheduledJobId,String email,Int64 sendStatus)
+        {
+            ScheduledJobNotificationEmailId = scheduledJobNotificationEmailId;
+            ScheduledJobId = scheduledJobId;
+            Email = email;
+            SendStatus = sendStatus;
+        }
+
+        [JsonPropertyName("scheduledJobNotificationEmailId")]
+        public Int64 ScheduledJobNotificationEmailId {set; get;}
+        [JsonPropertyName("scheduledJobId")]
+        public Int64 ScheduledJobId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("sendStatus")]
+        public Int64 SendStatus {set; get;}
+        [JsonPropertyName("message")]
+        public String Message {set; get;}
+
+        public ScheduledJobNotificationEmailUpdateModel GetCopy()
+        {
+            var obj = new ScheduledJobNotificationEmailUpdateModel();
+            obj.ScheduledJobNotificationEmailId = ScheduledJobNotificationEmailId;
+            obj.ScheduledJobId = ScheduledJobId;
+            obj.Email = Email;
+            obj.SendStatus = SendStatus;
+            obj.Message = Message;
+            return obj;
+        }
+
+        // Property Names
+        public const string ScheduledJobNotificationEmailId__Name = "ScheduledJobNotificationEmailId";
+        public const string ScheduledJobId__Name = "ScheduledJobId";
+        public const string Email__Name = "Email";
+        public const string SendStatus__Name = "SendStatus";
+        public const string Message__Name = "Message";
+        // String Column Sizes
+        public const int Email__Size = 200;
+        public const int Message__Size = 200;
+    }
+
+    public class CompanyStorageConfigurationModel
+    {
+
+        public CompanyStorageConfigurationModel()
+        {
+        }
+
+        public CompanyStorageConfigurationModel(Int64 companyStorageConfigurationId,Guid companyStorageConfigurationGuid,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            CompanyStorageConfigurationId = companyStorageConfigurationId;
+            CompanyStorageConfigurationGuid = companyStorageConfigurationGuid;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("companyStorageConfigurationId")]
+        public Int64 CompanyStorageConfigurationId {set; get;}
+        [JsonPropertyName("companyStorageConfigurationGuid")]
+        public Guid CompanyStorageConfigurationGuid {set; get;}
+        [JsonPropertyName("profilePictureFileStorageConnectionString")]
+        public String ProfilePictureFileStorageConnectionString {set; get;}
+        [JsonPropertyName("reportServerFileStorageConnectionString")]
+        public String ReportServerFileStorageConnectionString {set; get;}
+        [JsonPropertyName("fileAttachmentFileStorageConnectionString")]
+        public String FileAttachmentFileStorageConnectionString {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public CompanyStorageConfigurationCreateModel GetAsCreateModel()
+        {
+            var obj = new CompanyStorageConfigurationCreateModel();
+            obj.CompanyStorageConfigurationGuid = CompanyStorageConfigurationGuid;
+            obj.ProfilePictureFileStorageConnectionString = ProfilePictureFileStorageConnectionString;
+            obj.ReportServerFileStorageConnectionString = ReportServerFileStorageConnectionString;
+            obj.FileAttachmentFileStorageConnectionString = FileAttachmentFileStorageConnectionString;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(CompanyStorageConfigurationCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.CompanyStorageConfigurationGuid == CompanyStorageConfigurationGuid);
+            result = result && (obj.ProfilePictureFileStorageConnectionString == ProfilePictureFileStorageConnectionString);
+            result = result && (obj.ReportServerFileStorageConnectionString == ReportServerFileStorageConnectionString);
+            result = result && (obj.FileAttachmentFileStorageConnectionString == FileAttachmentFileStorageConnectionString);
+            return result;
+        }
+
+
+        public CompanyStorageConfigurationUpdateModel GetAsUpdateModel()
+        {
+            var obj = new CompanyStorageConfigurationUpdateModel();
+            obj.CompanyStorageConfigurationId = CompanyStorageConfigurationId;
+            obj.CompanyStorageConfigurationGuid = CompanyStorageConfigurationGuid;
+            obj.ProfilePictureFileStorageConnectionString = ProfilePictureFileStorageConnectionString;
+            obj.ReportServerFileStorageConnectionString = ReportServerFileStorageConnectionString;
+            obj.FileAttachmentFileStorageConnectionString = FileAttachmentFileStorageConnectionString;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(CompanyStorageConfigurationUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.CompanyStorageConfigurationId == CompanyStorageConfigurationId);
+            result = result && (obj.CompanyStorageConfigurationGuid == CompanyStorageConfigurationGuid);
+            result = result && (obj.ProfilePictureFileStorageConnectionString == ProfilePictureFileStorageConnectionString);
+            result = result && (obj.ReportServerFileStorageConnectionString == ReportServerFileStorageConnectionString);
+            result = result && (obj.FileAttachmentFileStorageConnectionString == FileAttachmentFileStorageConnectionString);
+            return result;
+        }
+
+
+        public CompanyStorageConfigurationModel GetCopy()
+        {
+            var obj = new CompanyStorageConfigurationModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.CompanyStorageConfigurationId = CompanyStorageConfigurationId;
+            obj.CompanyStorageConfigurationGuid = CompanyStorageConfigurationGuid;
+            obj.ProfilePictureFileStorageConnectionString = ProfilePictureFileStorageConnectionString;
+            obj.ReportServerFileStorageConnectionString = ReportServerFileStorageConnectionString;
+            obj.FileAttachmentFileStorageConnectionString = FileAttachmentFileStorageConnectionString;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string CompanyStorageConfigurationId__Name = "CompanyStorageConfigurationId";
+        public const string CompanyStorageConfigurationGuid__Name = "CompanyStorageConfigurationGuid";
+        public const string ProfilePictureFileStorageConnectionString__Name = "ProfilePictureFileStorageConnectionString";
+        public const string ReportServerFileStorageConnectionString__Name = "ReportServerFileStorageConnectionString";
+        public const string FileAttachmentFileStorageConnectionString__Name = "FileAttachmentFileStorageConnectionString";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int ProfilePictureFileStorageConnectionString__Size = 500;
+        public const int ReportServerFileStorageConnectionString__Size = 500;
+        public const int FileAttachmentFileStorageConnectionString__Size = 500;
+    }
+
+    public class CompanyStorageConfigurationCreateModel
+    {
+
+        public CompanyStorageConfigurationCreateModel()
+        {
+        }
+
+        public CompanyStorageConfigurationCreateModel(Guid companyStorageConfigurationGuid)
+        {
+            CompanyStorageConfigurationGuid = companyStorageConfigurationGuid;
+        }
+
+        [JsonPropertyName("companyStorageConfigurationGuid")]
+        public Guid CompanyStorageConfigurationGuid {set; get;}
+        [JsonPropertyName("profilePictureFileStorageConnectionString")]
+        public String ProfilePictureFileStorageConnectionString {set; get;}
+        [JsonPropertyName("reportServerFileStorageConnectionString")]
+        public String ReportServerFileStorageConnectionString {set; get;}
+        [JsonPropertyName("fileAttachmentFileStorageConnectionString")]
+        public String FileAttachmentFileStorageConnectionString {set; get;}
+
+        public CompanyStorageConfigurationCreateModel GetCopy()
+        {
+            var obj = new CompanyStorageConfigurationCreateModel();
+            obj.CompanyStorageConfigurationGuid = CompanyStorageConfigurationGuid;
+            obj.ProfilePictureFileStorageConnectionString = ProfilePictureFileStorageConnectionString;
+            obj.ReportServerFileStorageConnectionString = ReportServerFileStorageConnectionString;
+            obj.FileAttachmentFileStorageConnectionString = FileAttachmentFileStorageConnectionString;
+            return obj;
+        }
+
+        // Property Names
+        public const string CompanyStorageConfigurationGuid__Name = "CompanyStorageConfigurationGuid";
+        public const string ProfilePictureFileStorageConnectionString__Name = "ProfilePictureFileStorageConnectionString";
+        public const string ReportServerFileStorageConnectionString__Name = "ReportServerFileStorageConnectionString";
+        public const string FileAttachmentFileStorageConnectionString__Name = "FileAttachmentFileStorageConnectionString";
+        // String Column Sizes
+        public const int ProfilePictureFileStorageConnectionString__Size = 500;
+        public const int ReportServerFileStorageConnectionString__Size = 500;
+        public const int FileAttachmentFileStorageConnectionString__Size = 500;
+    }
+
+    public class CompanyStorageConfigurationUpdateModel
+    {
+
+        public CompanyStorageConfigurationUpdateModel()
+        {
+        }
+
+        public CompanyStorageConfigurationUpdateModel(Int64 companyStorageConfigurationId,Guid companyStorageConfigurationGuid)
+        {
+            CompanyStorageConfigurationId = companyStorageConfigurationId;
+            CompanyStorageConfigurationGuid = companyStorageConfigurationGuid;
+        }
+
+        [JsonPropertyName("companyStorageConfigurationId")]
+        public Int64 CompanyStorageConfigurationId {set; get;}
+        [JsonPropertyName("companyStorageConfigurationGuid")]
+        public Guid CompanyStorageConfigurationGuid {set; get;}
+        [JsonPropertyName("profilePictureFileStorageConnectionString")]
+        public String ProfilePictureFileStorageConnectionString {set; get;}
+        [JsonPropertyName("reportServerFileStorageConnectionString")]
+        public String ReportServerFileStorageConnectionString {set; get;}
+        [JsonPropertyName("fileAttachmentFileStorageConnectionString")]
+        public String FileAttachmentFileStorageConnectionString {set; get;}
+
+        public CompanyStorageConfigurationUpdateModel GetCopy()
+        {
+            var obj = new CompanyStorageConfigurationUpdateModel();
+            obj.CompanyStorageConfigurationId = CompanyStorageConfigurationId;
+            obj.CompanyStorageConfigurationGuid = CompanyStorageConfigurationGuid;
+            obj.ProfilePictureFileStorageConnectionString = ProfilePictureFileStorageConnectionString;
+            obj.ReportServerFileStorageConnectionString = ReportServerFileStorageConnectionString;
+            obj.FileAttachmentFileStorageConnectionString = FileAttachmentFileStorageConnectionString;
+            return obj;
+        }
+
+        // Property Names
+        public const string CompanyStorageConfigurationId__Name = "CompanyStorageConfigurationId";
+        public const string CompanyStorageConfigurationGuid__Name = "CompanyStorageConfigurationGuid";
+        public const string ProfilePictureFileStorageConnectionString__Name = "ProfilePictureFileStorageConnectionString";
+        public const string ReportServerFileStorageConnectionString__Name = "ReportServerFileStorageConnectionString";
+        public const string FileAttachmentFileStorageConnectionString__Name = "FileAttachmentFileStorageConnectionString";
+        // String Column Sizes
+        public const int ProfilePictureFileStorageConnectionString__Size = 500;
+        public const int ReportServerFileStorageConnectionString__Size = 500;
+        public const int FileAttachmentFileStorageConnectionString__Size = 500;
+    }
+
+    public class MailServerModel
+    {
+
+        public MailServerModel()
+        {
+        }
+
+        public MailServerModel(Int64 mailServerId,String mailServerCode,String mailServerName,String host,Int64 port,String senderName,String senderEmail,String userName,Boolean isDefault,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            MailServerId = mailServerId;
+            MailServerCode = mailServerCode;
+            MailServerName = mailServerName;
+            Host = host;
+            Port = port;
+            SenderName = senderName;
+            SenderEmail = senderEmail;
+            UserName = userName;
+            IsDefault = isDefault;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("mailServerId")]
+        public Int64 MailServerId {set; get;}
+        [JsonPropertyName("mailServerCode")]
+        public String MailServerCode {set; get;}
+        [JsonPropertyName("mailServerName")]
+        public String MailServerName {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("port")]
+        public Int64 Port {set; get;}
+        [JsonPropertyName("senderName")]
+        public String SenderName {set; get;}
+        [JsonPropertyName("senderEmail")]
+        public String SenderEmail {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("isSecure")]
+        public Boolean? IsSecure {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public MailServerCreateModel GetAsCreateModel()
+        {
+            var obj = new MailServerCreateModel();
+            obj.MailServerCode = MailServerCode;
+            obj.MailServerName = MailServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(MailServerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.MailServerCode == MailServerCode);
+            result = result && (obj.MailServerName == MailServerName);
+            result = result && (obj.Host == Host);
+            result = result && (obj.Port == Port);
+            result = result && (obj.SenderName == SenderName);
+            result = result && (obj.SenderEmail == SenderEmail);
+            result = result && (obj.UserName == UserName);
+            result = result && (obj.Password == Password);
+            result = result && (obj.IsSecure == IsSecure);
+            result = result && (obj.IsDefault == IsDefault);
+            return result;
+        }
+
+
+        public MailServerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new MailServerUpdateModel();
+            obj.MailServerId = MailServerId;
+            obj.MailServerCode = MailServerCode;
+            obj.MailServerName = MailServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(MailServerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.MailServerId == MailServerId);
+            result = result && (obj.MailServerCode == MailServerCode);
+            result = result && (obj.MailServerName == MailServerName);
+            result = result && (obj.Host == Host);
+            result = result && (obj.Port == Port);
+            result = result && (obj.SenderName == SenderName);
+            result = result && (obj.SenderEmail == SenderEmail);
+            result = result && (obj.UserName == UserName);
+            result = result && (obj.Password == Password);
+            result = result && (obj.IsSecure == IsSecure);
+            result = result && (obj.IsDefault == IsDefault);
+            return result;
+        }
+
+
+        public MailServerModel GetCopy()
+        {
+            var obj = new MailServerModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.MailServerId = MailServerId;
+            obj.MailServerCode = MailServerCode;
+            obj.MailServerName = MailServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string MailServerId__Name = "MailServerId";
+        public const string MailServerCode__Name = "MailServerCode";
+        public const string MailServerName__Name = "MailServerName";
+        public const string Host__Name = "Host";
+        public const string Port__Name = "Port";
+        public const string SenderName__Name = "SenderName";
+        public const string SenderEmail__Name = "SenderEmail";
+        public const string UserName__Name = "UserName";
+        public const string Password__Name = "Password";
+        public const string IsSecure__Name = "IsSecure";
+        public const string IsDefault__Name = "IsDefault";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int MailServerCode__Size = 45;
+        public const int MailServerName__Size = 100;
+        public const int Host__Size = 150;
+        public const int SenderName__Size = 100;
+        public const int SenderEmail__Size = 150;
+        public const int UserName__Size = 100;
+        public const int Password__Size = 200;
+    }
+
+    public class MailServerSearchCriteria
+    {
+
+        public MailServerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MailServerSearchCriteria GetCopy()
+        {
+            var obj = new MailServerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MailServerCreateModel
+    {
+
+        public MailServerCreateModel()
+        {
+        }
+
+        public MailServerCreateModel(String mailServerCode,String mailServerName,String host,Int64 port,String senderName,String senderEmail,String userName,Boolean isDefault)
+        {
+            MailServerCode = mailServerCode;
+            MailServerName = mailServerName;
+            Host = host;
+            Port = port;
+            SenderName = senderName;
+            SenderEmail = senderEmail;
+            UserName = userName;
+            IsDefault = isDefault;
+        }
+
+        [JsonPropertyName("mailServerCode")]
+        public String MailServerCode {set; get;}
+        [JsonPropertyName("mailServerName")]
+        public String MailServerName {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("port")]
+        public Int64 Port {set; get;}
+        [JsonPropertyName("senderName")]
+        public String SenderName {set; get;}
+        [JsonPropertyName("senderEmail")]
+        public String SenderEmail {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("isSecure")]
+        public Boolean? IsSecure {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+
+        public MailServerCreateModel GetCopy()
+        {
+            var obj = new MailServerCreateModel();
+            obj.MailServerCode = MailServerCode;
+            obj.MailServerName = MailServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        // Property Names
+        public const string MailServerCode__Name = "MailServerCode";
+        public const string MailServerName__Name = "MailServerName";
+        public const string Host__Name = "Host";
+        public const string Port__Name = "Port";
+        public const string SenderName__Name = "SenderName";
+        public const string SenderEmail__Name = "SenderEmail";
+        public const string UserName__Name = "UserName";
+        public const string Password__Name = "Password";
+        public const string IsSecure__Name = "IsSecure";
+        public const string IsDefault__Name = "IsDefault";
+        // String Column Sizes
+        public const int MailServerCode__Size = 45;
+        public const int MailServerName__Size = 100;
+        public const int Host__Size = 150;
+        public const int SenderName__Size = 100;
+        public const int SenderEmail__Size = 150;
+        public const int UserName__Size = 100;
+        public const int Password__Size = 200;
+    }
+
+    public class MailServerUpdateModel
+    {
+
+        public MailServerUpdateModel()
+        {
+        }
+
+        public MailServerUpdateModel(Int64 mailServerId,String mailServerCode,String mailServerName,String host,Int64 port,String senderName,String senderEmail,String userName,Boolean isDefault)
+        {
+            MailServerId = mailServerId;
+            MailServerCode = mailServerCode;
+            MailServerName = mailServerName;
+            Host = host;
+            Port = port;
+            SenderName = senderName;
+            SenderEmail = senderEmail;
+            UserName = userName;
+            IsDefault = isDefault;
+        }
+
+        [JsonPropertyName("mailServerId")]
+        public Int64 MailServerId {set; get;}
+        [JsonPropertyName("mailServerCode")]
+        public String MailServerCode {set; get;}
+        [JsonPropertyName("mailServerName")]
+        public String MailServerName {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("port")]
+        public Int64 Port {set; get;}
+        [JsonPropertyName("senderName")]
+        public String SenderName {set; get;}
+        [JsonPropertyName("senderEmail")]
+        public String SenderEmail {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("isSecure")]
+        public Boolean? IsSecure {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+
+        public MailServerUpdateModel GetCopy()
+        {
+            var obj = new MailServerUpdateModel();
+            obj.MailServerId = MailServerId;
+            obj.MailServerCode = MailServerCode;
+            obj.MailServerName = MailServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        // Property Names
+        public const string MailServerId__Name = "MailServerId";
+        public const string MailServerCode__Name = "MailServerCode";
+        public const string MailServerName__Name = "MailServerName";
+        public const string Host__Name = "Host";
+        public const string Port__Name = "Port";
+        public const string SenderName__Name = "SenderName";
+        public const string SenderEmail__Name = "SenderEmail";
+        public const string UserName__Name = "UserName";
+        public const string Password__Name = "Password";
+        public const string IsSecure__Name = "IsSecure";
+        public const string IsDefault__Name = "IsDefault";
+        // String Column Sizes
+        public const int MailServerCode__Size = 45;
+        public const int MailServerName__Size = 100;
+        public const int Host__Size = 150;
+        public const int SenderName__Size = 100;
+        public const int SenderEmail__Size = 150;
+        public const int UserName__Size = 100;
+        public const int Password__Size = 200;
+    }
+
+    public class SmsServerModel
+    {
+
+        public SmsServerModel()
+        {
+        }
+
+        public SmsServerModel(Int64 smsServerId,String smsServerCode,String smsServerName,String host,Int64 port,String senderName,String senderEmail,String userName,Boolean isDefault,Int64 predefinedSmsAndVoiceServerTypeId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            SmsServerId = smsServerId;
+            SmsServerCode = smsServerCode;
+            SmsServerName = smsServerName;
+            Host = host;
+            Port = port;
+            SenderName = senderName;
+            SenderEmail = senderEmail;
+            UserName = userName;
+            IsDefault = isDefault;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeName")]
+        public String PredefinedSmsAndVoiceServerTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("smsServerId")]
+        public Int64 SmsServerId {set; get;}
+        [JsonPropertyName("smsServerCode")]
+        public String SmsServerCode {set; get;}
+        [JsonPropertyName("smsServerName")]
+        public String SmsServerName {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("port")]
+        public Int64 Port {set; get;}
+        [JsonPropertyName("senderName")]
+        public String SenderName {set; get;}
+        [JsonPropertyName("senderEmail")]
+        public String SenderEmail {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("isSecure")]
+        public Boolean? IsSecure {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAccountAuthToken")]
+        public String TwilioAccountAuthToken {set; get;}
+        [JsonPropertyName("twilioAccountPhoneNumber")]
+        public String TwilioAccountPhoneNumber {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public SmsServerCreateModel GetAsCreateModel()
+        {
+            var obj = new SmsServerCreateModel();
+            obj.SmsServerCode = SmsServerCode;
+            obj.SmsServerName = SmsServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(SmsServerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SmsServerCode == SmsServerCode);
+            result = result && (obj.SmsServerName == SmsServerName);
+            result = result && (obj.Host == Host);
+            result = result && (obj.Port == Port);
+            result = result && (obj.SenderName == SenderName);
+            result = result && (obj.SenderEmail == SenderEmail);
+            result = result && (obj.UserName == UserName);
+            result = result && (obj.Password == Password);
+            result = result && (obj.IsSecure == IsSecure);
+            result = result && (obj.IsDefault == IsDefault);
+            result = result && (obj.PredefinedSmsAndVoiceServerTypeId == PredefinedSmsAndVoiceServerTypeId);
+            result = result && (obj.TwilioAccountSid == TwilioAccountSid);
+            result = result && (obj.TwilioAccountAuthToken == TwilioAccountAuthToken);
+            result = result && (obj.TwilioAccountPhoneNumber == TwilioAccountPhoneNumber);
+            return result;
+        }
+
+
+        public SmsServerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new SmsServerUpdateModel();
+            obj.SmsServerId = SmsServerId;
+            obj.SmsServerCode = SmsServerCode;
+            obj.SmsServerName = SmsServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(SmsServerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SmsServerId == SmsServerId);
+            result = result && (obj.SmsServerCode == SmsServerCode);
+            result = result && (obj.SmsServerName == SmsServerName);
+            result = result && (obj.Host == Host);
+            result = result && (obj.Port == Port);
+            result = result && (obj.SenderName == SenderName);
+            result = result && (obj.SenderEmail == SenderEmail);
+            result = result && (obj.UserName == UserName);
+            result = result && (obj.Password == Password);
+            result = result && (obj.IsSecure == IsSecure);
+            result = result && (obj.IsDefault == IsDefault);
+            result = result && (obj.PredefinedSmsAndVoiceServerTypeId == PredefinedSmsAndVoiceServerTypeId);
+            result = result && (obj.TwilioAccountSid == TwilioAccountSid);
+            result = result && (obj.TwilioAccountAuthToken == TwilioAccountAuthToken);
+            result = result && (obj.TwilioAccountPhoneNumber == TwilioAccountPhoneNumber);
+            return result;
+        }
+
+
+        public SmsServerModel GetCopy()
+        {
+            var obj = new SmsServerModel();
+            obj.PredefinedSmsAndVoiceServerTypeName = PredefinedSmsAndVoiceServerTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.SmsServerId = SmsServerId;
+            obj.SmsServerCode = SmsServerCode;
+            obj.SmsServerName = SmsServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedSmsAndVoiceServerTypeName__Name = "PredefinedSmsAndVoiceServerTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string SmsServerId__Name = "SmsServerId";
+        public const string SmsServerCode__Name = "SmsServerCode";
+        public const string SmsServerName__Name = "SmsServerName";
+        public const string Host__Name = "Host";
+        public const string Port__Name = "Port";
+        public const string SenderName__Name = "SenderName";
+        public const string SenderEmail__Name = "SenderEmail";
+        public const string UserName__Name = "UserName";
+        public const string Password__Name = "Password";
+        public const string IsSecure__Name = "IsSecure";
+        public const string IsDefault__Name = "IsDefault";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAccountAuthToken__Name = "TwilioAccountAuthToken";
+        public const string TwilioAccountPhoneNumber__Name = "TwilioAccountPhoneNumber";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int SmsServerCode__Size = 45;
+        public const int SmsServerName__Size = 100;
+        public const int Host__Size = 150;
+        public const int SenderName__Size = 100;
+        public const int SenderEmail__Size = 150;
+        public const int UserName__Size = 100;
+        public const int Password__Size = 200;
+        public const int TwilioAccountSid__Size = 255;
+        public const int TwilioAccountAuthToken__Size = 500;
+        public const int TwilioAccountPhoneNumber__Size = 255;
+    }
+
+    public class SmsServerSearchCriteria
+    {
+
+        public SmsServerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeIds")]
+        public List<Int64> PredefinedSmsAndVoiceServerTypeIds {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public SmsServerSearchCriteria GetCopy()
+        {
+            var obj = new SmsServerSearchCriteria();
+            obj.PredefinedSmsAndVoiceServerTypeIds = PredefinedSmsAndVoiceServerTypeIds;
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedSmsAndVoiceServerTypeIds__Name = "PredefinedSmsAndVoiceServerTypeIds";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class SmsServerCreateModel
+    {
+
+        public SmsServerCreateModel()
+        {
+        }
+
+        public SmsServerCreateModel(String smsServerCode,String smsServerName,String host,Int64 port,String senderName,String senderEmail,String userName,Boolean isDefault,Int64 predefinedSmsAndVoiceServerTypeId)
+        {
+            SmsServerCode = smsServerCode;
+            SmsServerName = smsServerName;
+            Host = host;
+            Port = port;
+            SenderName = senderName;
+            SenderEmail = senderEmail;
+            UserName = userName;
+            IsDefault = isDefault;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+        }
+
+        [JsonPropertyName("smsServerCode")]
+        public String SmsServerCode {set; get;}
+        [JsonPropertyName("smsServerName")]
+        public String SmsServerName {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("port")]
+        public Int64 Port {set; get;}
+        [JsonPropertyName("senderName")]
+        public String SenderName {set; get;}
+        [JsonPropertyName("senderEmail")]
+        public String SenderEmail {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("isSecure")]
+        public Boolean? IsSecure {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAccountAuthToken")]
+        public String TwilioAccountAuthToken {set; get;}
+        [JsonPropertyName("twilioAccountPhoneNumber")]
+        public String TwilioAccountPhoneNumber {set; get;}
+
+        public SmsServerCreateModel GetCopy()
+        {
+            var obj = new SmsServerCreateModel();
+            obj.SmsServerCode = SmsServerCode;
+            obj.SmsServerName = SmsServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            return obj;
+        }
+
+        // Property Names
+        public const string SmsServerCode__Name = "SmsServerCode";
+        public const string SmsServerName__Name = "SmsServerName";
+        public const string Host__Name = "Host";
+        public const string Port__Name = "Port";
+        public const string SenderName__Name = "SenderName";
+        public const string SenderEmail__Name = "SenderEmail";
+        public const string UserName__Name = "UserName";
+        public const string Password__Name = "Password";
+        public const string IsSecure__Name = "IsSecure";
+        public const string IsDefault__Name = "IsDefault";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAccountAuthToken__Name = "TwilioAccountAuthToken";
+        public const string TwilioAccountPhoneNumber__Name = "TwilioAccountPhoneNumber";
+        // String Column Sizes
+        public const int SmsServerCode__Size = 45;
+        public const int SmsServerName__Size = 100;
+        public const int Host__Size = 150;
+        public const int SenderName__Size = 100;
+        public const int SenderEmail__Size = 150;
+        public const int UserName__Size = 100;
+        public const int Password__Size = 200;
+        public const int TwilioAccountSid__Size = 255;
+        public const int TwilioAccountAuthToken__Size = 500;
+        public const int TwilioAccountPhoneNumber__Size = 255;
+    }
+
+    public class SmsServerUpdateModel
+    {
+
+        public SmsServerUpdateModel()
+        {
+        }
+
+        public SmsServerUpdateModel(Int64 smsServerId,String smsServerCode,String smsServerName,String host,Int64 port,String senderName,String senderEmail,String userName,Boolean isDefault,Int64 predefinedSmsAndVoiceServerTypeId)
+        {
+            SmsServerId = smsServerId;
+            SmsServerCode = smsServerCode;
+            SmsServerName = smsServerName;
+            Host = host;
+            Port = port;
+            SenderName = senderName;
+            SenderEmail = senderEmail;
+            UserName = userName;
+            IsDefault = isDefault;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+        }
+
+        [JsonPropertyName("smsServerId")]
+        public Int64 SmsServerId {set; get;}
+        [JsonPropertyName("smsServerCode")]
+        public String SmsServerCode {set; get;}
+        [JsonPropertyName("smsServerName")]
+        public String SmsServerName {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("port")]
+        public Int64 Port {set; get;}
+        [JsonPropertyName("senderName")]
+        public String SenderName {set; get;}
+        [JsonPropertyName("senderEmail")]
+        public String SenderEmail {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("isSecure")]
+        public Boolean? IsSecure {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAccountAuthToken")]
+        public String TwilioAccountAuthToken {set; get;}
+        [JsonPropertyName("twilioAccountPhoneNumber")]
+        public String TwilioAccountPhoneNumber {set; get;}
+
+        public SmsServerUpdateModel GetCopy()
+        {
+            var obj = new SmsServerUpdateModel();
+            obj.SmsServerId = SmsServerId;
+            obj.SmsServerCode = SmsServerCode;
+            obj.SmsServerName = SmsServerName;
+            obj.Host = Host;
+            obj.Port = Port;
+            obj.SenderName = SenderName;
+            obj.SenderEmail = SenderEmail;
+            obj.UserName = UserName;
+            obj.Password = Password;
+            obj.IsSecure = IsSecure;
+            obj.IsDefault = IsDefault;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            return obj;
+        }
+
+        // Property Names
+        public const string SmsServerId__Name = "SmsServerId";
+        public const string SmsServerCode__Name = "SmsServerCode";
+        public const string SmsServerName__Name = "SmsServerName";
+        public const string Host__Name = "Host";
+        public const string Port__Name = "Port";
+        public const string SenderName__Name = "SenderName";
+        public const string SenderEmail__Name = "SenderEmail";
+        public const string UserName__Name = "UserName";
+        public const string Password__Name = "Password";
+        public const string IsSecure__Name = "IsSecure";
+        public const string IsDefault__Name = "IsDefault";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAccountAuthToken__Name = "TwilioAccountAuthToken";
+        public const string TwilioAccountPhoneNumber__Name = "TwilioAccountPhoneNumber";
+        // String Column Sizes
+        public const int SmsServerCode__Size = 45;
+        public const int SmsServerName__Size = 100;
+        public const int Host__Size = 150;
+        public const int SenderName__Size = 100;
+        public const int SenderEmail__Size = 150;
+        public const int UserName__Size = 100;
+        public const int Password__Size = 200;
+        public const int TwilioAccountSid__Size = 255;
+        public const int TwilioAccountAuthToken__Size = 500;
+        public const int TwilioAccountPhoneNumber__Size = 255;
+    }
+
+    public class SingleSignOnServerModel
+    {
+
+        public SingleSignOnServerModel()
+        {
+        }
+
+        public SingleSignOnServerModel(Int64 singleSignOnServerId,String singleSignOnServerName,String singleSignOnServerCode,Int64 predefinedSingleSignOnServerTypeId,Boolean forAllCompany,Boolean isDefault,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            SingleSignOnServerId = singleSignOnServerId;
+            SingleSignOnServerName = singleSignOnServerName;
+            SingleSignOnServerCode = singleSignOnServerCode;
+            PredefinedSingleSignOnServerTypeId = predefinedSingleSignOnServerTypeId;
+            ForAllCompany = forAllCompany;
+            IsDefault = isDefault;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("singleSignOnServerTypeName")]
+        public String SingleSignOnServerTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("singleSignOnServerId")]
+        public Int64 SingleSignOnServerId {set; get;}
+        [JsonPropertyName("singleSignOnServerName")]
+        public String SingleSignOnServerName {set; get;}
+        [JsonPropertyName("singleSignOnServerCode")]
+        public String SingleSignOnServerCode {set; get;}
+        [JsonPropertyName("predefinedSingleSignOnServerTypeId")]
+        public Int64 PredefinedSingleSignOnServerTypeId {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("clientId")]
+        public String ClientId {set; get;}
+        [JsonPropertyName("clientTenantId")]
+        public String ClientTenantId {set; get;}
+        [JsonPropertyName("clientSecret")]
+        public String ClientSecret {set; get;}
+        [JsonPropertyName("forAllCompany")]
+        public Boolean ForAllCompany {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public SingleSignOnServerCreateModel GetAsCreateModel()
+        {
+            var obj = new SingleSignOnServerCreateModel();
+            obj.SingleSignOnServerName = SingleSignOnServerName;
+            obj.SingleSignOnServerCode = SingleSignOnServerCode;
+            obj.PredefinedSingleSignOnServerTypeId = PredefinedSingleSignOnServerTypeId;
+            obj.Host = Host;
+            obj.ClientId = ClientId;
+            obj.ClientTenantId = ClientTenantId;
+            obj.ClientSecret = ClientSecret;
+            obj.ForAllCompany = ForAllCompany;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(SingleSignOnServerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SingleSignOnServerName == SingleSignOnServerName);
+            result = result && (obj.SingleSignOnServerCode == SingleSignOnServerCode);
+            result = result && (obj.PredefinedSingleSignOnServerTypeId == PredefinedSingleSignOnServerTypeId);
+            result = result && (obj.Host == Host);
+            result = result && (obj.ClientId == ClientId);
+            result = result && (obj.ClientTenantId == ClientTenantId);
+            result = result && (obj.ClientSecret == ClientSecret);
+            result = result && (obj.ForAllCompany == ForAllCompany);
+            result = result && (obj.IsDefault == IsDefault);
+            return result;
+        }
+
+
+        public SingleSignOnServerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new SingleSignOnServerUpdateModel();
+            obj.SingleSignOnServerId = SingleSignOnServerId;
+            obj.SingleSignOnServerName = SingleSignOnServerName;
+            obj.SingleSignOnServerCode = SingleSignOnServerCode;
+            obj.PredefinedSingleSignOnServerTypeId = PredefinedSingleSignOnServerTypeId;
+            obj.Host = Host;
+            obj.ClientId = ClientId;
+            obj.ClientTenantId = ClientTenantId;
+            obj.ClientSecret = ClientSecret;
+            obj.ForAllCompany = ForAllCompany;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(SingleSignOnServerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.SingleSignOnServerId == SingleSignOnServerId);
+            result = result && (obj.SingleSignOnServerName == SingleSignOnServerName);
+            result = result && (obj.SingleSignOnServerCode == SingleSignOnServerCode);
+            result = result && (obj.PredefinedSingleSignOnServerTypeId == PredefinedSingleSignOnServerTypeId);
+            result = result && (obj.Host == Host);
+            result = result && (obj.ClientId == ClientId);
+            result = result && (obj.ClientTenantId == ClientTenantId);
+            result = result && (obj.ClientSecret == ClientSecret);
+            result = result && (obj.ForAllCompany == ForAllCompany);
+            result = result && (obj.IsDefault == IsDefault);
+            return result;
+        }
+
+
+        public SingleSignOnServerModel GetCopy()
+        {
+            var obj = new SingleSignOnServerModel();
+            obj.SingleSignOnServerTypeName = SingleSignOnServerTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.SingleSignOnServerId = SingleSignOnServerId;
+            obj.SingleSignOnServerName = SingleSignOnServerName;
+            obj.SingleSignOnServerCode = SingleSignOnServerCode;
+            obj.PredefinedSingleSignOnServerTypeId = PredefinedSingleSignOnServerTypeId;
+            obj.Host = Host;
+            obj.ClientId = ClientId;
+            obj.ClientTenantId = ClientTenantId;
+            obj.ClientSecret = ClientSecret;
+            obj.ForAllCompany = ForAllCompany;
+            obj.IsDefault = IsDefault;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string SingleSignOnServerTypeName__Name = "SingleSignOnServerTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string SingleSignOnServerId__Name = "SingleSignOnServerId";
+        public const string SingleSignOnServerName__Name = "SingleSignOnServerName";
+        public const string SingleSignOnServerCode__Name = "SingleSignOnServerCode";
+        public const string PredefinedSingleSignOnServerTypeId__Name = "PredefinedSingleSignOnServerTypeId";
+        public const string Host__Name = "Host";
+        public const string ClientId__Name = "ClientId";
+        public const string ClientTenantId__Name = "ClientTenantId";
+        public const string ClientSecret__Name = "ClientSecret";
+        public const string ForAllCompany__Name = "ForAllCompany";
+        public const string IsDefault__Name = "IsDefault";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int SingleSignOnServerName__Size = 100;
+        public const int SingleSignOnServerCode__Size = 45;
+        public const int Host__Size = 500;
+        public const int ClientId__Size = 100;
+        public const int ClientTenantId__Size = 100;
+        public const int ClientSecret__Size = 200;
+    }
+
+    public class SingleSignOnServerSearchCriteria
+    {
+
+        public SingleSignOnServerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedSingleSignOnServerTypeIds")]
+        public List<Int64> PredefinedSingleSignOnServerTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public SingleSignOnServerSearchCriteria GetCopy()
+        {
+            var obj = new SingleSignOnServerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedSingleSignOnServerTypeIds = PredefinedSingleSignOnServerTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedSingleSignOnServerTypeIds__Name = "PredefinedSingleSignOnServerTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class SingleSignOnServerCreateModel
+    {
+
+        public SingleSignOnServerCreateModel()
+        {
+        }
+
+        public SingleSignOnServerCreateModel(String singleSignOnServerName,String singleSignOnServerCode,Int64 predefinedSingleSignOnServerTypeId,Boolean forAllCompany,Boolean isDefault)
+        {
+            SingleSignOnServerName = singleSignOnServerName;
+            SingleSignOnServerCode = singleSignOnServerCode;
+            PredefinedSingleSignOnServerTypeId = predefinedSingleSignOnServerTypeId;
+            ForAllCompany = forAllCompany;
+            IsDefault = isDefault;
+        }
+
+        [JsonPropertyName("singleSignOnServerName")]
+        public String SingleSignOnServerName {set; get;}
+        [JsonPropertyName("singleSignOnServerCode")]
+        public String SingleSignOnServerCode {set; get;}
+        [JsonPropertyName("predefinedSingleSignOnServerTypeId")]
+        public Int64 PredefinedSingleSignOnServerTypeId {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("clientId")]
+        public String ClientId {set; get;}
+        [JsonPropertyName("clientTenantId")]
+        public String ClientTenantId {set; get;}
+        [JsonPropertyName("clientSecret")]
+        public String ClientSecret {set; get;}
+        [JsonPropertyName("forAllCompany")]
+        public Boolean ForAllCompany {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+
+        public SingleSignOnServerCreateModel GetCopy()
+        {
+            var obj = new SingleSignOnServerCreateModel();
+            obj.SingleSignOnServerName = SingleSignOnServerName;
+            obj.SingleSignOnServerCode = SingleSignOnServerCode;
+            obj.PredefinedSingleSignOnServerTypeId = PredefinedSingleSignOnServerTypeId;
+            obj.Host = Host;
+            obj.ClientId = ClientId;
+            obj.ClientTenantId = ClientTenantId;
+            obj.ClientSecret = ClientSecret;
+            obj.ForAllCompany = ForAllCompany;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        // Property Names
+        public const string SingleSignOnServerName__Name = "SingleSignOnServerName";
+        public const string SingleSignOnServerCode__Name = "SingleSignOnServerCode";
+        public const string PredefinedSingleSignOnServerTypeId__Name = "PredefinedSingleSignOnServerTypeId";
+        public const string Host__Name = "Host";
+        public const string ClientId__Name = "ClientId";
+        public const string ClientTenantId__Name = "ClientTenantId";
+        public const string ClientSecret__Name = "ClientSecret";
+        public const string ForAllCompany__Name = "ForAllCompany";
+        public const string IsDefault__Name = "IsDefault";
+        // String Column Sizes
+        public const int SingleSignOnServerName__Size = 100;
+        public const int SingleSignOnServerCode__Size = 45;
+        public const int Host__Size = 500;
+        public const int ClientId__Size = 100;
+        public const int ClientTenantId__Size = 100;
+        public const int ClientSecret__Size = 200;
+    }
+
+    public class SingleSignOnServerUpdateModel
+    {
+
+        public SingleSignOnServerUpdateModel()
+        {
+        }
+
+        public SingleSignOnServerUpdateModel(Int64 singleSignOnServerId,String singleSignOnServerName,String singleSignOnServerCode,Int64 predefinedSingleSignOnServerTypeId,Boolean forAllCompany,Boolean isDefault)
+        {
+            SingleSignOnServerId = singleSignOnServerId;
+            SingleSignOnServerName = singleSignOnServerName;
+            SingleSignOnServerCode = singleSignOnServerCode;
+            PredefinedSingleSignOnServerTypeId = predefinedSingleSignOnServerTypeId;
+            ForAllCompany = forAllCompany;
+            IsDefault = isDefault;
+        }
+
+        [JsonPropertyName("singleSignOnServerId")]
+        public Int64 SingleSignOnServerId {set; get;}
+        [JsonPropertyName("singleSignOnServerName")]
+        public String SingleSignOnServerName {set; get;}
+        [JsonPropertyName("singleSignOnServerCode")]
+        public String SingleSignOnServerCode {set; get;}
+        [JsonPropertyName("predefinedSingleSignOnServerTypeId")]
+        public Int64 PredefinedSingleSignOnServerTypeId {set; get;}
+        [JsonPropertyName("host")]
+        public String Host {set; get;}
+        [JsonPropertyName("clientId")]
+        public String ClientId {set; get;}
+        [JsonPropertyName("clientTenantId")]
+        public String ClientTenantId {set; get;}
+        [JsonPropertyName("clientSecret")]
+        public String ClientSecret {set; get;}
+        [JsonPropertyName("forAllCompany")]
+        public Boolean ForAllCompany {set; get;}
+        [JsonPropertyName("isDefault")]
+        public Boolean IsDefault {set; get;}
+
+        public SingleSignOnServerUpdateModel GetCopy()
+        {
+            var obj = new SingleSignOnServerUpdateModel();
+            obj.SingleSignOnServerId = SingleSignOnServerId;
+            obj.SingleSignOnServerName = SingleSignOnServerName;
+            obj.SingleSignOnServerCode = SingleSignOnServerCode;
+            obj.PredefinedSingleSignOnServerTypeId = PredefinedSingleSignOnServerTypeId;
+            obj.Host = Host;
+            obj.ClientId = ClientId;
+            obj.ClientTenantId = ClientTenantId;
+            obj.ClientSecret = ClientSecret;
+            obj.ForAllCompany = ForAllCompany;
+            obj.IsDefault = IsDefault;
+            return obj;
+        }
+
+        // Property Names
+        public const string SingleSignOnServerId__Name = "SingleSignOnServerId";
+        public const string SingleSignOnServerName__Name = "SingleSignOnServerName";
+        public const string SingleSignOnServerCode__Name = "SingleSignOnServerCode";
+        public const string PredefinedSingleSignOnServerTypeId__Name = "PredefinedSingleSignOnServerTypeId";
+        public const string Host__Name = "Host";
+        public const string ClientId__Name = "ClientId";
+        public const string ClientTenantId__Name = "ClientTenantId";
+        public const string ClientSecret__Name = "ClientSecret";
+        public const string ForAllCompany__Name = "ForAllCompany";
+        public const string IsDefault__Name = "IsDefault";
+        // String Column Sizes
+        public const int SingleSignOnServerName__Size = 100;
+        public const int SingleSignOnServerCode__Size = 45;
+        public const int Host__Size = 500;
+        public const int ClientId__Size = 100;
+        public const int ClientTenantId__Size = 100;
+        public const int ClientSecret__Size = 200;
+    }
+
+    public class PushNotificationServerModel
+    {
+
+        public PushNotificationServerModel()
+        {
+        }
+
+        public PushNotificationServerModel(Int64 pushNotificationServerId,String pushNotificationServerCode,String pushNotificationServerName,Int64 predefinedPushNotificationServerTypeId,Boolean isEnabled,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            PushNotificationServerId = pushNotificationServerId;
+            PushNotificationServerCode = pushNotificationServerCode;
+            PushNotificationServerName = pushNotificationServerName;
+            PredefinedPushNotificationServerTypeId = predefinedPushNotificationServerTypeId;
+            IsEnabled = isEnabled;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("pushNotificationServerId")]
+        public Int64 PushNotificationServerId {set; get;}
+        [JsonPropertyName("pushNotificationServerCode")]
+        public String PushNotificationServerCode {set; get;}
+        [JsonPropertyName("pushNotificationServerName")]
+        public String PushNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedPushNotificationServerTypeId")]
+        public Int64 PredefinedPushNotificationServerTypeId {set; get;}
+        [JsonPropertyName("projectId")]
+        public String ProjectId {set; get;}
+        [JsonPropertyName("apiKey")]
+        public String ApiKey {set; get;}
+        [JsonPropertyName("apiSecret")]
+        public String ApiSecret {set; get;}
+        [JsonPropertyName("appleTeamId")]
+        public String AppleTeamId {set; get;}
+        [JsonPropertyName("appleKeyId")]
+        public String AppleKeyId {set; get;}
+        [JsonPropertyName("appleAuthKey")]
+        public String AppleAuthKey {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public PushNotificationServerCreateModel GetAsCreateModel()
+        {
+            var obj = new PushNotificationServerCreateModel();
+            obj.PushNotificationServerCode = PushNotificationServerCode;
+            obj.PushNotificationServerName = PushNotificationServerName;
+            obj.PredefinedPushNotificationServerTypeId = PredefinedPushNotificationServerTypeId;
+            obj.ProjectId = ProjectId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AppleTeamId = AppleTeamId;
+            obj.AppleKeyId = AppleKeyId;
+            obj.AppleAuthKey = AppleAuthKey;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(PushNotificationServerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PushNotificationServerCode == PushNotificationServerCode);
+            result = result && (obj.PushNotificationServerName == PushNotificationServerName);
+            result = result && (obj.PredefinedPushNotificationServerTypeId == PredefinedPushNotificationServerTypeId);
+            result = result && (obj.ProjectId == ProjectId);
+            result = result && (obj.ApiKey == ApiKey);
+            result = result && (obj.ApiSecret == ApiSecret);
+            result = result && (obj.AppleTeamId == AppleTeamId);
+            result = result && (obj.AppleKeyId == AppleKeyId);
+            result = result && (obj.AppleAuthKey == AppleAuthKey);
+            result = result && (obj.IsEnabled == IsEnabled);
+            return result;
+        }
+
+
+        public PushNotificationServerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new PushNotificationServerUpdateModel();
+            obj.PushNotificationServerId = PushNotificationServerId;
+            obj.PushNotificationServerCode = PushNotificationServerCode;
+            obj.PushNotificationServerName = PushNotificationServerName;
+            obj.PredefinedPushNotificationServerTypeId = PredefinedPushNotificationServerTypeId;
+            obj.ProjectId = ProjectId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AppleTeamId = AppleTeamId;
+            obj.AppleKeyId = AppleKeyId;
+            obj.AppleAuthKey = AppleAuthKey;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(PushNotificationServerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PushNotificationServerId == PushNotificationServerId);
+            result = result && (obj.PushNotificationServerCode == PushNotificationServerCode);
+            result = result && (obj.PushNotificationServerName == PushNotificationServerName);
+            result = result && (obj.PredefinedPushNotificationServerTypeId == PredefinedPushNotificationServerTypeId);
+            result = result && (obj.ProjectId == ProjectId);
+            result = result && (obj.ApiKey == ApiKey);
+            result = result && (obj.ApiSecret == ApiSecret);
+            result = result && (obj.AppleTeamId == AppleTeamId);
+            result = result && (obj.AppleKeyId == AppleKeyId);
+            result = result && (obj.AppleAuthKey == AppleAuthKey);
+            result = result && (obj.IsEnabled == IsEnabled);
+            return result;
+        }
+
+
+        public PushNotificationServerModel GetCopy()
+        {
+            var obj = new PushNotificationServerModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.PushNotificationServerId = PushNotificationServerId;
+            obj.PushNotificationServerCode = PushNotificationServerCode;
+            obj.PushNotificationServerName = PushNotificationServerName;
+            obj.PredefinedPushNotificationServerTypeId = PredefinedPushNotificationServerTypeId;
+            obj.ProjectId = ProjectId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AppleTeamId = AppleTeamId;
+            obj.AppleKeyId = AppleKeyId;
+            obj.AppleAuthKey = AppleAuthKey;
+            obj.IsEnabled = IsEnabled;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string PushNotificationServerId__Name = "PushNotificationServerId";
+        public const string PushNotificationServerCode__Name = "PushNotificationServerCode";
+        public const string PushNotificationServerName__Name = "PushNotificationServerName";
+        public const string PredefinedPushNotificationServerTypeId__Name = "PredefinedPushNotificationServerTypeId";
+        public const string ProjectId__Name = "ProjectId";
+        public const string ApiKey__Name = "ApiKey";
+        public const string ApiSecret__Name = "ApiSecret";
+        public const string AppleTeamId__Name = "AppleTeamId";
+        public const string AppleKeyId__Name = "AppleKeyId";
+        public const string AppleAuthKey__Name = "AppleAuthKey";
+        public const string IsEnabled__Name = "IsEnabled";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int PushNotificationServerCode__Size = 45;
+        public const int PushNotificationServerName__Size = 100;
+        public const int ProjectId__Size = 100;
+        public const int ApiKey__Size = 255;
+        public const int ApiSecret__Size = 255;
+        public const int AppleTeamId__Size = 100;
+        public const int AppleKeyId__Size = 100;
+        public const int AppleAuthKey__Size = 2000;
+    }
+
+    public class PushNotificationServerSearchCriteria
+    {
+
+        public PushNotificationServerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public PushNotificationServerSearchCriteria GetCopy()
+        {
+            var obj = new PushNotificationServerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class PushNotificationServerCreateModel
+    {
+
+        public PushNotificationServerCreateModel()
+        {
+        }
+
+        public PushNotificationServerCreateModel(String pushNotificationServerCode,String pushNotificationServerName,Int64 predefinedPushNotificationServerTypeId,Boolean isEnabled)
+        {
+            PushNotificationServerCode = pushNotificationServerCode;
+            PushNotificationServerName = pushNotificationServerName;
+            PredefinedPushNotificationServerTypeId = predefinedPushNotificationServerTypeId;
+            IsEnabled = isEnabled;
+        }
+
+        [JsonPropertyName("pushNotificationServerCode")]
+        public String PushNotificationServerCode {set; get;}
+        [JsonPropertyName("pushNotificationServerName")]
+        public String PushNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedPushNotificationServerTypeId")]
+        public Int64 PredefinedPushNotificationServerTypeId {set; get;}
+        [JsonPropertyName("projectId")]
+        public String ProjectId {set; get;}
+        [JsonPropertyName("apiKey")]
+        public String ApiKey {set; get;}
+        [JsonPropertyName("apiSecret")]
+        public String ApiSecret {set; get;}
+        [JsonPropertyName("appleTeamId")]
+        public String AppleTeamId {set; get;}
+        [JsonPropertyName("appleKeyId")]
+        public String AppleKeyId {set; get;}
+        [JsonPropertyName("appleAuthKey")]
+        public String AppleAuthKey {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+
+        public PushNotificationServerCreateModel GetCopy()
+        {
+            var obj = new PushNotificationServerCreateModel();
+            obj.PushNotificationServerCode = PushNotificationServerCode;
+            obj.PushNotificationServerName = PushNotificationServerName;
+            obj.PredefinedPushNotificationServerTypeId = PredefinedPushNotificationServerTypeId;
+            obj.ProjectId = ProjectId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AppleTeamId = AppleTeamId;
+            obj.AppleKeyId = AppleKeyId;
+            obj.AppleAuthKey = AppleAuthKey;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        // Property Names
+        public const string PushNotificationServerCode__Name = "PushNotificationServerCode";
+        public const string PushNotificationServerName__Name = "PushNotificationServerName";
+        public const string PredefinedPushNotificationServerTypeId__Name = "PredefinedPushNotificationServerTypeId";
+        public const string ProjectId__Name = "ProjectId";
+        public const string ApiKey__Name = "ApiKey";
+        public const string ApiSecret__Name = "ApiSecret";
+        public const string AppleTeamId__Name = "AppleTeamId";
+        public const string AppleKeyId__Name = "AppleKeyId";
+        public const string AppleAuthKey__Name = "AppleAuthKey";
+        public const string IsEnabled__Name = "IsEnabled";
+        // String Column Sizes
+        public const int PushNotificationServerCode__Size = 45;
+        public const int PushNotificationServerName__Size = 100;
+        public const int ProjectId__Size = 100;
+        public const int ApiKey__Size = 255;
+        public const int ApiSecret__Size = 255;
+        public const int AppleTeamId__Size = 100;
+        public const int AppleKeyId__Size = 100;
+        public const int AppleAuthKey__Size = 2000;
+    }
+
+    public class MultiplePushNotificationServerCreateModel
+    {
+
+        public MultiplePushNotificationServerCreateModel()
+        {
+        }
+        [JsonPropertyName("newPushNotificationServers")]
+        public List<PushNotificationServerCreateModel> NewPushNotificationServers {set; get;}
+
+        public MultiplePushNotificationServerCreateModel GetCopy()
+        {
+            var obj = new MultiplePushNotificationServerCreateModel();
+            obj.NewPushNotificationServers = NewPushNotificationServers;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewPushNotificationServers__Name = "NewPushNotificationServers";
+    }
+
+    public class PushNotificationServerUpdateModel
+    {
+
+        public PushNotificationServerUpdateModel()
+        {
+        }
+
+        public PushNotificationServerUpdateModel(Int64 pushNotificationServerId,String pushNotificationServerCode,String pushNotificationServerName,Int64 predefinedPushNotificationServerTypeId,Boolean isEnabled)
+        {
+            PushNotificationServerId = pushNotificationServerId;
+            PushNotificationServerCode = pushNotificationServerCode;
+            PushNotificationServerName = pushNotificationServerName;
+            PredefinedPushNotificationServerTypeId = predefinedPushNotificationServerTypeId;
+            IsEnabled = isEnabled;
+        }
+
+        [JsonPropertyName("pushNotificationServerId")]
+        public Int64 PushNotificationServerId {set; get;}
+        [JsonPropertyName("pushNotificationServerCode")]
+        public String PushNotificationServerCode {set; get;}
+        [JsonPropertyName("pushNotificationServerName")]
+        public String PushNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedPushNotificationServerTypeId")]
+        public Int64 PredefinedPushNotificationServerTypeId {set; get;}
+        [JsonPropertyName("projectId")]
+        public String ProjectId {set; get;}
+        [JsonPropertyName("apiKey")]
+        public String ApiKey {set; get;}
+        [JsonPropertyName("apiSecret")]
+        public String ApiSecret {set; get;}
+        [JsonPropertyName("appleTeamId")]
+        public String AppleTeamId {set; get;}
+        [JsonPropertyName("appleKeyId")]
+        public String AppleKeyId {set; get;}
+        [JsonPropertyName("appleAuthKey")]
+        public String AppleAuthKey {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+
+        public PushNotificationServerUpdateModel GetCopy()
+        {
+            var obj = new PushNotificationServerUpdateModel();
+            obj.PushNotificationServerId = PushNotificationServerId;
+            obj.PushNotificationServerCode = PushNotificationServerCode;
+            obj.PushNotificationServerName = PushNotificationServerName;
+            obj.PredefinedPushNotificationServerTypeId = PredefinedPushNotificationServerTypeId;
+            obj.ProjectId = ProjectId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AppleTeamId = AppleTeamId;
+            obj.AppleKeyId = AppleKeyId;
+            obj.AppleAuthKey = AppleAuthKey;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        // Property Names
+        public const string PushNotificationServerId__Name = "PushNotificationServerId";
+        public const string PushNotificationServerCode__Name = "PushNotificationServerCode";
+        public const string PushNotificationServerName__Name = "PushNotificationServerName";
+        public const string PredefinedPushNotificationServerTypeId__Name = "PredefinedPushNotificationServerTypeId";
+        public const string ProjectId__Name = "ProjectId";
+        public const string ApiKey__Name = "ApiKey";
+        public const string ApiSecret__Name = "ApiSecret";
+        public const string AppleTeamId__Name = "AppleTeamId";
+        public const string AppleKeyId__Name = "AppleKeyId";
+        public const string AppleAuthKey__Name = "AppleAuthKey";
+        public const string IsEnabled__Name = "IsEnabled";
+        // String Column Sizes
+        public const int PushNotificationServerCode__Size = 45;
+        public const int PushNotificationServerName__Size = 100;
+        public const int ProjectId__Size = 100;
+        public const int ApiKey__Size = 255;
+        public const int ApiSecret__Size = 255;
+        public const int AppleTeamId__Size = 100;
+        public const int AppleKeyId__Size = 100;
+        public const int AppleAuthKey__Size = 2000;
+    }
+
+    public class VoiceNotificationServerModel
+    {
+
+        public VoiceNotificationServerModel()
+        {
+        }
+
+        public VoiceNotificationServerModel(Int64 voiceNotificationServerId,String voiceNotificationServerCode,String voiceNotificationServerName,Int64 predefinedSmsAndVoiceServerTypeId,Boolean isEnabled,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            VoiceNotificationServerId = voiceNotificationServerId;
+            VoiceNotificationServerCode = voiceNotificationServerCode;
+            VoiceNotificationServerName = voiceNotificationServerName;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            IsEnabled = isEnabled;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("enumTypeName")]
+        public String EnumTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("voiceNotificationServerId")]
+        public Int64 VoiceNotificationServerId {set; get;}
+        [JsonPropertyName("voiceNotificationServerCode")]
+        public String VoiceNotificationServerCode {set; get;}
+        [JsonPropertyName("voiceNotificationServerName")]
+        public String VoiceNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAccountAuthToken")]
+        public String TwilioAccountAuthToken {set; get;}
+        [JsonPropertyName("twilioAccountPhoneNumber")]
+        public String TwilioAccountPhoneNumber {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public VoiceNotificationServerCreateModel GetAsCreateModel()
+        {
+            var obj = new VoiceNotificationServerCreateModel();
+            obj.VoiceNotificationServerCode = VoiceNotificationServerCode;
+            obj.VoiceNotificationServerName = VoiceNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(VoiceNotificationServerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VoiceNotificationServerCode == VoiceNotificationServerCode);
+            result = result && (obj.VoiceNotificationServerName == VoiceNotificationServerName);
+            result = result && (obj.PredefinedSmsAndVoiceServerTypeId == PredefinedSmsAndVoiceServerTypeId);
+            result = result && (obj.TwilioAccountSid == TwilioAccountSid);
+            result = result && (obj.TwilioAccountAuthToken == TwilioAccountAuthToken);
+            result = result && (obj.TwilioAccountPhoneNumber == TwilioAccountPhoneNumber);
+            result = result && (obj.IsEnabled == IsEnabled);
+            return result;
+        }
+
+
+        public VoiceNotificationServerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new VoiceNotificationServerUpdateModel();
+            obj.VoiceNotificationServerId = VoiceNotificationServerId;
+            obj.VoiceNotificationServerCode = VoiceNotificationServerCode;
+            obj.VoiceNotificationServerName = VoiceNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(VoiceNotificationServerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VoiceNotificationServerId == VoiceNotificationServerId);
+            result = result && (obj.VoiceNotificationServerCode == VoiceNotificationServerCode);
+            result = result && (obj.VoiceNotificationServerName == VoiceNotificationServerName);
+            result = result && (obj.PredefinedSmsAndVoiceServerTypeId == PredefinedSmsAndVoiceServerTypeId);
+            result = result && (obj.TwilioAccountSid == TwilioAccountSid);
+            result = result && (obj.TwilioAccountAuthToken == TwilioAccountAuthToken);
+            result = result && (obj.TwilioAccountPhoneNumber == TwilioAccountPhoneNumber);
+            result = result && (obj.IsEnabled == IsEnabled);
+            return result;
+        }
+
+
+        public VoiceNotificationServerModel GetCopy()
+        {
+            var obj = new VoiceNotificationServerModel();
+            obj.EnumTypeName = EnumTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.VoiceNotificationServerId = VoiceNotificationServerId;
+            obj.VoiceNotificationServerCode = VoiceNotificationServerCode;
+            obj.VoiceNotificationServerName = VoiceNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string EnumTypeName__Name = "EnumTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string VoiceNotificationServerId__Name = "VoiceNotificationServerId";
+        public const string VoiceNotificationServerCode__Name = "VoiceNotificationServerCode";
+        public const string VoiceNotificationServerName__Name = "VoiceNotificationServerName";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAccountAuthToken__Name = "TwilioAccountAuthToken";
+        public const string TwilioAccountPhoneNumber__Name = "TwilioAccountPhoneNumber";
+        public const string IsEnabled__Name = "IsEnabled";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int VoiceNotificationServerCode__Size = 45;
+        public const int VoiceNotificationServerName__Size = 100;
+        public const int TwilioAccountSid__Size = 255;
+        public const int TwilioAccountAuthToken__Size = 500;
+        public const int TwilioAccountPhoneNumber__Size = 255;
+    }
+
+    public class VoiceNotificationServerSearchCriteria
+    {
+
+        public VoiceNotificationServerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeIds")]
+        public List<Int64> PredefinedSmsAndVoiceServerTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VoiceNotificationServerSearchCriteria GetCopy()
+        {
+            var obj = new VoiceNotificationServerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedSmsAndVoiceServerTypeIds = PredefinedSmsAndVoiceServerTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedSmsAndVoiceServerTypeIds__Name = "PredefinedSmsAndVoiceServerTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VoiceNotificationServerCreateModel
+    {
+
+        public VoiceNotificationServerCreateModel()
+        {
+        }
+
+        public VoiceNotificationServerCreateModel(String voiceNotificationServerCode,String voiceNotificationServerName,Int64 predefinedSmsAndVoiceServerTypeId,Boolean isEnabled)
+        {
+            VoiceNotificationServerCode = voiceNotificationServerCode;
+            VoiceNotificationServerName = voiceNotificationServerName;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            IsEnabled = isEnabled;
+        }
+
+        [JsonPropertyName("voiceNotificationServerCode")]
+        public String VoiceNotificationServerCode {set; get;}
+        [JsonPropertyName("voiceNotificationServerName")]
+        public String VoiceNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAccountAuthToken")]
+        public String TwilioAccountAuthToken {set; get;}
+        [JsonPropertyName("twilioAccountPhoneNumber")]
+        public String TwilioAccountPhoneNumber {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+
+        public VoiceNotificationServerCreateModel GetCopy()
+        {
+            var obj = new VoiceNotificationServerCreateModel();
+            obj.VoiceNotificationServerCode = VoiceNotificationServerCode;
+            obj.VoiceNotificationServerName = VoiceNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        // Property Names
+        public const string VoiceNotificationServerCode__Name = "VoiceNotificationServerCode";
+        public const string VoiceNotificationServerName__Name = "VoiceNotificationServerName";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAccountAuthToken__Name = "TwilioAccountAuthToken";
+        public const string TwilioAccountPhoneNumber__Name = "TwilioAccountPhoneNumber";
+        public const string IsEnabled__Name = "IsEnabled";
+        // String Column Sizes
+        public const int VoiceNotificationServerCode__Size = 45;
+        public const int VoiceNotificationServerName__Size = 100;
+        public const int TwilioAccountSid__Size = 255;
+        public const int TwilioAccountAuthToken__Size = 500;
+        public const int TwilioAccountPhoneNumber__Size = 255;
+    }
+
+    public class MultipleVoiceNotificationServerCreateModel
+    {
+
+        public MultipleVoiceNotificationServerCreateModel()
+        {
+        }
+        [JsonPropertyName("newVoiceNotificationServers")]
+        public List<VoiceNotificationServerCreateModel> NewVoiceNotificationServers {set; get;}
+
+        public MultipleVoiceNotificationServerCreateModel GetCopy()
+        {
+            var obj = new MultipleVoiceNotificationServerCreateModel();
+            obj.NewVoiceNotificationServers = NewVoiceNotificationServers;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewVoiceNotificationServers__Name = "NewVoiceNotificationServers";
+    }
+
+    public class VoiceNotificationServerUpdateModel
+    {
+
+        public VoiceNotificationServerUpdateModel()
+        {
+        }
+
+        public VoiceNotificationServerUpdateModel(Int64 voiceNotificationServerId,String voiceNotificationServerCode,String voiceNotificationServerName,Int64 predefinedSmsAndVoiceServerTypeId,Boolean isEnabled)
+        {
+            VoiceNotificationServerId = voiceNotificationServerId;
+            VoiceNotificationServerCode = voiceNotificationServerCode;
+            VoiceNotificationServerName = voiceNotificationServerName;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            IsEnabled = isEnabled;
+        }
+
+        [JsonPropertyName("voiceNotificationServerId")]
+        public Int64 VoiceNotificationServerId {set; get;}
+        [JsonPropertyName("voiceNotificationServerCode")]
+        public String VoiceNotificationServerCode {set; get;}
+        [JsonPropertyName("voiceNotificationServerName")]
+        public String VoiceNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAccountAuthToken")]
+        public String TwilioAccountAuthToken {set; get;}
+        [JsonPropertyName("twilioAccountPhoneNumber")]
+        public String TwilioAccountPhoneNumber {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+
+        public VoiceNotificationServerUpdateModel GetCopy()
+        {
+            var obj = new VoiceNotificationServerUpdateModel();
+            obj.VoiceNotificationServerId = VoiceNotificationServerId;
+            obj.VoiceNotificationServerCode = VoiceNotificationServerCode;
+            obj.VoiceNotificationServerName = VoiceNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAccountAuthToken = TwilioAccountAuthToken;
+            obj.TwilioAccountPhoneNumber = TwilioAccountPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        // Property Names
+        public const string VoiceNotificationServerId__Name = "VoiceNotificationServerId";
+        public const string VoiceNotificationServerCode__Name = "VoiceNotificationServerCode";
+        public const string VoiceNotificationServerName__Name = "VoiceNotificationServerName";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAccountAuthToken__Name = "TwilioAccountAuthToken";
+        public const string TwilioAccountPhoneNumber__Name = "TwilioAccountPhoneNumber";
+        public const string IsEnabled__Name = "IsEnabled";
+        // String Column Sizes
+        public const int VoiceNotificationServerCode__Size = 45;
+        public const int VoiceNotificationServerName__Size = 100;
+        public const int TwilioAccountSid__Size = 255;
+        public const int TwilioAccountAuthToken__Size = 500;
+        public const int TwilioAccountPhoneNumber__Size = 255;
+    }
+
+    public class WhatsAppNotificationServerModel
+    {
+
+        public WhatsAppNotificationServerModel()
+        {
+        }
+
+        public WhatsAppNotificationServerModel(Int64 whatsAppNotificationServerId,String whatsAppNotificationServerCode,String whatsAppNotificationServerName,Int64 predefinedSmsAndVoiceServerTypeId,String apiKey,String apiSecret,String accessToken,String versionNumber,String phoneNumberId,Boolean isEnabled,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            WhatsAppNotificationServerId = whatsAppNotificationServerId;
+            WhatsAppNotificationServerCode = whatsAppNotificationServerCode;
+            WhatsAppNotificationServerName = whatsAppNotificationServerName;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            ApiKey = apiKey;
+            ApiSecret = apiSecret;
+            AccessToken = accessToken;
+            VersionNumber = versionNumber;
+            PhoneNumberId = phoneNumberId;
+            IsEnabled = isEnabled;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("enumTypeName")]
+        public String EnumTypeName {set; get;}
+        [JsonPropertyName("phoneNumberName")]
+        public String PhoneNumberName {set; get;}
+        [JsonPropertyName("businessAccountName")]
+        public String BusinessAccountName {set; get;}
+        [JsonPropertyName("companyId")]
+        public Int64 CompanyId {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("whatsAppNotificationServerId")]
+        public Int64 WhatsAppNotificationServerId {set; get;}
+        [JsonPropertyName("whatsAppNotificationServerCode")]
+        public String WhatsAppNotificationServerCode {set; get;}
+        [JsonPropertyName("whatsAppNotificationServerName")]
+        public String WhatsAppNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("apiKey")]
+        public String ApiKey {set; get;}
+        [JsonPropertyName("apiSecret")]
+        public String ApiSecret {set; get;}
+        [JsonPropertyName("accessToken")]
+        public String AccessToken {set; get;}
+        [JsonPropertyName("versionNumber")]
+        public String VersionNumber {set; get;}
+        [JsonPropertyName("phoneNumberId")]
+        public String PhoneNumberId {set; get;}
+        [JsonPropertyName("businessAccountId")]
+        public String BusinessAccountId {set; get;}
+        [JsonPropertyName("senderPhoneNumber")]
+        public String SenderPhoneNumber {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public WhatsAppNotificationServerCreateModel GetAsCreateModel()
+        {
+            var obj = new WhatsAppNotificationServerCreateModel();
+            obj.WhatsAppNotificationServerCode = WhatsAppNotificationServerCode;
+            obj.WhatsAppNotificationServerName = WhatsAppNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AccessToken = AccessToken;
+            obj.VersionNumber = VersionNumber;
+            obj.PhoneNumberId = PhoneNumberId;
+            obj.BusinessAccountId = BusinessAccountId;
+            obj.SenderPhoneNumber = SenderPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(WhatsAppNotificationServerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.WhatsAppNotificationServerCode == WhatsAppNotificationServerCode);
+            result = result && (obj.WhatsAppNotificationServerName == WhatsAppNotificationServerName);
+            result = result && (obj.PredefinedSmsAndVoiceServerTypeId == PredefinedSmsAndVoiceServerTypeId);
+            result = result && (obj.ApiKey == ApiKey);
+            result = result && (obj.ApiSecret == ApiSecret);
+            result = result && (obj.AccessToken == AccessToken);
+            result = result && (obj.VersionNumber == VersionNumber);
+            result = result && (obj.PhoneNumberId == PhoneNumberId);
+            result = result && (obj.BusinessAccountId == BusinessAccountId);
+            result = result && (obj.SenderPhoneNumber == SenderPhoneNumber);
+            result = result && (obj.IsEnabled == IsEnabled);
+            return result;
+        }
+
+
+        public WhatsAppNotificationServerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new WhatsAppNotificationServerUpdateModel();
+            obj.WhatsAppNotificationServerId = WhatsAppNotificationServerId;
+            obj.WhatsAppNotificationServerCode = WhatsAppNotificationServerCode;
+            obj.WhatsAppNotificationServerName = WhatsAppNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AccessToken = AccessToken;
+            obj.VersionNumber = VersionNumber;
+            obj.PhoneNumberId = PhoneNumberId;
+            obj.BusinessAccountId = BusinessAccountId;
+            obj.SenderPhoneNumber = SenderPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(WhatsAppNotificationServerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.WhatsAppNotificationServerId == WhatsAppNotificationServerId);
+            result = result && (obj.WhatsAppNotificationServerCode == WhatsAppNotificationServerCode);
+            result = result && (obj.WhatsAppNotificationServerName == WhatsAppNotificationServerName);
+            result = result && (obj.PredefinedSmsAndVoiceServerTypeId == PredefinedSmsAndVoiceServerTypeId);
+            result = result && (obj.ApiKey == ApiKey);
+            result = result && (obj.ApiSecret == ApiSecret);
+            result = result && (obj.AccessToken == AccessToken);
+            result = result && (obj.VersionNumber == VersionNumber);
+            result = result && (obj.PhoneNumberId == PhoneNumberId);
+            result = result && (obj.BusinessAccountId == BusinessAccountId);
+            result = result && (obj.SenderPhoneNumber == SenderPhoneNumber);
+            result = result && (obj.IsEnabled == IsEnabled);
+            return result;
+        }
+
+
+        public WhatsAppNotificationServerModel GetCopy()
+        {
+            var obj = new WhatsAppNotificationServerModel();
+            obj.EnumTypeName = EnumTypeName;
+            obj.PhoneNumberName = PhoneNumberName;
+            obj.BusinessAccountName = BusinessAccountName;
+            obj.CompanyId = CompanyId;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.WhatsAppNotificationServerId = WhatsAppNotificationServerId;
+            obj.WhatsAppNotificationServerCode = WhatsAppNotificationServerCode;
+            obj.WhatsAppNotificationServerName = WhatsAppNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AccessToken = AccessToken;
+            obj.VersionNumber = VersionNumber;
+            obj.PhoneNumberId = PhoneNumberId;
+            obj.BusinessAccountId = BusinessAccountId;
+            obj.SenderPhoneNumber = SenderPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string EnumTypeName__Name = "EnumTypeName";
+        public const string PhoneNumberName__Name = "PhoneNumberName";
+        public const string BusinessAccountName__Name = "BusinessAccountName";
+        public const string CompanyId__Name = "CompanyId";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string WhatsAppNotificationServerId__Name = "WhatsAppNotificationServerId";
+        public const string WhatsAppNotificationServerCode__Name = "WhatsAppNotificationServerCode";
+        public const string WhatsAppNotificationServerName__Name = "WhatsAppNotificationServerName";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string ApiKey__Name = "ApiKey";
+        public const string ApiSecret__Name = "ApiSecret";
+        public const string AccessToken__Name = "AccessToken";
+        public const string VersionNumber__Name = "VersionNumber";
+        public const string PhoneNumberId__Name = "PhoneNumberId";
+        public const string BusinessAccountId__Name = "BusinessAccountId";
+        public const string SenderPhoneNumber__Name = "SenderPhoneNumber";
+        public const string IsEnabled__Name = "IsEnabled";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int WhatsAppNotificationServerCode__Size = 45;
+        public const int WhatsAppNotificationServerName__Size = 100;
+        public const int ApiKey__Size = 255;
+        public const int ApiSecret__Size = 255;
+        public const int AccessToken__Size = 255;
+        public const int VersionNumber__Size = 10;
+        public const int PhoneNumberId__Size = 50;
+        public const int BusinessAccountId__Size = 50;
+        public const int SenderPhoneNumber__Size = 20;
+    }
+
+    public class WhatsAppNotificationServerSearchCriteria
+    {
+
+        public WhatsAppNotificationServerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeIds")]
+        public List<Int64> PredefinedSmsAndVoiceServerTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public WhatsAppNotificationServerSearchCriteria GetCopy()
+        {
+            var obj = new WhatsAppNotificationServerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedSmsAndVoiceServerTypeIds = PredefinedSmsAndVoiceServerTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedSmsAndVoiceServerTypeIds__Name = "PredefinedSmsAndVoiceServerTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class WhatsAppNotificationServerCreateModel
+    {
+
+        public WhatsAppNotificationServerCreateModel()
+        {
+        }
+
+        public WhatsAppNotificationServerCreateModel(String whatsAppNotificationServerCode,String whatsAppNotificationServerName,Int64 predefinedSmsAndVoiceServerTypeId,String apiKey,String apiSecret,String accessToken,String versionNumber,String phoneNumberId,Boolean isEnabled)
+        {
+            WhatsAppNotificationServerCode = whatsAppNotificationServerCode;
+            WhatsAppNotificationServerName = whatsAppNotificationServerName;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            ApiKey = apiKey;
+            ApiSecret = apiSecret;
+            AccessToken = accessToken;
+            VersionNumber = versionNumber;
+            PhoneNumberId = phoneNumberId;
+            IsEnabled = isEnabled;
+        }
+
+        [JsonPropertyName("whatsAppNotificationServerCode")]
+        public String WhatsAppNotificationServerCode {set; get;}
+        [JsonPropertyName("whatsAppNotificationServerName")]
+        public String WhatsAppNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("apiKey")]
+        public String ApiKey {set; get;}
+        [JsonPropertyName("apiSecret")]
+        public String ApiSecret {set; get;}
+        [JsonPropertyName("accessToken")]
+        public String AccessToken {set; get;}
+        [JsonPropertyName("versionNumber")]
+        public String VersionNumber {set; get;}
+        [JsonPropertyName("phoneNumberId")]
+        public String PhoneNumberId {set; get;}
+        [JsonPropertyName("businessAccountId")]
+        public String BusinessAccountId {set; get;}
+        [JsonPropertyName("senderPhoneNumber")]
+        public String SenderPhoneNumber {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+
+        public WhatsAppNotificationServerCreateModel GetCopy()
+        {
+            var obj = new WhatsAppNotificationServerCreateModel();
+            obj.WhatsAppNotificationServerCode = WhatsAppNotificationServerCode;
+            obj.WhatsAppNotificationServerName = WhatsAppNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AccessToken = AccessToken;
+            obj.VersionNumber = VersionNumber;
+            obj.PhoneNumberId = PhoneNumberId;
+            obj.BusinessAccountId = BusinessAccountId;
+            obj.SenderPhoneNumber = SenderPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        // Property Names
+        public const string WhatsAppNotificationServerCode__Name = "WhatsAppNotificationServerCode";
+        public const string WhatsAppNotificationServerName__Name = "WhatsAppNotificationServerName";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string ApiKey__Name = "ApiKey";
+        public const string ApiSecret__Name = "ApiSecret";
+        public const string AccessToken__Name = "AccessToken";
+        public const string VersionNumber__Name = "VersionNumber";
+        public const string PhoneNumberId__Name = "PhoneNumberId";
+        public const string BusinessAccountId__Name = "BusinessAccountId";
+        public const string SenderPhoneNumber__Name = "SenderPhoneNumber";
+        public const string IsEnabled__Name = "IsEnabled";
+        // String Column Sizes
+        public const int WhatsAppNotificationServerCode__Size = 45;
+        public const int WhatsAppNotificationServerName__Size = 100;
+        public const int ApiKey__Size = 255;
+        public const int ApiSecret__Size = 255;
+        public const int AccessToken__Size = 255;
+        public const int VersionNumber__Size = 10;
+        public const int PhoneNumberId__Size = 50;
+        public const int BusinessAccountId__Size = 50;
+        public const int SenderPhoneNumber__Size = 20;
+    }
+
+    public class MultipleWhatsAppNotificationServerCreateModel
+    {
+
+        public MultipleWhatsAppNotificationServerCreateModel()
+        {
+        }
+        [JsonPropertyName("newWhatsAppNotificationServers")]
+        public List<WhatsAppNotificationServerCreateModel> NewWhatsAppNotificationServers {set; get;}
+
+        public MultipleWhatsAppNotificationServerCreateModel GetCopy()
+        {
+            var obj = new MultipleWhatsAppNotificationServerCreateModel();
+            obj.NewWhatsAppNotificationServers = NewWhatsAppNotificationServers;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewWhatsAppNotificationServers__Name = "NewWhatsAppNotificationServers";
+    }
+
+    public class WhatsAppNotificationServerUpdateModel
+    {
+
+        public WhatsAppNotificationServerUpdateModel()
+        {
+        }
+
+        public WhatsAppNotificationServerUpdateModel(Int64 whatsAppNotificationServerId,String whatsAppNotificationServerCode,String whatsAppNotificationServerName,Int64 predefinedSmsAndVoiceServerTypeId,String apiKey,String apiSecret,String accessToken,String versionNumber,String phoneNumberId,Boolean isEnabled)
+        {
+            WhatsAppNotificationServerId = whatsAppNotificationServerId;
+            WhatsAppNotificationServerCode = whatsAppNotificationServerCode;
+            WhatsAppNotificationServerName = whatsAppNotificationServerName;
+            PredefinedSmsAndVoiceServerTypeId = predefinedSmsAndVoiceServerTypeId;
+            ApiKey = apiKey;
+            ApiSecret = apiSecret;
+            AccessToken = accessToken;
+            VersionNumber = versionNumber;
+            PhoneNumberId = phoneNumberId;
+            IsEnabled = isEnabled;
+        }
+
+        [JsonPropertyName("whatsAppNotificationServerId")]
+        public Int64 WhatsAppNotificationServerId {set; get;}
+        [JsonPropertyName("whatsAppNotificationServerCode")]
+        public String WhatsAppNotificationServerCode {set; get;}
+        [JsonPropertyName("whatsAppNotificationServerName")]
+        public String WhatsAppNotificationServerName {set; get;}
+        [JsonPropertyName("predefinedSmsAndVoiceServerTypeId")]
+        public Int64 PredefinedSmsAndVoiceServerTypeId {set; get;}
+        [JsonPropertyName("apiKey")]
+        public String ApiKey {set; get;}
+        [JsonPropertyName("apiSecret")]
+        public String ApiSecret {set; get;}
+        [JsonPropertyName("accessToken")]
+        public String AccessToken {set; get;}
+        [JsonPropertyName("versionNumber")]
+        public String VersionNumber {set; get;}
+        [JsonPropertyName("phoneNumberId")]
+        public String PhoneNumberId {set; get;}
+        [JsonPropertyName("businessAccountId")]
+        public String BusinessAccountId {set; get;}
+        [JsonPropertyName("senderPhoneNumber")]
+        public String SenderPhoneNumber {set; get;}
+        [JsonPropertyName("isEnabled")]
+        public Boolean IsEnabled {set; get;}
+
+        public WhatsAppNotificationServerUpdateModel GetCopy()
+        {
+            var obj = new WhatsAppNotificationServerUpdateModel();
+            obj.WhatsAppNotificationServerId = WhatsAppNotificationServerId;
+            obj.WhatsAppNotificationServerCode = WhatsAppNotificationServerCode;
+            obj.WhatsAppNotificationServerName = WhatsAppNotificationServerName;
+            obj.PredefinedSmsAndVoiceServerTypeId = PredefinedSmsAndVoiceServerTypeId;
+            obj.ApiKey = ApiKey;
+            obj.ApiSecret = ApiSecret;
+            obj.AccessToken = AccessToken;
+            obj.VersionNumber = VersionNumber;
+            obj.PhoneNumberId = PhoneNumberId;
+            obj.BusinessAccountId = BusinessAccountId;
+            obj.SenderPhoneNumber = SenderPhoneNumber;
+            obj.IsEnabled = IsEnabled;
+            return obj;
+        }
+
+        // Property Names
+        public const string WhatsAppNotificationServerId__Name = "WhatsAppNotificationServerId";
+        public const string WhatsAppNotificationServerCode__Name = "WhatsAppNotificationServerCode";
+        public const string WhatsAppNotificationServerName__Name = "WhatsAppNotificationServerName";
+        public const string PredefinedSmsAndVoiceServerTypeId__Name = "PredefinedSmsAndVoiceServerTypeId";
+        public const string ApiKey__Name = "ApiKey";
+        public const string ApiSecret__Name = "ApiSecret";
+        public const string AccessToken__Name = "AccessToken";
+        public const string VersionNumber__Name = "VersionNumber";
+        public const string PhoneNumberId__Name = "PhoneNumberId";
+        public const string BusinessAccountId__Name = "BusinessAccountId";
+        public const string SenderPhoneNumber__Name = "SenderPhoneNumber";
+        public const string IsEnabled__Name = "IsEnabled";
+        // String Column Sizes
+        public const int WhatsAppNotificationServerCode__Size = 45;
+        public const int WhatsAppNotificationServerName__Size = 100;
+        public const int ApiKey__Size = 255;
+        public const int ApiSecret__Size = 255;
+        public const int AccessToken__Size = 255;
+        public const int VersionNumber__Size = 10;
+        public const int PhoneNumberId__Size = 50;
+        public const int BusinessAccountId__Size = 50;
+        public const int SenderPhoneNumber__Size = 20;
+    }
+
+    public class MessageTemplateModel
+    {
+
+        public MessageTemplateModel()
+        {
+        }
+
+        public MessageTemplateModel(Int64 messageTemplateId,Int64 predefinedMessageTemplateTypeId,String emailSubject,String emailBody,String smsBody,String appNotificationSubject,String appNotificationBody,String webNotificationSubject,String webNotificationBody,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            MessageTemplateId = messageTemplateId;
+            PredefinedMessageTemplateTypeId = predefinedMessageTemplateTypeId;
+            EmailSubject = emailSubject;
+            EmailBody = emailBody;
+            SmsBody = smsBody;
+            AppNotificationSubject = appNotificationSubject;
+            AppNotificationBody = appNotificationBody;
+            WebNotificationSubject = webNotificationSubject;
+            WebNotificationBody = webNotificationBody;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedMessageTemplateTypeName")]
+        public String PredefinedMessageTemplateTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("messageTemplateId")]
+        public Int64 MessageTemplateId {set; get;}
+        [JsonPropertyName("predefinedMessageTemplateTypeId")]
+        public Int64 PredefinedMessageTemplateTypeId {set; get;}
+        [JsonPropertyName("emailSubject")]
+        public String EmailSubject {set; get;}
+        [JsonPropertyName("emailBody")]
+        public String EmailBody {set; get;}
+        [JsonPropertyName("smsBody")]
+        public String SmsBody {set; get;}
+        [JsonPropertyName("appNotificationSubject")]
+        public String AppNotificationSubject {set; get;}
+        [JsonPropertyName("appNotificationBody")]
+        public String AppNotificationBody {set; get;}
+        [JsonPropertyName("webNotificationSubject")]
+        public String WebNotificationSubject {set; get;}
+        [JsonPropertyName("webNotificationBody")]
+        public String WebNotificationBody {set; get;}
+        [JsonPropertyName("sendEmailForInternalUser")]
+        public Boolean? SendEmailForInternalUser {set; get;}
+        [JsonPropertyName("sendSmsForInternalUser")]
+        public Boolean? SendSmsForInternalUser {set; get;}
+        [JsonPropertyName("sendAppNotificationForInternalUser")]
+        public Boolean? SendAppNotificationForInternalUser {set; get;}
+        [JsonPropertyName("sendEmailForExternalUser")]
+        public Boolean? SendEmailForExternalUser {set; get;}
+        [JsonPropertyName("sendSmsForExternalUser")]
+        public Boolean? SendSmsForExternalUser {set; get;}
+        [JsonPropertyName("sendAppNotificationForExternalUser")]
+        public Boolean? SendAppNotificationForExternalUser {set; get;}
+        [JsonPropertyName("additionalRecipients")]
+        public String AdditionalRecipients {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public MessageTemplateCreateModel GetAsCreateModel()
+        {
+            var obj = new MessageTemplateCreateModel();
+            obj.PredefinedMessageTemplateTypeId = PredefinedMessageTemplateTypeId;
+            obj.EmailSubject = EmailSubject;
+            obj.EmailBody = EmailBody;
+            obj.SmsBody = SmsBody;
+            obj.AppNotificationSubject = AppNotificationSubject;
+            obj.AppNotificationBody = AppNotificationBody;
+            obj.WebNotificationSubject = WebNotificationSubject;
+            obj.WebNotificationBody = WebNotificationBody;
+            obj.SendEmailForInternalUser = SendEmailForInternalUser;
+            obj.SendSmsForInternalUser = SendSmsForInternalUser;
+            obj.SendAppNotificationForInternalUser = SendAppNotificationForInternalUser;
+            obj.SendEmailForExternalUser = SendEmailForExternalUser;
+            obj.SendSmsForExternalUser = SendSmsForExternalUser;
+            obj.SendAppNotificationForExternalUser = SendAppNotificationForExternalUser;
+            obj.AdditionalRecipients = AdditionalRecipients;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(MessageTemplateCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedMessageTemplateTypeId == PredefinedMessageTemplateTypeId);
+            result = result && (obj.EmailSubject == EmailSubject);
+            result = result && (obj.EmailBody == EmailBody);
+            result = result && (obj.SmsBody == SmsBody);
+            result = result && (obj.AppNotificationSubject == AppNotificationSubject);
+            result = result && (obj.AppNotificationBody == AppNotificationBody);
+            result = result && (obj.WebNotificationSubject == WebNotificationSubject);
+            result = result && (obj.WebNotificationBody == WebNotificationBody);
+            result = result && (obj.SendEmailForInternalUser == SendEmailForInternalUser);
+            result = result && (obj.SendSmsForInternalUser == SendSmsForInternalUser);
+            result = result && (obj.SendAppNotificationForInternalUser == SendAppNotificationForInternalUser);
+            result = result && (obj.SendEmailForExternalUser == SendEmailForExternalUser);
+            result = result && (obj.SendSmsForExternalUser == SendSmsForExternalUser);
+            result = result && (obj.SendAppNotificationForExternalUser == SendAppNotificationForExternalUser);
+            result = result && (obj.AdditionalRecipients == AdditionalRecipients);
+            return result;
+        }
+
+
+        public MessageTemplateUpdateModel GetAsUpdateModel()
+        {
+            var obj = new MessageTemplateUpdateModel();
+            obj.MessageTemplateId = MessageTemplateId;
+            obj.PredefinedMessageTemplateTypeId = PredefinedMessageTemplateTypeId;
+            obj.EmailSubject = EmailSubject;
+            obj.EmailBody = EmailBody;
+            obj.SmsBody = SmsBody;
+            obj.AppNotificationSubject = AppNotificationSubject;
+            obj.AppNotificationBody = AppNotificationBody;
+            obj.WebNotificationSubject = WebNotificationSubject;
+            obj.WebNotificationBody = WebNotificationBody;
+            obj.SendEmailForInternalUser = SendEmailForInternalUser;
+            obj.SendSmsForInternalUser = SendSmsForInternalUser;
+            obj.SendAppNotificationForInternalUser = SendAppNotificationForInternalUser;
+            obj.SendEmailForExternalUser = SendEmailForExternalUser;
+            obj.SendSmsForExternalUser = SendSmsForExternalUser;
+            obj.SendAppNotificationForExternalUser = SendAppNotificationForExternalUser;
+            obj.AdditionalRecipients = AdditionalRecipients;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(MessageTemplateUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.MessageTemplateId == MessageTemplateId);
+            result = result && (obj.PredefinedMessageTemplateTypeId == PredefinedMessageTemplateTypeId);
+            result = result && (obj.EmailSubject == EmailSubject);
+            result = result && (obj.EmailBody == EmailBody);
+            result = result && (obj.SmsBody == SmsBody);
+            result = result && (obj.AppNotificationSubject == AppNotificationSubject);
+            result = result && (obj.AppNotificationBody == AppNotificationBody);
+            result = result && (obj.WebNotificationSubject == WebNotificationSubject);
+            result = result && (obj.WebNotificationBody == WebNotificationBody);
+            result = result && (obj.SendEmailForInternalUser == SendEmailForInternalUser);
+            result = result && (obj.SendSmsForInternalUser == SendSmsForInternalUser);
+            result = result && (obj.SendAppNotificationForInternalUser == SendAppNotificationForInternalUser);
+            result = result && (obj.SendEmailForExternalUser == SendEmailForExternalUser);
+            result = result && (obj.SendSmsForExternalUser == SendSmsForExternalUser);
+            result = result && (obj.SendAppNotificationForExternalUser == SendAppNotificationForExternalUser);
+            result = result && (obj.AdditionalRecipients == AdditionalRecipients);
+            return result;
+        }
+
+
+        public MessageTemplateModel GetCopy()
+        {
+            var obj = new MessageTemplateModel();
+            obj.PredefinedMessageTemplateTypeName = PredefinedMessageTemplateTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.MessageTemplateId = MessageTemplateId;
+            obj.PredefinedMessageTemplateTypeId = PredefinedMessageTemplateTypeId;
+            obj.EmailSubject = EmailSubject;
+            obj.EmailBody = EmailBody;
+            obj.SmsBody = SmsBody;
+            obj.AppNotificationSubject = AppNotificationSubject;
+            obj.AppNotificationBody = AppNotificationBody;
+            obj.WebNotificationSubject = WebNotificationSubject;
+            obj.WebNotificationBody = WebNotificationBody;
+            obj.SendEmailForInternalUser = SendEmailForInternalUser;
+            obj.SendSmsForInternalUser = SendSmsForInternalUser;
+            obj.SendAppNotificationForInternalUser = SendAppNotificationForInternalUser;
+            obj.SendEmailForExternalUser = SendEmailForExternalUser;
+            obj.SendSmsForExternalUser = SendSmsForExternalUser;
+            obj.SendAppNotificationForExternalUser = SendAppNotificationForExternalUser;
+            obj.AdditionalRecipients = AdditionalRecipients;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMessageTemplateTypeName__Name = "PredefinedMessageTemplateTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string MessageTemplateId__Name = "MessageTemplateId";
+        public const string PredefinedMessageTemplateTypeId__Name = "PredefinedMessageTemplateTypeId";
+        public const string EmailSubject__Name = "EmailSubject";
+        public const string EmailBody__Name = "EmailBody";
+        public const string SmsBody__Name = "SmsBody";
+        public const string AppNotificationSubject__Name = "AppNotificationSubject";
+        public const string AppNotificationBody__Name = "AppNotificationBody";
+        public const string WebNotificationSubject__Name = "WebNotificationSubject";
+        public const string WebNotificationBody__Name = "WebNotificationBody";
+        public const string SendEmailForInternalUser__Name = "SendEmailForInternalUser";
+        public const string SendSmsForInternalUser__Name = "SendSmsForInternalUser";
+        public const string SendAppNotificationForInternalUser__Name = "SendAppNotificationForInternalUser";
+        public const string SendEmailForExternalUser__Name = "SendEmailForExternalUser";
+        public const string SendSmsForExternalUser__Name = "SendSmsForExternalUser";
+        public const string SendAppNotificationForExternalUser__Name = "SendAppNotificationForExternalUser";
+        public const string AdditionalRecipients__Name = "AdditionalRecipients";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int EmailSubject__Size = 500;
+        public const int EmailBody__Size = 2000;
+        public const int SmsBody__Size = 2000;
+        public const int AppNotificationSubject__Size = 500;
+        public const int AppNotificationBody__Size = 2000;
+        public const int WebNotificationSubject__Size = 500;
+        public const int WebNotificationBody__Size = 2000;
+        public const int AdditionalRecipients__Size = 500;
+    }
+
+    public class MessageTemplateSearchCriteria
+    {
+
+        public MessageTemplateSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedMessageTemplateTypeIds")]
+        public List<Int64> PredefinedMessageTemplateTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MessageTemplateSearchCriteria GetCopy()
+        {
+            var obj = new MessageTemplateSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedMessageTemplateTypeIds = PredefinedMessageTemplateTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedMessageTemplateTypeIds__Name = "PredefinedMessageTemplateTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MessageTemplateCreateModel
+    {
+
+        public MessageTemplateCreateModel()
+        {
+        }
+
+        public MessageTemplateCreateModel(Int64 predefinedMessageTemplateTypeId,String emailSubject,String emailBody,String smsBody,String appNotificationSubject,String appNotificationBody,String webNotificationSubject,String webNotificationBody)
+        {
+            PredefinedMessageTemplateTypeId = predefinedMessageTemplateTypeId;
+            EmailSubject = emailSubject;
+            EmailBody = emailBody;
+            SmsBody = smsBody;
+            AppNotificationSubject = appNotificationSubject;
+            AppNotificationBody = appNotificationBody;
+            WebNotificationSubject = webNotificationSubject;
+            WebNotificationBody = webNotificationBody;
+        }
+
+        [JsonPropertyName("predefinedMessageTemplateTypeId")]
+        public Int64 PredefinedMessageTemplateTypeId {set; get;}
+        [JsonPropertyName("emailSubject")]
+        public String EmailSubject {set; get;}
+        [JsonPropertyName("emailBody")]
+        public String EmailBody {set; get;}
+        [JsonPropertyName("smsBody")]
+        public String SmsBody {set; get;}
+        [JsonPropertyName("appNotificationSubject")]
+        public String AppNotificationSubject {set; get;}
+        [JsonPropertyName("appNotificationBody")]
+        public String AppNotificationBody {set; get;}
+        [JsonPropertyName("webNotificationSubject")]
+        public String WebNotificationSubject {set; get;}
+        [JsonPropertyName("webNotificationBody")]
+        public String WebNotificationBody {set; get;}
+        [JsonPropertyName("sendEmailForInternalUser")]
+        public Boolean? SendEmailForInternalUser {set; get;}
+        [JsonPropertyName("sendSmsForInternalUser")]
+        public Boolean? SendSmsForInternalUser {set; get;}
+        [JsonPropertyName("sendAppNotificationForInternalUser")]
+        public Boolean? SendAppNotificationForInternalUser {set; get;}
+        [JsonPropertyName("sendEmailForExternalUser")]
+        public Boolean? SendEmailForExternalUser {set; get;}
+        [JsonPropertyName("sendSmsForExternalUser")]
+        public Boolean? SendSmsForExternalUser {set; get;}
+        [JsonPropertyName("sendAppNotificationForExternalUser")]
+        public Boolean? SendAppNotificationForExternalUser {set; get;}
+        [JsonPropertyName("additionalRecipients")]
+        public String AdditionalRecipients {set; get;}
+
+        public MessageTemplateCreateModel GetCopy()
+        {
+            var obj = new MessageTemplateCreateModel();
+            obj.PredefinedMessageTemplateTypeId = PredefinedMessageTemplateTypeId;
+            obj.EmailSubject = EmailSubject;
+            obj.EmailBody = EmailBody;
+            obj.SmsBody = SmsBody;
+            obj.AppNotificationSubject = AppNotificationSubject;
+            obj.AppNotificationBody = AppNotificationBody;
+            obj.WebNotificationSubject = WebNotificationSubject;
+            obj.WebNotificationBody = WebNotificationBody;
+            obj.SendEmailForInternalUser = SendEmailForInternalUser;
+            obj.SendSmsForInternalUser = SendSmsForInternalUser;
+            obj.SendAppNotificationForInternalUser = SendAppNotificationForInternalUser;
+            obj.SendEmailForExternalUser = SendEmailForExternalUser;
+            obj.SendSmsForExternalUser = SendSmsForExternalUser;
+            obj.SendAppNotificationForExternalUser = SendAppNotificationForExternalUser;
+            obj.AdditionalRecipients = AdditionalRecipients;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMessageTemplateTypeId__Name = "PredefinedMessageTemplateTypeId";
+        public const string EmailSubject__Name = "EmailSubject";
+        public const string EmailBody__Name = "EmailBody";
+        public const string SmsBody__Name = "SmsBody";
+        public const string AppNotificationSubject__Name = "AppNotificationSubject";
+        public const string AppNotificationBody__Name = "AppNotificationBody";
+        public const string WebNotificationSubject__Name = "WebNotificationSubject";
+        public const string WebNotificationBody__Name = "WebNotificationBody";
+        public const string SendEmailForInternalUser__Name = "SendEmailForInternalUser";
+        public const string SendSmsForInternalUser__Name = "SendSmsForInternalUser";
+        public const string SendAppNotificationForInternalUser__Name = "SendAppNotificationForInternalUser";
+        public const string SendEmailForExternalUser__Name = "SendEmailForExternalUser";
+        public const string SendSmsForExternalUser__Name = "SendSmsForExternalUser";
+        public const string SendAppNotificationForExternalUser__Name = "SendAppNotificationForExternalUser";
+        public const string AdditionalRecipients__Name = "AdditionalRecipients";
+        // String Column Sizes
+        public const int EmailSubject__Size = 500;
+        public const int EmailBody__Size = 2000;
+        public const int SmsBody__Size = 2000;
+        public const int AppNotificationSubject__Size = 500;
+        public const int AppNotificationBody__Size = 2000;
+        public const int WebNotificationSubject__Size = 500;
+        public const int WebNotificationBody__Size = 2000;
+        public const int AdditionalRecipients__Size = 500;
+    }
+
+    public class MessageTemplateUpdateModel
+    {
+
+        public MessageTemplateUpdateModel()
+        {
+        }
+
+        public MessageTemplateUpdateModel(Int64 messageTemplateId,Int64 predefinedMessageTemplateTypeId,String emailSubject,String emailBody,String smsBody,String appNotificationSubject,String appNotificationBody,String webNotificationSubject,String webNotificationBody)
+        {
+            MessageTemplateId = messageTemplateId;
+            PredefinedMessageTemplateTypeId = predefinedMessageTemplateTypeId;
+            EmailSubject = emailSubject;
+            EmailBody = emailBody;
+            SmsBody = smsBody;
+            AppNotificationSubject = appNotificationSubject;
+            AppNotificationBody = appNotificationBody;
+            WebNotificationSubject = webNotificationSubject;
+            WebNotificationBody = webNotificationBody;
+        }
+
+        [JsonPropertyName("messageTemplateId")]
+        public Int64 MessageTemplateId {set; get;}
+        [JsonPropertyName("predefinedMessageTemplateTypeId")]
+        public Int64 PredefinedMessageTemplateTypeId {set; get;}
+        [JsonPropertyName("emailSubject")]
+        public String EmailSubject {set; get;}
+        [JsonPropertyName("emailBody")]
+        public String EmailBody {set; get;}
+        [JsonPropertyName("smsBody")]
+        public String SmsBody {set; get;}
+        [JsonPropertyName("appNotificationSubject")]
+        public String AppNotificationSubject {set; get;}
+        [JsonPropertyName("appNotificationBody")]
+        public String AppNotificationBody {set; get;}
+        [JsonPropertyName("webNotificationSubject")]
+        public String WebNotificationSubject {set; get;}
+        [JsonPropertyName("webNotificationBody")]
+        public String WebNotificationBody {set; get;}
+        [JsonPropertyName("sendEmailForInternalUser")]
+        public Boolean? SendEmailForInternalUser {set; get;}
+        [JsonPropertyName("sendSmsForInternalUser")]
+        public Boolean? SendSmsForInternalUser {set; get;}
+        [JsonPropertyName("sendAppNotificationForInternalUser")]
+        public Boolean? SendAppNotificationForInternalUser {set; get;}
+        [JsonPropertyName("sendEmailForExternalUser")]
+        public Boolean? SendEmailForExternalUser {set; get;}
+        [JsonPropertyName("sendSmsForExternalUser")]
+        public Boolean? SendSmsForExternalUser {set; get;}
+        [JsonPropertyName("sendAppNotificationForExternalUser")]
+        public Boolean? SendAppNotificationForExternalUser {set; get;}
+        [JsonPropertyName("additionalRecipients")]
+        public String AdditionalRecipients {set; get;}
+
+        public MessageTemplateUpdateModel GetCopy()
+        {
+            var obj = new MessageTemplateUpdateModel();
+            obj.MessageTemplateId = MessageTemplateId;
+            obj.PredefinedMessageTemplateTypeId = PredefinedMessageTemplateTypeId;
+            obj.EmailSubject = EmailSubject;
+            obj.EmailBody = EmailBody;
+            obj.SmsBody = SmsBody;
+            obj.AppNotificationSubject = AppNotificationSubject;
+            obj.AppNotificationBody = AppNotificationBody;
+            obj.WebNotificationSubject = WebNotificationSubject;
+            obj.WebNotificationBody = WebNotificationBody;
+            obj.SendEmailForInternalUser = SendEmailForInternalUser;
+            obj.SendSmsForInternalUser = SendSmsForInternalUser;
+            obj.SendAppNotificationForInternalUser = SendAppNotificationForInternalUser;
+            obj.SendEmailForExternalUser = SendEmailForExternalUser;
+            obj.SendSmsForExternalUser = SendSmsForExternalUser;
+            obj.SendAppNotificationForExternalUser = SendAppNotificationForExternalUser;
+            obj.AdditionalRecipients = AdditionalRecipients;
+            return obj;
+        }
+
+        // Property Names
+        public const string MessageTemplateId__Name = "MessageTemplateId";
+        public const string PredefinedMessageTemplateTypeId__Name = "PredefinedMessageTemplateTypeId";
+        public const string EmailSubject__Name = "EmailSubject";
+        public const string EmailBody__Name = "EmailBody";
+        public const string SmsBody__Name = "SmsBody";
+        public const string AppNotificationSubject__Name = "AppNotificationSubject";
+        public const string AppNotificationBody__Name = "AppNotificationBody";
+        public const string WebNotificationSubject__Name = "WebNotificationSubject";
+        public const string WebNotificationBody__Name = "WebNotificationBody";
+        public const string SendEmailForInternalUser__Name = "SendEmailForInternalUser";
+        public const string SendSmsForInternalUser__Name = "SendSmsForInternalUser";
+        public const string SendAppNotificationForInternalUser__Name = "SendAppNotificationForInternalUser";
+        public const string SendEmailForExternalUser__Name = "SendEmailForExternalUser";
+        public const string SendSmsForExternalUser__Name = "SendSmsForExternalUser";
+        public const string SendAppNotificationForExternalUser__Name = "SendAppNotificationForExternalUser";
+        public const string AdditionalRecipients__Name = "AdditionalRecipients";
+        // String Column Sizes
+        public const int EmailSubject__Size = 500;
+        public const int EmailBody__Size = 2000;
+        public const int SmsBody__Size = 2000;
+        public const int AppNotificationSubject__Size = 500;
+        public const int AppNotificationBody__Size = 2000;
+        public const int WebNotificationSubject__Size = 500;
+        public const int WebNotificationBody__Size = 2000;
+        public const int AdditionalRecipients__Size = 500;
+    }
+
+    public class SystemSummaryModel
+    {
+
+        public SystemSummaryModel()
+        {
+        }
+        [JsonPropertyName("usersCount")]
+        public Int64 UsersCount {set; get;}
+        [JsonPropertyName("currentRunningJobsCount")]
+        public Int64 CurrentRunningJobsCount {set; get;}
+        [JsonPropertyName("messageToSendTotalCount")]
+        public Int64 MessageToSendTotalCount {set; get;}
+        [JsonPropertyName("messageToSendSuccessCount")]
+        public Int64 MessageToSendSuccessCount {set; get;}
+        [JsonPropertyName("messageToSendErrorCount")]
+        public Int64 MessageToSendErrorCount {set; get;}
+        [JsonPropertyName("totalJobCount")]
+        public Int64 TotalJobCount {set; get;}
+        [JsonPropertyName("jobSuccessCount")]
+        public Int64 JobSuccessCount {set; get;}
+        [JsonPropertyName("jobErrorCount")]
+        public Int64 JobErrorCount {set; get;}
+
+        public SystemSummaryModel GetCopy()
+        {
+            var obj = new SystemSummaryModel();
+            obj.UsersCount = UsersCount;
+            obj.CurrentRunningJobsCount = CurrentRunningJobsCount;
+            obj.MessageToSendTotalCount = MessageToSendTotalCount;
+            obj.MessageToSendSuccessCount = MessageToSendSuccessCount;
+            obj.MessageToSendErrorCount = MessageToSendErrorCount;
+            obj.TotalJobCount = TotalJobCount;
+            obj.JobSuccessCount = JobSuccessCount;
+            obj.JobErrorCount = JobErrorCount;
+            return obj;
+        }
+
+        // Property Names
+        public const string UsersCount__Name = "UsersCount";
+        public const string CurrentRunningJobsCount__Name = "CurrentRunningJobsCount";
+        public const string MessageToSendTotalCount__Name = "MessageToSendTotalCount";
+        public const string MessageToSendSuccessCount__Name = "MessageToSendSuccessCount";
+        public const string MessageToSendErrorCount__Name = "MessageToSendErrorCount";
+        public const string TotalJobCount__Name = "TotalJobCount";
+        public const string JobSuccessCount__Name = "JobSuccessCount";
+        public const string JobErrorCount__Name = "JobErrorCount";
+    }
+
+    public class TwilioInitiateCallModel
+    {
+
+        public TwilioInitiateCallModel()
+        {
+        }
+        [JsonPropertyName("toPhoneNumber")]
+        public String ToPhoneNumber {set; get;}
+        [JsonPropertyName("twilioAccountSid")]
+        public String TwilioAccountSid {set; get;}
+        [JsonPropertyName("twilioAuthToken")]
+        public String TwilioAuthToken {set; get;}
+        [JsonPropertyName("twilioPhoneNumber")]
+        public String TwilioPhoneNumber {set; get;}
+
+        public TwilioInitiateCallModel GetCopy()
+        {
+            var obj = new TwilioInitiateCallModel();
+            obj.ToPhoneNumber = ToPhoneNumber;
+            obj.TwilioAccountSid = TwilioAccountSid;
+            obj.TwilioAuthToken = TwilioAuthToken;
+            obj.TwilioPhoneNumber = TwilioPhoneNumber;
+            return obj;
+        }
+
+        // Property Names
+        public const string ToPhoneNumber__Name = "ToPhoneNumber";
+        public const string TwilioAccountSid__Name = "TwilioAccountSid";
+        public const string TwilioAuthToken__Name = "TwilioAuthToken";
+        public const string TwilioPhoneNumber__Name = "TwilioPhoneNumber";
+    }
+
+    public class TextWithValue
+    {
+
+        public TextWithValue()
+        {
+        }
+        [JsonPropertyName("text")]
+        public String Text {set; get;}
+        [JsonPropertyName("value")]
+        public String Value {set; get;}
+        [JsonPropertyName("code")]
+        public String Code {set; get;}
+
+        public TextWithValue GetCopy()
+        {
+            var obj = new TextWithValue();
+            obj.Text = Text;
+            obj.Value = Value;
+            obj.Code = Code;
+            return obj;
+        }
+
+        // Property Names
+        public const string Text__Name = "Text";
+        public const string Value__Name = "Value";
+        public const string Code__Name = "Code";
+    }
+
+    public class StringValues
+    {
+
+        public StringValues()
+        {
+        }
+        [JsonPropertyName("count")]
+        public Int32 Count {set; get;}
+        [JsonPropertyName("item")]
+        public String Item {set; get;}
+
+        public StringValues GetCopy()
+        {
+            var obj = new StringValues();
+            obj.Count = Count;
+            obj.Item = Item;
+            return obj;
+        }
+
+        // Property Names
+        public const string Count__Name = "Count";
+        public const string Item__Name = "Item";
+    }
+
+    public class IHeaderDictionary
+    {
+
+        public IHeaderDictionary()
+        {
+        }
+        [JsonPropertyName("item")]
+        public StringValues Item {set; get;}
+        [JsonPropertyName("contentLength")]
+        public Int64? ContentLength {set; get;}
+        [JsonPropertyName("accept")]
+        public StringValues Accept {set; get;}
+        [JsonPropertyName("acceptCharset")]
+        public StringValues AcceptCharset {set; get;}
+        [JsonPropertyName("acceptEncoding")]
+        public StringValues AcceptEncoding {set; get;}
+        [JsonPropertyName("acceptLanguage")]
+        public StringValues AcceptLanguage {set; get;}
+        [JsonPropertyName("acceptRanges")]
+        public StringValues AcceptRanges {set; get;}
+        [JsonPropertyName("accessControlAllowCredentials")]
+        public StringValues AccessControlAllowCredentials {set; get;}
+        [JsonPropertyName("accessControlAllowHeaders")]
+        public StringValues AccessControlAllowHeaders {set; get;}
+        [JsonPropertyName("accessControlAllowMethods")]
+        public StringValues AccessControlAllowMethods {set; get;}
+        [JsonPropertyName("accessControlAllowOrigin")]
+        public StringValues AccessControlAllowOrigin {set; get;}
+        [JsonPropertyName("accessControlExposeHeaders")]
+        public StringValues AccessControlExposeHeaders {set; get;}
+        [JsonPropertyName("accessControlMaxAge")]
+        public StringValues AccessControlMaxAge {set; get;}
+        [JsonPropertyName("accessControlRequestHeaders")]
+        public StringValues AccessControlRequestHeaders {set; get;}
+        [JsonPropertyName("accessControlRequestMethod")]
+        public StringValues AccessControlRequestMethod {set; get;}
+        [JsonPropertyName("age")]
+        public StringValues Age {set; get;}
+        [JsonPropertyName("allow")]
+        public StringValues Allow {set; get;}
+        [JsonPropertyName("altSvc")]
+        public StringValues AltSvc {set; get;}
+        [JsonPropertyName("authorization")]
+        public StringValues Authorization {set; get;}
+        [JsonPropertyName("baggage")]
+        public StringValues Baggage {set; get;}
+        [JsonPropertyName("cacheControl")]
+        public StringValues CacheControl {set; get;}
+        [JsonPropertyName("connection")]
+        public StringValues Connection {set; get;}
+        [JsonPropertyName("contentDisposition")]
+        public StringValues ContentDisposition {set; get;}
+        [JsonPropertyName("contentEncoding")]
+        public StringValues ContentEncoding {set; get;}
+        [JsonPropertyName("contentLanguage")]
+        public StringValues ContentLanguage {set; get;}
+        [JsonPropertyName("contentLocation")]
+        public StringValues ContentLocation {set; get;}
+        [JsonPropertyName("contentMD5")]
+        public StringValues ContentMD5 {set; get;}
+        [JsonPropertyName("contentRange")]
+        public StringValues ContentRange {set; get;}
+        [JsonPropertyName("contentSecurityPolicy")]
+        public StringValues ContentSecurityPolicy {set; get;}
+        [JsonPropertyName("contentSecurityPolicyReportOnly")]
+        public StringValues ContentSecurityPolicyReportOnly {set; get;}
+        [JsonPropertyName("contentType")]
+        public StringValues ContentType {set; get;}
+        [JsonPropertyName("correlationContext")]
+        public StringValues CorrelationContext {set; get;}
+        [JsonPropertyName("cookie")]
+        public StringValues Cookie {set; get;}
+        [JsonPropertyName("date")]
+        public StringValues Date {set; get;}
+        [JsonPropertyName("eTag")]
+        public StringValues ETag {set; get;}
+        [JsonPropertyName("expires")]
+        public StringValues Expires {set; get;}
+        [JsonPropertyName("expect")]
+        public StringValues Expect {set; get;}
+        [JsonPropertyName("from")]
+        public StringValues From {set; get;}
+        [JsonPropertyName("grpcAcceptEncoding")]
+        public StringValues GrpcAcceptEncoding {set; get;}
+        [JsonPropertyName("grpcEncoding")]
+        public StringValues GrpcEncoding {set; get;}
+        [JsonPropertyName("grpcMessage")]
+        public StringValues GrpcMessage {set; get;}
+        [JsonPropertyName("grpcStatus")]
+        public StringValues GrpcStatus {set; get;}
+        [JsonPropertyName("grpcTimeout")]
+        public StringValues GrpcTimeout {set; get;}
+        [JsonPropertyName("host")]
+        public StringValues Host {set; get;}
+        [JsonPropertyName("keepAlive")]
+        public StringValues KeepAlive {set; get;}
+        [JsonPropertyName("ifMatch")]
+        public StringValues IfMatch {set; get;}
+        [JsonPropertyName("ifModifiedSince")]
+        public StringValues IfModifiedSince {set; get;}
+        [JsonPropertyName("ifNoneMatch")]
+        public StringValues IfNoneMatch {set; get;}
+        [JsonPropertyName("ifRange")]
+        public StringValues IfRange {set; get;}
+        [JsonPropertyName("ifUnmodifiedSince")]
+        public StringValues IfUnmodifiedSince {set; get;}
+        [JsonPropertyName("lastModified")]
+        public StringValues LastModified {set; get;}
+        [JsonPropertyName("link")]
+        public StringValues Link {set; get;}
+        [JsonPropertyName("location")]
+        public StringValues Location {set; get;}
+        [JsonPropertyName("maxForwards")]
+        public StringValues MaxForwards {set; get;}
+        [JsonPropertyName("origin")]
+        public StringValues Origin {set; get;}
+        [JsonPropertyName("pragma")]
+        public StringValues Pragma {set; get;}
+        [JsonPropertyName("proxyAuthenticate")]
+        public StringValues ProxyAuthenticate {set; get;}
+        [JsonPropertyName("proxyAuthorization")]
+        public StringValues ProxyAuthorization {set; get;}
+        [JsonPropertyName("proxyConnection")]
+        public StringValues ProxyConnection {set; get;}
+        [JsonPropertyName("range")]
+        public StringValues Range {set; get;}
+        [JsonPropertyName("referer")]
+        public StringValues Referer {set; get;}
+        [JsonPropertyName("retryAfter")]
+        public StringValues RetryAfter {set; get;}
+        [JsonPropertyName("requestId")]
+        public StringValues RequestId {set; get;}
+        [JsonPropertyName("secWebSocketAccept")]
+        public StringValues SecWebSocketAccept {set; get;}
+        [JsonPropertyName("secWebSocketKey")]
+        public StringValues SecWebSocketKey {set; get;}
+        [JsonPropertyName("secWebSocketProtocol")]
+        public StringValues SecWebSocketProtocol {set; get;}
+        [JsonPropertyName("secWebSocketVersion")]
+        public StringValues SecWebSocketVersion {set; get;}
+        [JsonPropertyName("secWebSocketExtensions")]
+        public StringValues SecWebSocketExtensions {set; get;}
+        [JsonPropertyName("server")]
+        public StringValues Server {set; get;}
+        [JsonPropertyName("setCookie")]
+        public StringValues SetCookie {set; get;}
+        [JsonPropertyName("strictTransportSecurity")]
+        public StringValues StrictTransportSecurity {set; get;}
+        [JsonPropertyName("tE")]
+        public StringValues TE {set; get;}
+        [JsonPropertyName("trailer")]
+        public StringValues Trailer {set; get;}
+        [JsonPropertyName("transferEncoding")]
+        public StringValues TransferEncoding {set; get;}
+        [JsonPropertyName("translate")]
+        public StringValues Translate {set; get;}
+        [JsonPropertyName("traceParent")]
+        public StringValues TraceParent {set; get;}
+        [JsonPropertyName("traceState")]
+        public StringValues TraceState {set; get;}
+        [JsonPropertyName("upgrade")]
+        public StringValues Upgrade {set; get;}
+        [JsonPropertyName("upgradeInsecureRequests")]
+        public StringValues UpgradeInsecureRequests {set; get;}
+        [JsonPropertyName("userAgent")]
+        public StringValues UserAgent {set; get;}
+        [JsonPropertyName("vary")]
+        public StringValues Vary {set; get;}
+        [JsonPropertyName("via")]
+        public StringValues Via {set; get;}
+        [JsonPropertyName("warning")]
+        public StringValues Warning {set; get;}
+        [JsonPropertyName("webSocketSubProtocols")]
+        public StringValues WebSocketSubProtocols {set; get;}
+        [JsonPropertyName("wWWAuthenticate")]
+        public StringValues WWWAuthenticate {set; get;}
+        [JsonPropertyName("xContentTypeOptions")]
+        public StringValues XContentTypeOptions {set; get;}
+        [JsonPropertyName("xFrameOptions")]
+        public StringValues XFrameOptions {set; get;}
+        [JsonPropertyName("xPoweredBy")]
+        public StringValues XPoweredBy {set; get;}
+        [JsonPropertyName("xRequestedWith")]
+        public StringValues XRequestedWith {set; get;}
+        [JsonPropertyName("xUACompatible")]
+        public StringValues XUACompatible {set; get;}
+        [JsonPropertyName("xXSSProtection")]
+        public StringValues XXSSProtection {set; get;}
+
+        public IHeaderDictionary GetCopy()
+        {
+            var obj = new IHeaderDictionary();
+            obj.Item = Item;
+            obj.ContentLength = ContentLength;
+            obj.Accept = Accept;
+            obj.AcceptCharset = AcceptCharset;
+            obj.AcceptEncoding = AcceptEncoding;
+            obj.AcceptLanguage = AcceptLanguage;
+            obj.AcceptRanges = AcceptRanges;
+            obj.AccessControlAllowCredentials = AccessControlAllowCredentials;
+            obj.AccessControlAllowHeaders = AccessControlAllowHeaders;
+            obj.AccessControlAllowMethods = AccessControlAllowMethods;
+            obj.AccessControlAllowOrigin = AccessControlAllowOrigin;
+            obj.AccessControlExposeHeaders = AccessControlExposeHeaders;
+            obj.AccessControlMaxAge = AccessControlMaxAge;
+            obj.AccessControlRequestHeaders = AccessControlRequestHeaders;
+            obj.AccessControlRequestMethod = AccessControlRequestMethod;
+            obj.Age = Age;
+            obj.Allow = Allow;
+            obj.AltSvc = AltSvc;
+            obj.Authorization = Authorization;
+            obj.Baggage = Baggage;
+            obj.CacheControl = CacheControl;
+            obj.Connection = Connection;
+            obj.ContentDisposition = ContentDisposition;
+            obj.ContentEncoding = ContentEncoding;
+            obj.ContentLanguage = ContentLanguage;
+            obj.ContentLocation = ContentLocation;
+            obj.ContentMD5 = ContentMD5;
+            obj.ContentRange = ContentRange;
+            obj.ContentSecurityPolicy = ContentSecurityPolicy;
+            obj.ContentSecurityPolicyReportOnly = ContentSecurityPolicyReportOnly;
+            obj.ContentType = ContentType;
+            obj.CorrelationContext = CorrelationContext;
+            obj.Cookie = Cookie;
+            obj.Date = Date;
+            obj.ETag = ETag;
+            obj.Expires = Expires;
+            obj.Expect = Expect;
+            obj.From = From;
+            obj.GrpcAcceptEncoding = GrpcAcceptEncoding;
+            obj.GrpcEncoding = GrpcEncoding;
+            obj.GrpcMessage = GrpcMessage;
+            obj.GrpcStatus = GrpcStatus;
+            obj.GrpcTimeout = GrpcTimeout;
+            obj.Host = Host;
+            obj.KeepAlive = KeepAlive;
+            obj.IfMatch = IfMatch;
+            obj.IfModifiedSince = IfModifiedSince;
+            obj.IfNoneMatch = IfNoneMatch;
+            obj.IfRange = IfRange;
+            obj.IfUnmodifiedSince = IfUnmodifiedSince;
+            obj.LastModified = LastModified;
+            obj.Link = Link;
+            obj.Location = Location;
+            obj.MaxForwards = MaxForwards;
+            obj.Origin = Origin;
+            obj.Pragma = Pragma;
+            obj.ProxyAuthenticate = ProxyAuthenticate;
+            obj.ProxyAuthorization = ProxyAuthorization;
+            obj.ProxyConnection = ProxyConnection;
+            obj.Range = Range;
+            obj.Referer = Referer;
+            obj.RetryAfter = RetryAfter;
+            obj.RequestId = RequestId;
+            obj.SecWebSocketAccept = SecWebSocketAccept;
+            obj.SecWebSocketKey = SecWebSocketKey;
+            obj.SecWebSocketProtocol = SecWebSocketProtocol;
+            obj.SecWebSocketVersion = SecWebSocketVersion;
+            obj.SecWebSocketExtensions = SecWebSocketExtensions;
+            obj.Server = Server;
+            obj.SetCookie = SetCookie;
+            obj.StrictTransportSecurity = StrictTransportSecurity;
+            obj.TE = TE;
+            obj.Trailer = Trailer;
+            obj.TransferEncoding = TransferEncoding;
+            obj.Translate = Translate;
+            obj.TraceParent = TraceParent;
+            obj.TraceState = TraceState;
+            obj.Upgrade = Upgrade;
+            obj.UpgradeInsecureRequests = UpgradeInsecureRequests;
+            obj.UserAgent = UserAgent;
+            obj.Vary = Vary;
+            obj.Via = Via;
+            obj.Warning = Warning;
+            obj.WebSocketSubProtocols = WebSocketSubProtocols;
+            obj.WWWAuthenticate = WWWAuthenticate;
+            obj.XContentTypeOptions = XContentTypeOptions;
+            obj.XFrameOptions = XFrameOptions;
+            obj.XPoweredBy = XPoweredBy;
+            obj.XRequestedWith = XRequestedWith;
+            obj.XUACompatible = XUACompatible;
+            obj.XXSSProtection = XXSSProtection;
+            return obj;
+        }
+
+        // Property Names
+        public const string Item__Name = "Item";
+        public const string ContentLength__Name = "ContentLength";
+        public const string Accept__Name = "Accept";
+        public const string AcceptCharset__Name = "AcceptCharset";
+        public const string AcceptEncoding__Name = "AcceptEncoding";
+        public const string AcceptLanguage__Name = "AcceptLanguage";
+        public const string AcceptRanges__Name = "AcceptRanges";
+        public const string AccessControlAllowCredentials__Name = "AccessControlAllowCredentials";
+        public const string AccessControlAllowHeaders__Name = "AccessControlAllowHeaders";
+        public const string AccessControlAllowMethods__Name = "AccessControlAllowMethods";
+        public const string AccessControlAllowOrigin__Name = "AccessControlAllowOrigin";
+        public const string AccessControlExposeHeaders__Name = "AccessControlExposeHeaders";
+        public const string AccessControlMaxAge__Name = "AccessControlMaxAge";
+        public const string AccessControlRequestHeaders__Name = "AccessControlRequestHeaders";
+        public const string AccessControlRequestMethod__Name = "AccessControlRequestMethod";
+        public const string Age__Name = "Age";
+        public const string Allow__Name = "Allow";
+        public const string AltSvc__Name = "AltSvc";
+        public const string Authorization__Name = "Authorization";
+        public const string Baggage__Name = "Baggage";
+        public const string CacheControl__Name = "CacheControl";
+        public const string Connection__Name = "Connection";
+        public const string ContentDisposition__Name = "ContentDisposition";
+        public const string ContentEncoding__Name = "ContentEncoding";
+        public const string ContentLanguage__Name = "ContentLanguage";
+        public const string ContentLocation__Name = "ContentLocation";
+        public const string ContentMD5__Name = "ContentMD5";
+        public const string ContentRange__Name = "ContentRange";
+        public const string ContentSecurityPolicy__Name = "ContentSecurityPolicy";
+        public const string ContentSecurityPolicyReportOnly__Name = "ContentSecurityPolicyReportOnly";
+        public const string ContentType__Name = "ContentType";
+        public const string CorrelationContext__Name = "CorrelationContext";
+        public const string Cookie__Name = "Cookie";
+        public const string Date__Name = "Date";
+        public const string ETag__Name = "ETag";
+        public const string Expires__Name = "Expires";
+        public const string Expect__Name = "Expect";
+        public const string From__Name = "From";
+        public const string GrpcAcceptEncoding__Name = "GrpcAcceptEncoding";
+        public const string GrpcEncoding__Name = "GrpcEncoding";
+        public const string GrpcMessage__Name = "GrpcMessage";
+        public const string GrpcStatus__Name = "GrpcStatus";
+        public const string GrpcTimeout__Name = "GrpcTimeout";
+        public const string Host__Name = "Host";
+        public const string KeepAlive__Name = "KeepAlive";
+        public const string IfMatch__Name = "IfMatch";
+        public const string IfModifiedSince__Name = "IfModifiedSince";
+        public const string IfNoneMatch__Name = "IfNoneMatch";
+        public const string IfRange__Name = "IfRange";
+        public const string IfUnmodifiedSince__Name = "IfUnmodifiedSince";
+        public const string LastModified__Name = "LastModified";
+        public const string Link__Name = "Link";
+        public const string Location__Name = "Location";
+        public const string MaxForwards__Name = "MaxForwards";
+        public const string Origin__Name = "Origin";
+        public const string Pragma__Name = "Pragma";
+        public const string ProxyAuthenticate__Name = "ProxyAuthenticate";
+        public const string ProxyAuthorization__Name = "ProxyAuthorization";
+        public const string ProxyConnection__Name = "ProxyConnection";
+        public const string Range__Name = "Range";
+        public const string Referer__Name = "Referer";
+        public const string RetryAfter__Name = "RetryAfter";
+        public const string RequestId__Name = "RequestId";
+        public const string SecWebSocketAccept__Name = "SecWebSocketAccept";
+        public const string SecWebSocketKey__Name = "SecWebSocketKey";
+        public const string SecWebSocketProtocol__Name = "SecWebSocketProtocol";
+        public const string SecWebSocketVersion__Name = "SecWebSocketVersion";
+        public const string SecWebSocketExtensions__Name = "SecWebSocketExtensions";
+        public const string Server__Name = "Server";
+        public const string SetCookie__Name = "SetCookie";
+        public const string StrictTransportSecurity__Name = "StrictTransportSecurity";
+        public const string TE__Name = "TE";
+        public const string Trailer__Name = "Trailer";
+        public const string TransferEncoding__Name = "TransferEncoding";
+        public const string Translate__Name = "Translate";
+        public const string TraceParent__Name = "TraceParent";
+        public const string TraceState__Name = "TraceState";
+        public const string Upgrade__Name = "Upgrade";
+        public const string UpgradeInsecureRequests__Name = "UpgradeInsecureRequests";
+        public const string UserAgent__Name = "UserAgent";
+        public const string Vary__Name = "Vary";
+        public const string Via__Name = "Via";
+        public const string Warning__Name = "Warning";
+        public const string WebSocketSubProtocols__Name = "WebSocketSubProtocols";
+        public const string WWWAuthenticate__Name = "WWWAuthenticate";
+        public const string XContentTypeOptions__Name = "XContentTypeOptions";
+        public const string XFrameOptions__Name = "XFrameOptions";
+        public const string XPoweredBy__Name = "XPoweredBy";
+        public const string XRequestedWith__Name = "XRequestedWith";
+        public const string XUACompatible__Name = "XUACompatible";
+        public const string XXSSProtection__Name = "XXSSProtection";
+    }
+
+    public class IFormFile
+    {
+
+        public IFormFile()
+        {
+        }
+        [JsonPropertyName("contentType")]
+        public String ContentType {set; get;}
+        [JsonPropertyName("contentDisposition")]
+        public String ContentDisposition {set; get;}
+        [JsonPropertyName("headers")]
+        public IHeaderDictionary Headers {set; get;}
+        [JsonPropertyName("length")]
+        public Int64 Length {set; get;}
+        [JsonPropertyName("name")]
+        public String Name {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+
+        public IFormFile GetCopy()
+        {
+            var obj = new IFormFile();
+            obj.ContentType = ContentType;
+            obj.ContentDisposition = ContentDisposition;
+            obj.Headers = Headers;
+            obj.Length = Length;
+            obj.Name = Name;
+            obj.FileName = FileName;
+            return obj;
+        }
+
+        // Property Names
+        public const string ContentType__Name = "ContentType";
+        public const string ContentDisposition__Name = "ContentDisposition";
+        public const string Headers__Name = "Headers";
+        public const string Length__Name = "Length";
+        public const string Name__Name = "Name";
+        public const string FileName__Name = "FileName";
+    }
+
+    public class LogSettings
+    {
+
+        public LogSettings()
+        {
+        }
+        [JsonPropertyName("logTrace")]
+        public Boolean LogTrace {set; get;}
+        [JsonPropertyName("logDebug")]
+        public Boolean LogDebug {set; get;}
+        [JsonPropertyName("logInfo")]
+        public Boolean LogInfo {set; get;}
+        [JsonPropertyName("logSql")]
+        public Boolean LogSql {set; get;}
+        [JsonPropertyName("logWarn")]
+        public Boolean LogWarn {set; get;}
+        [JsonPropertyName("logError")]
+        public Boolean LogError {set; get;}
+        [JsonPropertyName("logPerformance")]
+        public Boolean LogPerformance {set; get;}
+        [JsonPropertyName("logLocation")]
+        public String LogLocation {set; get;}
+        [JsonPropertyName("logToFile")]
+        public Boolean LogToFile {set; get;}
+        [JsonPropertyName("logToConsole")]
+        public Boolean LogToConsole {set; get;}
+        [JsonPropertyName("logToDebugger")]
+        public Boolean LogToDebugger {set; get;}
+        [JsonPropertyName("logToServer")]
+        public Boolean LogToServer {set; get;}
+        [JsonPropertyName("logServerHost")]
+        public String LogServerHost {set; get;}
+        [JsonPropertyName("logServerPort")]
+        public Int32 LogServerPort {set; get;}
+        [JsonPropertyName("logServerUserName")]
+        public String LogServerUserName {set; get;}
+        [JsonPropertyName("logServerPassword")]
+        public String LogServerPassword {set; get;}
+        [JsonPropertyName("logServerAccessKey")]
+        public String LogServerAccessKey {set; get;}
+
+        public LogSettings GetCopy()
+        {
+            var obj = new LogSettings();
+            obj.LogTrace = LogTrace;
+            obj.LogDebug = LogDebug;
+            obj.LogInfo = LogInfo;
+            obj.LogSql = LogSql;
+            obj.LogWarn = LogWarn;
+            obj.LogError = LogError;
+            obj.LogPerformance = LogPerformance;
+            obj.LogLocation = LogLocation;
+            obj.LogToFile = LogToFile;
+            obj.LogToConsole = LogToConsole;
+            obj.LogToDebugger = LogToDebugger;
+            obj.LogToServer = LogToServer;
+            obj.LogServerHost = LogServerHost;
+            obj.LogServerPort = LogServerPort;
+            obj.LogServerUserName = LogServerUserName;
+            obj.LogServerPassword = LogServerPassword;
+            obj.LogServerAccessKey = LogServerAccessKey;
+            return obj;
+        }
+
+        // Property Names
+        public const string LogTrace__Name = "LogTrace";
+        public const string LogDebug__Name = "LogDebug";
+        public const string LogInfo__Name = "LogInfo";
+        public const string LogSql__Name = "LogSql";
+        public const string LogWarn__Name = "LogWarn";
+        public const string LogError__Name = "LogError";
+        public const string LogPerformance__Name = "LogPerformance";
+        public const string LogLocation__Name = "LogLocation";
+        public const string LogToFile__Name = "LogToFile";
+        public const string LogToConsole__Name = "LogToConsole";
+        public const string LogToDebugger__Name = "LogToDebugger";
+        public const string LogToServer__Name = "LogToServer";
+        public const string LogServerHost__Name = "LogServerHost";
+        public const string LogServerPort__Name = "LogServerPort";
+        public const string LogServerUserName__Name = "LogServerUserName";
+        public const string LogServerPassword__Name = "LogServerPassword";
+        public const string LogServerAccessKey__Name = "LogServerAccessKey";
+        public const string OtherFrameworkLogSettings__Name = "OtherFrameworkLogSettings";
+    }
+
+    public class AppHeaderModel
+    {
+        [AlternateName("x-tenant-entity-guid")]
+        public string TenantEntityGuid { get; set; }
+        [AlternateName("x-user-role-id")]
+        public long Role { get; set; }
+        //Constants
+        public const string TenantEntityGuidHeaderValue = "x-tenant-entity-guid";
+        public const string RoleHeaderValue = "x-user-role-id";
+    }
+
+}

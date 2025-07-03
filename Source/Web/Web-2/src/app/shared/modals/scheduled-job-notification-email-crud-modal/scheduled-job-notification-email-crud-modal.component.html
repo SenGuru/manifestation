@@ -1,0 +1,76 @@
+
+<form #lvScheduledJobNotificationEmailForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvScheduledJobNotificationEmailForm.form.valid && onSubmit(lvScheduledJobNotificationEmailForm)">
+  <div class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="auditduo-scheduled-job-notification-email-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-scheduled-job-notification-email-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedScheduledJob">Scheduled Job
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcScheduledJobId #lvScheduledJob="ngModel" placeholder="Scheduled Job"
+            name="selectedScheduledJob" id="selectedScheduledJob"
+            bindLabel="scheduledJobName" required
+            [items]="scheduledJobs" [clearable]="false" [ngClass]="{'is-invalid': lvScheduledJobNotificationEmailForm.submitted && lvScheduledJob.invalid }" [typeahead]="scheduledJobTypeahead$"  [loading]="scheduledJobTypeaheadLoading" [(ngModel)]="selectedScheduledJob">
+          </ng-select>
+          <div *ngIf="lvScheduledJobNotificationEmailForm.submitted && lvScheduledJob.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvScheduledJob.errors?.['required']">Scheduled Job is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{scheduledJobNotificationEmailModel.scheduledJobId ? scheduledJobNotificationEmailModel.scheduledJobId : '-'}}
+        </div>
+      </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="email">Email
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvEmail="ngModel" type="text" name="email" id="email" required appEmailvalidator
+                class="form-control" placeholder="Email" [ngClass]="{'is-invalid': lvScheduledJobNotificationEmailForm.submitted && lvEmail.invalid }"
+                [(ngModel)]="scheduledJobNotificationEmailModel.email">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobNotificationEmailForm.submitted) && lvEmail.errors?.['required']">
+                  Email is required
+                </span>
+                <span *ngIf="(lvScheduledJobNotificationEmailForm.submitted) && lvEmail.hasError('emailvalidator')">
+                  Please provide a valid Email
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobNotificationEmailModel.email ? scheduledJobNotificationEmailModel.email : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="message">Message
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessage="ngModel" type="text" name="message" id="message" required class="form-control"
+                 placeholder="Message" [ngClass]="{'is-invalid': lvScheduledJobNotificationEmailForm.submitted && lvMessage.invalid }"
+                [(ngModel)]="scheduledJobNotificationEmailModel.message">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobNotificationEmailForm.submitted) && lvMessage.errors?.['required']">
+                  Message is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobNotificationEmailModel.message ? scheduledJobNotificationEmailModel.message : '-'}}
+            </div>
+          </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-scheduled-job-notification-email-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-scheduled-job-notification-email-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

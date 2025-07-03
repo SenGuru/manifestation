@@ -1,0 +1,177 @@
+{
+  "HEADER": {
+    "MORE": {
+      "TEXT": "More"
+    }
+  },
+  "MENUITEMS": {
+    "SUPERADMIN": {
+      "TEXT": "Super Admin"
+    },
+    "CONFIGURATION": {
+      "TEXT": "Configuration",
+      "BADGE": "New",
+      "LIST": {
+        "COMPANIES": "Companies",
+        "JOBS": "Jobs",
+        "MESSAGETOSEND": "Message To Send",
+        "AUDIT": "Audit",
+        "CONTRACTTEMPLATE": "Contract Template",
+        "BUDGET": "Budget",
+        "GENRE": "Genre",
+        "ARTIST": "Artist",
+        "TECHNICIAN": "Technician",
+        "USERS": "Users",
+        "MAILSERVERCONFIG": "Mail Server Config",
+        "STORAGECONFIG": "Storage Config"
+      }
+    },
+    "COMPANYADMIN": {
+      "TEXT": "Company Admin"
+    },
+    "COMPANYINFORMATION": {
+      "TEXT": "Company Information"
+    },
+    "CHAT": {
+      "TEXT": "Chat"
+    },
+    "METADATAS": {
+      "TEXT": "Meta Data"
+    },
+    "STATEMENTTEMPLATES": {
+      "TEXT": "Statement Templates"
+    },
+    "JOBTEMPLATES": {
+      "TEXT": "Job Templates"
+    },
+    "BUDGETCONFIG": {
+      "TEXT": "Budget Config"
+    },
+    "RATECONFIG": {
+      "TEXT": "Rate Config"
+    },
+    "INFORMATION": {
+      "TEXT": "Information"
+    },
+    "CONTRACTTEMPLATES": {
+      "TEXT": "Contract Templates"
+    },
+    "PROPERTIES": {
+      "TEXT": "Properties"
+    },
+    "CONTRACTS": {
+      "TEXT": "Contracts"
+    },
+    "FILES": {
+      "TEXT": "Files"
+    },
+    "COMPANYCONFIG": {
+      "TEXT": "Company Config"
+    },
+    "BACKTOLISTVIEW": {
+      "TEXT": "Back To List"
+    },
+    "APPLOGS": {
+      "TEXT": "App Logs"
+    },
+    "PERFLOGS": {
+      "TEXT": "Perf Logs"
+    },
+    "SINGLESIGNON": {
+      "TEXT": "Single Sign-On Server"
+    },
+    "TECHNICIAN": {
+      "TEXT": "Technician"
+    },
+    "USERS": {
+      "TEXT": "Users"
+    },
+    "PRODUCER": {
+      "TEXT": "Producer"
+    },
+    "COMPANIES": {
+      "TEXT": "Companies"
+    },
+    "JOBS": {
+      "TEXT": "Jobs"
+    },
+    "MESSAGETOSEND": {
+      "TEXT": "Message To Send"
+    },
+    "VENDORS": {
+      "TEXT": "Vendors"
+    },
+    "AUDIT": {
+      "TEXT": "Audit"
+    },
+    "SCENES": {
+      "TEXT": "Scenes"
+    },
+    "DIGITALSIGNATURE": {
+      "TEXT": "Digital Signature"
+    },
+    "PUSHNOTIFICATION": {
+      "TEXT": "Push Notification"
+    },
+    "VOICENOTIFICATION": {
+      "TEXT": "Voice Notification"
+    },
+    "WHATSAPPNOTIFICATION": {
+      "TEXT": "Whatsapp Notification"
+    },
+    "SEARCHDETAILS": {
+      "TEXT": "Search Details"
+    },
+    "CONTRACTINFORMATION": {
+      "TEXT": "Contract Information"
+    },
+    "CONTRACTTEMPLATEINFORMATION": {
+      "TEXT": "Contract Template Information"
+    },
+    "DETAILS": {
+      "TEXT": "Details"
+    },
+    "MAILSERVERCONFIG": {
+      "TEXT": "Mail Server"
+    },
+    "CASTANDCREW": {
+      "TEXT": "Cast And Crew"
+    },
+    "ANALYTICSREPORT": {
+      "TEXT": "Analytics Report",
+      "LIST": {
+        "CASTANDCREW": "By Cast and Crew",
+        "HIGHLEVELDIVISION": "By Stages",
+        "CATEGORY": "By Category",
+        "MONTHLY": "By Monthly"
+      }
+    },
+    "SMSSERVERCONFIG": {
+      "TEXT": "SMS Server"
+    },
+    "STORAGECONFIG": {
+      "TEXT": "Storage Config"
+    },
+    "MESSAGETEMPLATE": {
+      "TEXT": "Message Templates"
+    },
+    "EQUIPMENTS": {
+      "TEXT": "Equipments"
+    },
+    "LAYOUTS": {
+      "TEXT": "Layouts",
+      "LIST": {
+        "HORIZONTAL": "Horizontal",
+        "DETACHED": "Detached",
+        "TWOCOLUMN": "Two Column",
+        "HOVERED": "Hovered"
+      }
+    },
+    "PAGES": {
+      "TEXT": "Pages"
+    },
+    "DASHBOARD": {
+      "TEXT": "Dashboard"
+    }
+  }
+}

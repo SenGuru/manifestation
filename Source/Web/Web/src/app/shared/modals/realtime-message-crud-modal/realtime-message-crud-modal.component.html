@@ -1,0 +1,200 @@
+
+<form #lvRealtimeMessageForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvRealtimeMessageForm.form.valid && onSubmit(lvRealtimeMessageForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="auditduo-realtime-message-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-realtime-message-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedMessagePriorityType">Message Priority Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedMessagePriorityType="ngModel" placeholder="Select Message Priority Type" class="form-control" name="selectedPredefinedMessagePriorityType"
+            id="selectedPredefinedMessagePriorityType"
+            bindLabel="type" required
+            [items]="predefinedMessagePriorityTypes" [clearable]="false" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvPredefinedMessagePriorityType.invalid }" [(ngModel)]="selectedPredefinedMessagePriorityType">
+          </ng-select>
+          <div *ngIf="lvRealtimeMessageForm.submitted && lvPredefinedMessagePriorityType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedMessagePriorityType.errors?.['required']">Message Priority Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{realtimeMessageModel.predefinedMessagePriorityTypeName ? realtimeMessageModel.predefinedMessagePriorityTypeName : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="messageDateTime">Date
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvMessageDateTime="ngModel" class="form-control flatpickr-input" type="text" mwlFlatpickr
+            name="messageDateTime" id="messageDateTime" required altFormat="F j, Y"
+            dateFormat="Y-m-d" placeholder="Select Message Date Time" [altInput]="true" [convertModelValue]="true"
+            [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvMessageDateTime.invalid }"
+            [(ngModel)]="aMessageDateTime" />
+          <div *ngIf="lvRealtimeMessageForm.submitted && lvMessageDateTime.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvMessageDateTime.errors?.['required']">Message Date Time is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{realtimeMessageModel.messageDateTime ? (realtimeMessageModel.messageDateTime | date : 'dd/MM/yy')  : '-'}}
+        </div>
+      </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageSubject">Message Subject
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageSubject="ngModel" type="text" name="messageSubject" id="messageSubject" required class="form-control"
+                 placeholder="Message Subject" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvMessageSubject.invalid }"
+                [(ngModel)]="realtimeMessageModel.messageSubject">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvRealtimeMessageForm.submitted) && lvMessageSubject.errors?.['required']">
+                  Message Subject is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{realtimeMessageModel.messageSubject ? realtimeMessageModel.messageSubject : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageContent">Message Content
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageContent="ngModel" type="text" name="messageContent" id="messageContent" required class="form-control"
+                 placeholder="Message Content" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvMessageContent.invalid }"
+                [(ngModel)]="realtimeMessageModel.messageContent">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvRealtimeMessageForm.submitted) && lvMessageContent.errors?.['required']">
+                  Message Content is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{realtimeMessageModel.messageContent ? realtimeMessageModel.messageContent : '-'}}
+            </div>
+          </div> 
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedRealtimeMessageStatusType">Realtime Message Status
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedRealtimeMessageStatusType="ngModel" placeholder="Select Realtime Message Status" class="form-control" name="selectedPredefinedRealtimeMessageStatusType"
+            id="selectedPredefinedRealtimeMessageStatusType"
+            bindLabel="type" required
+            [items]="predefinedRealtimeMessageStatusTypes" [clearable]="false" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvPredefinedRealtimeMessageStatusType.invalid }" [(ngModel)]="selectedPredefinedRealtimeMessageStatusType">
+          </ng-select>
+          <div *ngIf="lvRealtimeMessageForm.submitted && lvPredefinedRealtimeMessageStatusType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedRealtimeMessageStatusType.errors?.['required']">Realtime Message Status is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{realtimeMessageModel.predefinedRealtimeMessageStatusTypeName ? realtimeMessageModel.predefinedRealtimeMessageStatusTypeName : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedNotificationMessageType">Notification Message Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedNotificationMessageType="ngModel" placeholder="Select Notification Message Type" class="form-control" name="selectedPredefinedNotificationMessageType"
+            id="selectedPredefinedNotificationMessageType"
+            bindLabel="type" required
+            [items]="predefinedNotificationMessageTypes" [clearable]="false" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvPredefinedNotificationMessageType.invalid }" [(ngModel)]="selectedPredefinedNotificationMessageType">
+          </ng-select>
+          <div *ngIf="lvRealtimeMessageForm.submitted && lvPredefinedNotificationMessageType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedNotificationMessageType.errors?.['required']">Notification Message Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{realtimeMessageModel.predefinedNotificationMessageTypeName ? realtimeMessageModel.predefinedNotificationMessageTypeName : '-'}}
+        </div>
+      </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="resourceName">Resource Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvResourceName="ngModel" type="text" name="resourceName" id="resourceName" required class="form-control"
+                 placeholder="Resource Name" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvResourceName.invalid }"
+                [(ngModel)]="realtimeMessageModel.resourceName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvRealtimeMessageForm.submitted) && lvResourceName.errors?.['required']">
+                  Resource Name is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{realtimeMessageModel.resourceName ? realtimeMessageModel.resourceName : '-'}}
+            </div>
+          </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedResourceType">Resource Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedResourceType="ngModel" placeholder="Select Resource Type" class="form-control" name="selectedPredefinedResourceType"
+            id="selectedPredefinedResourceType"
+            bindLabel="type" required
+            [items]="predefinedResourceTypes" [clearable]="false" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvPredefinedResourceType.invalid }" [(ngModel)]="selectedPredefinedResourceType">
+          </ng-select>
+          <div *ngIf="lvRealtimeMessageForm.submitted && lvPredefinedResourceType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedResourceType.errors?.['required']">Resource Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{realtimeMessageModel.predefinedResourceTypeName ? realtimeMessageModel.predefinedResourceTypeName : '-'}}
+        </div>
+      </div> 
+          <div class="col-sm-6">
+            <label class="form-label" for="errorMessage">Error Message
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvErrorMessage="ngModel" type="text" name="errorMessage" id="errorMessage" required class="form-control"
+                 placeholder="Error Message" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvErrorMessage.invalid }"
+                [(ngModel)]="realtimeMessageModel.errorMessage">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvRealtimeMessageForm.submitted) && lvErrorMessage.errors?.['required']">
+                  Error Message is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{realtimeMessageModel.errorMessage ? realtimeMessageModel.errorMessage : '-'}}
+            </div>
+          </div> 
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedUser">User
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcUserId #lvUser="ngModel" placeholder="User" class="form-control"
+            name="selectedUser" id="selectedUser"
+            bindLabel="userName" required
+            [items]="users" [clearable]="false" [ngClass]="{'is-invalid': lvRealtimeMessageForm.submitted && lvUser.invalid }" [typeahead]="userTypeahead$"  [loading]="userTypeaheadLoading" [(ngModel)]="selectedUser">
+          </ng-select>
+          <div *ngIf="lvRealtimeMessageForm.submitted && lvUser.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvUser.errors?.['required']">User is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{realtimeMessageModel.userId ? realtimeMessageModel.userId : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-realtime-message-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-realtime-message-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

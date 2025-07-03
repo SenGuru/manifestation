@@ -1,0 +1,31 @@
+﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace Framework.Infrastructure.Helpers
+{
+    public class Int32NullConverter : JsonConverter<int>
+    {
+        public override int Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.Null)
+            {
+                return 0;
+            }
+
+            try
+            {
+                return reader.GetInt32();
+            }
+            catch
+            {
+                return Convert.ToInt32(reader.GetString());
+            }
+        }
+
+        public override void Write(Utf8JsonWriter writer, int value, JsonSerializerOptions options)
+        {
+            writer.WriteNumberValue(value);
+        }
+    }
+}

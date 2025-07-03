@@ -1,0 +1,301 @@
+<form #lvCompanyForm="ngForm" name="form" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+  (ngSubmit)="lvCompanyForm.form.valid && onSubmit(lvCompanyForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header p-3">
+    <h5 class="modal-title" id="auditduo-company-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-company-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div>
+  <div *ngIf="isShowFullScreen">
+    <h5 class="modal-title" id="auditduo-company-page-title">Information</h5>
+    <hr class="mt-1" />
+  </div>
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 295px)', 'overflow-y': 'auto'} : {'':''}">
+    <div class="form-group row mb-3">
+      <div class="col-sm-9">
+        <div class="form-group row mb-4">
+          <div class="col-sm-6">
+            <label class="form-label" for="companyName"> Company Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvCompanyName="ngModel" type="text" name="companyName" id="companyName" required
+                class="form-control" ngbAutoFocus placeholder="Company Name" maxlength="{{ companyName__size }}"
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvCompanyName.invalid }"
+                [(ngModel)]="companyModel.companyName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvCompanyForm.submitted)&&lvCompanyName.errors?.['required']">
+                  Company Name is required
+                </span>
+                <span *ngIf="lvCompanyForm.submitted&&lvCompanyName.errors?.['maxlength']">
+                  Maximum {{ companyName__size }} characters allowed.
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{companyModel.companyName ? companyModel.companyName : '-'}}
+            </div>
+          </div>
+          <div *ngIf="isCreateMode" class="col-sm-3 group-control">
+            <label class="form-label" for="initialPasswordField">
+              Initial Admin Password
+              <span class="required-sign">&nbsp;*</span></label>
+            <div *ngIf="isCreateMode">
+              <input #initialPwd="ngModel" type="password" class="form-control" placeholder="Initial Admin Password"
+                id="initialPasswordField" name="initialPasswordField" required
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && initialPwd.invalid }"
+                [(ngModel)]="initialPassword" />
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvCompanyForm.submitted)&&initialPwd.errors?.['required']">
+                  Initial Admin Password is required
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="form-group row mb-4">
+          <div class="col-sm-6">
+            <label class="form-label" for="contactFirstName">Contact First Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvContactFirstName="ngModel" type="text" name="contactFirstName" required class="form-control"
+                placeholder="Contact First Name" maxlength="{{ contactFirstName__size }}"
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvContactFirstName.invalid }"
+                [(ngModel)]="companyModel.contactFirstName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvCompanyForm.submitted) && lvContactFirstName.errors?.['required']">
+                  Contact First Name is required
+                </span>
+                <span *ngIf="lvCompanyForm.submitted && lvContactFirstName.errors?.['maxlength']">
+                  Maximum {{ contactFirstName__size }} characters allowed.
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{companyModel.contactFirstName ? companyModel.contactFirstName : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="contactLastName">Contact Last Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvContactLastName="ngModel" type="text" name="contactLastName" id="contactLastName" required
+                class="form-control" placeholder="Contact Last Name" maxlength="{{ contactLastName__size }}"
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvContactLastName.invalid }"
+                [(ngModel)]="companyModel.contactLastName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvCompanyForm.submitted) && lvContactLastName.errors?.['required']">
+                  Contact Last Name is required
+                </span>
+                <span *ngIf="lvCompanyForm.submitted && lvContactLastName.errors?.['maxlength']">
+                  Maximum {{ contactLastName__size }} characters allowed.
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{companyModel.contactLastName ? companyModel.contactLastName : '-'}}
+            </div>
+          </div>
+        </div>
+        <div class="form-group row mb-2">
+          <div class="col-sm-6">
+            <label class="form-label" for="email">Email
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvEmail="ngModel" type="text" name="email" id="email" required appEmailvalidator
+                class="form-control" autocomplete="off" placeholder="Email" maxlength="{{ email__size }}"
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvEmail.invalid }"
+                [(ngModel)]="companyModel.email">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvCompanyForm.submitted) && lvEmail.errors?.['required']">
+                  Email is required
+                </span>
+                <span *ngIf="lvCompanyForm.submitted && lvEmail.errors?.['maxlength']">
+                  Maximum {{ email__size }} characters allowed.
+                </span>
+                <span *ngIf="lvCompanyForm.submitted && lvEmail.hasError('emailvalidator')">
+                  Please provide a valid Email
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{companyModel.email ? companyModel.email : '-'}}
+            </div>
+          </div>
+
+          <div class="col-sm-3">
+            <label class="form-label" for="workPhone">Work Phone
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvWorkPhone="ngModel" type="text" name="workPhone" required class="form-control"
+                placeholder="Work Phone" maxlength="{{ workPhone__size }}"
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvWorkPhone.invalid }"
+                [(ngModel)]="companyModel.workPhone">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvCompanyForm.submitted) && lvWorkPhone.errors?.['required']">
+                  Work Phone is required
+                </span>
+                <span *ngIf="lvCompanyForm.submitted && lvWorkPhone.errors?.['maxlength']">
+                  Maximum {{ workPhone__size }} characters allowed.
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{companyModel.workPhone ? companyModel.workPhone : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <label class="form-label" for="cellPhone">Cell Phone
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvCellPhone="ngModel" type="text" name="cellPhone" class="form-control" placeholder="Cell Phone"
+                maxlength="{{ cellPhone__size }}"
+                [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvCellPhone.invalid }"
+                [(ngModel)]="companyModel.cellPhone">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="lvCompanyForm.submitted && lvCellPhone.errors?.['maxlength']">
+                  Maximum {{ cellPhone__size }} characters allowed.
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{companyModel.cellPhone ? companyModel.cellPhone : '-'}}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-sm-3">
+        <div class="text-center mt-5">
+          <div class="profile-user position-relative d-inline-block mx-auto mb-4 cursor-pointer">
+            <img class="rounded-circle aduo-avatar-sm img-thumbnail user-profile-image material-shadow" alt=""
+              [src]="companyProfilePicture">
+            <!--  (click)="triggerFileInput()" -->
+            <div class="avatar-sm p-0 rounded-circle profile-photo-edit" hidden>
+              <input #vcCompanyProfileFileInput id="company-profile-img-file-input" type="file"
+                class="profile-img-file-input" name="companyProfileFileUpload" [disabled]="isViewMode"
+                [accept]="allowedFileTypes" (change)="uploadFile($event)">
+            </div>
+          </div>
+          <div *ngIf="fileName && companyFileUpload">
+            {{fileName? fileName : ''}} <i class="ri-close-line fs-16 m-1 cursor-pointer" (click)="onClearFiles()">X</i>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="address1">Address 1
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvAddress1="ngModel" type="text" name="address1" id="address1" required class="form-control"
+            placeholder="Address 1" maxlength="{{ address1__size }}"
+            [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvAddress1.invalid }"
+            [(ngModel)]="companyModel.address1">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvCompanyForm.submitted) && lvAddress1.errors?.['required']">
+              Address1 is required
+            </span>
+            <span *ngIf="lvCompanyForm.submitted && lvAddress1.errors?.['maxlength']">
+              Maximum {{ address1__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{companyModel.address1 ? companyModel.address1 : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="address2">Address 2
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvAddress2="ngModel" type="text" name="address2" id="address2" class="form-control"
+            placeholder="Address 2" maxlength="{{ address2__size }}"
+            [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvAddress2.invalid }"
+            [(ngModel)]="companyModel.address2">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="lvCompanyForm.submitted && lvAddress2.errors?.['maxlength']">
+              Maximum {{ address2__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{companyModel.address2 ? companyModel.address2 : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-3">
+        <label class="form-label" for="city">City
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvCity="ngModel" type="text" name="city" id="city" required class="form-control" placeholder="City"
+            maxlength="{{ city__size }}" [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvCity.invalid }"
+            [(ngModel)]="companyModel.city">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvCompanyForm.submitted) && lvCity.errors?.['required']">
+              City is required
+            </span>
+            <span *ngIf="lvCompanyForm.submitted && lvCity.errors?.['maxlength']">
+              Maximum {{ city__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{companyModel.city ? companyModel.city : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-label" for="selectedState">State
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcUserState #lvUserState="ngModel" placeholder="State" name="selectedState" id="selectedState"
+            bindLabel="stateName" required [items]="states" [clearable]="false"
+            [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvUserState.invalid }" [typeahead]="stateTypeahead$"
+            [loading]="stateTypeaheadLoading" [(ngModel)]="selectedState" />
+          <div *ngIf="lvCompanyForm.submitted && lvUserState.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvUserState.errors?.['required']">State is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{companyModel.stateName ? companyModel.stateName : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <label class="form-label" for="selectedCountry">Country
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcCountry #lvCountry="ngModel" placeholder="Country" name="selectedCountry" id="selectedCountry"
+            bindLabel="countryName" required [items]="countrys" [clearable]="false" [typeahead]="countryTypeahead$"
+            [loading]="countryTypeaheadLoading"
+            [ngClass]="{'is-invalid': lvCompanyForm.submitted && lvCountry.invalid }" [(ngModel)]="selectedCountry"
+            (change)="onChangeCountry(selectedCountry)" />
+          <div *ngIf="lvCompanyForm.submitted && lvCountry.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvCountry.errors?.['required']">Country is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{companyModel.countryName ? companyModel.countryName : '-'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer mt-3">
+    <button *ngIf="!isShowFullScreen" type="button" class="btn aduo-btn-sm btn-sm btn-light"
+      id="auditduo-company-modal-close-btn" data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn aduo-btn-sm btn-sm btn-primary"
+      id="auditduo-company-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

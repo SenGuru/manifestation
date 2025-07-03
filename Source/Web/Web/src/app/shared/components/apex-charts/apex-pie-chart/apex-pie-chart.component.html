@@ -1,0 +1,12 @@
+<div id="chart">
+    <apx-chart
+      [series]="chartOptions?.series ?? []"
+      [chart]="chartOptions?.chart ?? predefinedChart"
+      [labels]="chartOptions?.labels ?? predefinedLabels"
+      [responsive]="chartOptions?.responsive ?? []"
+      [dataLabels]="chartOptions?.dataLabels ?? predefinedLabels"
+      [title]="chartOptions?.title ?? predefinedApexTitle"
+      [tooltip]="chartOptions?.tooltip"
+      [plotOptions]="chartOptions?.plotOptions ?? predefinedPlotOptions"
+    ></apx-chart>
+  </div>

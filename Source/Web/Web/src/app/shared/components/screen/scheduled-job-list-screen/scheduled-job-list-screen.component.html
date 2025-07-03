@@ -1,0 +1,276 @@
+<app-super-admin-header></app-super-admin-header>
+
+<div class="page-header px-3 py-2">
+  <div class="d-flex align-items-center">
+    <div class="col-sm-auto">
+      <!-- Page title -->
+      <h3 class="card-title mb-0 flex-grow-1">
+        Scheduled Jobs
+      </h3>
+    </div>
+    <!-- add scheduledJob btn -->
+    <div class="d-flex justify-content-sm-end col-sm">
+      <button type="button" class="btn bg-light search" data-bs-toggle="modal" id="back-to-job-selection-btn"
+        (click)="showJobSelectionScreen();"><i class="ri-arrow-go-back-fill align-bottom me-1"></i> Back to job
+        selection</button>
+    </div>
+  </div>
+</div>
+<div class="card mb-2">
+  <div class="card-header py-2">
+    <form #scheduledJobSearch="ngForm" novalidate focusOnError (ngSubmit)="onSearch(scheduledJobSearch)">
+
+      <div class="row">
+        <div class="col-md-2 pr-0">
+          <input type="text" class="form-control" name="example-text-input" placeholder="Search Text"
+            [(ngModel)]="this.searchModel.keyword" />
+        </div>
+        <div class="col-md-2">
+          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
+            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
+            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
+          </ng-select>
+        </div>
+        <div class="col-md-2">
+          <ng-select placeholder="Job Template" class="form-control" name="selectedJobTemplate" id="selectedJobTemplate"
+            bindLabel="jobTemplateName" [items]="jobTemplates" [clearable]="true" [typeahead]="jobTemplateTypeahead$"
+            [loading]="jobTemplateTypeaheadLoading" [(ngModel)]="selectedJobTemplate">
+          </ng-select>
+        </div>
+        <div class="col-md-2 pr-0">
+          <ng-select name="selectedPredefinedJobOrReportTypes" bindLabel="type" placeholder="Job Or Report Type"
+            [items]="predefinedJobOrReportTypes" [multiple]="true" [clearable]="true"
+            [(ngModel)]="selectedPredefinedJobOrReportTypes">
+            <ng-template let-item="item" let-index="index" let-search="searchTerm" ng-option-tmp>
+              <div style="margin: 4px;" title="{{item.type}}">
+                <div> {{item.type}}</div>
+              </div>
+            </ng-template>
+            <ng-template let-items="items" let-clear="clear" ng-multi-label-tmp>
+              <div *ngFor="let item of selectedPredefinedJobOrReportTypes | slice:-1:1" class="ng-value">
+                <span class="ng-value-label truncate cursor-pointer" title="{{item.type}}">{{item.type}}</span>
+                <span class="ng-value-icon right" aria-hidden="true" (click)="clear(item)">×</span>
+              </div>
+              <div *ngIf="items.length > 1" class="ng-value">
+                <span class="ng-value-label">{{items.length - 0}} Selected...</span>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="col-md-2">
+          <ng-select placeholder="Run As User" class="form-control" name="selectedRunAsUser" id="selectedRunAsUser"
+            bindLabel="runAsUserName" [items]="runAsUsers" [clearable]="true" [typeahead]="runAsUserTypeahead$"
+            [loading]="runAsUserTypeaheadLoading" [(ngModel)]="selectedRunAsUser">
+          </ng-select>
+        </div>
+        <div class="d-flex justify-content-sm-end col-sm">
+          <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal"
+            id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+          <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(scheduledJobSearch)">
+            Reset
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-body">
+    <div class="table-responsive table-card auditduo-table">
+      <table *ngIf="listData.length > 0; else nodata" class="table">
+        <thead class="auditduo-table-header">
+          <tr>
+            <th *ngFor="let column of columns" class="text-left" [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }" (click)="changeSort(column)">
+              <span class="mr-1" [innerHTML]="column.text"></span>
+              <i [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "></i>
+            </th>
+            <th class="text-left w-1 last-col-floating-container">
+              <span class="mr-1">ACTION</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of listData">
+            <td class="text-left">
+              <!-- {{ item.jobTemplateName  }} -->
+            </td>
+            <td class="text-left">
+              <!-- {{ item.predefinedJobOrReportTypeName  }} -->
+            </td>
+            <td class="text-left">
+              {{ item.companyName }}
+            </td>
+            <td class="text-left">
+              {{ item.submittedByUserName }}
+            </td>
+            <td class="text-left">
+              {{ item.executableFolder }}
+            </td>
+            <td class="text-left">
+              {{ item.executableName }}
+            </td>
+            <td class="text-left">
+              {{ item.executableParameter }}
+            </td>
+            <td class="text-left">
+              {{ item.serializedJobParameter }}
+            </td>
+            <td class="text-left">
+              {{ item.reportTemplateFile }}
+            </td>
+            <td class="text-left">
+              {{ item.exportDoc }}
+            </td>
+            <td class="text-left">
+              {{ item.exportXls }}
+            </td>
+            <td class="text-left">
+              {{ item.exportPpt }}
+            </td>
+            <td class="text-left">
+              {{ item.exportCsv }}
+            </td>
+            <td class="text-left">
+              {{ item.exportXml }}
+            </td>
+            <td class="text-left">
+              {{ item.exportPdf }}
+            </td>
+            <td class="text-left">
+              {{ item.exportCustom }}
+            </td>
+            <td class="text-left">
+              {{ item.customExportName }}
+            </td>
+            <td class="text-left">
+              {{ item.pickupDate | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.jobName }}
+            </td>
+            <td class="text-left">
+              {{ item.runAsUserName }}
+            </td>
+            <td class="text-left">
+              {{ item.startDate | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.endDate | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.startTime | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.recurring }}
+            </td>
+            <td class="text-left">
+              {{ item.runMonday }}
+            </td>
+            <td class="text-left">
+              {{ item.runTuesday }}
+            </td>
+            <td class="text-left">
+              {{ item.runWednesday }}
+            </td>
+            <td class="text-left">
+              {{ item.runThursday }}
+            </td>
+            <td class="text-left">
+              {{ item.runFriday }}
+            </td>
+            <td class="text-left">
+              {{ item.runSaturday }}
+            </td>
+            <td class="text-left">
+              {{ item.runSunday }}
+            </td>
+            <td class="text-left">
+              {{ item.active }}
+            </td>
+            <td class="text-left">
+              {{ item.isMonthly }}
+            </td>
+            <td class="text-left">
+              {{ item.runMonthlyDay }}
+            </td>
+            <td class="text-left">
+              {{ item.runMonthlyTime | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.isHourly }}
+            </td>
+            <td class="text-left">
+              {{ item.isDaily }}
+            </td>
+            <td class="text-left">
+              {{ item.runDailyTime | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.isWeekly }}
+            </td>
+            <td class="text-left">
+              {{ item.runHourlyMinute }}
+            </td>
+            <td class="text-left">
+              {{ item.includeDataSourceFile }}
+            </td>
+            <td class="text-left">
+              {{ item.runOnWeekNumber }}
+            </td>
+            <td class="text-left">
+              {{ item.isDeleted }}
+            </td>
+            <td class="text-left">
+              {{ item.createdDate | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.createdByUserFirstName }} {{ item.createdByUserLastName }}
+            </td>
+            <td class="text-left">
+              {{ item.modifiedDate | date: 'dd/MM/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.modifiedByUserFirstName }} {{ item.modifiedByUserLastName }}
+            </td>
+            <td class="text-left last-col-floating-container">
+              <div class="action-col-wrap">
+                <span class="mx-1">
+                  <a>
+                    <span class="text-dark" title="View ScheduledJob" (click)="showViewScheduledJobModal(item)">
+                      <app-icon-view></app-icon-view>
+                    </span>
+                  </a>
+                </span>
+                <span class="mx-1">
+                  <a>
+                    <span class="text-dark" title="Edit ScheduledJob" (click)="showUpdateScheduledJobModal(item)">
+                      <app-icon-edit></app-icon-edit>
+                    </span>
+                  </a>
+                </span>
+                <span class="mx-1">
+                  <a class="cursor-pointer">
+                    <span class="text-dark" title="Delete ScheduledJob" (click)="deleteScheduledJob(item)">
+                      <app-icon-delete></app-icon-delete>
+                    </span>
+                  </a>
+                </span>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #nodata>
+        <app-no-data-found></app-no-data-found>
+      </ng-template>
+    </div>
+    <app-pagination #pagination [totalItems]="totalItems" [currentPage]="searchModel.page"
+      (pageOptionChanged)="paginationChange($event)"></app-pagination>
+  </div>
+</div>

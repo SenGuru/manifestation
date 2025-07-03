@@ -1,0 +1,185 @@
+<form #lvVoiceNotificationServerForm="ngForm" name="form" appFocusOnError
+  (ngSubmit)="lvVoiceNotificationServerForm.form.valid && onSubmit(lvVoiceNotificationServerForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="auditduo-voice-notification-server-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-voice-notification-server-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="voiceNotificationServerCode">Voice Notification Server Code
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvVoiceNotificationServerCode="ngModel" type="text"
+            name="voiceNotificationServerCode" id="voiceNotificationServerCode"
+            required class="form-control" placeholder="Voice Notification Server Code"
+            maxlength="{{ voiceNotificationServerCode__size }}"
+            [ngClass]="{'is-invalid': lvVoiceNotificationServerForm.submitted && lvVoiceNotificationServerCode.invalid }"
+            [(ngModel)]="voiceNotificationServerModel.voiceNotificationServerCode">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvVoiceNotificationServerForm.submitted) && lvVoiceNotificationServerCode.errors?.['required']">
+              Voice Notification Server Code is required
+            </span>
+            <span *ngIf="lvVoiceNotificationServerForm.submitted && lvVoiceNotificationServerCode.errors?.['maxlength']">
+              Maximum {{ voiceNotificationServerCode__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{voiceNotificationServerModel.voiceNotificationServerCode ?
+          voiceNotificationServerModel.voiceNotificationServerCode : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="voiceNotificationServerName">Voice Notification Server Name
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvVoiceNotificationServerName="ngModel" type="text"
+            name="voiceNotificationServerName" id="voiceNotificationServerName"
+            required class="form-control" placeholder="Voice Notification Server Name"
+            maxlength="{{ voiceNotificationServerName__size }}"
+            [ngClass]="{'is-invalid': lvVoiceNotificationServerForm.submitted && lvVoiceNotificationServerName.invalid }"
+            [(ngModel)]="voiceNotificationServerModel.voiceNotificationServerName">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvVoiceNotificationServerForm.submitted) && lvVoiceNotificationServerName.errors?.['required']">
+              Voice Notification Server Name is required
+            </span>
+            <span *ngIf="lvVoiceNotificationServerForm.submitted && lvVoiceNotificationServerName.errors?.['maxlength']">
+              Maximum {{ voiceNotificationServerName__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{voiceNotificationServerModel.voiceNotificationServerName ?
+          voiceNotificationServerModel.voiceNotificationServerName : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedSmsAndVoiceServerType">Server Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedSmsAndVoiceServerType="ngModel" placeholder="Select Server Type"
+            class="form-control" name="selectedPredefinedSmsAndVoiceServerType" id="selectedPredefinedSmsAndVoiceServerType"
+            bindLabel="type"
+            required [items]="predefinedSmsAndVoiceServerTypes" [clearable]="false"
+            [ngClass]="{'is-invalid': lvVoiceNotificationServerForm.submitted && lvPredefinedSmsAndVoiceServerType.invalid }" [(ngModel)]="selectedPredefinedSmsAndVoiceServerType">
+          </ng-select>
+          <div *ngIf="lvVoiceNotificationServerForm.submitted && lvPredefinedSmsAndVoiceServerType.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedSmsAndVoiceServerType.errors?.['required']">Server Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{selectedPredefinedSmsAndVoiceServerType?.type ? selectedPredefinedSmsAndVoiceServerType?.type : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="twilioAccountSid">Twilio Account Sid
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvTwilioAccountSid="ngModel" type="text" name="twilioAccountSid"
+            id="twilioAccountSid" required class="form-control" placeholder="Twilio Account Sid"
+            maxlength="{{ twilioAccountSid__size }}"
+            [ngClass]="{'is-invalid': lvVoiceNotificationServerForm.submitted && lvTwilioAccountSid.invalid }"
+            [(ngModel)]="voiceNotificationServerModel.twilioAccountSid">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvVoiceNotificationServerForm.submitted) && lvTwilioAccountSid.errors?.['required']">
+              Twilio Account Sid is required
+            </span>
+            <span *ngIf="lvVoiceNotificationServerForm.submitted && lvTwilioAccountSid.errors?.['maxlength']">
+              Maximum {{ twilioAccountSid__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{voiceNotificationServerModel.twilioAccountSid ? voiceNotificationServerModel.twilioAccountSid : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="twilioAccountAuthToken">Twilio Account Auth Token
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvTwilioAccountAuthToken="ngModel" type="text"
+            name="twilioAccountAuthToken" id="twilioAccountAuthToken"
+            required class="form-control" placeholder="Twilio Account Auth Token" maxlength="{{ twilioAccountAuthToken__size }}"
+            [ngClass]="{'is-invalid': lvVoiceNotificationServerForm.submitted && lvTwilioAccountAuthToken.invalid }"
+            [(ngModel)]="voiceNotificationServerModel.twilioAccountAuthToken">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvVoiceNotificationServerForm.submitted) && lvTwilioAccountAuthToken.errors?.['required']">
+              Twilio Account Auth Token is required
+            </span>
+            <span *ngIf="lvVoiceNotificationServerForm.submitted && lvTwilioAccountAuthToken.errors?.['maxlength']">
+              Maximum {{ twilioAccountAuthToken__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{voiceNotificationServerModel.twilioAccountAuthToken ? voiceNotificationServerModel.twilioAccountAuthToken :
+          '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="twilioAccountPhoneNumber">Twilio Account Phone Number
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvTwilioAccountPhoneNumber="ngModel" type="text"
+            name="twilioAccountPhoneNumber" appPhoneNumberValidator
+            id="twilioAccountPhoneNumber" required
+            class="form-control" placeholder="Twilio Account Phone Number" maxlength="{{ twilioAccountPhoneNumber__size }}" [ngClass]="{'is-invalid': lvVoiceNotificationServerForm.submitted && lvTwilioAccountPhoneNumber.invalid }"
+            [(ngModel)]="voiceNotificationServerModel.twilioAccountPhoneNumber"
+            (keypress)="customSelectService.numberOnly($event)">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvVoiceNotificationServerForm.submitted) && lvTwilioAccountPhoneNumber.errors?.['required']">
+              Twilio Account Phone Number is required
+            </span>
+            <span *ngIf="lvVoiceNotificationServerForm.submitted && lvTwilioAccountPhoneNumber.hasError('phoneNumberValidator')">
+              Phone Number is not a valid
+            </span>
+            <span *ngIf="lvVoiceNotificationServerForm.submitted && lvTwilioAccountPhoneNumber.errors?.['maxlength']">
+              Maximum {{ twilioAccountPhoneNumber__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{voiceNotificationServerModel.twilioAccountPhoneNumber ?
+          voiceNotificationServerModel.twilioAccountPhoneNumber : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isEnabled" id="isEnabled"
+              [disabled]="isViewMode" [(ngModel)]="voiceNotificationServerModel.isEnabled">
+            <label class="form-check-label" for="isEnabled">
+              Is Enabled
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm aduo-btn-sm btn-light"
+      id="auditduo-voice-notification-server-modal-close-btn" data-bs-dismiss="modal"
+      (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit"
+      class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-voice-notification-server-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

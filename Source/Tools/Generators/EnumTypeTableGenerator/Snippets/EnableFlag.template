@@ -1,0 +1,65 @@
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> Change<ColumnWithoutId>For<Table>([FromQuery] long <SmallTable>Id, [FromQuery] long <SmallColumn>)
+        {
+            return movieService.Change<ColumnWithoutId>For<Table>Async(<SmallTable>Id, <SmallColumn>);
+        }
+
+        public async Task<ReturnModel<bool>> Change<ColumnWithoutId>For<Table>Async(long <SmallTable>Id, long <SmallColumn>)
+        {
+            try
+            {
+                var existing<Table>Model = await Get<Table>ByIdForWriteAsync(<SmallTable>Id);
+                if (!existing<Table>Model.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(existing<Table>Model);
+                }
+
+                var (resultValue, canAssign, errorStr) = await permissionService.CanConfigureCompany(existing<Table>Model.Model.CompanyId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                if (!ValidationUtils.IsEnumValid<<ColumnWithoutId>s, long>(<SmallColumn>))
+                {
+                    return log.ErrorAndReturnModel<bool>("Status type is not valid", new { <SmallTable>Id,  <SmallColumn> });
+                }
+
+                /*
+                var status = await companyRepository.Get<SmallColumnWithoutId>ByIdAsync(<SmallTable>Id);
+                if (status == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("Status Type is not valid");
+                }
+
+                if (status.CompanyId != existing<Table>Model.Model.CompanyId)
+                {
+                    return log.ErrorAndReturnModel<bool>("Status Type does not belong to you");
+                }
+                */
+
+                bool result;
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await movieRepository.Change<ColumnWithoutId>For<Table>Async(<SmallTable>Id, <SmallColumn>, await currentSessionService.GetCurrentUserIdAsync());
+                    await trx.CompleteAsync();
+                }
+
+                // uncommet it later - await auditService.Change<ColumnWithoutId>For<Table>Async(<SmallTable>Id, <SmallColumn>, await currentSessionService.GetCurrentUserIdAsync());
+
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when Changing status for <Table>", new { <SmallColumn> }, ex);
+            }
+        }
+
+
+
+        public async Task<bool> Change<ColumnWithoutId>For<Table>Async(long <SmallTable>Id, long <SmallColumn>, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<<Table>>().Where(x => x.<Table>Id == <SmallTable>Id).Set(x => x.<Column>, <SmallColumn>).UpdateWithAuditAsync(modifiedBy) > 0;
+        }

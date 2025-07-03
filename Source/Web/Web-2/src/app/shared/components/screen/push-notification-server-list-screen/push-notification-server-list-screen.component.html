@@ -1,0 +1,130 @@
+<app-super-admin-summary-header></app-super-admin-summary-header>
+<div class="px-4 py-2 aduo-list-screen-wrapper">
+  <div class="page-header px-1 py-0 bg-white">
+    <div class="d-flex align-items-center">
+      <div class="col-sm-auto">
+        <!-- Page title -->
+        <h3 class="card-title mb-0 flex-grow-1" id="auditduo-push-notification-server-page-title">
+          Push Notification Servers
+        </h3>
+      </div>
+      <!-- add pushNotificationServer btn -->
+      <div class="d-flex justify-content-sm-end col-sm">
+        <button type="button" class="btn btn-sm aduo-btn-sm btn-primary" data-bs-toggle="modal"
+          id="create-push-notification-server-btn" (click)="showAddPushNotificationServerModal();"><i-tabler name="plus"
+            class="tabler-icon-sm tabler-icon-stroke-white mx-1" /> Add Push Notification Server</button>
+      </div>
+    </div>
+  </div>
+  <hr class="my-1 mb-3 aduo-selection-header-line" />
+  <div class="card mb-2">
+    <div class="card-header pt-1">
+      <form #pushNotificationServerSearch="ngForm" novalidate focusOnError
+        (ngSubmit)="onSearch(pushNotificationServerSearch)">
+
+        <div class="row">
+          <div class="col-md-2 pr-0">
+            <input type="text" class="form-control" name="push-notification-server-search-input"
+              placeholder="Search Text" [(ngModel)]="this.searchModel.keyword" />
+          </div>
+          <div class="col-md-2">
+            <ng-select placeholder="Company" name="selectedCompany" id="selectedCompany" bindLabel="companyName"
+              [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$" [loading]="companyTypeaheadLoading"
+              [(ngModel)]="selectedCompany">
+            </ng-select>
+          </div>
+          <div class="col-auto ml-auto mt-auto">
+            <button type="submit" class="btn btn-sm aduo-btn-sm btn-primary search" data-bs-toggle="modal"
+              id="push-notification-server-search-btn"><i-tabler name="search"
+                class="tabler-icon-sm tabler-icon-stroke-white mx-1" /> Search</button>
+            <button type="button" class="btn btn-sm aduo-btn-sm bg-light"
+              (click)="onReset(pushNotificationServerSearch)">
+              Reset
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive aduo-table" id="auditduo-push-notification-server-page-table">
+        <table *ngIf="listData.length > 0; else nodata"
+          class="table card-table table-vcenter text-nowrap datatable table-striped"
+          id="auditduo-push-notification-server-page-list-table">
+          <thead class="aduo-table-header">
+            <tr>
+              <th *ngFor="let column of columns" class="text-left" [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }" (click)="changeSort(column)">
+                <span class="mr-1" [innerHTML]="column.text"></span>
+                <i [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "></i>
+              </th>
+              <th class="text-left w-1">
+                <span class="mr-1">ACTION</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of listData">
+              <td class="text-left">
+                {{ item.pushNotificationServerName }}
+              </td>
+              <td>
+                <!-- <span
+                  class="badge bg-{{enumViewService.getPredefinedPushNotificationServerTypeClass(item.predefinedPushNotificationServerTypeId)}}-subtle text-{{enumViewService.getPredefinedPushNotificationServerTypeClass(item.predefinedPushNotificationServerTypeId)}}">{{
+                  item.predefinedPushNotificationServerTypeName }}</span> -->
+              </td>
+              <td class="text-left">
+                {{ item.projectName }}
+              </td>
+              <td class="text-left">
+                {{ item.isEnabled }}
+              </td>
+              <td class="text-left">
+                {{ item.modifiedDate | date: 'MM/dd/yy' }}
+              </td>
+              <td class="text-left">
+                {{ item.modifiedByUserFirstName }} {{ item.modifiedByUserLastName }}
+              </td>
+              <td class="text-left">
+                <div class="action-col-wrap">
+                  <span class="mx-1">
+                    <a class="cursor-pointer" (click)="showViewPushNotificationServerModal(item)">
+                      <span class="text-dark" title="View push Notification">
+                        <i-tabler name="eye" class="tabler-icon-sm tabler-icon-stroke-gray" />
+                      </span>
+                    </a>
+                  </span>
+                  <span class="mx-1">
+                    <a class="cursor-pointer" (click)="showUpdatePushNotificationServerModal(item)">
+                      <span class="text-dark" title="Edit Push Notification">
+                        <i-tabler name="edit" class="tabler-icon-sm tabler-icon-stroke-gray" />
+                      </span>
+                    </a>
+                  </span>
+                  <span class="mx-1">
+                    <a class="cursor-pointer" (click)="deletePushNotificationServer(item)">
+                      <span class="text-dark" title="Delete Push Notification">
+                        <i-tabler name="trash" class="tabler-icon-sm tabler-icon-stroke-gray" />
+                      </span>
+                    </a>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <ng-template #nodata>
+          <app-no-data-found></app-no-data-found>
+        </ng-template>
+      </div>
+      <app-pagination #pagination [totalItems]="totalItems" [currentPage]="searchModel.page"
+        (pageOptionChanged)="paginationChange($event)"></app-pagination>
+    </div>
+  </div>
+</div>

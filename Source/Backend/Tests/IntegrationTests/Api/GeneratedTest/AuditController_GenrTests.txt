@@ -1,0 +1,9 @@
+public void GetAuditOperations_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationSearchCriteria();
+    var r = GetAuditOperations();
+}
+public void GetAuditOperations_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

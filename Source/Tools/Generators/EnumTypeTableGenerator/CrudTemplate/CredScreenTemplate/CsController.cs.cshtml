@@ -1,0 +1,55 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+using System.Threading.Tasks;
+using Framework.Infrastructure.Models.Result;
+using Microsoft.AspNetCore.Mvc;
+using %AppName%.Common.Models.ViewModels;
+
+namespace %AppName%.Api.All.Controllers
+{
+    public partial class CredController
+    {
+
+@{
+    int i = 0;
+    //int breakAfter = -1;
+}
+@foreach (var t in Model.Code.Sections)
+{
+        //if(i > breakAfter)
+        //    continue;
+        i ++;
+    var pkCol = t.GetPK();
+    var pkColName = "";
+    var pkColIdithType = "";
+    if (pkCol != null)
+    {
+        pkColName = pkCol.TsDbColumnName;
+        pkColIdithType = "[FromQuery] long " + pkCol.TsDbColumnName;
+    }
+    else
+    {
+        //throw new Exception("PK is no good for section " + t.SectionName);
+    }
+    @:#region @(t.ViewClassName)
+    @:[HttpGet]
+        @:public Task<ReturnModel<@(t.ViewClassName)Model>> Get@(t.ViewClassName)(@pkColIdithType)
+        @:{
+            @:return credService.Get@(t.ViewClassName)Async(@pkColName);
+        @:}
+@:
+        @:[HttpPost]
+        @:public Task<ReturnModel<bool>> CreateOrUpdate@(t.ViewClassName)([FromBody] @(t.ViewClassName)CreateUpdateModel model)
+        @:{
+            @:return credService.CreateOrUpdate@(t.ViewClassName)Async(model);
+        @:}
+@:
+        @:[HttpDelete]
+        @:public Task<ReturnModel<bool>> Mark@(t.ViewClassName)AsVerified()
+        @:{
+            @:return credService.Mark@(t.ViewClassName)AsVerifiedAsync();
+        @:}
+@:  
+    @:#endregion @(t.ViewClassName)
+}
+    }
+}

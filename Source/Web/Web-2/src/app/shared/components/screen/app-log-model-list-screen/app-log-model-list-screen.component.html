@@ -1,0 +1,197 @@
+<app-super-admin-summary-header></app-super-admin-summary-header>
+<div *ngIf="showLogCacheScreen" class="modal-header bg-light p-3">
+  <h5 class="modal-title" id="auditduo-movie-modal-title">{{title}}</h5>
+  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+    id="auditduo-app-log-modal-cancel-btn" (click)="close(true)"></button>
+</div>
+
+<div class="px-4 py-2 aduo-list-screen-wrapper">
+  <div class="page-header px-1 py-0 bg-white">
+    <div class="d-flex align-items-center">
+      <div class="col-sm-auto">
+        <!-- Page title -->
+        <h3 class="card-title mb-0 flex-grow-1">
+          Log Viewers
+        </h3>
+      </div>
+      <!-- add jobTemplateCategory btn -->
+      <div class="d-flex justify-content-sm-end col-sm">
+        <label class="form-check col-form-label py-1 pr-2 mx-3" for="wordwraplogmessage">
+          <input type="checkbox" class="form-check-input" name="wordwraplogmessage" id="wordwraplogmessage"
+            [(ngModel)]="isWordWrap" (ngModelChange)="changeWordWrapMessage()" />
+          <span class="form-check-label"><strong>Word Wrap Log Message</strong></span>
+        </label>
+        <button *ngIf="!showLogCacheScreen" type="button" class="btn btn-sm aduo-btn-sm btn-primary mx-2"
+          data-bs-toggle="modal" id="add-log-cache-btn" (click)="AddToLogCache();"><i-tabler name="plus"
+            class="tabler-icon-sm tabler-icon-stroke-white mx-1" />
+          Add to Log Cache</button>
+        <button *ngIf="!showLogCacheScreen" type="button" class="btn btn-sm aduo-btn-sm btn-primary"
+          data-bs-toggle="modal" id="add-log-cache-btn" (click)="showLogCache();"><i-tabler name="plus"
+            class="tabler-icon-sm tabler-icon-stroke-white mx-1" />
+          Log Cache</button>
+      </div>
+    </div>
+  </div>
+  <hr class="my-1 mb-3 aduo-selection-header-line" />
+
+  <div class="card mb-0" id="log-model-list-card">
+    <div *ngIf="!showLogCacheScreen" class="card-header pt-2">
+      <form #appLogModelSearch="ngForm" novalidate focusOnError id="log-viewer-search-form"
+        (ngSubmit)="onSearch(appLogModelSearch)">
+
+        <div class="row">
+          <div class="col-sm-2 pr-2">
+            <input type="text" id="keyword" class="form-control" name="keyword" placeholder="Search Text"
+              [(ngModel)]="searchModel.keyword" />
+          </div>
+
+          <div class="col-cd-10 pr-2">
+            <input #txtStartDate class="form-control flatpickr-input" type="text" mwlFlatpickr name="logStartDate"
+              id="logStartDate" altFormat="F j, Y" dateFormat="Y-m-d" placeholder="Start Date" [altInput]="true"
+              [convertModelValue]="true" [(ngModel)]="startDate" />
+          </div>
+
+          <div class="col-cd-10 pr-2">
+            <input #txtEndDate class="form-control flatpickr-input" type="text" mwlFlatpickr name="logEndDate"
+              id="logEndDate" altFormat="F j, Y" dateFormat="Y-m-d" placeholder="End Date" [altInput]="true"
+              [convertModelValue]="true" [(ngModel)]="endDate" />
+          </div>
+
+          <div class="col-sm-2 pr-2">
+            <ng-select name="selectedSeverityType" bindLabel="type" id="selectedSeverityType"
+              placeholder="Severity Type" [items]="severityTypes" [multiple]="true" [clearable]="true"
+              [(ngModel)]="selectedSeverityType">
+              <ng-template let-item="item" let-index="index" let-search="searchTerm" ng-option-tmp>
+                <div style="margin: 4px;" title="{{item.type}}">
+                  <div> {{item.type}}</div>
+                </div>
+              </ng-template>
+              <ng-template let-items="items" let-clear="clear" ng-multi-label-tmp>
+                <div *ngFor="let item of selectedSeverityType | slice:-1:1" class="ng-value">
+                  <span class="ng-value-label truncate cursor-pointer" title="{{item.type}}">{{item.type}}</span>
+                  <span class="ng-value-icon right" aria-hidden="true" (click)="clear(item)">×</span>
+                </div>
+                <div *ngIf="items.length > 1" class="ng-value">
+                  <span class="ng-value-label">{{items.length - 0}} Selected...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+
+          <div class="col-md-1 pr-2">
+            <input type="text" id="machineName" class="form-control" name="machineName" placeholder="Machine"
+              [(ngModel)]="searchModel.machineName" />
+          </div>
+
+          <div class="col-cd-10 pr-2">
+            <input type="text" id="appName" class="form-control" name="appName" placeholder="App Name"
+              [(ngModel)]="searchModel.appName" />
+          </div>
+
+          <div class="col-cd-10 pr-2">
+            <input type="text" id="activityId" class="form-control" name="activityId" placeholder="Activity Id"
+              [(ngModel)]="appActivityId" />
+          </div>
+
+          <div class="col-auto ml-auto mt-auto">
+            <button type="button" class="btn btn-primary aduo-btn-sm mx-2" id="log-viewer-search-btn">
+              <i-tabler name="search" class="tabler-icon-sm tabler-icon-stroke-white mx-1" />
+              Search
+            </button>
+            <button type="button" class="btn btn-secondary aduo-btn-sm ml-1" id="log-viewer-reset-btn"
+              (click)="onReset(appLogModelSearch)">
+              Reset
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="card-body p-0">
+      <div class="table-responsive aduo-table" id="app-log-list-container"
+        [ngClass]="showLogCacheScreen ? 'auditduo-table-no-btn' : 'auditduo-table' ">
+        <table *ngIf="listData.length > 0; else nodata"
+          class="table card-table table-vcenter text-nowrap datatable table-striped" id="app-log-list-table">
+          <thead class="auditduo-table-header">
+            <tr>
+              <th *ngFor="let column of columns" class="text-left" [ngClass]="{
+            'w-1': column.value === 'action',
+            'table-header': column.sortable
+          }" [style.width.%]="column.width" (click)="changeSort(column)">
+                <span class="mr-1" [innerHTML]="column.text"></span>
+                <i [ngClass]="
+              searchModel.sortBy === column.value
+                ? 'fa fa-sort-' + currentSort
+                : ''
+            "></i>
+              </th>
+            </tr>
+          </thead>
+          <tbody *ngFor="let item of listData; let i = index">
+            <tr>
+              <td *ngIf="!showLogCacheScreen" class="text-left">
+                <label class="form-check m-0 pr-0">
+                  <input type="checkbox" class="form-check-input custom-pointer" [checked]="selectedCheckBox[i]"
+                    [value]="item" [disabled]="item.isLogCache" (change)="onCheckboxChange(item, i)" /><span
+                    class="form-check-label"></span></label>
+              </td>
+              <td class="text-left">
+                <div *ngIf="item.logDate" class="pre-formatted-text">{{ item.logDate | utcToBrowserTime : 'split' }}
+                </div>
+              </td>
+              <td class="text-left">
+                <span class="badge {{enumViewService.getAppLogSeverityTypeClass(item.severity)}}">{{ item.severity
+                  }}</span>
+              </td>
+              <td class="text-left">
+                {{ item.machineName }}
+              </td>
+              <td class="text-left">
+                <div>
+                  {{ item.appName }} <br />
+                  PID: {{ item.processId }},
+                  TID: {{ item.threadId }}
+                </div>
+              </td>
+              <td class="text-left">
+                <div>
+                  <span [title]="item.currentSourceFileName">
+                    {{ item.currentSourceFileName | lastItem }}
+                  </span>
+                  ( {{ item.currentSourceLineNumber }} ) <br />
+                  {{ item.currentFunction }}
+                </div>
+              </td>
+              <td *ngIf="!isWordWrap" class="text-left">
+                <div class="truncate-xl cursor-pointer" title="{{ item.message  }}">
+                  {{item.activityId}} <br />
+                  {{item.message}}
+                </div>
+              </td>
+            </tr>
+            <tr *ngIf="isWordWrap">
+              <td style="height:100px;overflow:auto" [attr.colspan]="columns.length+1">
+                <div style="height:100px;overflow:auto">
+                  {{item.activityId}} <br />
+                  {{item.message}}
+                </div>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <app-pagination *ngIf="!showLogCacheScreen" #pagination [totalItems]="totalItems" [currentPage]="searchModel.page"
+      (pageOptionChanged)="paginationChange($event)"></app-pagination>
+  </div>
+
+  <ng-template #nodata>
+    <app-no-data-found></app-no-data-found>
+  </ng-template>
+</div>
+
+<div *ngIf="showLogCacheScreen" class="modal-footer">
+  <button type="button" class="btn btn-light btn-md mr-1" id="log-viewer-cancel-log-btn"
+    (click)="close(true)">Cancel</button>
+</div>

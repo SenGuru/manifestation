@@ -1,0 +1,173 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+
+<div>
+    <div class="modal-header" appDraggable>
+        <h5 class="modal-title">{{title}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <app-icon-cancel></app-icon-cancel>
+        </button>
+    </div>
+    <form #form="ngForm" novalidate appFocusOnError (ngSubmit)="onSubmit(form)">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-5 group-control"
+                     *ngIf="customSelectService.showFieldsIndividualAndOrganization(selectedNpiType)">
+                    <label class="form-label">Identifier Id<span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span></label>
+                    <div class="pr-0" *ngIf="!isViewMode">
+                        <input type="number" class="form-control" #lvIdentifier="ngModel" required id="identifierId" name="identifierId"
+                               placeholder="Identifier Id" [(ngModel)]="entityProfileIdentifierModel.idNumber"
+                               [ngClass]="{ 'error': form.submitted && lvIdentifier.invalid }" />
+                        <div class="error-msg error-msg-fixed">
+                            <h4>
+                                <small>
+                                    <span class="text-danger" *ngIf="(form.submitted) && lvIdentifier.errors?.required">
+                                        id required
+                                    </span>
+                                </small>
+                            </h4>
+                        </div>
+                    </div>
+                    <div *ngIf="isViewMode">
+                        {{entityProfileIdentifierModel.idNumber}}
+                    </div>
+                </div>
+                <div class="col-sm-5 group-control" *ngIf="customSelectService.showFieldsIndividual(selectedNpiType)">
+                    <label class="form-label">
+                        Country Of Issue Id<span class="required-sign"
+                                                 *ngIf="!isViewMode">&nbsp;*</span>
+                    </label>
+                    <div class="pr-0" *ngIf="!isViewMode">
+                        <input type="number" class="form-control" #lvIssueId="ngModel" required id="countryOfIssueId"
+                               name="countryOfIssueId" placeholder="Identifier Id"
+                               [(ngModel)]="entityProfileIdentifierModel.countryOfIssueId"
+                               [ngClass]="{ 'error': form.submitted && lvIssueId.invalid }" />
+                        <div class="error-msg error-msg-fixed">
+                            <h4>
+                                <small>
+                                    <span class="text-danger" *ngIf="(form.submitted) && lvIssueId.errors?.required">
+                                        id required
+                                    </span>
+                                </small>
+                            </h4>
+                        </div>
+                    </div>
+                    <div *ngIf="isViewMode">
+                        {{entityProfileIdentifierModel.countryOfIssueId}}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-5 group-control"
+                     *ngIf="customSelectService.showFieldsIndividualAndOrganization(selectedNpiType)">
+                    <label class="form-label">
+                        Verification Date
+                        <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+                    </label>
+                    <div *ngIf="isViewMode; else editVerifiedDateDate">
+                        <div class="text-muted">
+                            {{ entityProfileIdentifierModel.verifiedDate | date : 'MM/dd/yy' }}
+                        </div>
+                    </div>
+                    <ng-template #editVerifiedDateDate>
+                        <div class="input-icon">
+                            <input id="verifiedDate" name="verifiedDate" #vcVerifiedDate
+                                   (ngModelChange)="updateVerifiedDate($event)" type="text" [ngModel]="aVerifiedDate"
+                                   class="form-control flatpickr-input" placeholder="Select a date" readonly="readonly" />
+                            <span class="input-icon-addon">
+                                <app-date-icon></app-date-icon>
+                            </span>
+                        </div>
+                        <div class="error-msg error-msg-fixed">
+                            <h4>
+                                <small>
+                                    <span class="text-danger" *ngIf="
+                    (form.submitted) &&
+                    vcVerifiedDate.errors?.required
+                  ">
+                                        Verification Date is required
+                                    </span>
+                                </small>
+                            </h4>
+                        </div>
+                    </ng-template>
+                </div>
+
+                <div class="col-sm-5 group-control"
+                     *ngIf="!isCreateMode && customSelectService.showFieldsIndividualAndOrganization(selectedNpiType)">
+                    <label class="form-label">Verified By</label>
+                    <div>
+                        {{entityProfileIdentifierModel.verifiedBy}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5 group-control"
+                     *ngIf="customSelectService.showFieldsIndividualAndOrganization(selectedNpiType)">
+                    <label class="form-label">
+                        Id Type
+                        <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+                    </label>
+                    <div *ngIf="!isViewMode">
+                        <ng-select [items]="idTypeMetaDatas" #lvIdType="ngModel" id="selectedIdTypeMetaData"
+                                   name="selectedIdTypeMetaData" [(ngModel)]="selectedIdTypeMetaData" [clearable]="false"
+                                   bindLabel="metaDataName" aria-placeholder="Id Type" required
+                                   [ngClass]="{'error': form.submitted && lvIdType.invalid }">
+                        </ng-select>
+                        <div class="error-msg error-msg-fixed">
+                            <h4>
+                                <small>
+                                    <span class="text-danger" *ngIf="
+                  (form.submitted) &&
+                  lvIdType.errors?.required
+                ">
+                                        Id Type is required
+                                    </span>
+                                </small>
+                            </h4>
+                        </div>
+                    </div>
+                    <div *ngIf="isViewMode">
+                        {{selectedIdTypeMetaData.metaDataGroupName}}
+                    </div>
+                </div>
+
+                <div class="col-sm-5 group-control" *ngIf="customSelectService.showFieldsIndividualAndOrganization(selectedNpiType)">
+                    <label class="form-label">
+                        Source Type
+                        <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+                    </label>
+                    <div *ngIf="!isViewMode">
+                        <ng-select [items]="verificationSourceMetaDatas" #lvSourceType="ngModel"
+                                   id="selectedVerificationSourceMetaData" name="selectedVerificationSourceMetaData"
+                                   [(ngModel)]="selectedVerificationSourceMetaData" [clearable]="false" bindLabel="metaDataName"
+                                   aria-placeholder="Source Type" required [ngClass]="{'error': form.submitted && lvSourceType.invalid }">
+
+                        </ng-select>
+                        <div class="error-msg error-msg-fixed">
+                            <h4>
+                                <small>
+                                    <span class="text-danger" *ngIf="
+                  (form.submitted) &&
+                  lvSourceType.errors?.required
+                ">
+                                        Source Type is required
+                                    </span>
+                                </small>
+                            </h4>
+                        </div>
+                    </div>
+                    <div *ngIf="isViewMode">
+                        {{selectedVerificationSourceMetaData.metaDataGroupName}}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-sm mr-1" *ngIf="!isViewMode">{{buttonText}}</button>
+            <button type="button" class="btn btn-danger btn-sm mr-1" (click)="close()">Cancel</button>
+
+        </div>
+    </form>
+</div>

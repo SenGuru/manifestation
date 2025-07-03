@@ -1,0 +1,868 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+@{
+    var splittedTableName = StringUtils.SplitCamelCase(Model.CapitalizeEntityName, "_").ToLower();
+    var splittedTableNameBySpace = StringUtils.SplitCamelCase(Model.CapitalizeEntityName, " ").ToLower();
+    var camelCaseTableName = StringUtils.MakeFirstCharAsLower(Model.CapitalizeEntityName);
+}
+ 
+import 'package:flimi_project/api/generated/code/filmicall.swagger.dart';
+import 'package:flimi_project/common_widget/dialogs/confirmation_dialog.dart';
+import 'package:flimi_project/common_widget/dialogs/error_dialog.dart';
+import 'package:flimi_project/common_widget/dialogs/success_dialog.dart';
+import 'package:flimi_project/common_widget/no_data/no_data_found_widget.dart';
+import 'package:flimi_project/framework/enum/app_enum.dart';
+import 'package:flimi_project/framework/infrastructure/log/logger_service.dart';
+import 'package:flimi_project/framework/services/api_service.dart';
+import 'package:flimi_project/pages/screens/@(splittedTableName)/@(splittedTableName)_crud_screen.dart';
+import 'package:flimi_project/pages/screens/@(splittedTableName)/@(splittedTableName)_filter_widget.dart';
+import 'package:flimi_project/pages/screens/@(splittedTableName)/@(splittedTableName)_list_item_widget.dart';
+import 'package:flimi_project/pages/widgets/searchtextfield.dart';
+import 'package:flimi_project/themedata/themecolor.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:very_good_infinite_list/very_good_infinite_list.dart';
+
+class @(Model.CapitalizeEntityName)ListScreen extends StatefulWidget {
+  int? companyId;
+  int? movieId;
+  @(Model.CapitalizeEntityName)ListScreen(
+      {super.key, required this.companyId, required this.movieId});
+
+  @@override
+  State<@(Model.CapitalizeEntityName)ListScreen> createState() => _@(Model.CapitalizeEntityName)ListScreenState();
+}
+
+class _@(Model.CapitalizeEntityName)ListScreenState extends State<@(Model.CapitalizeEntityName)ListScreen> {
+  final TextEditingController _controller = TextEditingController();
+  GetIt getIt = GetIt.instance;
+  String? searchTextValue;
+  late final ApiService _apiService;
+  late final LoggerService _loggerService;
+  List<@(Model.CapitalizeEntityName)Model> @(camelCaseTableName)s = [];
+  var _isLoading = false;
+  var activePageSize = 5;
+            
+            @foreach (var p in Model.EntityType.GetProperties())
+            {
+
+                var pName = p.Name;
+                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                if (p.Name == (Model.EntityType.Name + "Id"))
+                {
+                    continue;
+                }
+                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                {
+                    continue;
+                }
+                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                {
+                    continue;
+                }
+                else if (p.Name == "StateId")
+                {
+                    continue;
+                }
+                else if (p.Name == "CountryId")
+                {
+                    continue;
+                }
+                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                {
+                    @:       int? selected@(pNameWithoutId)Id;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+  String? searchKeyword;
+  bool? isFilterActive;
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    // monitor network fetch
+    await get@(Model.CapitalizeEntityName)s(
+        pageSize: activePageSize,
+           
+            @foreach (var p in Model.EntityType.GetProperties())
+            {
+
+                var pName = p.Name;
+                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                if (p.Name == (Model.EntityType.Name + "Id"))
+                {
+                    continue;
+                }
+                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                {
+                    continue;
+                }
+                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                {
+                    continue;
+                }
+                else if (p.Name == "StateId")
+                {
+                    continue;
+                }
+                else if (p.Name == "CountryId")
+                {
+                    continue;
+                }
+                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                {
+                    @:       @(pLNameWithoutId)Id : selected@(pNameWithoutId)Id,
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        keyword: searchKeyword);
+ 
+    _refreshController.refreshCompleted();
+  }
+
+  void _loadMoreData() async {
+    if (@(camelCaseTableName)s.length < 5) return;
+    if (mounted) {
+    setState(() {
+      _isLoading = true;
+    });
+    }
+    @{
+@:  await get@(Model.CapitalizeEntityName)s(
+    }
+        pageSize: activePageSize + 5,
+            @foreach (var p in Model.EntityType.GetProperties())
+            {
+
+                var pName = p.Name;
+                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                if (p.Name == (Model.EntityType.Name + "Id"))
+                {
+                    continue;
+                }
+                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                {
+                    continue;
+                }
+                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                {
+                    continue;
+                }
+                else if (p.Name == "StateId")
+                {
+                    continue;
+                }
+                else if (p.Name == "CountryId")
+                {
+                    continue;
+                }
+                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                {
+   @:       @(pLNameWithoutId)Id : selected@(pNameWithoutId)Id,
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        keyword: searchKeyword);
+
+    if (!mounted) {
+      return;
+    }
+   
+   if (mounted) {
+    setState(() {
+      _isLoading = false;
+    });
+   }
+
+  }
+
+  @@override
+  void initState() {
+    super.initState();
+           
+            @foreach (var p in Model.EntityType.GetProperties())
+            {
+
+                var pName = p.Name;
+                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                if (p.Name == (Model.EntityType.Name + "Id"))
+                {
+                    continue;
+                }
+                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                {
+                    continue;
+                }
+                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                {
+                    continue;
+                }
+                else if (p.Name == "StateId")
+                {
+                    continue;
+                }
+                else if (p.Name == "CountryId")
+                {
+                    continue;
+                }
+                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                {
+ @:                   selected@(pNameWithoutId)Id = null;
+             }
+                else
+                {
+                    continue;
+                }
+            }
+    isFilterActive = false;
+    _apiService = getIt<ApiService>();
+    _loggerService = getIt<LoggerService>();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await get@(Model.CapitalizeEntityName)s(pageSize: activePageSize);
+    });
+  }
+
+  @@override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> get@(Model.CapitalizeEntityName)s(
+      {required int pageSize,
+         
+                        @foreach (var p in Model.EntityType.GetProperties())
+                        {
+
+                            var pName = p.Name;
+                            var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                            var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                            if (p.Name == (Model.EntityType.Name + "Id"))
+                            {
+                                continue;
+                            }
+                            else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                            {
+                                continue;
+                            }
+                            else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                            {
+                                continue;
+                            }
+                            else if (p.Name == "StateId")
+                            {
+                                continue;
+                            }
+                            else if (p.Name == "CountryId")
+                            {
+                                continue;
+                            }
+                            else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                            {
+@:                                int? @(pLNameWithoutId)Id,
+                             }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+                        String? keyword}) async {
+                        try {
+                         EasyLoading.show(status: "Loading..");
+                        
+                       if (mounted) {
+                        setState(() {
+                            activePageSize = pageSize;
+                          });
+                        }
+
+                          final @(camelCaseTableName)Result = await _apiService.get@(Model.CapitalizeEntityName)s(
+                          page: 1,
+                          pageSize: pageSize,
+                          companyId: widget.companyId,
+                          movieId: widget.movieId,
+                        @foreach (var p in Model.EntityType.GetProperties())
+                        {
+
+                            var pName = p.Name;
+                            var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                            var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                            if (p.Name == (Model.EntityType.Name + "Id"))
+                            {
+                                continue;
+                            }
+                            else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                            {
+                                continue;
+                            }
+                            else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                            {
+                                continue;
+                            }
+                            else if (p.Name == "StateId")
+                            {
+                                continue;
+                            }
+                            else if (p.Name == "CountryId")
+                            {
+                                continue;
+                            }
+                            else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                            {
+ @:                                @(pLNameWithoutId)Id: @(pLNameWithoutId)Id,
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                        }
+          keyword: keyword);
+
+
+       if (@(camelCaseTableName)Result == null) {
+        _loggerService.writeLog("get@(Model.CapitalizeEntityName)s: Unable to get @(splittedTableNameBySpace)s",
+            LogMessageLevel.error);
+        showErrorDialog(context, "Unable to get @(splittedTableNameBySpace)s");
+
+        return;
+      } @("else if ") (!@(camelCaseTableName)Result.success) {
+        _loggerService.writeLog(
+            "get@(Model.CapitalizeEntityName)s: no data found - ${@(camelCaseTableName)Result.errorMsg}",
+            LogMessageLevel.error);
+        showErrorDialog(context,
+            "No @(splittedTableNameBySpace)s data found: ${@(camelCaseTableName)Result.errorMsg}");
+        return;
+      }
+    
+     if (mounted) {
+      setState(() {
+        @(camelCaseTableName)s = @(camelCaseTableName)Result.result?.model ?? [];
+      });
+     }
+
+    } catch (e, stackTrace) { 
+
+      _loggerService.writeLog("get@(Model.CapitalizeEntityName)s: Unable to get @(splittedTableNameBySpace)s",
+          LogMessageLevel.error, e, stackTrace);
+      showErrorDialog(context, "Unable to get @(splittedTableNameBySpace)s");
+    } finally {
+        
+       EasyLoading.dismiss();
+    }
+  }
+
+  Future<void> onSearch@(Model.CapitalizeEntityName)({ 
+                            @foreach (var p in Model.EntityType.GetProperties())
+                            {
+
+                                var pName = p.Name;
+                                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                                if (p.Name == (Model.EntityType.Name + "Id"))
+                                {
+                                    continue;
+                                }
+                                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                {
+                                    continue;
+                                }
+                                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                {
+                                    continue;
+                                }
+                                else if (p.Name == "StateId")
+                                {
+                                    continue;
+                                }
+                                else if (p.Name == "CountryId")
+                                {
+                                    continue;
+                                }
+                                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                {
+                                    @:    int? s@(pNameWithoutId)Id,
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+    String? keyword,
+  }) async {
+  
+      if (mounted) {
+    setState(() {
+      isFilterActive = true;
+         @foreach (var p in Model.EntityType.GetProperties())
+                {
+
+                                var pName = p.Name;
+                                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                                if (p.Name == (Model.EntityType.Name + "Id"))
+                                {
+                                    continue;
+                                }
+                                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                {
+                                    continue;
+                                }
+                                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                {
+                                    continue;
+                                }
+                                else if (p.Name == "StateId")
+                                {
+                                    continue;
+                                }
+                                else if (p.Name == "CountryId")
+                                {
+                                    continue;
+                                }
+                                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                {
+                                    @:   selected@(pNameWithoutId)Id = s@(pNameWithoutId)Id;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+      searchKeyword = keyword;
+    });
+    }
+    await get@(Model.CapitalizeEntityName)s(
+        pageSize: activePageSize,
+
+                            @foreach (var p in Model.EntityType.GetProperties())
+                            {
+
+                                var pName = p.Name;
+                                var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                                var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                                if (p.Name == (Model.EntityType.Name + "Id"))
+                                {
+                                    continue;
+                                }
+                                else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                {
+                                    continue;
+                                }
+                                else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                {
+                                    continue;
+                                }
+                                else if (p.Name == "StateId")
+                                {
+                                    continue;
+                                }
+                                else if (p.Name == "CountryId")
+                                {
+                                    continue;
+                                }
+                                else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                {
+                          @:       @(pLNameWithoutId)Id : selected@(pNameWithoutId)Id,
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
+        keyword: searchKeyword);
+  }
+
+  Future<void> onReset@(Model.CapitalizeEntityName)() async {
+   if (mounted) {
+    setState(() {
+      isFilterActive = false;
+
+                                @foreach (var p in Model.EntityType.GetProperties())
+                                {
+
+                                    var pName = p.Name;
+                                    var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                                    var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                                    if (p.Name == (Model.EntityType.Name + "Id"))
+                                    {
+                                        continue;
+                                    }
+                                    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                    {
+                                        continue;
+                                    }
+                                    else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                    {
+                                        continue;
+                                    }
+                                    else if (p.Name == "StateId")
+                                    {
+                                        continue;
+                                    }
+                                    else if (p.Name == "CountryId")
+                                    {
+                                        continue;
+                                    }
+                                    else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                    {
+                                        @:         selected@(pNameWithoutId)Id   = null;
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
+                                }
+      searchKeyword = null;
+    });
+    }
+    await get@(Model.CapitalizeEntityName)s(
+      pageSize: activePageSize,
+    );
+  }
+
+  Future<void> onDelete@(Model.CapitalizeEntityName)(@(Model.CapitalizeEntityName)Model? @(camelCaseTableName)) async {
+    var confirmation = await showConfirmationDialog(context, "Confirmation",
+        "Are you sure, you want to delete @(splittedTableNameBySpace) - ${@(camelCaseTableName)?.@(camelCaseTableName)Name}");
+    if (confirmation) {
+      try {
+        EasyLoading.show(status: "Loading..");
+                                    if (@(camelCaseTableName) == null) {
+          return showErrorDialog(context, "@(splittedTableNameBySpace) Code is required");
+        }
+
+        final @(camelCaseTableName)DeleteResult = await _apiService
+            .mark@(Model.CapitalizeEntityName)AsDeleted(id: @(camelCaseTableName).@(camelCaseTableName)Id);
+             
+
+        if (@(camelCaseTableName)DeleteResult == null) {
+          _loggerService.writeLog(
+              "delete@(Model.CapitalizeEntityName): Unable to delete @(splittedTableNameBySpace)",
+              LogMessageLevel.error);
+          showErrorDialog(context, "Unable to delete @(splittedTableNameBySpace)");
+
+          return;
+        } @("else if ") (!@(camelCaseTableName)DeleteResult.success) {
+          _loggerService.writeLog(
+              "delete@(Model.CapitalizeEntityName): Unable to delete @(splittedTableNameBySpace) - ${@(camelCaseTableName)DeleteResult.errorMsg}",
+              LogMessageLevel.error);
+          showErrorDialog(context,
+              "Unable to delete @(splittedTableNameBySpace) - ${@(camelCaseTableName)DeleteResult.errorMsg}");
+          return;
+        }
+
+        await showSuccessDialog(context, "Successfully @(splittedTableNameBySpace) deleted");
+        onReset@(Model.CapitalizeEntityName)();
+      } catch (e, stackTrace) { 
+        _loggerService.writeLog("create@(Model.CapitalizeEntityName): Unable to delete @(splittedTableNameBySpace)",
+            LogMessageLevel.error, e, stackTrace);
+        showErrorDialog(context, "Unable to delete @(splittedTableNameBySpace)");
+      } finally {
+        
+       EasyLoading.dismiss();
+    }
+    }
+  }
+
+  @@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        title: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("@(splittedTableNameBySpace)s"),
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => @(Model.CapitalizeEntityName)CrudScreen(
+                                companyId: widget.companyId,
+                                isCreateMode: true,
+                                isEditMode: false,
+                                isViewMode: false,
+                                movieId: widget.movieId,
+                                title: "Create @(splittedTableNameBySpace)",
+                                onSubmitCallback: (value) {
+                                  onReset@(Model.CapitalizeEntityName)();
+                                },
+                                key: widget.key,
+                              )));
+                },
+                icon: Icon(Icons.add))
+          ],
+        ),
+        leading: TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.keyboard_arrow_left_outlined)),
+      ),
+      backgroundColor: ThemeColor.lightGreyTwo,
+      body: Expanded(
+        child: SmartRefresher(
+          enablePullDown: true,
+          enablePullUp: false,
+          header: CustomHeader(
+            builder: (context, mode) {
+              Widget body;
+              if (mode == RefreshStatus.idle) {
+                body = Text("pull down refresh");
+              } @("else if ") (mode == RefreshStatus.refreshing) {
+                body = Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CupertinoActivityIndicator(
+                      color: ThemeColor.mainThemeColor,
+                      animating: true,
+                      radius: 15,
+                    ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Text("Loading.."),
+                  ],
+                );
+              } @("else if ") (mode == RefreshStatus.failed) {
+                body = Text("refresh Failed!Click retry!");
+              } @("else if ") (mode == RefreshStatus.canRefresh) {
+                body = Text("release to refresh");
+              } @("else ") {
+                body = Flex(
+                  direction: Axis.horizontal,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    CupertinoActivityIndicator(
+                      color: ThemeColor.mainThemeColor,
+                      animating: true,
+                      radius: 15,
+                    ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Text("Loading.."),
+                  ],
+                );
+              }
+              return Container(height: 55.0, child: Center(child: body));
+            },
+          ),
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          child: Column(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SearchTextField(
+                      width: 290.w,
+                      height: 40.h,
+                      innerWidth: 200.w,
+                      label: "Search for something",
+                      controller: _controller,
+                      onSearchValue: (value) {
+                        onSearch@(Model.CapitalizeEntityName)(keyword: value);
+                      },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: isFilterActive == true
+                              ? ThemeColor.mainThemeColor
+                              : Colors.transparent,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
+                      width: 42.w,
+                      height: 40.h,
+                      child: IconButton(
+                          onPressed: () {
+                            show@(Model.CapitalizeEntityName)FilterWidget(
+                              context: context,
+                              movieId: widget.movieId,
+                              companyId: widget.companyId,
+                                   
+                                    @foreach (var p in Model.EntityType.GetProperties())
+                                    {
+
+                                        var pName = p.Name;
+                                        var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+                                        var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+                                        if (p.Name == (Model.EntityType.Name + "Id"))
+                                        {
+                                            continue;
+                                        }
+                                        else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                        {
+                                            continue;
+                                        }
+                                        else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name == "StateId")
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name == "CountryId")
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                        {
+                    @:                     @(pLNameWithoutId)Id: selected@(pNameWithoutId)Id,
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+                              onResetFilter: () {
+                                onReset@(Model.CapitalizeEntityName)();
+                              },
+                              onSubmitFilter: (
+                                  {
+                                   
+                                    @foreach (var p in Model.EntityType.GetProperties())
+                                    {
+                                        if (p.Name == (Model.EntityType.Name + "Id"))
+                                        {
+                                            continue;
+                                        }
+                                        else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                        {
+                                            continue;
+                                        }
+                                        else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name == "StateId")
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name == "CountryId")
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                        {
+                                            @:    selected@(p.Name),
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+
+                                  }) {
+                                onSearch@(Model.CapitalizeEntityName)(
+
+                                    @foreach (var p in Model.EntityType.GetProperties())
+                                    {
+                                        if (p.Name == (Model.EntityType.Name + "Id"))
+                                        {
+                                            continue;
+                                        }
+                                        else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                        {
+                                            continue;
+                                        }
+                                        else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name == "StateId")
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name == "CountryId")
+                                        {
+                                            continue;
+                                        }
+                                        else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                                        {
+                                            @:       s@(p.Name): selected@(p.Name),
+                                        }
+                                        else
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    );
+                              },
+                            );
+                          },
+                          icon: Icon(
+                            Icons.filter_list_outlined,
+                            color: isFilterActive == true
+                                ? Colors.white
+                                : Colors.black87,
+                          )),
+                    ),
+                  ],
+                ),
+              ),
+              if (@(camelCaseTableName)s.isNotEmpty) ...[
+                Expanded(
+                  child: InfiniteList(
+                    itemCount: @(camelCaseTableName)s.length,
+                    isLoading: _isLoading,
+                    onFetchData: _loadMoreData,
+                    separatorBuilder: (context, index) => const Divider(),
+                    itemBuilder: (context, index) {
+                      return @(Model.CapitalizeEntityName)ListItemWidget(
+                        movieId: widget.movieId,
+                        companyId: widget.companyId,
+                        @(camelCaseTableName): @(camelCaseTableName)s[index],
+                        key: widget.key,
+                        onSubmitCallback: (value) {
+                          onReset@(Model.CapitalizeEntityName)();
+                        },
+                        onDeleteCallback: ({required @(camelCaseTableName)}) {
+                          onDelete@(Model.CapitalizeEntityName)(@(camelCaseTableName));
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ] else ...[
+                SizedBox(
+                  height: 50.h,
+                ),
+                const Expanded(
+                    child: SingleChildScrollView(
+                  child: NoDataFoundWidget(canShowMessage: true),
+                )),
+              ]
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

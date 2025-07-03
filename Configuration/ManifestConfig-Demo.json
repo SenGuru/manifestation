@@ -1,0 +1,44 @@
+{
+  "configuration": {
+    "appSettings": {
+
+      "serverPort": 9494,
+
+      "logSettings": {
+        "logTrace": true,
+        "logDebug": true,
+        "logInfo": true,
+        "logSql": true,
+        "logWarn": true,
+        "logError": true,
+        "logPerformance": true,
+        "logToFile": true,
+        "logLocation": "|ConfigPath|\\..\\Data\\Logs",
+        "logToDebugger": true,
+        "logToConsole": true
+      },
+      "connectionStrings": {
+        "default": {
+          "databaseType": "postgresql",
+          "databaseName": "Manifest-Demo-1",
+          "databaseServer": "159.65.153.42",
+          "databaseUserName": "postgres",
+          "databasePassword": "/D3i565@Dmin123##",
+          "ignoreValidation": true,
+          "databaseCommandTimeout": 99999,
+          "maxPoolSize": 99,
+          "automaticMigration": true,
+          "migrationNamespace": "Manifest.Repository.Migration.Application",
+          "migrationProfile": null
+        }
+      }
+    }
+  },
+
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Error"
+    }
+  }
+}

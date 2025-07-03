@@ -1,0 +1,81 @@
+<form #lvSavedJobNotificationEmailForm="ngForm" name="form" appFocusOnError
+  (ngSubmit)="lvSavedJobNotificationEmailForm.form.valid && onSubmit(lvSavedJobNotificationEmailForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="auditduo-saved-job-notification-email-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-saved-job-notification-email-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedSavedJob">Saved Job
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcSavedJobId #lvSavedJob="ngModel" placeholder="Saved Job" class="form-control"
+            name="selectedSavedJob" id="selectedSavedJob" bindLabel="savedJobName" required [items]="savedJobs"
+            [clearable]="false"
+            [ngClass]="{'is-invalid': lvSavedJobNotificationEmailForm.submitted && lvSavedJob.invalid }"
+            [typeahead]="savedJobTypeahead$" [loading]="savedJobTypeaheadLoading" [(ngModel)]="selectedSavedJob">
+          </ng-select>
+          <div *ngIf="lvSavedJobNotificationEmailForm.submitted && lvSavedJob.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvSavedJob.errors?.['required']">Saved Job is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{savedJobNotificationEmailModel.savedJobId ? savedJobNotificationEmailModel.savedJobId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="email">Email
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvEmail="ngModel" type="text" name="email" id="email" required appEmailvalidator class="form-control"
+            placeholder="Email"
+            [ngClass]="{'is-invalid': lvSavedJobNotificationEmailForm.submitted && lvEmail.invalid }"
+            [(ngModel)]="savedJobNotificationEmailModel.email">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvSavedJobNotificationEmailForm.submitted) && lvEmail.errors?.['required']">
+              Email is required
+            </span>
+            <span *ngIf="(lvSavedJobNotificationEmailForm.submitted) && lvEmail.hasError('emailvalidator')">
+              Please provide a valid Email
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{savedJobNotificationEmailModel.email ? savedJobNotificationEmailModel.email : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="Message">Message
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvMessage="ngModel" type="text" name="message" required class="form-control" placeholder="Message"
+            [ngClass]="{'is-invalid': lvSavedJobNotificationEmailForm.submitted && lvMessage.invalid }"
+            [(ngModel)]="savedJobNotificationEmailModel.message">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvSavedJobNotificationEmailForm.submitted) && lvMessage.errors?.['required']">
+              Message is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{savedJobNotificationEmailModel.message ? savedJobNotificationEmailModel.message : '-'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm aduo-btn-sm"
+      id="auditduo-saved-job-notification-email-modal-close-btn" data-bs-dismiss="modal"
+      (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success"
+      id="auditduo-saved-job-notification-email-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

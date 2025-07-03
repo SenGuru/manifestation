@@ -1,0 +1,230 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+@{
+    int i = 0;
+    //int breakAfter = -1;
+    var addedColumns = new List<string>();
+}
+using System;
+using System.Collections.Generic;
+using %AppName%.Common.Models.DB;
+
+#pragma warning disable SA1508 , SA1402, SA1649, CS0108, SA1502, S4015, SA1507, SA1507 // Closing braces should not be preceded by blank line
+namespace %AppName%.Common.Models.ViewModels
+{
+@foreach (var t in Model.Code.Tables)
+{
+    if (!t.DbTableName.Contains("MetaData"))
+    {
+        continue;
+    }
+        i ++;
+    @:public class @(t.DbTableName)View : @(t.DbTableName)
+    @:{
+    @:}
+@:
+    @:public class @(t.DbTableName)Model : @(t.DbTableName)View
+    @:{
+foreach(var c in t.Columns)
+{
+    if (c.IsArray)
+    {
+        if(c.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild || c.ElementType == CodeGenerator.ElementTypes.MetaData)
+        {
+        @:public List<MetaDataModel> @(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        }
+        else
+        {
+        @:public List<@(c.FKeyTypeName)Model> @(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        }
+    }
+    else if (c.IsFkey)
+    {
+        @://public @c.FKeyTypeName @c.DbColumnNameWithoutId { get; set; }
+@:
+    }    
+}
+    @:}
+@:
+    @:public class @(t.DbTableName)UpdateModel : @(t.DbTableName)
+    @:{
+foreach(var c in t.Columns)
+{
+    if (c.IsArray)
+    {
+        if(c.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild || c.ElementType == CodeGenerator.ElementTypes.MetaData)
+        {
+        @:public List<long> New@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        @:public List<long> Existing@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        @:public List<long> PreviousExisting@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        }
+        else
+        {
+        @:public List<long> New@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        @:public List<long> Existing@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        @:public List<long> PreviousExisting@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        }
+    }
+    else if (c.IsFkey)
+    {
+        @://public @c.FKeyTypeName @c.DbColumnNameWithoutId { get; set; }
+@:
+    }    
+}
+        @:protected DateTime CreatedDate { get { return base.CreatedDate; } set { base.CreatedDate = value; } }
+@:
+        @:protected DateTime ModifiedDate { get { return base.CreatedDate; } set { base.CreatedDate = value; } }
+@:
+        @:protected long? CreatedByUserId { get { return base.CreatedByUserId; } set { base.CreatedByUserId = value; } }
+@:
+        @:protected long? ModifiedByUserId { get { return base.ModifiedByUserId; } set { base.ModifiedByUserId = value; } }
+    @:}
+@:
+    @:public class @(t.DbTableName)CreateModel : @(t.DbTableName)UpdateModel
+    @:{
+foreach(var c in t.Columns)
+{
+    if (c.IsArray)
+    {
+        if(c.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild || c.ElementType == CodeGenerator.ElementTypes.MetaData)
+        {
+        @:protected List<long> Existing@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        }
+        else
+        {
+        @:protected List<long> Existing@(c.DbColumnNameWithoutIds)s { get; set; }
+@:
+        }
+    }
+    else if (c.IsFkey)
+    {
+        @://public @c.FKeyTypeName @c.DbColumnNameWithoutId { get; set; }
+@:
+    }    
+}
+        @:protected long @(t.DbTableName)Id { get { return base.@(t.DbTableName)Id; } set { base.@(t.DbTableName)Id = value; } }
+    @:}
+@:
+}
+@{
+    i = 0;
+}
+@foreach (var t in Model.Code.Sections)
+{
+        //if(i > breakAfter)
+        //    continue;
+        i ++;
+        addedColumns.Clear();
+    @:public class @(t.ViewClassName)CreateUpdateModel
+    @:{
+        @:public CredStepInfoModel StepInfo { get; set; }
+@:
+    @foreach (var c in t.AllColumns)
+    {
+            var arrStr = "";
+            var arrEndStr = "";
+            if (c.IsArray)
+            {
+                arrStr = "List<";
+                arrEndStr = ">";
+            }
+            else if (c.IsNull && (c.DataType != CodeGenerator.CSharpDataTypes.FKey || c.DataType != CodeGenerator.CSharpDataTypes.File || c.DataType != CodeGenerator.CSharpDataTypes.Unknown || c.DataType != CodeGenerator.CSharpDataTypes.@string) )
+            {
+                if(c.DataType == CodeGenerator.CSharpDataTypes.@string)
+                {
+                    arrEndStr = "";
+                }
+                else
+                {
+                arrEndStr = "?";
+                }
+            }
+
+            var withoutId = c.DbColumnName.Replace("Id", "");
+            bool withNameExists = t.AllColumns.Any(x => x.DbColumnName == withoutId + "Name");
+
+            if (c.IsFkey)
+            {
+                    if (c.ElementType == CodeGenerator.ElementTypes.File)
+                    {
+                    @foreach (var cf in c.FileRelatedColumnsForView)
+                    {                    
+        @:public @(cf.DataType) @(cf.FileColumn) { get; set; } // 1 -@*@(c.ToString())*@
+@:
+        addedColumns.Add(cf.FileColumn);
+                    }
+                    }
+                    else
+                    {
+                    if (c.ControlType == CodeGenerator.ControlTypes.MultiSelect || c.ParentTable.IsList)
+                        {
+                            if (c.DbColumnName.EndsWith("MetaDataIds"))
+                            {
+        @:public @Raw(arrStr+"long"+arrEndStr) Existing@(c.DbColumnName) { get; set; }//2 -@(c.ToString())
+        addedColumns.Add(c.DbColumnName);
+@:
+        @:public @Raw(arrStr+"long"+arrEndStr) New@(c.DbColumnName) { get; set; }//2 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                            }
+                            else
+                            {
+                                if(c.ElementType != CodeGenerator.ElementTypes.LookupList)
+                                {
+        @:public @Raw(arrStr+c.FKeyTypeName+"UpdateModel"+arrEndStr) Existing@(c.DbColumnName) { get; set; }//2.1 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+@:        
+        @:public @Raw(arrStr+c.FKeyTypeName+"CreateModel"+arrEndStr) New@(c.DbColumnName) { get; set; }//2.1 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                                }
+                                else
+                                {
+        @:public @Raw(arrStr+"long"+arrEndStr) Existing@(c.DbColumnName) { get; set; }//2.1.1 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+@:
+        @:public @Raw(arrStr+"long"+arrEndStr) New@(c.DbColumnName) { get; set; }//2.1.1 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                                }
+                            }
+                        }
+                        else
+                        {
+        @:public @Raw(arrStr + "long" + arrEndStr) @(c.DbColumnName) {get ; set;}//2.2 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                        }
+                    }
+            }
+            else
+            {
+                if (c.TsDataType == CodeGenerator.TsDataTypes.fKey)
+                {
+                    if (addedColumns.Any(x => x == c.DbColumnName))
+                    {
+                        continue;
+                    }
+        @:public @Raw(arrStr + "long" + arrEndStr) @(c.DbColumnName) { get; set; }//3 -@*@(c.ToString())*@
+                }
+                else
+                {
+                    if (addedColumns.Any(x => x == c.DbColumnName))
+                    {
+                        continue;
+                    }
+        @:public @Raw(arrStr + c.DataType + arrEndStr) @(c.DbColumnName) { get; set; } // 5 -@*@(c.ToString())*@
+    addedColumns.Add(c.DbColumnName);
+                }
+            }
+@:
+    }
+    @:}
+@:
+}
+}
+#pragma warning restore SA1508 , SA1402, SA1649 , CS0108, SA1502, S4015, SA1507, SA1507 // Closing braces should not be preceded by blank line

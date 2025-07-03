@@ -1,0 +1,8 @@
+./**/bin/**
+./**/obj/**
+./**/out/**
+./**/TestResults/**
+./**/.git/**
+./**/node_modules/**
+./**/artifacts/**
+./**/.history/**

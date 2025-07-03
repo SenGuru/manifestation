@@ -1,0 +1,13 @@
+<apx-chart 
+    [series]="chartOptions?.series ?? []"
+    [chart]="chartOptions?.chart ?? predefinedChart"
+    [xaxis]="chartOptions?.xaxis ?? predefinedXAxis"
+    [dataLabels]="chartOptions?.dataLabels ?? predefinedLabels"
+    [grid]="chartOptions?.grid ?? predefinedGrid"
+    [stroke]="chartOptions?.stroke ?? predefinedStroke"
+    [title]="chartOptions?.title ?? predefinedApexTitle"
+    [colors]="chartOptions?.colors ?? []"
+    [tooltip]="chartOptions?.tooltip"
+    [labels]="chartOptions?.labels"
+    [plotOptions]="chartOptions?.plotOptions ?? predefinedPlotOptions"
+  ></apx-chart>

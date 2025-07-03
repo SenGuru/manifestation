@@ -1,0 +1,54 @@
+public void GetUsers_WithValidData_ReturnsValidData()
+{
+    var model = new UserSearchCriteria();
+    var r = GetUsers();
+}
+public void GetUsers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateUser_WithValidData_ReturnsValidData()
+{
+    var model = new UserCreateModel();
+    var r = CreateUser();
+}
+public void CreateUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUser_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUser();
+}
+public void GetUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateUserByAdmin_WithValidData_ReturnsValidData()
+{
+    var model = new UserUpdateModel();
+    var r = UpdateUserByAdmin();
+}
+public void UpdateUserByAdmin_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void EnableUserById_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = EnableUserById();
+}
+public void EnableUserById_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void DisableUserById_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = DisableUserById();
+}
+public void DisableUserById_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

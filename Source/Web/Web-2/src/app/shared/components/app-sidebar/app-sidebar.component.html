@@ -1,0 +1,31 @@
+<aside class="navbar navbar-vertical navbar-expand-lg adou-sidebar" data-bs-theme="dark">
+  <div class="container-fluid">
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebar-menu"
+      aria-controls="sidebar-menu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-brand navbar-brand-autodark">
+      <a href="." class="navbar-brand navbar-brand-autodark d-none-navbar-vertical">
+        <img src="assets/images/logo-light.png" width="120" height="28" alt=""
+          class="navbar-brand-logo navbar-brand-logo-large" />
+      </a>
+    </div>
+    <div class="navbar-collapse collapse" id="sidebar-menu">
+
+      <ul class="navbar-nav pt-lg-3">
+        <li *ngFor="let item of appMenuItems" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="[item.link]" [routerLinkActive]="['active']">
+            <span class="nav-link-icon d-md-none d-lg-inline-block">
+              <i-tabler class="tabler-icon-xl tabler-icon-stroke-gray-sidebar mx-2 cursor-pointer"
+                [name]="item.icon ?? ''" />
+            </span>
+            <span class="nav-link-title mx-1">
+              {{item.label}}
+            </span>
+          </a>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</aside>

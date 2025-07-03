@@ -1,0 +1,26 @@
+<div class="card-footer hstack pb-2 mt-3 align-items-center pt-0 border-0">
+  <p class="col-sm-auto d-flex gap-3 align-items-center m-0">
+    <span *ngIf="totalItems; else nodata" class="mr-1"> 
+      {{ currentStartData }} - {{ currentEndData }} of {{totalItems}} entries
+    </span>
+    <ng-template #nodata>
+      0 of 0 entries
+    </ng-template>
+    <span>
+      <select class="ng-select form-select page-selector-width" [disabled]="totalItems === 0"[(ngModel)]="perPage"
+        (ngModelChange)="onChangePage(1);" >
+        <option *ngFor="let limit of [10, 20, 50, 100, 200]">{{limit}}</option>
+      </select>
+    </span>
+    <span> per page</span>
+  </p>
+  <ngb-pagination class="d-flex justify-content-sm-end col-sm cursor-pointer m-0 p-0 pt-2 auditduo-pagination-bar" [collectionSize]="(totalItems)" [boundaryLinks]="true" [pageSize]="perPage"
+    [maxSize]="5" [(page)]="currentPage" (pageChange)="onChangePage($event);">
+    <ng-template ngbPaginationFirst>First</ng-template>
+    <ng-template ngbPaginationLast>Last</ng-template>
+    <ng-template ngbPaginationPrevious>Prev</ng-template>
+    <ng-template ngbPaginationNext>Next</ng-template>
+    <ng-template ngbPaginationEllipsis>...</ng-template>
+  </ngb-pagination>
+</div>
+      

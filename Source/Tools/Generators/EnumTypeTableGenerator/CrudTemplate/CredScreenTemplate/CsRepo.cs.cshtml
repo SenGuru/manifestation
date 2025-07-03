@@ -1,0 +1,268 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Framework.Data.Utils;
+using Framework.Infrastructure.Models.Result;
+using LinqToDB;
+using %AppName%.Common.Models.DB;
+using %AppName%.Common.Models.SearchCriteria;
+using %AppName%.Common.Models.ViewModels;
+
+#pragma warning disable SA1508 , SA1402 , SA1649, SA1505, SA1507, SA1513, SA1210,  S4144 ,  SA1516 // Closing braces should not be preceded by blank line
+namespace %AppName%.Repository.Common
+{
+@{
+    int i = 0;
+    //int breakAfter = -1;
+    var addedColumns = new List<string>();
+}
+
+    public partial class CredRepository
+    {
+@foreach (var t in Model.Code.Sections)
+{
+    var pkCol = t.GetPK();    
+    if (pkCol == null)
+    {
+        throw new Exception("Pk is not available for " + t.SectionName);
+    }
+    //if(i > breakAfter)
+    //    continue;
+    i++;
+    addedColumns.Clear();
+    var colSortedByTables = t.GetMergedColumns().GroupBy(x => x.ParentTable);
+    
+    var tblsToIgnore = new List<string>();
+    @foreach (var col in t.GetMergedColumns())
+    {
+        if (col.IsArray)
+        {
+            if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+            {
+                continue;
+            }
+        tblsToIgnore.Add(col.DbColumnName);
+        }
+    }
+                    
+    @:#region @(t.ViewClassName)
+                    
+    @foreach (var colTables in colSortedByTables)
+    {
+        var tbl = colTables.Key;
+        var cols = colTables.Select(x => x);
+        var arrayCount = colTables.Count(x => x.IsArray);
+        var itemCount = colTables.Select(x => x).Count();
+        if (arrayCount > 0 && arrayCount == itemCount)
+        {
+@*            @://skipping  @tbl.DbTableName because item and array count are same*@
+            continue;   
+        }
+        
+        @:public async Task<bool> Update@(t.ViewClassName)For@(tbl.DbTableName)Async(@(tbl.DbTableName) model, long? modifiedByUserId)
+        @:{
+            @:return await dbMgr.GetTable<@(tbl.DbTableName)>()
+            @foreach (var c in cols)
+            {
+                if (c.IsArray || tblsToIgnore.Contains(c.DbColumnName) || tblsToIgnore.Contains(c.DbColumnName+"s") || c.DbColumnName == "EntityProfileId")
+                {
+@*@:                    //ignored for set - @(c.DbColumnName)*@
+                    continue;
+                }
+                @:.Set(x=> x.@(c.DbColumnName),model.@(c.DbColumnName))
+            }
+            @:  .UpdateWithAuditAsync(modifiedByUserId) > 0;
+        @:}
+        @:
+        @:public async Task<@(tbl.DbTableName)> Create@(t.ViewClassName)For@(tbl.DbTableName)Async(@(tbl.DbTableName) model, long? modifiedByUserId)
+        @:{
+            @:model.IsDeleted = false;
+            @:var id = await dbMgr.InsertWithAuditAsync<@(tbl.DbTableName),long>(model,modifiedByUserId);
+            @:model.@(tbl.DbTableName)Id = id;
+            @:return model;
+        @:}        
+    }
+        @:
+        @:
+
+    var pkAltName = pkCol.TsDbColumnName;
+    var pkAltNameWithoutId = pkCol.TsDbColumnNameWithoutId;    
+    var pkAltCapName = pkCol.DbColumnName;
+    var pkAltCapNameWithoutId = pkCol.DbColumnNameWithoutId;
+    var pkTableName = pkCol.ParentTable.DbTableName;
+    
+    if (pkCol.TsDbColumnName == "caseId")
+    {
+        pkAltName = "entityProfileId";
+        pkAltNameWithoutId = "entityProfile";
+        pkAltCapName = "EntityProfileId";
+        pkAltCapNameWithoutId = "EntityProfile";
+        pkTableName = "EntityProfile";
+    }
+
+        
+        @foreach (var col in t.GetMergedColumns())
+        {
+            var commentStart = "";
+            var commentEnd = "";
+                if (!col.IsArray)
+                {
+                    continue;
+                }
+                
+                if (col.DbColumnNameWithoutIds == "AccessibilityMetaData" && col.DbColumnNameWithoutIds == "SpecialSkillMetaData" || col.DbColumnNameWithoutIds == "AccessibilityMetaData" || col.DbColumnNameWithoutIds == "OfficePersonnelLngMetaData" || col.DbColumnNameWithoutIds == "InterpretersLanguageMetaData" || col.DbColumnNameWithoutIds == "AcceptTypeOrPatientMetaData" || col.DbColumnNameWithoutIds == "LocationServiceMetaData" || col.DbColumnNameWithoutLastS == "EntityProfileContact")
+                {
+                    pkAltName = col.ParentTable.TsDbTableName + "Id";
+                    pkAltNameWithoutId = col.ParentTable.TsDbTableName;
+                    pkAltCapName = col.ParentTable.DbTableName + "Id";
+                    pkAltCapNameWithoutId = col.ParentTable.DbTableName;
+                    pkTableName = col.ParentTable.DbTableName;
+                }
+                
+                if (col.DbColumnNameWithoutIds == "AccessibilityMetaData")
+                {
+
+                }
+               
+                if(col.DbColumnName.EndsWith("Ids"))
+                {
+                    var fKeyId = col.FKeyTypeName + "Id";
+                    if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+                    {
+                        fKeyId = "MetaDataId";
+                    }
+                        var mtableName = pkAltCapNameWithoutId + col.DbColumnNameWithoutIds;
+@:        @commentStart
+@:        public Task<List<MetaData>> Get@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(long @(pkAltName))
+@:        {   
+@:           var sql = from a in dbMgr.GetTable<MetaData>()
+@:                     join b in dbMgr.GetTable<@mtableName>() on a.MetaDataId equals b.MetaDataId
+@:                     where b.@(pkAltCapName) == @(pkAltName)
+@:                     select a;
+@:           return sql.ToListAsync();
+@:        }
+@:
+@:        public async Task<@mtableName> Create@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(long @(pkAltName), long metaDataId, long? modifiedBy)
+@:        {
+@:          var result = new @mtableName { @(pkAltCapName) = @(pkAltName), MetaDataId = metaDataId };
+@:          var id = await dbMgr.InsertWithAuditAsync<@mtableName,long>(result, modifiedBy);
+@:          result.@(mtableName)Id = id;
+@:          return result;
+@:        }
+@:
+@:        public Task<bool> Does@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)ExistsAsync(long @(pkAltName), long metaDataId)
+@:        {
+@:        return dbMgr.GetTable<@mtableName>().AnyAsync(x => x.@(pkAltCapName) == @(pkAltName) && x.MetaDataId == metaDataId);                      
+@:        }
+@:
+@:        public async Task<bool> HardDelete@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(long @(pkAltName), long metaDataId)
+@:        {
+@:          return (await dbMgr.GetTable<@mtableName>()
+@:              .Where(x => x.@(pkAltCapName) == @(pkAltName) && x.MetaDataId == metaDataId).DeleteAsync()) > 0;
+@:        }
+@:        @commentEnd
+@:
+                    }
+                else 
+                {
+                    if(col.DbColumnNameWithoutLastS != "EntityProfileContact")
+                    {
+@:        public Task<List<@(col.DbColumnNameWithoutLastS)>> Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(long @(pkAltName))
+@:        {
+@:           return dbMgr.GetTable<@(col.DbColumnNameWithoutLastS)>().Where(x => x.@(pkAltCapName) == @(pkAltName)).ToListAsync();
+@:        }
+@:
+@:        public Task<DbReturnListModel<@(col.DbColumnNameWithoutLastS)>> Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(@(pkAltCapName)SearchCriteria search)
+@:        {
+@:           return dbMgr.GetTable<@(col.DbColumnNameWithoutLastS)>().Where(x => x.@(pkAltCapName) == search.@(pkAltCapName)).ReturnListModelResultAsync(search);
+@:        }
+@:
+                    }
+                }
+        }
+        
+        @:public Task<@(t.ViewClassName)View> Get@(t.ViewClassName)Async(long @pkCol.TsDbColumnName)
+        @:{
+if (t.ViewClassName == "ProviderSpecialitiesX")
+{
+@:          var sql = from a in dbMgr.GetTable<EntityProfileSpecialty>()
+@:          join b in dbMgr.GetTable<EntityProfile>() on a.EntityProfileId equals b.EntityProfileId
+@:          select new ProviderSpecialitiesView
+@:          {
+@:            EntityProfileId = a.EntityProfileId,
+@:            SpecialityOtherInterest = b.SpecialityOtherInterest,
+@:          };
+@:          sql = sql.Where(x=> x.EntityProfileId == entityProfileId);
+@:          return sql.FirstOrDefaultAsync();
+}
+if (true)//t.ViewClassName != "ProviderSpecialities")
+{
+    int j = 0;
+    char dName = 'a';
+    string previousValue = "a";
+    string previousColId = "Id";
+    
+    @foreach (var colTables in colSortedByTables)
+    {
+        var tbl = colTables.Key;
+        var arrayCount = colTables.Count(x => x.IsArray);
+        var itemCount = colTables.Select(x => x).Count();
+        if (arrayCount > 0 && arrayCount == itemCount)
+        {
+            continue;   
+        }
+        j++;
+        if (j == 1)
+        {
+            @:var sql = from @dName in dbMgr.GetTable<@(tbl.DbTableName)>()
+            previousValue = dName.ToString();
+            previousColId = tbl.DbTableName + "Id";
+            dName++;
+            continue;
+        }
+        else
+        {
+            @:join @dName in dbMgr.GetTable<@(tbl.DbTableName)>() on @(previousValue).@(previousColId) equals @dName.@(tbl.DbTableName)Id
+            previousValue = dName.ToString();
+            dName++;
+        }
+    }
+            @:select new @(t.ViewClassName)View
+            @:{
+    dName = 'a';
+    @foreach (var colTables in colSortedByTables)
+    {
+        var tbl = colTables.Key;
+        var cols = colTables.Select(x => x);
+        foreach(var col in cols)
+        {
+            
+        if (col.DbColumnName == "VerificationEntityProfileFileId" || col.DbColumnName == "EntityProfileId")
+        {
+            continue;
+        }
+
+        if (col.IsArray || tblsToIgnore.Contains(col.DbColumnName) || tblsToIgnore.Contains(col.DbColumnName+"s"))
+        {
+@*@:      //ignored for set - @(col.DbColumnName)*@
+        continue;
+        }          
+            @:@(col.DbColumnName) = @(dName).@(col.DbColumnName),
+        }
+        dName++;
+    }
+            @:};
+            @:sql = sql.Where(x=> x.@pkCol.DbColumnName == @pkCol.TsDbColumnName);
+            @:return sql.FirstOrDefaultAsync();
+}            
+@:
+        @:}
+
+        @:#endregion @(t.ViewClassName)
+        @:
+}
+    }
+}
+#pragma warning restore SA1508 , SA1402 , SA1649, SA1505, SA1507, SA1513, SA1210,  S4144 ,  SA1516 // Closing braces should not be preceded by blank line

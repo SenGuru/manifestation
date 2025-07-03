@@ -1,0 +1,991 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+@{
+    var splittedTableName = StringUtils.SplitCamelCase(Model.CapitalizeEntityName, "_").ToLower();
+    var splittedTableNameBySpace = StringUtils.SplitCamelCase(Model.CapitalizeEntityName, " ").ToLower();
+    var camelCaseTableName = StringUtils.MakeFirstCharAsLower(Model.CapitalizeEntityName);
+}
+
+
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flimi_project/api/services/select-service.dart';
+import 'package:flimi_project/common_widget/dialogs/error_dialog.dart';
+import 'package:flimi_project/common_widget/styles/button_style.dart';
+import 'package:flimi_project/framework/enum/app_enum.dart';
+import 'package:flimi_project/framework/infrastructure/log/logger_service.dart';
+import 'package:flimi_project/framework/services/api_service.dart';
+import 'package:flimi_project/themedata/themecolor.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_it/get_it.dart';
+
+import '../../../api/generated/code/filmicall.swagger.dart';
+import '../../../themedata/custom_text_scaler.dart';
+
+typedef OnTab@(Model.CapitalizeEntityName)SubmitFilter = void Function(
+    {
+     @foreach (var p in Model.EntityType.GetProperties())
+                  {
+                       if (p.Name == (Model.EntityType.Name+"Id"))
+	              {
+                    continue;
+                } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+                  {
+                     continue;
+                 } 
+	              else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	              {
+                    continue;
+                }
+	              else if (p.Name == "StateId")
+	              {
+                    continue;
+                }
+	              else if (p.Name == "CountryId")
+	              {
+                    continue;
+                }	
+                  else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	                 {
+                @:  int? selected@(p.Name),
+                    }  
+                    else
+                     {
+                           continue;
+                     }
+    }}
+                    );
+typedef OnTab@(Model.CapitalizeEntityName)ResetFilter = void Function();
+Future<dynamic> show@(Model.CapitalizeEntityName)FilterWidget({
+  required BuildContext context,
+  required OnTab@(Model.CapitalizeEntityName)SubmitFilter onSubmitFilter,
+  required OnTab@(Model.CapitalizeEntityName)ResetFilter onResetFilter,
+  required int? companyId,
+  required int? movieId,
+  @foreach (var p in Model.EntityType.GetProperties())
+  {
+      if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+      {
+         continue;
+     } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+	  else if (p.Name == "StateId")
+	  {
+        continue;
+    }
+	  else if (p.Name == "CountryId")
+	  {
+        continue;
+    } else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	 {
+@:   required int? @(StringUtils.MakeFirstCharAsLower(p.Name)),
+    }
+    else
+     {
+           continue;
+     }
+    }
+   
+}) {
+  return showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (builder) {
+        return Container(
+          color: ThemeColor.white,
+          height: 0.40.sh,
+          width: 1.sw,
+          child: @(Model.CapitalizeEntityName)FilterWidget(
+            movieId: movieId,
+            companyId: companyId,
+              @foreach (var p in Model.EntityType.GetProperties())
+                  {
+                      if (p.Name == (Model.EntityType.Name+"Id"))
+	              {
+                    continue;
+                } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+                  {
+                     continue;
+                 } 
+	              else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	              {
+                    continue;
+                }
+	              else if (p.Name == "StateId")
+	              {
+                    continue;
+                }
+	              else if (p.Name == "CountryId")
+	              {
+                    continue;
+                } else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	            {
+                @:      selected@(p.Name): @(StringUtils.MakeFirstCharAsLower(p.Name)),
+                }
+                    else
+                     {
+                           continue;
+                     }
+                    }
+
+            onSubmitFilter: ({
+                @foreach (var p in Model.EntityType.GetProperties())
+                  {
+                       if (p.Name == (Model.EntityType.Name+"Id"))
+	              {
+                    continue;
+                } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+                  {
+                     continue;
+                 } 
+	              else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	              {
+                    continue;
+                }
+	              else if (p.Name == "StateId")
+	              {
+                    continue;
+                }
+	              else if (p.Name == "CountryId")
+	              {
+                    continue;
+                }	
+                 else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	                {
+                @:        selected@(p.Name),
+                    }
+                    else
+                     {
+                           continue;
+                     }
+                    }
+
+                    }) {
+              onSubmitFilter(
+                    @foreach (var p in Model.EntityType.GetProperties())
+                  {
+                       if (p.Name == (Model.EntityType.Name+"Id"))
+	              {
+                    continue;
+                } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+                  {
+                     continue;
+                 } 
+	              else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	              {
+                    continue;
+                }
+	              else if (p.Name == "StateId")
+	              {
+                    continue;
+                }
+	              else if (p.Name == "CountryId")
+	              {
+                    continue;
+                }  else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	                {
+                @:      selected@(p.Name): selected@(p.Name),
+                    }
+                    else
+                     {
+                           continue;
+                     }
+                    });
+            },
+            onResetFilter: () {
+              onResetFilter();
+            },
+          ),
+        );
+      });
+}
+
+class @(Model.CapitalizeEntityName)FilterWidget extends StatefulWidget {
+  final OnTab@(Model.CapitalizeEntityName)SubmitFilter onSubmitFilter;
+  final int? companyId;
+  final OnTab@(Model.CapitalizeEntityName)ResetFilter onResetFilter;
+  final int? movieId;
+    @foreach (var p in Model.EntityType.GetProperties())
+  {
+     if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+      {
+         continue;
+     } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+	  else if (p.Name == "StateId")
+	  {
+        continue;
+    }
+	  else if (p.Name == "CountryId")
+	  { 
+        continue;
+    } else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	{
+@:      final int? selected@(p.Name);
+    }
+    else
+     {
+           continue;
+     }
+    }
+  const @(Model.CapitalizeEntityName)FilterWidget({
+    super.key,
+    required this.onSubmitFilter,
+    required this.onResetFilter,
+    required this.companyId,
+    required this.movieId,
+      @foreach (var p in Model.EntityType.GetProperties())
+  {
+     if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+      {
+         continue;
+     } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+	  else if (p.Name == "StateId")
+	  {
+        continue;
+    }
+	  else if (p.Name == "CountryId")
+	  {
+        continue;
+    } else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	{
+@:      required this.selected@(p.Name),
+    }
+    else
+     {
+           continue;
+     }
+    }
+  });
+
+  @@override
+  State<@(Model.CapitalizeEntityName)FilterWidget> createState() => _@(Model.CapitalizeEntityName)FilterWidgetState();
+}
+
+class _@(Model.CapitalizeEntityName)FilterWidgetState extends State<@(Model.CapitalizeEntityName)FilterWidget> {
+ 
+  GetIt getIt = GetIt.instance;
+  late final ApiService _apiService;
+  late final LoggerService _loggerService;
+  late final SelectService _selectService;
+  final _formKey = GlobalKey<FormState>();
+
+@foreach (var p in Model.EntityType.GetProperties())
+  {
+   if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+      {
+         continue;
+     } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+	  else if (p.Name == "StateId")
+	  {
+        continue;
+    }
+	  else if (p.Name == "CountryId")
+	  {
+        continue;
+    }	
+      else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+	{
+      @:List<Status>? @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId","Types"))) = [];  
+      @:Status? selected@(p.Name.Replace("TypeId","Type"));
+    }
+    else if (p.Name.EndsWith("TypeIds") && p.Name.StartsWith("Predefined"))
+	{
+      @:List<Status>? @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeIds","Types"))) = [];  
+      @:List<Status>? selected@(p.Name.Replace("TypeIds","Types")) = [];
+    }
+	else if (p.Name.EndsWith("Id"))
+	{
+      @:List<@(p.Name.Replace("Id",""))Model>? @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id","")))s = [];
+      @:@(p.Name.Replace("Id",""))Model? selected@(p.Name.Replace("Id",""));
+    }
+	else if (p.Name.EndsWith("Ids"))
+	{
+      @:List<@(p.Name.Replace("Ids",""))Model>? @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Ids","")))s = [];
+      @:List<@(p.Name.Replace("Ids",""))Model>? selected@(p.Name.Replace("Ids",""))s = [];
+    }
+    else
+    {
+        continue;
+    }
+  }
+   
+
+  @@override
+  initState() {
+    super.initState();
+    _apiService = getIt<ApiService>();
+    _loggerService = getIt<LoggerService>();
+    _selectService = getIt<SelectService>();
+        
+  @foreach(var p in Model.EntityType.GetProperties())
+  {
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+      {
+         continue;
+     } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+	  else if (p.Name == "StateId")
+	  {
+        continue;
+    }
+	  else if (p.Name == "CountryId")
+	  {
+        continue;
+    }	
+    else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+	  {
+        var vCapName = p.Name.Replace("TypeId","Types");
+        var vCapNameWithoutS = p.Name.Replace("TypeId","Type");
+
+        var vName = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId","Types"));
+        var vNameWithoutS = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId","Type"));
+        var lName = StringUtils.MakeFirstCharAsLower(p.Name);
+
+@:        @(vName) = _selectService.Get@(p.Name.Replace("TypeId","Types"))();
+
+    }
+    else if (p.Name.EndsWith("TypeIds") && p.Name.StartsWith("Predefined"))
+	  {
+@:        @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeIds","Types"))) = _selectService.Get@(p.Name.Replace("TypeIds","Types"))();
+    } else
+    {
+        continue;
+    }
+  }
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await loadInitialData();
+    });
+  }
+
+  Future<void> loadInitialData() async {
+         
+  @foreach(var p in Model.EntityType.GetProperties())
+  {
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+      {
+          continue;
+       } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+	  else if (p.Name == "StateId")
+	  {
+        continue;
+    }
+	  else if (p.Name == "CountryId")
+	  {
+        continue;
+    }	
+    else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+	  {
+        continue;
+      }
+	  else if (p.Name.EndsWith("Id"))
+	  {
+@:      await get@(p.Name.Replace("Id", ""))s();
+    }
+    else if (p.Name.EndsWith("Ids"))
+    {
+@:         await get@(p.Name.Replace("Ids", ""))s();
+    } else
+    {
+    continue;
+    }
+  }
+  @("}")
+
+
+   @foreach(var p in Model.EntityType.GetProperties())
+  {
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+     {
+           continue;
+      } 
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+    else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+	  {
+        continue;
+     }
+	  else if (p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	  {
+        var pflName = StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id", ""));
+        var pNameSplittedBySpace = StringUtils.SplitCamelCase(p.Name.Replace("Id", "")," ");
+         
+@:     Future<void> get@(p.Name.Replace("Id", ""))s() async {
+@:        try {
+@:    
+@:          EasyLoading.show(status: "Loading..");
+@:
+@:          final @(pflName)Result = await _apiService.get@(p.Name.Replace("Id", ""))s(
+@:              page: 1,
+@:              pageSize: 10000,
+@:              companyId: widget.companyId,
+@:              movieId: widget.movieId);
+@:
+@:          if (@(pflName)Result == null) {
+@:            _loggerService.writeLog("get@(p.Name.Replace("Id", ""))s: Unable to get @(pNameSplittedBySpace)s", LogMessageLevel.error);
+@:            showErrorDialog(context, "Unable to get @(pNameSplittedBySpace)s");
+@:
+@:            return;
+@:          } else if (!@(pflName)Result.success) {
+@:            _loggerService.writeLog(
+@:             "get@(p.Name.Replace("Id", ""))s: no data found - ${@(pflName)Result.errorMsg}", LogMessageLevel.error);
+@:            showErrorDialog(context, "No @(pNameSplittedBySpace)s data found: ${@(pflName)Result.errorMsg}");
+@:            return;
+@:          }
+@:       if (mounted) {
+@:          setState(() {
+@:            @(pflName)s = @(pflName)Result.result?.model;
+@:          });
+@:        }
+@:            } catch (e, stackTrace) {
+@:              _loggerService.writeLog(
+@:                 "get@(pflName)s: Unable to get @(pNameSplittedBySpace)s",
+@:                  LogMessageLevel.error,
+@:                  e,
+@:                  stackTrace);
+@:             showErrorDialog(context, "Unable to get @(pNameSplittedBySpace)s");
+@:              } finally {
+@:    
+@:        EasyLoading.dismiss();
+@:    }
+@:             }
+          }
+    else
+    {
+     continue;
+    }
+  }
+
+  applyFilter() {
+    widget.onSubmitFilter(
+           @foreach (var p in Model.EntityType.GetProperties())
+          {
+              var pName = p.Name.Replace("Id", "");
+              var pflName = StringUtils.MakeFirstCharAsLower(p.Name);
+
+             if (p.Name == (Model.EntityType.Name+"Id"))
+	          {
+                continue;
+            } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+              {
+                 continue;
+             } 
+	          else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	          {
+                continue;
+            }
+	          else if (p.Name == "StateId")
+	          {
+                continue;
+            }
+	          else if (p.Name == "CountryId")
+	          { 
+                continue;
+            } else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	        {
+@:           selected@(p.Name): selected@(pName)?.@(pflName),
+            }
+            else
+             {
+                   continue;
+             }
+            }
+    );
+    Navigator.pop(context);
+  }
+
+  resetFilter() {
+   if (mounted) {
+    setState(() {
+       @foreach (var p in Model.EntityType.GetProperties())
+          {
+              var pName = p.Name.Replace("Id", "");
+
+             if (p.Name == (Model.EntityType.Name+"Id"))
+	          {
+                continue;
+            } else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+              {
+                 continue;
+             } 
+	          else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	          {
+                continue;
+            }
+	          else if (p.Name == "StateId")
+	          {
+                continue;
+            }
+	          else if (p.Name == "CountryId")
+	          { 
+                continue;
+            } else if (p.Name.EndsWith("TypeId") || p.Name.EndsWith("TypeIds") || p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+	        {
+@:            selected@(pName) = null;
+            }
+            else
+             {
+                   continue;
+             }
+            }
+    });
+    }
+    widget.onResetFilter();
+    Navigator.pop(context);
+  }
+
+  @@override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+              child: SingleChildScrollView(
+              child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+                      
+                      @foreach(var p in Model.EntityType.GetProperties())
+                      {
+                            var pName = p.Name;
+
+                            var pNameWithOutTypeId = p.Name.Replace("TypeId", "");
+                            var pLNameWithOutTypeId = StringUtils.MakeFirstCharAsLower(pNameWithOutTypeId);
+                            var pCamelNameWithOutTypeId = StringUtils.SplitCamelCase(pNameWithOutTypeId);
+                            var pNameWithOutTypesId = p.Name.Replace("TypesId", "");
+
+                            var pNameWithOutId = p.Name.Replace("Id", "");
+                            var pLNameWithOutId = StringUtils.MakeFirstCharAsLower(pNameWithOutId);
+                            var pCamelNameWithOutId = StringUtils.SplitCamelCase(pNameWithOutId);
+
+                            var pLName = StringUtils.MakeFirstCharAsLower(p.Name);
+                            var pCamelName = StringUtils.SplitCamelCase(pName);
+                            var pCamelLName = StringUtils.SplitCamelCase((pLName));
+
+                        if (p.Name == (Model.EntityType.Name+"Id"))
+	                      {
+                            continue;
+                        }    
+                        else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+                        
+                        {
+                            continue;
+                        } 
+	                      else if (p.Name == "StateId")
+                            {
+                                continue;
+
+                            }
+	                      else if (p.Name == "CountryId")
+	                      {
+@:                              Text("State"),
+@:                               SizedBox(height: 10.h),
+@:                                 DropdownButtonFormField2<StateModel>(
+@:                                   isExpanded: false,
+@:                                   buttonStyleData: const ButtonStyleData(
+@:                                     padding: EdgeInsets.only(right: 8),
+@:                                   ),
+@:                                   iconStyleData: const IconStyleData(
+@:                                     icon: Icon(
+@:                                       Icons.arrow_drop_down,
+@:                                       color: Colors.black45,
+@:                                     ),
+@:                                     iconSize: 24,
+@:                                   ),
+@:                                   dropdownStyleData: DropdownStyleData(
+@:                                     maxHeight: 200.h,
+@:                                     decoration: BoxDecoration(
+@:                                       borderRadius: BorderRadius.circular(15),
+@:                                     ),
+@:                                   ),
+@:                                   menuItemStyleData: const MenuItemStyleData(
+@:                                     padding: EdgeInsets.symmetric(horizontal: 16),
+@:                                   ),
+@:                                   decoration: InputDecoration(
+@:                                     contentPadding:
+@:                                         const EdgeInsets.symmetric(vertical: 16),
+@:                                     border: OutlineInputBorder(
+@:                                       borderRadius: BorderRadius.circular(15),
+@:                                     ),
+@:                                   ),
+@:                                   alignment: Alignment.centerLeft,
+@:                                   value: selectedState,
+@:                                 hint: const Text("Select State"),
+@:                                   items: states?.map((item) {
+@:                                     return DropdownMenuItem<StateModel>(
+@:                                       value: item,
+@:                                       alignment: AlignmentDirectional.centerStart,
+@:                                       child: Text(
+@:                                         item.stateName ?? "",
+@:                                         style: const TextStyle(
+@:                                           fontSize: 14,
+@:                                           fontWeight: FontWeight.bold,
+@:                                           color: Colors.black87,
+@:                                           overflow: TextOverflow.ellipsis,
+@:                                         ),
+@:                                       ),
+@:                                     );
+@:                                   }).toList(),
+@:                                   validator: (value) {
+@:                                     if (value == null) {
+@:                                      return 'State is required';
+@:                                     }
+@:                                     return null;
+@:                                   },
+@:                                   onChanged: (StateModel? newValue) {
+@:                                     setState(() {
+@:                                       selectedState = newValue;
+@:                                     });
+@:                                   },
+@:                                 ),
+@:                             SizedBox(
+@:                               height: 20.h,
+@:                             ),
+@: 	                      Text("Country"),
+@:                             SizedBox(height: 10.h),
+@:                               DropdownButtonFormField2<CountryModel>(
+@:                                 isExpanded: false,
+@:                                 buttonStyleData: const ButtonStyleData(
+@:                                   padding: EdgeInsets.only(right: 8),
+@:                                 ),
+@:                                 iconStyleData: const IconStyleData(
+@:                                   icon: Icon(
+@:                                     Icons.arrow_drop_down,
+@:                                     color: Colors.black45,
+@:                                   ),
+@:                                   iconSize: 24,
+@:                                 ),
+@:                                 dropdownStyleData: DropdownStyleData(
+@:                                   maxHeight: 200.h,
+@:                                   decoration: BoxDecoration(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 menuItemStyleData: const MenuItemStyleData(
+@:                                   padding: EdgeInsets.symmetric(horizontal: 16),
+@:                                 ),
+@:                                 decoration: InputDecoration(
+@:                                   contentPadding:
+@:                                       const EdgeInsets.symmetric(vertical: 16),
+@:                                   border: OutlineInputBorder(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 alignment: Alignment.centerLeft,
+@:                                 value: selectedCountry,
+@:                               hint: const Text("Select Country"),
+@:                                 items: states?.map((item) {
+@:                                   return DropdownMenuItem<CountryModel>(
+@:                                     value: item,
+@:                                     alignment: AlignmentDirectional.centerStart,
+@:                                     child: Text(
+@:                                       item.countryName ?? "",
+@:                                       style: const TextStyle(
+@:                                         fontSize: 14,
+@:                                         fontWeight: FontWeight.bold,
+@:                                         color: Colors.black87,
+@:                                         overflow: TextOverflow.ellipsis,
+@:                                       ),
+@:                                     ),
+@:                                   );
+@:                                 }).toList(),
+@:                                 validator: (value) {
+@:                                   if (value == null) {
+@:                                   return 'Country is required';
+@:                                   }
+@:                                   return null;
+@:                                 },
+@:                                 onChanged: (CountryModel? newValue) {
+@:                                   setState(() {
+@:                                    selectedCountry = newValue;
+@:                                   });
+@:                                 },
+@:                               ),
+@:                         
+@:                             SizedBox(
+@:                               height: 20.h,
+@:                             ),
+                        }	
+                        else if (p.PropertyType.Name == "DateTime" || p.PropertyType.Name == "Date"|| p.PropertyType.Name == "DateOnly")
+                           {
+                          continue;                                
+                            }
+                        else if (p.PropertyType.Name == "boolean" || p.PropertyType.Name == "Boolean")
+                        {
+                             continue;                                
+                        }
+                        else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+	                      {
+@:                             Text("@(pCamelNameWithOutId)"),
+@:                             SizedBox(height: 10.h),
+@:                               DropdownButtonFormField2<Status>(
+@:                                 isExpanded: false,
+@:                                 buttonStyleData: const ButtonStyleData(
+@:                                   padding: EdgeInsets.only(right: 8),
+@:                                 ),
+@:                                 iconStyleData: const IconStyleData(
+@:                                   icon: Icon(
+@:                                     Icons.arrow_drop_down,
+@:                                     color: Colors.black45,
+@:                                   ),
+@:                                   iconSize: 24,
+@:                                 ),
+@:                                 dropdownStyleData: DropdownStyleData(
+@:                                   maxHeight: 200.h,
+@:                                   decoration: BoxDecoration(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 menuItemStyleData: const MenuItemStyleData(
+@:                                   padding: EdgeInsets.symmetric(horizontal: 16),
+@:                                 ),
+@:                                 decoration: InputDecoration(
+@:                                   contentPadding:
+@:                                       const EdgeInsets.symmetric(vertical: 16),
+@:                                   border: OutlineInputBorder(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 alignment: Alignment.centerLeft,
+@:                                 value: selected@(pNameWithOutId),
+@:                                 hint: const Text("Select @(pCamelNameWithOutId)"),
+@:                                 items: @(pLNameWithOutId)s?.map((item) {
+@:                                   return DropdownMenuItem<Status>(
+@:                                     value: item,
+@:                                     alignment: AlignmentDirectional.centerStart,
+@:                                     child: Text(
+@:                                       item.type ?? "",
+@:                                       style: const TextStyle(
+@:                                         fontSize: 14,
+@:                                         fontWeight: FontWeight.bold,
+@:                                         color: Colors.black87,
+@:                                         overflow: TextOverflow.ellipsis,
+@:                                       ),
+@:                                     ),
+@:                                   );
+@:                                 }).toList(),
+@:                                 onChanged: (Status? newValue) {
+@:                                   setState(() {
+@:                                        selected@(pNameWithOutId) = newValue;
+@:                                   });
+@:                                 },
+@:                               ),
+@:                             SizedBox(
+@:                               height: 20.h,
+@:                              ),
+                        }
+	                      else if (p.Name.EndsWith("Id"))
+                        {
+@:                             Text("@(pCamelNameWithOutId)"),
+@:                             SizedBox(height: 10.h),
+@:                               DropdownButtonFormField2<@(pNameWithOutId)Model>(
+@:                                 isExpanded: false,
+@:                                 buttonStyleData: const ButtonStyleData(
+@:                                   padding: EdgeInsets.only(right: 8),
+@:                                 ),
+@:                                 iconStyleData: const IconStyleData(
+@:                                   icon: Icon(
+@:                                     Icons.arrow_drop_down,
+@:                                     color: Colors.black45,
+@:                                   ),
+@:                                   iconSize: 24,
+@:                                 ),
+@:                                 dropdownStyleData: DropdownStyleData(
+@:                                   maxHeight: 200.h,
+@:                                   decoration: BoxDecoration(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 menuItemStyleData: const MenuItemStyleData(
+@:                                   padding: EdgeInsets.symmetric(horizontal: 16),
+@:                                 ),
+@:                                 decoration: InputDecoration(
+@:                                   contentPadding:
+@:                                       const EdgeInsets.symmetric(vertical: 16),
+@:                                   border: OutlineInputBorder(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 alignment: Alignment.centerLeft,
+@:                                 value: selected@(pNameWithOutId),
+@:                                 hint: const Text("Select @(pCamelNameWithOutId)"),
+@:                                 items: @(pLNameWithOutId)s?.map((item) {
+@:                                   return DropdownMenuItem<@(pNameWithOutId)Model>(
+@:                                     value: item,
+@:                                     alignment: AlignmentDirectional.centerStart,
+@:                                     child: Text(
+@:                                       item.@(pLNameWithOutId)Name ?? "",
+@:                                       style: const TextStyle(
+@:                                         fontSize: 14,
+@:                                         fontWeight: FontWeight.bold,
+@:                                         color: Colors.black87,
+@:                                         overflow: TextOverflow.ellipsis,
+@:                                       ),
+@:                                     ),
+@:                                   );
+@:                                 }).toList(),
+@:                                 onChanged: (@(pNameWithOutId)Model? newValue) {
+@:                                   setState(() {
+@:                                     selected@(pNameWithOutId) = newValue;
+@:                                   });
+@:                                 },
+@:                               ),
+@:                             SizedBox(
+@:                               height: 20.h,
+@:                             ),
+@: 
+                        }
+	                      else if (p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                        {
+@:                             Text("@(pCamelNameWithOutId)"),
+@:                             SizedBox(height: 10.h),
+@:                               DropdownButtonFormField2<@(pNameWithOutId)Model>(
+@:                                 isExpanded: false,
+@:                                 buttonStyleData: const ButtonStyleData(
+@:                                   padding: EdgeInsets.only(right: 8),
+@:                                 ),
+@:                                 iconStyleData: const IconStyleData(
+@:                                   icon: Icon(
+@:                                     Icons.arrow_drop_down,
+@:                                     color: Colors.black45,
+@:                                   ),
+@:                                   iconSize: 24,
+@:                                 ),
+@:                                 dropdownStyleData: DropdownStyleData(
+@:                                   maxHeight: 200.h,
+@:                                   decoration: BoxDecoration(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 menuItemStyleData: const MenuItemStyleData(
+@:                                   padding: EdgeInsets.symmetric(horizontal: 16),
+@:                                 ),
+@:                                 decoration: InputDecoration(
+@:                                   contentPadding:
+@:                                       const EdgeInsets.symmetric(vertical: 16),
+@:                                   border: OutlineInputBorder(
+@:                                     borderRadius: BorderRadius.circular(15),
+@:                                   ),
+@:                                 ),
+@:                                 alignment: Alignment.centerLeft,
+@:                                 value: selected@(pNameWithOutId),
+@:                                hint: const Text("Select @(pCamelNameWithOutId)"),
+@:                                 items: @(pLNameWithOutId)s?.map((item) {
+@:                                   return DropdownMenuItem<@(pNameWithOutId)Model>(
+@:                                     value: item,
+@:                                     alignment: AlignmentDirectional.centerStart,
+@:                                     child: Text(
+@:                                       item.@(pLNameWithOutId)Name ?? "",
+@:                                       style: const TextStyle(
+@:                                         fontSize: 14,
+@:                                         fontWeight: FontWeight.bold,
+@:                                         color: Colors.black87,
+@:                                         overflow: TextOverflow.ellipsis,
+@:                                       ),
+@:                                     ),
+@:                                   );
+@:                                 }).toList(), 
+@:                                 onChanged: (@(pNameWithOutId)Model? newValue) {
+@:                                   setState(() {
+@:                                     selected@(pNameWithOutId) = newValue;
+@:                                   });
+@:                                 },
+@:                               ),
+@:                             SizedBox(
+@:                               height: 20.h,
+@:                             ),
+
+                        } 
+                        else
+                        { 
+                             continue;                                
+                       }
+                     }
+      
+            ],
+            ),
+          )),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                style: cancelButtonStyle(),
+                onPressed: () {
+                  resetFilter();
+                },
+                child: const Text(
+                  "Reset",
+                  textScaler: CustomTextScaler.headerTwo,
+                  style: TextStyle(color: Colors.black87),
+                ),
+              ),
+              SizedBox(
+                width: 10.w,
+              ),
+              TextButton(
+                style: submitButtonStyle(),
+                onPressed: () {
+                  applyFilter();
+                },
+                child: const Text(
+                  "Apply Filter",
+                  textScaler: CustomTextScaler.headerTwo,
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}

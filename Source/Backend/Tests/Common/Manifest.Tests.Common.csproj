@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <NuGetAudit>False</NuGetAudit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Infrastructure\Framework.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Framework\Tests\Infrastructure\Framework.Infrastructure.Tests.csproj" />
+    <ProjectReference Include="..\..\Framework\TestUtilities\Framework.TestUtilities.csproj" />
+    <ProjectReference Include="..\..\Shared\Common\Manifest.Common.csproj" />
+  </ItemGroup>
+
+</Project>

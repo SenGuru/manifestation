@@ -1,0 +1,19 @@
+  <div> 
+    <div class="modal-header p-3">
+      <h5 class="modal-title" id="success-dialoge-title">{{title}}</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="success-dialoge-cancel-btn" (click)="close()"></button>
+  </div>
+    <div class="modal-body text-center p-1">
+      <div class="mt-2">
+          <lord-icon src="https://cdn.lordicon.com/tqywkdcz.json" trigger="hover"
+              style="width: 130px; height: 130px" />
+          <p class="fs-15 mb-3">{{message}}</p>
+          <div class="text-muted">
+            <span *ngFor="let item of errorList;let i= index"><span *ngIf="i !== 0"> , </span><span>{{item}}</span> </span>
+          </div>
+      </div>
+  </div>
+    <div class="modal-footer"> 
+      <button type="button" class="btn aduo-btn-sm btn-sm btn-light" id="success-modal-close-btn" data-bs-dismiss="modal" (click)="close()">Close</button>
+    </div>
+  </div>

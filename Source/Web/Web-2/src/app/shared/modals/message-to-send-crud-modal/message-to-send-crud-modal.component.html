@@ -1,0 +1,199 @@
+
+<form #lvMessageToSendForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvMessageToSendForm.form.valid && onSubmit(lvMessageToSendForm)">
+  <div class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="auditduo-message-to-send-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-message-to-send-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedMessageToSendType">Message To Send Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedMessageToSendType="ngModel" placeholder="Select Message To Send Type" name="selectedPredefinedMessageToSendType"
+            id="selectedPredefinedMessageToSendType"
+            bindLabel="type" required
+            [items]="predefinedMessageToSendTypes" [clearable]="false" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvPredefinedMessageToSendType.invalid }" [(ngModel)]="selectedPredefinedMessageToSendType">
+          </ng-select>
+          <div *ngIf="lvMessageToSendForm.submitted && lvPredefinedMessageToSendType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedMessageToSendType.errors?.['required']">Message To Send Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{messageToSendModel.predefinedMessageToSendTypeName ? messageToSendModel.predefinedMessageToSendTypeName : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedRealtimeMessage">Realtime Message
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcRealtimeMessageId #lvRealtimeMessage="ngModel" placeholder="Realtime Message"
+            name="selectedRealtimeMessage" id="selectedRealtimeMessage"
+            bindLabel="realtimeMessageName" required
+            [items]="realtimeMessages" [clearable]="false" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvRealtimeMessage.invalid }" [typeahead]="realtimeMessageTypeahead$"  [loading]="realtimeMessageTypeaheadLoading" [(ngModel)]="selectedRealtimeMessage">
+          </ng-select>
+          <div *ngIf="lvMessageToSendForm.submitted && lvRealtimeMessage.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvRealtimeMessage.errors?.['required']">Realtime Message is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{messageToSendModel.realtimeMessageId ? messageToSendModel.realtimeMessageId : '-'}}
+        </div>
+      </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageFrom">Message From
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageFrom="ngModel" type="text" name="messageFrom" id="messageFrom" required class="form-control"
+                 placeholder="Message From" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvMessageFrom.invalid }"
+                [(ngModel)]="messageToSendModel.messageFrom">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvMessageFrom.errors?.['required']">
+                  Message From is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.messageFrom ? messageToSendModel.messageFrom : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageTo">Message To
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageTo="ngModel" type="text" name="messageTo" id="messageTo" required class="form-control"
+                 placeholder="Message To" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvMessageTo.invalid }"
+                [(ngModel)]="messageToSendModel.messageTo">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvMessageTo.errors?.['required']">
+                  Message To is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.messageTo ? messageToSendModel.messageTo : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageFromName">Message From Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageFromName="ngModel" type="text" name="messageFromName" id="messageFromName" required class="form-control"
+                 placeholder="Message From Name" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvMessageFromName.invalid }"
+                [(ngModel)]="messageToSendModel.messageFromName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvMessageFromName.errors?.['required']">
+                  Message From Name is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.messageFromName ? messageToSendModel.messageFromName : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageToName">Message To Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageToName="ngModel" type="text" id="messageToName" name="messageToName" required class="form-control"
+                 placeholder="Message To Name" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvMessageToName.invalid }"
+                [(ngModel)]="messageToSendModel.messageToName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvMessageToName.errors?.['required']">
+                  Message To Name is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.messageToName ? messageToSendModel.messageToName : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageSubject">Message Subject
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageSubject="ngModel" type="text" name="messageSubject" id="messageSubject" required class="form-control"
+                 placeholder="Message Subject" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvMessageSubject.invalid }"
+                [(ngModel)]="messageToSendModel.messageSubject">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvMessageSubject.errors?.['required']">
+                  Message Subject is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.messageSubject ? messageToSendModel.messageSubject : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="messageBody">Message Body
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessageBody="ngModel" type="text" name="messageBody" id="messageBody" required class="form-control"
+                 placeholder="Message Body" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvMessageBody.invalid }"
+                [(ngModel)]="messageToSendModel.messageBody">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvMessageBody.errors?.['required']">
+                  Message Body is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.messageBody ? messageToSendModel.messageBody : '-'}}
+            </div>
+          </div> 
+          <div class="col-sm-6">
+            <label class="form-label" for="sentErrorMessage">Sent Error Message
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvSentErrorMessage="ngModel" type="text" name="sentErrorMessage" id="sentErrorMessage" required class="form-control"
+                 placeholder="Sent Error Message" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvSentErrorMessage.invalid }"
+                [(ngModel)]="messageToSendModel.sentErrorMessage">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvMessageToSendForm.submitted) && lvSentErrorMessage.errors?.['required']">
+                  Sent Error Message is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{messageToSendModel.sentErrorMessage ? messageToSendModel.sentErrorMessage : '-'}}
+            </div>
+          </div> 
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedCompany">Company
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcCompanyId #lvCompany="ngModel" placeholder="Company"
+            name="selectedCompany" id="selectedCompany"
+            bindLabel="companyName" required
+            [items]="companys" [clearable]="false" [ngClass]="{'is-invalid': lvMessageToSendForm.submitted && lvCompany.invalid }" [typeahead]="companyTypeahead$"  [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
+          </ng-select>
+          <div *ngIf="lvMessageToSendForm.submitted && lvCompany.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvCompany.errors?.['required']">Company is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{messageToSendModel.companyName ? messageToSendModel.companyName : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-message-to-send-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-message-to-send-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

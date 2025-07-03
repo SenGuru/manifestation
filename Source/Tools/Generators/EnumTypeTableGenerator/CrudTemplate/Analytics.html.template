@@ -1,0 +1,168 @@
+<div class="opnt-content-pane">
+    <div class="opnt-page">
+      <div class="page-content px-3">
+        <div class="card row hstack p-2" style="background-color: whitesmoke;margin: auto;">
+  
+          <div class="col-md-2 pr-0">
+            <ng-select name="reporttype" id="reporttype" [items]="reportTypeList" bindLabel="type" [clearable]="true"
+              [(ngModel)]="selectedReportType" [multiple]="false" placeholder="Report Type" (ngModelChange)="changeReportType()">
+            </ng-select>
+          </div>
+  
+          <div class="col-md-2 pr-0" *ngIf="selectedReportType && selectedReportType.id === reportTypes.Weekly">
+            <ng-select name="reportweek" id="reportweek" [items]="reportWeekList" bindLabel="type" [clearable]="true"
+              [(ngModel)]="selectedReportWeek" [multiple]="false" placeholder="Week">
+            </ng-select>
+          </div>
+  
+          <div class="col-md-2 pr-0" *ngIf="selectedReportType && selectedReportType.id === reportTypes.Monthly">
+            <ng-select name="reportmonthly" id="reportmonthly" [items]="reportMonthList" bindLabel="type"
+              [clearable]="true" [(ngModel)]="selectedReportMonth" [multiple]="false" placeholder="Month">
+            </ng-select>
+          </div>
+
+          <div class="col-md-2 pr-0" *ngIf="selectedReportType && selectedReportType.id === reportTypes.Yearly">
+            <ng-select name="reportyear" id="reportyear" [items]="reportYearList" bindLabel="type" [clearable]="true"
+              [(ngModel)]="selectedReportYear" [multiple]="false" placeholder="Year">
+            </ng-select>
+          </div>
+
+          <div class="col-md-2 pr-0" *ngIf="selectedReportMonth && selectedReportMonth.id === reportMonthTypes.CustomMonthType
+          && selectedReportType && selectedReportType.id === reportTypes.Monthly">
+            <input
+            [(ngModel)]="fromDate"
+            autocomplete="off"
+            class="form-control"
+            name="customMonthFromMonth"
+            placeholder="From Month"
+            bsDatepicker
+            [bsConfig]="{
+              minMode: 'month',
+              adaptivePosition: true,
+              dateInputFormat: 'MMMM YYYY'
+            }"
+          />
+          </div>
+
+          <div class="col-md-2 pr-0" *ngIf="selectedReportMonth && selectedReportMonth.id === reportMonthTypes.CustomMonthType && 
+          selectedReportType && selectedReportType.id === reportTypes.Monthly">
+            <input
+            [(ngModel)]="endDate"
+            autocomplete="off"
+            class="form-control"
+            name="customMonthEndDate"
+            placeholder="To Month"
+            bsDatepicker
+            [bsConfig]="{
+              minMode: 'month',
+              adaptivePosition: true,
+              dateInputFormat: 'MMMM YYYY'
+            }"
+          />
+          </div>
+
+          <div class="col-md-2 pr-0" *ngIf="selectedReportYear && selectedReportYear.id === reportYearTypes.CustomYearType">
+            <input
+            [(ngModel)]="fromDate"
+            autocomplete="off"
+            class="form-control"
+            name="customYearFromDate"
+            placeholder="From Year"
+            bsDatepicker
+            [bsConfig]="{
+              minMode: 'year',
+              adaptivePosition: true,
+              dateInputFormat: 'YYYY'
+            }"
+          />
+          </div>
+
+          <div class="col-md-2 pr-0" *ngIf="selectedReportYear && selectedReportYear.id === reportYearTypes.CustomYearType">
+            <input
+            [(ngModel)]="endDate"
+            autocomplete="off"
+            class="form-control"
+            name="customYearToDate"
+            placeholder="To Year"
+            bsDatepicker
+            [bsConfig]="{
+              minMode: 'year',
+              adaptivePosition: true,
+              dateInputFormat: 'YYYY'
+            }"
+          />
+          </div>
+  
+          <div class="col-md-2 pr-0" *ngIf="selectedReportType && selectedReportType.id === reportTypes.CustomDateRange">
+            <div class="input-icon">
+              <input id="txtFromDate" name="txtFromDate" #txtFromDate [(ngModel)]="fromDate" (ngModelChange)="updateStartDate($event)"
+                type="text" class="form-control flatpickr-input" placeholder="Select a date" readonly="readonly" />
+              <span class="input-icon-addon">
+                <app-date-icon></app-date-icon>
+              </span>
+            </div>
+          </div>
+          <div class="col-md-2 pr-0" *ngIf="selectedReportType && selectedReportType.id === reportTypes.CustomDateRange">
+            <div class="input-icon">
+              <input id="txtEndDate" name="txtEndDate" #txtEndDate [(ngModel)]="endDate" (ngModelChange)="updateEndDate($event)" type="text"
+                class="form-control flatpickr-input" placeholder="Select a date" readonly="readonly" />
+              <span class="input-icon-addon">
+                <app-date-icon></app-date-icon>
+              </span>
+            </div>
+          </div>
+
+          <div class="col-md-2 pr-0">
+            <ng-select name="%splittedFileName%-types" id="%splittedFileName%-types" placeholder="%nameWithSpaceSeperation%"
+              [items]="search%name%Types" bindLabel="type" [clearable]="true"
+              [(ngModel)]="selected%name%Type" [multiple]="true" [closeOnSelect]="false">
+              <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+                <div class="ng-value" *ngFor="let item of selected%name%Type | slice:-1:1">
+                  <span class="ng-value-label">{{item.type}}</span>
+                  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+                </div>
+                <div class="ng-value" *ngIf="items.length > 1">
+                  <span class="ng-value-label">{{items.length - 0}} Selected...</span>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+  
+          <div class="col-auto ml-auto">
+            <button class="btn btn-primary ml-1" (click)="search()">
+              <app-config-adjustments></app-config-adjustments>Apply Filter
+            </button>
+          </div>
+        </div>
+        <div *ngIf="chartData && chartData.length === 1"  style="border: 1px solid #E6E6E6;">
+          <app-apex-pie-chart [chartOptions]="chartValues"></app-apex-pie-chart>
+        </div>
+  
+        <div *ngIf="chartData && chartData.length > 1" class="mt-2" style="border: 1px solid #E6E6E6;">
+          <app-apex-bar-chart [chartOptions]="chartValues"></app-apex-bar-chart>
+        </div>
+        
+        <div *ngIf="!chartData || (chartData && chartData.length === 0)">
+          <div style="width: 75vw;height: 350px;margin: auto;display: flex;justify-content: center;align-items: center;flex-direction: column;">
+            <svg width="200px" height="200px" viewBox="0 0 24 24" stroke-width="0.5" stroke="#9e9e9e" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g transform="matrix(1, 0, 0, 1, -7, -7)">
+                <circle cx="12" cy="12" r="3.375"></circle>
+                <line x1="12" y1="10" x2="12" y2="13" ></line>
+                <line x1="12" y1="14" x2="12" y2="14.5" ></line>
+              </g>
+              <rect style="stroke-linecap: square;" x="2" y="12" width="3.516" height="8"></rect>
+              <rect x="6.938" y="9.453" width="3.891" height="10.594"></rect>
+              <rect x="17.687" y="1.985" width="4.313" height="18.015"></rect>
+              <rect x="12.22" y="6.493" width="3.891" height="13.64"></rect>
+            </svg>
+            <div>No data available!</div>
+          </div>
+        </div>
+  
+        <div class="">
+          <app-analytics-%returnModelWithSmallFirstLetter%-list-view [listData]="listData" [listDataTotalRecord]="listDataTotalRecord" [columns]="columns" (emitPage)="paginationChange($event)" ></app-analytics-%returnModelWithSmallFirstLetter%-list-view>
+        </div>
+      </div>
+    </div>
+  </div>
+  

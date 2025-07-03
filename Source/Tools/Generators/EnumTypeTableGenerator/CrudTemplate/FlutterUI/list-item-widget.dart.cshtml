@@ -1,0 +1,325 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+@{
+    var splittedTableName = StringUtils.SplitCamelCase(Model.CapitalizeEntityName, "_").ToLower();
+    var splittedTableNameBySpace = StringUtils.SplitCamelCase(Model.CapitalizeEntityName, " ").ToLower();
+    var camelCaseTableName = StringUtils.MakeFirstCharAsLower(Model.CapitalizeEntityName);
+}
+
+import 'package:flimi_project/api/generated/code/filmicall.swagger.dart';
+import 'package:flimi_project/common_widget/styles/content_style.dart';
+import 'package:flimi_project/pages/screens/@(splittedTableName)/@(splittedTableName)_crud_screen.dart';
+import 'package:flimi_project/themedata/custom_text_scaler.dart';
+import 'package:flimi_project/themedata/themecolor.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
+typedef on@(Model.CapitalizeEntityName)DeleteCallback = void Function(
+    {required @(Model.CapitalizeEntityName)Model? @(camelCaseTableName)});
+
+class @(Model.CapitalizeEntityName)ListItemWidget extends StatefulWidget {
+ @(Model.CapitalizeEntityName)Model? @(camelCaseTableName);
+  int? movieId;
+  int? companyId;
+  on@(Model.CapitalizeEntityName)DeleteCallback onDeleteCallback;
+  @(Model.CapitalizeEntityName)OnSubmitCallBack onSubmitCallback;
+  @(Model.CapitalizeEntityName)ListItemWidget(
+      {super.key,
+      required this.@(camelCaseTableName),
+      required this.movieId,
+      required this.companyId,
+      required this.onDeleteCallback,
+      required this.onSubmitCallback});
+
+  @@override
+  State<@(Model.CapitalizeEntityName)ListItemWidget> createState() =>
+      _@(Model.CapitalizeEntityName)ListItemWidgetState();
+}
+
+class _@(Model.CapitalizeEntityName)ListItemWidgetState extends State<@(Model.CapitalizeEntityName)ListItemWidget> {
+  goGoEditPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => @(Model.CapitalizeEntityName)CrudScreen(
+                  companyId: widget.companyId,
+                  title: "Edit @(splittedTableNameBySpace)",
+                  isEditMode: true,
+                  isViewMode: false,
+                  isCreateMode: false,
+                  @(camelCaseTableName): widget.@(camelCaseTableName),
+                  movieId: widget.movieId,
+                  onSubmitCallback: (value) {
+                    widget.onSubmitCallback(value);
+                  },
+                  key: widget.key,
+                )));
+  }
+
+  goGoViewPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => @(Model.CapitalizeEntityName)CrudScreen(
+                  companyId: widget.companyId,
+                  isEditMode: false,
+                  title: "View @(splittedTableNameBySpace)",
+                  isViewMode: true,
+                  isCreateMode: false,
+                  @(camelCaseTableName): widget.@(camelCaseTableName),
+                  movieId: widget.movieId,
+                  onSubmitCallback: (value) {
+                    widget.onSubmitCallback(value);
+                  },
+                  key: widget.key,
+                )));
+  }
+
+  @@override
+  Widget build(BuildContext context) {
+        return Container(
+        padding: ContentStyle.contentSmallPadding,
+        child:Slidable(
+        direction: Axis.horizontal,
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          children: [ 
+            SlidableAction(
+              // An action can be bigger than the others.
+              flex: 2,
+              onPressed: (context) {
+                widget.onDeleteCallback(@(camelCaseTableName): widget.@(camelCaseTableName));
+              },
+              backgroundColor: ThemeColor.mainThemeColor,
+              foregroundColor: Colors.white,
+              icon: Icons.delete,
+              label: 'Delete',
+            ),
+          ],
+        ),
+        child: Container(
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                child: Column(
+                  children: [
+                   InkWell(
+                    onTap: () {
+                      goGoEditPage();
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                          color: ThemeColor.mainThemeLightColorFour,
+                          border: Border(
+                              top: BorderSide(color: ThemeColor.lightGrey),
+                              left: BorderSide(color: ThemeColor.lightGrey),
+                              right: BorderSide(color: ThemeColor.lightGrey)),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          )),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: .5.sw,
+                                child: Text(
+                                  widget.@(camelCaseTableName)?.@(camelCaseTableName)Name ?? "",
+                                  textScaler: CustomTextScaler.headerThree,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                          TextButton(
+                              onPressed: () {},
+                              child: Icon(
+                                Icons.keyboard_arrow_right,
+                              ))
+                        ],
+                      ),
+                    ),
+                   ),
+                    Container(
+                        decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                color: ThemeColor.lightGrey,
+                              ),
+                              left: BorderSide(color: ThemeColor.lightGrey),
+                              right: BorderSide(color: ThemeColor.lightGrey)),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                          ),
+                          color: Colors.white,
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  width: 150.w,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                        @foreach (var p in Model.EntityType.GetProperties())
+                                        {
+
+                                            var pName = p.Name;
+
+                                            var pNameWithOutTypeId = p.Name.Replace("TypeId", "");
+                                            var pLNameWithOutTypeId = StringUtils.MakeFirstCharAsLower(pNameWithOutTypeId);
+                                            var pCamelNameWithOutTypeId = StringUtils.SplitCamelCase(pNameWithOutTypeId);
+                                            var pNameWithOutTypesId = p.Name.Replace("TypesId", "");
+
+                                            var pNameWithOutId = p.Name.Replace("Id", "");
+                                            var pLNameWithOutId = StringUtils.MakeFirstCharAsLower(pNameWithOutId);
+                                            var pCamelNameWithOutId = StringUtils.SplitCamelCase(pNameWithOutId);
+
+                                            var pLName = StringUtils.MakeFirstCharAsLower(p.Name);
+                                            var pCamelName = StringUtils.SplitCamelCase(pName);
+                                            var pCamelLName = StringUtils.SplitCamelCase((pLName)); 
+
+
+                                            if (p.Name == (Model.EntityType.Name + "Id"))
+                                            {
+                                                continue;
+                                            }
+                                            else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+                                            {
+                                                continue;
+                                            }
+                                            else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+                                            {
+                                                continue;
+                                            }
+                                            else if (p.Name == "StateId")
+                                            {
+@:                                              Text("State Name"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ),
+@:                                              Text(
+@:                                                widget.@(camelCaseTableName)?.stateName ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,
+@:                                              ),
+                                            }
+                                            else if (p.Name == "CountryId")
+                                            {
+@:                                              Text("Country Name"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ),
+@:                                              Text(
+@:                                                widget.@(camelCaseTableName)?.countryName ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,
+@:                                              ),
+                                                }
+                                                else if (p.PropertyType.Name == "DateTime" || p.PropertyType.Name == "Date" || p.PropertyType.Name == "DateOnly")
+                                                {
+@:                                              Text("@(pCamelNameWithOutId)"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ),
+@:                                              Text(
+@:                                                widget.@(camelCaseTableName)?.@(pLNameWithOutId).toString() ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,
+@:                                              ),
+                                                }
+                                                else if (p.PropertyType.Name == "boolean" || p.PropertyType.Name == "Boolean")
+                                                {
+@:                                              Text("@(pCamelNameWithOutId)"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ),
+@:                                              Text(
+@:                                                widget.@(camelCaseTableName)?.@(pLNameWithOutId).toString() ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,
+@:                                              ),
+                                                } 
+                                              else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+	                                  {
+@:                                             Text("@(pCamelNameWithOutId)"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ),
+@:                                             Text(widget.@(camelCaseTableName)?.@(pLNameWithOutId)Name ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,),
+@:                             
+                        
+                                 }
+	                      else if (p.Name.EndsWith("Id"))
+                        {
+@:                             Text("@(pCamelNameWithOutId)"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ), 
+@:                              Text(widget.@(camelCaseTableName)?.@(pLNameWithOutId)Name ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,),
+@:                             
+@: 
+                        }
+	                      else if (p.Name.EndsWith("Id") || p.Name.EndsWith("Ids"))
+                        {
+@:                             Text("@(pCamelNameWithOutId)"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ), 
+@:                              Text(widget.@(camelCaseTableName)?.@(pLNameWithOutId)Name ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,),
+
+                        } 
+                        else
+                        {
+                            if (p.PropertyType.Name == "String" || p.PropertyType.Name == "string")
+                                    {
+@:                                 Text("@(pNameWithOutId)"),
+@:                                              SizedBox(
+@:                                                height: 5,
+@:                                              ), 
+ @:                                Text(widget.@(camelCaseTableName)?.@(camelCaseTableName)Code ?? "",
+@:                                                textScaler: TextScaler.linear(1.2.sp),
+@:                                                overflow: TextOverflow.ellipsis,),
+
+                          } else {
+ @:                                const Placeholder(child: Text("Not Implemented @(pNameWithOutId)")),
+                          }
+                        } 
+                                        }
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ))
+                  ],
+                ),
+              ),
+            ),
+        );
+        
+  }
+}

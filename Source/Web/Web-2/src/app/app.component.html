@@ -1,0 +1,19 @@
+<block-ui [delayStart]='10'>
+  <router-outlet />
+</block-ui>
+    
+  <ng-template #childModal>
+    <div class="modal-header p-3">
+      <h5 class="modal-title" id="auditduo-idle-modal-title">You Have Been Idle!</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+        id="auditduo-idle-modal-cancel-btn" (click)="hideChildModal()"></button>
+    </div>
+
+    <div class="modal-body">
+      {{idleState}}
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn aduo-btn-sm btn-sm btn-danger btn-sm ml-auto" id="auditduo-user-form-idle-logout-btn" (click)="logout()">Logout</button>
+      <button type="button" class="btn aduo-btn-sm btn-sm btn-success btn-sm" id="auditduo-user-form-idle-stay-btn" (click)="stay()">Stay</button>
+    </div>
+  </ng-template>

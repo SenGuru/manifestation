@@ -1,0 +1,125 @@
+<div class="page-header px-1 py-0 bg-white">
+  <div class="d-flex align-items-center">
+      <div class="col-sm-auto">
+          <!-- Page title -->
+          <h3 class="card-title mb-0 flex-grow-1">
+              Mail Servers
+          </h3>
+      </div>
+     <!-- add mailServer btn -->
+      <div class="d-flex justify-content-sm-end col-sm"> 
+          <button type="button" class="btn btn-success btn-sm aduo-btn-sm"  data-bs-toggle="modal" id="create-user-btn" (click)="showAddMailServerModal();"><i-tabler name="plus" class="tabler-icon-sm tabler-icon-stroke-white mx-1" /> Add Mail Server</button>
+      </div>
+  </div>
+</div>
+<div class="card mb-2">
+<div class="card-header pt-2">
+<form #mailServerSearch="ngForm"
+  novalidate
+  focusOnError
+  (ngSubmit)="onSearch(mailServerSearch)"
+>
+ 
+  <div class="row">
+    <div class="col-md-2 pr-0">
+      <input
+        type="text"
+        class="form-control"
+        name="example-text-input"
+        placeholder="Search Text"
+        [(ngModel)]="this.searchModel.keyword"
+      />
+    </div>  
+    <div class="d-flex justify-content-sm-end col-sm">
+      <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i-tabler name="search" class="tabler-icon-sm tabler-icon-stroke-white mx-1" /> Search</button>
+      <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(mailServerSearch)">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="card-body p-0">
+<div class="table-responsive table-card auditduo-table" >
+<table *ngIf="listData.length > 0; else nodata" class="table">
+  <thead class="auditduo-table-header">
+    <tr>
+      <th
+        *ngFor="let column of columns"
+        class="text-left"
+        [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }"
+        (click)="changeSort(column)"
+      >
+        <span class="mr-1" [innerHTML]="column.text"></span>
+        <i
+          [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "
+        ></i>
+      </th>
+      <th
+        class="text-left w-1"
+      >
+        <span class="mr-1">ACTION</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of listData">
+      <td class="text-left">
+        {{ item.mailServerName  }}
+      </td>
+      <td class="text-left">
+        {{ item.host  }}
+      </td>
+      <td class="text-left">
+        {{ item.port  }}
+      </td>
+      <td class="text-left">
+        {{ item.senderName  }}
+      </td>
+      <td class="text-left">
+        {{ item.senderEmail  }}
+      </td>
+      <td class="text-left">
+        {{ item.userName  }}
+      </td>
+      <td class="text-left">
+        {{ item.modifiedDate |  date: 'MM/dd/yy' }}
+      </td>
+      <td class="text-left">
+        {{ item.modifiedBy }} 
+      </td>
+      <td class="text-left">
+          <div class="d-flex gap-2">
+          <div class="view">
+            <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showViewMailServerModal(item)">View</button>
+          </div>
+          <div class="edit">
+              <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showUpdateMailServerModal(item)">Edit</button>
+          </div>
+          <div class="remove">
+              <button class="btn btn-sm aduo-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button" (click)="deleteMailServer(item)">Remove</button>
+          </div>
+         </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ng-template #nodata>
+<app-no-data-found></app-no-data-found>
+</ng-template>
+</div>
+<app-pagination
+#pagination
+[totalItems]="totalItems" [currentPage]="searchModel.page"
+(pageOptionChanged)="paginationChange($event)"
+></app-pagination>
+</div>
+</div>

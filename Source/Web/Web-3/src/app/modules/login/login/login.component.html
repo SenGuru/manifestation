@@ -1,0 +1,120 @@
+<div class="account-pages my-5 pt-sm-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5">
+                <div class="card overflow-hidden">
+                    <div class="bg-primary-subtle">
+                        <div class="row">
+                            <div class="col-7">
+                                <div class="text-primary p-4">
+                                    <h5 class="text-primary">Welcome Back !</h5>
+                                    <p>Sign in to continue to AuditDuo.</p>
+                                </div>
+                            </div>
+                            <div class="col-5 align-self-end">
+                                <img src="assets/images/profile-img.png" alt="" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div>
+                            <a routerLink="/">
+                                <div class="avatar-md profile-user-wid mb-4">
+                                    <span class="avatar-title rounded-circle bg-light">
+                                        <img src="assets/images/logo.svg" alt="" class="rounded-circle" height="34">
+                                    </span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="p-2">
+                            <form #adminlogin="ngForm"
+                                (ngSubmit)="adminlogin.form.valid && onSubmitAdminLogin(adminlogin)">
+                                <div class="mb-3">
+                                    <label class="form-label" for="">User Name</label>
+                                    <input #lvUsername="ngModel" type="text" name="username" class="form-control"
+                                        required placeholder="User Name" autocomplete="randomName" [ngClass]="{
+                                                'form-control': true,
+                                                'is-invalid': adminlogin.submitted && lvUsername.invalid
+                                              }" [(ngModel)]="credentials.username" />
+                                    <div *ngIf="
+                                                adminlogin.submitted && lvUsername.invalid"
+                                        class="invalid-feedback invalid-feedback-fixed mt-0">
+                                        User Name is required
+                                    </div>
+                                </div>
+                                <div *ngIf="siteDetails?.loginOptionModel && siteDetails.loginOptionModel.useBuiltInAuthentication"
+                                    class="mb-3">
+                                    <div class="float-end">
+                                        <a routerLink="/forgot-password" class="text-muted me-2">Forgot
+                                            password?</a>
+                                    </div>
+                                    <label class="form-label" for=""> Password </label>
+                                    <input #lvPassword="ngModel" type="password" name="password"
+                                        autocomplete="new-password" class="form-control" required placeholder="Password"
+                                        [ngClass]="{
+                                                'form-control': true,
+                                                'is-invalid': adminlogin.submitted && lvPassword.invalid
+                                              }" [(ngModel)]="credentials.password" />
+                                    <div *ngIf="adminlogin.submitted && lvPassword.invalid"
+                                        class="invalid-feedback invalid-feedback-fixed mt-0">
+                                        <div *ngIf="lvPassword.errors?.['required']">Password is required</div>
+                                    </div>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="auth-remember-check">
+                                    <label class="form-check-label" for="auth-remember-check">Remember
+                                        me</label>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button class="btn btn-success w-100" type="submit">Sign In</button>
+                                </div>
+
+                                <div class="mt-4 text-center">
+                                    <p class="mb-0">If you're user <a routerLink="/user/login"
+                                            class="fw-semibold text-primary text-decoration-underline">
+                                            click here
+                                        </a> to proceed. </p>
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <div class="signin-other-title">
+                                        <h5 class="font-size-14 mb-3">Sign in with</h5>
+                                    </div>
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <!-- <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button> -->
+                                        <button type="button" title="Google Sign-In"
+                                            class="btn btn-danger btn-icon waves-effect waves-light"
+                                            (click)="loginServerWithGlAndMs(predefinedSingleSignOnServerType.Google)">
+                                            <i class="bx bxl-google fs-20"></i>
+                                        </button>
+
+                                        <button type="button" title="Microsoft Sign-In"
+                                            class="btn btn-info btn-icon waves-effect waves-light"
+                                            (click)="loginServerWithGlAndMs(predefinedSingleSignOnServerType.Microsoft)"><i
+                                                class="mdi mdi-microsoft-office fs-20"></i></button>
+                                        <!-- <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+                                                  <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button> -->
+                                    </div>
+                                </div>
+                                <div class="site-config app-version-container">
+                                    <div class="auditduo-login-form-app-version-info">App Version :
+                                        {{siteDetails?.appVersion}} </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="mt-5 text-center">
+                    <p>Don't have an account ? <a routerLink="." class="fw-medium text-primary">  Contact Us
+                        </a> </p>
+                    <p>© {{year}} AuditDuo.</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- end container -->
+</div>
+<!-- end page -->

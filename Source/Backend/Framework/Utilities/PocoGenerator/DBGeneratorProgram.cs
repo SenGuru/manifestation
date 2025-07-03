@@ -1,0 +1,56 @@
+﻿/**
+Copyright (c) 2016 Foundation.IO (https://github.com/foundationio). All rights reserved.
+
+This work is licensed under the terms of the BSD license.
+For a copy, see <https://opensource.org/licenses/BSD-3-Clause>.
+**/
+using System;
+using Framework.Utilities.PocoGenerator.Utilities;
+
+namespace Framework.Utilities.PocoGenerator
+{
+    public static class DBGeneratorProgram
+    {
+        public static int MainApp(string[] args)
+        {
+            if (args.Length == 0)
+            {
+                PrintUsage();
+                return -1;
+            }
+
+            if (!(args.IsParamValueAvailable("--config")
+                    || args.IsParamValueAvailable("--new")
+                    || (args.IsParamValueAvailable("--connectionString")
+                     && args.IsParamValueAvailable("--dbtype")
+                     && args.IsParamValueAvailable("--templatefile")
+                     && args.IsParamValueAvailable("--codefile")
+                     && args.IsParamValueAvailable("--canWriteToFlatFile"))))
+            {
+                PrintUsage();
+                return -1;
+            }
+
+            Config config = new Config(args);
+            config.Load();
+
+            DbGenerator generator = new DbGenerator(config);
+            generator.LoadAndGenerate();
+
+            return 0;
+        }
+
+        private static void PrintUsage()
+        {
+            Console.WriteLine("Usage:");
+            Console.WriteLine("\t -new  <config_file.json> : Create new configuration file");
+            Console.WriteLine("\t -config <config_file.json>        : Specify all the configuration in a single file ");
+            Console.WriteLine("Following used to send data without config file.");
+            Console.WriteLine("You need to provide all the following command lines");
+            Console.WriteLine("\t -connectionString <connection_string>");
+            Console.WriteLine("\t -dbtype <dbType>   : sqlite3, mssql");
+            Console.WriteLine("\t -templatefile <template_file.cshtml>   : This is a razor template file");
+            Console.WriteLine("\t -codefile <code_file_to_generate.cs>   : This is a output file generated from template file");
+        }
+    }
+}

@@ -1,0 +1,43 @@
+<div>
+  <div class="modal-header aduo-background-color p-3">
+    <h5 class="modal-title text-white" id="error-dialoge-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="error-dialoge-cancel-btn" (click)="close()"></button>
+</div>
+<div class="modal-body text-center py-5">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-xl icon-thin mb-4 text-red">
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" y1="8" x2="12" y2="12" />
+      <line x1="12" y1="16" x2="12.01" y2="16" />
+    </svg>
+    <div>{{message}}</div> 
+   
+    <div class="text-muted ">
+      <ul  class="list-group list-custom" [ngClass]="{'list-group': true,'list-custom':(errorItems !== null && errorItems.length > 1 )}" >
+        <li *ngFor="let item of errorItems;let i= index" class="list-group-item text-left">
+          <span>{{item.key}}</span> <span *ngIf="item.key"> - </span> <span>{{item.value}}</span></li> 
+      </ul>
+    </div>
+    
+    <div *ngIf="detailedModel">
+      <div class="mt-3 mb-1">
+        <a class="cursor-pointer" (click)="isShowMore = !isShowMore">
+         Error reference details 
+          <app-chevron-right-icon *ngIf="!isShowMore" />
+          <app-chevron-down-icon *ngIf="isShowMore" />
+        </a>
+      </div>
+      <div *ngIf="isShowMore">
+        <div *ngIf="detailedModel.activityId">Activity Id: {{detailedModel.activityId}} </div>
+        <div *ngIf="detailedModel.processId">Process Id: {{detailedModel.processId}} </div>
+        <div *ngIf="detailedModel.server">Server: {{detailedModel.server}} </div>
+        <div *ngIf="detailedModel.activityDateTime">Activity Time: {{detailedModel.activityDateTime | utcToBrowserTime }} </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn aduo-btn-sm btn-sm btn-light p-0 m-0" id="error-modal-close-btn" data-bs-dismiss="modal" (click)="close()">Close</button>
+    </div>
+</div>
+   

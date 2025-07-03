@@ -1,0 +1,126 @@
+public void GetFileAttachmentFolders_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentFolderSearchCriteria();
+    var r = GetFileAttachmentFolders();
+}
+public void GetFileAttachmentFolders_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFileAttachmentFolder();
+}
+public void GetFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentFolderCreateModel();
+    var r = CreateFileAttachmentFolder();
+}
+public void CreateFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleFileAttachmentFolderCreateModel();
+    var r = CreateMultipleFileAttachmentFolder();
+}
+public void CreateMultipleFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentFolderUpdateModel();
+    var r = UpdateFileAttachmentFolder();
+}
+public void UpdateFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentFolderAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentFolderAsDeleted();
+}
+public void MarkFileAttachmentFolderAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentFolderAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentFolderAsNotDeleted();
+}
+public void MarkFileAttachmentFolderAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFileAttachments_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentSearchCriteria();
+    var r = GetFileAttachments();
+}
+public void GetFileAttachments_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFileAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFileAttachment();
+}
+public void GetFileAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateFileAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentCreateWithFileFormModel();
+    var r = CreateFileAttachment();
+}
+public void CreateFileAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateFileAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentUpdateModel();
+    var r = UpdateFileAttachment();
+}
+public void UpdateFileAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentAsDeleted();
+}
+public void MarkFileAttachmentAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentAsNotDeleted();
+}
+public void MarkFileAttachmentAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsFileAttachmentFileValid_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = IsFileAttachmentFileValid();
+}
+public void IsFileAttachmentFileValid_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

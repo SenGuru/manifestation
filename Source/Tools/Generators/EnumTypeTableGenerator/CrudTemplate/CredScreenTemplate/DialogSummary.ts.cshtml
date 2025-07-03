@@ -1,0 +1,55 @@
+@using Framework.Infrastructure.Utils;
+@model List<(string Name, string DashName)>
+
+import { Component, OnInit } from '@@angular/core';
+import { NgbModal } from '@@ng-bootstrap/ng-bootstrap';
+import { Status } from 'projects/shared-library/src/common/models/app-custom-model';
+import { NpiTypes } from 'projects/shared-library/src/common/models/app-enums';
+import { SelectService } from 'projects/shared-library/src/public-api';
+@foreach(var c in Model)
+{
+@:import { AddCase@(c.Name)ModalComponent } from '../../../../modals/add-case-@(c.DashName)-modal/add-case-@(c.DashName)-modal.component';
+}
+
+@@Component({
+  selector: 'app-case-provider-test-screen',
+  templateUrl: './case-provider-test-screen.component.html',
+  styleUrls: ['./case-provider-test-screen.component.css']
+})
+export class CaseProviderTestScreenComponent implements OnInit {
+  
+  selectedNpiType: Status;
+  npiTypes: Status[] = [];
+  constructor(private modalService: NgbModal,
+    private selectService: SelectService,
+  ) { }
+
+  ngOnInit(): void {
+    this.npiTypes = this.selectService.GetWithBlankNpiTypes();
+    this.selectedNpiType = this.npiTypes.find(i => i.id == NpiTypes.Organization)
+  }
+
+@foreach(var c in Model)
+{
+@:  show@(c.Name)Modal() {
+@:    const modalRef = this.modalService.open(AddCase@(c.Name)ModalComponent, {
+@:      centered: true,
+@:      size: 'lg',
+@:      beforeDismiss: () => !modalRef.componentInstance.form.dirty
+@:    });
+@:    const componentInstance = modalRef.componentInstance as AddCasee@(c.Name)ModalComponent;
+@:    componentInstance.title = "Add @(c.Name.SplitCamelCase())";
+@:    componentInstance.isCreateMode = true;
+@:    componentInstance.isViewMode = false;
+@:    componentInstance.selectedNpiType = this.selectedNpiType;
+@:    componentInstance.buttonText = "Add";
+@:    componentInstance.modalResponse.subscribe(res => {
+@:      if (!res) return; 
+@:      componentInstance.close();
+@:    });
+@:  }
+}
+  changeNpiType(type: Status) {
+    
+  }
+}

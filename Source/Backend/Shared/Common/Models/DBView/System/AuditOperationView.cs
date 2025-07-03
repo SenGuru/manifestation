@@ -1,0 +1,68 @@
+using Manifest.Common.Models.DB;
+using LinqToDB.Mapping;
+
+namespace Manifest.Common.Models.DBView
+{
+    public class AuditOperationView : AuditOperation
+    {
+        [NotColumn]
+        public string PredefinedAuditOperationTypeName { get; set; }
+
+        [NotColumn]
+        public string UserName { get; set; }
+
+        [NotColumn]
+        public string FirstName { get; set; }
+
+        [NotColumn]
+        public string LastName { get; set; }
+
+        [NotColumn]
+        public string PredefinedResourceTypeName { get; set; }
+
+        [NotColumn]
+        public string ResourceName { get; set; }
+
+        public string CreatedByUserFirstName { get; set; }
+
+        public string CreatedByUserLastName { get; set; }
+
+        public string CreatedByUserEmail { get; set; }
+
+        public string ModifiedByUserFirstName { get; set; }
+
+        public string ModifiedByUserLastName { get; set; }
+
+        public string ModifiedByUserEmail { get; set; }
+
+        public string CreatedBy
+        {
+            get
+            {
+                if (CreatedByUserId == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return $"{CreatedByUserFirstName} {CreatedByUserLastName}";
+                }
+            }
+        }
+
+        public string ModifiedBy
+        {
+            get
+            {
+                if (ModifiedByUserId == null)
+                {
+                    return "";
+                }
+                else
+                {
+                    return $"{ModifiedByUserFirstName} {ModifiedByUserLastName}";
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,472 @@
+
+<form #lvScheduledJobForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvScheduledJobForm.form.valid && onSubmit(lvScheduledJobForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="auditduo-scheduled-job-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="auditduo-scheduled-job-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedJobTemplate">Job Template
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcJobTemplateId #lvJobTemplate="ngModel" placeholder="Job Template" class="form-control"
+            name="selectedJobTemplate" id="selectedJobTemplate"
+            bindLabel="jobTemplateName" required
+            [items]="jobTemplates" [clearable]="false" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvJobTemplate.invalid }" [typeahead]="jobTemplateTypeahead$"  [loading]="jobTemplateTypeaheadLoading" [(ngModel)]="selectedJobTemplate">
+          </ng-select>
+          <div *ngIf="lvScheduledJobForm.submitted && lvJobTemplate.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvJobTemplate.errors?.['required']">Job Template is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{scheduledJobModel.jobTemplateId ? scheduledJobModel.jobTemplateId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedJobOrReportType">Job Or Report Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedJobOrReportType="ngModel" placeholder="Select Job Or Report Type" class="form-control" name="selectedPredefinedJobOrReportType"
+            id="selectedPredefinedJobOrReportType"
+            bindLabel="type" required
+            [items]="predefinedJobOrReportTypes" [clearable]="false" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvPredefinedJobOrReportType.invalid }" [(ngModel)]="selectedPredefinedJobOrReportType">
+          </ng-select>
+          <div *ngIf="lvScheduledJobForm.submitted && lvPredefinedJobOrReportType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedJobOrReportType.errors?.['required']">Job Or Report Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{selectedPredefinedJobOrReportType ?  selectedPredefinedJobOrReportType.type : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedCompany">Company
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcCompanyId #lvCompany="ngModel" placeholder="Company" class="form-control"
+            name="selectedCompany" id="selectedCompany"
+            bindLabel="companyName" required
+            [items]="companys" [clearable]="false" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvCompany.invalid }" [typeahead]="companyTypeahead$"  [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
+          </ng-select>
+          <div *ngIf="lvScheduledJobForm.submitted && lvCompany.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvCompany.errors?.['required']">Company is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{scheduledJobModel.companyName ? scheduledJobModel.companyName : '-'}}
+        </div>
+      </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="executableFolder">Executable Folder
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutableFolder="ngModel" type="text" name="executableFolder" id="executableFolder" required class="form-control"
+                 placeholder="Executable Folder" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvExecutableFolder.invalid }"
+                [(ngModel)]="scheduledJobModel.executableFolder">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvExecutableFolder.errors?.['required']">
+                  Executable Folder is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.executableFolder ? scheduledJobModel.executableFolder : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="executableName">Executable Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutableName="ngModel" type="text" name="executableName" id="executableName" required class="form-control"
+                 placeholder="Executable Name" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvExecutableName.invalid }"
+                [(ngModel)]="scheduledJobModel.executableName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvExecutableName.errors?.['required']">
+                  Executable Name is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.executableName ? scheduledJobModel.executableName : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="executableParameter">Executable Parameter
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutableParameter="ngModel" type="text" name="executableParameter" id="executableParameter" required class="form-control"
+                 placeholder="Executable Parameter" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvExecutableParameter.invalid }"
+                [(ngModel)]="scheduledJobModel.executableParameter">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvExecutableParameter.errors?.['required']">
+                  Executable Parameter is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.executableParameter ? scheduledJobModel.executableParameter : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="serializedJobParameter">Serialized Job Parameter
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvSerializedJobParameter="ngModel" type="text" name="serializedJobParameter" required class="form-control"
+                 placeholder="Serialized Job Parameter" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvSerializedJobParameter.invalid }"
+                [(ngModel)]="scheduledJobModel.serializedJobParameter">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvSerializedJobParameter.errors?.['required']">
+                  Serialized Job Parameter is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.serializedJobParameter ? scheduledJobModel.serializedJobParameter : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="reportTemplateFile">Report Template File
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvReportTemplateFile="ngModel" type="text" name="reportTemplateFile" id="reportTemplateFile" required class="form-control"
+                 placeholder="Report Template File" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvReportTemplateFile.invalid }"
+                [(ngModel)]="scheduledJobModel.reportTemplateFile">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvReportTemplateFile.errors?.['required']">
+                  Report Template File is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.reportTemplateFile ? scheduledJobModel.reportTemplateFile : '-'}}
+            </div>
+          </div>
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportDoc"
+              id="exportDoc" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportDoc">
+            <label class="form-check-label" for="exportDoc">
+              Export Doc
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportXls"
+              id="exportXls" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportXls">
+            <label class="form-check-label" for="exportXls">
+              Export Xls
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportPpt"
+              id="exportPpt" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportPpt">
+            <label class="form-check-label" for="exportPpt">
+              Export Ppt
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportCsv"
+              id="exportCsv" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportCsv">
+            <label class="form-check-label" for="exportCsv">
+              Export Csv
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportXml"
+              id="exportXml" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportXml">
+            <label class="form-check-label" for="exportXml">
+              Export Xml
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportPdf"
+              id="exportPdf" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportPdf">
+            <label class="form-check-label" for="exportPdf">
+              Export Pdf
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportCustom"
+              id="exportCustom" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.exportCustom">
+            <label class="form-check-label" for="exportCustom">
+              Export Custom
+            </label>
+          </div>
+        </div>
+      </div>      
+          <div class="col-sm-6">
+            <label class="form-label" for="customExportName">Custom Export Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvCustomExportName="ngModel" type="text" name="customExportName" id="customExportName" required class="form-control"
+                 placeholder="Custom Export Name" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvCustomExportName.invalid }"
+                [(ngModel)]="scheduledJobModel.customExportName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvCustomExportName.errors?.['required']">
+                  Custom Export Name is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.customExportName ? scheduledJobModel.customExportName : '-'}}
+            </div>
+          </div> 
+          <div class="col-sm-6">
+            <label class="form-label" for="jobName">Job Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvJobName="ngModel" type="text" name="jobName" id="jobName" required class="form-control"
+                 placeholder="Job Name" [ngClass]="{'is-invalid': lvScheduledJobForm.submitted && lvJobName.invalid }"
+                [(ngModel)]="scheduledJobModel.jobName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvScheduledJobForm.submitted) && lvJobName.errors?.['required']">
+                  Job Name is required
+                </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{scheduledJobModel.jobName ? scheduledJobModel.jobName : '-'}}
+            </div>
+          </div>
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="recurring"
+              id="recurring" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.recurring">
+            <label class="form-check-label" for="recurring">
+              Recurring
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runMonday"
+              id="runMonday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runMonday">
+            <label class="form-check-label" for="runMonday">
+              Run Monday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runTuesday"
+              id="runTuesday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runTuesday">
+            <label class="form-check-label" for="runTuesday">
+              Run Tuesday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runWednesday"
+              id="runWednesday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runWednesday">
+            <label class="form-check-label" for="runWednesday">
+              Run Wednesday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runThursday"
+              id="runThursday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runThursday">
+            <label class="form-check-label" for="runThursday">
+              Run Thursday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runFriday"
+              id="runFriday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runFriday">
+            <label class="form-check-label" for="runFriday">
+              Run Friday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runSaturday"
+              id="runSaturday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runSaturday">
+            <label class="form-check-label" for="runSaturday">
+              Run Saturday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="runSunday"
+              id="runSunday" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.runSunday">
+            <label class="form-check-label" for="runSunday">
+              Run Sunday
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="active"
+              id="active" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.active">
+            <label class="form-check-label" for="active">
+              Active
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isMonthly"
+              id="isMonthly" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.isMonthly">
+            <label class="form-check-label" for="isMonthly">
+              Is Monthly
+            </label>
+          </div>
+        </div>
+      </div>       
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isHourly"
+              id="isHourly" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.isHourly">
+            <label class="form-check-label" for="isHourly">
+              Is Hourly
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isDaily"
+              id="isDaily" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.isDaily">
+            <label class="form-check-label" for="isDaily">
+              Is Daily
+            </label>
+          </div>
+        </div>
+      </div>       
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isWeekly"
+              id="isWeekly" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.isWeekly">
+            <label class="form-check-label" for="isWeekly">
+              Is Weekly
+            </label>
+          </div>
+        </div>
+      </div>       
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="includeDataSourceFile"
+              id="includeDataSourceFile" [disabled]="isViewMode" [(ngModel)]="scheduledJobModel.includeDataSourceFile">
+            <label class="form-check-label" for="includeDataSourceFile">
+              Include Data Source File
+            </label>
+          </div>
+        </div>
+      </div>       
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-scheduled-job-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-scheduled-job-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

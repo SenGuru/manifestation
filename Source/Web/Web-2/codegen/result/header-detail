@@ -1,0 +1,155 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header details screen
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mt-n4 mx-n4">
+            <div class="bg-warning-subtle">
+                <div class="card-body pb-0 px-4">
+                    <div class="row mb-3">
+                        <div class="col-md">
+                            <div class="row align-items-center g-3">
+                                <div class="col-md-auto">
+                                    <div class="col-auto">
+                                        <div class="avatar-md">
+                                            <img [src]="hostProfilePicture" alt="host-information-img"
+                                                class="img-thumbnail rounded-circle auditduo-header-img" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div>
+                                        <h4 class="fw-bold">Host Configuration</h4>
+                                        <div class="hstack gap-3 flex-wrap">
+                                            <div> <i class="ri-dashboard-fill"></i> Language : {{hostInfo?.language}}
+                                            </div>
+                                            <div class="vr"></div>
+                                            <div><i class="ri-menu-2-line"></i> Runing Time : {{hostInfo?.runningTime |
+                                                secondsToHour }}
+                                            </div>
+                                            <div class="vr"></div>
+                                            <div><i class="ri-currency-line"></i> Budget Cost :
+                                                {{hostInfo?.budgetCost}}</div>
+                                            <div class="vr"></div>
+                                            <div><i class="ri-team-line"></i> Company: {{hostInfo?.companyName}}</div>
+                                            <div class="vr"></div>
+                                            <div class="badge rounded-pill bg-info fs-12">New</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-auto">
+                            <div class="hstack gap-1 flex-wrap">
+                                <button type="button" class="btn py-0 fs-16 text-body material-shadow-none"
+                                    (click)="backToHostsListScreen();">
+                                    <i class="ri-arrow-go-back-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-12">
+                    <div class="card mb-0 shadow-none bg-transparent">
+                        <div class="card-header align-items-center d-flex bg-transparent">
+                            <div class="flex-shrink-0 ms-2">
+                                <ul ngbNav
+                                    class="nav justify-content-end nav-tabs-custom rounded card-header-tabs border-bottom-0">
+
+                    <li class="nav-item cursor-pointer" (click)="changeTab('summary')">
+                        <a class="nav-link bg-transparent pt-0 pb-2"
+                            [ngClass]="selectedHostConfigScreenType == 'summary' ? 'active' : ''">
+                            Summary
+                        </a>
+                    </li> 
+                     
+
+                    <li class="nav-item cursor-pointer" (click)="changeTab('catalogs')">
+                        <a class="nav-link bg-transparent pt-0 pb-2"
+                            [ngClass]="selectedHostConfigScreenType == 'catalogs' ? 'active' : ''">
+                            Catalogs
+                        </a>
+                    </li> 
+                     
+
+                             </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 <!-- end card body -->
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+     </div>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header details ts config screen
+
+    @Output() showChangeTab: EventEmitter<string> = new EventEmitter<string>();
+    selectedHostConfigScreenType: HostConfigScreenTabTypes;
+              
+    changeTab(tab: HostConfigScreenTabTypes) {
+      this.showChangeTab.emit(tab);
+      this.selectedHostConfigScreenType = tab;
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header config screen
+<div class="tab-container">
+             
+          
+  
+            <div *ngIf="showProductCatalogListScreen">
+              <app-product-catalog-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isHostConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-product-catalog-list-screen>
+            </div>  
+  
+            <div *ngIf="showCatalogListScreen">
+              <app-catalog-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isHostConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-catalog-list-screen>
+            </div>  
+
+
+        </div>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header config ts config screen
+
+ ///// member initialization
+
+  selectedHostConfigScreenType: HostConfigScreenTabTypes;
+  
+showProductCatalogListScreen: boolean = false;
+showCatalogListScreen: boolean = false;
+
+  changeTab(tab: HostConfigScreenTabTypes) {
+    this.resetTabs();
+    this.selectedHostConfigScreenType = tab;
+  
+
+        if (tab == 'summary') {
+          this.showProductCatalogListScreen = true;
+        }
+ else if (tab == 'catalogs') {
+            this.showCatalogListScreen = true;
+        }
+
+    }
+  resetTabs() {
+    
+this.showProductCatalogListScreen = false;
+this.showCatalogListScreen = false;
+
+    }
+
+/////////////////////////////////////////////////////
+In custom-model.ts
+export type HostConfigScreenTabTypes: summary | catalogs;

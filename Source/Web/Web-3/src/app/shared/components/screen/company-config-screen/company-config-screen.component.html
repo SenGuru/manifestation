@@ -1,0 +1,29 @@
+<app-company-header [companyId]="companyId" (showChangeTab)="changeTab($event)"></app-company-header>
+
+<div class="tab-container">
+    <div *ngIf="showCompanyInformationScreen">
+        <app-company-crud-modal [isSuperAdmin]="isSuperAdmin" [isCompanyConfig]="true" [isShowFullScreen]="true"
+            [isViewMode]="isViewMode" [companyId]="companyId"></app-company-crud-modal>
+    </div>
+    <div *ngIf="showStorageInformationScreen && isSuperAdmin">
+        <app-company-storage-configuration-screen [isSuperAdmin]="isSuperAdmin" [isCompanyConfig]="true"
+            [isShowFullScreen]="true" [isViewMode]="isViewMode" [companyId]="companyId"
+            [companyName]="companyName"></app-company-storage-configuration-screen>
+    </div>
+    <div *ngIf="showAppointmentListScreen">
+        <app-appointment-list-screen [isSuperAdmin]="isSuperAdmin" [isAppointmentConfig]="true"
+            [isShowFullScreen]="true" [isViewMode]="isViewMode" [companyId]="companyId"
+            [companyName]="companyName"></app-appointment-list-screen>
+    </div>
+    <div *ngIf="showAppointmentCalendarScreen">
+        <app-custom-calendar [isSuperAdmin]="isSuperAdmin" [isAppointmentConfig]="true"
+            [isShowFullScreen]="true" [isViewMode]="isViewMode" [companyId]="companyId"
+            [companyName]="companyName"></app-custom-calendar>
+    </div>
+     <div *ngIf="showCompanyLicensesListScreen">
+        <app-company-license-list-screen  [isSuperAdmin]="isSuperAdmin" [isCompanyConfig]="true"
+        [isShowFullScreen]="true" [isViewMode]="isViewMode" [companyId]="companyId"
+        [companyName]="companyName"
+        ></app-company-license-list-screen>
+     </div>
+</div>
