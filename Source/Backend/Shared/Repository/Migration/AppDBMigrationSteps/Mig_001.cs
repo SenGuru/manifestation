@@ -65,6 +65,19 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "AuditOperationDetail", "AuditOperationDetailId", 1000);
+            Create.Table("Category")
+                .WithColumn("CategoryId").AsInt64().PrimaryKey("PK_Category").Identity().NotNullable()
+                .WithColumn("DefaultCategoryId").AsInt64().NotNullable()
+                .WithColumn("CategoryName").AsString(255).NotNullable()
+                .WithColumn("PredefinedCategoryTypeId").AsInt64().Nullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "Category", "CategoryId", 1000);
             Create.Table("Chat")
                 .WithColumn("ChatId").AsInt64().PrimaryKey("PK_Chat").Identity().NotNullable()
                 .WithColumn("ChatName").AsString(500).NotNullable()
@@ -159,6 +172,102 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "Country", "CountryId", 1000);
+            Create.Table("DailyAffirmationSession")
+                .WithColumn("DailyAffirmationSessionId").AsInt64().PrimaryKey("PK_DailyAffirmationSession").Identity().NotNullable()
+                .WithColumn("DailyAffirmationSessionDate").AsDateTime().NotNullable()
+                .WithColumn("DailyAffirmationSessionTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("AddedToFeed").AsBoolean().Nullable()
+                .WithColumn("AddedToFeedDate").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DailyAffirmationSession", "DailyAffirmationSessionId", 1000);
+            Create.Table("DailyAffirmationSessionCategory")
+                .WithColumn("DailyAffirmationSessionCategoryId").AsInt64().PrimaryKey("PK_DailyAffirmationSessionCategory").Identity().NotNullable()
+                .WithColumn("CategoryId").AsInt64().NotNullable()
+                .WithColumn("DailyAffirmationSessionId").AsInt64().NotNullable()
+                .WithColumn("DailyAffirmationSessionCategoryTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DailyAffirmationSessionCategory", "DailyAffirmationSessionCategoryId", 1000);
+            Create.Table("DailyAffirmationText")
+                .WithColumn("DailyAffirmationTextId").AsInt64().PrimaryKey("PK_DailyAffirmationText").Identity().NotNullable()
+                .WithColumn("DailyAffirmationTextValue").AsString(255).NotNullable()
+                .WithColumn("CategoryId").AsInt64().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DailyAffirmationText", "DailyAffirmationTextId", 1000);
+            Create.Table("DefaultCategory")
+                .WithColumn("DefaultCategoryId").AsInt64().PrimaryKey("PK_DefaultCategory").Identity().NotNullable()
+                .WithColumn("DefaultCategoryName").AsString(255).NotNullable()
+                .WithColumn("PredefinedCategoryTypeId").AsInt64().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DefaultCategory", "DefaultCategoryId", 1000);
+            Create.Table("DefaultDailyAffirmationText")
+                .WithColumn("DefaultDailyAffirmationTextId").AsInt64().PrimaryKey("PK_DefaultDailyAffirmationText").Identity().NotNullable()
+                .WithColumn("DefaultDailyAffirmationTextName").AsString(255).NotNullable()
+                .WithColumn("DefaultCategoryId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DefaultDailyAffirmationText", "DefaultDailyAffirmationTextId", 1000);
+            Create.Table("DefaultGoalTracker")
+                .WithColumn("DefaultGoalTrackerId").AsInt64().PrimaryKey("PK_DefaultGoalTracker").Identity().NotNullable()
+                .WithColumn("DefaultGoalTrackerText").AsString(255).NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DefaultGoalTracker", "DefaultGoalTrackerId", 1000);
+            Create.Table("DefaultGoalTrackerCategory")
+                .WithColumn("DefaultGoalTrackerCategoryId").AsInt64().PrimaryKey("PK_DefaultGoalTrackerCategory").Identity().NotNullable()
+                .WithColumn("DefaultCategoryId").AsInt64().NotNullable()
+                .WithColumn("DefaultGoalTrackerId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DefaultGoalTrackerCategory", "DefaultGoalTrackerCategoryId", 1000);
+            Create.Table("DefaultMeditationFile")
+                .WithColumn("DefaultMeditationFileId").AsInt64().PrimaryKey("PK_DefaultMeditationFile").Identity().NotNullable()
+                .WithColumn("DefaultMeditationFileName").AsString(255).NotNullable()
+                .WithColumn("PredefinedMeditationTypeId").AsInt64().NotNullable()
+                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("FileName").AsString(255).NotNullable()
+                .WithColumn("FileSize").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DefaultMeditationFile", "DefaultMeditationFileId", 1000);
             Create.Table("DefaultUserTypePermission")
                 .WithColumn("DefaultUserTypePermissionId").AsInt64().PrimaryKey("PK_DefaultUserTypePermission").Identity().NotNullable()
                 .WithColumn("PredefinedUserTypeId").AsInt64().NotNullable()
@@ -170,6 +279,18 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "DefaultUserTypePermission", "DefaultUserTypePermissionId", 1000);
+            Create.Table("DefaultVisionBoardPicture")
+                .WithColumn("DefaultVisionBoardPictureId").AsInt64().PrimaryKey("PK_DefaultVisionBoardPicture").Identity().NotNullable()
+                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("FileName").AsString(255).NotNullable()
+                .WithColumn("FileSize").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DefaultVisionBoardPicture", "DefaultVisionBoardPictureId", 1000);
             Create.Table("EnumGroup")
                 .WithColumn("EnumGroupId").AsInt64().PrimaryKey("PK_EnumGroup").NotNullable()
                 .WithColumn("EnumGroupName").AsString(100).NotNullable()
@@ -191,6 +312,39 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedDate").AsDateTime().NotNullable()
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
+            Create.Table("Feed")
+                .WithColumn("FeedId").AsInt64().PrimaryKey("PK_Feed").Identity().NotNullable()
+                .WithColumn("FeedGuid").AsGuid().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("DailyAffirmationSessionId").AsInt64().Nullable()
+                .WithColumn("DailyAffirmationSessionDate").AsDateTime().Nullable()
+                .WithColumn("DailyAffirmationTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("VisionBoardSessionId").AsInt64().Nullable()
+                .WithColumn("VisionBoardSessionDate").AsDateTime().Nullable()
+                .WithColumn("VisionBoardSessionTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("MeditationSessionId").AsInt64().Nullable()
+                .WithColumn("MeditationSessionDate").AsDateTime().Nullable()
+                .WithColumn("MeditationSessionTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("MeditationFileName").AsString(255).Nullable()
+                .WithColumn("PredefinedMeditationTypeId").AsInt64().Nullable()
+                .WithColumn("GoalTrackerId").AsInt64().Nullable()
+                .WithColumn("GoalTrackerName").AsString(255).Nullable()
+                .WithColumn("PredefinedGoalStatusTypeId").AsInt64().Nullable()
+                .WithColumn("GoalTrackerStartDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerEndDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerCompletedDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerMileStoneId").AsInt64().Nullable()
+                .WithColumn("GoalTrackerMileStoneName").AsString(255).Nullable()
+                .WithColumn("GoalTrackerMileStoneStartDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerMileStoneEndDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerMileStoneCompletedDate").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "Feed", "FeedId", 1000);
             Create.Table("FileAttachment")
                 .WithColumn("FileAttachmentId").AsInt64().PrimaryKey("PK_FileAttachment").Identity().NotNullable()
                 .WithColumn("FileAttachmentFolderId").AsInt64().Nullable()
@@ -221,6 +375,51 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "FileAttachmentFolder", "FileAttachmentFolderId", 1000);
+            Create.Table("GoalTracker")
+                .WithColumn("GoalTrackerId").AsInt64().PrimaryKey("PK_GoalTracker").Identity().NotNullable()
+                .WithColumn("GoalTrackerName").AsString(255).NotNullable()
+                .WithColumn("PredefinedGoalStatusTypeId").AsInt64().NotNullable()
+                .WithColumn("GoalTrackerStartDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerEndDate").AsDateTime().Nullable()
+                .WithColumn("GoalTrackerCompletedDate").AsDateTime().Nullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("AddedToFeed").AsBoolean().Nullable()
+                .WithColumn("AddedToFeedDate").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "GoalTracker", "GoalTrackerId", 1000);
+            Create.Table("GoalTrackerCategory")
+                .WithColumn("GoalTrackerCategoryId").AsInt64().PrimaryKey("PK_GoalTrackerCategory").Identity().NotNullable()
+                .WithColumn("CategoryId").AsInt64().NotNullable()
+                .WithColumn("GoalTrackerId").AsInt64().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "GoalTrackerCategory", "GoalTrackerCategoryId", 1000);
+            Create.Table("GoalTrackerMileStone")
+                .WithColumn("GoalTrackerMileStoneId").AsInt64().PrimaryKey("PK_GoalTrackerMileStone").Identity().NotNullable()
+                .WithColumn("GoalTrackerId").AsInt64().NotNullable()
+                .WithColumn("GoalTrackerMileStoneName").AsString(255).NotNullable()
+                .WithColumn("GoalTrackerMileStoneStartDate").AsDateTime().NotNullable()
+                .WithColumn("GoalTrackerMileStoneEndDate").AsDateTime().NotNullable()
+                .WithColumn("PredefinedGoalStatusTypeId").AsInt64().NotNullable()
+                .WithColumn("GoalTrackerMileStoneCompletedDate").AsDateTime().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "GoalTrackerMileStone", "GoalTrackerMileStoneId", 1000);
             Create.Table("Job")
                 .WithColumn("JobId").AsInt64().PrimaryKey("PK_Job").Identity().NotNullable()
                 .WithColumn("PredefinedJobTypeId").AsInt64().Nullable()
@@ -375,6 +574,36 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "MailServer", "MailServerId", 1000);
+            Create.Table("MeditationFile")
+                .WithColumn("MeditationFileId").AsInt64().PrimaryKey("PK_MeditationFile").Identity().NotNullable()
+                .WithColumn("PredefinedMeditationTypeId").AsInt64().NotNullable()
+                .WithColumn("MeditationFileName").AsString(255).NotNullable()
+                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("FileName").AsString(255).NotNullable()
+                .WithColumn("FileSize").AsInt64().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "MeditationFile", "MeditationFileId", 1000);
+            Create.Table("MeditationSession")
+                .WithColumn("MeditationSessionId").AsInt64().PrimaryKey("PK_MeditationSession").Identity().NotNullable()
+                .WithColumn("MeditationSessionDate").AsDateTime().NotNullable()
+                .WithColumn("MeditationSessionTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("MeditationFileId").AsInt64().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("AddedToFeed").AsBoolean().Nullable()
+                .WithColumn("AddedToFeedDate").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "MeditationSession", "MeditationSessionId", 1000);
             Create.Table("MessageTemplate")
                 .WithColumn("MessageTemplateId").AsInt64().PrimaryKey("PK_MessageTemplate").Identity().NotNullable()
                 .WithColumn("PredefinedMessageTemplateTypeId").AsInt64().NotNullable()
@@ -718,6 +947,47 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "UserPermission", "UserPermissionId", 1000);
+            Create.Table("VisionBoardPicture")
+                .WithColumn("VisionBoardPictureId").AsInt64().PrimaryKey("PK_VisionBoardPicture").Identity().NotNullable()
+                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("FileName").AsString(255).NotNullable()
+                .WithColumn("FileSize").AsInt64().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "VisionBoardPicture", "VisionBoardPictureId", 1000);
+            Create.Table("VisionBoardSession")
+                .WithColumn("VisionBoardSessionId").AsInt64().PrimaryKey("PK_VisionBoardSession").Identity().NotNullable()
+                .WithColumn("VisionBoardSessionDate").AsDateTime().NotNullable()
+                .WithColumn("VisionBoardSessionTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("AddedToFeed").AsBoolean().Nullable()
+                .WithColumn("AddedToFeedDate").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "VisionBoardSession", "VisionBoardSessionId", 1000);
+            Create.Table("VisionBoardSessionPicture")
+                .WithColumn("VisionBoardSessionPictureId").AsInt64().PrimaryKey("PK_VisionBoardSessionPicture").Identity().NotNullable()
+                .WithColumn("VisionBoardSessionId").AsInt64().NotNullable()
+                .WithColumn("VisionBoardSessionPictureDate").AsDateTime().NotNullable()
+                .WithColumn("VisionBoardPictureId").AsInt64().NotNullable()
+                .WithColumn("VisionBoardSessionPictureTimeSpentInSeconds").AsInt64().Nullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "VisionBoardSessionPicture", "VisionBoardSessionPictureId", 1000);
             Create.Table("VoiceNotificationServer")
                 .WithColumn("VoiceNotificationServerId").AsInt64().PrimaryKey("PK_VoiceNotificationServer").Identity().NotNullable()
                 .WithColumn("VoiceNotificationServerCode").AsString(45).NotNullable()
@@ -756,10 +1026,476 @@ namespace Manifest.Repository.Migration.Application
             UpdateSequenceStartValue("", "WhatsAppNotificationServer", "WhatsAppNotificationServerId", 1000);
 
             //Indexes definitions
+            Create.Index("IX_Category_CreatedByUserId").OnTable("Category")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_Category_DefaultCategoryId").OnTable("Category")
+                .OnColumn("DefaultCategoryId")
+            
+            ;
+            Create.Index("IX_Category_ModifiedByUserId").OnTable("Category")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_Category_PredefinedCategoryTypeId").OnTable("Category")
+                .OnColumn("PredefinedCategoryTypeId")
+            
+            ;
+            Create.Index("IX_Category_UserId").OnTable("Category")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSession_CreatedByUserId").OnTable("DailyAffirmationSession")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSession_ModifiedByUserId").OnTable("DailyAffirmationSession")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSession_UserId").OnTable("DailyAffirmationSession")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSessionCategory_CategoryId").OnTable("DailyAffirmationSessionCategory")
+                .OnColumn("CategoryId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSessionCategory_CreatedByUserId").OnTable("DailyAffirmationSessionCategory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSessionCategory_DailyAffirmationSessionId").OnTable("DailyAffirmationSessionCategory")
+                .OnColumn("DailyAffirmationSessionId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSessionCategory_ModifiedByUserId").OnTable("DailyAffirmationSessionCategory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationSessionCategory_UserId").OnTable("DailyAffirmationSessionCategory")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationText_CategoryId").OnTable("DailyAffirmationText")
+                .OnColumn("CategoryId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationText_CreatedByUserId").OnTable("DailyAffirmationText")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationText_ModifiedByUserId").OnTable("DailyAffirmationText")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DailyAffirmationText_UserId").OnTable("DailyAffirmationText")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_DefaultCategory_CreatedByUserId").OnTable("DefaultCategory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultCategory_ModifiedByUserId").OnTable("DefaultCategory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultCategory_PredefinedCategoryTypeId").OnTable("DefaultCategory")
+                .OnColumn("PredefinedCategoryTypeId")
+            
+            ;
+            Create.Index("IX_DefaultDailyAffirmationText_CreatedByUserId").OnTable("DefaultDailyAffirmationText")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultDailyAffirmationText_DefaultCategoryId").OnTable("DefaultDailyAffirmationText")
+                .OnColumn("DefaultCategoryId")
+            
+            ;
+            Create.Index("IX_DefaultDailyAffirmationText_ModifiedByUserId").OnTable("DefaultDailyAffirmationText")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultGoalTracker_CreatedByUserId").OnTable("DefaultGoalTracker")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultGoalTracker_ModifiedByUserId").OnTable("DefaultGoalTracker")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultGoalTrackerCategory_CreatedByUserId").OnTable("DefaultGoalTrackerCategory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultGoalTrackerCategory_DefaultCategoryId").OnTable("DefaultGoalTrackerCategory")
+                .OnColumn("DefaultCategoryId")
+            
+            ;
+            Create.Index("IX_DefaultGoalTrackerCategory_DefaultGoalTrackerId").OnTable("DefaultGoalTrackerCategory")
+                .OnColumn("DefaultGoalTrackerId")
+            
+            ;
+            Create.Index("IX_DefaultGoalTrackerCategory_ModifiedByUserId").OnTable("DefaultGoalTrackerCategory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultMeditationFile_CreatedByUserId").OnTable("DefaultMeditationFile")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultMeditationFile_ModifiedByUserId").OnTable("DefaultMeditationFile")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultMeditationFile_PredefinedMeditationTypeId").OnTable("DefaultMeditationFile")
+                .OnColumn("PredefinedMeditationTypeId")
+            
+            ;
+            Create.Index("IX_DefaultVisionBoardPicture_CreatedByUserId").OnTable("DefaultVisionBoardPicture")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultVisionBoardPicture_ModifiedByUserId").OnTable("DefaultVisionBoardPicture")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_Feed_CreatedByUserId").OnTable("Feed")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_Feed_DailyAffirmationSessionId").OnTable("Feed")
+                .OnColumn("DailyAffirmationSessionId")
+            
+            ;
+            Create.Index("IX_Feed_FeedGuid").OnTable("Feed")
+                .OnColumn("FeedGuid")
+            
+            ;
+            Create.Index("IX_Feed_GoalTrackerId").OnTable("Feed")
+                .OnColumn("GoalTrackerId")
+            
+            ;
+            Create.Index("IX_Feed_GoalTrackerMileStoneId").OnTable("Feed")
+                .OnColumn("GoalTrackerMileStoneId")
+            
+            ;
+            Create.Index("IX_Feed_MeditationSessionId").OnTable("Feed")
+                .OnColumn("MeditationSessionId")
+            
+            ;
+            Create.Index("IX_Feed_ModifiedByUserId").OnTable("Feed")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_Feed_PredefinedGoalStatusTypeId").OnTable("Feed")
+                .OnColumn("PredefinedGoalStatusTypeId")
+            
+            ;
+            Create.Index("IX_Feed_PredefinedMeditationTypeId").OnTable("Feed")
+                .OnColumn("PredefinedMeditationTypeId")
+            
+            ;
+            Create.Index("IX_Feed_UserId").OnTable("Feed")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_Feed_VisionBoardSessionId").OnTable("Feed")
+                .OnColumn("VisionBoardSessionId")
+            
+            ;
+            Create.Index("IX_GoalTracker_CreatedByUserId").OnTable("GoalTracker")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTracker_ModifiedByUserId").OnTable("GoalTracker")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTracker_PredefinedGoalStatusTypeId").OnTable("GoalTracker")
+                .OnColumn("PredefinedGoalStatusTypeId")
+            
+            ;
+            Create.Index("IX_GoalTracker_UserId").OnTable("GoalTracker")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_GoalTrackerCategory_CategoryId").OnTable("GoalTrackerCategory")
+                .OnColumn("CategoryId")
+            
+            ;
+            Create.Index("IX_GoalTrackerCategory_CreatedByUserId").OnTable("GoalTrackerCategory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTrackerCategory_GoalTrackerId").OnTable("GoalTrackerCategory")
+                .OnColumn("GoalTrackerId")
+            
+            ;
+            Create.Index("IX_GoalTrackerCategory_ModifiedByUserId").OnTable("GoalTrackerCategory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTrackerCategory_UserId").OnTable("GoalTrackerCategory")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_GoalTrackerMileStone_CreatedByUserId").OnTable("GoalTrackerMileStone")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTrackerMileStone_GoalTrackerId").OnTable("GoalTrackerMileStone")
+                .OnColumn("GoalTrackerId")
+            
+            ;
+            Create.Index("IX_GoalTrackerMileStone_ModifiedByUserId").OnTable("GoalTrackerMileStone")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTrackerMileStone_PredefinedGoalStatusTypeId").OnTable("GoalTrackerMileStone")
+                .OnColumn("PredefinedGoalStatusTypeId")
+            
+            ;
+            Create.Index("IX_GoalTrackerMileStone_UserId").OnTable("GoalTrackerMileStone")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_MeditationFile_CreatedByUserId").OnTable("MeditationFile")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_MeditationFile_ModifiedByUserId").OnTable("MeditationFile")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_MeditationFile_PredefinedMeditationTypeId").OnTable("MeditationFile")
+                .OnColumn("PredefinedMeditationTypeId")
+            
+            ;
+            Create.Index("IX_MeditationFile_UserId").OnTable("MeditationFile")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_MeditationSession_CreatedByUserId").OnTable("MeditationSession")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_MeditationSession_MeditationFileId").OnTable("MeditationSession")
+                .OnColumn("MeditationFileId")
+            
+            ;
+            Create.Index("IX_MeditationSession_ModifiedByUserId").OnTable("MeditationSession")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_MeditationSession_UserId").OnTable("MeditationSession")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_VisionBoardPicture_CreatedByUserId").OnTable("VisionBoardPicture")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_VisionBoardPicture_ModifiedByUserId").OnTable("VisionBoardPicture")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_VisionBoardPicture_UserId").OnTable("VisionBoardPicture")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSession_CreatedByUserId").OnTable("VisionBoardSession")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSession_ModifiedByUserId").OnTable("VisionBoardSession")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSession_UserId").OnTable("VisionBoardSession")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSessionPicture_CreatedByUserId").OnTable("VisionBoardSessionPicture")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSessionPicture_ModifiedByUserId").OnTable("VisionBoardSessionPicture")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSessionPicture_UserId").OnTable("VisionBoardSessionPicture")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_VisionBoardSessionPicture_VisionBoardPictureId").OnTable("VisionBoardSessionPicture")
+                .OnColumn("VisionBoardPictureId")
+            
+            ;
+            Create.Index("IX_VisionBoardSessionPicture_VisionBoardSessionId").OnTable("VisionBoardSessionPicture")
+                .OnColumn("VisionBoardSessionId")
+            
+            ;
 
             //UniqueKeys definitions
 
             //ForeignKeys definitions
+            Create.ForeignKey("FK_Category_CreatedByUserId").FromTable("Category").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Category_DefaultCategoryId").FromTable("Category").ForeignColumns("DefaultCategoryId")
+                .ToTable("DefaultCategory").PrimaryColumns("DefaultCategoryId");
+            Create.ForeignKey("FK_Category_ModifiedByUserId").FromTable("Category").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Category_PredefinedCategoryTypeId").FromTable("Category").ForeignColumns("PredefinedCategoryTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Category_UserId").FromTable("Category").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationSession_CreatedByUserId").FromTable("DailyAffirmationSession").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationSession_ModifiedByUserId").FromTable("DailyAffirmationSession").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationSession_UserId").FromTable("DailyAffirmationSession").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationSessionCategory_CategoryId").FromTable("DailyAffirmationSessionCategory").ForeignColumns("CategoryId")
+                .ToTable("Category").PrimaryColumns("CategoryId");
+            Create.ForeignKey("FK_DailyAffirmationSessionCategory_CreatedByUserId").FromTable("DailyAffirmationSessionCategory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationSessionCategory_DailyAffirmationSessionId").FromTable("DailyAffirmationSessionCategory").ForeignColumns("DailyAffirmationSessionId")
+                .ToTable("DailyAffirmationSession").PrimaryColumns("DailyAffirmationSessionId");
+            Create.ForeignKey("FK_DailyAffirmationSessionCategory_ModifiedByUserId").FromTable("DailyAffirmationSessionCategory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationSessionCategory_UserId").FromTable("DailyAffirmationSessionCategory").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationText_CategoryId").FromTable("DailyAffirmationText").ForeignColumns("CategoryId")
+                .ToTable("Category").PrimaryColumns("CategoryId");
+            Create.ForeignKey("FK_DailyAffirmationText_CreatedByUserId").FromTable("DailyAffirmationText").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationText_ModifiedByUserId").FromTable("DailyAffirmationText").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyAffirmationText_UserId").FromTable("DailyAffirmationText").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultCategory_CreatedByUserId").FromTable("DefaultCategory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultCategory_ModifiedByUserId").FromTable("DefaultCategory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultCategory_PredefinedCategoryTypeId").FromTable("DefaultCategory").ForeignColumns("PredefinedCategoryTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DefaultDailyAffirmationText_CreatedByUserId").FromTable("DefaultDailyAffirmationText").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultDailyAffirmationText_DefaultCategoryId").FromTable("DefaultDailyAffirmationText").ForeignColumns("DefaultCategoryId")
+                .ToTable("DefaultCategory").PrimaryColumns("DefaultCategoryId");
+            Create.ForeignKey("FK_DefaultDailyAffirmationText_ModifiedByUserId").FromTable("DefaultDailyAffirmationText").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultGoalTracker_CreatedByUserId").FromTable("DefaultGoalTracker").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultGoalTracker_ModifiedByUserId").FromTable("DefaultGoalTracker").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultGoalTrackerCategory_CreatedByUserId").FromTable("DefaultGoalTrackerCategory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultGoalTrackerCategory_DefaultCategoryId").FromTable("DefaultGoalTrackerCategory").ForeignColumns("DefaultCategoryId")
+                .ToTable("DefaultCategory").PrimaryColumns("DefaultCategoryId");
+            Create.ForeignKey("FK_DefaultGoalTrackerCategory_DefaultGoalTrackerId").FromTable("DefaultGoalTrackerCategory").ForeignColumns("DefaultGoalTrackerId")
+                .ToTable("DefaultGoalTracker").PrimaryColumns("DefaultGoalTrackerId");
+            Create.ForeignKey("FK_DefaultGoalTrackerCategory_ModifiedByUserId").FromTable("DefaultGoalTrackerCategory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultMeditationFile_CreatedByUserId").FromTable("DefaultMeditationFile").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultMeditationFile_ModifiedByUserId").FromTable("DefaultMeditationFile").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultMeditationFile_PredefinedMeditationTypeId").FromTable("DefaultMeditationFile").ForeignColumns("PredefinedMeditationTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DefaultVisionBoardPicture_CreatedByUserId").FromTable("DefaultVisionBoardPicture").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultVisionBoardPicture_ModifiedByUserId").FromTable("DefaultVisionBoardPicture").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Feed_CreatedByUserId").FromTable("Feed").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Feed_DailyAffirmationSessionId").FromTable("Feed").ForeignColumns("DailyAffirmationSessionId")
+                .ToTable("DailyAffirmationSession").PrimaryColumns("DailyAffirmationSessionId");
+            Create.ForeignKey("FK_Feed_GoalTrackerId").FromTable("Feed").ForeignColumns("GoalTrackerId")
+                .ToTable("GoalTracker").PrimaryColumns("GoalTrackerId");
+            Create.ForeignKey("FK_Feed_GoalTrackerMileStoneId").FromTable("Feed").ForeignColumns("GoalTrackerMileStoneId")
+                .ToTable("GoalTrackerMileStone").PrimaryColumns("GoalTrackerMileStoneId");
+            Create.ForeignKey("FK_Feed_MeditationSessionId").FromTable("Feed").ForeignColumns("MeditationSessionId")
+                .ToTable("MeditationSession").PrimaryColumns("MeditationSessionId");
+            Create.ForeignKey("FK_Feed_ModifiedByUserId").FromTable("Feed").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Feed_PredefinedGoalStatusTypeId").FromTable("Feed").ForeignColumns("PredefinedGoalStatusTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Feed_PredefinedMeditationTypeId").FromTable("Feed").ForeignColumns("PredefinedMeditationTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Feed_UserId").FromTable("Feed").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Feed_VisionBoardSessionId").FromTable("Feed").ForeignColumns("VisionBoardSessionId")
+                .ToTable("VisionBoardSession").PrimaryColumns("VisionBoardSessionId");
+            Create.ForeignKey("FK_GoalTracker_CreatedByUserId").FromTable("GoalTracker").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTracker_ModifiedByUserId").FromTable("GoalTracker").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTracker_PredefinedGoalStatusTypeId").FromTable("GoalTracker").ForeignColumns("PredefinedGoalStatusTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_GoalTracker_UserId").FromTable("GoalTracker").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTrackerCategory_CategoryId").FromTable("GoalTrackerCategory").ForeignColumns("CategoryId")
+                .ToTable("Category").PrimaryColumns("CategoryId");
+            Create.ForeignKey("FK_GoalTrackerCategory_CreatedByUserId").FromTable("GoalTrackerCategory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTrackerCategory_GoalTrackerId").FromTable("GoalTrackerCategory").ForeignColumns("GoalTrackerId")
+                .ToTable("GoalTracker").PrimaryColumns("GoalTrackerId");
+            Create.ForeignKey("FK_GoalTrackerCategory_ModifiedByUserId").FromTable("GoalTrackerCategory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTrackerCategory_UserId").FromTable("GoalTrackerCategory").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTrackerMileStone_CreatedByUserId").FromTable("GoalTrackerMileStone").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTrackerMileStone_GoalTrackerId").FromTable("GoalTrackerMileStone").ForeignColumns("GoalTrackerId")
+                .ToTable("GoalTracker").PrimaryColumns("GoalTrackerId");
+            Create.ForeignKey("FK_GoalTrackerMileStone_ModifiedByUserId").FromTable("GoalTrackerMileStone").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTrackerMileStone_PredefinedGoalStatusTypeId").FromTable("GoalTrackerMileStone").ForeignColumns("PredefinedGoalStatusTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_GoalTrackerMileStone_UserId").FromTable("GoalTrackerMileStone").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MeditationFile_CreatedByUserId").FromTable("MeditationFile").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MeditationFile_ModifiedByUserId").FromTable("MeditationFile").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MeditationFile_PredefinedMeditationTypeId").FromTable("MeditationFile").ForeignColumns("PredefinedMeditationTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_MeditationFile_UserId").FromTable("MeditationFile").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MeditationSession_CreatedByUserId").FromTable("MeditationSession").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MeditationSession_MeditationFileId").FromTable("MeditationSession").ForeignColumns("MeditationFileId")
+                .ToTable("MeditationFile").PrimaryColumns("MeditationFileId");
+            Create.ForeignKey("FK_MeditationSession_ModifiedByUserId").FromTable("MeditationSession").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MeditationSession_UserId").FromTable("MeditationSession").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardPicture_CreatedByUserId").FromTable("VisionBoardPicture").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardPicture_ModifiedByUserId").FromTable("VisionBoardPicture").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardPicture_UserId").FromTable("VisionBoardPicture").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSession_CreatedByUserId").FromTable("VisionBoardSession").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSession_ModifiedByUserId").FromTable("VisionBoardSession").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSession_UserId").FromTable("VisionBoardSession").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSessionPicture_CreatedByUserId").FromTable("VisionBoardSessionPicture").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSessionPicture_ModifiedByUserId").FromTable("VisionBoardSessionPicture").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSessionPicture_UserId").FromTable("VisionBoardSessionPicture").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VisionBoardSessionPicture_VisionBoardPictureId").FromTable("VisionBoardSessionPicture").ForeignColumns("VisionBoardPictureId")
+                .ToTable("VisionBoardPicture").PrimaryColumns("VisionBoardPictureId");
+            Create.ForeignKey("FK_VisionBoardSessionPicture_VisionBoardSessionId").FromTable("VisionBoardSessionPicture").ForeignColumns("VisionBoardSessionId")
+                .ToTable("VisionBoardSession").PrimaryColumns("VisionBoardSessionId");
         }
     }
 }

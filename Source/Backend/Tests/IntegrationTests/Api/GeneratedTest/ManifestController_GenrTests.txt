@@ -1,0 +1,2439 @@
+public void GetFileAttachmentFolders_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentFolderSearchCriteria();
+    var r = GetFileAttachmentFolders();
+}
+public void GetFileAttachmentFolders_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFileAttachmentFolder();
+}
+public void GetFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentFolderCreateModel();
+    var r = CreateFileAttachmentFolder();
+}
+public void CreateFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleFileAttachmentFolderCreateModel();
+    var r = CreateMultipleFileAttachmentFolder();
+}
+public void CreateMultipleFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateFileAttachmentFolder_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentFolderUpdateModel();
+    var r = UpdateFileAttachmentFolder();
+}
+public void UpdateFileAttachmentFolder_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentFolderAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentFolderAsDeleted();
+}
+public void MarkFileAttachmentFolderAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentFolderAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentFolderAsNotDeleted();
+}
+public void MarkFileAttachmentFolderAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFileAttachments_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentSearchCriteria();
+    var r = GetFileAttachments();
+}
+public void GetFileAttachments_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFileAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFileAttachment();
+}
+public void GetFileAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateFileAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentCreateWithFileFormModel();
+    var r = CreateFileAttachment();
+}
+public void CreateFileAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateFileAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new FileAttachmentUpdateModel();
+    var r = UpdateFileAttachment();
+}
+public void UpdateFileAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentAsDeleted();
+}
+public void MarkFileAttachmentAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFileAttachmentAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFileAttachmentAsNotDeleted();
+}
+public void MarkFileAttachmentAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsFileAttachmentFileValid_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = IsFileAttachmentFileValid();
+}
+public void IsFileAttachmentFileValid_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictures_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionPictureSearchCriteria();
+    var r = GetVisionBoardSessionPictures();
+}
+public void GetVisionBoardSessionPictures_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPicture_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionPicture();
+}
+public void GetVisionBoardSessionPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateVisionBoardSessionPicture_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionPictureCreateModel();
+    var r = CreateVisionBoardSessionPicture();
+}
+public void CreateVisionBoardSessionPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleVisionBoardSessionPicture_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleVisionBoardSessionPictureCreateModel();
+    var r = CreateMultipleVisionBoardSessionPicture();
+}
+public void CreateMultipleVisionBoardSessionPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateVisionBoardSessionPicture_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionPictureUpdateModel();
+    var r = UpdateVisionBoardSessionPicture();
+}
+public void UpdateVisionBoardSessionPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardSessionPictureAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardSessionPictureAsDeleted();
+}
+public void MarkVisionBoardSessionPictureAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardSessionPictureAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardSessionPictureAsNotDeleted();
+}
+public void MarkVisionBoardSessionPictureAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictureByVisionBoardSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionPictureByVisionBoardSessionId();
+}
+public void GetVisionBoardSessionPictureByVisionBoardSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictureByVisionBoardSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria();
+    var r = GetVisionBoardSessionPictureByVisionBoardSessionIdSearch();
+}
+public void GetVisionBoardSessionPictureByVisionBoardSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByVisionBoardSessionPictureId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionByVisionBoardSessionPictureId();
+}
+public void GetVisionBoardSessionByVisionBoardSessionPictureId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByVisionBoardSessionPictureIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria();
+    var r = GetVisionBoardSessionByVisionBoardSessionPictureIdSearch();
+}
+public void GetVisionBoardSessionByVisionBoardSessionPictureIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictureByVisionBoardPictureId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionPictureByVisionBoardPictureId();
+}
+public void GetVisionBoardSessionPictureByVisionBoardPictureId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictureByVisionBoardPictureIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria();
+    var r = GetVisionBoardSessionPictureByVisionBoardPictureIdSearch();
+}
+public void GetVisionBoardSessionPictureByVisionBoardPictureIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardPictureByVisionBoardSessionPictureId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardPictureByVisionBoardSessionPictureId();
+}
+public void GetVisionBoardPictureByVisionBoardSessionPictureId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardPictureByVisionBoardSessionPictureIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria();
+    var r = GetVisionBoardPictureByVisionBoardSessionPictureIdSearch();
+}
+public void GetVisionBoardPictureByVisionBoardSessionPictureIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictureByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionPictureByUserId();
+}
+public void GetVisionBoardSessionPictureByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionPictureByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionPictureByUserIdSearchCriteria();
+    var r = GetVisionBoardSessionPictureByUserIdSearch();
+}
+public void GetVisionBoardSessionPictureByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardSessionPictureId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByVisionBoardSessionPictureId();
+}
+public void GetUserByVisionBoardSessionPictureId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardSessionPictureIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByVisionBoardSessionPictureIdSearchCriteria();
+    var r = GetUserByVisionBoardSessionPictureIdSearch();
+}
+public void GetUserByVisionBoardSessionPictureIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategorys_WithValidData_ReturnsValidData()
+{
+    var model = new CategorySearchCriteria();
+    var r = GetCategorys();
+}
+public void GetCategorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCategory();
+}
+public void GetCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateCategory_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryCreateModel();
+    var r = CreateCategory();
+}
+public void CreateCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleCategory_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleCategoryCreateModel();
+    var r = CreateMultipleCategory();
+}
+public void CreateMultipleCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateCategory_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryUpdateModel();
+    var r = UpdateCategory();
+}
+public void UpdateCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkCategoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkCategoryAsDeleted();
+}
+public void MarkCategoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkCategoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkCategoryAsNotDeleted();
+}
+public void MarkCategoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByDefaultCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCategoryByDefaultCategoryId();
+}
+public void GetCategoryByDefaultCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByDefaultCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryByDefaultCategoryIdSearchCriteria();
+    var r = GetCategoryByDefaultCategoryIdSearch();
+}
+public void GetCategoryByDefaultCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategoryByCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultCategoryByCategoryId();
+}
+public void GetDefaultCategoryByCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategoryByCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultCategoryByCategoryIdSearchCriteria();
+    var r = GetDefaultCategoryByCategoryIdSearch();
+}
+public void GetDefaultCategoryByCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCategoryByUserId();
+}
+public void GetCategoryByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryByUserIdSearchCriteria();
+    var r = GetCategoryByUserIdSearch();
+}
+public void GetCategoryByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByCategoryId();
+}
+public void GetUserByCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByCategoryIdSearchCriteria();
+    var r = GetUserByCategoryIdSearch();
+}
+public void GetUserByCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessions_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionSearchCriteria();
+    var r = GetDailyAffirmationSessions();
+}
+public void GetDailyAffirmationSessions_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSession_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSession();
+}
+public void GetDailyAffirmationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDailyAffirmationSession_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCreateModel();
+    var r = CreateDailyAffirmationSession();
+}
+public void CreateDailyAffirmationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDailyAffirmationSession_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDailyAffirmationSessionCreateModel();
+    var r = CreateMultipleDailyAffirmationSession();
+}
+public void CreateMultipleDailyAffirmationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDailyAffirmationSession_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionUpdateModel();
+    var r = UpdateDailyAffirmationSession();
+}
+public void UpdateDailyAffirmationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyAffirmationSessionAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyAffirmationSessionAsDeleted();
+}
+public void MarkDailyAffirmationSessionAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyAffirmationSessionAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyAffirmationSessionAsNotDeleted();
+}
+public void MarkDailyAffirmationSessionAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionByUserId();
+}
+public void GetDailyAffirmationSessionByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionByUserIdSearchCriteria();
+    var r = GetDailyAffirmationSessionByUserIdSearch();
+}
+public void GetDailyAffirmationSessionByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyAffirmationSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByDailyAffirmationSessionId();
+}
+public void GetUserByDailyAffirmationSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyAffirmationSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByDailyAffirmationSessionIdSearchCriteria();
+    var r = GetUserByDailyAffirmationSessionIdSearch();
+}
+public void GetUserByDailyAffirmationSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategorys_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCategorySearchCriteria();
+    var r = GetDailyAffirmationSessionCategorys();
+}
+public void GetDailyAffirmationSessionCategorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionCategory();
+}
+public void GetDailyAffirmationSessionCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDailyAffirmationSessionCategory_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCategoryCreateModel();
+    var r = CreateDailyAffirmationSessionCategory();
+}
+public void CreateDailyAffirmationSessionCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDailyAffirmationSessionCategory_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDailyAffirmationSessionCategoryCreateModel();
+    var r = CreateMultipleDailyAffirmationSessionCategory();
+}
+public void CreateMultipleDailyAffirmationSessionCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDailyAffirmationSessionCategory_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCategoryUpdateModel();
+    var r = UpdateDailyAffirmationSessionCategory();
+}
+public void UpdateDailyAffirmationSessionCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyAffirmationSessionCategoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyAffirmationSessionCategoryAsDeleted();
+}
+public void MarkDailyAffirmationSessionCategoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyAffirmationSessionCategoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyAffirmationSessionCategoryAsNotDeleted();
+}
+public void MarkDailyAffirmationSessionCategoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategoryByCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionCategoryByCategoryId();
+}
+public void GetDailyAffirmationSessionCategoryByCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategoryByCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCategoryByCategoryIdSearchCriteria();
+    var r = GetDailyAffirmationSessionCategoryByCategoryIdSearch();
+}
+public void GetDailyAffirmationSessionCategoryByCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByDailyAffirmationSessionCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCategoryByDailyAffirmationSessionCategoryId();
+}
+public void GetCategoryByDailyAffirmationSessionCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByDailyAffirmationSessionCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryByDailyAffirmationSessionCategoryIdSearchCriteria();
+    var r = GetCategoryByDailyAffirmationSessionCategoryIdSearch();
+}
+public void GetCategoryByDailyAffirmationSessionCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategoryByDailyAffirmationSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionCategoryByDailyAffirmationSessionId();
+}
+public void GetDailyAffirmationSessionCategoryByDailyAffirmationSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria();
+    var r = GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearch();
+}
+public void GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionByDailyAffirmationSessionCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionByDailyAffirmationSessionCategoryId();
+}
+public void GetDailyAffirmationSessionByDailyAffirmationSessionCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria();
+    var r = GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearch();
+}
+public void GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategoryByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionCategoryByUserId();
+}
+public void GetDailyAffirmationSessionCategoryByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionCategoryByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionCategoryByUserIdSearchCriteria();
+    var r = GetDailyAffirmationSessionCategoryByUserIdSearch();
+}
+public void GetDailyAffirmationSessionCategoryByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyAffirmationSessionCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByDailyAffirmationSessionCategoryId();
+}
+public void GetUserByDailyAffirmationSessionCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyAffirmationSessionCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByDailyAffirmationSessionCategoryIdSearchCriteria();
+    var r = GetUserByDailyAffirmationSessionCategoryIdSearch();
+}
+public void GetUserByDailyAffirmationSessionCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationTexts_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationTextSearchCriteria();
+    var r = GetDailyAffirmationTexts();
+}
+public void GetDailyAffirmationTexts_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationText();
+}
+public void GetDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationTextCreateModel();
+    var r = CreateDailyAffirmationText();
+}
+public void CreateDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDailyAffirmationTextCreateModel();
+    var r = CreateMultipleDailyAffirmationText();
+}
+public void CreateMultipleDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationTextUpdateModel();
+    var r = UpdateDailyAffirmationText();
+}
+public void UpdateDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyAffirmationTextAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyAffirmationTextAsDeleted();
+}
+public void MarkDailyAffirmationTextAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyAffirmationTextAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyAffirmationTextAsNotDeleted();
+}
+public void MarkDailyAffirmationTextAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationTextByCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationTextByCategoryId();
+}
+public void GetDailyAffirmationTextByCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationTextByCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationTextByCategoryIdSearchCriteria();
+    var r = GetDailyAffirmationTextByCategoryIdSearch();
+}
+public void GetDailyAffirmationTextByCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByDailyAffirmationTextId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCategoryByDailyAffirmationTextId();
+}
+public void GetCategoryByDailyAffirmationTextId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByDailyAffirmationTextIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryByDailyAffirmationTextIdSearchCriteria();
+    var r = GetCategoryByDailyAffirmationTextIdSearch();
+}
+public void GetCategoryByDailyAffirmationTextIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationTextByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationTextByUserId();
+}
+public void GetDailyAffirmationTextByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationTextByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationTextByUserIdSearchCriteria();
+    var r = GetDailyAffirmationTextByUserIdSearch();
+}
+public void GetDailyAffirmationTextByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyAffirmationTextId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByDailyAffirmationTextId();
+}
+public void GetUserByDailyAffirmationTextId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyAffirmationTextIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByDailyAffirmationTextIdSearchCriteria();
+    var r = GetUserByDailyAffirmationTextIdSearch();
+}
+public void GetUserByDailyAffirmationTextIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategorys_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultCategorySearchCriteria();
+    var r = GetDefaultCategorys();
+}
+public void GetDefaultCategorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultCategory();
+}
+public void GetDefaultCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDefaultCategory_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultCategoryCreateModel();
+    var r = CreateDefaultCategory();
+}
+public void CreateDefaultCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDefaultCategory_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDefaultCategoryCreateModel();
+    var r = CreateMultipleDefaultCategory();
+}
+public void CreateMultipleDefaultCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDefaultCategory_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultCategoryUpdateModel();
+    var r = UpdateDefaultCategory();
+}
+public void UpdateDefaultCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultCategoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultCategoryAsDeleted();
+}
+public void MarkDefaultCategoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultCategoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultCategoryAsNotDeleted();
+}
+public void MarkDefaultCategoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultDailyAffirmationTexts_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultDailyAffirmationTextSearchCriteria();
+    var r = GetDefaultDailyAffirmationTexts();
+}
+public void GetDefaultDailyAffirmationTexts_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultDailyAffirmationText();
+}
+public void GetDefaultDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDefaultDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultDailyAffirmationTextCreateModel();
+    var r = CreateDefaultDailyAffirmationText();
+}
+public void CreateDefaultDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDefaultDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDefaultDailyAffirmationTextCreateModel();
+    var r = CreateMultipleDefaultDailyAffirmationText();
+}
+public void CreateMultipleDefaultDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDefaultDailyAffirmationText_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultDailyAffirmationTextUpdateModel();
+    var r = UpdateDefaultDailyAffirmationText();
+}
+public void UpdateDefaultDailyAffirmationText_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultDailyAffirmationTextAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultDailyAffirmationTextAsDeleted();
+}
+public void MarkDefaultDailyAffirmationTextAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultDailyAffirmationTextAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultDailyAffirmationTextAsNotDeleted();
+}
+public void MarkDefaultDailyAffirmationTextAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultDailyAffirmationTextByDefaultCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultDailyAffirmationTextByDefaultCategoryId();
+}
+public void GetDefaultDailyAffirmationTextByDefaultCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultDailyAffirmationTextByDefaultCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria();
+    var r = GetDefaultDailyAffirmationTextByDefaultCategoryIdSearch();
+}
+public void GetDefaultDailyAffirmationTextByDefaultCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategoryByDefaultDailyAffirmationTextId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultCategoryByDefaultDailyAffirmationTextId();
+}
+public void GetDefaultCategoryByDefaultDailyAffirmationTextId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategoryByDefaultDailyAffirmationTextIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria();
+    var r = GetDefaultCategoryByDefaultDailyAffirmationTextIdSearch();
+}
+public void GetDefaultCategoryByDefaultDailyAffirmationTextIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackers_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerSearchCriteria();
+    var r = GetDefaultGoalTrackers();
+}
+public void GetDefaultGoalTrackers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultGoalTracker();
+}
+public void GetDefaultGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDefaultGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerCreateModel();
+    var r = CreateDefaultGoalTracker();
+}
+public void CreateDefaultGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDefaultGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDefaultGoalTrackerCreateModel();
+    var r = CreateMultipleDefaultGoalTracker();
+}
+public void CreateMultipleDefaultGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDefaultGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerUpdateModel();
+    var r = UpdateDefaultGoalTracker();
+}
+public void UpdateDefaultGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultGoalTrackerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultGoalTrackerAsDeleted();
+}
+public void MarkDefaultGoalTrackerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultGoalTrackerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultGoalTrackerAsNotDeleted();
+}
+public void MarkDefaultGoalTrackerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerCategorys_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerCategorySearchCriteria();
+    var r = GetDefaultGoalTrackerCategorys();
+}
+public void GetDefaultGoalTrackerCategorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultGoalTrackerCategory();
+}
+public void GetDefaultGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDefaultGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerCategoryCreateModel();
+    var r = CreateDefaultGoalTrackerCategory();
+}
+public void CreateDefaultGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDefaultGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDefaultGoalTrackerCategoryCreateModel();
+    var r = CreateMultipleDefaultGoalTrackerCategory();
+}
+public void CreateMultipleDefaultGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDefaultGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerCategoryUpdateModel();
+    var r = UpdateDefaultGoalTrackerCategory();
+}
+public void UpdateDefaultGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultGoalTrackerCategoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultGoalTrackerCategoryAsDeleted();
+}
+public void MarkDefaultGoalTrackerCategoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultGoalTrackerCategoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultGoalTrackerCategoryAsNotDeleted();
+}
+public void MarkDefaultGoalTrackerCategoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerCategoryByDefaultCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultGoalTrackerCategoryByDefaultCategoryId();
+}
+public void GetDefaultGoalTrackerCategoryByDefaultCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerCategoryByDefaultCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria();
+    var r = GetDefaultGoalTrackerCategoryByDefaultCategoryIdSearch();
+}
+public void GetDefaultGoalTrackerCategoryByDefaultCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategoryByDefaultGoalTrackerCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultCategoryByDefaultGoalTrackerCategoryId();
+}
+public void GetDefaultCategoryByDefaultGoalTrackerCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultCategoryByDefaultGoalTrackerCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria();
+    var r = GetDefaultCategoryByDefaultGoalTrackerCategoryIdSearch();
+}
+public void GetDefaultCategoryByDefaultGoalTrackerCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerCategoryByDefaultGoalTrackerId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultGoalTrackerCategoryByDefaultGoalTrackerId();
+}
+public void GetDefaultGoalTrackerCategoryByDefaultGoalTrackerId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria();
+    var r = GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearch();
+}
+public void GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerByDefaultGoalTrackerCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultGoalTrackerByDefaultGoalTrackerCategoryId();
+}
+public void GetDefaultGoalTrackerByDefaultGoalTrackerCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria();
+    var r = GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearch();
+}
+public void GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultMeditationFiles_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultMeditationFileSearchCriteria();
+    var r = GetDefaultMeditationFiles();
+}
+public void GetDefaultMeditationFiles_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultMeditationFile();
+}
+public void GetDefaultMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDefaultMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultMeditationFileCreateModel();
+    var r = CreateDefaultMeditationFile();
+}
+public void CreateDefaultMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDefaultMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDefaultMeditationFileCreateModel();
+    var r = CreateMultipleDefaultMeditationFile();
+}
+public void CreateMultipleDefaultMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDefaultMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultMeditationFileUpdateModel();
+    var r = UpdateDefaultMeditationFile();
+}
+public void UpdateDefaultMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultMeditationFileAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultMeditationFileAsDeleted();
+}
+public void MarkDefaultMeditationFileAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultMeditationFileAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultMeditationFileAsNotDeleted();
+}
+public void MarkDefaultMeditationFileAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultVisionBoardPictures_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultVisionBoardPictureSearchCriteria();
+    var r = GetDefaultVisionBoardPictures();
+}
+public void GetDefaultVisionBoardPictures_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDefaultVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDefaultVisionBoardPicture();
+}
+public void GetDefaultVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDefaultVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultVisionBoardPictureCreateModel();
+    var r = CreateDefaultVisionBoardPicture();
+}
+public void CreateDefaultVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDefaultVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDefaultVisionBoardPictureCreateModel();
+    var r = CreateMultipleDefaultVisionBoardPicture();
+}
+public void CreateMultipleDefaultVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDefaultVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new DefaultVisionBoardPictureUpdateModel();
+    var r = UpdateDefaultVisionBoardPicture();
+}
+public void UpdateDefaultVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultVisionBoardPictureAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultVisionBoardPictureAsDeleted();
+}
+public void MarkDefaultVisionBoardPictureAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDefaultVisionBoardPictureAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDefaultVisionBoardPictureAsNotDeleted();
+}
+public void MarkDefaultVisionBoardPictureAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeeds_WithValidData_ReturnsValidData()
+{
+    var model = new FeedSearchCriteria();
+    var r = GetFeeds();
+}
+public void GetFeeds_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeed_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeed();
+}
+public void GetFeed_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateFeed_WithValidData_ReturnsValidData()
+{
+    var model = new FeedCreateModel();
+    var r = CreateFeed();
+}
+public void CreateFeed_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleFeed_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleFeedCreateModel();
+    var r = CreateMultipleFeed();
+}
+public void CreateMultipleFeed_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateFeed_WithValidData_ReturnsValidData()
+{
+    var model = new FeedUpdateModel();
+    var r = UpdateFeed();
+}
+public void UpdateFeed_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFeedAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFeedAsDeleted();
+}
+public void MarkFeedAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkFeedAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkFeedAsNotDeleted();
+}
+public void MarkFeedAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeedByUserId();
+}
+public void GetFeedByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new FeedByUserIdSearchCriteria();
+    var r = GetFeedByUserIdSearch();
+}
+public void GetFeedByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByFeedId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByFeedId();
+}
+public void GetUserByFeedId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByFeedIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByFeedIdSearchCriteria();
+    var r = GetUserByFeedIdSearch();
+}
+public void GetUserByFeedIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByDailyAffirmationSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeedByDailyAffirmationSessionId();
+}
+public void GetFeedByDailyAffirmationSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByDailyAffirmationSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new FeedByDailyAffirmationSessionIdSearchCriteria();
+    var r = GetFeedByDailyAffirmationSessionIdSearch();
+}
+public void GetFeedByDailyAffirmationSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionByFeedId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyAffirmationSessionByFeedId();
+}
+public void GetDailyAffirmationSessionByFeedId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationSessionByFeedIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyAffirmationSessionByFeedIdSearchCriteria();
+    var r = GetDailyAffirmationSessionByFeedIdSearch();
+}
+public void GetDailyAffirmationSessionByFeedIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByVisionBoardSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeedByVisionBoardSessionId();
+}
+public void GetFeedByVisionBoardSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByVisionBoardSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new FeedByVisionBoardSessionIdSearchCriteria();
+    var r = GetFeedByVisionBoardSessionIdSearch();
+}
+public void GetFeedByVisionBoardSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByFeedId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionByFeedId();
+}
+public void GetVisionBoardSessionByFeedId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByFeedIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionByFeedIdSearchCriteria();
+    var r = GetVisionBoardSessionByFeedIdSearch();
+}
+public void GetVisionBoardSessionByFeedIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByMeditationSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeedByMeditationSessionId();
+}
+public void GetFeedByMeditationSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByMeditationSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new FeedByMeditationSessionIdSearchCriteria();
+    var r = GetFeedByMeditationSessionIdSearch();
+}
+public void GetFeedByMeditationSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessionByFeedId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationSessionByFeedId();
+}
+public void GetMeditationSessionByFeedId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessionByFeedIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationSessionByFeedIdSearchCriteria();
+    var r = GetMeditationSessionByFeedIdSearch();
+}
+public void GetMeditationSessionByFeedIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByGoalTrackerId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeedByGoalTrackerId();
+}
+public void GetFeedByGoalTrackerId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByGoalTrackerIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new FeedByGoalTrackerIdSearchCriteria();
+    var r = GetFeedByGoalTrackerIdSearch();
+}
+public void GetFeedByGoalTrackerIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByFeedId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerByFeedId();
+}
+public void GetGoalTrackerByFeedId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByFeedIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerByFeedIdSearchCriteria();
+    var r = GetGoalTrackerByFeedIdSearch();
+}
+public void GetGoalTrackerByFeedIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByGoalTrackerMileStoneId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetFeedByGoalTrackerMileStoneId();
+}
+public void GetFeedByGoalTrackerMileStoneId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetFeedByGoalTrackerMileStoneIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new FeedByGoalTrackerMileStoneIdSearchCriteria();
+    var r = GetFeedByGoalTrackerMileStoneIdSearch();
+}
+public void GetFeedByGoalTrackerMileStoneIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStoneByFeedId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerMileStoneByFeedId();
+}
+public void GetGoalTrackerMileStoneByFeedId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStoneByFeedIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerMileStoneByFeedIdSearchCriteria();
+    var r = GetGoalTrackerMileStoneByFeedIdSearch();
+}
+public void GetGoalTrackerMileStoneByFeedIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackers_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerSearchCriteria();
+    var r = GetGoalTrackers();
+}
+public void GetGoalTrackers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTracker();
+}
+public void GetGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCreateModel();
+    var r = CreateGoalTracker();
+}
+public void CreateGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleGoalTrackerCreateModel();
+    var r = CreateMultipleGoalTracker();
+}
+public void CreateMultipleGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateGoalTracker_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerUpdateModel();
+    var r = UpdateGoalTracker();
+}
+public void UpdateGoalTracker_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkGoalTrackerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkGoalTrackerAsDeleted();
+}
+public void MarkGoalTrackerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkGoalTrackerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkGoalTrackerAsNotDeleted();
+}
+public void MarkGoalTrackerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerByUserId();
+}
+public void GetGoalTrackerByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerByUserIdSearchCriteria();
+    var r = GetGoalTrackerByUserIdSearch();
+}
+public void GetGoalTrackerByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByGoalTrackerId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByGoalTrackerId();
+}
+public void GetUserByGoalTrackerId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByGoalTrackerIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByGoalTrackerIdSearchCriteria();
+    var r = GetUserByGoalTrackerIdSearch();
+}
+public void GetUserByGoalTrackerIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategorys_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCategorySearchCriteria();
+    var r = GetGoalTrackerCategorys();
+}
+public void GetGoalTrackerCategorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerCategory();
+}
+public void GetGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCategoryCreateModel();
+    var r = CreateGoalTrackerCategory();
+}
+public void CreateGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleGoalTrackerCategoryCreateModel();
+    var r = CreateMultipleGoalTrackerCategory();
+}
+public void CreateMultipleGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateGoalTrackerCategory_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCategoryUpdateModel();
+    var r = UpdateGoalTrackerCategory();
+}
+public void UpdateGoalTrackerCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkGoalTrackerCategoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkGoalTrackerCategoryAsDeleted();
+}
+public void MarkGoalTrackerCategoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkGoalTrackerCategoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkGoalTrackerCategoryAsNotDeleted();
+}
+public void MarkGoalTrackerCategoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategoryByCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerCategoryByCategoryId();
+}
+public void GetGoalTrackerCategoryByCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategoryByCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCategoryByCategoryIdSearchCriteria();
+    var r = GetGoalTrackerCategoryByCategoryIdSearch();
+}
+public void GetGoalTrackerCategoryByCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByGoalTrackerCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCategoryByGoalTrackerCategoryId();
+}
+public void GetCategoryByGoalTrackerCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCategoryByGoalTrackerCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new CategoryByGoalTrackerCategoryIdSearchCriteria();
+    var r = GetCategoryByGoalTrackerCategoryIdSearch();
+}
+public void GetCategoryByGoalTrackerCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategoryByGoalTrackerId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerCategoryByGoalTrackerId();
+}
+public void GetGoalTrackerCategoryByGoalTrackerId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategoryByGoalTrackerIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCategoryByGoalTrackerIdSearchCriteria();
+    var r = GetGoalTrackerCategoryByGoalTrackerIdSearch();
+}
+public void GetGoalTrackerCategoryByGoalTrackerIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByGoalTrackerCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerByGoalTrackerCategoryId();
+}
+public void GetGoalTrackerByGoalTrackerCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByGoalTrackerCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerByGoalTrackerCategoryIdSearchCriteria();
+    var r = GetGoalTrackerByGoalTrackerCategoryIdSearch();
+}
+public void GetGoalTrackerByGoalTrackerCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategoryByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerCategoryByUserId();
+}
+public void GetGoalTrackerCategoryByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerCategoryByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerCategoryByUserIdSearchCriteria();
+    var r = GetGoalTrackerCategoryByUserIdSearch();
+}
+public void GetGoalTrackerCategoryByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByGoalTrackerCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByGoalTrackerCategoryId();
+}
+public void GetUserByGoalTrackerCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByGoalTrackerCategoryIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByGoalTrackerCategoryIdSearchCriteria();
+    var r = GetUserByGoalTrackerCategoryIdSearch();
+}
+public void GetUserByGoalTrackerCategoryIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStones_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerMileStoneSearchCriteria();
+    var r = GetGoalTrackerMileStones();
+}
+public void GetGoalTrackerMileStones_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStone_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerMileStone();
+}
+public void GetGoalTrackerMileStone_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateGoalTrackerMileStone_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerMileStoneCreateModel();
+    var r = CreateGoalTrackerMileStone();
+}
+public void CreateGoalTrackerMileStone_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleGoalTrackerMileStone_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleGoalTrackerMileStoneCreateModel();
+    var r = CreateMultipleGoalTrackerMileStone();
+}
+public void CreateMultipleGoalTrackerMileStone_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateGoalTrackerMileStone_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerMileStoneUpdateModel();
+    var r = UpdateGoalTrackerMileStone();
+}
+public void UpdateGoalTrackerMileStone_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkGoalTrackerMileStoneAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkGoalTrackerMileStoneAsDeleted();
+}
+public void MarkGoalTrackerMileStoneAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkGoalTrackerMileStoneAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkGoalTrackerMileStoneAsNotDeleted();
+}
+public void MarkGoalTrackerMileStoneAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStoneByGoalTrackerId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerMileStoneByGoalTrackerId();
+}
+public void GetGoalTrackerMileStoneByGoalTrackerId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStoneByGoalTrackerIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerMileStoneByGoalTrackerIdSearchCriteria();
+    var r = GetGoalTrackerMileStoneByGoalTrackerIdSearch();
+}
+public void GetGoalTrackerMileStoneByGoalTrackerIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByGoalTrackerMileStoneId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerByGoalTrackerMileStoneId();
+}
+public void GetGoalTrackerByGoalTrackerMileStoneId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerByGoalTrackerMileStoneIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerByGoalTrackerMileStoneIdSearchCriteria();
+    var r = GetGoalTrackerByGoalTrackerMileStoneIdSearch();
+}
+public void GetGoalTrackerByGoalTrackerMileStoneIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStoneByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackerMileStoneByUserId();
+}
+public void GetGoalTrackerMileStoneByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetGoalTrackerMileStoneByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new GoalTrackerMileStoneByUserIdSearchCriteria();
+    var r = GetGoalTrackerMileStoneByUserIdSearch();
+}
+public void GetGoalTrackerMileStoneByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByGoalTrackerMileStoneId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByGoalTrackerMileStoneId();
+}
+public void GetUserByGoalTrackerMileStoneId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByGoalTrackerMileStoneIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByGoalTrackerMileStoneIdSearchCriteria();
+    var r = GetUserByGoalTrackerMileStoneIdSearch();
+}
+public void GetUserByGoalTrackerMileStoneIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationFiles_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationFileSearchCriteria();
+    var r = GetMeditationFiles();
+}
+public void GetMeditationFiles_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationFile();
+}
+public void GetMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationFileCreateModel();
+    var r = CreateMeditationFile();
+}
+public void CreateMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleMeditationFileCreateModel();
+    var r = CreateMultipleMeditationFile();
+}
+public void CreateMultipleMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateMeditationFile_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationFileUpdateModel();
+    var r = UpdateMeditationFile();
+}
+public void UpdateMeditationFile_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMeditationFileAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMeditationFileAsDeleted();
+}
+public void MarkMeditationFileAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMeditationFileAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMeditationFileAsNotDeleted();
+}
+public void MarkMeditationFileAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationFileByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationFileByUserId();
+}
+public void GetMeditationFileByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationFileByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationFileByUserIdSearchCriteria();
+    var r = GetMeditationFileByUserIdSearch();
+}
+public void GetMeditationFileByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByMeditationFileId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByMeditationFileId();
+}
+public void GetUserByMeditationFileId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByMeditationFileIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByMeditationFileIdSearchCriteria();
+    var r = GetUserByMeditationFileIdSearch();
+}
+public void GetUserByMeditationFileIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessions_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationSessionSearchCriteria();
+    var r = GetMeditationSessions();
+}
+public void GetMeditationSessions_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSession_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationSession();
+}
+public void GetMeditationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMeditationSession_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationSessionCreateModel();
+    var r = CreateMeditationSession();
+}
+public void CreateMeditationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleMeditationSession_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleMeditationSessionCreateModel();
+    var r = CreateMultipleMeditationSession();
+}
+public void CreateMultipleMeditationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateMeditationSession_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationSessionUpdateModel();
+    var r = UpdateMeditationSession();
+}
+public void UpdateMeditationSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMeditationSessionAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMeditationSessionAsDeleted();
+}
+public void MarkMeditationSessionAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMeditationSessionAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMeditationSessionAsNotDeleted();
+}
+public void MarkMeditationSessionAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessionByMeditationFileId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationSessionByMeditationFileId();
+}
+public void GetMeditationSessionByMeditationFileId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessionByMeditationFileIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationSessionByMeditationFileIdSearchCriteria();
+    var r = GetMeditationSessionByMeditationFileIdSearch();
+}
+public void GetMeditationSessionByMeditationFileIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationFileByMeditationSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationFileByMeditationSessionId();
+}
+public void GetMeditationFileByMeditationSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationFileByMeditationSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationFileByMeditationSessionIdSearchCriteria();
+    var r = GetMeditationFileByMeditationSessionIdSearch();
+}
+public void GetMeditationFileByMeditationSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessionByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMeditationSessionByUserId();
+}
+public void GetMeditationSessionByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMeditationSessionByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new MeditationSessionByUserIdSearchCriteria();
+    var r = GetMeditationSessionByUserIdSearch();
+}
+public void GetMeditationSessionByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByMeditationSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByMeditationSessionId();
+}
+public void GetUserByMeditationSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByMeditationSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByMeditationSessionIdSearchCriteria();
+    var r = GetUserByMeditationSessionIdSearch();
+}
+public void GetUserByMeditationSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardPictures_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardPictureSearchCriteria();
+    var r = GetVisionBoardPictures();
+}
+public void GetVisionBoardPictures_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardPicture();
+}
+public void GetVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardPictureCreateModel();
+    var r = CreateVisionBoardPicture();
+}
+public void CreateVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleVisionBoardPictureCreateModel();
+    var r = CreateMultipleVisionBoardPicture();
+}
+public void CreateMultipleVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateVisionBoardPicture_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardPictureUpdateModel();
+    var r = UpdateVisionBoardPicture();
+}
+public void UpdateVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardPictureAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardPictureAsDeleted();
+}
+public void MarkVisionBoardPictureAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardPictureAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardPictureAsNotDeleted();
+}
+public void MarkVisionBoardPictureAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardPictureByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardPictureByUserId();
+}
+public void GetVisionBoardPictureByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardPictureByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardPictureByUserIdSearchCriteria();
+    var r = GetVisionBoardPictureByUserIdSearch();
+}
+public void GetVisionBoardPictureByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardPictureId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByVisionBoardPictureId();
+}
+public void GetUserByVisionBoardPictureId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardPictureIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByVisionBoardPictureIdSearchCriteria();
+    var r = GetUserByVisionBoardPictureIdSearch();
+}
+public void GetUserByVisionBoardPictureIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessions_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionSearchCriteria();
+    var r = GetVisionBoardSessions();
+}
+public void GetVisionBoardSessions_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSession();
+}
+public void GetVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionCreateModel();
+    var r = CreateVisionBoardSession();
+}
+public void CreateVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleVisionBoardSessionCreateModel();
+    var r = CreateMultipleVisionBoardSession();
+}
+public void CreateMultipleVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionUpdateModel();
+    var r = UpdateVisionBoardSession();
+}
+public void UpdateVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardSessionAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardSessionAsDeleted();
+}
+public void MarkVisionBoardSessionAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardSessionAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardSessionAsNotDeleted();
+}
+public void MarkVisionBoardSessionAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionByUserId();
+}
+public void GetVisionBoardSessionByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionByUserIdSearchCriteria();
+    var r = GetVisionBoardSessionByUserIdSearch();
+}
+public void GetVisionBoardSessionByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByVisionBoardSessionId();
+}
+public void GetUserByVisionBoardSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByVisionBoardSessionIdSearchCriteria();
+    var r = GetUserByVisionBoardSessionIdSearch();
+}
+public void GetUserByVisionBoardSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

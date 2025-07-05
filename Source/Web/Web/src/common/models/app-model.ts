@@ -2453,6 +2453,5071 @@ export class FileAttachmentUpdateModel {
     }
 }
 
+export class VisionBoardSessionPictureModel {
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    visionBoardSessionPictureId : number = 0;
+    visionBoardSessionId : number = 0;
+    visionBoardSessionPictureDate : Date = new Date();
+    visionBoardPictureId : number = 0;
+    visionBoardSessionPictureTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : VisionBoardSessionPictureModel,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureModel {
+      let obj = new VisionBoardSessionPictureModel();
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('visionBoardSessionPictureId'))
+        obj.visionBoardSessionPictureId = self.visionBoardSessionPictureId;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionPictureDate'))
+        obj.visionBoardSessionPictureDate = self.visionBoardSessionPictureDate ?? (!adjustDateToUTC ? self.visionBoardSessionPictureDate : DateUtils.parseAsUTC(self.visionBoardSessionPictureDate));
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('visionBoardSessionPictureTimeSpentInSeconds'))
+        obj.visionBoardSessionPictureTimeSpentInSeconds = self.visionBoardSessionPictureTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : VisionBoardSessionPictureModel) : VisionBoardSessionPictureCreateModel {
+      let obj = new VisionBoardSessionPictureCreateModel();
+      obj.visionBoardSessionId = self.visionBoardSessionId;
+      obj.visionBoardSessionPictureDate = self.visionBoardSessionPictureDate;
+      obj.visionBoardPictureId = self.visionBoardPictureId;
+      obj.visionBoardSessionPictureTimeSpentInSeconds = self.visionBoardSessionPictureTimeSpentInSeconds;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : VisionBoardSessionPictureModel):VisionBoardSessionPictureUpdateModel {
+      let obj = new VisionBoardSessionPictureUpdateModel();
+      obj.visionBoardSessionPictureId = self.visionBoardSessionPictureId;
+      obj.visionBoardSessionId = self.visionBoardSessionId;
+      obj.visionBoardSessionPictureDate = self.visionBoardSessionPictureDate;
+      obj.visionBoardPictureId = self.visionBoardPictureId;
+      obj.visionBoardSessionPictureTimeSpentInSeconds = self.visionBoardSessionPictureTimeSpentInSeconds;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionPictureSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    visionBoardSessionId : number | null = null;
+    visionBoardPictureId : number | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : VisionBoardSessionPictureSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureSearchCriteria {
+      let obj = new VisionBoardSessionPictureSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionPictureCreateModel {
+    visionBoardSessionId : number = 0;
+    visionBoardSessionPictureDate : Date = new Date();
+    visionBoardPictureId : number = 0;
+    visionBoardSessionPictureTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+
+    static getCopy(self : VisionBoardSessionPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureCreateModel {
+      let obj = new VisionBoardSessionPictureCreateModel();
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionPictureDate'))
+        obj.visionBoardSessionPictureDate = self.visionBoardSessionPictureDate ?? (!adjustDateToUTC ? self.visionBoardSessionPictureDate : DateUtils.parseAsUTC(self.visionBoardSessionPictureDate));
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('visionBoardSessionPictureTimeSpentInSeconds'))
+        obj.visionBoardSessionPictureTimeSpentInSeconds = self.visionBoardSessionPictureTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleVisionBoardSessionPictureCreateModel {
+    newVisionBoardSessionPictures : VisionBoardSessionPictureCreateModel[] | null = null;
+
+    static getCopy(self : MultipleVisionBoardSessionPictureCreateModel,adjustDateToUTC : boolean = false) : MultipleVisionBoardSessionPictureCreateModel {
+      let obj = new MultipleVisionBoardSessionPictureCreateModel();
+      if (self.hasOwnProperty('newVisionBoardSessionPictures'))
+        obj.newVisionBoardSessionPictures = self.newVisionBoardSessionPictures;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionPictureUpdateModel {
+    visionBoardSessionPictureId : number = 0;
+    visionBoardSessionId : number = 0;
+    visionBoardSessionPictureDate : Date = new Date();
+    visionBoardPictureId : number = 0;
+    visionBoardSessionPictureTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+
+    static getCopy(self : VisionBoardSessionPictureUpdateModel,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureUpdateModel {
+      let obj = new VisionBoardSessionPictureUpdateModel();
+      if (self.hasOwnProperty('visionBoardSessionPictureId'))
+        obj.visionBoardSessionPictureId = self.visionBoardSessionPictureId;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionPictureDate'))
+        obj.visionBoardSessionPictureDate = self.visionBoardSessionPictureDate ?? (!adjustDateToUTC ? self.visionBoardSessionPictureDate : DateUtils.parseAsUTC(self.visionBoardSessionPictureDate));
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('visionBoardSessionPictureTimeSpentInSeconds'))
+        obj.visionBoardSessionPictureTimeSpentInSeconds = self.visionBoardSessionPictureTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardSessionId : number = 0;
+
+    static getCopy(self : VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria {
+      let obj = new VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionModel {
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    visionBoardSessionId : number = 0;
+    visionBoardSessionDate : Date = new Date();
+    visionBoardSessionTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : VisionBoardSessionModel,adjustDateToUTC : boolean = false) : VisionBoardSessionModel {
+      let obj = new VisionBoardSessionModel();
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionDate'))
+        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : DateUtils.parseAsUTC(self.visionBoardSessionDate));
+      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
+        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : VisionBoardSessionModel) : VisionBoardSessionCreateModel {
+      let obj = new VisionBoardSessionCreateModel();
+      obj.visionBoardSessionDate = self.visionBoardSessionDate;
+      obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : VisionBoardSessionModel):VisionBoardSessionUpdateModel {
+      let obj = new VisionBoardSessionUpdateModel();
+      obj.visionBoardSessionId = self.visionBoardSessionId;
+      obj.visionBoardSessionDate = self.visionBoardSessionDate;
+      obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardSessionPictureId : number = 0;
+
+    static getCopy(self : VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria {
+      let obj = new VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardSessionPictureId'))
+        obj.visionBoardSessionPictureId = self.visionBoardSessionPictureId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardPictureId : number = 0;
+
+    static getCopy(self : VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria {
+      let obj = new VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureModel {
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    visionBoardPictureId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : VisionBoardPictureModel,adjustDateToUTC : boolean = false) : VisionBoardPictureModel {
+      let obj = new VisionBoardPictureModel();
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : VisionBoardPictureModel) : VisionBoardPictureCreateModel {
+      let obj = new VisionBoardPictureCreateModel();
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : VisionBoardPictureModel):VisionBoardPictureUpdateModel {
+      let obj = new VisionBoardPictureUpdateModel();
+      obj.visionBoardPictureId = self.visionBoardPictureId;
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardSessionPictureId : number = 0;
+
+    static getCopy(self : VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria {
+      let obj = new VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardSessionPictureId'))
+        obj.visionBoardSessionPictureId = self.visionBoardSessionPictureId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionPictureByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : VisionBoardSessionPictureByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionPictureByUserIdSearchCriteria {
+      let obj = new VisionBoardSessionPictureByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByVisionBoardSessionPictureIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardSessionPictureId : number = 0;
+
+    static getCopy(self : UserByVisionBoardSessionPictureIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByVisionBoardSessionPictureIdSearchCriteria {
+      let obj = new UserByVisionBoardSessionPictureIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardSessionPictureId'))
+        obj.visionBoardSessionPictureId = self.visionBoardSessionPictureId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class CategoryModel {
+    defaultCategoryName : string = '';
+    predefinedCategoryTypeName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    categoryId : number = 0;
+    defaultCategoryId : number = 0;
+    categoryName : string = '';
+    predefinedCategoryTypeId : number | null = null;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static categoryName__size : number = 255;
+
+    static getCopy(self : CategoryModel,adjustDateToUTC : boolean = false) : CategoryModel {
+      let obj = new CategoryModel();
+      if (self.hasOwnProperty('defaultCategoryName'))
+        obj.defaultCategoryName = self.defaultCategoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeName'))
+        obj.predefinedCategoryTypeName = self.predefinedCategoryTypeName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('categoryName'))
+        obj.categoryName = self.categoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : CategoryModel) : CategoryCreateModel {
+      let obj = new CategoryCreateModel();
+      obj.defaultCategoryId = self.defaultCategoryId;
+      obj.categoryName = self.categoryName;
+      obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : CategoryModel):CategoryUpdateModel {
+      let obj = new CategoryUpdateModel();
+      obj.categoryId = self.categoryId;
+      obj.defaultCategoryId = self.defaultCategoryId;
+      obj.categoryName = self.categoryName;
+      obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class CategorySearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    defaultCategoryId : number | null = null;
+    predefinedCategoryTypeIds : number[] | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : CategorySearchCriteria,adjustDateToUTC : boolean = false) : CategorySearchCriteria {
+      let obj = new CategorySearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('predefinedCategoryTypeIds'))
+        obj.predefinedCategoryTypeIds = self.predefinedCategoryTypeIds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class CategoryCreateModel {
+    defaultCategoryId : number = 0;
+    categoryName : string = '';
+    predefinedCategoryTypeId : number | null = null;
+    userId : number = 0;
+    static categoryName__size : number = 255;
+
+    static getCopy(self : CategoryCreateModel,adjustDateToUTC : boolean = false) : CategoryCreateModel {
+      let obj = new CategoryCreateModel();
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('categoryName'))
+        obj.categoryName = self.categoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleCategoryCreateModel {
+    newCategorys : CategoryCreateModel[] | null = null;
+
+    static getCopy(self : MultipleCategoryCreateModel,adjustDateToUTC : boolean = false) : MultipleCategoryCreateModel {
+      let obj = new MultipleCategoryCreateModel();
+      if (self.hasOwnProperty('newCategorys'))
+        obj.newCategorys = self.newCategorys;
+      return obj;
+    }
+}
+
+export class CategoryUpdateModel {
+    categoryId : number = 0;
+    defaultCategoryId : number = 0;
+    categoryName : string = '';
+    predefinedCategoryTypeId : number | null = null;
+    userId : number = 0;
+    static categoryName__size : number = 255;
+
+    static getCopy(self : CategoryUpdateModel,adjustDateToUTC : boolean = false) : CategoryUpdateModel {
+      let obj = new CategoryUpdateModel();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('categoryName'))
+        obj.categoryName = self.categoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class CategoryByDefaultCategoryIdSearchCriteria extends BaseSearchCriteria{
+    defaultCategoryId : number = 0;
+
+    static getCopy(self : CategoryByDefaultCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : CategoryByDefaultCategoryIdSearchCriteria {
+      let obj = new CategoryByDefaultCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultCategoryModel {
+    predefinedCategoryTypeName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    defaultCategoryId : number = 0;
+    defaultCategoryName : string = '';
+    predefinedCategoryTypeId : number | null = null;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static defaultCategoryName__size : number = 255;
+
+    static getCopy(self : DefaultCategoryModel,adjustDateToUTC : boolean = false) : DefaultCategoryModel {
+      let obj = new DefaultCategoryModel();
+      if (self.hasOwnProperty('predefinedCategoryTypeName'))
+        obj.predefinedCategoryTypeName = self.predefinedCategoryTypeName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('defaultCategoryName'))
+        obj.defaultCategoryName = self.defaultCategoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DefaultCategoryModel) : DefaultCategoryCreateModel {
+      let obj = new DefaultCategoryCreateModel();
+      obj.defaultCategoryName = self.defaultCategoryName;
+      obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DefaultCategoryModel):DefaultCategoryUpdateModel {
+      let obj = new DefaultCategoryUpdateModel();
+      obj.defaultCategoryId = self.defaultCategoryId;
+      obj.defaultCategoryName = self.defaultCategoryName;
+      obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      return obj;
+    }
+}
+
+export class DefaultCategoryByCategoryIdSearchCriteria extends BaseSearchCriteria{
+    categoryId : number = 0;
+
+    static getCopy(self : DefaultCategoryByCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultCategoryByCategoryIdSearchCriteria {
+      let obj = new DefaultCategoryByCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class CategoryByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : CategoryByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : CategoryByUserIdSearchCriteria {
+      let obj = new CategoryByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByCategoryIdSearchCriteria extends BaseSearchCriteria{
+    categoryId : number = 0;
+
+    static getCopy(self : UserByCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByCategoryIdSearchCriteria {
+      let obj = new UserByCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionModel {
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    dailyAffirmationSessionId : number = 0;
+    dailyAffirmationSessionDate : Date = new Date();
+    dailyAffirmationSessionTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DailyAffirmationSessionModel,adjustDateToUTC : boolean = false) : DailyAffirmationSessionModel {
+      let obj = new DailyAffirmationSessionModel();
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionDate'))
+        obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate ?? (!adjustDateToUTC ? self.dailyAffirmationSessionDate : DateUtils.parseAsUTC(self.dailyAffirmationSessionDate));
+      if (self.hasOwnProperty('dailyAffirmationSessionTimeSpentInSeconds'))
+        obj.dailyAffirmationSessionTimeSpentInSeconds = self.dailyAffirmationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DailyAffirmationSessionModel) : DailyAffirmationSessionCreateModel {
+      let obj = new DailyAffirmationSessionCreateModel();
+      obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate;
+      obj.dailyAffirmationSessionTimeSpentInSeconds = self.dailyAffirmationSessionTimeSpentInSeconds;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DailyAffirmationSessionModel):DailyAffirmationSessionUpdateModel {
+      let obj = new DailyAffirmationSessionUpdateModel();
+      obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate;
+      obj.dailyAffirmationSessionTimeSpentInSeconds = self.dailyAffirmationSessionTimeSpentInSeconds;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DailyAffirmationSessionSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionSearchCriteria {
+      let obj = new DailyAffirmationSessionSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCreateModel {
+    dailyAffirmationSessionDate : Date = new Date();
+    dailyAffirmationSessionTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+
+    static getCopy(self : DailyAffirmationSessionCreateModel,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCreateModel {
+      let obj = new DailyAffirmationSessionCreateModel();
+      if (self.hasOwnProperty('dailyAffirmationSessionDate'))
+        obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate ?? (!adjustDateToUTC ? self.dailyAffirmationSessionDate : DateUtils.parseAsUTC(self.dailyAffirmationSessionDate));
+      if (self.hasOwnProperty('dailyAffirmationSessionTimeSpentInSeconds'))
+        obj.dailyAffirmationSessionTimeSpentInSeconds = self.dailyAffirmationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class MultipleDailyAffirmationSessionCreateModel {
+    newDailyAffirmationSessions : DailyAffirmationSessionCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDailyAffirmationSessionCreateModel,adjustDateToUTC : boolean = false) : MultipleDailyAffirmationSessionCreateModel {
+      let obj = new MultipleDailyAffirmationSessionCreateModel();
+      if (self.hasOwnProperty('newDailyAffirmationSessions'))
+        obj.newDailyAffirmationSessions = self.newDailyAffirmationSessions;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionUpdateModel {
+    dailyAffirmationSessionId : number = 0;
+    dailyAffirmationSessionDate : Date = new Date();
+    dailyAffirmationSessionTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+
+    static getCopy(self : DailyAffirmationSessionUpdateModel,adjustDateToUTC : boolean = false) : DailyAffirmationSessionUpdateModel {
+      let obj = new DailyAffirmationSessionUpdateModel();
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionDate'))
+        obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate ?? (!adjustDateToUTC ? self.dailyAffirmationSessionDate : DateUtils.parseAsUTC(self.dailyAffirmationSessionDate));
+      if (self.hasOwnProperty('dailyAffirmationSessionTimeSpentInSeconds'))
+        obj.dailyAffirmationSessionTimeSpentInSeconds = self.dailyAffirmationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionByUserIdSearchCriteria {
+      let obj = new DailyAffirmationSessionByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByDailyAffirmationSessionIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationSessionId : number = 0;
+
+    static getCopy(self : UserByDailyAffirmationSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByDailyAffirmationSessionIdSearchCriteria {
+      let obj = new UserByDailyAffirmationSessionIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategoryModel {
+    categoryName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    dailyAffirmationSessionCategoryId : number = 0;
+    categoryId : number = 0;
+    dailyAffirmationSessionId : number = 0;
+    dailyAffirmationSessionCategoryTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DailyAffirmationSessionCategoryModel,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategoryModel {
+      let obj = new DailyAffirmationSessionCategoryModel();
+      if (self.hasOwnProperty('categoryName'))
+        obj.categoryName = self.categoryName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryId'))
+        obj.dailyAffirmationSessionCategoryId = self.dailyAffirmationSessionCategoryId;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryTimeSpentInSeconds'))
+        obj.dailyAffirmationSessionCategoryTimeSpentInSeconds = self.dailyAffirmationSessionCategoryTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DailyAffirmationSessionCategoryModel) : DailyAffirmationSessionCategoryCreateModel {
+      let obj = new DailyAffirmationSessionCategoryCreateModel();
+      obj.categoryId = self.categoryId;
+      obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      obj.dailyAffirmationSessionCategoryTimeSpentInSeconds = self.dailyAffirmationSessionCategoryTimeSpentInSeconds;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DailyAffirmationSessionCategoryModel):DailyAffirmationSessionCategoryUpdateModel {
+      let obj = new DailyAffirmationSessionCategoryUpdateModel();
+      obj.dailyAffirmationSessionCategoryId = self.dailyAffirmationSessionCategoryId;
+      obj.categoryId = self.categoryId;
+      obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      obj.dailyAffirmationSessionCategoryTimeSpentInSeconds = self.dailyAffirmationSessionCategoryTimeSpentInSeconds;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategorySearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    categoryId : number | null = null;
+    dailyAffirmationSessionId : number | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DailyAffirmationSessionCategorySearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategorySearchCriteria {
+      let obj = new DailyAffirmationSessionCategorySearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategoryCreateModel {
+    categoryId : number = 0;
+    dailyAffirmationSessionId : number = 0;
+    dailyAffirmationSessionCategoryTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionCategoryCreateModel,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategoryCreateModel {
+      let obj = new DailyAffirmationSessionCategoryCreateModel();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryTimeSpentInSeconds'))
+        obj.dailyAffirmationSessionCategoryTimeSpentInSeconds = self.dailyAffirmationSessionCategoryTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleDailyAffirmationSessionCategoryCreateModel {
+    newDailyAffirmationSessionCategorys : DailyAffirmationSessionCategoryCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDailyAffirmationSessionCategoryCreateModel,adjustDateToUTC : boolean = false) : MultipleDailyAffirmationSessionCategoryCreateModel {
+      let obj = new MultipleDailyAffirmationSessionCategoryCreateModel();
+      if (self.hasOwnProperty('newDailyAffirmationSessionCategorys'))
+        obj.newDailyAffirmationSessionCategorys = self.newDailyAffirmationSessionCategorys;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategoryUpdateModel {
+    dailyAffirmationSessionCategoryId : number = 0;
+    categoryId : number = 0;
+    dailyAffirmationSessionId : number = 0;
+    dailyAffirmationSessionCategoryTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionCategoryUpdateModel,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategoryUpdateModel {
+      let obj = new DailyAffirmationSessionCategoryUpdateModel();
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryId'))
+        obj.dailyAffirmationSessionCategoryId = self.dailyAffirmationSessionCategoryId;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryTimeSpentInSeconds'))
+        obj.dailyAffirmationSessionCategoryTimeSpentInSeconds = self.dailyAffirmationSessionCategoryTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategoryByCategoryIdSearchCriteria extends BaseSearchCriteria{
+    categoryId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionCategoryByCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategoryByCategoryIdSearchCriteria {
+      let obj = new DailyAffirmationSessionCategoryByCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class CategoryByDailyAffirmationSessionCategoryIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationSessionCategoryId : number = 0;
+
+    static getCopy(self : CategoryByDailyAffirmationSessionCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : CategoryByDailyAffirmationSessionCategoryIdSearchCriteria {
+      let obj = new CategoryByDailyAffirmationSessionCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryId'))
+        obj.dailyAffirmationSessionCategoryId = self.dailyAffirmationSessionCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationSessionId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria {
+      let obj = new DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationSessionCategoryId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria {
+      let obj = new DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryId'))
+        obj.dailyAffirmationSessionCategoryId = self.dailyAffirmationSessionCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionCategoryByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionCategoryByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionCategoryByUserIdSearchCriteria {
+      let obj = new DailyAffirmationSessionCategoryByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByDailyAffirmationSessionCategoryIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationSessionCategoryId : number = 0;
+
+    static getCopy(self : UserByDailyAffirmationSessionCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByDailyAffirmationSessionCategoryIdSearchCriteria {
+      let obj = new UserByDailyAffirmationSessionCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationSessionCategoryId'))
+        obj.dailyAffirmationSessionCategoryId = self.dailyAffirmationSessionCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationTextModel {
+    categoryName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    dailyAffirmationTextId : number = 0;
+    dailyAffirmationTextValue : string = '';
+    categoryId : number = 0;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static dailyAffirmationTextValue__size : number = 255;
+
+    static getCopy(self : DailyAffirmationTextModel,adjustDateToUTC : boolean = false) : DailyAffirmationTextModel {
+      let obj = new DailyAffirmationTextModel();
+      if (self.hasOwnProperty('categoryName'))
+        obj.categoryName = self.categoryName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('dailyAffirmationTextId'))
+        obj.dailyAffirmationTextId = self.dailyAffirmationTextId;
+      if (self.hasOwnProperty('dailyAffirmationTextValue'))
+        obj.dailyAffirmationTextValue = self.dailyAffirmationTextValue;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DailyAffirmationTextModel) : DailyAffirmationTextCreateModel {
+      let obj = new DailyAffirmationTextCreateModel();
+      obj.dailyAffirmationTextValue = self.dailyAffirmationTextValue;
+      obj.categoryId = self.categoryId;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DailyAffirmationTextModel):DailyAffirmationTextUpdateModel {
+      let obj = new DailyAffirmationTextUpdateModel();
+      obj.dailyAffirmationTextId = self.dailyAffirmationTextId;
+      obj.dailyAffirmationTextValue = self.dailyAffirmationTextValue;
+      obj.categoryId = self.categoryId;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class DailyAffirmationTextSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    categoryId : number | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DailyAffirmationTextSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationTextSearchCriteria {
+      let obj = new DailyAffirmationTextSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationTextCreateModel {
+    dailyAffirmationTextValue : string = '';
+    categoryId : number = 0;
+    userId : number = 0;
+    static dailyAffirmationTextValue__size : number = 255;
+
+    static getCopy(self : DailyAffirmationTextCreateModel,adjustDateToUTC : boolean = false) : DailyAffirmationTextCreateModel {
+      let obj = new DailyAffirmationTextCreateModel();
+      if (self.hasOwnProperty('dailyAffirmationTextValue'))
+        obj.dailyAffirmationTextValue = self.dailyAffirmationTextValue;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleDailyAffirmationTextCreateModel {
+    newDailyAffirmationTexts : DailyAffirmationTextCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDailyAffirmationTextCreateModel,adjustDateToUTC : boolean = false) : MultipleDailyAffirmationTextCreateModel {
+      let obj = new MultipleDailyAffirmationTextCreateModel();
+      if (self.hasOwnProperty('newDailyAffirmationTexts'))
+        obj.newDailyAffirmationTexts = self.newDailyAffirmationTexts;
+      return obj;
+    }
+}
+
+export class DailyAffirmationTextUpdateModel {
+    dailyAffirmationTextId : number = 0;
+    dailyAffirmationTextValue : string = '';
+    categoryId : number = 0;
+    userId : number = 0;
+    static dailyAffirmationTextValue__size : number = 255;
+
+    static getCopy(self : DailyAffirmationTextUpdateModel,adjustDateToUTC : boolean = false) : DailyAffirmationTextUpdateModel {
+      let obj = new DailyAffirmationTextUpdateModel();
+      if (self.hasOwnProperty('dailyAffirmationTextId'))
+        obj.dailyAffirmationTextId = self.dailyAffirmationTextId;
+      if (self.hasOwnProperty('dailyAffirmationTextValue'))
+        obj.dailyAffirmationTextValue = self.dailyAffirmationTextValue;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class DailyAffirmationTextByCategoryIdSearchCriteria extends BaseSearchCriteria{
+    categoryId : number = 0;
+
+    static getCopy(self : DailyAffirmationTextByCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationTextByCategoryIdSearchCriteria {
+      let obj = new DailyAffirmationTextByCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class CategoryByDailyAffirmationTextIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationTextId : number = 0;
+
+    static getCopy(self : CategoryByDailyAffirmationTextIdSearchCriteria,adjustDateToUTC : boolean = false) : CategoryByDailyAffirmationTextIdSearchCriteria {
+      let obj = new CategoryByDailyAffirmationTextIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationTextId'))
+        obj.dailyAffirmationTextId = self.dailyAffirmationTextId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationTextByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : DailyAffirmationTextByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationTextByUserIdSearchCriteria {
+      let obj = new DailyAffirmationTextByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByDailyAffirmationTextIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationTextId : number = 0;
+
+    static getCopy(self : UserByDailyAffirmationTextIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByDailyAffirmationTextIdSearchCriteria {
+      let obj = new UserByDailyAffirmationTextIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationTextId'))
+        obj.dailyAffirmationTextId = self.dailyAffirmationTextId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    predefinedCategoryTypeIds : number[] | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultCategorySearchCriteria,adjustDateToUTC : boolean = false) : DefaultCategorySearchCriteria {
+      let obj = new DefaultCategorySearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('predefinedCategoryTypeIds'))
+        obj.predefinedCategoryTypeIds = self.predefinedCategoryTypeIds;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultCategoryCreateModel {
+    defaultCategoryName : string = '';
+    predefinedCategoryTypeId : number | null = null;
+    static defaultCategoryName__size : number = 255;
+
+    static getCopy(self : DefaultCategoryCreateModel,adjustDateToUTC : boolean = false) : DefaultCategoryCreateModel {
+      let obj = new DefaultCategoryCreateModel();
+      if (self.hasOwnProperty('defaultCategoryName'))
+        obj.defaultCategoryName = self.defaultCategoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      return obj;
+    }
+}
+
+export class MultipleDefaultCategoryCreateModel {
+    newDefaultCategorys : DefaultCategoryCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDefaultCategoryCreateModel,adjustDateToUTC : boolean = false) : MultipleDefaultCategoryCreateModel {
+      let obj = new MultipleDefaultCategoryCreateModel();
+      if (self.hasOwnProperty('newDefaultCategorys'))
+        obj.newDefaultCategorys = self.newDefaultCategorys;
+      return obj;
+    }
+}
+
+export class DefaultCategoryUpdateModel {
+    defaultCategoryId : number = 0;
+    defaultCategoryName : string = '';
+    predefinedCategoryTypeId : number | null = null;
+    static defaultCategoryName__size : number = 255;
+
+    static getCopy(self : DefaultCategoryUpdateModel,adjustDateToUTC : boolean = false) : DefaultCategoryUpdateModel {
+      let obj = new DefaultCategoryUpdateModel();
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('defaultCategoryName'))
+        obj.defaultCategoryName = self.defaultCategoryName;
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      return obj;
+    }
+}
+
+export class DefaultDailyAffirmationTextModel {
+    defaultCategoryName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    defaultDailyAffirmationTextId : number = 0;
+    defaultDailyAffirmationTextName : string = '';
+    defaultCategoryId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static defaultDailyAffirmationTextName__size : number = 255;
+
+    static getCopy(self : DefaultDailyAffirmationTextModel,adjustDateToUTC : boolean = false) : DefaultDailyAffirmationTextModel {
+      let obj = new DefaultDailyAffirmationTextModel();
+      if (self.hasOwnProperty('defaultCategoryName'))
+        obj.defaultCategoryName = self.defaultCategoryName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('defaultDailyAffirmationTextId'))
+        obj.defaultDailyAffirmationTextId = self.defaultDailyAffirmationTextId;
+      if (self.hasOwnProperty('defaultDailyAffirmationTextName'))
+        obj.defaultDailyAffirmationTextName = self.defaultDailyAffirmationTextName;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DefaultDailyAffirmationTextModel) : DefaultDailyAffirmationTextCreateModel {
+      let obj = new DefaultDailyAffirmationTextCreateModel();
+      obj.defaultDailyAffirmationTextName = self.defaultDailyAffirmationTextName;
+      obj.defaultCategoryId = self.defaultCategoryId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DefaultDailyAffirmationTextModel):DefaultDailyAffirmationTextUpdateModel {
+      let obj = new DefaultDailyAffirmationTextUpdateModel();
+      obj.defaultDailyAffirmationTextId = self.defaultDailyAffirmationTextId;
+      obj.defaultDailyAffirmationTextName = self.defaultDailyAffirmationTextName;
+      obj.defaultCategoryId = self.defaultCategoryId;
+      return obj;
+    }
+}
+
+export class DefaultDailyAffirmationTextSearchCriteria extends BaseSearchCriteria{
+    userId : number | null = null;
+    showDeleted : boolean = false;
+    defaultCategoryId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultDailyAffirmationTextSearchCriteria,adjustDateToUTC : boolean = false) : DefaultDailyAffirmationTextSearchCriteria {
+      let obj = new DefaultDailyAffirmationTextSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultDailyAffirmationTextCreateModel {
+    defaultDailyAffirmationTextName : string = '';
+    defaultCategoryId : number = 0;
+    static defaultDailyAffirmationTextName__size : number = 255;
+
+    static getCopy(self : DefaultDailyAffirmationTextCreateModel,adjustDateToUTC : boolean = false) : DefaultDailyAffirmationTextCreateModel {
+      let obj = new DefaultDailyAffirmationTextCreateModel();
+      if (self.hasOwnProperty('defaultDailyAffirmationTextName'))
+        obj.defaultDailyAffirmationTextName = self.defaultDailyAffirmationTextName;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      return obj;
+    }
+}
+
+export class MultipleDefaultDailyAffirmationTextCreateModel {
+    newDefaultDailyAffirmationTexts : DefaultDailyAffirmationTextCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDefaultDailyAffirmationTextCreateModel,adjustDateToUTC : boolean = false) : MultipleDefaultDailyAffirmationTextCreateModel {
+      let obj = new MultipleDefaultDailyAffirmationTextCreateModel();
+      if (self.hasOwnProperty('newDefaultDailyAffirmationTexts'))
+        obj.newDefaultDailyAffirmationTexts = self.newDefaultDailyAffirmationTexts;
+      return obj;
+    }
+}
+
+export class DefaultDailyAffirmationTextUpdateModel {
+    defaultDailyAffirmationTextId : number = 0;
+    defaultDailyAffirmationTextName : string = '';
+    defaultCategoryId : number = 0;
+    static defaultDailyAffirmationTextName__size : number = 255;
+
+    static getCopy(self : DefaultDailyAffirmationTextUpdateModel,adjustDateToUTC : boolean = false) : DefaultDailyAffirmationTextUpdateModel {
+      let obj = new DefaultDailyAffirmationTextUpdateModel();
+      if (self.hasOwnProperty('defaultDailyAffirmationTextId'))
+        obj.defaultDailyAffirmationTextId = self.defaultDailyAffirmationTextId;
+      if (self.hasOwnProperty('defaultDailyAffirmationTextName'))
+        obj.defaultDailyAffirmationTextName = self.defaultDailyAffirmationTextName;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      return obj;
+    }
+}
+
+export class DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria extends BaseSearchCriteria{
+    defaultCategoryId : number = 0;
+
+    static getCopy(self : DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria {
+      let obj = new DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria extends BaseSearchCriteria{
+    defaultDailyAffirmationTextId : number = 0;
+
+    static getCopy(self : DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria {
+      let obj = new DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria();
+      if (self.hasOwnProperty('defaultDailyAffirmationTextId'))
+        obj.defaultDailyAffirmationTextId = self.defaultDailyAffirmationTextId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerModel {
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    defaultGoalTrackerId : number = 0;
+    defaultGoalTrackerText : string = '';
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static defaultGoalTrackerText__size : number = 255;
+
+    static getCopy(self : DefaultGoalTrackerModel,adjustDateToUTC : boolean = false) : DefaultGoalTrackerModel {
+      let obj = new DefaultGoalTrackerModel();
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      if (self.hasOwnProperty('defaultGoalTrackerText'))
+        obj.defaultGoalTrackerText = self.defaultGoalTrackerText;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DefaultGoalTrackerModel) : DefaultGoalTrackerCreateModel {
+      let obj = new DefaultGoalTrackerCreateModel();
+      obj.defaultGoalTrackerText = self.defaultGoalTrackerText;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DefaultGoalTrackerModel):DefaultGoalTrackerUpdateModel {
+      let obj = new DefaultGoalTrackerUpdateModel();
+      obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      obj.defaultGoalTrackerText = self.defaultGoalTrackerText;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultGoalTrackerSearchCriteria,adjustDateToUTC : boolean = false) : DefaultGoalTrackerSearchCriteria {
+      let obj = new DefaultGoalTrackerSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCreateModel {
+    defaultGoalTrackerText : string = '';
+    static defaultGoalTrackerText__size : number = 255;
+
+    static getCopy(self : DefaultGoalTrackerCreateModel,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCreateModel {
+      let obj = new DefaultGoalTrackerCreateModel();
+      if (self.hasOwnProperty('defaultGoalTrackerText'))
+        obj.defaultGoalTrackerText = self.defaultGoalTrackerText;
+      return obj;
+    }
+}
+
+export class MultipleDefaultGoalTrackerCreateModel {
+    newDefaultGoalTrackers : DefaultGoalTrackerCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDefaultGoalTrackerCreateModel,adjustDateToUTC : boolean = false) : MultipleDefaultGoalTrackerCreateModel {
+      let obj = new MultipleDefaultGoalTrackerCreateModel();
+      if (self.hasOwnProperty('newDefaultGoalTrackers'))
+        obj.newDefaultGoalTrackers = self.newDefaultGoalTrackers;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerUpdateModel {
+    defaultGoalTrackerId : number = 0;
+    defaultGoalTrackerText : string = '';
+    static defaultGoalTrackerText__size : number = 255;
+
+    static getCopy(self : DefaultGoalTrackerUpdateModel,adjustDateToUTC : boolean = false) : DefaultGoalTrackerUpdateModel {
+      let obj = new DefaultGoalTrackerUpdateModel();
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      if (self.hasOwnProperty('defaultGoalTrackerText'))
+        obj.defaultGoalTrackerText = self.defaultGoalTrackerText;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCategoryModel {
+    defaultCategoryName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    defaultGoalTrackerCategoryId : number = 0;
+    defaultCategoryId : number = 0;
+    defaultGoalTrackerId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultGoalTrackerCategoryModel,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCategoryModel {
+      let obj = new DefaultGoalTrackerCategoryModel();
+      if (self.hasOwnProperty('defaultCategoryName'))
+        obj.defaultCategoryName = self.defaultCategoryName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('defaultGoalTrackerCategoryId'))
+        obj.defaultGoalTrackerCategoryId = self.defaultGoalTrackerCategoryId;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DefaultGoalTrackerCategoryModel) : DefaultGoalTrackerCategoryCreateModel {
+      let obj = new DefaultGoalTrackerCategoryCreateModel();
+      obj.defaultCategoryId = self.defaultCategoryId;
+      obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DefaultGoalTrackerCategoryModel):DefaultGoalTrackerCategoryUpdateModel {
+      let obj = new DefaultGoalTrackerCategoryUpdateModel();
+      obj.defaultGoalTrackerCategoryId = self.defaultGoalTrackerCategoryId;
+      obj.defaultCategoryId = self.defaultCategoryId;
+      obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCategorySearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    defaultCategoryId : number | null = null;
+    defaultGoalTrackerId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultGoalTrackerCategorySearchCriteria,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCategorySearchCriteria {
+      let obj = new DefaultGoalTrackerCategorySearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCategoryCreateModel {
+    defaultCategoryId : number = 0;
+    defaultGoalTrackerId : number = 0;
+
+    static getCopy(self : DefaultGoalTrackerCategoryCreateModel,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCategoryCreateModel {
+      let obj = new DefaultGoalTrackerCategoryCreateModel();
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      return obj;
+    }
+}
+
+export class MultipleDefaultGoalTrackerCategoryCreateModel {
+    newDefaultGoalTrackerCategorys : DefaultGoalTrackerCategoryCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDefaultGoalTrackerCategoryCreateModel,adjustDateToUTC : boolean = false) : MultipleDefaultGoalTrackerCategoryCreateModel {
+      let obj = new MultipleDefaultGoalTrackerCategoryCreateModel();
+      if (self.hasOwnProperty('newDefaultGoalTrackerCategorys'))
+        obj.newDefaultGoalTrackerCategorys = self.newDefaultGoalTrackerCategorys;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCategoryUpdateModel {
+    defaultGoalTrackerCategoryId : number = 0;
+    defaultCategoryId : number = 0;
+    defaultGoalTrackerId : number = 0;
+
+    static getCopy(self : DefaultGoalTrackerCategoryUpdateModel,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCategoryUpdateModel {
+      let obj = new DefaultGoalTrackerCategoryUpdateModel();
+      if (self.hasOwnProperty('defaultGoalTrackerCategoryId'))
+        obj.defaultGoalTrackerCategoryId = self.defaultGoalTrackerCategoryId;
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria extends BaseSearchCriteria{
+    defaultCategoryId : number = 0;
+
+    static getCopy(self : DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria {
+      let obj = new DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('defaultCategoryId'))
+        obj.defaultCategoryId = self.defaultCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria extends BaseSearchCriteria{
+    defaultGoalTrackerCategoryId : number = 0;
+
+    static getCopy(self : DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria {
+      let obj = new DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('defaultGoalTrackerCategoryId'))
+        obj.defaultGoalTrackerCategoryId = self.defaultGoalTrackerCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
+    defaultGoalTrackerId : number = 0;
+
+    static getCopy(self : DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria {
+      let obj = new DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria();
+      if (self.hasOwnProperty('defaultGoalTrackerId'))
+        obj.defaultGoalTrackerId = self.defaultGoalTrackerId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria extends BaseSearchCriteria{
+    defaultGoalTrackerCategoryId : number = 0;
+
+    static getCopy(self : DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria {
+      let obj = new DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('defaultGoalTrackerCategoryId'))
+        obj.defaultGoalTrackerCategoryId = self.defaultGoalTrackerCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultMeditationFileModel {
+    predefinedMeditationTypeName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    defaultMeditationFileId : number = 0;
+    defaultMeditationFileName : string = '';
+    predefinedMeditationTypeId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static defaultMeditationFileName__size : number = 255;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : DefaultMeditationFileModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileModel {
+      let obj = new DefaultMeditationFileModel();
+      if (self.hasOwnProperty('predefinedMeditationTypeName'))
+        obj.predefinedMeditationTypeName = self.predefinedMeditationTypeName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('defaultMeditationFileId'))
+        obj.defaultMeditationFileId = self.defaultMeditationFileId;
+      if (self.hasOwnProperty('defaultMeditationFileName'))
+        obj.defaultMeditationFileName = self.defaultMeditationFileName;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DefaultMeditationFileModel) : DefaultMeditationFileCreateModel {
+      let obj = new DefaultMeditationFileCreateModel();
+      obj.defaultMeditationFileName = self.defaultMeditationFileName;
+      obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DefaultMeditationFileModel):DefaultMeditationFileUpdateModel {
+      let obj = new DefaultMeditationFileUpdateModel();
+      obj.defaultMeditationFileId = self.defaultMeditationFileId;
+      obj.defaultMeditationFileName = self.defaultMeditationFileName;
+      obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      return obj;
+    }
+}
+
+export class DefaultMeditationFileSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    predefinedMeditationTypeIds : number[] | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultMeditationFileSearchCriteria,adjustDateToUTC : boolean = false) : DefaultMeditationFileSearchCriteria {
+      let obj = new DefaultMeditationFileSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('predefinedMeditationTypeIds'))
+        obj.predefinedMeditationTypeIds = self.predefinedMeditationTypeIds;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultMeditationFileCreateModel {
+    defaultMeditationFileName : string = '';
+    predefinedMeditationTypeId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    static defaultMeditationFileName__size : number = 255;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : DefaultMeditationFileCreateModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileCreateModel {
+      let obj = new DefaultMeditationFileCreateModel();
+      if (self.hasOwnProperty('defaultMeditationFileName'))
+        obj.defaultMeditationFileName = self.defaultMeditationFileName;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      return obj;
+    }
+}
+
+export class MultipleDefaultMeditationFileCreateModel {
+    newDefaultMeditationFiles : DefaultMeditationFileCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDefaultMeditationFileCreateModel,adjustDateToUTC : boolean = false) : MultipleDefaultMeditationFileCreateModel {
+      let obj = new MultipleDefaultMeditationFileCreateModel();
+      if (self.hasOwnProperty('newDefaultMeditationFiles'))
+        obj.newDefaultMeditationFiles = self.newDefaultMeditationFiles;
+      return obj;
+    }
+}
+
+export class DefaultMeditationFileUpdateModel {
+    defaultMeditationFileId : number = 0;
+    defaultMeditationFileName : string = '';
+    predefinedMeditationTypeId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    static defaultMeditationFileName__size : number = 255;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : DefaultMeditationFileUpdateModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileUpdateModel {
+      let obj = new DefaultMeditationFileUpdateModel();
+      if (self.hasOwnProperty('defaultMeditationFileId'))
+        obj.defaultMeditationFileId = self.defaultMeditationFileId;
+      if (self.hasOwnProperty('defaultMeditationFileName'))
+        obj.defaultMeditationFileName = self.defaultMeditationFileName;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      return obj;
+    }
+}
+
+export class DefaultVisionBoardPictureModel {
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    defaultVisionBoardPictureId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : DefaultVisionBoardPictureModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureModel {
+      let obj = new DefaultVisionBoardPictureModel();
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('defaultVisionBoardPictureId'))
+        obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DefaultVisionBoardPictureModel) : DefaultVisionBoardPictureCreateModel {
+      let obj = new DefaultVisionBoardPictureCreateModel();
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DefaultVisionBoardPictureModel):DefaultVisionBoardPictureUpdateModel {
+      let obj = new DefaultVisionBoardPictureUpdateModel();
+      obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      return obj;
+    }
+}
+
+export class DefaultVisionBoardPictureSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DefaultVisionBoardPictureSearchCriteria,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureSearchCriteria {
+      let obj = new DefaultVisionBoardPictureSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DefaultVisionBoardPictureCreateModel {
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : DefaultVisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureCreateModel {
+      let obj = new DefaultVisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      return obj;
+    }
+}
+
+export class MultipleDefaultVisionBoardPictureCreateModel {
+    newDefaultVisionBoardPictures : DefaultVisionBoardPictureCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDefaultVisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : MultipleDefaultVisionBoardPictureCreateModel {
+      let obj = new MultipleDefaultVisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('newDefaultVisionBoardPictures'))
+        obj.newDefaultVisionBoardPictures = self.newDefaultVisionBoardPictures;
+      return obj;
+    }
+}
+
+export class DefaultVisionBoardPictureUpdateModel {
+    defaultVisionBoardPictureId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : DefaultVisionBoardPictureUpdateModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureUpdateModel {
+      let obj = new DefaultVisionBoardPictureUpdateModel();
+      if (self.hasOwnProperty('defaultVisionBoardPictureId'))
+        obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      return obj;
+    }
+}
+
+export class FeedModel {
+    userName : string = '';
+    predefinedMeditationTypeName : string = '';
+    predefinedGoalStatusTypeName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    feedId : number = 0;
+    feedGuid : string = '';
+    userId : number = 0;
+    dailyAffirmationSessionId : number | null = null;
+    dailyAffirmationSessionDate : Date | null = null;
+    dailyAffirmationTimeSpentInSeconds : number | null = null;
+    visionBoardSessionId : number | null = null;
+    visionBoardSessionDate : Date | null = null;
+    visionBoardSessionTimeSpentInSeconds : number | null = null;
+    meditationSessionId : number | null = null;
+    meditationSessionDate : Date | null = null;
+    meditationSessionTimeSpentInSeconds : number | null = null;
+    meditationFileName : string = '';
+    predefinedMeditationTypeId : number | null = null;
+    goalTrackerId : number | null = null;
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeId : number | null = null;
+    goalTrackerStartDate : Date | null = null;
+    goalTrackerEndDate : Date | null = null;
+    goalTrackerCompletedDate : Date | null = null;
+    goalTrackerMileStoneId : number | null = null;
+    goalTrackerMileStoneName : string = '';
+    goalTrackerMileStoneStartDate : Date | null = null;
+    goalTrackerMileStoneEndDate : Date | null = null;
+    goalTrackerMileStoneCompletedDate : Date | null = null;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static meditationFileName__size : number = 255;
+    static goalTrackerName__size : number = 255;
+    static goalTrackerMileStoneName__size : number = 255;
+
+    static getCopy(self : FeedModel,adjustDateToUTC : boolean = false) : FeedModel {
+      let obj = new FeedModel();
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('predefinedMeditationTypeName'))
+        obj.predefinedMeditationTypeName = self.predefinedMeditationTypeName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeName'))
+        obj.predefinedGoalStatusTypeName = self.predefinedGoalStatusTypeName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('feedGuid'))
+        obj.feedGuid = self.feedGuid;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionDate'))
+        obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate ?? (!adjustDateToUTC ? self.dailyAffirmationSessionDate : (self.dailyAffirmationSessionDate !== null ? DateUtils.parseAsUTC(self.dailyAffirmationSessionDate) : self.dailyAffirmationSessionDate ));
+      if (self.hasOwnProperty('dailyAffirmationTimeSpentInSeconds'))
+        obj.dailyAffirmationTimeSpentInSeconds = self.dailyAffirmationTimeSpentInSeconds;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionDate'))
+        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : (self.visionBoardSessionDate !== null ? DateUtils.parseAsUTC(self.visionBoardSessionDate) : self.visionBoardSessionDate ));
+      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
+        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('meditationSessionDate'))
+        obj.meditationSessionDate = self.meditationSessionDate ?? (!adjustDateToUTC ? self.meditationSessionDate : (self.meditationSessionDate !== null ? DateUtils.parseAsUTC(self.meditationSessionDate) : self.meditationSessionDate ));
+      if (self.hasOwnProperty('meditationSessionTimeSpentInSeconds'))
+        obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerStartDate'))
+        obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
+      if (self.hasOwnProperty('goalTrackerEndDate'))
+        obj.goalTrackerEndDate = self.goalTrackerEndDate ?? (!adjustDateToUTC ? self.goalTrackerEndDate : (self.goalTrackerEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerEndDate) : self.goalTrackerEndDate ));
+      if (self.hasOwnProperty('goalTrackerCompletedDate'))
+        obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerCompletedDate : (self.goalTrackerCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerCompletedDate) : self.goalTrackerCompletedDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('goalTrackerMileStoneName'))
+        obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : (self.goalTrackerMileStoneStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate) : self.goalTrackerMileStoneStartDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : (self.goalTrackerMileStoneEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate) : self.goalTrackerMileStoneEndDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : (self.goalTrackerMileStoneCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate) : self.goalTrackerMileStoneCompletedDate ));
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : FeedModel) : FeedCreateModel {
+      let obj = new FeedCreateModel();
+      obj.feedGuid = self.feedGuid;
+      obj.userId = self.userId;
+      obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate;
+      obj.dailyAffirmationTimeSpentInSeconds = self.dailyAffirmationTimeSpentInSeconds;
+      obj.visionBoardSessionId = self.visionBoardSessionId;
+      obj.visionBoardSessionDate = self.visionBoardSessionDate;
+      obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      obj.meditationSessionId = self.meditationSessionId;
+      obj.meditationSessionDate = self.meditationSessionDate;
+      obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      obj.meditationFileName = self.meditationFileName;
+      obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.goalTrackerName = self.goalTrackerName;
+      obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.goalTrackerStartDate = self.goalTrackerStartDate;
+      obj.goalTrackerEndDate = self.goalTrackerEndDate;
+      obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate;
+      obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate;
+      obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate;
+      obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : FeedModel):FeedUpdateModel {
+      let obj = new FeedUpdateModel();
+      obj.feedId = self.feedId;
+      obj.feedGuid = self.feedGuid;
+      obj.userId = self.userId;
+      obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate;
+      obj.dailyAffirmationTimeSpentInSeconds = self.dailyAffirmationTimeSpentInSeconds;
+      obj.visionBoardSessionId = self.visionBoardSessionId;
+      obj.visionBoardSessionDate = self.visionBoardSessionDate;
+      obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      obj.meditationSessionId = self.meditationSessionId;
+      obj.meditationSessionDate = self.meditationSessionDate;
+      obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      obj.meditationFileName = self.meditationFileName;
+      obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.goalTrackerName = self.goalTrackerName;
+      obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.goalTrackerStartDate = self.goalTrackerStartDate;
+      obj.goalTrackerEndDate = self.goalTrackerEndDate;
+      obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate;
+      obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate;
+      obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate;
+      obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate;
+      return obj;
+    }
+}
+
+export class FeedSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    userId : number | null = null;
+    dailyAffirmationSessionId : number | null = null;
+    visionBoardSessionId : number | null = null;
+    meditationSessionId : number | null = null;
+    predefinedMeditationTypeIds : number[] | null = null;
+    goalTrackerId : number | null = null;
+    predefinedGoalStatusTypeIds : number[] | null = null;
+    goalTrackerMileStoneId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : FeedSearchCriteria,adjustDateToUTC : boolean = false) : FeedSearchCriteria {
+      let obj = new FeedSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('predefinedMeditationTypeIds'))
+        obj.predefinedMeditationTypeIds = self.predefinedMeditationTypeIds;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeIds'))
+        obj.predefinedGoalStatusTypeIds = self.predefinedGoalStatusTypeIds;
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class FeedCreateModel {
+    feedGuid : string = '';
+    userId : number = 0;
+    dailyAffirmationSessionId : number | null = null;
+    dailyAffirmationSessionDate : Date | null = null;
+    dailyAffirmationTimeSpentInSeconds : number | null = null;
+    visionBoardSessionId : number | null = null;
+    visionBoardSessionDate : Date | null = null;
+    visionBoardSessionTimeSpentInSeconds : number | null = null;
+    meditationSessionId : number | null = null;
+    meditationSessionDate : Date | null = null;
+    meditationSessionTimeSpentInSeconds : number | null = null;
+    meditationFileName : string = '';
+    predefinedMeditationTypeId : number | null = null;
+    goalTrackerId : number | null = null;
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeId : number | null = null;
+    goalTrackerStartDate : Date | null = null;
+    goalTrackerEndDate : Date | null = null;
+    goalTrackerCompletedDate : Date | null = null;
+    goalTrackerMileStoneId : number | null = null;
+    goalTrackerMileStoneName : string = '';
+    goalTrackerMileStoneStartDate : Date | null = null;
+    goalTrackerMileStoneEndDate : Date | null = null;
+    goalTrackerMileStoneCompletedDate : Date | null = null;
+    static meditationFileName__size : number = 255;
+    static goalTrackerName__size : number = 255;
+    static goalTrackerMileStoneName__size : number = 255;
+
+    static getCopy(self : FeedCreateModel,adjustDateToUTC : boolean = false) : FeedCreateModel {
+      let obj = new FeedCreateModel();
+      if (self.hasOwnProperty('feedGuid'))
+        obj.feedGuid = self.feedGuid;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionDate'))
+        obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate ?? (!adjustDateToUTC ? self.dailyAffirmationSessionDate : (self.dailyAffirmationSessionDate !== null ? DateUtils.parseAsUTC(self.dailyAffirmationSessionDate) : self.dailyAffirmationSessionDate ));
+      if (self.hasOwnProperty('dailyAffirmationTimeSpentInSeconds'))
+        obj.dailyAffirmationTimeSpentInSeconds = self.dailyAffirmationTimeSpentInSeconds;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionDate'))
+        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : (self.visionBoardSessionDate !== null ? DateUtils.parseAsUTC(self.visionBoardSessionDate) : self.visionBoardSessionDate ));
+      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
+        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('meditationSessionDate'))
+        obj.meditationSessionDate = self.meditationSessionDate ?? (!adjustDateToUTC ? self.meditationSessionDate : (self.meditationSessionDate !== null ? DateUtils.parseAsUTC(self.meditationSessionDate) : self.meditationSessionDate ));
+      if (self.hasOwnProperty('meditationSessionTimeSpentInSeconds'))
+        obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerStartDate'))
+        obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
+      if (self.hasOwnProperty('goalTrackerEndDate'))
+        obj.goalTrackerEndDate = self.goalTrackerEndDate ?? (!adjustDateToUTC ? self.goalTrackerEndDate : (self.goalTrackerEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerEndDate) : self.goalTrackerEndDate ));
+      if (self.hasOwnProperty('goalTrackerCompletedDate'))
+        obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerCompletedDate : (self.goalTrackerCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerCompletedDate) : self.goalTrackerCompletedDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('goalTrackerMileStoneName'))
+        obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : (self.goalTrackerMileStoneStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate) : self.goalTrackerMileStoneStartDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : (self.goalTrackerMileStoneEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate) : self.goalTrackerMileStoneEndDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : (self.goalTrackerMileStoneCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate) : self.goalTrackerMileStoneCompletedDate ));
+      return obj;
+    }
+}
+
+export class MultipleFeedCreateModel {
+    newFeeds : FeedCreateModel[] | null = null;
+
+    static getCopy(self : MultipleFeedCreateModel,adjustDateToUTC : boolean = false) : MultipleFeedCreateModel {
+      let obj = new MultipleFeedCreateModel();
+      if (self.hasOwnProperty('newFeeds'))
+        obj.newFeeds = self.newFeeds;
+      return obj;
+    }
+}
+
+export class FeedUpdateModel {
+    feedId : number = 0;
+    feedGuid : string = '';
+    userId : number = 0;
+    dailyAffirmationSessionId : number | null = null;
+    dailyAffirmationSessionDate : Date | null = null;
+    dailyAffirmationTimeSpentInSeconds : number | null = null;
+    visionBoardSessionId : number | null = null;
+    visionBoardSessionDate : Date | null = null;
+    visionBoardSessionTimeSpentInSeconds : number | null = null;
+    meditationSessionId : number | null = null;
+    meditationSessionDate : Date | null = null;
+    meditationSessionTimeSpentInSeconds : number | null = null;
+    meditationFileName : string = '';
+    predefinedMeditationTypeId : number | null = null;
+    goalTrackerId : number | null = null;
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeId : number | null = null;
+    goalTrackerStartDate : Date | null = null;
+    goalTrackerEndDate : Date | null = null;
+    goalTrackerCompletedDate : Date | null = null;
+    goalTrackerMileStoneId : number | null = null;
+    goalTrackerMileStoneName : string = '';
+    goalTrackerMileStoneStartDate : Date | null = null;
+    goalTrackerMileStoneEndDate : Date | null = null;
+    goalTrackerMileStoneCompletedDate : Date | null = null;
+    static meditationFileName__size : number = 255;
+    static goalTrackerName__size : number = 255;
+    static goalTrackerMileStoneName__size : number = 255;
+
+    static getCopy(self : FeedUpdateModel,adjustDateToUTC : boolean = false) : FeedUpdateModel {
+      let obj = new FeedUpdateModel();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('feedGuid'))
+        obj.feedGuid = self.feedGuid;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('dailyAffirmationSessionDate'))
+        obj.dailyAffirmationSessionDate = self.dailyAffirmationSessionDate ?? (!adjustDateToUTC ? self.dailyAffirmationSessionDate : (self.dailyAffirmationSessionDate !== null ? DateUtils.parseAsUTC(self.dailyAffirmationSessionDate) : self.dailyAffirmationSessionDate ));
+      if (self.hasOwnProperty('dailyAffirmationTimeSpentInSeconds'))
+        obj.dailyAffirmationTimeSpentInSeconds = self.dailyAffirmationTimeSpentInSeconds;
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionDate'))
+        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : (self.visionBoardSessionDate !== null ? DateUtils.parseAsUTC(self.visionBoardSessionDate) : self.visionBoardSessionDate ));
+      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
+        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('meditationSessionDate'))
+        obj.meditationSessionDate = self.meditationSessionDate ?? (!adjustDateToUTC ? self.meditationSessionDate : (self.meditationSessionDate !== null ? DateUtils.parseAsUTC(self.meditationSessionDate) : self.meditationSessionDate ));
+      if (self.hasOwnProperty('meditationSessionTimeSpentInSeconds'))
+        obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerStartDate'))
+        obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
+      if (self.hasOwnProperty('goalTrackerEndDate'))
+        obj.goalTrackerEndDate = self.goalTrackerEndDate ?? (!adjustDateToUTC ? self.goalTrackerEndDate : (self.goalTrackerEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerEndDate) : self.goalTrackerEndDate ));
+      if (self.hasOwnProperty('goalTrackerCompletedDate'))
+        obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerCompletedDate : (self.goalTrackerCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerCompletedDate) : self.goalTrackerCompletedDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('goalTrackerMileStoneName'))
+        obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : (self.goalTrackerMileStoneStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate) : self.goalTrackerMileStoneStartDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : (self.goalTrackerMileStoneEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate) : self.goalTrackerMileStoneEndDate ));
+      if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : (self.goalTrackerMileStoneCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate) : self.goalTrackerMileStoneCompletedDate ));
+      return obj;
+    }
+}
+
+export class FeedByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : FeedByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : FeedByUserIdSearchCriteria {
+      let obj = new FeedByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByFeedIdSearchCriteria extends BaseSearchCriteria{
+    feedId : number = 0;
+
+    static getCopy(self : UserByFeedIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByFeedIdSearchCriteria {
+      let obj = new UserByFeedIdSearchCriteria();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class FeedByDailyAffirmationSessionIdSearchCriteria extends BaseSearchCriteria{
+    dailyAffirmationSessionId : number = 0;
+
+    static getCopy(self : FeedByDailyAffirmationSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : FeedByDailyAffirmationSessionIdSearchCriteria {
+      let obj = new FeedByDailyAffirmationSessionIdSearchCriteria();
+      if (self.hasOwnProperty('dailyAffirmationSessionId'))
+        obj.dailyAffirmationSessionId = self.dailyAffirmationSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyAffirmationSessionByFeedIdSearchCriteria extends BaseSearchCriteria{
+    feedId : number = 0;
+
+    static getCopy(self : DailyAffirmationSessionByFeedIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyAffirmationSessionByFeedIdSearchCriteria {
+      let obj = new DailyAffirmationSessionByFeedIdSearchCriteria();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class FeedByVisionBoardSessionIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardSessionId : number = 0;
+
+    static getCopy(self : FeedByVisionBoardSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : FeedByVisionBoardSessionIdSearchCriteria {
+      let obj = new FeedByVisionBoardSessionIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionByFeedIdSearchCriteria extends BaseSearchCriteria{
+    feedId : number = 0;
+
+    static getCopy(self : VisionBoardSessionByFeedIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionByFeedIdSearchCriteria {
+      let obj = new VisionBoardSessionByFeedIdSearchCriteria();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class FeedByMeditationSessionIdSearchCriteria extends BaseSearchCriteria{
+    meditationSessionId : number = 0;
+
+    static getCopy(self : FeedByMeditationSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : FeedByMeditationSessionIdSearchCriteria {
+      let obj = new FeedByMeditationSessionIdSearchCriteria();
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationSessionModel {
+    meditationFileName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    meditationSessionId : number = 0;
+    meditationSessionDate : Date = new Date();
+    meditationSessionTimeSpentInSeconds : number | null = null;
+    meditationFileId : number = 0;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : MeditationSessionModel,adjustDateToUTC : boolean = false) : MeditationSessionModel {
+      let obj = new MeditationSessionModel();
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('meditationSessionDate'))
+        obj.meditationSessionDate = self.meditationSessionDate ?? (!adjustDateToUTC ? self.meditationSessionDate : DateUtils.parseAsUTC(self.meditationSessionDate));
+      if (self.hasOwnProperty('meditationSessionTimeSpentInSeconds'))
+        obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : MeditationSessionModel) : MeditationSessionCreateModel {
+      let obj = new MeditationSessionCreateModel();
+      obj.meditationSessionDate = self.meditationSessionDate;
+      obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      obj.meditationFileId = self.meditationFileId;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : MeditationSessionModel):MeditationSessionUpdateModel {
+      let obj = new MeditationSessionUpdateModel();
+      obj.meditationSessionId = self.meditationSessionId;
+      obj.meditationSessionDate = self.meditationSessionDate;
+      obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      obj.meditationFileId = self.meditationFileId;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+}
+
+export class MeditationSessionByFeedIdSearchCriteria extends BaseSearchCriteria{
+    feedId : number = 0;
+
+    static getCopy(self : MeditationSessionByFeedIdSearchCriteria,adjustDateToUTC : boolean = false) : MeditationSessionByFeedIdSearchCriteria {
+      let obj = new MeditationSessionByFeedIdSearchCriteria();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class FeedByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerId : number = 0;
+
+    static getCopy(self : FeedByGoalTrackerIdSearchCriteria,adjustDateToUTC : boolean = false) : FeedByGoalTrackerIdSearchCriteria {
+      let obj = new FeedByGoalTrackerIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerModel {
+    predefinedGoalStatusTypeName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    goalTrackerId : number = 0;
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeId : number = 0;
+    goalTrackerStartDate : Date | null = null;
+    goalTrackerEndDate : Date | null = null;
+    goalTrackerCompletedDate : Date | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static goalTrackerName__size : number = 255;
+
+    static getCopy(self : GoalTrackerModel,adjustDateToUTC : boolean = false) : GoalTrackerModel {
+      let obj = new GoalTrackerModel();
+      if (self.hasOwnProperty('predefinedGoalStatusTypeName'))
+        obj.predefinedGoalStatusTypeName = self.predefinedGoalStatusTypeName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerStartDate'))
+        obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
+      if (self.hasOwnProperty('goalTrackerEndDate'))
+        obj.goalTrackerEndDate = self.goalTrackerEndDate ?? (!adjustDateToUTC ? self.goalTrackerEndDate : (self.goalTrackerEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerEndDate) : self.goalTrackerEndDate ));
+      if (self.hasOwnProperty('goalTrackerCompletedDate'))
+        obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerCompletedDate : (self.goalTrackerCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerCompletedDate) : self.goalTrackerCompletedDate ));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : GoalTrackerModel) : GoalTrackerCreateModel {
+      let obj = new GoalTrackerCreateModel();
+      obj.goalTrackerName = self.goalTrackerName;
+      obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.goalTrackerStartDate = self.goalTrackerStartDate;
+      obj.goalTrackerEndDate = self.goalTrackerEndDate;
+      obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : GoalTrackerModel):GoalTrackerUpdateModel {
+      let obj = new GoalTrackerUpdateModel();
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.goalTrackerName = self.goalTrackerName;
+      obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.goalTrackerStartDate = self.goalTrackerStartDate;
+      obj.goalTrackerEndDate = self.goalTrackerEndDate;
+      obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate;
+      obj.userId = self.userId;
+      obj.addedToFeed = self.addedToFeed;
+      obj.addedToFeedDate = self.addedToFeedDate;
+      return obj;
+    }
+}
+
+export class GoalTrackerByFeedIdSearchCriteria extends BaseSearchCriteria{
+    feedId : number = 0;
+
+    static getCopy(self : GoalTrackerByFeedIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerByFeedIdSearchCriteria {
+      let obj = new GoalTrackerByFeedIdSearchCriteria();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class FeedByGoalTrackerMileStoneIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerMileStoneId : number = 0;
+
+    static getCopy(self : FeedByGoalTrackerMileStoneIdSearchCriteria,adjustDateToUTC : boolean = false) : FeedByGoalTrackerMileStoneIdSearchCriteria {
+      let obj = new FeedByGoalTrackerMileStoneIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneModel {
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    goalTrackerMileStoneId : number = 0;
+    goalTrackerId : number = 0;
+    goalTrackerMileStoneName : string = '';
+    goalTrackerMileStoneStartDate : Date = new Date();
+    goalTrackerMileStoneEndDate : Date = new Date();
+    predefinedGoalStatusTypeId : number = 0;
+    goalTrackerMileStoneCompletedDate : Date = new Date();
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static goalTrackerMileStoneName__size : number = 255;
+
+    static getCopy(self : GoalTrackerMileStoneModel,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneModel {
+      let obj = new GoalTrackerMileStoneModel();
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeName'))
+        obj.predefinedGoalStatusTypeName = self.predefinedGoalStatusTypeName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerMileStoneName'))
+        obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate));
+      if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate));
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : GoalTrackerMileStoneModel) : GoalTrackerMileStoneCreateModel {
+      let obj = new GoalTrackerMileStoneCreateModel();
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate;
+      obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate;
+      obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : GoalTrackerMileStoneModel):GoalTrackerMileStoneUpdateModel {
+      let obj = new GoalTrackerMileStoneUpdateModel();
+      obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate;
+      obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate;
+      obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneByFeedIdSearchCriteria extends BaseSearchCriteria{
+    feedId : number = 0;
+
+    static getCopy(self : GoalTrackerMileStoneByFeedIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneByFeedIdSearchCriteria {
+      let obj = new GoalTrackerMileStoneByFeedIdSearchCriteria();
+      if (self.hasOwnProperty('feedId'))
+        obj.feedId = self.feedId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    predefinedGoalStatusTypeIds : number[] | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : GoalTrackerSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerSearchCriteria {
+      let obj = new GoalTrackerSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeIds'))
+        obj.predefinedGoalStatusTypeIds = self.predefinedGoalStatusTypeIds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerCreateModel {
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeId : number = 0;
+    goalTrackerStartDate : Date | null = null;
+    goalTrackerEndDate : Date | null = null;
+    goalTrackerCompletedDate : Date | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+    static goalTrackerName__size : number = 255;
+
+    static getCopy(self : GoalTrackerCreateModel,adjustDateToUTC : boolean = false) : GoalTrackerCreateModel {
+      let obj = new GoalTrackerCreateModel();
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerStartDate'))
+        obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
+      if (self.hasOwnProperty('goalTrackerEndDate'))
+        obj.goalTrackerEndDate = self.goalTrackerEndDate ?? (!adjustDateToUTC ? self.goalTrackerEndDate : (self.goalTrackerEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerEndDate) : self.goalTrackerEndDate ));
+      if (self.hasOwnProperty('goalTrackerCompletedDate'))
+        obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerCompletedDate : (self.goalTrackerCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerCompletedDate) : self.goalTrackerCompletedDate ));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class MultipleGoalTrackerCreateModel {
+    newGoalTrackers : GoalTrackerCreateModel[] | null = null;
+
+    static getCopy(self : MultipleGoalTrackerCreateModel,adjustDateToUTC : boolean = false) : MultipleGoalTrackerCreateModel {
+      let obj = new MultipleGoalTrackerCreateModel();
+      if (self.hasOwnProperty('newGoalTrackers'))
+        obj.newGoalTrackers = self.newGoalTrackers;
+      return obj;
+    }
+}
+
+export class GoalTrackerUpdateModel {
+    goalTrackerId : number = 0;
+    goalTrackerName : string = '';
+    predefinedGoalStatusTypeId : number = 0;
+    goalTrackerStartDate : Date | null = null;
+    goalTrackerEndDate : Date | null = null;
+    goalTrackerCompletedDate : Date | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+    static goalTrackerName__size : number = 255;
+
+    static getCopy(self : GoalTrackerUpdateModel,adjustDateToUTC : boolean = false) : GoalTrackerUpdateModel {
+      let obj = new GoalTrackerUpdateModel();
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerStartDate'))
+        obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
+      if (self.hasOwnProperty('goalTrackerEndDate'))
+        obj.goalTrackerEndDate = self.goalTrackerEndDate ?? (!adjustDateToUTC ? self.goalTrackerEndDate : (self.goalTrackerEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerEndDate) : self.goalTrackerEndDate ));
+      if (self.hasOwnProperty('goalTrackerCompletedDate'))
+        obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerCompletedDate : (self.goalTrackerCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerCompletedDate) : self.goalTrackerCompletedDate ));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class GoalTrackerByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : GoalTrackerByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerByUserIdSearchCriteria {
+      let obj = new GoalTrackerByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerId : number = 0;
+
+    static getCopy(self : UserByGoalTrackerIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByGoalTrackerIdSearchCriteria {
+      let obj = new UserByGoalTrackerIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategoryModel {
+    categoryName : string = '';
+    goalTrackerName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    goalTrackerCategoryId : number = 0;
+    categoryId : number = 0;
+    goalTrackerId : number = 0;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : GoalTrackerCategoryModel,adjustDateToUTC : boolean = false) : GoalTrackerCategoryModel {
+      let obj = new GoalTrackerCategoryModel();
+      if (self.hasOwnProperty('categoryName'))
+        obj.categoryName = self.categoryName;
+      if (self.hasOwnProperty('goalTrackerName'))
+        obj.goalTrackerName = self.goalTrackerName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('goalTrackerCategoryId'))
+        obj.goalTrackerCategoryId = self.goalTrackerCategoryId;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : GoalTrackerCategoryModel) : GoalTrackerCategoryCreateModel {
+      let obj = new GoalTrackerCategoryCreateModel();
+      obj.categoryId = self.categoryId;
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : GoalTrackerCategoryModel):GoalTrackerCategoryUpdateModel {
+      let obj = new GoalTrackerCategoryUpdateModel();
+      obj.goalTrackerCategoryId = self.goalTrackerCategoryId;
+      obj.categoryId = self.categoryId;
+      obj.goalTrackerId = self.goalTrackerId;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategorySearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    categoryId : number | null = null;
+    goalTrackerId : number | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : GoalTrackerCategorySearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerCategorySearchCriteria {
+      let obj = new GoalTrackerCategorySearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategoryCreateModel {
+    categoryId : number = 0;
+    goalTrackerId : number = 0;
+    userId : number = 0;
+
+    static getCopy(self : GoalTrackerCategoryCreateModel,adjustDateToUTC : boolean = false) : GoalTrackerCategoryCreateModel {
+      let obj = new GoalTrackerCategoryCreateModel();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleGoalTrackerCategoryCreateModel {
+    newGoalTrackerCategorys : GoalTrackerCategoryCreateModel[] | null = null;
+
+    static getCopy(self : MultipleGoalTrackerCategoryCreateModel,adjustDateToUTC : boolean = false) : MultipleGoalTrackerCategoryCreateModel {
+      let obj = new MultipleGoalTrackerCategoryCreateModel();
+      if (self.hasOwnProperty('newGoalTrackerCategorys'))
+        obj.newGoalTrackerCategorys = self.newGoalTrackerCategorys;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategoryUpdateModel {
+    goalTrackerCategoryId : number = 0;
+    categoryId : number = 0;
+    goalTrackerId : number = 0;
+    userId : number = 0;
+
+    static getCopy(self : GoalTrackerCategoryUpdateModel,adjustDateToUTC : boolean = false) : GoalTrackerCategoryUpdateModel {
+      let obj = new GoalTrackerCategoryUpdateModel();
+      if (self.hasOwnProperty('goalTrackerCategoryId'))
+        obj.goalTrackerCategoryId = self.goalTrackerCategoryId;
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategoryByCategoryIdSearchCriteria extends BaseSearchCriteria{
+    categoryId : number = 0;
+
+    static getCopy(self : GoalTrackerCategoryByCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerCategoryByCategoryIdSearchCriteria {
+      let obj = new GoalTrackerCategoryByCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('categoryId'))
+        obj.categoryId = self.categoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class CategoryByGoalTrackerCategoryIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerCategoryId : number = 0;
+
+    static getCopy(self : CategoryByGoalTrackerCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : CategoryByGoalTrackerCategoryIdSearchCriteria {
+      let obj = new CategoryByGoalTrackerCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerCategoryId'))
+        obj.goalTrackerCategoryId = self.goalTrackerCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategoryByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerId : number = 0;
+
+    static getCopy(self : GoalTrackerCategoryByGoalTrackerIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerCategoryByGoalTrackerIdSearchCriteria {
+      let obj = new GoalTrackerCategoryByGoalTrackerIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerByGoalTrackerCategoryIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerCategoryId : number = 0;
+
+    static getCopy(self : GoalTrackerByGoalTrackerCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerByGoalTrackerCategoryIdSearchCriteria {
+      let obj = new GoalTrackerByGoalTrackerCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerCategoryId'))
+        obj.goalTrackerCategoryId = self.goalTrackerCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerCategoryByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : GoalTrackerCategoryByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerCategoryByUserIdSearchCriteria {
+      let obj = new GoalTrackerCategoryByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByGoalTrackerCategoryIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerCategoryId : number = 0;
+
+    static getCopy(self : UserByGoalTrackerCategoryIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByGoalTrackerCategoryIdSearchCriteria {
+      let obj = new UserByGoalTrackerCategoryIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerCategoryId'))
+        obj.goalTrackerCategoryId = self.goalTrackerCategoryId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    goalTrackerId : number | null = null;
+    predefinedGoalStatusTypeIds : number[] | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : GoalTrackerMileStoneSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneSearchCriteria {
+      let obj = new GoalTrackerMileStoneSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('predefinedGoalStatusTypeIds'))
+        obj.predefinedGoalStatusTypeIds = self.predefinedGoalStatusTypeIds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneCreateModel {
+    goalTrackerId : number = 0;
+    goalTrackerMileStoneName : string = '';
+    goalTrackerMileStoneStartDate : Date = new Date();
+    goalTrackerMileStoneEndDate : Date = new Date();
+    predefinedGoalStatusTypeId : number = 0;
+    goalTrackerMileStoneCompletedDate : Date = new Date();
+    userId : number = 0;
+    static goalTrackerMileStoneName__size : number = 255;
+
+    static getCopy(self : GoalTrackerMileStoneCreateModel,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneCreateModel {
+      let obj = new GoalTrackerMileStoneCreateModel();
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerMileStoneName'))
+        obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate));
+      if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate));
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleGoalTrackerMileStoneCreateModel {
+    newGoalTrackerMileStones : GoalTrackerMileStoneCreateModel[] | null = null;
+
+    static getCopy(self : MultipleGoalTrackerMileStoneCreateModel,adjustDateToUTC : boolean = false) : MultipleGoalTrackerMileStoneCreateModel {
+      let obj = new MultipleGoalTrackerMileStoneCreateModel();
+      if (self.hasOwnProperty('newGoalTrackerMileStones'))
+        obj.newGoalTrackerMileStones = self.newGoalTrackerMileStones;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneUpdateModel {
+    goalTrackerMileStoneId : number = 0;
+    goalTrackerId : number = 0;
+    goalTrackerMileStoneName : string = '';
+    goalTrackerMileStoneStartDate : Date = new Date();
+    goalTrackerMileStoneEndDate : Date = new Date();
+    predefinedGoalStatusTypeId : number = 0;
+    goalTrackerMileStoneCompletedDate : Date = new Date();
+    userId : number = 0;
+    static goalTrackerMileStoneName__size : number = 255;
+
+    static getCopy(self : GoalTrackerMileStoneUpdateModel,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneUpdateModel {
+      let obj = new GoalTrackerMileStoneUpdateModel();
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('goalTrackerMileStoneName'))
+        obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
+      if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate));
+      if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate));
+      if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
+        obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerId : number = 0;
+
+    static getCopy(self : GoalTrackerMileStoneByGoalTrackerIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneByGoalTrackerIdSearchCriteria {
+      let obj = new GoalTrackerMileStoneByGoalTrackerIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerId'))
+        obj.goalTrackerId = self.goalTrackerId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerByGoalTrackerMileStoneIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerMileStoneId : number = 0;
+
+    static getCopy(self : GoalTrackerByGoalTrackerMileStoneIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerByGoalTrackerMileStoneIdSearchCriteria {
+      let obj = new GoalTrackerByGoalTrackerMileStoneIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class GoalTrackerMileStoneByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : GoalTrackerMileStoneByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : GoalTrackerMileStoneByUserIdSearchCriteria {
+      let obj = new GoalTrackerMileStoneByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByGoalTrackerMileStoneIdSearchCriteria extends BaseSearchCriteria{
+    goalTrackerMileStoneId : number = 0;
+
+    static getCopy(self : UserByGoalTrackerMileStoneIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByGoalTrackerMileStoneIdSearchCriteria {
+      let obj = new UserByGoalTrackerMileStoneIdSearchCriteria();
+      if (self.hasOwnProperty('goalTrackerMileStoneId'))
+        obj.goalTrackerMileStoneId = self.goalTrackerMileStoneId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationFileModel {
+    predefinedMeditationTypeName : string = '';
+    userName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    meditationFileId : number = 0;
+    predefinedMeditationTypeId : number = 0;
+    meditationFileName : string = '';
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static meditationFileName__size : number = 255;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : MeditationFileModel,adjustDateToUTC : boolean = false) : MeditationFileModel {
+      let obj = new MeditationFileModel();
+      if (self.hasOwnProperty('predefinedMeditationTypeName'))
+        obj.predefinedMeditationTypeName = self.predefinedMeditationTypeName;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : MeditationFileModel) : MeditationFileCreateModel {
+      let obj = new MeditationFileCreateModel();
+      obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      obj.meditationFileName = self.meditationFileName;
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      obj.userId = self.userId;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : MeditationFileModel):MeditationFileUpdateModel {
+      let obj = new MeditationFileUpdateModel();
+      obj.meditationFileId = self.meditationFileId;
+      obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      obj.meditationFileName = self.meditationFileName;
+      obj.location = self.location;
+      obj.fileName = self.fileName;
+      obj.fileSize = self.fileSize;
+      obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MeditationFileSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    predefinedMeditationTypeIds : number[] | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : MeditationFileSearchCriteria,adjustDateToUTC : boolean = false) : MeditationFileSearchCriteria {
+      let obj = new MeditationFileSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('predefinedMeditationTypeIds'))
+        obj.predefinedMeditationTypeIds = self.predefinedMeditationTypeIds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationFileCreateModel {
+    predefinedMeditationTypeId : number = 0;
+    meditationFileName : string = '';
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    static meditationFileName__size : number = 255;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : MeditationFileCreateModel,adjustDateToUTC : boolean = false) : MeditationFileCreateModel {
+      let obj = new MeditationFileCreateModel();
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleMeditationFileCreateModel {
+    newMeditationFiles : MeditationFileCreateModel[] | null = null;
+
+    static getCopy(self : MultipleMeditationFileCreateModel,adjustDateToUTC : boolean = false) : MultipleMeditationFileCreateModel {
+      let obj = new MultipleMeditationFileCreateModel();
+      if (self.hasOwnProperty('newMeditationFiles'))
+        obj.newMeditationFiles = self.newMeditationFiles;
+      return obj;
+    }
+}
+
+export class MeditationFileUpdateModel {
+    meditationFileId : number = 0;
+    predefinedMeditationTypeId : number = 0;
+    meditationFileName : string = '';
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    static meditationFileName__size : number = 255;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : MeditationFileUpdateModel,adjustDateToUTC : boolean = false) : MeditationFileUpdateModel {
+      let obj = new MeditationFileUpdateModel();
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('predefinedMeditationTypeId'))
+        obj.predefinedMeditationTypeId = self.predefinedMeditationTypeId;
+      if (self.hasOwnProperty('meditationFileName'))
+        obj.meditationFileName = self.meditationFileName;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MeditationFileByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : MeditationFileByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : MeditationFileByUserIdSearchCriteria {
+      let obj = new MeditationFileByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByMeditationFileIdSearchCriteria extends BaseSearchCriteria{
+    meditationFileId : number = 0;
+
+    static getCopy(self : UserByMeditationFileIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByMeditationFileIdSearchCriteria {
+      let obj = new UserByMeditationFileIdSearchCriteria();
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationSessionSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    meditationFileId : number | null = null;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : MeditationSessionSearchCriteria,adjustDateToUTC : boolean = false) : MeditationSessionSearchCriteria {
+      let obj = new MeditationSessionSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationSessionCreateModel {
+    meditationSessionDate : Date = new Date();
+    meditationSessionTimeSpentInSeconds : number | null = null;
+    meditationFileId : number = 0;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+
+    static getCopy(self : MeditationSessionCreateModel,adjustDateToUTC : boolean = false) : MeditationSessionCreateModel {
+      let obj = new MeditationSessionCreateModel();
+      if (self.hasOwnProperty('meditationSessionDate'))
+        obj.meditationSessionDate = self.meditationSessionDate ?? (!adjustDateToUTC ? self.meditationSessionDate : DateUtils.parseAsUTC(self.meditationSessionDate));
+      if (self.hasOwnProperty('meditationSessionTimeSpentInSeconds'))
+        obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class MultipleMeditationSessionCreateModel {
+    newMeditationSessions : MeditationSessionCreateModel[] | null = null;
+
+    static getCopy(self : MultipleMeditationSessionCreateModel,adjustDateToUTC : boolean = false) : MultipleMeditationSessionCreateModel {
+      let obj = new MultipleMeditationSessionCreateModel();
+      if (self.hasOwnProperty('newMeditationSessions'))
+        obj.newMeditationSessions = self.newMeditationSessions;
+      return obj;
+    }
+}
+
+export class MeditationSessionUpdateModel {
+    meditationSessionId : number = 0;
+    meditationSessionDate : Date = new Date();
+    meditationSessionTimeSpentInSeconds : number | null = null;
+    meditationFileId : number = 0;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+
+    static getCopy(self : MeditationSessionUpdateModel,adjustDateToUTC : boolean = false) : MeditationSessionUpdateModel {
+      let obj = new MeditationSessionUpdateModel();
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('meditationSessionDate'))
+        obj.meditationSessionDate = self.meditationSessionDate ?? (!adjustDateToUTC ? self.meditationSessionDate : DateUtils.parseAsUTC(self.meditationSessionDate));
+      if (self.hasOwnProperty('meditationSessionTimeSpentInSeconds'))
+        obj.meditationSessionTimeSpentInSeconds = self.meditationSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class MeditationSessionByMeditationFileIdSearchCriteria extends BaseSearchCriteria{
+    meditationFileId : number = 0;
+
+    static getCopy(self : MeditationSessionByMeditationFileIdSearchCriteria,adjustDateToUTC : boolean = false) : MeditationSessionByMeditationFileIdSearchCriteria {
+      let obj = new MeditationSessionByMeditationFileIdSearchCriteria();
+      if (self.hasOwnProperty('meditationFileId'))
+        obj.meditationFileId = self.meditationFileId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationFileByMeditationSessionIdSearchCriteria extends BaseSearchCriteria{
+    meditationSessionId : number = 0;
+
+    static getCopy(self : MeditationFileByMeditationSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : MeditationFileByMeditationSessionIdSearchCriteria {
+      let obj = new MeditationFileByMeditationSessionIdSearchCriteria();
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class MeditationSessionByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : MeditationSessionByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : MeditationSessionByUserIdSearchCriteria {
+      let obj = new MeditationSessionByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByMeditationSessionIdSearchCriteria extends BaseSearchCriteria{
+    meditationSessionId : number = 0;
+
+    static getCopy(self : UserByMeditationSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByMeditationSessionIdSearchCriteria {
+      let obj = new UserByMeditationSessionIdSearchCriteria();
+      if (self.hasOwnProperty('meditationSessionId'))
+        obj.meditationSessionId = self.meditationSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : VisionBoardPictureSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardPictureSearchCriteria {
+      let obj = new VisionBoardPictureSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureCreateModel {
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
+      let obj = new VisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class MultipleVisionBoardPictureCreateModel {
+    newVisionBoardPictures : VisionBoardPictureCreateModel[] | null = null;
+
+    static getCopy(self : MultipleVisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : MultipleVisionBoardPictureCreateModel {
+      let obj = new MultipleVisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('newVisionBoardPictures'))
+        obj.newVisionBoardPictures = self.newVisionBoardPictures;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureUpdateModel {
+    visionBoardPictureId : number = 0;
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : VisionBoardPictureUpdateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateModel {
+      let obj = new VisionBoardPictureUpdateModel();
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : VisionBoardPictureByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardPictureByUserIdSearchCriteria {
+      let obj = new VisionBoardPictureByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByVisionBoardPictureIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardPictureId : number = 0;
+
+    static getCopy(self : UserByVisionBoardPictureIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByVisionBoardPictureIdSearchCriteria {
+      let obj = new UserByVisionBoardPictureIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionSearchCriteria extends BaseSearchCriteria{
+    showDeleted : boolean = false;
+    userId : number | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : VisionBoardSessionSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionSearchCriteria {
+      let obj = new VisionBoardSessionSearchCriteria();
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionCreateModel {
+    visionBoardSessionDate : Date = new Date();
+    visionBoardSessionTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+
+    static getCopy(self : VisionBoardSessionCreateModel,adjustDateToUTC : boolean = false) : VisionBoardSessionCreateModel {
+      let obj = new VisionBoardSessionCreateModel();
+      if (self.hasOwnProperty('visionBoardSessionDate'))
+        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : DateUtils.parseAsUTC(self.visionBoardSessionDate));
+      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
+        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class MultipleVisionBoardSessionCreateModel {
+    newVisionBoardSessions : VisionBoardSessionCreateModel[] | null = null;
+
+    static getCopy(self : MultipleVisionBoardSessionCreateModel,adjustDateToUTC : boolean = false) : MultipleVisionBoardSessionCreateModel {
+      let obj = new MultipleVisionBoardSessionCreateModel();
+      if (self.hasOwnProperty('newVisionBoardSessions'))
+        obj.newVisionBoardSessions = self.newVisionBoardSessions;
+      return obj;
+    }
+}
+
+export class VisionBoardSessionUpdateModel {
+    visionBoardSessionId : number = 0;
+    visionBoardSessionDate : Date = new Date();
+    visionBoardSessionTimeSpentInSeconds : number | null = null;
+    userId : number = 0;
+    addedToFeed : boolean | null = false;
+    addedToFeedDate : Date | null = null;
+
+    static getCopy(self : VisionBoardSessionUpdateModel,adjustDateToUTC : boolean = false) : VisionBoardSessionUpdateModel {
+      let obj = new VisionBoardSessionUpdateModel();
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('visionBoardSessionDate'))
+        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : DateUtils.parseAsUTC(self.visionBoardSessionDate));
+      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
+        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('addedToFeed'))
+        obj.addedToFeed = self.addedToFeed;
+      if (self.hasOwnProperty('addedToFeedDate'))
+        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
+      return obj;
+    }
+}
+
+export class VisionBoardSessionByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : VisionBoardSessionByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionByUserIdSearchCriteria {
+      let obj = new VisionBoardSessionByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByVisionBoardSessionIdSearchCriteria extends BaseSearchCriteria{
+    visionBoardSessionId : number = 0;
+
+    static getCopy(self : UserByVisionBoardSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByVisionBoardSessionIdSearchCriteria {
+      let obj = new UserByVisionBoardSessionIdSearchCriteria();
+      if (self.hasOwnProperty('visionBoardSessionId'))
+        obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
 export class CountryModel {
     countryId : number = 0;
     countryName : string = '';

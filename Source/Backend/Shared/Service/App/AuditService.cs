@@ -183,7 +183,7 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<AuditOperationModel>($"Unable to find the auditOperation for {auditOperationId}");
                 }
 
-                return this.ConvertToItem(item,objectMapperService.AuditOperationViewToAuditOperationModel);
+                return this.ConvertToItem(item, objectMapperService.AuditOperationViewToAuditOperationModel);
             }
             catch (Exception ex)
             {
@@ -1666,6 +1666,747 @@ namespace Manifest.Service.App
         public async Task HardDeleteUserGroupAsync(long userGroupId)
         {
             await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.UserGroup, resourceName: "UserGroup", resourceId: userGroupId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+        
+        #region VisionBoardSessionPicture
+        public async Task VisionBoardSessionPictureCreatedAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSessionPicture,  resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionPictureUpdatedAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSessionPicture,  resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionPictureDeletedAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSessionPicture,  resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionPictureUnDeletedAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSessionPicture,  resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task VisionBoardSessionPictureEnabledAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.VisionBoardSessionPicture, resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionPictureDisabledAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.VisionBoardSessionPicture, resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteVisionBoardSessionPictureAsync(long visionBoardSessionPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSessionPicture,  resourceName: "VisionBoardSessionPicture", resourceId: visionBoardSessionPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region Category
+        public async Task CategoryCreatedAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Category,  resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task CategoryUpdatedAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Category,  resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task CategoryDeletedAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Category,  resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task CategoryUnDeletedAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Category,  resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task CategoryEnabledAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.Category, resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task CategoryDisabledAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.Category, resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteCategoryAsync(long categoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Category,  resourceName: "Category", resourceId: categoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DailyAffirmationSession
+        public async Task DailyAffirmationSessionCreatedAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSession,  resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionUpdatedAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSession,  resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionDeletedAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSession,  resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionUnDeletedAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSession,  resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DailyAffirmationSessionEnabledAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DailyAffirmationSession, resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionDisabledAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DailyAffirmationSession, resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDailyAffirmationSessionAsync(long dailyAffirmationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSession,  resourceName: "DailyAffirmationSession", resourceId: dailyAffirmationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DailyAffirmationSessionCategory
+        public async Task DailyAffirmationSessionCategoryCreatedAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory,  resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionCategoryUpdatedAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory,  resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionCategoryDeletedAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory,  resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionCategoryUnDeletedAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory,  resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DailyAffirmationSessionCategoryEnabledAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory, resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationSessionCategoryDisabledAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory, resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDailyAffirmationSessionCategoryAsync(long dailyAffirmationSessionCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationSessionCategory,  resourceName: "DailyAffirmationSessionCategory", resourceId: dailyAffirmationSessionCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DailyAffirmationText
+        public async Task DailyAffirmationTextCreatedAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationText,  resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationTextUpdatedAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationText,  resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationTextDeletedAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationText,  resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationTextUnDeletedAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationText,  resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DailyAffirmationTextEnabledAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DailyAffirmationText, resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyAffirmationTextDisabledAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DailyAffirmationText, resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDailyAffirmationTextAsync(long dailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyAffirmationText,  resourceName: "DailyAffirmationText", resourceId: dailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DefaultCategory
+        public async Task DefaultCategoryCreatedAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultCategory,  resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultCategoryUpdatedAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultCategory,  resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultCategoryDeletedAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultCategory,  resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultCategoryUnDeletedAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultCategory,  resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DefaultCategoryEnabledAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DefaultCategory, resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultCategoryDisabledAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DefaultCategory, resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDefaultCategoryAsync(long defaultCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultCategory,  resourceName: "DefaultCategory", resourceId: defaultCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DefaultDailyAffirmationText
+        public async Task DefaultDailyAffirmationTextCreatedAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText,  resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultDailyAffirmationTextUpdatedAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText,  resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultDailyAffirmationTextDeletedAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText,  resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultDailyAffirmationTextUnDeletedAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText,  resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DefaultDailyAffirmationTextEnabledAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText, resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultDailyAffirmationTextDisabledAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText, resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDefaultDailyAffirmationTextAsync(long defaultDailyAffirmationTextId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultDailyAffirmationText,  resourceName: "DefaultDailyAffirmationText", resourceId: defaultDailyAffirmationTextId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DefaultGoalTrackerCategory
+        public async Task DefaultGoalTrackerCategoryCreatedAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory,  resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerCategoryUpdatedAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory,  resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerCategoryDeletedAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory,  resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerCategoryUnDeletedAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory,  resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DefaultGoalTrackerCategoryEnabledAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory, resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerCategoryDisabledAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory, resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDefaultGoalTrackerCategoryAsync(long defaultGoalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTrackerCategory,  resourceName: "DefaultGoalTrackerCategory", resourceId: defaultGoalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DefaultGoalTracker
+        public async Task DefaultGoalTrackerCreatedAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTracker,  resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerUpdatedAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTracker,  resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerDeletedAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTracker,  resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerUnDeletedAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTracker,  resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DefaultGoalTrackerEnabledAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DefaultGoalTracker, resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultGoalTrackerDisabledAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DefaultGoalTracker, resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDefaultGoalTrackerAsync(long defaultGoalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultGoalTracker,  resourceName: "DefaultGoalTracker", resourceId: defaultGoalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DefaultMeditationFile
+        public async Task DefaultMeditationFileCreatedAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultMeditationFile,  resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultMeditationFileUpdatedAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultMeditationFile,  resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultMeditationFileDeletedAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultMeditationFile,  resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultMeditationFileUnDeletedAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultMeditationFile,  resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DefaultMeditationFileEnabledAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DefaultMeditationFile, resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultMeditationFileDisabledAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DefaultMeditationFile, resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDefaultMeditationFileAsync(long defaultMeditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultMeditationFile,  resourceName: "DefaultMeditationFile", resourceId: defaultMeditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region DefaultVisionBoardPicture
+        public async Task DefaultVisionBoardPictureCreatedAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture,  resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultVisionBoardPictureUpdatedAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture,  resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultVisionBoardPictureDeletedAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture,  resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultVisionBoardPictureUnDeletedAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture,  resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DefaultVisionBoardPictureEnabledAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture, resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DefaultVisionBoardPictureDisabledAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture, resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDefaultVisionBoardPictureAsync(long defaultVisionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DefaultVisionBoardPicture,  resourceName: "DefaultVisionBoardPicture", resourceId: defaultVisionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region Feed
+        public async Task FeedCreatedAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Feed,  resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task FeedUpdatedAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Feed,  resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task FeedDeletedAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Feed,  resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task FeedUnDeletedAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Feed,  resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task FeedEnabledAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.Feed, resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task FeedDisabledAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.Feed, resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteFeedAsync(long feedId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.Feed,  resourceName: "Feed", resourceId: feedId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region GoalTracker
+        public async Task GoalTrackerCreatedAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTracker,  resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerUpdatedAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTracker,  resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerDeletedAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTracker,  resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerUnDeletedAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTracker,  resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task GoalTrackerEnabledAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.GoalTracker, resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerDisabledAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.GoalTracker, resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteGoalTrackerAsync(long goalTrackerId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTracker,  resourceName: "GoalTracker", resourceId: goalTrackerId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region GoalTrackerCategory
+        public async Task GoalTrackerCategoryCreatedAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerCategory,  resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerCategoryUpdatedAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerCategory,  resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerCategoryDeletedAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerCategory,  resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerCategoryUnDeletedAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerCategory,  resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task GoalTrackerCategoryEnabledAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.GoalTrackerCategory, resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerCategoryDisabledAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.GoalTrackerCategory, resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteGoalTrackerCategoryAsync(long goalTrackerCategoryId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerCategory,  resourceName: "GoalTrackerCategory", resourceId: goalTrackerCategoryId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region GoalTrackerMileStone
+        public async Task GoalTrackerMileStoneCreatedAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerMileStone,  resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerMileStoneUpdatedAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerMileStone,  resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerMileStoneDeletedAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerMileStone,  resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerMileStoneUnDeletedAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerMileStone,  resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task GoalTrackerMileStoneEnabledAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.GoalTrackerMileStone, resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task GoalTrackerMileStoneDisabledAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.GoalTrackerMileStone, resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteGoalTrackerMileStoneAsync(long goalTrackerMileStoneId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.GoalTrackerMileStone,  resourceName: "GoalTrackerMileStone", resourceId: goalTrackerMileStoneId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region MeditationFile
+        public async Task MeditationFileCreatedAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationFile,  resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationFileUpdatedAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationFile,  resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationFileDeletedAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationFile,  resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationFileUnDeletedAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationFile,  resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task MeditationFileEnabledAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.MeditationFile, resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationFileDisabledAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.MeditationFile, resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteMeditationFileAsync(long meditationFileId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationFile,  resourceName: "MeditationFile", resourceId: meditationFileId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region MeditationSession
+        public async Task MeditationSessionCreatedAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationSession,  resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationSessionUpdatedAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationSession,  resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationSessionDeletedAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationSession,  resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationSessionUnDeletedAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationSession,  resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task MeditationSessionEnabledAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.MeditationSession, resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task MeditationSessionDisabledAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.MeditationSession, resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteMeditationSessionAsync(long meditationSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.MeditationSession,  resourceName: "MeditationSession", resourceId: meditationSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region VisionBoardPicture
+        public async Task VisionBoardPictureCreatedAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardPicture,  resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardPictureUpdatedAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardPicture,  resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardPictureDeletedAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardPicture,  resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardPictureUnDeletedAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardPicture,  resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task VisionBoardPictureEnabledAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.VisionBoardPicture, resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardPictureDisabledAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.VisionBoardPicture, resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteVisionBoardPictureAsync(long visionBoardPictureId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardPicture,  resourceName: "VisionBoardPicture", resourceId: visionBoardPictureId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
+#region VisionBoardSession
+        public async Task VisionBoardSessionCreatedAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSession,  resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionUpdatedAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSession,  resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionDeletedAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSession,  resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionUnDeletedAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSession,  resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task VisionBoardSessionEnabledAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.VisionBoardSession, resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task VisionBoardSessionDisabledAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.VisionBoardSession, resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteVisionBoardSessionAsync(long visionBoardSessionId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSession,  resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
         }
         #endregion
     }

@@ -4225,6 +4225,9434 @@ namespace Manifest.Tests.Common
         public const int Description__Size = 200;
     }
 
+    public class VisionBoardSessionPictureModel
+    {
+
+        public VisionBoardSessionPictureModel()
+        {
+        }
+
+        public VisionBoardSessionPictureModel(Int64 visionBoardSessionPictureId,Int64 visionBoardSessionId,DateTime visionBoardSessionPictureDate,Int64 visionBoardPictureId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            VisionBoardSessionPictureId = visionBoardSessionPictureId;
+            VisionBoardSessionId = visionBoardSessionId;
+            VisionBoardSessionPictureDate = visionBoardSessionPictureDate;
+            VisionBoardPictureId = visionBoardPictureId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureId")]
+        public Int64 VisionBoardSessionPictureId {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureDate")]
+        public DateTime VisionBoardSessionPictureDate {set; get;}
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionPictureTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public VisionBoardSessionPictureCreateModel GetAsCreateModel()
+        {
+            var obj = new VisionBoardSessionPictureCreateModel();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionPictureDate = VisionBoardSessionPictureDate;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.VisionBoardSessionPictureTimeSpentInSeconds = VisionBoardSessionPictureTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(VisionBoardSessionPictureCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
+            result = result && (obj.VisionBoardSessionPictureDate == VisionBoardSessionPictureDate);
+            result = result && (obj.VisionBoardPictureId == VisionBoardPictureId);
+            result = result && (obj.VisionBoardSessionPictureTimeSpentInSeconds == VisionBoardSessionPictureTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public VisionBoardSessionPictureUpdateModel GetAsUpdateModel()
+        {
+            var obj = new VisionBoardSessionPictureUpdateModel();
+            obj.VisionBoardSessionPictureId = VisionBoardSessionPictureId;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionPictureDate = VisionBoardSessionPictureDate;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.VisionBoardSessionPictureTimeSpentInSeconds = VisionBoardSessionPictureTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(VisionBoardSessionPictureUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardSessionPictureId == VisionBoardSessionPictureId);
+            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
+            result = result && (obj.VisionBoardSessionPictureDate == VisionBoardSessionPictureDate);
+            result = result && (obj.VisionBoardPictureId == VisionBoardPictureId);
+            result = result && (obj.VisionBoardSessionPictureTimeSpentInSeconds == VisionBoardSessionPictureTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public VisionBoardSessionPictureModel GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureModel();
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.VisionBoardSessionPictureId = VisionBoardSessionPictureId;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionPictureDate = VisionBoardSessionPictureDate;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.VisionBoardSessionPictureTimeSpentInSeconds = VisionBoardSessionPictureTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string VisionBoardSessionPictureId__Name = "VisionBoardSessionPictureId";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionPictureDate__Name = "VisionBoardSessionPictureDate";
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string VisionBoardSessionPictureTimeSpentInSeconds__Name = "VisionBoardSessionPictureTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class VisionBoardSessionPictureSearchCriteria
+    {
+
+        public VisionBoardSessionPictureSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64? VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64? VisionBoardPictureId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionPictureSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionPictureCreateModel
+    {
+
+        public VisionBoardSessionPictureCreateModel()
+        {
+        }
+
+        public VisionBoardSessionPictureCreateModel(Int64 visionBoardSessionId,DateTime visionBoardSessionPictureDate,Int64 visionBoardPictureId,Int64 userId)
+        {
+            VisionBoardSessionId = visionBoardSessionId;
+            VisionBoardSessionPictureDate = visionBoardSessionPictureDate;
+            VisionBoardPictureId = visionBoardPictureId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureDate")]
+        public DateTime VisionBoardSessionPictureDate {set; get;}
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionPictureTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public VisionBoardSessionPictureCreateModel GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureCreateModel();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionPictureDate = VisionBoardSessionPictureDate;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.VisionBoardSessionPictureTimeSpentInSeconds = VisionBoardSessionPictureTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionPictureDate__Name = "VisionBoardSessionPictureDate";
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string VisionBoardSessionPictureTimeSpentInSeconds__Name = "VisionBoardSessionPictureTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class MultipleVisionBoardSessionPictureCreateModel
+    {
+
+        public MultipleVisionBoardSessionPictureCreateModel()
+        {
+        }
+        [JsonPropertyName("newVisionBoardSessionPictures")]
+        public List<VisionBoardSessionPictureCreateModel> NewVisionBoardSessionPictures {set; get;}
+
+        public MultipleVisionBoardSessionPictureCreateModel GetCopy()
+        {
+            var obj = new MultipleVisionBoardSessionPictureCreateModel();
+            obj.NewVisionBoardSessionPictures = NewVisionBoardSessionPictures;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewVisionBoardSessionPictures__Name = "NewVisionBoardSessionPictures";
+    }
+
+    public class VisionBoardSessionPictureUpdateModel
+    {
+
+        public VisionBoardSessionPictureUpdateModel()
+        {
+        }
+
+        public VisionBoardSessionPictureUpdateModel(Int64 visionBoardSessionPictureId,Int64 visionBoardSessionId,DateTime visionBoardSessionPictureDate,Int64 visionBoardPictureId,Int64 userId)
+        {
+            VisionBoardSessionPictureId = visionBoardSessionPictureId;
+            VisionBoardSessionId = visionBoardSessionId;
+            VisionBoardSessionPictureDate = visionBoardSessionPictureDate;
+            VisionBoardPictureId = visionBoardPictureId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardSessionPictureId")]
+        public Int64 VisionBoardSessionPictureId {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureDate")]
+        public DateTime VisionBoardSessionPictureDate {set; get;}
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("visionBoardSessionPictureTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionPictureTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public VisionBoardSessionPictureUpdateModel GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureUpdateModel();
+            obj.VisionBoardSessionPictureId = VisionBoardSessionPictureId;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionPictureDate = VisionBoardSessionPictureDate;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.VisionBoardSessionPictureTimeSpentInSeconds = VisionBoardSessionPictureTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionPictureId__Name = "VisionBoardSessionPictureId";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionPictureDate__Name = "VisionBoardSessionPictureDate";
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string VisionBoardSessionPictureTimeSpentInSeconds__Name = "VisionBoardSessionPictureTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria
+    {
+
+        public VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionModel
+    {
+
+        public VisionBoardSessionModel()
+        {
+        }
+
+        public VisionBoardSessionModel(Int64 visionBoardSessionId,DateTime visionBoardSessionDate,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            VisionBoardSessionId = visionBoardSessionId;
+            VisionBoardSessionDate = visionBoardSessionDate;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public VisionBoardSessionCreateModel GetAsCreateModel()
+        {
+            var obj = new VisionBoardSessionCreateModel();
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(VisionBoardSessionCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
+            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public VisionBoardSessionUpdateModel GetAsUpdateModel()
+        {
+            var obj = new VisionBoardSessionUpdateModel();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(VisionBoardSessionUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
+            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
+            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public VisionBoardSessionModel GetCopy()
+        {
+            var obj = new VisionBoardSessionModel();
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria
+    {
+
+        public VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionPictureId")]
+        public Int64 VisionBoardSessionPictureId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria();
+            obj.VisionBoardSessionPictureId = VisionBoardSessionPictureId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionPictureId__Name = "VisionBoardSessionPictureId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria
+    {
+
+        public VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria();
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardPictureModel
+    {
+
+        public VisionBoardPictureModel()
+        {
+        }
+
+        public VisionBoardPictureModel(Int64 visionBoardPictureId,String fileName,Int64 fileSize,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            VisionBoardPictureId = visionBoardPictureId;
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public VisionBoardPictureCreateModel GetAsCreateModel()
+        {
+            var obj = new VisionBoardPictureCreateModel();
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(VisionBoardPictureCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public VisionBoardPictureUpdateModel GetAsUpdateModel()
+        {
+            var obj = new VisionBoardPictureUpdateModel();
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(VisionBoardPictureUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardPictureId == VisionBoardPictureId);
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public VisionBoardPictureModel GetCopy()
+        {
+            var obj = new VisionBoardPictureModel();
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria
+    {
+
+        public VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionPictureId")]
+        public Int64 VisionBoardSessionPictureId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria();
+            obj.VisionBoardSessionPictureId = VisionBoardSessionPictureId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionPictureId__Name = "VisionBoardSessionPictureId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionPictureByUserIdSearchCriteria
+    {
+
+        public VisionBoardSessionPictureByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionPictureByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionPictureByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByVisionBoardSessionPictureIdSearchCriteria
+    {
+
+        public UserByVisionBoardSessionPictureIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionPictureId")]
+        public Int64 VisionBoardSessionPictureId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByVisionBoardSessionPictureIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByVisionBoardSessionPictureIdSearchCriteria();
+            obj.VisionBoardSessionPictureId = VisionBoardSessionPictureId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionPictureId__Name = "VisionBoardSessionPictureId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class CategoryModel
+    {
+
+        public CategoryModel()
+        {
+        }
+
+        public CategoryModel(Int64 categoryId,Int64 defaultCategoryId,String categoryName,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            CategoryId = categoryId;
+            DefaultCategoryId = defaultCategoryId;
+            CategoryName = categoryName;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("defaultCategoryName")]
+        public String DefaultCategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeName")]
+        public String PredefinedCategoryTypeName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("categoryName")]
+        public String CategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public CategoryCreateModel GetAsCreateModel()
+        {
+            var obj = new CategoryCreateModel();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.CategoryName = CategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(CategoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            result = result && (obj.CategoryName == CategoryName);
+            result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public CategoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new CategoryUpdateModel();
+            obj.CategoryId = CategoryId;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.CategoryName = CategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(CategoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            result = result && (obj.CategoryName == CategoryName);
+            result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public CategoryModel GetCopy()
+        {
+            var obj = new CategoryModel();
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.PredefinedCategoryTypeName = PredefinedCategoryTypeName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.CategoryId = CategoryId;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.CategoryName = CategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryName__Name = "DefaultCategoryName";
+        public const string PredefinedCategoryTypeName__Name = "PredefinedCategoryTypeName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string CategoryId__Name = "CategoryId";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string CategoryName__Name = "CategoryName";
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int CategoryName__Size = 255;
+    }
+
+    public class CategorySearchCriteria
+    {
+
+        public CategorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64? DefaultCategoryId {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeIds")]
+        public List<Int64> PredefinedCategoryTypeIds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public CategorySearchCriteria GetCopy()
+        {
+            var obj = new CategorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.PredefinedCategoryTypeIds = PredefinedCategoryTypeIds;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string PredefinedCategoryTypeIds__Name = "PredefinedCategoryTypeIds";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class CategoryCreateModel
+    {
+
+        public CategoryCreateModel()
+        {
+        }
+
+        public CategoryCreateModel(Int64 defaultCategoryId,String categoryName,Int64 userId)
+        {
+            DefaultCategoryId = defaultCategoryId;
+            CategoryName = categoryName;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("categoryName")]
+        public String CategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public CategoryCreateModel GetCopy()
+        {
+            var obj = new CategoryCreateModel();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.CategoryName = CategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string CategoryName__Name = "CategoryName";
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int CategoryName__Size = 255;
+    }
+
+    public class MultipleCategoryCreateModel
+    {
+
+        public MultipleCategoryCreateModel()
+        {
+        }
+        [JsonPropertyName("newCategorys")]
+        public List<CategoryCreateModel> NewCategorys {set; get;}
+
+        public MultipleCategoryCreateModel GetCopy()
+        {
+            var obj = new MultipleCategoryCreateModel();
+            obj.NewCategorys = NewCategorys;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewCategorys__Name = "NewCategorys";
+    }
+
+    public class CategoryUpdateModel
+    {
+
+        public CategoryUpdateModel()
+        {
+        }
+
+        public CategoryUpdateModel(Int64 categoryId,Int64 defaultCategoryId,String categoryName,Int64 userId)
+        {
+            CategoryId = categoryId;
+            DefaultCategoryId = defaultCategoryId;
+            CategoryName = categoryName;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("categoryName")]
+        public String CategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public CategoryUpdateModel GetCopy()
+        {
+            var obj = new CategoryUpdateModel();
+            obj.CategoryId = CategoryId;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.CategoryName = CategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string CategoryName__Name = "CategoryName";
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int CategoryName__Size = 255;
+    }
+
+    public class CategoryByDefaultCategoryIdSearchCriteria
+    {
+
+        public CategoryByDefaultCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public CategoryByDefaultCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new CategoryByDefaultCategoryIdSearchCriteria();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultCategoryModel
+    {
+
+        public DefaultCategoryModel()
+        {
+        }
+
+        public DefaultCategoryModel(Int64 defaultCategoryId,String defaultCategoryName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DefaultCategoryId = defaultCategoryId;
+            DefaultCategoryName = defaultCategoryName;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedCategoryTypeName")]
+        public String PredefinedCategoryTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("defaultCategoryName")]
+        public String DefaultCategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DefaultCategoryCreateModel GetAsCreateModel()
+        {
+            var obj = new DefaultCategoryCreateModel();
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DefaultCategoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultCategoryName == DefaultCategoryName);
+            result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
+            return result;
+        }
+
+
+        public DefaultCategoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DefaultCategoryUpdateModel();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DefaultCategoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            result = result && (obj.DefaultCategoryName == DefaultCategoryName);
+            result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
+            return result;
+        }
+
+
+        public DefaultCategoryModel GetCopy()
+        {
+            var obj = new DefaultCategoryModel();
+            obj.PredefinedCategoryTypeName = PredefinedCategoryTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedCategoryTypeName__Name = "PredefinedCategoryTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string DefaultCategoryName__Name = "DefaultCategoryName";
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int DefaultCategoryName__Size = 255;
+    }
+
+    public class DefaultCategoryByCategoryIdSearchCriteria
+    {
+
+        public DefaultCategoryByCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultCategoryByCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultCategoryByCategoryIdSearchCriteria();
+            obj.CategoryId = CategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class CategoryByUserIdSearchCriteria
+    {
+
+        public CategoryByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public CategoryByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new CategoryByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByCategoryIdSearchCriteria
+    {
+
+        public UserByCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByCategoryIdSearchCriteria();
+            obj.CategoryId = CategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionModel
+    {
+
+        public DailyAffirmationSessionModel()
+        {
+        }
+
+        public DailyAffirmationSessionModel(Int64 dailyAffirmationSessionId,DateTime dailyAffirmationSessionDate,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DailyAffirmationSessionId = dailyAffirmationSessionId;
+            DailyAffirmationSessionDate = dailyAffirmationSessionDate;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionDate")]
+        public DateTime DailyAffirmationSessionDate {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionTimeSpentInSeconds")]
+        public Int64? DailyAffirmationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DailyAffirmationSessionCreateModel GetAsCreateModel()
+        {
+            var obj = new DailyAffirmationSessionCreateModel();
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationSessionTimeSpentInSeconds = DailyAffirmationSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DailyAffirmationSessionCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyAffirmationSessionDate == DailyAffirmationSessionDate);
+            result = result && (obj.DailyAffirmationSessionTimeSpentInSeconds == DailyAffirmationSessionTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public DailyAffirmationSessionUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DailyAffirmationSessionUpdateModel();
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationSessionTimeSpentInSeconds = DailyAffirmationSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DailyAffirmationSessionUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyAffirmationSessionId == DailyAffirmationSessionId);
+            result = result && (obj.DailyAffirmationSessionDate == DailyAffirmationSessionDate);
+            result = result && (obj.DailyAffirmationSessionTimeSpentInSeconds == DailyAffirmationSessionTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public DailyAffirmationSessionModel GetCopy()
+        {
+            var obj = new DailyAffirmationSessionModel();
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationSessionTimeSpentInSeconds = DailyAffirmationSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionDate__Name = "DailyAffirmationSessionDate";
+        public const string DailyAffirmationSessionTimeSpentInSeconds__Name = "DailyAffirmationSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class DailyAffirmationSessionSearchCriteria
+    {
+
+        public DailyAffirmationSessionSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionCreateModel
+    {
+
+        public DailyAffirmationSessionCreateModel()
+        {
+        }
+
+        public DailyAffirmationSessionCreateModel(DateTime dailyAffirmationSessionDate,Int64 userId)
+        {
+            DailyAffirmationSessionDate = dailyAffirmationSessionDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("dailyAffirmationSessionDate")]
+        public DateTime DailyAffirmationSessionDate {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionTimeSpentInSeconds")]
+        public Int64? DailyAffirmationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public DailyAffirmationSessionCreateModel GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCreateModel();
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationSessionTimeSpentInSeconds = DailyAffirmationSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionDate__Name = "DailyAffirmationSessionDate";
+        public const string DailyAffirmationSessionTimeSpentInSeconds__Name = "DailyAffirmationSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class MultipleDailyAffirmationSessionCreateModel
+    {
+
+        public MultipleDailyAffirmationSessionCreateModel()
+        {
+        }
+        [JsonPropertyName("newDailyAffirmationSessions")]
+        public List<DailyAffirmationSessionCreateModel> NewDailyAffirmationSessions {set; get;}
+
+        public MultipleDailyAffirmationSessionCreateModel GetCopy()
+        {
+            var obj = new MultipleDailyAffirmationSessionCreateModel();
+            obj.NewDailyAffirmationSessions = NewDailyAffirmationSessions;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDailyAffirmationSessions__Name = "NewDailyAffirmationSessions";
+    }
+
+    public class DailyAffirmationSessionUpdateModel
+    {
+
+        public DailyAffirmationSessionUpdateModel()
+        {
+        }
+
+        public DailyAffirmationSessionUpdateModel(Int64 dailyAffirmationSessionId,DateTime dailyAffirmationSessionDate,Int64 userId)
+        {
+            DailyAffirmationSessionId = dailyAffirmationSessionId;
+            DailyAffirmationSessionDate = dailyAffirmationSessionDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionDate")]
+        public DateTime DailyAffirmationSessionDate {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionTimeSpentInSeconds")]
+        public Int64? DailyAffirmationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public DailyAffirmationSessionUpdateModel GetCopy()
+        {
+            var obj = new DailyAffirmationSessionUpdateModel();
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationSessionTimeSpentInSeconds = DailyAffirmationSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionDate__Name = "DailyAffirmationSessionDate";
+        public const string DailyAffirmationSessionTimeSpentInSeconds__Name = "DailyAffirmationSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class DailyAffirmationSessionByUserIdSearchCriteria
+    {
+
+        public DailyAffirmationSessionByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByDailyAffirmationSessionIdSearchCriteria
+    {
+
+        public UserByDailyAffirmationSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByDailyAffirmationSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByDailyAffirmationSessionIdSearchCriteria();
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionCategoryModel
+    {
+
+        public DailyAffirmationSessionCategoryModel()
+        {
+        }
+
+        public DailyAffirmationSessionCategoryModel(Int64 dailyAffirmationSessionCategoryId,Int64 categoryId,Int64 dailyAffirmationSessionId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DailyAffirmationSessionCategoryId = dailyAffirmationSessionCategoryId;
+            CategoryId = categoryId;
+            DailyAffirmationSessionId = dailyAffirmationSessionId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("categoryName")]
+        public String CategoryName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionCategoryId")]
+        public Int64 DailyAffirmationSessionCategoryId {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionCategoryTimeSpentInSeconds")]
+        public Int64? DailyAffirmationSessionCategoryTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DailyAffirmationSessionCategoryCreateModel GetAsCreateModel()
+        {
+            var obj = new DailyAffirmationSessionCategoryCreateModel();
+            obj.CategoryId = CategoryId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionCategoryTimeSpentInSeconds = DailyAffirmationSessionCategoryTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DailyAffirmationSessionCategoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.DailyAffirmationSessionId == DailyAffirmationSessionId);
+            result = result && (obj.DailyAffirmationSessionCategoryTimeSpentInSeconds == DailyAffirmationSessionCategoryTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public DailyAffirmationSessionCategoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DailyAffirmationSessionCategoryUpdateModel();
+            obj.DailyAffirmationSessionCategoryId = DailyAffirmationSessionCategoryId;
+            obj.CategoryId = CategoryId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionCategoryTimeSpentInSeconds = DailyAffirmationSessionCategoryTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DailyAffirmationSessionCategoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyAffirmationSessionCategoryId == DailyAffirmationSessionCategoryId);
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.DailyAffirmationSessionId == DailyAffirmationSessionId);
+            result = result && (obj.DailyAffirmationSessionCategoryTimeSpentInSeconds == DailyAffirmationSessionCategoryTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public DailyAffirmationSessionCategoryModel GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategoryModel();
+            obj.CategoryName = CategoryName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DailyAffirmationSessionCategoryId = DailyAffirmationSessionCategoryId;
+            obj.CategoryId = CategoryId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionCategoryTimeSpentInSeconds = DailyAffirmationSessionCategoryTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryName__Name = "CategoryName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DailyAffirmationSessionCategoryId__Name = "DailyAffirmationSessionCategoryId";
+        public const string CategoryId__Name = "CategoryId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionCategoryTimeSpentInSeconds__Name = "DailyAffirmationSessionCategoryTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class DailyAffirmationSessionCategorySearchCriteria
+    {
+
+        public DailyAffirmationSessionCategorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64? CategoryId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64? DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionCategorySearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CategoryId = CategoryId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CategoryId__Name = "CategoryId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionCategoryCreateModel
+    {
+
+        public DailyAffirmationSessionCategoryCreateModel()
+        {
+        }
+
+        public DailyAffirmationSessionCategoryCreateModel(Int64 categoryId,Int64 dailyAffirmationSessionId,Int64 userId)
+        {
+            CategoryId = categoryId;
+            DailyAffirmationSessionId = dailyAffirmationSessionId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionCategoryTimeSpentInSeconds")]
+        public Int64? DailyAffirmationSessionCategoryTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public DailyAffirmationSessionCategoryCreateModel GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategoryCreateModel();
+            obj.CategoryId = CategoryId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionCategoryTimeSpentInSeconds = DailyAffirmationSessionCategoryTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionCategoryTimeSpentInSeconds__Name = "DailyAffirmationSessionCategoryTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class MultipleDailyAffirmationSessionCategoryCreateModel
+    {
+
+        public MultipleDailyAffirmationSessionCategoryCreateModel()
+        {
+        }
+        [JsonPropertyName("newDailyAffirmationSessionCategorys")]
+        public List<DailyAffirmationSessionCategoryCreateModel> NewDailyAffirmationSessionCategorys {set; get;}
+
+        public MultipleDailyAffirmationSessionCategoryCreateModel GetCopy()
+        {
+            var obj = new MultipleDailyAffirmationSessionCategoryCreateModel();
+            obj.NewDailyAffirmationSessionCategorys = NewDailyAffirmationSessionCategorys;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDailyAffirmationSessionCategorys__Name = "NewDailyAffirmationSessionCategorys";
+    }
+
+    public class DailyAffirmationSessionCategoryUpdateModel
+    {
+
+        public DailyAffirmationSessionCategoryUpdateModel()
+        {
+        }
+
+        public DailyAffirmationSessionCategoryUpdateModel(Int64 dailyAffirmationSessionCategoryId,Int64 categoryId,Int64 dailyAffirmationSessionId,Int64 userId)
+        {
+            DailyAffirmationSessionCategoryId = dailyAffirmationSessionCategoryId;
+            CategoryId = categoryId;
+            DailyAffirmationSessionId = dailyAffirmationSessionId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("dailyAffirmationSessionCategoryId")]
+        public Int64 DailyAffirmationSessionCategoryId {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionCategoryTimeSpentInSeconds")]
+        public Int64? DailyAffirmationSessionCategoryTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public DailyAffirmationSessionCategoryUpdateModel GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategoryUpdateModel();
+            obj.DailyAffirmationSessionCategoryId = DailyAffirmationSessionCategoryId;
+            obj.CategoryId = CategoryId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionCategoryTimeSpentInSeconds = DailyAffirmationSessionCategoryTimeSpentInSeconds;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionCategoryId__Name = "DailyAffirmationSessionCategoryId";
+        public const string CategoryId__Name = "CategoryId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionCategoryTimeSpentInSeconds__Name = "DailyAffirmationSessionCategoryTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class DailyAffirmationSessionCategoryByCategoryIdSearchCriteria
+    {
+
+        public DailyAffirmationSessionCategoryByCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionCategoryByCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategoryByCategoryIdSearchCriteria();
+            obj.CategoryId = CategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class CategoryByDailyAffirmationSessionCategoryIdSearchCriteria
+    {
+
+        public CategoryByDailyAffirmationSessionCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationSessionCategoryId")]
+        public Int64 DailyAffirmationSessionCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public CategoryByDailyAffirmationSessionCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new CategoryByDailyAffirmationSessionCategoryIdSearchCriteria();
+            obj.DailyAffirmationSessionCategoryId = DailyAffirmationSessionCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionCategoryId__Name = "DailyAffirmationSessionCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria
+    {
+
+        public DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria();
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria
+    {
+
+        public DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationSessionCategoryId")]
+        public Int64 DailyAffirmationSessionCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria();
+            obj.DailyAffirmationSessionCategoryId = DailyAffirmationSessionCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionCategoryId__Name = "DailyAffirmationSessionCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionCategoryByUserIdSearchCriteria
+    {
+
+        public DailyAffirmationSessionCategoryByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionCategoryByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionCategoryByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByDailyAffirmationSessionCategoryIdSearchCriteria
+    {
+
+        public UserByDailyAffirmationSessionCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationSessionCategoryId")]
+        public Int64 DailyAffirmationSessionCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByDailyAffirmationSessionCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByDailyAffirmationSessionCategoryIdSearchCriteria();
+            obj.DailyAffirmationSessionCategoryId = DailyAffirmationSessionCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionCategoryId__Name = "DailyAffirmationSessionCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationTextModel
+    {
+
+        public DailyAffirmationTextModel()
+        {
+        }
+
+        public DailyAffirmationTextModel(Int64 dailyAffirmationTextId,String dailyAffirmationTextValue,Int64 categoryId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DailyAffirmationTextId = dailyAffirmationTextId;
+            DailyAffirmationTextValue = dailyAffirmationTextValue;
+            CategoryId = categoryId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("categoryName")]
+        public String CategoryName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("dailyAffirmationTextId")]
+        public Int64 DailyAffirmationTextId {set; get;}
+        [JsonPropertyName("dailyAffirmationTextValue")]
+        public String DailyAffirmationTextValue {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DailyAffirmationTextCreateModel GetAsCreateModel()
+        {
+            var obj = new DailyAffirmationTextCreateModel();
+            obj.DailyAffirmationTextValue = DailyAffirmationTextValue;
+            obj.CategoryId = CategoryId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DailyAffirmationTextCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyAffirmationTextValue == DailyAffirmationTextValue);
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public DailyAffirmationTextUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DailyAffirmationTextUpdateModel();
+            obj.DailyAffirmationTextId = DailyAffirmationTextId;
+            obj.DailyAffirmationTextValue = DailyAffirmationTextValue;
+            obj.CategoryId = CategoryId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DailyAffirmationTextUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyAffirmationTextId == DailyAffirmationTextId);
+            result = result && (obj.DailyAffirmationTextValue == DailyAffirmationTextValue);
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public DailyAffirmationTextModel GetCopy()
+        {
+            var obj = new DailyAffirmationTextModel();
+            obj.CategoryName = CategoryName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DailyAffirmationTextId = DailyAffirmationTextId;
+            obj.DailyAffirmationTextValue = DailyAffirmationTextValue;
+            obj.CategoryId = CategoryId;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryName__Name = "CategoryName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DailyAffirmationTextId__Name = "DailyAffirmationTextId";
+        public const string DailyAffirmationTextValue__Name = "DailyAffirmationTextValue";
+        public const string CategoryId__Name = "CategoryId";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int DailyAffirmationTextValue__Size = 255;
+    }
+
+    public class DailyAffirmationTextSearchCriteria
+    {
+
+        public DailyAffirmationTextSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64? CategoryId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationTextSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationTextSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CategoryId = CategoryId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CategoryId__Name = "CategoryId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationTextCreateModel
+    {
+
+        public DailyAffirmationTextCreateModel()
+        {
+        }
+
+        public DailyAffirmationTextCreateModel(String dailyAffirmationTextValue,Int64 categoryId,Int64 userId)
+        {
+            DailyAffirmationTextValue = dailyAffirmationTextValue;
+            CategoryId = categoryId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("dailyAffirmationTextValue")]
+        public String DailyAffirmationTextValue {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public DailyAffirmationTextCreateModel GetCopy()
+        {
+            var obj = new DailyAffirmationTextCreateModel();
+            obj.DailyAffirmationTextValue = DailyAffirmationTextValue;
+            obj.CategoryId = CategoryId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationTextValue__Name = "DailyAffirmationTextValue";
+        public const string CategoryId__Name = "CategoryId";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int DailyAffirmationTextValue__Size = 255;
+    }
+
+    public class MultipleDailyAffirmationTextCreateModel
+    {
+
+        public MultipleDailyAffirmationTextCreateModel()
+        {
+        }
+        [JsonPropertyName("newDailyAffirmationTexts")]
+        public List<DailyAffirmationTextCreateModel> NewDailyAffirmationTexts {set; get;}
+
+        public MultipleDailyAffirmationTextCreateModel GetCopy()
+        {
+            var obj = new MultipleDailyAffirmationTextCreateModel();
+            obj.NewDailyAffirmationTexts = NewDailyAffirmationTexts;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDailyAffirmationTexts__Name = "NewDailyAffirmationTexts";
+    }
+
+    public class DailyAffirmationTextUpdateModel
+    {
+
+        public DailyAffirmationTextUpdateModel()
+        {
+        }
+
+        public DailyAffirmationTextUpdateModel(Int64 dailyAffirmationTextId,String dailyAffirmationTextValue,Int64 categoryId,Int64 userId)
+        {
+            DailyAffirmationTextId = dailyAffirmationTextId;
+            DailyAffirmationTextValue = dailyAffirmationTextValue;
+            CategoryId = categoryId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("dailyAffirmationTextId")]
+        public Int64 DailyAffirmationTextId {set; get;}
+        [JsonPropertyName("dailyAffirmationTextValue")]
+        public String DailyAffirmationTextValue {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public DailyAffirmationTextUpdateModel GetCopy()
+        {
+            var obj = new DailyAffirmationTextUpdateModel();
+            obj.DailyAffirmationTextId = DailyAffirmationTextId;
+            obj.DailyAffirmationTextValue = DailyAffirmationTextValue;
+            obj.CategoryId = CategoryId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationTextId__Name = "DailyAffirmationTextId";
+        public const string DailyAffirmationTextValue__Name = "DailyAffirmationTextValue";
+        public const string CategoryId__Name = "CategoryId";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int DailyAffirmationTextValue__Size = 255;
+    }
+
+    public class DailyAffirmationTextByCategoryIdSearchCriteria
+    {
+
+        public DailyAffirmationTextByCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationTextByCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationTextByCategoryIdSearchCriteria();
+            obj.CategoryId = CategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class CategoryByDailyAffirmationTextIdSearchCriteria
+    {
+
+        public CategoryByDailyAffirmationTextIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationTextId")]
+        public Int64 DailyAffirmationTextId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public CategoryByDailyAffirmationTextIdSearchCriteria GetCopy()
+        {
+            var obj = new CategoryByDailyAffirmationTextIdSearchCriteria();
+            obj.DailyAffirmationTextId = DailyAffirmationTextId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationTextId__Name = "DailyAffirmationTextId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationTextByUserIdSearchCriteria
+    {
+
+        public DailyAffirmationTextByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationTextByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationTextByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByDailyAffirmationTextIdSearchCriteria
+    {
+
+        public UserByDailyAffirmationTextIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationTextId")]
+        public Int64 DailyAffirmationTextId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByDailyAffirmationTextIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByDailyAffirmationTextIdSearchCriteria();
+            obj.DailyAffirmationTextId = DailyAffirmationTextId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationTextId__Name = "DailyAffirmationTextId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultCategorySearchCriteria
+    {
+
+        public DefaultCategorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeIds")]
+        public List<Int64> PredefinedCategoryTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultCategorySearchCriteria GetCopy()
+        {
+            var obj = new DefaultCategorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedCategoryTypeIds = PredefinedCategoryTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedCategoryTypeIds__Name = "PredefinedCategoryTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultCategoryCreateModel
+    {
+
+        public DefaultCategoryCreateModel()
+        {
+        }
+
+        public DefaultCategoryCreateModel(String defaultCategoryName)
+        {
+            DefaultCategoryName = defaultCategoryName;
+        }
+
+        [JsonPropertyName("defaultCategoryName")]
+        public String DefaultCategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+
+        public DefaultCategoryCreateModel GetCopy()
+        {
+            var obj = new DefaultCategoryCreateModel();
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryName__Name = "DefaultCategoryName";
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        // String Column Sizes
+        public const int DefaultCategoryName__Size = 255;
+    }
+
+    public class MultipleDefaultCategoryCreateModel
+    {
+
+        public MultipleDefaultCategoryCreateModel()
+        {
+        }
+        [JsonPropertyName("newDefaultCategorys")]
+        public List<DefaultCategoryCreateModel> NewDefaultCategorys {set; get;}
+
+        public MultipleDefaultCategoryCreateModel GetCopy()
+        {
+            var obj = new MultipleDefaultCategoryCreateModel();
+            obj.NewDefaultCategorys = NewDefaultCategorys;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDefaultCategorys__Name = "NewDefaultCategorys";
+    }
+
+    public class DefaultCategoryUpdateModel
+    {
+
+        public DefaultCategoryUpdateModel()
+        {
+        }
+
+        public DefaultCategoryUpdateModel(Int64 defaultCategoryId,String defaultCategoryName)
+        {
+            DefaultCategoryId = defaultCategoryId;
+            DefaultCategoryName = defaultCategoryName;
+        }
+
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("defaultCategoryName")]
+        public String DefaultCategoryName {set; get;}
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+
+        public DefaultCategoryUpdateModel GetCopy()
+        {
+            var obj = new DefaultCategoryUpdateModel();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string DefaultCategoryName__Name = "DefaultCategoryName";
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        // String Column Sizes
+        public const int DefaultCategoryName__Size = 255;
+    }
+
+    public class DefaultDailyAffirmationTextModel
+    {
+
+        public DefaultDailyAffirmationTextModel()
+        {
+        }
+
+        public DefaultDailyAffirmationTextModel(Int64 defaultDailyAffirmationTextId,String defaultDailyAffirmationTextName,Int64 defaultCategoryId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DefaultDailyAffirmationTextId = defaultDailyAffirmationTextId;
+            DefaultDailyAffirmationTextName = defaultDailyAffirmationTextName;
+            DefaultCategoryId = defaultCategoryId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("defaultCategoryName")]
+        public String DefaultCategoryName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("defaultDailyAffirmationTextId")]
+        public Int64 DefaultDailyAffirmationTextId {set; get;}
+        [JsonPropertyName("defaultDailyAffirmationTextName")]
+        public String DefaultDailyAffirmationTextName {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DefaultDailyAffirmationTextCreateModel GetAsCreateModel()
+        {
+            var obj = new DefaultDailyAffirmationTextCreateModel();
+            obj.DefaultDailyAffirmationTextName = DefaultDailyAffirmationTextName;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DefaultDailyAffirmationTextCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultDailyAffirmationTextName == DefaultDailyAffirmationTextName);
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            return result;
+        }
+
+
+        public DefaultDailyAffirmationTextUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DefaultDailyAffirmationTextUpdateModel();
+            obj.DefaultDailyAffirmationTextId = DefaultDailyAffirmationTextId;
+            obj.DefaultDailyAffirmationTextName = DefaultDailyAffirmationTextName;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DefaultDailyAffirmationTextUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultDailyAffirmationTextId == DefaultDailyAffirmationTextId);
+            result = result && (obj.DefaultDailyAffirmationTextName == DefaultDailyAffirmationTextName);
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            return result;
+        }
+
+
+        public DefaultDailyAffirmationTextModel GetCopy()
+        {
+            var obj = new DefaultDailyAffirmationTextModel();
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DefaultDailyAffirmationTextId = DefaultDailyAffirmationTextId;
+            obj.DefaultDailyAffirmationTextName = DefaultDailyAffirmationTextName;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryName__Name = "DefaultCategoryName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DefaultDailyAffirmationTextId__Name = "DefaultDailyAffirmationTextId";
+        public const string DefaultDailyAffirmationTextName__Name = "DefaultDailyAffirmationTextName";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int DefaultDailyAffirmationTextName__Size = 255;
+    }
+
+    public class DefaultDailyAffirmationTextSearchCriteria
+    {
+
+        public DefaultDailyAffirmationTextSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64? DefaultCategoryId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultDailyAffirmationTextSearchCriteria GetCopy()
+        {
+            var obj = new DefaultDailyAffirmationTextSearchCriteria();
+            obj.UserId = UserId;
+            obj.ShowDeleted = ShowDeleted;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultDailyAffirmationTextCreateModel
+    {
+
+        public DefaultDailyAffirmationTextCreateModel()
+        {
+        }
+
+        public DefaultDailyAffirmationTextCreateModel(String defaultDailyAffirmationTextName,Int64 defaultCategoryId)
+        {
+            DefaultDailyAffirmationTextName = defaultDailyAffirmationTextName;
+            DefaultCategoryId = defaultCategoryId;
+        }
+
+        [JsonPropertyName("defaultDailyAffirmationTextName")]
+        public String DefaultDailyAffirmationTextName {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+
+        public DefaultDailyAffirmationTextCreateModel GetCopy()
+        {
+            var obj = new DefaultDailyAffirmationTextCreateModel();
+            obj.DefaultDailyAffirmationTextName = DefaultDailyAffirmationTextName;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultDailyAffirmationTextName__Name = "DefaultDailyAffirmationTextName";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        // String Column Sizes
+        public const int DefaultDailyAffirmationTextName__Size = 255;
+    }
+
+    public class MultipleDefaultDailyAffirmationTextCreateModel
+    {
+
+        public MultipleDefaultDailyAffirmationTextCreateModel()
+        {
+        }
+        [JsonPropertyName("newDefaultDailyAffirmationTexts")]
+        public List<DefaultDailyAffirmationTextCreateModel> NewDefaultDailyAffirmationTexts {set; get;}
+
+        public MultipleDefaultDailyAffirmationTextCreateModel GetCopy()
+        {
+            var obj = new MultipleDefaultDailyAffirmationTextCreateModel();
+            obj.NewDefaultDailyAffirmationTexts = NewDefaultDailyAffirmationTexts;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDefaultDailyAffirmationTexts__Name = "NewDefaultDailyAffirmationTexts";
+    }
+
+    public class DefaultDailyAffirmationTextUpdateModel
+    {
+
+        public DefaultDailyAffirmationTextUpdateModel()
+        {
+        }
+
+        public DefaultDailyAffirmationTextUpdateModel(Int64 defaultDailyAffirmationTextId,String defaultDailyAffirmationTextName,Int64 defaultCategoryId)
+        {
+            DefaultDailyAffirmationTextId = defaultDailyAffirmationTextId;
+            DefaultDailyAffirmationTextName = defaultDailyAffirmationTextName;
+            DefaultCategoryId = defaultCategoryId;
+        }
+
+        [JsonPropertyName("defaultDailyAffirmationTextId")]
+        public Int64 DefaultDailyAffirmationTextId {set; get;}
+        [JsonPropertyName("defaultDailyAffirmationTextName")]
+        public String DefaultDailyAffirmationTextName {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+
+        public DefaultDailyAffirmationTextUpdateModel GetCopy()
+        {
+            var obj = new DefaultDailyAffirmationTextUpdateModel();
+            obj.DefaultDailyAffirmationTextId = DefaultDailyAffirmationTextId;
+            obj.DefaultDailyAffirmationTextName = DefaultDailyAffirmationTextName;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultDailyAffirmationTextId__Name = "DefaultDailyAffirmationTextId";
+        public const string DefaultDailyAffirmationTextName__Name = "DefaultDailyAffirmationTextName";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        // String Column Sizes
+        public const int DefaultDailyAffirmationTextName__Size = 255;
+    }
+
+    public class DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria
+    {
+
+        public DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria
+    {
+
+        public DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultDailyAffirmationTextId")]
+        public Int64 DefaultDailyAffirmationTextId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria();
+            obj.DefaultDailyAffirmationTextId = DefaultDailyAffirmationTextId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultDailyAffirmationTextId__Name = "DefaultDailyAffirmationTextId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultGoalTrackerModel
+    {
+
+        public DefaultGoalTrackerModel()
+        {
+        }
+
+        public DefaultGoalTrackerModel(Int64 defaultGoalTrackerId,String defaultGoalTrackerText,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DefaultGoalTrackerId = defaultGoalTrackerId;
+            DefaultGoalTrackerText = defaultGoalTrackerText;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64 DefaultGoalTrackerId {set; get;}
+        [JsonPropertyName("defaultGoalTrackerText")]
+        public String DefaultGoalTrackerText {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DefaultGoalTrackerCreateModel GetAsCreateModel()
+        {
+            var obj = new DefaultGoalTrackerCreateModel();
+            obj.DefaultGoalTrackerText = DefaultGoalTrackerText;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DefaultGoalTrackerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultGoalTrackerText == DefaultGoalTrackerText);
+            return result;
+        }
+
+
+        public DefaultGoalTrackerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DefaultGoalTrackerUpdateModel();
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            obj.DefaultGoalTrackerText = DefaultGoalTrackerText;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DefaultGoalTrackerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultGoalTrackerId == DefaultGoalTrackerId);
+            result = result && (obj.DefaultGoalTrackerText == DefaultGoalTrackerText);
+            return result;
+        }
+
+
+        public DefaultGoalTrackerModel GetCopy()
+        {
+            var obj = new DefaultGoalTrackerModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            obj.DefaultGoalTrackerText = DefaultGoalTrackerText;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+        public const string DefaultGoalTrackerText__Name = "DefaultGoalTrackerText";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int DefaultGoalTrackerText__Size = 255;
+    }
+
+    public class DefaultGoalTrackerSearchCriteria
+    {
+
+        public DefaultGoalTrackerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultGoalTrackerSearchCriteria GetCopy()
+        {
+            var obj = new DefaultGoalTrackerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultGoalTrackerCreateModel
+    {
+
+        public DefaultGoalTrackerCreateModel()
+        {
+        }
+
+        public DefaultGoalTrackerCreateModel(String defaultGoalTrackerText)
+        {
+            DefaultGoalTrackerText = defaultGoalTrackerText;
+        }
+
+        [JsonPropertyName("defaultGoalTrackerText")]
+        public String DefaultGoalTrackerText {set; get;}
+
+        public DefaultGoalTrackerCreateModel GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCreateModel();
+            obj.DefaultGoalTrackerText = DefaultGoalTrackerText;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultGoalTrackerText__Name = "DefaultGoalTrackerText";
+        // String Column Sizes
+        public const int DefaultGoalTrackerText__Size = 255;
+    }
+
+    public class MultipleDefaultGoalTrackerCreateModel
+    {
+
+        public MultipleDefaultGoalTrackerCreateModel()
+        {
+        }
+        [JsonPropertyName("newDefaultGoalTrackers")]
+        public List<DefaultGoalTrackerCreateModel> NewDefaultGoalTrackers {set; get;}
+
+        public MultipleDefaultGoalTrackerCreateModel GetCopy()
+        {
+            var obj = new MultipleDefaultGoalTrackerCreateModel();
+            obj.NewDefaultGoalTrackers = NewDefaultGoalTrackers;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDefaultGoalTrackers__Name = "NewDefaultGoalTrackers";
+    }
+
+    public class DefaultGoalTrackerUpdateModel
+    {
+
+        public DefaultGoalTrackerUpdateModel()
+        {
+        }
+
+        public DefaultGoalTrackerUpdateModel(Int64 defaultGoalTrackerId,String defaultGoalTrackerText)
+        {
+            DefaultGoalTrackerId = defaultGoalTrackerId;
+            DefaultGoalTrackerText = defaultGoalTrackerText;
+        }
+
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64 DefaultGoalTrackerId {set; get;}
+        [JsonPropertyName("defaultGoalTrackerText")]
+        public String DefaultGoalTrackerText {set; get;}
+
+        public DefaultGoalTrackerUpdateModel GetCopy()
+        {
+            var obj = new DefaultGoalTrackerUpdateModel();
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            obj.DefaultGoalTrackerText = DefaultGoalTrackerText;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+        public const string DefaultGoalTrackerText__Name = "DefaultGoalTrackerText";
+        // String Column Sizes
+        public const int DefaultGoalTrackerText__Size = 255;
+    }
+
+    public class DefaultGoalTrackerCategoryModel
+    {
+
+        public DefaultGoalTrackerCategoryModel()
+        {
+        }
+
+        public DefaultGoalTrackerCategoryModel(Int64 defaultGoalTrackerCategoryId,Int64 defaultCategoryId,Int64 defaultGoalTrackerId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DefaultGoalTrackerCategoryId = defaultGoalTrackerCategoryId;
+            DefaultCategoryId = defaultCategoryId;
+            DefaultGoalTrackerId = defaultGoalTrackerId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("defaultCategoryName")]
+        public String DefaultCategoryName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("defaultGoalTrackerCategoryId")]
+        public Int64 DefaultGoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64 DefaultGoalTrackerId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DefaultGoalTrackerCategoryCreateModel GetAsCreateModel()
+        {
+            var obj = new DefaultGoalTrackerCategoryCreateModel();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DefaultGoalTrackerCategoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            result = result && (obj.DefaultGoalTrackerId == DefaultGoalTrackerId);
+            return result;
+        }
+
+
+        public DefaultGoalTrackerCategoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DefaultGoalTrackerCategoryUpdateModel();
+            obj.DefaultGoalTrackerCategoryId = DefaultGoalTrackerCategoryId;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DefaultGoalTrackerCategoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultGoalTrackerCategoryId == DefaultGoalTrackerCategoryId);
+            result = result && (obj.DefaultCategoryId == DefaultCategoryId);
+            result = result && (obj.DefaultGoalTrackerId == DefaultGoalTrackerId);
+            return result;
+        }
+
+
+        public DefaultGoalTrackerCategoryModel GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCategoryModel();
+            obj.DefaultCategoryName = DefaultCategoryName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DefaultGoalTrackerCategoryId = DefaultGoalTrackerCategoryId;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryName__Name = "DefaultCategoryName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DefaultGoalTrackerCategoryId__Name = "DefaultGoalTrackerCategoryId";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class DefaultGoalTrackerCategorySearchCriteria
+    {
+
+        public DefaultGoalTrackerCategorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64? DefaultCategoryId {set; get;}
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64? DefaultGoalTrackerId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultGoalTrackerCategorySearchCriteria GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCategorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultGoalTrackerCategoryCreateModel
+    {
+
+        public DefaultGoalTrackerCategoryCreateModel()
+        {
+        }
+
+        public DefaultGoalTrackerCategoryCreateModel(Int64 defaultCategoryId,Int64 defaultGoalTrackerId)
+        {
+            DefaultCategoryId = defaultCategoryId;
+            DefaultGoalTrackerId = defaultGoalTrackerId;
+        }
+
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64 DefaultGoalTrackerId {set; get;}
+
+        public DefaultGoalTrackerCategoryCreateModel GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCategoryCreateModel();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+    }
+
+    public class MultipleDefaultGoalTrackerCategoryCreateModel
+    {
+
+        public MultipleDefaultGoalTrackerCategoryCreateModel()
+        {
+        }
+        [JsonPropertyName("newDefaultGoalTrackerCategorys")]
+        public List<DefaultGoalTrackerCategoryCreateModel> NewDefaultGoalTrackerCategorys {set; get;}
+
+        public MultipleDefaultGoalTrackerCategoryCreateModel GetCopy()
+        {
+            var obj = new MultipleDefaultGoalTrackerCategoryCreateModel();
+            obj.NewDefaultGoalTrackerCategorys = NewDefaultGoalTrackerCategorys;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDefaultGoalTrackerCategorys__Name = "NewDefaultGoalTrackerCategorys";
+    }
+
+    public class DefaultGoalTrackerCategoryUpdateModel
+    {
+
+        public DefaultGoalTrackerCategoryUpdateModel()
+        {
+        }
+
+        public DefaultGoalTrackerCategoryUpdateModel(Int64 defaultGoalTrackerCategoryId,Int64 defaultCategoryId,Int64 defaultGoalTrackerId)
+        {
+            DefaultGoalTrackerCategoryId = defaultGoalTrackerCategoryId;
+            DefaultCategoryId = defaultCategoryId;
+            DefaultGoalTrackerId = defaultGoalTrackerId;
+        }
+
+        [JsonPropertyName("defaultGoalTrackerCategoryId")]
+        public Int64 DefaultGoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64 DefaultGoalTrackerId {set; get;}
+
+        public DefaultGoalTrackerCategoryUpdateModel GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCategoryUpdateModel();
+            obj.DefaultGoalTrackerCategoryId = DefaultGoalTrackerCategoryId;
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultGoalTrackerCategoryId__Name = "DefaultGoalTrackerCategoryId";
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+    }
+
+    public class DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria
+    {
+
+        public DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultCategoryId")]
+        public Int64 DefaultCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria();
+            obj.DefaultCategoryId = DefaultCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultCategoryId__Name = "DefaultCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria
+    {
+
+        public DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultGoalTrackerCategoryId")]
+        public Int64 DefaultGoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria();
+            obj.DefaultGoalTrackerCategoryId = DefaultGoalTrackerCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultGoalTrackerCategoryId__Name = "DefaultGoalTrackerCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria
+    {
+
+        public DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultGoalTrackerId")]
+        public Int64 DefaultGoalTrackerId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria();
+            obj.DefaultGoalTrackerId = DefaultGoalTrackerId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultGoalTrackerId__Name = "DefaultGoalTrackerId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria
+    {
+
+        public DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("defaultGoalTrackerCategoryId")]
+        public Int64 DefaultGoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria();
+            obj.DefaultGoalTrackerCategoryId = DefaultGoalTrackerCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultGoalTrackerCategoryId__Name = "DefaultGoalTrackerCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultMeditationFileModel
+    {
+
+        public DefaultMeditationFileModel()
+        {
+        }
+
+        public DefaultMeditationFileModel(Int64 defaultMeditationFileId,String defaultMeditationFileName,Int64 predefinedMeditationTypeId,String fileName,Int64 fileSize,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DefaultMeditationFileId = defaultMeditationFileId;
+            DefaultMeditationFileName = defaultMeditationFileName;
+            PredefinedMeditationTypeId = predefinedMeditationTypeId;
+            FileName = fileName;
+            FileSize = fileSize;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedMeditationTypeName")]
+        public String PredefinedMeditationTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("defaultMeditationFileId")]
+        public Int64 DefaultMeditationFileId {set; get;}
+        [JsonPropertyName("defaultMeditationFileName")]
+        public String DefaultMeditationFileName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64 PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DefaultMeditationFileCreateModel GetAsCreateModel()
+        {
+            var obj = new DefaultMeditationFileCreateModel();
+            obj.DefaultMeditationFileName = DefaultMeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DefaultMeditationFileCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultMeditationFileName == DefaultMeditationFileName);
+            result = result && (obj.PredefinedMeditationTypeId == PredefinedMeditationTypeId);
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            return result;
+        }
+
+
+        public DefaultMeditationFileUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DefaultMeditationFileUpdateModel();
+            obj.DefaultMeditationFileId = DefaultMeditationFileId;
+            obj.DefaultMeditationFileName = DefaultMeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DefaultMeditationFileUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultMeditationFileId == DefaultMeditationFileId);
+            result = result && (obj.DefaultMeditationFileName == DefaultMeditationFileName);
+            result = result && (obj.PredefinedMeditationTypeId == PredefinedMeditationTypeId);
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            return result;
+        }
+
+
+        public DefaultMeditationFileModel GetCopy()
+        {
+            var obj = new DefaultMeditationFileModel();
+            obj.PredefinedMeditationTypeName = PredefinedMeditationTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DefaultMeditationFileId = DefaultMeditationFileId;
+            obj.DefaultMeditationFileName = DefaultMeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMeditationTypeName__Name = "PredefinedMeditationTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DefaultMeditationFileId__Name = "DefaultMeditationFileId";
+        public const string DefaultMeditationFileName__Name = "DefaultMeditationFileName";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int DefaultMeditationFileName__Size = 255;
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class DefaultMeditationFileSearchCriteria
+    {
+
+        public DefaultMeditationFileSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeIds")]
+        public List<Int64> PredefinedMeditationTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultMeditationFileSearchCriteria GetCopy()
+        {
+            var obj = new DefaultMeditationFileSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedMeditationTypeIds = PredefinedMeditationTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedMeditationTypeIds__Name = "PredefinedMeditationTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultMeditationFileCreateModel
+    {
+
+        public DefaultMeditationFileCreateModel()
+        {
+        }
+
+        public DefaultMeditationFileCreateModel(String defaultMeditationFileName,Int64 predefinedMeditationTypeId,String fileName,Int64 fileSize)
+        {
+            DefaultMeditationFileName = defaultMeditationFileName;
+            PredefinedMeditationTypeId = predefinedMeditationTypeId;
+            FileName = fileName;
+            FileSize = fileSize;
+        }
+
+        [JsonPropertyName("defaultMeditationFileName")]
+        public String DefaultMeditationFileName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64 PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+
+        public DefaultMeditationFileCreateModel GetCopy()
+        {
+            var obj = new DefaultMeditationFileCreateModel();
+            obj.DefaultMeditationFileName = DefaultMeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultMeditationFileName__Name = "DefaultMeditationFileName";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        // String Column Sizes
+        public const int DefaultMeditationFileName__Size = 255;
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class MultipleDefaultMeditationFileCreateModel
+    {
+
+        public MultipleDefaultMeditationFileCreateModel()
+        {
+        }
+        [JsonPropertyName("newDefaultMeditationFiles")]
+        public List<DefaultMeditationFileCreateModel> NewDefaultMeditationFiles {set; get;}
+
+        public MultipleDefaultMeditationFileCreateModel GetCopy()
+        {
+            var obj = new MultipleDefaultMeditationFileCreateModel();
+            obj.NewDefaultMeditationFiles = NewDefaultMeditationFiles;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDefaultMeditationFiles__Name = "NewDefaultMeditationFiles";
+    }
+
+    public class DefaultMeditationFileUpdateModel
+    {
+
+        public DefaultMeditationFileUpdateModel()
+        {
+        }
+
+        public DefaultMeditationFileUpdateModel(Int64 defaultMeditationFileId,String defaultMeditationFileName,Int64 predefinedMeditationTypeId,String fileName,Int64 fileSize)
+        {
+            DefaultMeditationFileId = defaultMeditationFileId;
+            DefaultMeditationFileName = defaultMeditationFileName;
+            PredefinedMeditationTypeId = predefinedMeditationTypeId;
+            FileName = fileName;
+            FileSize = fileSize;
+        }
+
+        [JsonPropertyName("defaultMeditationFileId")]
+        public Int64 DefaultMeditationFileId {set; get;}
+        [JsonPropertyName("defaultMeditationFileName")]
+        public String DefaultMeditationFileName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64 PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+
+        public DefaultMeditationFileUpdateModel GetCopy()
+        {
+            var obj = new DefaultMeditationFileUpdateModel();
+            obj.DefaultMeditationFileId = DefaultMeditationFileId;
+            obj.DefaultMeditationFileName = DefaultMeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultMeditationFileId__Name = "DefaultMeditationFileId";
+        public const string DefaultMeditationFileName__Name = "DefaultMeditationFileName";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        // String Column Sizes
+        public const int DefaultMeditationFileName__Size = 255;
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class DefaultVisionBoardPictureModel
+    {
+
+        public DefaultVisionBoardPictureModel()
+        {
+        }
+
+        public DefaultVisionBoardPictureModel(Int64 defaultVisionBoardPictureId,String fileName,Int64 fileSize,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DefaultVisionBoardPictureId = defaultVisionBoardPictureId;
+            FileName = fileName;
+            FileSize = fileSize;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("defaultVisionBoardPictureId")]
+        public Int64 DefaultVisionBoardPictureId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DefaultVisionBoardPictureCreateModel GetAsCreateModel()
+        {
+            var obj = new DefaultVisionBoardPictureCreateModel();
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DefaultVisionBoardPictureCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            return result;
+        }
+
+
+        public DefaultVisionBoardPictureUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DefaultVisionBoardPictureUpdateModel();
+            obj.DefaultVisionBoardPictureId = DefaultVisionBoardPictureId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DefaultVisionBoardPictureUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DefaultVisionBoardPictureId == DefaultVisionBoardPictureId);
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            return result;
+        }
+
+
+        public DefaultVisionBoardPictureModel GetCopy()
+        {
+            var obj = new DefaultVisionBoardPictureModel();
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DefaultVisionBoardPictureId = DefaultVisionBoardPictureId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DefaultVisionBoardPictureId__Name = "DefaultVisionBoardPictureId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class DefaultVisionBoardPictureSearchCriteria
+    {
+
+        public DefaultVisionBoardPictureSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DefaultVisionBoardPictureSearchCriteria GetCopy()
+        {
+            var obj = new DefaultVisionBoardPictureSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DefaultVisionBoardPictureCreateModel
+    {
+
+        public DefaultVisionBoardPictureCreateModel()
+        {
+        }
+
+        public DefaultVisionBoardPictureCreateModel(String fileName,Int64 fileSize)
+        {
+            FileName = fileName;
+            FileSize = fileSize;
+        }
+
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+
+        public DefaultVisionBoardPictureCreateModel GetCopy()
+        {
+            var obj = new DefaultVisionBoardPictureCreateModel();
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        // Property Names
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class MultipleDefaultVisionBoardPictureCreateModel
+    {
+
+        public MultipleDefaultVisionBoardPictureCreateModel()
+        {
+        }
+        [JsonPropertyName("newDefaultVisionBoardPictures")]
+        public List<DefaultVisionBoardPictureCreateModel> NewDefaultVisionBoardPictures {set; get;}
+
+        public MultipleDefaultVisionBoardPictureCreateModel GetCopy()
+        {
+            var obj = new MultipleDefaultVisionBoardPictureCreateModel();
+            obj.NewDefaultVisionBoardPictures = NewDefaultVisionBoardPictures;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDefaultVisionBoardPictures__Name = "NewDefaultVisionBoardPictures";
+    }
+
+    public class DefaultVisionBoardPictureUpdateModel
+    {
+
+        public DefaultVisionBoardPictureUpdateModel()
+        {
+        }
+
+        public DefaultVisionBoardPictureUpdateModel(Int64 defaultVisionBoardPictureId,String fileName,Int64 fileSize)
+        {
+            DefaultVisionBoardPictureId = defaultVisionBoardPictureId;
+            FileName = fileName;
+            FileSize = fileSize;
+        }
+
+        [JsonPropertyName("defaultVisionBoardPictureId")]
+        public Int64 DefaultVisionBoardPictureId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+
+        public DefaultVisionBoardPictureUpdateModel GetCopy()
+        {
+            var obj = new DefaultVisionBoardPictureUpdateModel();
+            obj.DefaultVisionBoardPictureId = DefaultVisionBoardPictureId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            return obj;
+        }
+
+        // Property Names
+        public const string DefaultVisionBoardPictureId__Name = "DefaultVisionBoardPictureId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class FeedModel
+    {
+
+        public FeedModel()
+        {
+        }
+
+        public FeedModel(Int64 feedId,Guid feedGuid,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            FeedId = feedId;
+            FeedGuid = feedGuid;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeName")]
+        public String PredefinedMeditationTypeName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeName")]
+        public String PredefinedGoalStatusTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("feedGuid")]
+        public Guid FeedGuid {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64? DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionDate")]
+        public DateTime? DailyAffirmationSessionDate {set; get;}
+        [JsonPropertyName("dailyAffirmationTimeSpentInSeconds")]
+        public Int64? DailyAffirmationTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64? VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime? VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationSessionId")]
+        public Int64? MeditationSessionId {set; get;}
+        [JsonPropertyName("meditationSessionDate")]
+        public DateTime? MeditationSessionDate {set; get;}
+        [JsonPropertyName("meditationSessionTimeSpentInSeconds")]
+        public Int64? MeditationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64? PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64? GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64? PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate {set; get;}
+        [JsonPropertyName("goalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate {set; get;}
+        [JsonPropertyName("goalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64? GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneName")]
+        public String GoalTrackerMileStoneName {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneStartDate")]
+        public DateTime? GoalTrackerMileStoneStartDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneEndDate")]
+        public DateTime? GoalTrackerMileStoneEndDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
+        public DateTime? GoalTrackerMileStoneCompletedDate {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public FeedCreateModel GetAsCreateModel()
+        {
+            var obj = new FeedCreateModel();
+            obj.FeedGuid = FeedGuid;
+            obj.UserId = UserId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationTimeSpentInSeconds = DailyAffirmationTimeSpentInSeconds;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileName = MeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(FeedCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.FeedGuid == FeedGuid);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.DailyAffirmationSessionId == DailyAffirmationSessionId);
+            result = result && (obj.DailyAffirmationSessionDate == DailyAffirmationSessionDate);
+            result = result && (obj.DailyAffirmationTimeSpentInSeconds == DailyAffirmationTimeSpentInSeconds);
+            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
+            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
+            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
+            result = result && (obj.MeditationSessionId == MeditationSessionId);
+            result = result && (obj.MeditationSessionDate == MeditationSessionDate);
+            result = result && (obj.MeditationSessionTimeSpentInSeconds == MeditationSessionTimeSpentInSeconds);
+            result = result && (obj.MeditationFileName == MeditationFileName);
+            result = result && (obj.PredefinedMeditationTypeId == PredefinedMeditationTypeId);
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.GoalTrackerName == GoalTrackerName);
+            result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.GoalTrackerStartDate == GoalTrackerStartDate);
+            result = result && (obj.GoalTrackerEndDate == GoalTrackerEndDate);
+            result = result && (obj.GoalTrackerCompletedDate == GoalTrackerCompletedDate);
+            result = result && (obj.GoalTrackerMileStoneId == GoalTrackerMileStoneId);
+            result = result && (obj.GoalTrackerMileStoneName == GoalTrackerMileStoneName);
+            result = result && (obj.GoalTrackerMileStoneStartDate == GoalTrackerMileStoneStartDate);
+            result = result && (obj.GoalTrackerMileStoneEndDate == GoalTrackerMileStoneEndDate);
+            result = result && (obj.GoalTrackerMileStoneCompletedDate == GoalTrackerMileStoneCompletedDate);
+            return result;
+        }
+
+
+        public FeedUpdateModel GetAsUpdateModel()
+        {
+            var obj = new FeedUpdateModel();
+            obj.FeedId = FeedId;
+            obj.FeedGuid = FeedGuid;
+            obj.UserId = UserId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationTimeSpentInSeconds = DailyAffirmationTimeSpentInSeconds;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileName = MeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(FeedUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.FeedId == FeedId);
+            result = result && (obj.FeedGuid == FeedGuid);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.DailyAffirmationSessionId == DailyAffirmationSessionId);
+            result = result && (obj.DailyAffirmationSessionDate == DailyAffirmationSessionDate);
+            result = result && (obj.DailyAffirmationTimeSpentInSeconds == DailyAffirmationTimeSpentInSeconds);
+            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
+            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
+            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
+            result = result && (obj.MeditationSessionId == MeditationSessionId);
+            result = result && (obj.MeditationSessionDate == MeditationSessionDate);
+            result = result && (obj.MeditationSessionTimeSpentInSeconds == MeditationSessionTimeSpentInSeconds);
+            result = result && (obj.MeditationFileName == MeditationFileName);
+            result = result && (obj.PredefinedMeditationTypeId == PredefinedMeditationTypeId);
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.GoalTrackerName == GoalTrackerName);
+            result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.GoalTrackerStartDate == GoalTrackerStartDate);
+            result = result && (obj.GoalTrackerEndDate == GoalTrackerEndDate);
+            result = result && (obj.GoalTrackerCompletedDate == GoalTrackerCompletedDate);
+            result = result && (obj.GoalTrackerMileStoneId == GoalTrackerMileStoneId);
+            result = result && (obj.GoalTrackerMileStoneName == GoalTrackerMileStoneName);
+            result = result && (obj.GoalTrackerMileStoneStartDate == GoalTrackerMileStoneStartDate);
+            result = result && (obj.GoalTrackerMileStoneEndDate == GoalTrackerMileStoneEndDate);
+            result = result && (obj.GoalTrackerMileStoneCompletedDate == GoalTrackerMileStoneCompletedDate);
+            return result;
+        }
+
+
+        public FeedModel GetCopy()
+        {
+            var obj = new FeedModel();
+            obj.UserName = UserName;
+            obj.PredefinedMeditationTypeName = PredefinedMeditationTypeName;
+            obj.PredefinedGoalStatusTypeName = PredefinedGoalStatusTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.FeedId = FeedId;
+            obj.FeedGuid = FeedGuid;
+            obj.UserId = UserId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationTimeSpentInSeconds = DailyAffirmationTimeSpentInSeconds;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileName = MeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string PredefinedMeditationTypeName__Name = "PredefinedMeditationTypeName";
+        public const string PredefinedGoalStatusTypeName__Name = "PredefinedGoalStatusTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string FeedId__Name = "FeedId";
+        public const string FeedGuid__Name = "FeedGuid";
+        public const string UserId__Name = "UserId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionDate__Name = "DailyAffirmationSessionDate";
+        public const string DailyAffirmationTimeSpentInSeconds__Name = "DailyAffirmationTimeSpentInSeconds";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string MeditationSessionDate__Name = "MeditationSessionDate";
+        public const string MeditationSessionTimeSpentInSeconds__Name = "MeditationSessionTimeSpentInSeconds";
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
+        public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
+        public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string GoalTrackerMileStoneName__Name = "GoalTrackerMileStoneName";
+        public const string GoalTrackerMileStoneStartDate__Name = "GoalTrackerMileStoneStartDate";
+        public const string GoalTrackerMileStoneEndDate__Name = "GoalTrackerMileStoneEndDate";
+        public const string GoalTrackerMileStoneCompletedDate__Name = "GoalTrackerMileStoneCompletedDate";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int MeditationFileName__Size = 255;
+        public const int GoalTrackerName__Size = 255;
+        public const int GoalTrackerMileStoneName__Size = 255;
+    }
+
+    public class FeedSearchCriteria
+    {
+
+        public FeedSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64? DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64? VisionBoardSessionId {set; get;}
+        [JsonPropertyName("meditationSessionId")]
+        public Int64? MeditationSessionId {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeIds")]
+        public List<Int64> PredefinedMeditationTypeIds {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64? GoalTrackerId {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeIds")]
+        public List<Int64> PredefinedGoalStatusTypeIds {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64? GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedSearchCriteria GetCopy()
+        {
+            var obj = new FeedSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.PredefinedMeditationTypeIds = PredefinedMeditationTypeIds;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.PredefinedGoalStatusTypeIds = PredefinedGoalStatusTypeIds;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string PredefinedMeditationTypeIds__Name = "PredefinedMeditationTypeIds";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string PredefinedGoalStatusTypeIds__Name = "PredefinedGoalStatusTypeIds";
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FeedCreateModel
+    {
+
+        public FeedCreateModel()
+        {
+        }
+
+        public FeedCreateModel(Guid feedGuid,Int64 userId)
+        {
+            FeedGuid = feedGuid;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("feedGuid")]
+        public Guid FeedGuid {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64? DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionDate")]
+        public DateTime? DailyAffirmationSessionDate {set; get;}
+        [JsonPropertyName("dailyAffirmationTimeSpentInSeconds")]
+        public Int64? DailyAffirmationTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64? VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime? VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationSessionId")]
+        public Int64? MeditationSessionId {set; get;}
+        [JsonPropertyName("meditationSessionDate")]
+        public DateTime? MeditationSessionDate {set; get;}
+        [JsonPropertyName("meditationSessionTimeSpentInSeconds")]
+        public Int64? MeditationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64? PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64? GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64? PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate {set; get;}
+        [JsonPropertyName("goalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate {set; get;}
+        [JsonPropertyName("goalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64? GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneName")]
+        public String GoalTrackerMileStoneName {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneStartDate")]
+        public DateTime? GoalTrackerMileStoneStartDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneEndDate")]
+        public DateTime? GoalTrackerMileStoneEndDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
+        public DateTime? GoalTrackerMileStoneCompletedDate {set; get;}
+
+        public FeedCreateModel GetCopy()
+        {
+            var obj = new FeedCreateModel();
+            obj.FeedGuid = FeedGuid;
+            obj.UserId = UserId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationTimeSpentInSeconds = DailyAffirmationTimeSpentInSeconds;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileName = MeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedGuid__Name = "FeedGuid";
+        public const string UserId__Name = "UserId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionDate__Name = "DailyAffirmationSessionDate";
+        public const string DailyAffirmationTimeSpentInSeconds__Name = "DailyAffirmationTimeSpentInSeconds";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string MeditationSessionDate__Name = "MeditationSessionDate";
+        public const string MeditationSessionTimeSpentInSeconds__Name = "MeditationSessionTimeSpentInSeconds";
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
+        public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
+        public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string GoalTrackerMileStoneName__Name = "GoalTrackerMileStoneName";
+        public const string GoalTrackerMileStoneStartDate__Name = "GoalTrackerMileStoneStartDate";
+        public const string GoalTrackerMileStoneEndDate__Name = "GoalTrackerMileStoneEndDate";
+        public const string GoalTrackerMileStoneCompletedDate__Name = "GoalTrackerMileStoneCompletedDate";
+        // String Column Sizes
+        public const int MeditationFileName__Size = 255;
+        public const int GoalTrackerName__Size = 255;
+        public const int GoalTrackerMileStoneName__Size = 255;
+    }
+
+    public class MultipleFeedCreateModel
+    {
+
+        public MultipleFeedCreateModel()
+        {
+        }
+        [JsonPropertyName("newFeeds")]
+        public List<FeedCreateModel> NewFeeds {set; get;}
+
+        public MultipleFeedCreateModel GetCopy()
+        {
+            var obj = new MultipleFeedCreateModel();
+            obj.NewFeeds = NewFeeds;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewFeeds__Name = "NewFeeds";
+    }
+
+    public class FeedUpdateModel
+    {
+
+        public FeedUpdateModel()
+        {
+        }
+
+        public FeedUpdateModel(Int64 feedId,Guid feedGuid,Int64 userId)
+        {
+            FeedId = feedId;
+            FeedGuid = feedGuid;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("feedGuid")]
+        public Guid FeedGuid {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64? DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("dailyAffirmationSessionDate")]
+        public DateTime? DailyAffirmationSessionDate {set; get;}
+        [JsonPropertyName("dailyAffirmationTimeSpentInSeconds")]
+        public Int64? DailyAffirmationTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64? VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime? VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationSessionId")]
+        public Int64? MeditationSessionId {set; get;}
+        [JsonPropertyName("meditationSessionDate")]
+        public DateTime? MeditationSessionDate {set; get;}
+        [JsonPropertyName("meditationSessionTimeSpentInSeconds")]
+        public Int64? MeditationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64? PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64? GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64? PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate {set; get;}
+        [JsonPropertyName("goalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate {set; get;}
+        [JsonPropertyName("goalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64? GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneName")]
+        public String GoalTrackerMileStoneName {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneStartDate")]
+        public DateTime? GoalTrackerMileStoneStartDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneEndDate")]
+        public DateTime? GoalTrackerMileStoneEndDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
+        public DateTime? GoalTrackerMileStoneCompletedDate {set; get;}
+
+        public FeedUpdateModel GetCopy()
+        {
+            var obj = new FeedUpdateModel();
+            obj.FeedId = FeedId;
+            obj.FeedGuid = FeedGuid;
+            obj.UserId = UserId;
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.DailyAffirmationSessionDate = DailyAffirmationSessionDate;
+            obj.DailyAffirmationTimeSpentInSeconds = DailyAffirmationTimeSpentInSeconds;
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileName = MeditationFileName;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string FeedGuid__Name = "FeedGuid";
+        public const string UserId__Name = "UserId";
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string DailyAffirmationSessionDate__Name = "DailyAffirmationSessionDate";
+        public const string DailyAffirmationTimeSpentInSeconds__Name = "DailyAffirmationTimeSpentInSeconds";
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string MeditationSessionDate__Name = "MeditationSessionDate";
+        public const string MeditationSessionTimeSpentInSeconds__Name = "MeditationSessionTimeSpentInSeconds";
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
+        public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
+        public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string GoalTrackerMileStoneName__Name = "GoalTrackerMileStoneName";
+        public const string GoalTrackerMileStoneStartDate__Name = "GoalTrackerMileStoneStartDate";
+        public const string GoalTrackerMileStoneEndDate__Name = "GoalTrackerMileStoneEndDate";
+        public const string GoalTrackerMileStoneCompletedDate__Name = "GoalTrackerMileStoneCompletedDate";
+        // String Column Sizes
+        public const int MeditationFileName__Size = 255;
+        public const int GoalTrackerName__Size = 255;
+        public const int GoalTrackerMileStoneName__Size = 255;
+    }
+
+    public class FeedByUserIdSearchCriteria
+    {
+
+        public FeedByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new FeedByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByFeedIdSearchCriteria
+    {
+
+        public UserByFeedIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByFeedIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByFeedIdSearchCriteria();
+            obj.FeedId = FeedId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FeedByDailyAffirmationSessionIdSearchCriteria
+    {
+
+        public FeedByDailyAffirmationSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyAffirmationSessionId")]
+        public Int64 DailyAffirmationSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedByDailyAffirmationSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new FeedByDailyAffirmationSessionIdSearchCriteria();
+            obj.DailyAffirmationSessionId = DailyAffirmationSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyAffirmationSessionId__Name = "DailyAffirmationSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyAffirmationSessionByFeedIdSearchCriteria
+    {
+
+        public DailyAffirmationSessionByFeedIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyAffirmationSessionByFeedIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyAffirmationSessionByFeedIdSearchCriteria();
+            obj.FeedId = FeedId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FeedByVisionBoardSessionIdSearchCriteria
+    {
+
+        public FeedByVisionBoardSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedByVisionBoardSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new FeedByVisionBoardSessionIdSearchCriteria();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionByFeedIdSearchCriteria
+    {
+
+        public VisionBoardSessionByFeedIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionByFeedIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionByFeedIdSearchCriteria();
+            obj.FeedId = FeedId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FeedByMeditationSessionIdSearchCriteria
+    {
+
+        public FeedByMeditationSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("meditationSessionId")]
+        public Int64 MeditationSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedByMeditationSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new FeedByMeditationSessionIdSearchCriteria();
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationSessionModel
+    {
+
+        public MeditationSessionModel()
+        {
+        }
+
+        public MeditationSessionModel(Int64 meditationSessionId,DateTime meditationSessionDate,Int64 meditationFileId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            MeditationSessionId = meditationSessionId;
+            MeditationSessionDate = meditationSessionDate;
+            MeditationFileId = meditationFileId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("meditationSessionId")]
+        public Int64 MeditationSessionId {set; get;}
+        [JsonPropertyName("meditationSessionDate")]
+        public DateTime MeditationSessionDate {set; get;}
+        [JsonPropertyName("meditationSessionTimeSpentInSeconds")]
+        public Int64? MeditationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public MeditationSessionCreateModel GetAsCreateModel()
+        {
+            var obj = new MeditationSessionCreateModel();
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileId = MeditationFileId;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(MeditationSessionCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.MeditationSessionDate == MeditationSessionDate);
+            result = result && (obj.MeditationSessionTimeSpentInSeconds == MeditationSessionTimeSpentInSeconds);
+            result = result && (obj.MeditationFileId == MeditationFileId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public MeditationSessionUpdateModel GetAsUpdateModel()
+        {
+            var obj = new MeditationSessionUpdateModel();
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileId = MeditationFileId;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(MeditationSessionUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.MeditationSessionId == MeditationSessionId);
+            result = result && (obj.MeditationSessionDate == MeditationSessionDate);
+            result = result && (obj.MeditationSessionTimeSpentInSeconds == MeditationSessionTimeSpentInSeconds);
+            result = result && (obj.MeditationFileId == MeditationFileId);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public MeditationSessionModel GetCopy()
+        {
+            var obj = new MeditationSessionModel();
+            obj.MeditationFileName = MeditationFileName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileId = MeditationFileId;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string MeditationSessionDate__Name = "MeditationSessionDate";
+        public const string MeditationSessionTimeSpentInSeconds__Name = "MeditationSessionTimeSpentInSeconds";
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class MeditationSessionByFeedIdSearchCriteria
+    {
+
+        public MeditationSessionByFeedIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationSessionByFeedIdSearchCriteria GetCopy()
+        {
+            var obj = new MeditationSessionByFeedIdSearchCriteria();
+            obj.FeedId = FeedId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FeedByGoalTrackerIdSearchCriteria
+    {
+
+        public FeedByGoalTrackerIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedByGoalTrackerIdSearchCriteria GetCopy()
+        {
+            var obj = new FeedByGoalTrackerIdSearchCriteria();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerModel
+    {
+
+        public GoalTrackerModel()
+        {
+        }
+
+        public GoalTrackerModel(Int64 goalTrackerId,String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            GoalTrackerId = goalTrackerId;
+            GoalTrackerName = goalTrackerName;
+            PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedGoalStatusTypeName")]
+        public String PredefinedGoalStatusTypeName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate {set; get;}
+        [JsonPropertyName("goalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate {set; get;}
+        [JsonPropertyName("goalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public GoalTrackerCreateModel GetAsCreateModel()
+        {
+            var obj = new GoalTrackerCreateModel();
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(GoalTrackerCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.GoalTrackerName == GoalTrackerName);
+            result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.GoalTrackerStartDate == GoalTrackerStartDate);
+            result = result && (obj.GoalTrackerEndDate == GoalTrackerEndDate);
+            result = result && (obj.GoalTrackerCompletedDate == GoalTrackerCompletedDate);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public GoalTrackerUpdateModel GetAsUpdateModel()
+        {
+            var obj = new GoalTrackerUpdateModel();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(GoalTrackerUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.GoalTrackerName == GoalTrackerName);
+            result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.GoalTrackerStartDate == GoalTrackerStartDate);
+            result = result && (obj.GoalTrackerEndDate == GoalTrackerEndDate);
+            result = result && (obj.GoalTrackerCompletedDate == GoalTrackerCompletedDate);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public GoalTrackerModel GetCopy()
+        {
+            var obj = new GoalTrackerModel();
+            obj.PredefinedGoalStatusTypeName = PredefinedGoalStatusTypeName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedGoalStatusTypeName__Name = "PredefinedGoalStatusTypeName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
+        public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
+        public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int GoalTrackerName__Size = 255;
+    }
+
+    public class GoalTrackerByFeedIdSearchCriteria
+    {
+
+        public GoalTrackerByFeedIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerByFeedIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerByFeedIdSearchCriteria();
+            obj.FeedId = FeedId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class FeedByGoalTrackerMileStoneIdSearchCriteria
+    {
+
+        public FeedByGoalTrackerMileStoneIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64 GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public FeedByGoalTrackerMileStoneIdSearchCriteria GetCopy()
+        {
+            var obj = new FeedByGoalTrackerMileStoneIdSearchCriteria();
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerMileStoneModel
+    {
+
+        public GoalTrackerMileStoneModel()
+        {
+        }
+
+        public GoalTrackerMileStoneModel(Int64 goalTrackerMileStoneId,Int64 goalTrackerId,String goalTrackerMileStoneName,DateTime goalTrackerMileStoneStartDate,DateTime goalTrackerMileStoneEndDate,Int64 predefinedGoalStatusTypeId,DateTime goalTrackerMileStoneCompletedDate,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            GoalTrackerMileStoneId = goalTrackerMileStoneId;
+            GoalTrackerId = goalTrackerId;
+            GoalTrackerMileStoneName = goalTrackerMileStoneName;
+            GoalTrackerMileStoneStartDate = goalTrackerMileStoneStartDate;
+            GoalTrackerMileStoneEndDate = goalTrackerMileStoneEndDate;
+            PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            GoalTrackerMileStoneCompletedDate = goalTrackerMileStoneCompletedDate;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeName")]
+        public String PredefinedGoalStatusTypeName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64 GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneName")]
+        public String GoalTrackerMileStoneName {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneStartDate")]
+        public DateTime GoalTrackerMileStoneStartDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneEndDate")]
+        public DateTime GoalTrackerMileStoneEndDate {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
+        public DateTime GoalTrackerMileStoneCompletedDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public GoalTrackerMileStoneCreateModel GetAsCreateModel()
+        {
+            var obj = new GoalTrackerMileStoneCreateModel();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(GoalTrackerMileStoneCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.GoalTrackerMileStoneName == GoalTrackerMileStoneName);
+            result = result && (obj.GoalTrackerMileStoneStartDate == GoalTrackerMileStoneStartDate);
+            result = result && (obj.GoalTrackerMileStoneEndDate == GoalTrackerMileStoneEndDate);
+            result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.GoalTrackerMileStoneCompletedDate == GoalTrackerMileStoneCompletedDate);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public GoalTrackerMileStoneUpdateModel GetAsUpdateModel()
+        {
+            var obj = new GoalTrackerMileStoneUpdateModel();
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(GoalTrackerMileStoneUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.GoalTrackerMileStoneId == GoalTrackerMileStoneId);
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.GoalTrackerMileStoneName == GoalTrackerMileStoneName);
+            result = result && (obj.GoalTrackerMileStoneStartDate == GoalTrackerMileStoneStartDate);
+            result = result && (obj.GoalTrackerMileStoneEndDate == GoalTrackerMileStoneEndDate);
+            result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.GoalTrackerMileStoneCompletedDate == GoalTrackerMileStoneCompletedDate);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public GoalTrackerMileStoneModel GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneModel();
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeName = PredefinedGoalStatusTypeName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeName__Name = "PredefinedGoalStatusTypeName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerMileStoneName__Name = "GoalTrackerMileStoneName";
+        public const string GoalTrackerMileStoneStartDate__Name = "GoalTrackerMileStoneStartDate";
+        public const string GoalTrackerMileStoneEndDate__Name = "GoalTrackerMileStoneEndDate";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerMileStoneCompletedDate__Name = "GoalTrackerMileStoneCompletedDate";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int GoalTrackerMileStoneName__Size = 255;
+    }
+
+    public class GoalTrackerMileStoneByFeedIdSearchCriteria
+    {
+
+        public GoalTrackerMileStoneByFeedIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("feedId")]
+        public Int64 FeedId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerMileStoneByFeedIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneByFeedIdSearchCriteria();
+            obj.FeedId = FeedId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string FeedId__Name = "FeedId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerSearchCriteria
+    {
+
+        public GoalTrackerSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeIds")]
+        public List<Int64> PredefinedGoalStatusTypeIds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedGoalStatusTypeIds = PredefinedGoalStatusTypeIds;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedGoalStatusTypeIds__Name = "PredefinedGoalStatusTypeIds";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerCreateModel
+    {
+
+        public GoalTrackerCreateModel()
+        {
+        }
+
+        public GoalTrackerCreateModel(String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 userId)
+        {
+            GoalTrackerName = goalTrackerName;
+            PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate {set; get;}
+        [JsonPropertyName("goalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate {set; get;}
+        [JsonPropertyName("goalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public GoalTrackerCreateModel GetCopy()
+        {
+            var obj = new GoalTrackerCreateModel();
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
+        public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
+        public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+        // String Column Sizes
+        public const int GoalTrackerName__Size = 255;
+    }
+
+    public class MultipleGoalTrackerCreateModel
+    {
+
+        public MultipleGoalTrackerCreateModel()
+        {
+        }
+        [JsonPropertyName("newGoalTrackers")]
+        public List<GoalTrackerCreateModel> NewGoalTrackers {set; get;}
+
+        public MultipleGoalTrackerCreateModel GetCopy()
+        {
+            var obj = new MultipleGoalTrackerCreateModel();
+            obj.NewGoalTrackers = NewGoalTrackers;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewGoalTrackers__Name = "NewGoalTrackers";
+    }
+
+    public class GoalTrackerUpdateModel
+    {
+
+        public GoalTrackerUpdateModel()
+        {
+        }
+
+        public GoalTrackerUpdateModel(Int64 goalTrackerId,String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 userId)
+        {
+            GoalTrackerId = goalTrackerId;
+            GoalTrackerName = goalTrackerName;
+            PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate {set; get;}
+        [JsonPropertyName("goalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate {set; get;}
+        [JsonPropertyName("goalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public GoalTrackerUpdateModel GetCopy()
+        {
+            var obj = new GoalTrackerUpdateModel();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerStartDate = GoalTrackerStartDate;
+            obj.GoalTrackerEndDate = GoalTrackerEndDate;
+            obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
+        public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
+        public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+        // String Column Sizes
+        public const int GoalTrackerName__Size = 255;
+    }
+
+    public class GoalTrackerByUserIdSearchCriteria
+    {
+
+        public GoalTrackerByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByGoalTrackerIdSearchCriteria
+    {
+
+        public UserByGoalTrackerIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByGoalTrackerIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByGoalTrackerIdSearchCriteria();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerCategoryModel
+    {
+
+        public GoalTrackerCategoryModel()
+        {
+        }
+
+        public GoalTrackerCategoryModel(Int64 goalTrackerCategoryId,Int64 categoryId,Int64 goalTrackerId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            GoalTrackerCategoryId = goalTrackerCategoryId;
+            CategoryId = categoryId;
+            GoalTrackerId = goalTrackerId;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("categoryName")]
+        public String CategoryName {set; get;}
+        [JsonPropertyName("goalTrackerName")]
+        public String GoalTrackerName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("goalTrackerCategoryId")]
+        public Int64 GoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public GoalTrackerCategoryCreateModel GetAsCreateModel()
+        {
+            var obj = new GoalTrackerCategoryCreateModel();
+            obj.CategoryId = CategoryId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(GoalTrackerCategoryCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public GoalTrackerCategoryUpdateModel GetAsUpdateModel()
+        {
+            var obj = new GoalTrackerCategoryUpdateModel();
+            obj.GoalTrackerCategoryId = GoalTrackerCategoryId;
+            obj.CategoryId = CategoryId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(GoalTrackerCategoryUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.GoalTrackerCategoryId == GoalTrackerCategoryId);
+            result = result && (obj.CategoryId == CategoryId);
+            result = result && (obj.GoalTrackerId == GoalTrackerId);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public GoalTrackerCategoryModel GetCopy()
+        {
+            var obj = new GoalTrackerCategoryModel();
+            obj.CategoryName = CategoryName;
+            obj.GoalTrackerName = GoalTrackerName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.GoalTrackerCategoryId = GoalTrackerCategoryId;
+            obj.CategoryId = CategoryId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryName__Name = "CategoryName";
+        public const string GoalTrackerName__Name = "GoalTrackerName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string GoalTrackerCategoryId__Name = "GoalTrackerCategoryId";
+        public const string CategoryId__Name = "CategoryId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+    }
+
+    public class GoalTrackerCategorySearchCriteria
+    {
+
+        public GoalTrackerCategorySearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64? CategoryId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64? GoalTrackerId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerCategorySearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerCategorySearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.CategoryId = CategoryId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string CategoryId__Name = "CategoryId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerCategoryCreateModel
+    {
+
+        public GoalTrackerCategoryCreateModel()
+        {
+        }
+
+        public GoalTrackerCategoryCreateModel(Int64 categoryId,Int64 goalTrackerId,Int64 userId)
+        {
+            CategoryId = categoryId;
+            GoalTrackerId = goalTrackerId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public GoalTrackerCategoryCreateModel GetCopy()
+        {
+            var obj = new GoalTrackerCategoryCreateModel();
+            obj.CategoryId = CategoryId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class MultipleGoalTrackerCategoryCreateModel
+    {
+
+        public MultipleGoalTrackerCategoryCreateModel()
+        {
+        }
+        [JsonPropertyName("newGoalTrackerCategorys")]
+        public List<GoalTrackerCategoryCreateModel> NewGoalTrackerCategorys {set; get;}
+
+        public MultipleGoalTrackerCategoryCreateModel GetCopy()
+        {
+            var obj = new MultipleGoalTrackerCategoryCreateModel();
+            obj.NewGoalTrackerCategorys = NewGoalTrackerCategorys;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewGoalTrackerCategorys__Name = "NewGoalTrackerCategorys";
+    }
+
+    public class GoalTrackerCategoryUpdateModel
+    {
+
+        public GoalTrackerCategoryUpdateModel()
+        {
+        }
+
+        public GoalTrackerCategoryUpdateModel(Int64 goalTrackerCategoryId,Int64 categoryId,Int64 goalTrackerId,Int64 userId)
+        {
+            GoalTrackerCategoryId = goalTrackerCategoryId;
+            CategoryId = categoryId;
+            GoalTrackerId = goalTrackerId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("goalTrackerCategoryId")]
+        public Int64 GoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public GoalTrackerCategoryUpdateModel GetCopy()
+        {
+            var obj = new GoalTrackerCategoryUpdateModel();
+            obj.GoalTrackerCategoryId = GoalTrackerCategoryId;
+            obj.CategoryId = CategoryId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerCategoryId__Name = "GoalTrackerCategoryId";
+        public const string CategoryId__Name = "CategoryId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string UserId__Name = "UserId";
+    }
+
+    public class GoalTrackerCategoryByCategoryIdSearchCriteria
+    {
+
+        public GoalTrackerCategoryByCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("categoryId")]
+        public Int64 CategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerCategoryByCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerCategoryByCategoryIdSearchCriteria();
+            obj.CategoryId = CategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string CategoryId__Name = "CategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class CategoryByGoalTrackerCategoryIdSearchCriteria
+    {
+
+        public CategoryByGoalTrackerCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerCategoryId")]
+        public Int64 GoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public CategoryByGoalTrackerCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new CategoryByGoalTrackerCategoryIdSearchCriteria();
+            obj.GoalTrackerCategoryId = GoalTrackerCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerCategoryId__Name = "GoalTrackerCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerCategoryByGoalTrackerIdSearchCriteria
+    {
+
+        public GoalTrackerCategoryByGoalTrackerIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerCategoryByGoalTrackerIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerCategoryByGoalTrackerIdSearchCriteria();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerByGoalTrackerCategoryIdSearchCriteria
+    {
+
+        public GoalTrackerByGoalTrackerCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerCategoryId")]
+        public Int64 GoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerByGoalTrackerCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerByGoalTrackerCategoryIdSearchCriteria();
+            obj.GoalTrackerCategoryId = GoalTrackerCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerCategoryId__Name = "GoalTrackerCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerCategoryByUserIdSearchCriteria
+    {
+
+        public GoalTrackerCategoryByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerCategoryByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerCategoryByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByGoalTrackerCategoryIdSearchCriteria
+    {
+
+        public UserByGoalTrackerCategoryIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerCategoryId")]
+        public Int64 GoalTrackerCategoryId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByGoalTrackerCategoryIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByGoalTrackerCategoryIdSearchCriteria();
+            obj.GoalTrackerCategoryId = GoalTrackerCategoryId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerCategoryId__Name = "GoalTrackerCategoryId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerMileStoneSearchCriteria
+    {
+
+        public GoalTrackerMileStoneSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64? GoalTrackerId {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeIds")]
+        public List<Int64> PredefinedGoalStatusTypeIds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerMileStoneSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.PredefinedGoalStatusTypeIds = PredefinedGoalStatusTypeIds;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string PredefinedGoalStatusTypeIds__Name = "PredefinedGoalStatusTypeIds";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerMileStoneCreateModel
+    {
+
+        public GoalTrackerMileStoneCreateModel()
+        {
+        }
+
+        public GoalTrackerMileStoneCreateModel(Int64 goalTrackerId,String goalTrackerMileStoneName,DateTime goalTrackerMileStoneStartDate,DateTime goalTrackerMileStoneEndDate,Int64 predefinedGoalStatusTypeId,DateTime goalTrackerMileStoneCompletedDate,Int64 userId)
+        {
+            GoalTrackerId = goalTrackerId;
+            GoalTrackerMileStoneName = goalTrackerMileStoneName;
+            GoalTrackerMileStoneStartDate = goalTrackerMileStoneStartDate;
+            GoalTrackerMileStoneEndDate = goalTrackerMileStoneEndDate;
+            PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            GoalTrackerMileStoneCompletedDate = goalTrackerMileStoneCompletedDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneName")]
+        public String GoalTrackerMileStoneName {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneStartDate")]
+        public DateTime GoalTrackerMileStoneStartDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneEndDate")]
+        public DateTime GoalTrackerMileStoneEndDate {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
+        public DateTime GoalTrackerMileStoneCompletedDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public GoalTrackerMileStoneCreateModel GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneCreateModel();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerMileStoneName__Name = "GoalTrackerMileStoneName";
+        public const string GoalTrackerMileStoneStartDate__Name = "GoalTrackerMileStoneStartDate";
+        public const string GoalTrackerMileStoneEndDate__Name = "GoalTrackerMileStoneEndDate";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerMileStoneCompletedDate__Name = "GoalTrackerMileStoneCompletedDate";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int GoalTrackerMileStoneName__Size = 255;
+    }
+
+    public class MultipleGoalTrackerMileStoneCreateModel
+    {
+
+        public MultipleGoalTrackerMileStoneCreateModel()
+        {
+        }
+        [JsonPropertyName("newGoalTrackerMileStones")]
+        public List<GoalTrackerMileStoneCreateModel> NewGoalTrackerMileStones {set; get;}
+
+        public MultipleGoalTrackerMileStoneCreateModel GetCopy()
+        {
+            var obj = new MultipleGoalTrackerMileStoneCreateModel();
+            obj.NewGoalTrackerMileStones = NewGoalTrackerMileStones;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewGoalTrackerMileStones__Name = "NewGoalTrackerMileStones";
+    }
+
+    public class GoalTrackerMileStoneUpdateModel
+    {
+
+        public GoalTrackerMileStoneUpdateModel()
+        {
+        }
+
+        public GoalTrackerMileStoneUpdateModel(Int64 goalTrackerMileStoneId,Int64 goalTrackerId,String goalTrackerMileStoneName,DateTime goalTrackerMileStoneStartDate,DateTime goalTrackerMileStoneEndDate,Int64 predefinedGoalStatusTypeId,DateTime goalTrackerMileStoneCompletedDate,Int64 userId)
+        {
+            GoalTrackerMileStoneId = goalTrackerMileStoneId;
+            GoalTrackerId = goalTrackerId;
+            GoalTrackerMileStoneName = goalTrackerMileStoneName;
+            GoalTrackerMileStoneStartDate = goalTrackerMileStoneStartDate;
+            GoalTrackerMileStoneEndDate = goalTrackerMileStoneEndDate;
+            PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            GoalTrackerMileStoneCompletedDate = goalTrackerMileStoneCompletedDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64 GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneName")]
+        public String GoalTrackerMileStoneName {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneStartDate")]
+        public DateTime GoalTrackerMileStoneStartDate {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneEndDate")]
+        public DateTime GoalTrackerMileStoneEndDate {set; get;}
+        [JsonPropertyName("predefinedGoalStatusTypeId")]
+        public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
+        public DateTime GoalTrackerMileStoneCompletedDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public GoalTrackerMileStoneUpdateModel GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneUpdateModel();
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.GoalTrackerMileStoneName = GoalTrackerMileStoneName;
+            obj.GoalTrackerMileStoneStartDate = GoalTrackerMileStoneStartDate;
+            obj.GoalTrackerMileStoneEndDate = GoalTrackerMileStoneEndDate;
+            obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.GoalTrackerMileStoneCompletedDate = GoalTrackerMileStoneCompletedDate;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string GoalTrackerMileStoneName__Name = "GoalTrackerMileStoneName";
+        public const string GoalTrackerMileStoneStartDate__Name = "GoalTrackerMileStoneStartDate";
+        public const string GoalTrackerMileStoneEndDate__Name = "GoalTrackerMileStoneEndDate";
+        public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string GoalTrackerMileStoneCompletedDate__Name = "GoalTrackerMileStoneCompletedDate";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int GoalTrackerMileStoneName__Size = 255;
+    }
+
+    public class GoalTrackerMileStoneByGoalTrackerIdSearchCriteria
+    {
+
+        public GoalTrackerMileStoneByGoalTrackerIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerId")]
+        public Int64 GoalTrackerId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerMileStoneByGoalTrackerIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneByGoalTrackerIdSearchCriteria();
+            obj.GoalTrackerId = GoalTrackerId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerId__Name = "GoalTrackerId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerByGoalTrackerMileStoneIdSearchCriteria
+    {
+
+        public GoalTrackerByGoalTrackerMileStoneIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64 GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerByGoalTrackerMileStoneIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerByGoalTrackerMileStoneIdSearchCriteria();
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class GoalTrackerMileStoneByUserIdSearchCriteria
+    {
+
+        public GoalTrackerMileStoneByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public GoalTrackerMileStoneByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new GoalTrackerMileStoneByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByGoalTrackerMileStoneIdSearchCriteria
+    {
+
+        public UserByGoalTrackerMileStoneIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("goalTrackerMileStoneId")]
+        public Int64 GoalTrackerMileStoneId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByGoalTrackerMileStoneIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByGoalTrackerMileStoneIdSearchCriteria();
+            obj.GoalTrackerMileStoneId = GoalTrackerMileStoneId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string GoalTrackerMileStoneId__Name = "GoalTrackerMileStoneId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationFileModel
+    {
+
+        public MeditationFileModel()
+        {
+        }
+
+        public MeditationFileModel(Int64 meditationFileId,Int64 predefinedMeditationTypeId,String meditationFileName,String fileName,Int64 fileSize,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            MeditationFileId = meditationFileId;
+            PredefinedMeditationTypeId = predefinedMeditationTypeId;
+            MeditationFileName = meditationFileName;
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("predefinedMeditationTypeName")]
+        public String PredefinedMeditationTypeName {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64 PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public MeditationFileCreateModel GetAsCreateModel()
+        {
+            var obj = new MeditationFileCreateModel();
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.MeditationFileName = MeditationFileName;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(MeditationFileCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.PredefinedMeditationTypeId == PredefinedMeditationTypeId);
+            result = result && (obj.MeditationFileName == MeditationFileName);
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public MeditationFileUpdateModel GetAsUpdateModel()
+        {
+            var obj = new MeditationFileUpdateModel();
+            obj.MeditationFileId = MeditationFileId;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.MeditationFileName = MeditationFileName;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(MeditationFileUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.MeditationFileId == MeditationFileId);
+            result = result && (obj.PredefinedMeditationTypeId == PredefinedMeditationTypeId);
+            result = result && (obj.MeditationFileName == MeditationFileName);
+            result = result && (obj.Location == Location);
+            result = result && (obj.FileName == FileName);
+            result = result && (obj.FileSize == FileSize);
+            result = result && (obj.UserId == UserId);
+            return result;
+        }
+
+
+        public MeditationFileModel GetCopy()
+        {
+            var obj = new MeditationFileModel();
+            obj.PredefinedMeditationTypeName = PredefinedMeditationTypeName;
+            obj.UserName = UserName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.MeditationFileId = MeditationFileId;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.MeditationFileName = MeditationFileName;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMeditationTypeName__Name = "PredefinedMeditationTypeName";
+        public const string UserName__Name = "UserName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int MeditationFileName__Size = 255;
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class MeditationFileSearchCriteria
+    {
+
+        public MeditationFileSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeIds")]
+        public List<Int64> PredefinedMeditationTypeIds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationFileSearchCriteria GetCopy()
+        {
+            var obj = new MeditationFileSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedMeditationTypeIds = PredefinedMeditationTypeIds;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedMeditationTypeIds__Name = "PredefinedMeditationTypeIds";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationFileCreateModel
+    {
+
+        public MeditationFileCreateModel()
+        {
+        }
+
+        public MeditationFileCreateModel(Int64 predefinedMeditationTypeId,String meditationFileName,String fileName,Int64 fileSize,Int64 userId)
+        {
+            PredefinedMeditationTypeId = predefinedMeditationTypeId;
+            MeditationFileName = meditationFileName;
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64 PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public MeditationFileCreateModel GetCopy()
+        {
+            var obj = new MeditationFileCreateModel();
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.MeditationFileName = MeditationFileName;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int MeditationFileName__Size = 255;
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class MultipleMeditationFileCreateModel
+    {
+
+        public MultipleMeditationFileCreateModel()
+        {
+        }
+        [JsonPropertyName("newMeditationFiles")]
+        public List<MeditationFileCreateModel> NewMeditationFiles {set; get;}
+
+        public MultipleMeditationFileCreateModel GetCopy()
+        {
+            var obj = new MultipleMeditationFileCreateModel();
+            obj.NewMeditationFiles = NewMeditationFiles;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewMeditationFiles__Name = "NewMeditationFiles";
+    }
+
+    public class MeditationFileUpdateModel
+    {
+
+        public MeditationFileUpdateModel()
+        {
+        }
+
+        public MeditationFileUpdateModel(Int64 meditationFileId,Int64 predefinedMeditationTypeId,String meditationFileName,String fileName,Int64 fileSize,Int64 userId)
+        {
+            MeditationFileId = meditationFileId;
+            PredefinedMeditationTypeId = predefinedMeditationTypeId;
+            MeditationFileName = meditationFileName;
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("predefinedMeditationTypeId")]
+        public Int64 PredefinedMeditationTypeId {set; get;}
+        [JsonPropertyName("meditationFileName")]
+        public String MeditationFileName {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public MeditationFileUpdateModel GetCopy()
+        {
+            var obj = new MeditationFileUpdateModel();
+            obj.MeditationFileId = MeditationFileId;
+            obj.PredefinedMeditationTypeId = PredefinedMeditationTypeId;
+            obj.MeditationFileName = MeditationFileName;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string PredefinedMeditationTypeId__Name = "PredefinedMeditationTypeId";
+        public const string MeditationFileName__Name = "MeditationFileName";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int MeditationFileName__Size = 255;
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class MeditationFileByUserIdSearchCriteria
+    {
+
+        public MeditationFileByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationFileByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new MeditationFileByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByMeditationFileIdSearchCriteria
+    {
+
+        public UserByMeditationFileIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByMeditationFileIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByMeditationFileIdSearchCriteria();
+            obj.MeditationFileId = MeditationFileId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationSessionSearchCriteria
+    {
+
+        public MeditationSessionSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("meditationFileId")]
+        public Int64? MeditationFileId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationSessionSearchCriteria GetCopy()
+        {
+            var obj = new MeditationSessionSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.MeditationFileId = MeditationFileId;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationSessionCreateModel
+    {
+
+        public MeditationSessionCreateModel()
+        {
+        }
+
+        public MeditationSessionCreateModel(DateTime meditationSessionDate,Int64 meditationFileId,Int64 userId)
+        {
+            MeditationSessionDate = meditationSessionDate;
+            MeditationFileId = meditationFileId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("meditationSessionDate")]
+        public DateTime MeditationSessionDate {set; get;}
+        [JsonPropertyName("meditationSessionTimeSpentInSeconds")]
+        public Int64? MeditationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public MeditationSessionCreateModel GetCopy()
+        {
+            var obj = new MeditationSessionCreateModel();
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileId = MeditationFileId;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationSessionDate__Name = "MeditationSessionDate";
+        public const string MeditationSessionTimeSpentInSeconds__Name = "MeditationSessionTimeSpentInSeconds";
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class MultipleMeditationSessionCreateModel
+    {
+
+        public MultipleMeditationSessionCreateModel()
+        {
+        }
+        [JsonPropertyName("newMeditationSessions")]
+        public List<MeditationSessionCreateModel> NewMeditationSessions {set; get;}
+
+        public MultipleMeditationSessionCreateModel GetCopy()
+        {
+            var obj = new MultipleMeditationSessionCreateModel();
+            obj.NewMeditationSessions = NewMeditationSessions;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewMeditationSessions__Name = "NewMeditationSessions";
+    }
+
+    public class MeditationSessionUpdateModel
+    {
+
+        public MeditationSessionUpdateModel()
+        {
+        }
+
+        public MeditationSessionUpdateModel(Int64 meditationSessionId,DateTime meditationSessionDate,Int64 meditationFileId,Int64 userId)
+        {
+            MeditationSessionId = meditationSessionId;
+            MeditationSessionDate = meditationSessionDate;
+            MeditationFileId = meditationFileId;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("meditationSessionId")]
+        public Int64 MeditationSessionId {set; get;}
+        [JsonPropertyName("meditationSessionDate")]
+        public DateTime MeditationSessionDate {set; get;}
+        [JsonPropertyName("meditationSessionTimeSpentInSeconds")]
+        public Int64? MeditationSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public MeditationSessionUpdateModel GetCopy()
+        {
+            var obj = new MeditationSessionUpdateModel();
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.MeditationSessionDate = MeditationSessionDate;
+            obj.MeditationSessionTimeSpentInSeconds = MeditationSessionTimeSpentInSeconds;
+            obj.MeditationFileId = MeditationFileId;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string MeditationSessionDate__Name = "MeditationSessionDate";
+        public const string MeditationSessionTimeSpentInSeconds__Name = "MeditationSessionTimeSpentInSeconds";
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class MeditationSessionByMeditationFileIdSearchCriteria
+    {
+
+        public MeditationSessionByMeditationFileIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("meditationFileId")]
+        public Int64 MeditationFileId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationSessionByMeditationFileIdSearchCriteria GetCopy()
+        {
+            var obj = new MeditationSessionByMeditationFileIdSearchCriteria();
+            obj.MeditationFileId = MeditationFileId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationFileId__Name = "MeditationFileId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationFileByMeditationSessionIdSearchCriteria
+    {
+
+        public MeditationFileByMeditationSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("meditationSessionId")]
+        public Int64 MeditationSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationFileByMeditationSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new MeditationFileByMeditationSessionIdSearchCriteria();
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class MeditationSessionByUserIdSearchCriteria
+    {
+
+        public MeditationSessionByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public MeditationSessionByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new MeditationSessionByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByMeditationSessionIdSearchCriteria
+    {
+
+        public UserByMeditationSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("meditationSessionId")]
+        public Int64 MeditationSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByMeditationSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByMeditationSessionIdSearchCriteria();
+            obj.MeditationSessionId = MeditationSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string MeditationSessionId__Name = "MeditationSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardPictureSearchCriteria
+    {
+
+        public VisionBoardPictureSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardPictureSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardPictureSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardPictureCreateModel
+    {
+
+        public VisionBoardPictureCreateModel()
+        {
+        }
+
+        public VisionBoardPictureCreateModel(String fileName,Int64 fileSize,Int64 userId)
+        {
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public VisionBoardPictureCreateModel GetCopy()
+        {
+            var obj = new VisionBoardPictureCreateModel();
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class MultipleVisionBoardPictureCreateModel
+    {
+
+        public MultipleVisionBoardPictureCreateModel()
+        {
+        }
+        [JsonPropertyName("newVisionBoardPictures")]
+        public List<VisionBoardPictureCreateModel> NewVisionBoardPictures {set; get;}
+
+        public MultipleVisionBoardPictureCreateModel GetCopy()
+        {
+            var obj = new MultipleVisionBoardPictureCreateModel();
+            obj.NewVisionBoardPictures = NewVisionBoardPictures;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewVisionBoardPictures__Name = "NewVisionBoardPictures";
+    }
+
+    public class VisionBoardPictureUpdateModel
+    {
+
+        public VisionBoardPictureUpdateModel()
+        {
+        }
+
+        public VisionBoardPictureUpdateModel(Int64 visionBoardPictureId,String fileName,Int64 fileSize,Int64 userId)
+        {
+            VisionBoardPictureId = visionBoardPictureId;
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public VisionBoardPictureUpdateModel GetCopy()
+        {
+            var obj = new VisionBoardPictureUpdateModel();
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
+    }
+
+    public class VisionBoardPictureByUserIdSearchCriteria
+    {
+
+        public VisionBoardPictureByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardPictureByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardPictureByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByVisionBoardPictureIdSearchCriteria
+    {
+
+        public UserByVisionBoardPictureIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByVisionBoardPictureIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByVisionBoardPictureIdSearchCriteria();
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionSearchCriteria
+    {
+
+        public VisionBoardSessionSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionCreateModel
+    {
+
+        public VisionBoardSessionCreateModel()
+        {
+        }
+
+        public VisionBoardSessionCreateModel(DateTime visionBoardSessionDate,Int64 userId)
+        {
+            VisionBoardSessionDate = visionBoardSessionDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public VisionBoardSessionCreateModel GetCopy()
+        {
+            var obj = new VisionBoardSessionCreateModel();
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class MultipleVisionBoardSessionCreateModel
+    {
+
+        public MultipleVisionBoardSessionCreateModel()
+        {
+        }
+        [JsonPropertyName("newVisionBoardSessions")]
+        public List<VisionBoardSessionCreateModel> NewVisionBoardSessions {set; get;}
+
+        public MultipleVisionBoardSessionCreateModel GetCopy()
+        {
+            var obj = new MultipleVisionBoardSessionCreateModel();
+            obj.NewVisionBoardSessions = NewVisionBoardSessions;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewVisionBoardSessions__Name = "NewVisionBoardSessions";
+    }
+
+    public class VisionBoardSessionUpdateModel
+    {
+
+        public VisionBoardSessionUpdateModel()
+        {
+        }
+
+        public VisionBoardSessionUpdateModel(Int64 visionBoardSessionId,DateTime visionBoardSessionDate,Int64 userId)
+        {
+            VisionBoardSessionId = visionBoardSessionId;
+            VisionBoardSessionDate = visionBoardSessionDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public VisionBoardSessionUpdateModel GetCopy()
+        {
+            var obj = new VisionBoardSessionUpdateModel();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class VisionBoardSessionByUserIdSearchCriteria
+    {
+
+        public VisionBoardSessionByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByVisionBoardSessionIdSearchCriteria
+    {
+
+        public UserByVisionBoardSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByVisionBoardSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByVisionBoardSessionIdSearchCriteria();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
     public class CountryModel
     {
 

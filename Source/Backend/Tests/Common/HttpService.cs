@@ -430,77 +430,1362 @@ namespace Manifest.Tests.Common
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<FileAttachmentFolderModel> result)> GetFileAttachmentFolders(FileAttachmentFolderSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FileAttachmentFolderModel>,FileAttachmentFolderSearchCriteria>(token,Url("/api/v1/movie/getfileattachmentfolders"),search,appHeader);
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FileAttachmentFolderModel>,FileAttachmentFolderSearchCriteria>(token,Url("/api/v1/manifest/getfileattachmentfolders"),search,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<FileAttachmentFolderModel> result)> GetFileAttachmentFolder(Int64 id, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentFolderModel>,Object>(token,Url("/api/v1/movie/getfileattachmentfolder"),new { id },appHeader);
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentFolderModel>,Object>(token,Url("/api/v1/manifest/getfileattachmentfolder"),new { id },appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<FileAttachmentFolderModel> result)> CreateFileAttachmentFolder(FileAttachmentFolderCreateModel fileAttachmentFolderModel, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentFolderModel>,FileAttachmentFolderCreateModel>(token,Url("/api/v1/movie/createfileattachmentfolder"),fileAttachmentFolderModel,appHeader);
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentFolderModel>,FileAttachmentFolderCreateModel>(token,Url("/api/v1/manifest/createfileattachmentfolder"),fileAttachmentFolderModel,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<FileAttachmentFolderModel> result)> CreateMultipleFileAttachmentFolder(MultipleFileAttachmentFolderCreateModel fileAttachmentFolderModels, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FileAttachmentFolderModel>,MultipleFileAttachmentFolderCreateModel>(token,Url("/api/v1/movie/createmultiplefileattachmentfolder"),fileAttachmentFolderModels,appHeader);
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FileAttachmentFolderModel>,MultipleFileAttachmentFolderCreateModel>(token,Url("/api/v1/manifest/createmultiplefileattachmentfolder"),fileAttachmentFolderModels,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<FileAttachmentFolderModel> result)> UpdateFileAttachmentFolder(FileAttachmentFolderUpdateModel fileAttachmentFolderModel, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentFolderModel>,FileAttachmentFolderUpdateModel>(token,Url("/api/v1/movie/updatefileattachmentfolder"),fileAttachmentFolderModel,appHeader);
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentFolderModel>,FileAttachmentFolderUpdateModel>(token,Url("/api/v1/manifest/updatefileattachmentfolder"),fileAttachmentFolderModel,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkFileAttachmentFolderAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/movie/markfileattachmentfolderasdeleted"),new { id },appHeader);
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markfileattachmentfolderasdeleted"),new { id },appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkFileAttachmentFolderAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/movie/markfileattachmentfolderasnotdeleted"),id,appHeader);
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markfileattachmentfolderasnotdeleted"),id,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<FileAttachmentModel> result)> GetFileAttachments(FileAttachmentSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FileAttachmentModel>,FileAttachmentSearchCriteria>(token,Url("/api/v1/movie/getfileattachments"),search,appHeader);
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FileAttachmentModel>,FileAttachmentSearchCriteria>(token,Url("/api/v1/manifest/getfileattachments"),search,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<FileAttachmentModel> result)> GetFileAttachment(Int64 id, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentModel>,Object>(token,Url("/api/v1/movie/getfileattachment"),new { id },appHeader);
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentModel>,Object>(token,Url("/api/v1/manifest/getfileattachment"),new { id },appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<FileAttachmentModel> result)> CreateFileAttachment(FileAttachmentCreateWithFileFormModel model, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAsFormAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentModel>,FileAttachmentCreateWithFileFormModel>(token,Url("/api/v1/movie/createfileattachment"),model,appHeader);
+           return env.PostAsFormAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentModel>,FileAttachmentCreateWithFileFormModel>(token,Url("/api/v1/manifest/createfileattachment"),model,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<FileAttachmentModel> result)> UpdateFileAttachment(FileAttachmentUpdateModel fileAttachmentModel, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentModel>,FileAttachmentUpdateModel>(token,Url("/api/v1/movie/updatefileattachment"),fileAttachmentModel,appHeader);
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FileAttachmentModel>,FileAttachmentUpdateModel>(token,Url("/api/v1/manifest/updatefileattachment"),fileAttachmentModel,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkFileAttachmentAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/movie/markfileattachmentasdeleted"),new { id },appHeader);
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markfileattachmentasdeleted"),new { id },appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkFileAttachmentAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/movie/markfileattachmentasnotdeleted"),id,appHeader);
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markfileattachmentasnotdeleted"),id,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> IsFileAttachmentFileValid(Int64 fileAttachmentId, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Object>(token,Url("/api/v1/movie/isfileattachmentfilevalid"),new { fileAttachmentId },appHeader);
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Object>(token,Url("/api/v1/manifest/isfileattachmentfilevalid"),new { fileAttachmentId },appHeader);
         }
 
         public virtual Task<HttpResponseMessage> DownloadFileAttachmentFile(Int64 fileAttachmentId, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/movie/downloadfileattachmentfile"),new { fileAttachmentId },appHeader);
+           return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/manifest/downloadfileattachmentfile"),new { fileAttachmentId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictures(VisionBoardSessionPictureSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,VisionBoardSessionPictureSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionpictures"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPicture(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionpicture"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionPictureModel> result)> CreateVisionBoardSessionPicture(VisionBoardSessionPictureCreateModel visionBoardSessionPictureModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionPictureModel>,VisionBoardSessionPictureCreateModel>(token,Url("/api/v1/manifest/createvisionboardsessionpicture"),visionBoardSessionPictureModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> CreateMultipleVisionBoardSessionPicture(MultipleVisionBoardSessionPictureCreateModel visionBoardSessionPictureModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,MultipleVisionBoardSessionPictureCreateModel>(token,Url("/api/v1/manifest/createmultiplevisionboardsessionpicture"),visionBoardSessionPictureModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionPictureModel> result)> UpdateVisionBoardSessionPicture(VisionBoardSessionPictureUpdateModel visionBoardSessionPictureModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionPictureModel>,VisionBoardSessionPictureUpdateModel>(token,Url("/api/v1/manifest/updatevisionboardsessionpicture"),visionBoardSessionPictureModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardSessionPictureAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markvisionboardsessionpictureasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardSessionPictureAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markvisionboardsessionpictureasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictureByVisionBoardSessionId(Int64 visionBoardSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionpicturebyvisionboardsessionid"),new { visionBoardSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictureByVisionBoardSessionIdSearch(VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionpicturebyvisionboardsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByVisionBoardSessionPictureId(Int64 visionBoardSessionPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionbyvisionboardsessionpictureid"),new { visionBoardSessionPictureId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByVisionBoardSessionPictureIdSearch(VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionbyvisionboardsessionpictureidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictureByVisionBoardPictureId(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionpicturebyvisionboardpictureid"),new { visionBoardPictureId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictureByVisionBoardPictureIdSearch(VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionpicturebyvisionboardpictureidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> GetVisionBoardPictureByVisionBoardSessionPictureId(Int64 visionBoardSessionPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardpicturebyvisionboardsessionpictureid"),new { visionBoardSessionPictureId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> GetVisionBoardPictureByVisionBoardSessionPictureIdSearch(VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardpicturebyvisionboardsessionpictureidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictureByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionpicturebyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionPictureModel> result)> GetVisionBoardSessionPictureByUserIdSearch(VisionBoardSessionPictureByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionPictureModel>,VisionBoardSessionPictureByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionpicturebyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionPictureId(Int64 visionBoardSessionPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionpictureid"),new { visionBoardSessionPictureId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionPictureIdSearch(UserByVisionBoardSessionPictureIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByVisionBoardSessionPictureIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionpictureidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategorys(CategorySearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategorySearchCriteria>(token,Url("/api/v1/manifest/getcategorys"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<CategoryModel> result)> GetCategory(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategory"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<CategoryModel> result)> CreateCategory(CategoryCreateModel categoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<CategoryModel>,CategoryCreateModel>(token,Url("/api/v1/manifest/createcategory"),categoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> CreateMultipleCategory(MultipleCategoryCreateModel categoryModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,MultipleCategoryCreateModel>(token,Url("/api/v1/manifest/createmultiplecategory"),categoryModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<CategoryModel> result)> UpdateCategory(CategoryUpdateModel categoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<CategoryModel>,CategoryUpdateModel>(token,Url("/api/v1/manifest/updatecategory"),categoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkCategoryAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markcategoryasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkCategoryAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markcategoryasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDefaultCategoryId(Int64 defaultCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategorybydefaultcategoryid"),new { defaultCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDefaultCategoryIdSearch(CategoryByDefaultCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByDefaultCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybydefaultcategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategoryByCategoryId(Int64 categoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultcategorybycategoryid"),new { categoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategoryByCategoryIdSearch(DefaultCategoryByCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,DefaultCategoryByCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultcategorybycategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategorybyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByUserIdSearch(CategoryByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByCategoryId(Int64 categoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbycategoryid"),new { categoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByCategoryIdSearch(UserByCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbycategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessions(DailyAffirmationSessionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,DailyAffirmationSessionSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessions"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSession(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationSessionModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsession"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationSessionModel> result)> CreateDailyAffirmationSession(DailyAffirmationSessionCreateModel dailyAffirmationSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationSessionModel>,DailyAffirmationSessionCreateModel>(token,Url("/api/v1/manifest/createdailyaffirmationsession"),dailyAffirmationSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> CreateMultipleDailyAffirmationSession(MultipleDailyAffirmationSessionCreateModel dailyAffirmationSessionModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,MultipleDailyAffirmationSessionCreateModel>(token,Url("/api/v1/manifest/createmultipledailyaffirmationsession"),dailyAffirmationSessionModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationSessionModel> result)> UpdateDailyAffirmationSession(DailyAffirmationSessionUpdateModel dailyAffirmationSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationSessionModel>,DailyAffirmationSessionUpdateModel>(token,Url("/api/v1/manifest/updatedailyaffirmationsession"),dailyAffirmationSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyAffirmationSessionAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdailyaffirmationsessionasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyAffirmationSessionAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdailyaffirmationsessionasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessionByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessionbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessionByUserIdSearch(DailyAffirmationSessionByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,DailyAffirmationSessionByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessionbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyAffirmationSessionId(Int64 dailyAffirmationSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbydailyaffirmationsessionid"),new { dailyAffirmationSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyAffirmationSessionIdSearch(UserByDailyAffirmationSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByDailyAffirmationSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbydailyaffirmationsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategorys(DailyAffirmationSessionCategorySearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,DailyAffirmationSessionCategorySearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorys"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategory(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationSessionCategoryModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategory"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationSessionCategoryModel> result)> CreateDailyAffirmationSessionCategory(DailyAffirmationSessionCategoryCreateModel dailyAffirmationSessionCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationSessionCategoryModel>,DailyAffirmationSessionCategoryCreateModel>(token,Url("/api/v1/manifest/createdailyaffirmationsessioncategory"),dailyAffirmationSessionCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> CreateMultipleDailyAffirmationSessionCategory(MultipleDailyAffirmationSessionCategoryCreateModel dailyAffirmationSessionCategoryModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,MultipleDailyAffirmationSessionCategoryCreateModel>(token,Url("/api/v1/manifest/createmultipledailyaffirmationsessioncategory"),dailyAffirmationSessionCategoryModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationSessionCategoryModel> result)> UpdateDailyAffirmationSessionCategory(DailyAffirmationSessionCategoryUpdateModel dailyAffirmationSessionCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationSessionCategoryModel>,DailyAffirmationSessionCategoryUpdateModel>(token,Url("/api/v1/manifest/updatedailyaffirmationsessioncategory"),dailyAffirmationSessionCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyAffirmationSessionCategoryAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdailyaffirmationsessioncategoryasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyAffirmationSessionCategoryAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdailyaffirmationsessioncategoryasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategoryByCategoryId(Int64 categoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorybycategoryid"),new { categoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategoryByCategoryIdSearch(DailyAffirmationSessionCategoryByCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,DailyAffirmationSessionCategoryByCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorybycategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDailyAffirmationSessionCategoryId(Int64 dailyAffirmationSessionCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategorybydailyaffirmationsessioncategoryid"),new { dailyAffirmationSessionCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDailyAffirmationSessionCategoryIdSearch(CategoryByDailyAffirmationSessionCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByDailyAffirmationSessionCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybydailyaffirmationsessioncategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategoryByDailyAffirmationSessionId(Int64 dailyAffirmationSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorybydailyaffirmationsessionid"),new { dailyAffirmationSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearch(DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorybydailyaffirmationsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessionByDailyAffirmationSessionCategoryId(Int64 dailyAffirmationSessionCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessionbydailyaffirmationsessioncategoryid"),new { dailyAffirmationSessionCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearch(DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessionbydailyaffirmationsessioncategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategoryByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorybyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionCategoryModel> result)> GetDailyAffirmationSessionCategoryByUserIdSearch(DailyAffirmationSessionCategoryByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionCategoryModel>,DailyAffirmationSessionCategoryByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessioncategorybyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyAffirmationSessionCategoryId(Int64 dailyAffirmationSessionCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbydailyaffirmationsessioncategoryid"),new { dailyAffirmationSessionCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyAffirmationSessionCategoryIdSearch(UserByDailyAffirmationSessionCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByDailyAffirmationSessionCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbydailyaffirmationsessioncategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTexts(DailyAffirmationTextSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,DailyAffirmationTextSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationtexts"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationTextModel> result)> GetDailyAffirmationText(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationTextModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationtext"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationTextModel> result)> CreateDailyAffirmationText(DailyAffirmationTextCreateModel dailyAffirmationTextModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationTextModel>,DailyAffirmationTextCreateModel>(token,Url("/api/v1/manifest/createdailyaffirmationtext"),dailyAffirmationTextModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> CreateMultipleDailyAffirmationText(MultipleDailyAffirmationTextCreateModel dailyAffirmationTextModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,MultipleDailyAffirmationTextCreateModel>(token,Url("/api/v1/manifest/createmultipledailyaffirmationtext"),dailyAffirmationTextModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyAffirmationTextModel> result)> UpdateDailyAffirmationText(DailyAffirmationTextUpdateModel dailyAffirmationTextModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyAffirmationTextModel>,DailyAffirmationTextUpdateModel>(token,Url("/api/v1/manifest/updatedailyaffirmationtext"),dailyAffirmationTextModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyAffirmationTextAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdailyaffirmationtextasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyAffirmationTextAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdailyaffirmationtextasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTextByCategoryId(Int64 categoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationtextbycategoryid"),new { categoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTextByCategoryIdSearch(DailyAffirmationTextByCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,DailyAffirmationTextByCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationtextbycategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDailyAffirmationTextId(Int64 dailyAffirmationTextId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategorybydailyaffirmationtextid"),new { dailyAffirmationTextId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDailyAffirmationTextIdSearch(CategoryByDailyAffirmationTextIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByDailyAffirmationTextIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybydailyaffirmationtextidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTextByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationtextbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTextByUserIdSearch(DailyAffirmationTextByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,DailyAffirmationTextByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationtextbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyAffirmationTextId(Int64 dailyAffirmationTextId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbydailyaffirmationtextid"),new { dailyAffirmationTextId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyAffirmationTextIdSearch(UserByDailyAffirmationTextIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByDailyAffirmationTextIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbydailyaffirmationtextidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategorys(DefaultCategorySearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,DefaultCategorySearchCriteria>(token,Url("/api/v1/manifest/getdefaultcategorys"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultCategoryModel> result)> GetDefaultCategory(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultcategory"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultCategoryModel> result)> CreateDefaultCategory(DefaultCategoryCreateModel defaultCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultCategoryModel>,DefaultCategoryCreateModel>(token,Url("/api/v1/manifest/createdefaultcategory"),defaultCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> CreateMultipleDefaultCategory(MultipleDefaultCategoryCreateModel defaultCategoryModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,MultipleDefaultCategoryCreateModel>(token,Url("/api/v1/manifest/createmultipledefaultcategory"),defaultCategoryModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultCategoryModel> result)> UpdateDefaultCategory(DefaultCategoryUpdateModel defaultCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultCategoryModel>,DefaultCategoryUpdateModel>(token,Url("/api/v1/manifest/updatedefaultcategory"),defaultCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultCategoryAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdefaultcategoryasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultCategoryAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdefaultcategoryasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultDailyAffirmationTextModel> result)> GetDefaultDailyAffirmationTexts(DefaultDailyAffirmationTextSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultDailyAffirmationTextModel>,DefaultDailyAffirmationTextSearchCriteria>(token,Url("/api/v1/manifest/getdefaultdailyaffirmationtexts"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultDailyAffirmationTextModel> result)> GetDefaultDailyAffirmationText(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultDailyAffirmationTextModel>,Object>(token,Url("/api/v1/manifest/getdefaultdailyaffirmationtext"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultDailyAffirmationTextModel> result)> CreateDefaultDailyAffirmationText(DefaultDailyAffirmationTextCreateModel defaultDailyAffirmationTextModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultDailyAffirmationTextModel>,DefaultDailyAffirmationTextCreateModel>(token,Url("/api/v1/manifest/createdefaultdailyaffirmationtext"),defaultDailyAffirmationTextModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultDailyAffirmationTextModel> result)> CreateMultipleDefaultDailyAffirmationText(MultipleDefaultDailyAffirmationTextCreateModel defaultDailyAffirmationTextModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultDailyAffirmationTextModel>,MultipleDefaultDailyAffirmationTextCreateModel>(token,Url("/api/v1/manifest/createmultipledefaultdailyaffirmationtext"),defaultDailyAffirmationTextModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultDailyAffirmationTextModel> result)> UpdateDefaultDailyAffirmationText(DefaultDailyAffirmationTextUpdateModel defaultDailyAffirmationTextModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultDailyAffirmationTextModel>,DefaultDailyAffirmationTextUpdateModel>(token,Url("/api/v1/manifest/updatedefaultdailyaffirmationtext"),defaultDailyAffirmationTextModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultDailyAffirmationTextAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdefaultdailyaffirmationtextasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultDailyAffirmationTextAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdefaultdailyaffirmationtextasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultDailyAffirmationTextModel> result)> GetDefaultDailyAffirmationTextByDefaultCategoryId(Int64 defaultCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultDailyAffirmationTextModel>,Object>(token,Url("/api/v1/manifest/getdefaultdailyaffirmationtextbydefaultcategoryid"),new { defaultCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultDailyAffirmationTextModel> result)> GetDefaultDailyAffirmationTextByDefaultCategoryIdSearch(DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultDailyAffirmationTextModel>,DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultdailyaffirmationtextbydefaultcategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategoryByDefaultDailyAffirmationTextId(Int64 defaultDailyAffirmationTextId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultcategorybydefaultdailyaffirmationtextid"),new { defaultDailyAffirmationTextId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategoryByDefaultDailyAffirmationTextIdSearch(DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultcategorybydefaultdailyaffirmationtextidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerModel> result)> GetDefaultGoalTrackers(DefaultGoalTrackerSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerModel>,DefaultGoalTrackerSearchCriteria>(token,Url("/api/v1/manifest/getdefaultgoaltrackers"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultGoalTrackerModel> result)> GetDefaultGoalTracker(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultGoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getdefaultgoaltracker"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultGoalTrackerModel> result)> CreateDefaultGoalTracker(DefaultGoalTrackerCreateModel defaultGoalTrackerModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultGoalTrackerModel>,DefaultGoalTrackerCreateModel>(token,Url("/api/v1/manifest/createdefaultgoaltracker"),defaultGoalTrackerModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerModel> result)> CreateMultipleDefaultGoalTracker(MultipleDefaultGoalTrackerCreateModel defaultGoalTrackerModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerModel>,MultipleDefaultGoalTrackerCreateModel>(token,Url("/api/v1/manifest/createmultipledefaultgoaltracker"),defaultGoalTrackerModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultGoalTrackerModel> result)> UpdateDefaultGoalTracker(DefaultGoalTrackerUpdateModel defaultGoalTrackerModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultGoalTrackerModel>,DefaultGoalTrackerUpdateModel>(token,Url("/api/v1/manifest/updatedefaultgoaltracker"),defaultGoalTrackerModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultGoalTrackerAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdefaultgoaltrackerasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultGoalTrackerAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdefaultgoaltrackerasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerCategoryModel> result)> GetDefaultGoalTrackerCategorys(DefaultGoalTrackerCategorySearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerCategoryModel>,DefaultGoalTrackerCategorySearchCriteria>(token,Url("/api/v1/manifest/getdefaultgoaltrackercategorys"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultGoalTrackerCategoryModel> result)> GetDefaultGoalTrackerCategory(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultGoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultgoaltrackercategory"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultGoalTrackerCategoryModel> result)> CreateDefaultGoalTrackerCategory(DefaultGoalTrackerCategoryCreateModel defaultGoalTrackerCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultGoalTrackerCategoryModel>,DefaultGoalTrackerCategoryCreateModel>(token,Url("/api/v1/manifest/createdefaultgoaltrackercategory"),defaultGoalTrackerCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerCategoryModel> result)> CreateMultipleDefaultGoalTrackerCategory(MultipleDefaultGoalTrackerCategoryCreateModel defaultGoalTrackerCategoryModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerCategoryModel>,MultipleDefaultGoalTrackerCategoryCreateModel>(token,Url("/api/v1/manifest/createmultipledefaultgoaltrackercategory"),defaultGoalTrackerCategoryModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultGoalTrackerCategoryModel> result)> UpdateDefaultGoalTrackerCategory(DefaultGoalTrackerCategoryUpdateModel defaultGoalTrackerCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultGoalTrackerCategoryModel>,DefaultGoalTrackerCategoryUpdateModel>(token,Url("/api/v1/manifest/updatedefaultgoaltrackercategory"),defaultGoalTrackerCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultGoalTrackerCategoryAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdefaultgoaltrackercategoryasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultGoalTrackerCategoryAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdefaultgoaltrackercategoryasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerCategoryModel> result)> GetDefaultGoalTrackerCategoryByDefaultCategoryId(Int64 defaultCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultgoaltrackercategorybydefaultcategoryid"),new { defaultCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerCategoryModel> result)> GetDefaultGoalTrackerCategoryByDefaultCategoryIdSearch(DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerCategoryModel>,DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultgoaltrackercategorybydefaultcategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategoryByDefaultGoalTrackerCategoryId(Int64 defaultGoalTrackerCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultcategorybydefaultgoaltrackercategoryid"),new { defaultGoalTrackerCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultCategoryModel> result)> GetDefaultCategoryByDefaultGoalTrackerCategoryIdSearch(DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultCategoryModel>,DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultcategorybydefaultgoaltrackercategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerCategoryModel> result)> GetDefaultGoalTrackerCategoryByDefaultGoalTrackerId(Int64 defaultGoalTrackerId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getdefaultgoaltrackercategorybydefaultgoaltrackerid"),new { defaultGoalTrackerId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerCategoryModel> result)> GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearch(DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerCategoryModel>,DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultgoaltrackercategorybydefaultgoaltrackeridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerModel> result)> GetDefaultGoalTrackerByDefaultGoalTrackerCategoryId(Int64 defaultGoalTrackerCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getdefaultgoaltrackerbydefaultgoaltrackercategoryid"),new { defaultGoalTrackerCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultGoalTrackerModel> result)> GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearch(DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultGoalTrackerModel>,DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getdefaultgoaltrackerbydefaultgoaltrackercategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultMeditationFileModel> result)> GetDefaultMeditationFiles(DefaultMeditationFileSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultMeditationFileModel>,DefaultMeditationFileSearchCriteria>(token,Url("/api/v1/manifest/getdefaultmeditationfiles"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultMeditationFileModel> result)> GetDefaultMeditationFile(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultMeditationFileModel>,Object>(token,Url("/api/v1/manifest/getdefaultmeditationfile"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultMeditationFileModel> result)> CreateDefaultMeditationFile(DefaultMeditationFileCreateModel defaultMeditationFileModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultMeditationFileModel>,DefaultMeditationFileCreateModel>(token,Url("/api/v1/manifest/createdefaultmeditationfile"),defaultMeditationFileModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultMeditationFileModel> result)> CreateMultipleDefaultMeditationFile(MultipleDefaultMeditationFileCreateModel defaultMeditationFileModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultMeditationFileModel>,MultipleDefaultMeditationFileCreateModel>(token,Url("/api/v1/manifest/createmultipledefaultmeditationfile"),defaultMeditationFileModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultMeditationFileModel> result)> UpdateDefaultMeditationFile(DefaultMeditationFileUpdateModel defaultMeditationFileModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultMeditationFileModel>,DefaultMeditationFileUpdateModel>(token,Url("/api/v1/manifest/updatedefaultmeditationfile"),defaultMeditationFileModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultMeditationFileAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdefaultmeditationfileasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultMeditationFileAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdefaultmeditationfileasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultVisionBoardPictureModel> result)> GetDefaultVisionBoardPictures(DefaultVisionBoardPictureSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultVisionBoardPictureModel>,DefaultVisionBoardPictureSearchCriteria>(token,Url("/api/v1/manifest/getdefaultvisionboardpictures"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultVisionBoardPictureModel> result)> GetDefaultVisionBoardPicture(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultVisionBoardPictureModel>,Object>(token,Url("/api/v1/manifest/getdefaultvisionboardpicture"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultVisionBoardPictureModel> result)> CreateDefaultVisionBoardPicture(DefaultVisionBoardPictureCreateModel defaultVisionBoardPictureModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultVisionBoardPictureModel>,DefaultVisionBoardPictureCreateModel>(token,Url("/api/v1/manifest/createdefaultvisionboardpicture"),defaultVisionBoardPictureModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DefaultVisionBoardPictureModel> result)> CreateMultipleDefaultVisionBoardPicture(MultipleDefaultVisionBoardPictureCreateModel defaultVisionBoardPictureModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DefaultVisionBoardPictureModel>,MultipleDefaultVisionBoardPictureCreateModel>(token,Url("/api/v1/manifest/createmultipledefaultvisionboardpicture"),defaultVisionBoardPictureModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DefaultVisionBoardPictureModel> result)> UpdateDefaultVisionBoardPicture(DefaultVisionBoardPictureUpdateModel defaultVisionBoardPictureModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DefaultVisionBoardPictureModel>,DefaultVisionBoardPictureUpdateModel>(token,Url("/api/v1/manifest/updatedefaultvisionboardpicture"),defaultVisionBoardPictureModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultVisionBoardPictureAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdefaultvisionboardpictureasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDefaultVisionBoardPictureAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdefaultvisionboardpictureasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeeds(FeedSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedSearchCriteria>(token,Url("/api/v1/manifest/getfeeds"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<FeedModel> result)> GetFeed(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeed"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<FeedModel> result)> CreateFeed(FeedCreateModel feedModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FeedModel>,FeedCreateModel>(token,Url("/api/v1/manifest/createfeed"),feedModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> CreateMultipleFeed(MultipleFeedCreateModel feedModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,MultipleFeedCreateModel>(token,Url("/api/v1/manifest/createmultiplefeed"),feedModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<FeedModel> result)> UpdateFeed(FeedUpdateModel feedModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<FeedModel>,FeedUpdateModel>(token,Url("/api/v1/manifest/updatefeed"),feedModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkFeedAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markfeedasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkFeedAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markfeedasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeedbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByUserIdSearch(FeedByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getfeedbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByFeedId(Int64 feedId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbyfeedid"),new { feedId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByFeedIdSearch(UserByFeedIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyfeedidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByDailyAffirmationSessionId(Int64 dailyAffirmationSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeedbydailyaffirmationsessionid"),new { dailyAffirmationSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByDailyAffirmationSessionIdSearch(FeedByDailyAffirmationSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedByDailyAffirmationSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getfeedbydailyaffirmationsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessionByFeedId(Int64 feedId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationsessionbyfeedid"),new { feedId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationSessionModel> result)> GetDailyAffirmationSessionByFeedIdSearch(DailyAffirmationSessionByFeedIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationSessionModel>,DailyAffirmationSessionByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyaffirmationsessionbyfeedidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByVisionBoardSessionId(Int64 visionBoardSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeedbyvisionboardsessionid"),new { visionBoardSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByVisionBoardSessionIdSearch(FeedByVisionBoardSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedByVisionBoardSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getfeedbyvisionboardsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByFeedId(Int64 feedId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionbyfeedid"),new { feedId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByFeedIdSearch(VisionBoardSessionByFeedIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionbyfeedidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByMeditationSessionId(Int64 meditationSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeedbymeditationsessionid"),new { meditationSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByMeditationSessionIdSearch(FeedByMeditationSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedByMeditationSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getfeedbymeditationsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessionByFeedId(Int64 feedId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,Object>(token,Url("/api/v1/manifest/getmeditationsessionbyfeedid"),new { feedId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessionByFeedIdSearch(MeditationSessionByFeedIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,MeditationSessionByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getmeditationsessionbyfeedidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByGoalTrackerId(Int64 goalTrackerId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeedbygoaltrackerid"),new { goalTrackerId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByGoalTrackerIdSearch(FeedByGoalTrackerIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedByGoalTrackerIdSearchCriteria>(token,Url("/api/v1/manifest/getfeedbygoaltrackeridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByFeedId(Int64 feedId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackerbyfeedid"),new { feedId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByFeedIdSearch(GoalTrackerByFeedIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,GoalTrackerByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackerbyfeedidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByGoalTrackerMileStoneId(Int64 goalTrackerMileStoneId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,Object>(token,Url("/api/v1/manifest/getfeedbygoaltrackermilestoneid"),new { goalTrackerMileStoneId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<FeedModel> result)> GetFeedByGoalTrackerMileStoneIdSearch(FeedByGoalTrackerMileStoneIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<FeedModel>,FeedByGoalTrackerMileStoneIdSearchCriteria>(token,Url("/api/v1/manifest/getfeedbygoaltrackermilestoneidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStoneByFeedId(Int64 feedId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackermilestonebyfeedid"),new { feedId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStoneByFeedIdSearch(GoalTrackerMileStoneByFeedIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackermilestonebyfeedidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackers(GoalTrackerSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,GoalTrackerSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackers"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerModel> result)> GetGoalTracker(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getgoaltracker"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerModel> result)> CreateGoalTracker(GoalTrackerCreateModel goalTrackerModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerModel>,GoalTrackerCreateModel>(token,Url("/api/v1/manifest/creategoaltracker"),goalTrackerModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> CreateMultipleGoalTracker(MultipleGoalTrackerCreateModel goalTrackerModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,MultipleGoalTrackerCreateModel>(token,Url("/api/v1/manifest/createmultiplegoaltracker"),goalTrackerModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerModel> result)> UpdateGoalTracker(GoalTrackerUpdateModel goalTrackerModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerModel>,GoalTrackerUpdateModel>(token,Url("/api/v1/manifest/updategoaltracker"),goalTrackerModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkGoalTrackerAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markgoaltrackerasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkGoalTrackerAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markgoaltrackerasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackerbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByUserIdSearch(GoalTrackerByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,GoalTrackerByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackerbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerId(Int64 goalTrackerId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbygoaltrackerid"),new { goalTrackerId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerIdSearch(UserByGoalTrackerIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByGoalTrackerIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbygoaltrackeridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategorys(GoalTrackerCategorySearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,GoalTrackerCategorySearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackercategorys"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategory(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackercategory"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerCategoryModel> result)> CreateGoalTrackerCategory(GoalTrackerCategoryCreateModel goalTrackerCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerCategoryModel>,GoalTrackerCategoryCreateModel>(token,Url("/api/v1/manifest/creategoaltrackercategory"),goalTrackerCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> CreateMultipleGoalTrackerCategory(MultipleGoalTrackerCategoryCreateModel goalTrackerCategoryModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,MultipleGoalTrackerCategoryCreateModel>(token,Url("/api/v1/manifest/createmultiplegoaltrackercategory"),goalTrackerCategoryModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerCategoryModel> result)> UpdateGoalTrackerCategory(GoalTrackerCategoryUpdateModel goalTrackerCategoryModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerCategoryModel>,GoalTrackerCategoryUpdateModel>(token,Url("/api/v1/manifest/updategoaltrackercategory"),goalTrackerCategoryModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkGoalTrackerCategoryAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markgoaltrackercategoryasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkGoalTrackerCategoryAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markgoaltrackercategoryasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategoryByCategoryId(Int64 categoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackercategorybycategoryid"),new { categoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategoryByCategoryIdSearch(GoalTrackerCategoryByCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,GoalTrackerCategoryByCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackercategorybycategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByGoalTrackerCategoryId(Int64 goalTrackerCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategorybygoaltrackercategoryid"),new { goalTrackerCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByGoalTrackerCategoryIdSearch(CategoryByGoalTrackerCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByGoalTrackerCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybygoaltrackercategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategoryByGoalTrackerId(Int64 goalTrackerId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackercategorybygoaltrackerid"),new { goalTrackerId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategoryByGoalTrackerIdSearch(GoalTrackerCategoryByGoalTrackerIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,GoalTrackerCategoryByGoalTrackerIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackercategorybygoaltrackeridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByGoalTrackerCategoryId(Int64 goalTrackerCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackerbygoaltrackercategoryid"),new { goalTrackerCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByGoalTrackerCategoryIdSearch(GoalTrackerByGoalTrackerCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,GoalTrackerByGoalTrackerCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackerbygoaltrackercategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategoryByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackercategorybyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategoryByUserIdSearch(GoalTrackerCategoryByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerCategoryModel>,GoalTrackerCategoryByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackercategorybyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerCategoryId(Int64 goalTrackerCategoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbygoaltrackercategoryid"),new { goalTrackerCategoryId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerCategoryIdSearch(UserByGoalTrackerCategoryIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByGoalTrackerCategoryIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbygoaltrackercategoryidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStones(GoalTrackerMileStoneSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackermilestones"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStone(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerMileStoneModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackermilestone"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerMileStoneModel> result)> CreateGoalTrackerMileStone(GoalTrackerMileStoneCreateModel goalTrackerMileStoneModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneCreateModel>(token,Url("/api/v1/manifest/creategoaltrackermilestone"),goalTrackerMileStoneModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> CreateMultipleGoalTrackerMileStone(MultipleGoalTrackerMileStoneCreateModel goalTrackerMileStoneModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,MultipleGoalTrackerMileStoneCreateModel>(token,Url("/api/v1/manifest/createmultiplegoaltrackermilestone"),goalTrackerMileStoneModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<GoalTrackerMileStoneModel> result)> UpdateGoalTrackerMileStone(GoalTrackerMileStoneUpdateModel goalTrackerMileStoneModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneUpdateModel>(token,Url("/api/v1/manifest/updategoaltrackermilestone"),goalTrackerMileStoneModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkGoalTrackerMileStoneAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markgoaltrackermilestoneasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkGoalTrackerMileStoneAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markgoaltrackermilestoneasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStoneByGoalTrackerId(Int64 goalTrackerId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackermilestonebygoaltrackerid"),new { goalTrackerId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStoneByGoalTrackerIdSearch(GoalTrackerMileStoneByGoalTrackerIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneByGoalTrackerIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackermilestonebygoaltrackeridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByGoalTrackerMileStoneId(Int64 goalTrackerMileStoneId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackerbygoaltrackermilestoneid"),new { goalTrackerMileStoneId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackerByGoalTrackerMileStoneIdSearch(GoalTrackerByGoalTrackerMileStoneIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,GoalTrackerByGoalTrackerMileStoneIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackerbygoaltrackermilestoneidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStoneByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackermilestonebyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerMileStoneModel> result)> GetGoalTrackerMileStoneByUserIdSearch(GoalTrackerMileStoneByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackermilestonebyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerMileStoneId(Int64 goalTrackerMileStoneId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbygoaltrackermilestoneid"),new { goalTrackerMileStoneId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerMileStoneIdSearch(UserByGoalTrackerMileStoneIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByGoalTrackerMileStoneIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbygoaltrackermilestoneidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationFileModel> result)> GetMeditationFiles(MeditationFileSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationFileModel>,MeditationFileSearchCriteria>(token,Url("/api/v1/manifest/getmeditationfiles"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<MeditationFileModel> result)> GetMeditationFile(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<MeditationFileModel>,Object>(token,Url("/api/v1/manifest/getmeditationfile"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<MeditationFileModel> result)> CreateMeditationFile(MeditationFileCreateModel meditationFileModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<MeditationFileModel>,MeditationFileCreateModel>(token,Url("/api/v1/manifest/createmeditationfile"),meditationFileModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationFileModel> result)> CreateMultipleMeditationFile(MultipleMeditationFileCreateModel meditationFileModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationFileModel>,MultipleMeditationFileCreateModel>(token,Url("/api/v1/manifest/createmultiplemeditationfile"),meditationFileModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<MeditationFileModel> result)> UpdateMeditationFile(MeditationFileUpdateModel meditationFileModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<MeditationFileModel>,MeditationFileUpdateModel>(token,Url("/api/v1/manifest/updatemeditationfile"),meditationFileModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkMeditationFileAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markmeditationfileasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkMeditationFileAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markmeditationfileasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationFileModel> result)> GetMeditationFileByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationFileModel>,Object>(token,Url("/api/v1/manifest/getmeditationfilebyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationFileModel> result)> GetMeditationFileByUserIdSearch(MeditationFileByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationFileModel>,MeditationFileByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getmeditationfilebyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByMeditationFileId(Int64 meditationFileId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbymeditationfileid"),new { meditationFileId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByMeditationFileIdSearch(UserByMeditationFileIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByMeditationFileIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbymeditationfileidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessions(MeditationSessionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,MeditationSessionSearchCriteria>(token,Url("/api/v1/manifest/getmeditationsessions"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<MeditationSessionModel> result)> GetMeditationSession(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<MeditationSessionModel>,Object>(token,Url("/api/v1/manifest/getmeditationsession"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<MeditationSessionModel> result)> CreateMeditationSession(MeditationSessionCreateModel meditationSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<MeditationSessionModel>,MeditationSessionCreateModel>(token,Url("/api/v1/manifest/createmeditationsession"),meditationSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> CreateMultipleMeditationSession(MultipleMeditationSessionCreateModel meditationSessionModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,MultipleMeditationSessionCreateModel>(token,Url("/api/v1/manifest/createmultiplemeditationsession"),meditationSessionModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<MeditationSessionModel> result)> UpdateMeditationSession(MeditationSessionUpdateModel meditationSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<MeditationSessionModel>,MeditationSessionUpdateModel>(token,Url("/api/v1/manifest/updatemeditationsession"),meditationSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkMeditationSessionAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markmeditationsessionasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkMeditationSessionAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markmeditationsessionasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessionByMeditationFileId(Int64 meditationFileId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,Object>(token,Url("/api/v1/manifest/getmeditationsessionbymeditationfileid"),new { meditationFileId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessionByMeditationFileIdSearch(MeditationSessionByMeditationFileIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,MeditationSessionByMeditationFileIdSearchCriteria>(token,Url("/api/v1/manifest/getmeditationsessionbymeditationfileidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationFileModel> result)> GetMeditationFileByMeditationSessionId(Int64 meditationSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationFileModel>,Object>(token,Url("/api/v1/manifest/getmeditationfilebymeditationsessionid"),new { meditationSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationFileModel> result)> GetMeditationFileByMeditationSessionIdSearch(MeditationFileByMeditationSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationFileModel>,MeditationFileByMeditationSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getmeditationfilebymeditationsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessionByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,Object>(token,Url("/api/v1/manifest/getmeditationsessionbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<MeditationSessionModel> result)> GetMeditationSessionByUserIdSearch(MeditationSessionByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<MeditationSessionModel>,MeditationSessionByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getmeditationsessionbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByMeditationSessionId(Int64 meditationSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbymeditationsessionid"),new { meditationSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByMeditationSessionIdSearch(UserByMeditationSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByMeditationSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbymeditationsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> GetVisionBoardPictures(VisionBoardPictureSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,VisionBoardPictureSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardpictures"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> GetVisionBoardPicture(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardpicture"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> CreateVisionBoardPicture(VisionBoardPictureCreateModel visionBoardPictureModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,VisionBoardPictureCreateModel>(token,Url("/api/v1/manifest/createvisionboardpicture"),visionBoardPictureModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> CreateMultipleVisionBoardPicture(MultipleVisionBoardPictureCreateModel visionBoardPictureModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,MultipleVisionBoardPictureCreateModel>(token,Url("/api/v1/manifest/createmultiplevisionboardpicture"),visionBoardPictureModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> UpdateVisionBoardPicture(VisionBoardPictureUpdateModel visionBoardPictureModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,VisionBoardPictureUpdateModel>(token,Url("/api/v1/manifest/updatevisionboardpicture"),visionBoardPictureModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardPictureAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markvisionboardpictureasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardPictureAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markvisionboardpictureasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> GetVisionBoardPictureByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardpicturebyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> GetVisionBoardPictureByUserIdSearch(VisionBoardPictureByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,VisionBoardPictureByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardpicturebyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardPictureId(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbyvisionboardpictureid"),new { visionBoardPictureId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardPictureIdSearch(UserByVisionBoardPictureIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByVisionBoardPictureIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyvisionboardpictureidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessions(VisionBoardSessionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessions"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionModel> result)> GetVisionBoardSession(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsession"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionModel> result)> CreateVisionBoardSession(VisionBoardSessionCreateModel visionBoardSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionModel>,VisionBoardSessionCreateModel>(token,Url("/api/v1/manifest/createvisionboardsession"),visionBoardSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> CreateMultipleVisionBoardSession(MultipleVisionBoardSessionCreateModel visionBoardSessionModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,MultipleVisionBoardSessionCreateModel>(token,Url("/api/v1/manifest/createmultiplevisionboardsession"),visionBoardSessionModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionModel> result)> UpdateVisionBoardSession(VisionBoardSessionUpdateModel visionBoardSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionModel>,VisionBoardSessionUpdateModel>(token,Url("/api/v1/manifest/updatevisionboardsession"),visionBoardSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardSessionAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markvisionboardsessionasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardSessionAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markvisionboardsessionasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByUserIdSearch(VisionBoardSessionByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionId(Int64 visionBoardSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionid"),new { visionBoardSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionIdSearch(UserByVisionBoardSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByVisionBoardSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionidsearch"),search,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<CountryModel> result)> GetSupportedCountries(string token = null, AppHeaderModel appHeader = null)

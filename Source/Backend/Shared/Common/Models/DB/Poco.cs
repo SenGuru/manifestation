@@ -415,6 +415,126 @@ namespace Manifest.Common.Models.DB
         }
     }
     
+    [Table("Category")]
+    [Serializable]
+    public partial class Category : IAuditableModel, INewObject<Category>
+    {
+        public const string TABLE_NAME = "Category";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_CategoryId = "CategoryId";
+        public const string COLUMN_DefaultCategoryId = "DefaultCategoryId";
+        public const string COLUMN_CategoryName = "CategoryName";
+        public const string COLUMN_PredefinedCategoryTypeId = "PredefinedCategoryTypeId";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_CategoryName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_CategoryId = false;
+        public const bool COLUMN_NULLABLE_DefaultCategoryId = false;
+        public const bool COLUMN_NULLABLE_CategoryName = false;
+        public const bool COLUMN_NULLABLE_PredefinedCategoryTypeId = true;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("CategoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long CategoryId { get; set; }
+        
+        [Column("DefaultCategoryId")]
+        [NotNull]
+        public long DefaultCategoryId { get; set; }
+        
+        [Column("CategoryName")]
+        [NotNull]
+        [StringLength(255)]
+        public string CategoryName { get; set; }
+        
+        [Column("PredefinedCategoryTypeId")]
+        public long? PredefinedCategoryTypeId { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"CategoryId = {CategoryId} , ");
+            sb.AppendLine($"DefaultCategoryId = {DefaultCategoryId} , ");
+            sb.AppendLine($"CategoryName = {CategoryName} , ");
+            sb.AppendLine($"PredefinedCategoryTypeId = {PredefinedCategoryTypeId} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public Category New(Category item)
+        {
+            if (item == null)
+                return null;
+
+            return new Category
+            {
+            CategoryId = item.CategoryId,
+            DefaultCategoryId = item.DefaultCategoryId,
+            CategoryName = item.CategoryName,
+            PredefinedCategoryTypeId = item.PredefinedCategoryTypeId,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public Category NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
     [Table("Chat")]
     [Serializable]
     public partial class Chat : IAuditableModel, INewObject<Chat>
@@ -1319,6 +1439,902 @@ namespace Manifest.Common.Models.DB
         }
     }
     
+    [Table("DailyAffirmationSession")]
+    [Serializable]
+    public partial class DailyAffirmationSession : IAuditableModel, INewObject<DailyAffirmationSession>
+    {
+        public const string TABLE_NAME = "DailyAffirmationSession";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DailyAffirmationSessionId = "DailyAffirmationSessionId";
+        public const string COLUMN_DailyAffirmationSessionDate = "DailyAffirmationSessionDate";
+        public const string COLUMN_DailyAffirmationSessionTimeSpentInSeconds = "DailyAffirmationSessionTimeSpentInSeconds";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_AddedToFeed = "AddedToFeed";
+        public const string COLUMN_AddedToFeedDate = "AddedToFeedDate";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionId = false;
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionDate = false;
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_AddedToFeed = true;
+        public const bool COLUMN_NULLABLE_AddedToFeedDate = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DailyAffirmationSessionId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DailyAffirmationSessionId { get; set; }
+        
+        [Column("DailyAffirmationSessionDate")]
+        [NotNull]
+        public DateTime DailyAffirmationSessionDate { get; set; }
+        
+        [Column("DailyAffirmationSessionTimeSpentInSeconds")]
+        public long? DailyAffirmationSessionTimeSpentInSeconds { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("AddedToFeed")]
+        public bool? AddedToFeed { get; set; }
+        
+        [Column("AddedToFeedDate")]
+        public DateTime? AddedToFeedDate { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DailyAffirmationSessionId = {DailyAffirmationSessionId} , ");
+            sb.AppendLine($"DailyAffirmationSessionDate = {DailyAffirmationSessionDate} , ");
+            sb.AppendLine($"DailyAffirmationSessionTimeSpentInSeconds = {DailyAffirmationSessionTimeSpentInSeconds} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"AddedToFeed = {AddedToFeed} , ");
+            sb.AppendLine($"AddedToFeedDate = {AddedToFeedDate} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DailyAffirmationSession New(DailyAffirmationSession item)
+        {
+            if (item == null)
+                return null;
+
+            return new DailyAffirmationSession
+            {
+            DailyAffirmationSessionId = item.DailyAffirmationSessionId,
+            DailyAffirmationSessionDate = item.DailyAffirmationSessionDate,
+            DailyAffirmationSessionTimeSpentInSeconds = item.DailyAffirmationSessionTimeSpentInSeconds,
+            UserId = item.UserId,
+            AddedToFeed = item.AddedToFeed,
+            AddedToFeedDate = item.AddedToFeedDate,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DailyAffirmationSession NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DailyAffirmationSessionCategory")]
+    [Serializable]
+    public partial class DailyAffirmationSessionCategory : IAuditableModel, INewObject<DailyAffirmationSessionCategory>
+    {
+        public const string TABLE_NAME = "DailyAffirmationSessionCategory";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DailyAffirmationSessionCategoryId = "DailyAffirmationSessionCategoryId";
+        public const string COLUMN_CategoryId = "CategoryId";
+        public const string COLUMN_DailyAffirmationSessionId = "DailyAffirmationSessionId";
+        public const string COLUMN_DailyAffirmationSessionCategoryTimeSpentInSeconds = "DailyAffirmationSessionCategoryTimeSpentInSeconds";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionCategoryId = false;
+        public const bool COLUMN_NULLABLE_CategoryId = false;
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionId = false;
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionCategoryTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DailyAffirmationSessionCategoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DailyAffirmationSessionCategoryId { get; set; }
+        
+        [Column("CategoryId")]
+        [NotNull]
+        public long CategoryId { get; set; }
+        
+        [Column("DailyAffirmationSessionId")]
+        [NotNull]
+        public long DailyAffirmationSessionId { get; set; }
+        
+        [Column("DailyAffirmationSessionCategoryTimeSpentInSeconds")]
+        public long? DailyAffirmationSessionCategoryTimeSpentInSeconds { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DailyAffirmationSessionCategoryId = {DailyAffirmationSessionCategoryId} , ");
+            sb.AppendLine($"CategoryId = {CategoryId} , ");
+            sb.AppendLine($"DailyAffirmationSessionId = {DailyAffirmationSessionId} , ");
+            sb.AppendLine($"DailyAffirmationSessionCategoryTimeSpentInSeconds = {DailyAffirmationSessionCategoryTimeSpentInSeconds} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DailyAffirmationSessionCategory New(DailyAffirmationSessionCategory item)
+        {
+            if (item == null)
+                return null;
+
+            return new DailyAffirmationSessionCategory
+            {
+            DailyAffirmationSessionCategoryId = item.DailyAffirmationSessionCategoryId,
+            CategoryId = item.CategoryId,
+            DailyAffirmationSessionId = item.DailyAffirmationSessionId,
+            DailyAffirmationSessionCategoryTimeSpentInSeconds = item.DailyAffirmationSessionCategoryTimeSpentInSeconds,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DailyAffirmationSessionCategory NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DailyAffirmationText")]
+    [Serializable]
+    public partial class DailyAffirmationText : IAuditableModel, INewObject<DailyAffirmationText>
+    {
+        public const string TABLE_NAME = "DailyAffirmationText";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DailyAffirmationTextId = "DailyAffirmationTextId";
+        public const string COLUMN_DailyAffirmationTextValue = "DailyAffirmationTextValue";
+        public const string COLUMN_CategoryId = "CategoryId";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_DailyAffirmationTextValue = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DailyAffirmationTextId = false;
+        public const bool COLUMN_NULLABLE_DailyAffirmationTextValue = false;
+        public const bool COLUMN_NULLABLE_CategoryId = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DailyAffirmationTextId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DailyAffirmationTextId { get; set; }
+        
+        [Column("DailyAffirmationTextValue")]
+        [NotNull]
+        [StringLength(255)]
+        public string DailyAffirmationTextValue { get; set; }
+        
+        [Column("CategoryId")]
+        [NotNull]
+        public long CategoryId { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DailyAffirmationTextId = {DailyAffirmationTextId} , ");
+            sb.AppendLine($"DailyAffirmationTextValue = {DailyAffirmationTextValue} , ");
+            sb.AppendLine($"CategoryId = {CategoryId} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DailyAffirmationText New(DailyAffirmationText item)
+        {
+            if (item == null)
+                return null;
+
+            return new DailyAffirmationText
+            {
+            DailyAffirmationTextId = item.DailyAffirmationTextId,
+            DailyAffirmationTextValue = item.DailyAffirmationTextValue,
+            CategoryId = item.CategoryId,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DailyAffirmationText NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DefaultCategory")]
+    [Serializable]
+    public partial class DefaultCategory : IAuditableModel, INewObject<DefaultCategory>
+    {
+        public const string TABLE_NAME = "DefaultCategory";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DefaultCategoryId = "DefaultCategoryId";
+        public const string COLUMN_DefaultCategoryName = "DefaultCategoryName";
+        public const string COLUMN_PredefinedCategoryTypeId = "PredefinedCategoryTypeId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_DefaultCategoryName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DefaultCategoryId = false;
+        public const bool COLUMN_NULLABLE_DefaultCategoryName = false;
+        public const bool COLUMN_NULLABLE_PredefinedCategoryTypeId = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DefaultCategoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DefaultCategoryId { get; set; }
+        
+        [Column("DefaultCategoryName")]
+        [NotNull]
+        [StringLength(255)]
+        public string DefaultCategoryName { get; set; }
+        
+        [Column("PredefinedCategoryTypeId")]
+        public long? PredefinedCategoryTypeId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DefaultCategoryId = {DefaultCategoryId} , ");
+            sb.AppendLine($"DefaultCategoryName = {DefaultCategoryName} , ");
+            sb.AppendLine($"PredefinedCategoryTypeId = {PredefinedCategoryTypeId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DefaultCategory New(DefaultCategory item)
+        {
+            if (item == null)
+                return null;
+
+            return new DefaultCategory
+            {
+            DefaultCategoryId = item.DefaultCategoryId,
+            DefaultCategoryName = item.DefaultCategoryName,
+            PredefinedCategoryTypeId = item.PredefinedCategoryTypeId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DefaultCategory NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DefaultDailyAffirmationText")]
+    [Serializable]
+    public partial class DefaultDailyAffirmationText : IAuditableModel, INewObject<DefaultDailyAffirmationText>
+    {
+        public const string TABLE_NAME = "DefaultDailyAffirmationText";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DefaultDailyAffirmationTextId = "DefaultDailyAffirmationTextId";
+        public const string COLUMN_DefaultDailyAffirmationTextName = "DefaultDailyAffirmationTextName";
+        public const string COLUMN_DefaultCategoryId = "DefaultCategoryId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_DefaultDailyAffirmationTextName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DefaultDailyAffirmationTextId = false;
+        public const bool COLUMN_NULLABLE_DefaultDailyAffirmationTextName = false;
+        public const bool COLUMN_NULLABLE_DefaultCategoryId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DefaultDailyAffirmationTextId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DefaultDailyAffirmationTextId { get; set; }
+        
+        [Column("DefaultDailyAffirmationTextName")]
+        [NotNull]
+        [StringLength(255)]
+        public string DefaultDailyAffirmationTextName { get; set; }
+        
+        [Column("DefaultCategoryId")]
+        [NotNull]
+        public long DefaultCategoryId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DefaultDailyAffirmationTextId = {DefaultDailyAffirmationTextId} , ");
+            sb.AppendLine($"DefaultDailyAffirmationTextName = {DefaultDailyAffirmationTextName} , ");
+            sb.AppendLine($"DefaultCategoryId = {DefaultCategoryId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DefaultDailyAffirmationText New(DefaultDailyAffirmationText item)
+        {
+            if (item == null)
+                return null;
+
+            return new DefaultDailyAffirmationText
+            {
+            DefaultDailyAffirmationTextId = item.DefaultDailyAffirmationTextId,
+            DefaultDailyAffirmationTextName = item.DefaultDailyAffirmationTextName,
+            DefaultCategoryId = item.DefaultCategoryId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DefaultDailyAffirmationText NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DefaultGoalTracker")]
+    [Serializable]
+    public partial class DefaultGoalTracker : IAuditableModel, INewObject<DefaultGoalTracker>
+    {
+        public const string TABLE_NAME = "DefaultGoalTracker";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DefaultGoalTrackerId = "DefaultGoalTrackerId";
+        public const string COLUMN_DefaultGoalTrackerText = "DefaultGoalTrackerText";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_DefaultGoalTrackerText = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DefaultGoalTrackerId = false;
+        public const bool COLUMN_NULLABLE_DefaultGoalTrackerText = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DefaultGoalTrackerId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DefaultGoalTrackerId { get; set; }
+        
+        [Column("DefaultGoalTrackerText")]
+        [NotNull]
+        [StringLength(255)]
+        public string DefaultGoalTrackerText { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DefaultGoalTrackerId = {DefaultGoalTrackerId} , ");
+            sb.AppendLine($"DefaultGoalTrackerText = {DefaultGoalTrackerText} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DefaultGoalTracker New(DefaultGoalTracker item)
+        {
+            if (item == null)
+                return null;
+
+            return new DefaultGoalTracker
+            {
+            DefaultGoalTrackerId = item.DefaultGoalTrackerId,
+            DefaultGoalTrackerText = item.DefaultGoalTrackerText,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DefaultGoalTracker NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DefaultGoalTrackerCategory")]
+    [Serializable]
+    public partial class DefaultGoalTrackerCategory : IAuditableModel, INewObject<DefaultGoalTrackerCategory>
+    {
+        public const string TABLE_NAME = "DefaultGoalTrackerCategory";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DefaultGoalTrackerCategoryId = "DefaultGoalTrackerCategoryId";
+        public const string COLUMN_DefaultCategoryId = "DefaultCategoryId";
+        public const string COLUMN_DefaultGoalTrackerId = "DefaultGoalTrackerId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DefaultGoalTrackerCategoryId = false;
+        public const bool COLUMN_NULLABLE_DefaultCategoryId = false;
+        public const bool COLUMN_NULLABLE_DefaultGoalTrackerId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DefaultGoalTrackerCategoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DefaultGoalTrackerCategoryId { get; set; }
+        
+        [Column("DefaultCategoryId")]
+        [NotNull]
+        public long DefaultCategoryId { get; set; }
+        
+        [Column("DefaultGoalTrackerId")]
+        [NotNull]
+        public long DefaultGoalTrackerId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DefaultGoalTrackerCategoryId = {DefaultGoalTrackerCategoryId} , ");
+            sb.AppendLine($"DefaultCategoryId = {DefaultCategoryId} , ");
+            sb.AppendLine($"DefaultGoalTrackerId = {DefaultGoalTrackerId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DefaultGoalTrackerCategory New(DefaultGoalTrackerCategory item)
+        {
+            if (item == null)
+                return null;
+
+            return new DefaultGoalTrackerCategory
+            {
+            DefaultGoalTrackerCategoryId = item.DefaultGoalTrackerCategoryId,
+            DefaultCategoryId = item.DefaultCategoryId,
+            DefaultGoalTrackerId = item.DefaultGoalTrackerId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DefaultGoalTrackerCategory NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DefaultMeditationFile")]
+    [Serializable]
+    public partial class DefaultMeditationFile : IAuditableModel, INewObject<DefaultMeditationFile>
+    {
+        public const string TABLE_NAME = "DefaultMeditationFile";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DefaultMeditationFileId = "DefaultMeditationFileId";
+        public const string COLUMN_DefaultMeditationFileName = "DefaultMeditationFileName";
+        public const string COLUMN_PredefinedMeditationTypeId = "PredefinedMeditationTypeId";
+        public const string COLUMN_Location = "Location";
+        public const string COLUMN_FileName = "FileName";
+        public const string COLUMN_FileSize = "FileSize";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_DefaultMeditationFileName = 255;
+        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_FileName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DefaultMeditationFileId = false;
+        public const bool COLUMN_NULLABLE_DefaultMeditationFileName = false;
+        public const bool COLUMN_NULLABLE_PredefinedMeditationTypeId = false;
+        public const bool COLUMN_NULLABLE_Location = true;
+        public const bool COLUMN_NULLABLE_FileName = false;
+        public const bool COLUMN_NULLABLE_FileSize = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DefaultMeditationFileId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DefaultMeditationFileId { get; set; }
+        
+        [Column("DefaultMeditationFileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string DefaultMeditationFileName { get; set; }
+        
+        [Column("PredefinedMeditationTypeId")]
+        [NotNull]
+        public long PredefinedMeditationTypeId { get; set; }
+        
+        [Column("Location")]
+        [StringLength(255)]
+        public string Location { get; set; }
+        
+        [Column("FileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string FileName { get; set; }
+        
+        [Column("FileSize")]
+        [NotNull]
+        public long FileSize { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DefaultMeditationFileId = {DefaultMeditationFileId} , ");
+            sb.AppendLine($"DefaultMeditationFileName = {DefaultMeditationFileName} , ");
+            sb.AppendLine($"PredefinedMeditationTypeId = {PredefinedMeditationTypeId} , ");
+            sb.AppendLine($"Location = {Location} , ");
+            sb.AppendLine($"FileName = {FileName} , ");
+            sb.AppendLine($"FileSize = {FileSize} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DefaultMeditationFile New(DefaultMeditationFile item)
+        {
+            if (item == null)
+                return null;
+
+            return new DefaultMeditationFile
+            {
+            DefaultMeditationFileId = item.DefaultMeditationFileId,
+            DefaultMeditationFileName = item.DefaultMeditationFileName,
+            PredefinedMeditationTypeId = item.PredefinedMeditationTypeId,
+            Location = item.Location,
+            FileName = item.FileName,
+            FileSize = item.FileSize,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DefaultMeditationFile NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
     [Table("DefaultUserTypePermission")]
     [Serializable]
     public partial class DefaultUserTypePermission : IAuditableModel, INewObject<DefaultUserTypePermission>
@@ -1417,6 +2433,120 @@ namespace Manifest.Common.Models.DB
         }
 
         public DefaultUserTypePermission NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("DefaultVisionBoardPicture")]
+    [Serializable]
+    public partial class DefaultVisionBoardPicture : IAuditableModel, INewObject<DefaultVisionBoardPicture>
+    {
+        public const string TABLE_NAME = "DefaultVisionBoardPicture";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DefaultVisionBoardPictureId = "DefaultVisionBoardPictureId";
+        public const string COLUMN_Location = "Location";
+        public const string COLUMN_FileName = "FileName";
+        public const string COLUMN_FileSize = "FileSize";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_FileName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DefaultVisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_Location = true;
+        public const bool COLUMN_NULLABLE_FileName = false;
+        public const bool COLUMN_NULLABLE_FileSize = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DefaultVisionBoardPictureId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DefaultVisionBoardPictureId { get; set; }
+        
+        [Column("Location")]
+        [StringLength(255)]
+        public string Location { get; set; }
+        
+        [Column("FileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string FileName { get; set; }
+        
+        [Column("FileSize")]
+        [NotNull]
+        public long FileSize { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DefaultVisionBoardPictureId = {DefaultVisionBoardPictureId} , ");
+            sb.AppendLine($"Location = {Location} , ");
+            sb.AppendLine($"FileName = {FileName} , ");
+            sb.AppendLine($"FileSize = {FileSize} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DefaultVisionBoardPicture New(DefaultVisionBoardPicture item)
+        {
+            if (item == null)
+                return null;
+
+            return new DefaultVisionBoardPicture
+            {
+            DefaultVisionBoardPictureId = item.DefaultVisionBoardPictureId,
+            Location = item.Location,
+            FileName = item.FileName,
+            FileSize = item.FileSize,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DefaultVisionBoardPicture NewFromObject()
         {
             return New(this);
         }
@@ -1634,6 +2764,269 @@ namespace Manifest.Common.Models.DB
         }
 
         public EnumType NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("Feed")]
+    [Serializable]
+    public partial class Feed : IAuditableModel, INewObject<Feed>
+    {
+        public const string TABLE_NAME = "Feed";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_FeedId = "FeedId";
+        public const string COLUMN_FeedGuid = "FeedGuid";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_DailyAffirmationSessionId = "DailyAffirmationSessionId";
+        public const string COLUMN_DailyAffirmationSessionDate = "DailyAffirmationSessionDate";
+        public const string COLUMN_DailyAffirmationTimeSpentInSeconds = "DailyAffirmationTimeSpentInSeconds";
+        public const string COLUMN_VisionBoardSessionId = "VisionBoardSessionId";
+        public const string COLUMN_VisionBoardSessionDate = "VisionBoardSessionDate";
+        public const string COLUMN_VisionBoardSessionTimeSpentInSeconds = "VisionBoardSessionTimeSpentInSeconds";
+        public const string COLUMN_MeditationSessionId = "MeditationSessionId";
+        public const string COLUMN_MeditationSessionDate = "MeditationSessionDate";
+        public const string COLUMN_MeditationSessionTimeSpentInSeconds = "MeditationSessionTimeSpentInSeconds";
+        public const string COLUMN_MeditationFileName = "MeditationFileName";
+        public const string COLUMN_PredefinedMeditationTypeId = "PredefinedMeditationTypeId";
+        public const string COLUMN_GoalTrackerId = "GoalTrackerId";
+        public const string COLUMN_GoalTrackerName = "GoalTrackerName";
+        public const string COLUMN_PredefinedGoalStatusTypeId = "PredefinedGoalStatusTypeId";
+        public const string COLUMN_GoalTrackerStartDate = "GoalTrackerStartDate";
+        public const string COLUMN_GoalTrackerEndDate = "GoalTrackerEndDate";
+        public const string COLUMN_GoalTrackerCompletedDate = "GoalTrackerCompletedDate";
+        public const string COLUMN_GoalTrackerMileStoneId = "GoalTrackerMileStoneId";
+        public const string COLUMN_GoalTrackerMileStoneName = "GoalTrackerMileStoneName";
+        public const string COLUMN_GoalTrackerMileStoneStartDate = "GoalTrackerMileStoneStartDate";
+        public const string COLUMN_GoalTrackerMileStoneEndDate = "GoalTrackerMileStoneEndDate";
+        public const string COLUMN_GoalTrackerMileStoneCompletedDate = "GoalTrackerMileStoneCompletedDate";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_MeditationFileName = 255;
+        public const int COLUMN_SIZE_GoalTrackerName = 255;
+        public const int COLUMN_SIZE_GoalTrackerMileStoneName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_FeedId = false;
+        public const bool COLUMN_NULLABLE_FeedGuid = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionId = true;
+        public const bool COLUMN_NULLABLE_DailyAffirmationSessionDate = true;
+        public const bool COLUMN_NULLABLE_DailyAffirmationTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionId = true;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionDate = true;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_MeditationSessionId = true;
+        public const bool COLUMN_NULLABLE_MeditationSessionDate = true;
+        public const bool COLUMN_NULLABLE_MeditationSessionTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_MeditationFileName = true;
+        public const bool COLUMN_NULLABLE_PredefinedMeditationTypeId = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerId = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerName = true;
+        public const bool COLUMN_NULLABLE_PredefinedGoalStatusTypeId = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerStartDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerEndDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerCompletedDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneId = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneName = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneStartDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneEndDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneCompletedDate = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("FeedId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long FeedId { get; set; }
+        
+        [Column("FeedGuid")]
+        [NotNull]
+        public System.Guid FeedGuid { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("DailyAffirmationSessionId")]
+        public long? DailyAffirmationSessionId { get; set; }
+        
+        [Column("DailyAffirmationSessionDate")]
+        public DateTime? DailyAffirmationSessionDate { get; set; }
+        
+        [Column("DailyAffirmationTimeSpentInSeconds")]
+        public long? DailyAffirmationTimeSpentInSeconds { get; set; }
+        
+        [Column("VisionBoardSessionId")]
+        public long? VisionBoardSessionId { get; set; }
+        
+        [Column("VisionBoardSessionDate")]
+        public DateTime? VisionBoardSessionDate { get; set; }
+        
+        [Column("VisionBoardSessionTimeSpentInSeconds")]
+        public long? VisionBoardSessionTimeSpentInSeconds { get; set; }
+        
+        [Column("MeditationSessionId")]
+        public long? MeditationSessionId { get; set; }
+        
+        [Column("MeditationSessionDate")]
+        public DateTime? MeditationSessionDate { get; set; }
+        
+        [Column("MeditationSessionTimeSpentInSeconds")]
+        public long? MeditationSessionTimeSpentInSeconds { get; set; }
+        
+        [Column("MeditationFileName")]
+        [StringLength(255)]
+        public string MeditationFileName { get; set; }
+        
+        [Column("PredefinedMeditationTypeId")]
+        public long? PredefinedMeditationTypeId { get; set; }
+        
+        [Column("GoalTrackerId")]
+        public long? GoalTrackerId { get; set; }
+        
+        [Column("GoalTrackerName")]
+        [StringLength(255)]
+        public string GoalTrackerName { get; set; }
+        
+        [Column("PredefinedGoalStatusTypeId")]
+        public long? PredefinedGoalStatusTypeId { get; set; }
+        
+        [Column("GoalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate { get; set; }
+        
+        [Column("GoalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate { get; set; }
+        
+        [Column("GoalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate { get; set; }
+        
+        [Column("GoalTrackerMileStoneId")]
+        public long? GoalTrackerMileStoneId { get; set; }
+        
+        [Column("GoalTrackerMileStoneName")]
+        [StringLength(255)]
+        public string GoalTrackerMileStoneName { get; set; }
+        
+        [Column("GoalTrackerMileStoneStartDate")]
+        public DateTime? GoalTrackerMileStoneStartDate { get; set; }
+        
+        [Column("GoalTrackerMileStoneEndDate")]
+        public DateTime? GoalTrackerMileStoneEndDate { get; set; }
+        
+        [Column("GoalTrackerMileStoneCompletedDate")]
+        public DateTime? GoalTrackerMileStoneCompletedDate { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"FeedId = {FeedId} , ");
+            sb.AppendLine($"FeedGuid = {FeedGuid} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"DailyAffirmationSessionId = {DailyAffirmationSessionId} , ");
+            sb.AppendLine($"DailyAffirmationSessionDate = {DailyAffirmationSessionDate} , ");
+            sb.AppendLine($"DailyAffirmationTimeSpentInSeconds = {DailyAffirmationTimeSpentInSeconds} , ");
+            sb.AppendLine($"VisionBoardSessionId = {VisionBoardSessionId} , ");
+            sb.AppendLine($"VisionBoardSessionDate = {VisionBoardSessionDate} , ");
+            sb.AppendLine($"VisionBoardSessionTimeSpentInSeconds = {VisionBoardSessionTimeSpentInSeconds} , ");
+            sb.AppendLine($"MeditationSessionId = {MeditationSessionId} , ");
+            sb.AppendLine($"MeditationSessionDate = {MeditationSessionDate} , ");
+            sb.AppendLine($"MeditationSessionTimeSpentInSeconds = {MeditationSessionTimeSpentInSeconds} , ");
+            sb.AppendLine($"MeditationFileName = {MeditationFileName} , ");
+            sb.AppendLine($"PredefinedMeditationTypeId = {PredefinedMeditationTypeId} , ");
+            sb.AppendLine($"GoalTrackerId = {GoalTrackerId} , ");
+            sb.AppendLine($"GoalTrackerName = {GoalTrackerName} , ");
+            sb.AppendLine($"PredefinedGoalStatusTypeId = {PredefinedGoalStatusTypeId} , ");
+            sb.AppendLine($"GoalTrackerStartDate = {GoalTrackerStartDate} , ");
+            sb.AppendLine($"GoalTrackerEndDate = {GoalTrackerEndDate} , ");
+            sb.AppendLine($"GoalTrackerCompletedDate = {GoalTrackerCompletedDate} , ");
+            sb.AppendLine($"GoalTrackerMileStoneId = {GoalTrackerMileStoneId} , ");
+            sb.AppendLine($"GoalTrackerMileStoneName = {GoalTrackerMileStoneName} , ");
+            sb.AppendLine($"GoalTrackerMileStoneStartDate = {GoalTrackerMileStoneStartDate} , ");
+            sb.AppendLine($"GoalTrackerMileStoneEndDate = {GoalTrackerMileStoneEndDate} , ");
+            sb.AppendLine($"GoalTrackerMileStoneCompletedDate = {GoalTrackerMileStoneCompletedDate} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public Feed New(Feed item)
+        {
+            if (item == null)
+                return null;
+
+            return new Feed
+            {
+            FeedId = item.FeedId,
+            FeedGuid = item.FeedGuid,
+            UserId = item.UserId,
+            DailyAffirmationSessionId = item.DailyAffirmationSessionId,
+            DailyAffirmationSessionDate = item.DailyAffirmationSessionDate,
+            DailyAffirmationTimeSpentInSeconds = item.DailyAffirmationTimeSpentInSeconds,
+            VisionBoardSessionId = item.VisionBoardSessionId,
+            VisionBoardSessionDate = item.VisionBoardSessionDate,
+            VisionBoardSessionTimeSpentInSeconds = item.VisionBoardSessionTimeSpentInSeconds,
+            MeditationSessionId = item.MeditationSessionId,
+            MeditationSessionDate = item.MeditationSessionDate,
+            MeditationSessionTimeSpentInSeconds = item.MeditationSessionTimeSpentInSeconds,
+            MeditationFileName = item.MeditationFileName,
+            PredefinedMeditationTypeId = item.PredefinedMeditationTypeId,
+            GoalTrackerId = item.GoalTrackerId,
+            GoalTrackerName = item.GoalTrackerName,
+            PredefinedGoalStatusTypeId = item.PredefinedGoalStatusTypeId,
+            GoalTrackerStartDate = item.GoalTrackerStartDate,
+            GoalTrackerEndDate = item.GoalTrackerEndDate,
+            GoalTrackerCompletedDate = item.GoalTrackerCompletedDate,
+            GoalTrackerMileStoneId = item.GoalTrackerMileStoneId,
+            GoalTrackerMileStoneName = item.GoalTrackerMileStoneName,
+            GoalTrackerMileStoneStartDate = item.GoalTrackerMileStoneStartDate,
+            GoalTrackerMileStoneEndDate = item.GoalTrackerMileStoneEndDate,
+            GoalTrackerMileStoneCompletedDate = item.GoalTrackerMileStoneCompletedDate,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public Feed NewFromObject()
         {
             return New(this);
         }
@@ -1911,6 +3304,410 @@ namespace Manifest.Common.Models.DB
         }
 
         public FileAttachmentFolder NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("GoalTracker")]
+    [Serializable]
+    public partial class GoalTracker : IAuditableModel, INewObject<GoalTracker>
+    {
+        public const string TABLE_NAME = "GoalTracker";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_GoalTrackerId = "GoalTrackerId";
+        public const string COLUMN_GoalTrackerName = "GoalTrackerName";
+        public const string COLUMN_PredefinedGoalStatusTypeId = "PredefinedGoalStatusTypeId";
+        public const string COLUMN_GoalTrackerStartDate = "GoalTrackerStartDate";
+        public const string COLUMN_GoalTrackerEndDate = "GoalTrackerEndDate";
+        public const string COLUMN_GoalTrackerCompletedDate = "GoalTrackerCompletedDate";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_AddedToFeed = "AddedToFeed";
+        public const string COLUMN_AddedToFeedDate = "AddedToFeedDate";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_GoalTrackerName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_GoalTrackerId = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerName = false;
+        public const bool COLUMN_NULLABLE_PredefinedGoalStatusTypeId = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerStartDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerEndDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerCompletedDate = true;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_AddedToFeed = true;
+        public const bool COLUMN_NULLABLE_AddedToFeedDate = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("GoalTrackerId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long GoalTrackerId { get; set; }
+        
+        [Column("GoalTrackerName")]
+        [NotNull]
+        [StringLength(255)]
+        public string GoalTrackerName { get; set; }
+        
+        [Column("PredefinedGoalStatusTypeId")]
+        [NotNull]
+        public long PredefinedGoalStatusTypeId { get; set; }
+        
+        [Column("GoalTrackerStartDate")]
+        public DateTime? GoalTrackerStartDate { get; set; }
+        
+        [Column("GoalTrackerEndDate")]
+        public DateTime? GoalTrackerEndDate { get; set; }
+        
+        [Column("GoalTrackerCompletedDate")]
+        public DateTime? GoalTrackerCompletedDate { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("AddedToFeed")]
+        public bool? AddedToFeed { get; set; }
+        
+        [Column("AddedToFeedDate")]
+        public DateTime? AddedToFeedDate { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"GoalTrackerId = {GoalTrackerId} , ");
+            sb.AppendLine($"GoalTrackerName = {GoalTrackerName} , ");
+            sb.AppendLine($"PredefinedGoalStatusTypeId = {PredefinedGoalStatusTypeId} , ");
+            sb.AppendLine($"GoalTrackerStartDate = {GoalTrackerStartDate} , ");
+            sb.AppendLine($"GoalTrackerEndDate = {GoalTrackerEndDate} , ");
+            sb.AppendLine($"GoalTrackerCompletedDate = {GoalTrackerCompletedDate} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"AddedToFeed = {AddedToFeed} , ");
+            sb.AppendLine($"AddedToFeedDate = {AddedToFeedDate} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public GoalTracker New(GoalTracker item)
+        {
+            if (item == null)
+                return null;
+
+            return new GoalTracker
+            {
+            GoalTrackerId = item.GoalTrackerId,
+            GoalTrackerName = item.GoalTrackerName,
+            PredefinedGoalStatusTypeId = item.PredefinedGoalStatusTypeId,
+            GoalTrackerStartDate = item.GoalTrackerStartDate,
+            GoalTrackerEndDate = item.GoalTrackerEndDate,
+            GoalTrackerCompletedDate = item.GoalTrackerCompletedDate,
+            UserId = item.UserId,
+            AddedToFeed = item.AddedToFeed,
+            AddedToFeedDate = item.AddedToFeedDate,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public GoalTracker NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("GoalTrackerCategory")]
+    [Serializable]
+    public partial class GoalTrackerCategory : IAuditableModel, INewObject<GoalTrackerCategory>
+    {
+        public const string TABLE_NAME = "GoalTrackerCategory";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_GoalTrackerCategoryId = "GoalTrackerCategoryId";
+        public const string COLUMN_CategoryId = "CategoryId";
+        public const string COLUMN_GoalTrackerId = "GoalTrackerId";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_GoalTrackerCategoryId = false;
+        public const bool COLUMN_NULLABLE_CategoryId = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerId = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("GoalTrackerCategoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long GoalTrackerCategoryId { get; set; }
+        
+        [Column("CategoryId")]
+        [NotNull]
+        public long CategoryId { get; set; }
+        
+        [Column("GoalTrackerId")]
+        [NotNull]
+        public long GoalTrackerId { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"GoalTrackerCategoryId = {GoalTrackerCategoryId} , ");
+            sb.AppendLine($"CategoryId = {CategoryId} , ");
+            sb.AppendLine($"GoalTrackerId = {GoalTrackerId} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public GoalTrackerCategory New(GoalTrackerCategory item)
+        {
+            if (item == null)
+                return null;
+
+            return new GoalTrackerCategory
+            {
+            GoalTrackerCategoryId = item.GoalTrackerCategoryId,
+            CategoryId = item.CategoryId,
+            GoalTrackerId = item.GoalTrackerId,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public GoalTrackerCategory NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("GoalTrackerMileStone")]
+    [Serializable]
+    public partial class GoalTrackerMileStone : IAuditableModel, INewObject<GoalTrackerMileStone>
+    {
+        public const string TABLE_NAME = "GoalTrackerMileStone";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_GoalTrackerMileStoneId = "GoalTrackerMileStoneId";
+        public const string COLUMN_GoalTrackerId = "GoalTrackerId";
+        public const string COLUMN_GoalTrackerMileStoneName = "GoalTrackerMileStoneName";
+        public const string COLUMN_GoalTrackerMileStoneStartDate = "GoalTrackerMileStoneStartDate";
+        public const string COLUMN_GoalTrackerMileStoneEndDate = "GoalTrackerMileStoneEndDate";
+        public const string COLUMN_PredefinedGoalStatusTypeId = "PredefinedGoalStatusTypeId";
+        public const string COLUMN_GoalTrackerMileStoneCompletedDate = "GoalTrackerMileStoneCompletedDate";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_GoalTrackerMileStoneName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneId = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerId = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneName = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneStartDate = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneEndDate = false;
+        public const bool COLUMN_NULLABLE_PredefinedGoalStatusTypeId = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneCompletedDate = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("GoalTrackerMileStoneId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long GoalTrackerMileStoneId { get; set; }
+        
+        [Column("GoalTrackerId")]
+        [NotNull]
+        public long GoalTrackerId { get; set; }
+        
+        [Column("GoalTrackerMileStoneName")]
+        [NotNull]
+        [StringLength(255)]
+        public string GoalTrackerMileStoneName { get; set; }
+        
+        [Column("GoalTrackerMileStoneStartDate")]
+        [NotNull]
+        public DateTime GoalTrackerMileStoneStartDate { get; set; }
+        
+        [Column("GoalTrackerMileStoneEndDate")]
+        [NotNull]
+        public DateTime GoalTrackerMileStoneEndDate { get; set; }
+        
+        [Column("PredefinedGoalStatusTypeId")]
+        [NotNull]
+        public long PredefinedGoalStatusTypeId { get; set; }
+        
+        [Column("GoalTrackerMileStoneCompletedDate")]
+        [NotNull]
+        public DateTime GoalTrackerMileStoneCompletedDate { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"GoalTrackerMileStoneId = {GoalTrackerMileStoneId} , ");
+            sb.AppendLine($"GoalTrackerId = {GoalTrackerId} , ");
+            sb.AppendLine($"GoalTrackerMileStoneName = {GoalTrackerMileStoneName} , ");
+            sb.AppendLine($"GoalTrackerMileStoneStartDate = {GoalTrackerMileStoneStartDate} , ");
+            sb.AppendLine($"GoalTrackerMileStoneEndDate = {GoalTrackerMileStoneEndDate} , ");
+            sb.AppendLine($"PredefinedGoalStatusTypeId = {PredefinedGoalStatusTypeId} , ");
+            sb.AppendLine($"GoalTrackerMileStoneCompletedDate = {GoalTrackerMileStoneCompletedDate} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public GoalTrackerMileStone New(GoalTrackerMileStone item)
+        {
+            if (item == null)
+                return null;
+
+            return new GoalTrackerMileStone
+            {
+            GoalTrackerMileStoneId = item.GoalTrackerMileStoneId,
+            GoalTrackerId = item.GoalTrackerId,
+            GoalTrackerMileStoneName = item.GoalTrackerMileStoneName,
+            GoalTrackerMileStoneStartDate = item.GoalTrackerMileStoneStartDate,
+            GoalTrackerMileStoneEndDate = item.GoalTrackerMileStoneEndDate,
+            PredefinedGoalStatusTypeId = item.PredefinedGoalStatusTypeId,
+            GoalTrackerMileStoneCompletedDate = item.GoalTrackerMileStoneCompletedDate,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public GoalTrackerMileStone NewFromObject()
         {
             return New(this);
         }
@@ -3293,6 +5090,278 @@ namespace Manifest.Common.Models.DB
         }
 
         public MailServer NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("MeditationFile")]
+    [Serializable]
+    public partial class MeditationFile : IAuditableModel, INewObject<MeditationFile>
+    {
+        public const string TABLE_NAME = "MeditationFile";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_MeditationFileId = "MeditationFileId";
+        public const string COLUMN_PredefinedMeditationTypeId = "PredefinedMeditationTypeId";
+        public const string COLUMN_MeditationFileName = "MeditationFileName";
+        public const string COLUMN_Location = "Location";
+        public const string COLUMN_FileName = "FileName";
+        public const string COLUMN_FileSize = "FileSize";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_MeditationFileName = 255;
+        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_FileName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_MeditationFileId = false;
+        public const bool COLUMN_NULLABLE_PredefinedMeditationTypeId = false;
+        public const bool COLUMN_NULLABLE_MeditationFileName = false;
+        public const bool COLUMN_NULLABLE_Location = true;
+        public const bool COLUMN_NULLABLE_FileName = false;
+        public const bool COLUMN_NULLABLE_FileSize = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("MeditationFileId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long MeditationFileId { get; set; }
+        
+        [Column("PredefinedMeditationTypeId")]
+        [NotNull]
+        public long PredefinedMeditationTypeId { get; set; }
+        
+        [Column("MeditationFileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string MeditationFileName { get; set; }
+        
+        [Column("Location")]
+        [StringLength(255)]
+        public string Location { get; set; }
+        
+        [Column("FileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string FileName { get; set; }
+        
+        [Column("FileSize")]
+        [NotNull]
+        public long FileSize { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"MeditationFileId = {MeditationFileId} , ");
+            sb.AppendLine($"PredefinedMeditationTypeId = {PredefinedMeditationTypeId} , ");
+            sb.AppendLine($"MeditationFileName = {MeditationFileName} , ");
+            sb.AppendLine($"Location = {Location} , ");
+            sb.AppendLine($"FileName = {FileName} , ");
+            sb.AppendLine($"FileSize = {FileSize} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public MeditationFile New(MeditationFile item)
+        {
+            if (item == null)
+                return null;
+
+            return new MeditationFile
+            {
+            MeditationFileId = item.MeditationFileId,
+            PredefinedMeditationTypeId = item.PredefinedMeditationTypeId,
+            MeditationFileName = item.MeditationFileName,
+            Location = item.Location,
+            FileName = item.FileName,
+            FileSize = item.FileSize,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public MeditationFile NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("MeditationSession")]
+    [Serializable]
+    public partial class MeditationSession : IAuditableModel, INewObject<MeditationSession>
+    {
+        public const string TABLE_NAME = "MeditationSession";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_MeditationSessionId = "MeditationSessionId";
+        public const string COLUMN_MeditationSessionDate = "MeditationSessionDate";
+        public const string COLUMN_MeditationSessionTimeSpentInSeconds = "MeditationSessionTimeSpentInSeconds";
+        public const string COLUMN_MeditationFileId = "MeditationFileId";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_AddedToFeed = "AddedToFeed";
+        public const string COLUMN_AddedToFeedDate = "AddedToFeedDate";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_MeditationSessionId = false;
+        public const bool COLUMN_NULLABLE_MeditationSessionDate = false;
+        public const bool COLUMN_NULLABLE_MeditationSessionTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_MeditationFileId = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_AddedToFeed = true;
+        public const bool COLUMN_NULLABLE_AddedToFeedDate = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("MeditationSessionId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long MeditationSessionId { get; set; }
+        
+        [Column("MeditationSessionDate")]
+        [NotNull]
+        public DateTime MeditationSessionDate { get; set; }
+        
+        [Column("MeditationSessionTimeSpentInSeconds")]
+        public long? MeditationSessionTimeSpentInSeconds { get; set; }
+        
+        [Column("MeditationFileId")]
+        [NotNull]
+        public long MeditationFileId { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("AddedToFeed")]
+        public bool? AddedToFeed { get; set; }
+        
+        [Column("AddedToFeedDate")]
+        public DateTime? AddedToFeedDate { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"MeditationSessionId = {MeditationSessionId} , ");
+            sb.AppendLine($"MeditationSessionDate = {MeditationSessionDate} , ");
+            sb.AppendLine($"MeditationSessionTimeSpentInSeconds = {MeditationSessionTimeSpentInSeconds} , ");
+            sb.AppendLine($"MeditationFileId = {MeditationFileId} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"AddedToFeed = {AddedToFeed} , ");
+            sb.AppendLine($"AddedToFeedDate = {AddedToFeedDate} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public MeditationSession New(MeditationSession item)
+        {
+            if (item == null)
+                return null;
+
+            return new MeditationSession
+            {
+            MeditationSessionId = item.MeditationSessionId,
+            MeditationSessionDate = item.MeditationSessionDate,
+            MeditationSessionTimeSpentInSeconds = item.MeditationSessionTimeSpentInSeconds,
+            MeditationFileId = item.MeditationFileId,
+            UserId = item.UserId,
+            AddedToFeed = item.AddedToFeed,
+            AddedToFeedDate = item.AddedToFeedDate,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public MeditationSession NewFromObject()
         {
             return New(this);
         }
@@ -6370,6 +8439,378 @@ namespace Manifest.Common.Models.DB
         }
 
         public UserPermission NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("VisionBoardPicture")]
+    [Serializable]
+    public partial class VisionBoardPicture : IAuditableModel, INewObject<VisionBoardPicture>
+    {
+        public const string TABLE_NAME = "VisionBoardPicture";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_VisionBoardPictureId = "VisionBoardPictureId";
+        public const string COLUMN_Location = "Location";
+        public const string COLUMN_FileName = "FileName";
+        public const string COLUMN_FileSize = "FileSize";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_FileName = 255;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_VisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_Location = true;
+        public const bool COLUMN_NULLABLE_FileName = false;
+        public const bool COLUMN_NULLABLE_FileSize = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("VisionBoardPictureId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long VisionBoardPictureId { get; set; }
+        
+        [Column("Location")]
+        [StringLength(255)]
+        public string Location { get; set; }
+        
+        [Column("FileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string FileName { get; set; }
+        
+        [Column("FileSize")]
+        [NotNull]
+        public long FileSize { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"VisionBoardPictureId = {VisionBoardPictureId} , ");
+            sb.AppendLine($"Location = {Location} , ");
+            sb.AppendLine($"FileName = {FileName} , ");
+            sb.AppendLine($"FileSize = {FileSize} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public VisionBoardPicture New(VisionBoardPicture item)
+        {
+            if (item == null)
+                return null;
+
+            return new VisionBoardPicture
+            {
+            VisionBoardPictureId = item.VisionBoardPictureId,
+            Location = item.Location,
+            FileName = item.FileName,
+            FileSize = item.FileSize,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public VisionBoardPicture NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("VisionBoardSession")]
+    [Serializable]
+    public partial class VisionBoardSession : IAuditableModel, INewObject<VisionBoardSession>
+    {
+        public const string TABLE_NAME = "VisionBoardSession";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_VisionBoardSessionId = "VisionBoardSessionId";
+        public const string COLUMN_VisionBoardSessionDate = "VisionBoardSessionDate";
+        public const string COLUMN_VisionBoardSessionTimeSpentInSeconds = "VisionBoardSessionTimeSpentInSeconds";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_AddedToFeed = "AddedToFeed";
+        public const string COLUMN_AddedToFeedDate = "AddedToFeedDate";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_VisionBoardSessionId = false;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionDate = false;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_AddedToFeed = true;
+        public const bool COLUMN_NULLABLE_AddedToFeedDate = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("VisionBoardSessionId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long VisionBoardSessionId { get; set; }
+        
+        [Column("VisionBoardSessionDate")]
+        [NotNull]
+        public DateTime VisionBoardSessionDate { get; set; }
+        
+        [Column("VisionBoardSessionTimeSpentInSeconds")]
+        public long? VisionBoardSessionTimeSpentInSeconds { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("AddedToFeed")]
+        public bool? AddedToFeed { get; set; }
+        
+        [Column("AddedToFeedDate")]
+        public DateTime? AddedToFeedDate { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"VisionBoardSessionId = {VisionBoardSessionId} , ");
+            sb.AppendLine($"VisionBoardSessionDate = {VisionBoardSessionDate} , ");
+            sb.AppendLine($"VisionBoardSessionTimeSpentInSeconds = {VisionBoardSessionTimeSpentInSeconds} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"AddedToFeed = {AddedToFeed} , ");
+            sb.AppendLine($"AddedToFeedDate = {AddedToFeedDate} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public VisionBoardSession New(VisionBoardSession item)
+        {
+            if (item == null)
+                return null;
+
+            return new VisionBoardSession
+            {
+            VisionBoardSessionId = item.VisionBoardSessionId,
+            VisionBoardSessionDate = item.VisionBoardSessionDate,
+            VisionBoardSessionTimeSpentInSeconds = item.VisionBoardSessionTimeSpentInSeconds,
+            UserId = item.UserId,
+            AddedToFeed = item.AddedToFeed,
+            AddedToFeedDate = item.AddedToFeedDate,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public VisionBoardSession NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("VisionBoardSessionPicture")]
+    [Serializable]
+    public partial class VisionBoardSessionPicture : IAuditableModel, INewObject<VisionBoardSessionPicture>
+    {
+        public const string TABLE_NAME = "VisionBoardSessionPicture";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_VisionBoardSessionPictureId = "VisionBoardSessionPictureId";
+        public const string COLUMN_VisionBoardSessionId = "VisionBoardSessionId";
+        public const string COLUMN_VisionBoardSessionPictureDate = "VisionBoardSessionPictureDate";
+        public const string COLUMN_VisionBoardPictureId = "VisionBoardPictureId";
+        public const string COLUMN_VisionBoardSessionPictureTimeSpentInSeconds = "VisionBoardSessionPictureTimeSpentInSeconds";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_VisionBoardSessionPictureId = false;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionId = false;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionPictureDate = false;
+        public const bool COLUMN_NULLABLE_VisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_VisionBoardSessionPictureTimeSpentInSeconds = true;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("VisionBoardSessionPictureId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long VisionBoardSessionPictureId { get; set; }
+        
+        [Column("VisionBoardSessionId")]
+        [NotNull]
+        public long VisionBoardSessionId { get; set; }
+        
+        [Column("VisionBoardSessionPictureDate")]
+        [NotNull]
+        public DateTime VisionBoardSessionPictureDate { get; set; }
+        
+        [Column("VisionBoardPictureId")]
+        [NotNull]
+        public long VisionBoardPictureId { get; set; }
+        
+        [Column("VisionBoardSessionPictureTimeSpentInSeconds")]
+        public long? VisionBoardSessionPictureTimeSpentInSeconds { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"VisionBoardSessionPictureId = {VisionBoardSessionPictureId} , ");
+            sb.AppendLine($"VisionBoardSessionId = {VisionBoardSessionId} , ");
+            sb.AppendLine($"VisionBoardSessionPictureDate = {VisionBoardSessionPictureDate} , ");
+            sb.AppendLine($"VisionBoardPictureId = {VisionBoardPictureId} , ");
+            sb.AppendLine($"VisionBoardSessionPictureTimeSpentInSeconds = {VisionBoardSessionPictureTimeSpentInSeconds} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public VisionBoardSessionPicture New(VisionBoardSessionPicture item)
+        {
+            if (item == null)
+                return null;
+
+            return new VisionBoardSessionPicture
+            {
+            VisionBoardSessionPictureId = item.VisionBoardSessionPictureId,
+            VisionBoardSessionId = item.VisionBoardSessionId,
+            VisionBoardSessionPictureDate = item.VisionBoardSessionPictureDate,
+            VisionBoardPictureId = item.VisionBoardPictureId,
+            VisionBoardSessionPictureTimeSpentInSeconds = item.VisionBoardSessionPictureTimeSpentInSeconds,
+            UserId = item.UserId,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public VisionBoardSessionPicture NewFromObject()
         {
             return New(this);
         }

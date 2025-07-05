@@ -38,7 +38,7 @@ namespace Manifest.Api.All.Controllers
     public partial class TwilioController : BaseController
     {
         private readonly TwilioService twilioService;
-        public TwilioController(TwilioService twilioService, CompanyService companyService, MovieService movieService, DummyDataGenerationService dummyDataGenerationService, ILog log)
+        public TwilioController(TwilioService twilioService, CompanyService companyService, ManifestService movieService, DummyDataGenerationService dummyDataGenerationService, ILog log)
             : base(log)
         {
             this.twilioService = twilioService;

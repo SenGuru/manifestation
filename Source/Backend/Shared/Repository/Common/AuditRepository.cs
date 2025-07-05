@@ -27,7 +27,7 @@ namespace Manifest.Repository.Common
             this.currentUser = currentUser;
         }
 
-        public async Task InsertAuditAsync(PredefinedAuditOperationTypes auditOperationType, string objectBeforeUpdate, string objectAfterUpdate, Guid? auditOperationGroupGuid = null, PredefinedResourceTypes? resourceType = null, string resourceName = null, long? resourceId = null, long? userId = null, string userName = null, string ipAddress = null, string description = null, string changeDiff = null, string browserName = null, string operatingSystemName = null, string deviceName = null, long? movieId = null, long? artistId = null, long? equipmentId = null, long? vendorId = null, long? technicianId = null, long? movieSceneId = null, long? budgetDivisionId = null, long? budgetCategoryId = null, long? movieShootDayId = null, long? propertyId = null, long? createdBy = null, long? modifiedBy = null)
+        public async Task InsertAuditAsync(PredefinedAuditOperationTypes auditOperationType, string objectBeforeUpdate, string objectAfterUpdate, Guid? auditOperationGroupGuid = null, PredefinedResourceTypes? resourceType = null, string resourceName = null, long? resourceId = null, long? userId = null, string userName = null, string ipAddress = null, string description = null, string changeDiff = null, string browserName = null, string operatingSystemName = null, string deviceName = null, long? createdBy = null, long? modifiedBy = null)
         {
             var item = new AuditOperation
             {
@@ -41,45 +41,6 @@ namespace Manifest.Repository.Common
                 BrowserName = browserName,
                 OperatingSystemName = operatingSystemName,
                 DeviceName = deviceName,
-
-                /*ApprovalId = ApprovalId,
-                ApprovalCategoryId = ApprovalCategoryId,
-                ApprovalCommentId = ApprovalCommentId,
-                ApprovalPageId = ApprovalPageId,
-                ApprovalPageFieldId = ApprovalPageFieldId,
-                ApprovalUserId = ApprovalUserId,
-                ControlId = ControlId,
-                ControlCategoryId = ControlCategoryId,
-                ControlItemId = ControlItemId,
-                ControlItemCommentId = ControlItemCommentId,
-                ControlItemUserId = ControlItemUserId,
-                ControlPageId = ControlPageId,
-                ControlPageFieldId = ControlPageFieldId,
-                CustomFieldTemplateId = CustomFieldTemplateId,
-                CustomFieldTemplatePageId = CustomFieldTemplatePageId,
-                CustomFieldTemplatePageFieldId = CustomFieldTemplatePageFieldId,
-                ProjectId = ProjectId,
-                ProjectCategoryId = ProjectCategoryId,
-                ProjectUserId = ProjectUserId,
-                ReviewId = ReviewId,
-                ReviewCategoryId = ReviewCategoryId,
-                ReviewPageId = ReviewPageId,
-                ReviewPageFieldId = ReviewPageFieldId,
-                ReviewSessionId = ReviewSessionId,
-                ReviewSessionCommentId = ReviewSessionCommentId,
-                ReviewUserId = ReviewUserId,
-                UserGroupId = UserGroupId,
-                UserGroupUserId = UserGroupUserId,
-                UserPermissionId = UserPermissionId,
-                WorkflowId = WorkflowId,
-                WorkflowSessionId = WorkflowSessionId,
-                WorkflowStageId = WorkflowStageId,
-                WorkflowStageSessionId = WorkflowStageSessionId,
-                WorkflowTemplateId = WorkflowTemplateId,
-                WorkflowTemplateCategoryId = WorkflowTemplateCategoryId,
-                WorkflowTemplateStageId = WorkflowTemplateStageId,
-                PredefinedResourceTypeId = PredefinedResourceTypeId,
-                */
                 ResourceId = resourceId,
                 CreatedDate = DateTime.UtcNow,
                 CreatedByUserId = createdBy,
@@ -97,7 +58,7 @@ namespace Manifest.Repository.Common
             });
         }
 
-        public async Task InsertAuditAsync<T>(PredefinedAuditOperationTypes auditOperationType, T objectBeforeUpdate, T objectAfterUpdate, Guid? auditOperationGroupGuid = null, PredefinedResourceTypes? resourceType = null, string resourceName = null, long? resourceId = null, long? userId = null, string userName = null, string ipAddress = null, string description = null, string changeDiff = null, string browserName = null, string operatingSystemName = null, string deviceName = null, long? movieId = null, long? artistId = null, long? equipmentId = null, long? vendorId = null, long? technicianId = null, long? movieSceneId = null, long? budgetDivisionId = null, long? budgetCategoryId = null, long? movieShootDayId = null, long? propertyId = null, long? createdBy = null, long? modifiedBy = null)
+        public async Task InsertAuditAsync<T>(PredefinedAuditOperationTypes auditOperationType, T objectBeforeUpdate, T objectAfterUpdate, Guid? auditOperationGroupGuid = null, PredefinedResourceTypes? resourceType = null, string resourceName = null, long? resourceId = null, long? userId = null, string userName = null, string ipAddress = null, string description = null, string changeDiff = null, string browserName = null, string operatingSystemName = null, string deviceName = null, long? createdBy = null, long? modifiedBy = null)
             where T : INewObject<T>
         {
             var jsonResultByCompareObjects = "";
