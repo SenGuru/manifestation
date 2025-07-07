@@ -83,12 +83,12 @@ namespace CodeGenerator
         static Dictionary<string, Type> cache = new Dictionary<string, Type>();
         static GenericUIGeneratorProgram()
         {
-            var t = typeof(AstroClass.Common.Constants.ConfigurationConstants);
+            var t = typeof(Manifest.Common.Constants.ConfigurationConstants);
 
             var assembly = t.Assembly;
             foreach (var aClass in assembly.GetTypes())
             {
-                if (!aClass.FullName.StartsWith("AstroClass.Common"))
+                if (!aClass.FullName.StartsWith("Manifest.Common"))
                     continue;
 
                 if (cache.ContainsKey(aClass.Name.Trim().ToLower()))
