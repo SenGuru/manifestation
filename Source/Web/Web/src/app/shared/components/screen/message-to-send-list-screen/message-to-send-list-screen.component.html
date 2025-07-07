@@ -22,12 +22,6 @@
           <input type="text" class="form-control" name="example-text-input" placeholder="Search Text"
             [(ngModel)]="this.searchModel.keyword" />
         </div>
-        <div class="col-md-2">
-          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-        </div>
         <div class="col-md-2 pr-0">
           <ng-select name="selectedPredefinedMessageToSendTypes" bindLabel="type" placeholder="Type"
             [items]="predefinedMessageToSendTypes" [multiple]="true" [clearable]="true"

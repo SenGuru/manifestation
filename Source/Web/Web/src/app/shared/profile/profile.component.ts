@@ -1,4 +1,4 @@
-import { AuditOperationModel, AuditOperationSearchCriteria, ChangePasswordModel, CompanyModel, CompanySearchCriteria, LoggedInUserModel, UserModel, UserPictureWithFileFormModel, UserUpdateWithFileFormModel } from 'src/common/models/app-model';
+import { AuditOperationModel, AuditOperationSearchCriteria, ChangePasswordModel, LoggedInUserModel, UserModel, UserPictureWithFileFormModel, UserUpdateWithFileFormModel } from 'src/common/models/app-model';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { PredefinedAuditOperationTypes, PredefinedUserTypes } from 'src/common/models/app-enums';
 
@@ -58,10 +58,7 @@ export class ProfileComponent implements OnInit {
   public predefinedUserTypes: Status[] = [];
   public selectedPredefinedUserType: Status | undefined;
   public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading: boolean = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
-  public companySearchModel: CompanySearchCriteria = new CompanySearchCriteria();
+  public companyTypeaheadLoading: boolean = false; 
   public auditOperations: AuditOperationModel[] = [];
 
   public constructor(private sessionService: SessionService,
@@ -191,13 +188,7 @@ export class ProfileComponent implements OnInit {
     });
 
     this.userModel.predefinedUserTypeId = this.selectedPredefinedUserType?.id ?? 0;
-    this.userModel.accountLockedUntil = new Date();
-    if (this.isSuperAdmin && (this.layoutTypeId == SidebarLayoutTypes.CompanyList || !this.layoutTypeId)) {
-      this.userModel.companyId = this.selectedCompany?.companyId ?? 0;
-    }
-    else {
-      this.userModel.companyId = this.companyId;
-    }
+    this.userModel.accountLockedUntil = new Date(); 
     if (this.isCreateMode) this.userModel.active = true;
     return this.userModel;
   }

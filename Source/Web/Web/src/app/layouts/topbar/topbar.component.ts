@@ -1,8 +1,8 @@
-import { CompanyModel, CompanySearchCriteria, LoggedInUserModel, UserModel, UserSearchCriteria } from "src/common/models/app-model";
+import {  LoggedInUserModel, UserModel, UserSearchCriteria } from "src/common/models/app-model";
 import { Component, EventEmitter, Inject, Input, OnInit, Output, DOCUMENT } from "@angular/core";
 import { GlobalSearchFeature, GlobalSearchRecordsCount, LightAndDarkModeTypes } from "src/common/models/app-custom-model";
 import { NavigationEnd, Params, Router } from "@angular/router";
-import { PredefinedCompanyTypes, PredefinedUserPermissionTypes, PredefinedUserTypes } from "src/common/models/app-enums";
+import {   PredefinedUserPermissionTypes, PredefinedUserTypes } from "src/common/models/app-enums";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { debounceTime, distinctUntilChanged } from "rxjs";
 
@@ -44,14 +44,11 @@ export class TopbarComponent implements OnInit {
   public layoutTypeId: number | undefined;
   public isSuperAdmin = false;
   public UserPermissionTypes: typeof PredefinedUserPermissionTypes = PredefinedUserPermissionTypes;
-  public searchFromControl = new UntypedFormControl('');
-  public isCompanySearchLoading = true;
-  public companySearchResult: ReturnListModel<CompanyModel> | null = null;
+  public searchFromControl = new UntypedFormControl(''); 
   public isUserSearchLoading = true;
   public userSearchResult: ReturnListModel<UserModel> | null = null;
   public globalSearchRecordsCount: GlobalSearchRecordsCount = new GlobalSearchRecordsCount();
   public userProfilePicture: string | undefined;
-  public companyInfo: CompanyModel | null = null;
 
   // eslint-disable-next-line
   public constructor(
@@ -86,89 +83,30 @@ export class TopbarComponent implements OnInit {
           this.layoutTypeId = RouterUtils.getRouterDataNumber(routerParams['layoutTypeId']) ?? 0;
           if (this.currentUser && this.currentUser?.userTypeId && this.currentUser?.userTypeId == PredefinedUserTypes.SuperAdmin) {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-            this.companyId = RouterUtils.getRouterDataNumber(routerParams['companyId']) ?? 0;
-            this.isSuperAdmin = true;
-            if (this.layoutTypeId !== SidebarLayoutTypes.CompanyList) {
-              this.loadSessionData(this.companyId);
-            }
-          } else {
-            this.companyId = this.currentUser?.companyId ?? 0;
-            this.loadSessionData(this.companyId);
-          }
 
           this.initializeSearch();
           this.enableSearchOptions();
         }
       }
+    }
     });
     this.initialUrl = this.sessionService.getInitialUrl();
     this.getUserPictureUrl(this.currentUser?.userId ?? 0, this.currentUser?.userProfileGuid ?? "", this.currentUser?.token ?? "");
-  }
-
-  public loadSessionData(companyId: number): void {
-    if (ObjectUtils.isNullOrUndefined(companyId) || companyId <= 0) return;
-    const sessionCompany = this.companySessionService.getCurrentCompany();
-    if (sessionCompany && sessionCompany?.companyId === companyId) {
-      this.companyName = sessionCompany?.companyName;
-      this.companyInfo = sessionCompany;
-    } else {
-      this.getCompanyInfo(companyId);
-    }
-  }
-
-  public getCompanyInfo(companyId: number): void {
-    this.httpService.getCompany(companyId).subscribe({
-      next: result => {
-        if (!result.isSuccess) {
-          this.dialogService.errorWithReturnModel("Unable to get Company", result);
-          return;
-        }
-        if (result.model) {
-          this.companyInfo = result.model;
-          this.companySessionService.setCurrentCompany(result.model);
-        }
-      },
-      error: (err: unknown) => this.dialogService.error("Unable to get Company"),
-      complete: () => null,
-    });
-  }
+  } 
 
   public initializeSearch(): void {
     this.searchFromControl.valueChanges.pipe(debounceTime(800), distinctUntilChanged(), untilDestroyed(this)).subscribe({
       next: (keyword: string) => {
         this.globalSearchRecordsCount = new GlobalSearchRecordsCount();
-        this.isCompanySearchLoading = true;
         this.isUserSearchLoading = true;
-        this.companySearchResult = null;
         this.userSearchResult = null;
-
-        const companySearchModel: CompanySearchCriteria = new CompanySearchCriteria();
-        companySearchModel.page = 1;
-        companySearchModel.pageSize = 5;
-        companySearchModel.keyword = keyword;
-        companySearchModel.isActive = null;
 
         const userSearchModel: UserSearchCriteria = new UserSearchCriteria();
         userSearchModel.page = 1;
         userSearchModel.pageSize = 5;
-        if (!ObjectUtils.isNullOrUndefined(this.companyId) && !Number.isNaN(this.companyId)) userSearchModel.companyIds = [this.companyId];
         userSearchModel.keyword = keyword;
         userSearchModel.active = true;
-
-        if (this.enable.includes('company') && this.isSuperAdmin) {
-          this.httpService.getCompanies(companySearchModel, getHeaderWithBlockUI()).subscribe({
-            next: data => {
-              this.isCompanySearchLoading = false;
-              this.companySearchResult = data;
-              this.globalSearchRecordsCount.companyCount = data.totalRecords ?? 0;
-            }, error: (err: unknown) => {
-              this.dialogService.error("Unable to get companies");
-              this.isCompanySearchLoading = false;
-            },
-            complete: () => this.isCompanySearchLoading = false
-          });
-        }
-
+ 
         if (this.enable.includes('user') && this.isSuperAdmin) {
           this.httpService.getUsers(userSearchModel, getHeaderWithBlockUI()).subscribe({
             next: data => {
@@ -278,16 +216,6 @@ export class TopbarComponent implements OnInit {
     }
   }
 
-  public selectCompany(item: CompanyModel): void {
-    this.resetSearch();
-    if (item.predefinedCompanyTypeId === PredefinedCompanyTypes.System) return;
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      if (this.isSuperAdmin) {
-        this.router.navigateByUrl(`${this.initialUrl}/company/${SidebarLayoutTypes.CompanyDetail}/${item.companyId}/company-config`);
-      }
-    });
-  }
-
   public selectUser(item: UserModel): void {
     this.resetSearch();
     const modalRef = this.modalService.open(UserCrudModalComponent, { windowClass: 'my-class', size: 'xl', scrollable: true });
@@ -297,7 +225,6 @@ export class TopbarComponent implements OnInit {
     componentInstance.title = 'Edit User';
     componentInstance.isSuperAdmin = this.isSuperAdmin;
     componentInstance.companyId = this.companyId;
-    componentInstance.companyName = item.companyName;
     componentInstance.layoutTypeId = this.layoutTypeId;
     componentInstance.userModel = JSON.parse(JSON.stringify(item)) as UserModel;
   }

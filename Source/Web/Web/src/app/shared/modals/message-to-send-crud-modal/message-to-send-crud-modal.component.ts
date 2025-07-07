@@ -1,6 +1,6 @@
-import { CompanyModel, CompanySearchCriteria, LoggedInUserModel, MessageToSendCreateModel, MessageToSendModel, RealtimeMessageModel, RealtimeMessageSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { LoggedInUserModel, MessageToSendCreateModel, MessageToSendModel, RealtimeMessageModel, RealtimeMessageSearchCriteria } from 'src/common/models/app-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
@@ -45,10 +45,7 @@ export class MessageToSendCrudModalComponent implements OnInit {
   public realtimeMessageTypeaheadLoading = false;
   public realtimeMessages: RealtimeMessageModel[] = [];
   public selectedRealtimeMessage: RealtimeMessageModel | undefined;
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
 
   public constructor(
     private httpService: HttpService,
@@ -63,7 +60,7 @@ export class MessageToSendCrudModalComponent implements OnInit {
     this.predefinedMessageToSendTypes = this.selectService.GetPredefinedMessageToSendTypes();
     if (!this.isCreateMode) this.selectedPredefinedMessageToSendType = this.predefinedMessageToSendTypes.find(item => item.id === this.messageToSendModel.predefinedMessageToSendTypeId);
     this.getRealtimeMessages();
-    this.getCompanies();
+   
     this.initTypeAheads();
   }
 
@@ -85,25 +82,7 @@ export class MessageToSendCrudModalComponent implements OnInit {
         this.realtimeMessageTypeaheadLoading = false;
       },
       complete: () => null,
-    });
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      if (!this.isCreateMode) companySearchCriteria.selectedId = this.selectedCompany?.companyId;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    }); 
   }
 
   public getRealtimeMessages(): void {
@@ -126,26 +105,6 @@ export class MessageToSendCrudModalComponent implements OnInit {
       complete: () => null,
     });
   }
-  public getCompanies(): void {
-    const searchModel: CompanySearchCriteria = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    if (!this.isCreateMode) searchModel.selectedId = this.selectedCompany?.companyId;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.messageToSendModel.companyId);
-        }
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
 
   public onSubmit(f: NgForm): void {
     if (!f.valid) {
@@ -164,8 +123,6 @@ export class MessageToSendCrudModalComponent implements OnInit {
       return;
     if (this.selectedRealtimeMessage == null)
       return;
-    if (this.selectedCompany == null)
-      return;
     Object.assign(this.messageToSendModel, obj);
     Object.keys(this.messageToSendModel).forEach(key => {
       //@ts-expect-error  --- following line expected to have an error
@@ -177,7 +134,6 @@ export class MessageToSendCrudModalComponent implements OnInit {
 
     this.messageToSendModel.predefinedMessageToSendTypeId = this.selectedPredefinedMessageToSendType?.id ?? 0;
     this.messageToSendModel.realtimeMessageId = this.selectedRealtimeMessage ? this.selectedRealtimeMessage.realtimeMessageId : null;
-    this.messageToSendModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     return this.messageToSendModel;
   }
 

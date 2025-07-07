@@ -1,5 +1,5 @@
 import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, VoiceNotificationServerModel, VoiceNotificationServerSearchCriteria } from 'src/common/models/app-model';
+import { VoiceNotificationServerModel, VoiceNotificationServerSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,18 +20,15 @@ import { getHeaderWithBlockUI } from 'src/common/interceptors/httpconfig.interce
 
 @UntilDestroy()
 @Component({
-    selector: 'app-voice-notification-server-list-screen',
-    templateUrl: './voice-notification-server-list-screen.component.html',
-    standalone: false
+  selector: 'app-voice-notification-server-list-screen',
+  templateUrl: './voice-notification-server-list-screen.component.html',
+  standalone: false
 })
 export class VoiceNotificationServerListScreenComponent extends BaseListComponent<VoiceNotificationServerModel, VoiceNotificationServerSearchCriteria> implements OnInit {
 
   public override searchModel: VoiceNotificationServerSearchCriteria = new VoiceNotificationServerSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+
   public predefinedSmsAndVoiceServerTypes: Status[] = [];
   public selectedPredefinedSmsAndVoiceServerTypes: Status[] = [];
 
@@ -73,7 +70,7 @@ export class VoiceNotificationServerListScreenComponent extends BaseListComponen
     },
   ];
 
- public constructor(
+  public constructor(
     private dialogService: CommonDialogService,
     public sessionService: SessionService,
     private httpService: HttpService,
@@ -87,53 +84,12 @@ export class VoiceNotificationServerListScreenComponent extends BaseListComponen
     this.titleService.pageTitle = "Voice Notification Server";
   }
 
-public ngOnInit(): void {
+  public ngOnInit(): void {
     this.getVoiceNotificationServers(this.searchModel);
-    this.getCompanys();
     this.predefinedSmsAndVoiceServerTypes = this.selectService.GetPredefinedSmsAndVoiceServerTypes();
-    this.initTypeAheads();
   }
 
-public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      companySearchCriteria.isActive = true;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-         if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-public getCompanys(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.isActive = true;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
-public getVoiceNotificationServers(searchModel: VoiceNotificationServerSearchCriteria): void {
+  public getVoiceNotificationServers(searchModel: VoiceNotificationServerSearchCriteria): void {
     this.httpService.getVoiceNotificationServers(searchModel).subscribe({
       next: result => {
         if (!result.isSuccess) {
@@ -150,7 +106,7 @@ public getVoiceNotificationServers(searchModel: VoiceNotificationServerSearchCri
     });
   }
 
-public showAddVoiceNotificationServerModal(): void {
+  public showAddVoiceNotificationServerModal(): void {
     const modalRef = this.modalService.open(VoiceNotificationServerCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
     const componentInstance = modalRef.componentInstance as VoiceNotificationServerCrudModalComponent;
     componentInstance.isCreateMode = true;
@@ -161,7 +117,7 @@ public showAddVoiceNotificationServerModal(): void {
     }
   }
 
-public showViewVoiceNotificationServerModal(item: VoiceNotificationServerModel): void {
+  public showViewVoiceNotificationServerModal(item: VoiceNotificationServerModel): void {
     const modalRef = this.modalService.open(VoiceNotificationServerCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
     const componentInstance = modalRef.componentInstance as VoiceNotificationServerCrudModalComponent;
     componentInstance.isViewMode = true;
@@ -170,7 +126,7 @@ public showViewVoiceNotificationServerModal(item: VoiceNotificationServerModel):
     componentInstance.voiceNotificationServerModel = JSON.parse(JSON.stringify(item)) as VoiceNotificationServerModel;
   }
 
-public showUpdateVoiceNotificationServerModal(item: VoiceNotificationServerModel): void {
+  public showUpdateVoiceNotificationServerModal(item: VoiceNotificationServerModel): void {
     const modalRef = this.modalService.open(VoiceNotificationServerCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
     const componentInstance = modalRef.componentInstance as VoiceNotificationServerCrudModalComponent;
     componentInstance.isEditMode = true;
@@ -182,7 +138,7 @@ public showUpdateVoiceNotificationServerModal(item: VoiceNotificationServerModel
     }
   }
 
-public deleteVoiceNotificationServer(item: VoiceNotificationServerModel): void {
+  public deleteVoiceNotificationServer(item: VoiceNotificationServerModel): void {
     this.dialogService.confirmWithTitle(`Delete Voice Notification Server`, `Do you want to delete the Voice Notification Server - ${item.voiceNotificationServerName}?`).then(res => {
       if (!res) return;
       this.httpService.markVoiceNotificationServerAsDeleted(item.voiceNotificationServerId).subscribe(result => {
@@ -194,30 +150,30 @@ public deleteVoiceNotificationServer(item: VoiceNotificationServerModel): void {
     });
   }
 
-public onSearch(f: NgForm): void {
+  public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+
     const predefinedSmsAndVoiceServerTypesArray = this.selectedPredefinedSmsAndVoiceServerTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedSmsAndVoiceServerTypeIds = predefinedSmsAndVoiceServerTypesArray;
 
     this.getVoiceNotificationServers(this.searchModel);
   }
 
-public onReset(f: NgForm): void {
+  public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+
     this.searchModel.predefinedSmsAndVoiceServerTypeIds = null;
     this.getVoiceNotificationServers(this.searchModel);
   }
 
-public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: AuditDuoColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getVoiceNotificationServers(this.searchModel);
   }
 
-public paginationChange(e: BaseSearchCriteria): void {
+  public paginationChange(e: BaseSearchCriteria): void {
     this.searchModel.page = e.page;
     this.searchModel.pageSize = e.pageSize;
     this.getVoiceNotificationServers(this.searchModel);

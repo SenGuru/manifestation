@@ -1,6 +1,6 @@
 
 import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, MessageToSendModel, MessageToSendSearchCriteria } from 'src/common/models/app-model';
+import { MessageToSendModel, MessageToSendSearchCriteria } from 'src/common/models/app-model';
 import { Component, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -19,17 +19,14 @@ import { getHeaderWithBlockUI } from 'src/common/interceptors/httpconfig.interce
 
 @UntilDestroy()
 @Component({
-    selector: 'app-message-to-send-list-screen',
-    templateUrl: './message-to-send-list-screen.component.html',
-    standalone: false
+  selector: 'app-message-to-send-list-screen',
+  templateUrl: './message-to-send-list-screen.component.html',
+  standalone: false
 })
 export class MessageToSendListScreenComponent extends BaseListComponent<MessageToSendModel, MessageToSendSearchCriteria> implements OnInit {
 
   public override searchModel: MessageToSendSearchCriteria = new MessageToSendSearchCriteria();
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public predefinedMessageToSendTypes: Status[] = [];
   public selectedPredefinedMessageToSendTypes: Status[] = [];
 
@@ -92,7 +89,7 @@ export class MessageToSendListScreenComponent extends BaseListComponent<MessageT
     },
   ];
 
- public constructor(
+  public constructor(
     private dialogService: CommonDialogService,
     public sessionService: SessionService,
     private httpService: HttpService,
@@ -105,52 +102,12 @@ export class MessageToSendListScreenComponent extends BaseListComponent<MessageT
     this.titleService.pageTitle = "Messages To Send";
   }
 
-public ngOnInit(): void {
+  public ngOnInit(): void {
     this.getMessageToSends(this.searchModel);
-    this.getCompanies();
     this.predefinedMessageToSendTypes = this.selectService.GetPredefinedMessageToSendTypes();
-    this.initTypeAheads();
   }
 
-public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-         if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  } 
-
-public getMessageToSends(searchModel: MessageToSendSearchCriteria): void {
+  public getMessageToSends(searchModel: MessageToSendSearchCriteria): void {
     this.httpService.getMessageToSends(searchModel).subscribe({
       next: result => {
         if (!result.isSuccess) {
@@ -162,12 +119,12 @@ public getMessageToSends(searchModel: MessageToSendSearchCriteria): void {
           this.totalItems = result.totalRecords ?? 0;
         }
       },
-      error: (err: unknown)=> this.dialogService.error("Unable to get Message To Send"),
+      error: (err: unknown) => this.dialogService.error("Unable to get Message To Send"),
       complete: () => null,
     });
   }
 
-public showAddMessageToSendModal(): void {
+  public showAddMessageToSendModal(): void {
     const modalRef = this.modalService.open(MessageToSendCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
     const componentInstance = modalRef.componentInstance as MessageToSendCrudModalComponent;
     componentInstance.isCreateMode = true;
@@ -178,7 +135,7 @@ public showAddMessageToSendModal(): void {
     }
   }
 
-public showViewMessageToSendModal(item: MessageToSendModel): void {
+  public showViewMessageToSendModal(item: MessageToSendModel): void {
     const modalRef = this.modalService.open(MessageToSendCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
     const componentInstance = modalRef.componentInstance as MessageToSendCrudModalComponent;
     componentInstance.isViewMode = true;
@@ -187,30 +144,28 @@ public showViewMessageToSendModal(item: MessageToSendModel): void {
     componentInstance.messageToSendModel = JSON.parse(JSON.stringify(item)) as MessageToSendModel;
   }
 
-public onSearch(f: NgForm): void {
+  public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     const predefinedMessageToSendTypesArray = this.selectedPredefinedMessageToSendTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedMessageToSendTypeIds = predefinedMessageToSendTypesArray;
     this.getMessageToSends(this.searchModel);
   }
 
-public onReset(f: NgForm): void {
+  public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
     this.searchModel.predefinedMessageToSendTypeIds = null;
     this.searchModel.realtimeMessageId = null;
     this.getMessageToSends(this.searchModel);
   }
 
-public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: AuditDuoColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getMessageToSends(this.searchModel);
   }
 
-public paginationChange(e: BaseSearchCriteria): void {
+  public paginationChange(e: BaseSearchCriteria): void {
     const messageToSendSearchCriteria = new MessageToSendSearchCriteria();
     messageToSendSearchCriteria.page = e.page;
     messageToSendSearchCriteria.pageSize = e.pageSize;

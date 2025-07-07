@@ -1,4 +1,4 @@
-import { PredefinedApprovalStatusTypes, PredefinedAuditOperationTypes, PredefinedCompanyTypes, PredefinedCurrencyTypes, PredefinedCustomFieldTemplateTypes, PredefinedEmailNotificationStatusTypes, PredefinedFieldControlTypes, PredefinedFieldPopulatorTypes, PredefinedFieldTypes, PredefinedFileStorageTypes, PredefinedJobOrReportTypes, PredefinedJobStatusTypes, PredefinedJobTypes, PredefinedJobUsageForTypes, PredefinedMessagePriorityTypes, PredefinedMessageTemplateTypes, PredefinedMessageToSendTypes, PredefinedMetaDataGroupTypes, PredefinedNotificationMessageTypes, PredefinedPhoneCallNotificationStatusTypes, PredefinedProjectControlStatusTypes, PredefinedProjectStatusTypes, PredefinedPushNotificationServerTypes, PredefinedPushNotificationStatusTypes, PredefinedRealtimeMessageStatusTypes, PredefinedResourceTypes, PredefinedReviewSessionStatusTypes, PredefinedSMSNotificationStatusTypes, PredefinedSingleSignOnServerTypes, PredefinedSmsAndVoiceServerTypes, PredefinedUserPermissionTypes, PredefinedUserTypes, PredefinedValidatorTypes, PredefinedWhatsAppNotificationStatusTypes } from "./app-enums";
+import { PredefinedAuditOperationTypes, PredefinedEmailNotificationStatusTypes, PredefinedFieldControlTypes, PredefinedFieldPopulatorTypes, PredefinedFieldTypes, PredefinedFileStorageTypes, PredefinedJobOrReportTypes, PredefinedJobStatusTypes, PredefinedJobTypes, PredefinedJobUsageForTypes, PredefinedMessagePriorityTypes, PredefinedMessageTemplateTypes, PredefinedMessageToSendTypes, PredefinedNotificationMessageTypes, PredefinedPhoneCallNotificationStatusTypes, PredefinedPushNotificationServerTypes, PredefinedPushNotificationStatusTypes, PredefinedRealtimeMessageStatusTypes, PredefinedResourceTypes, PredefinedSMSNotificationStatusTypes, PredefinedSingleSignOnServerTypes, PredefinedSmsAndVoiceServerTypes, PredefinedUserPermissionTypes, PredefinedUserTypes, PredefinedValidatorTypes, PredefinedWhatsAppNotificationStatusTypes } from "./app-enums";
 
 import { Injectable } from "@angular/core";
 import { LogSeverityType } from "./app-custom-model";
@@ -15,10 +15,7 @@ export class EnumViewService {
     switch (userTypeId) {
       case PredefinedUserTypes.SuperAdmin:
         this.router.navigate(["/sa/companies"]);
-        break;
-      case PredefinedUserTypes.CompanyAdmin:
-        this.router.navigate(["admin/company-config"]);
-        break;
+        break; 
       default:
         this.router.navigate(["/login"]);
     }
@@ -27,25 +24,12 @@ export class EnumViewService {
   public getInititalUrl(userTypeId: number): string {
     switch ((userTypeId)) {
       case PredefinedUserTypes.SuperAdmin:
-        return 'sa';
-      case PredefinedUserTypes.CompanyAdmin:
-        return 'admin';
+        return 'sa'; 
       default:
         return 'user';
     }
   }
-
-  public getCompanyTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedCompanyTypes.ProductionHouse:
-        return 'primary';
-      case PredefinedCompanyTypes.System:
-        return 'success';
-      default:
-        return 'primary';
-    }
-  }
-
+ 
   public getPredefinedAuditOperationTypeClass(typeId: number): string {
     switch (typeId) {
       case PredefinedAuditOperationTypes.ResourceCreated:
@@ -139,28 +123,6 @@ export class EnumViewService {
         return 'bg-orangish-lt';
       default:
         return 'bg-blue-lt';
-    }
-  }
-
-  public getPredefinedCompanyTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedCompanyTypes.System:
-        return 'success';
-      case PredefinedCompanyTypes.ProductionHouse:
-        return 'primary';
-      default:
-        return 'primary';
-    }
-  }
-
-  public getPredefinedCurrencyTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedCurrencyTypes.INR:
-        return 'success';
-      case PredefinedCurrencyTypes.USD:
-        return 'primary';
-      default:
-        return 'primary';
     }
   }
 
@@ -385,16 +347,7 @@ export class EnumViewService {
         return 'primary';
     }
   }
-
-  public getPredefinedMetaDataGroupTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedMetaDataGroupTypes.ActorType:
-        return 'success';
-      default:
-        return 'primary';
-    }
-  }
-
+ 
   public getPredefinedNotificationMessageTypeClass(typeId: number): string {
     switch (typeId) {
       case PredefinedNotificationMessageTypes.TaskAssigned:
@@ -658,8 +611,6 @@ export class EnumViewService {
     switch (typeId) {
       case PredefinedUserTypes.SuperAdmin:
         return 'success';
-      case PredefinedUserTypes.CompanyAdmin:
-        return 'primary';
       default:
         return 'primary';
     }
@@ -709,72 +660,6 @@ export class EnumViewService {
       case PredefinedWhatsAppNotificationStatusTypes.NotificationError:
         return 'primary';
       case PredefinedWhatsAppNotificationStatusTypes.ServerNotConfigured:
-        return 'secondary';
-      default:
-        return 'primary';
-    }
-  }
-
-  public getPredefinedProjectControlStatusTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedProjectControlStatusTypes.Open:
-        return 'success';
-      case PredefinedProjectControlStatusTypes.Completed:
-        return 'primary';
-      case PredefinedProjectControlStatusTypes.Abandoned:
-        return 'secondary';
-      default:
-        return 'primary';
-    }
-  }
-  public getPredefinedProjectStatusTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedProjectStatusTypes.InPlanning:
-        return 'success';
-      case PredefinedProjectStatusTypes.Open:
-        return 'primary';
-      case PredefinedProjectStatusTypes.Abandoned:
-        return 'secondary';
-      case PredefinedProjectStatusTypes.Completed:
-        return 'danger';
-      default:
-        return 'primary';
-    }
-  }
-
-  public getPredefinedReviewSessionStatusTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedReviewSessionStatusTypes.Open:
-        return 'success';
-      case PredefinedReviewSessionStatusTypes.Completed:
-        return 'primary';
-      case PredefinedReviewSessionStatusTypes.Abandoned:
-        return 'secondary';
-      default:
-        return 'primary';
-    }
-  }
-
-  public getPredefinedApprovalStatusTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedApprovalStatusTypes.Open:
-        return 'success';
-      case PredefinedApprovalStatusTypes.Completed:
-        return 'primary';
-      case PredefinedApprovalStatusTypes.Abandoned:
-        return 'secondary';
-      default:
-        return 'primary';
-    }
-  }
-
-  public getPredefinedCustomFieldTemplateTypeClass(typeId: number): string {
-    switch (typeId) {
-      case PredefinedCustomFieldTemplateTypes.Control:
-        return 'success';
-      case PredefinedCustomFieldTemplateTypes.Review:
-        return 'primary';
-      case PredefinedCustomFieldTemplateTypes.Approval:
         return 'secondary';
       default:
         return 'primary';

@@ -178,9 +178,7 @@ export class LoginComponent implements OnInit {
               result.model?.lastName ?? '',
               result.model?.userTypeId ?? 0,
               result.model?.userTypeName ?? '',
-              result.model?.userId ?? 0,
-              result.model?.companyId ?? 0,
-              result.model?.companyName ?? '',
+              result.model?.userId ?? 0, 
               result.model?.permissions ?? [],
             );
             if (result.model != null) {

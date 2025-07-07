@@ -26,12 +26,7 @@
           <input type="text" class="form-control" name="voice-notification-server-search-input"
             placeholder="Search Text" [(ngModel)]="this.searchModel.keyword" />
         </div>
-        <div class="col-md-2">
-          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-        </div>
+        
         <div class="col-md-2 pr-0">
           <ng-select name="selectedPredefinedSmsAndVoiceServerTypes" bindLabel="type" placeholder="Server Type"
             [items]="predefinedSmsAndVoiceServerTypes" [multiple]="true" [clearable]="true"

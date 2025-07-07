@@ -56,13 +56,6 @@ export class JobListScreenComponent extends BaseListComponent<JobModel, JobSearc
       width: '115px',
     },
     {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
-      width: '115px',
-    },
-    {
       text: 'Job Or Report Type',
       align: 'left',
       sortable: true,
@@ -250,7 +243,7 @@ export class JobListScreenComponent extends BaseListComponent<JobModel, JobSearc
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.predefinedJobTypeIds = null;
     this.searchModel.jobTemplateId = null;
     this.searchModel.predefinedJobOrReportTypeIds = null;

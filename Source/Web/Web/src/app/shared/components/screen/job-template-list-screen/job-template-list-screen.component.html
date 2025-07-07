@@ -22,13 +22,7 @@
         <div class="col-md-2 pr-0">
           <input type="text" class="form-control" name="example-text-input" placeholder="Search Text"
             [(ngModel)]="this.searchModel.keyword" />
-        </div>
-        <div class="col-md-2">
-          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-        </div>
+        </div> 
         <div class="col-md-2 pr-0">
           <ng-select name="selectedPredefinedJobTypes" bindLabel="type" placeholder="Job Type"
             [items]="predefinedJobTypes" [multiple]="true" [clearable]="true" [(ngModel)]="selectedPredefinedJobTypes">
@@ -119,10 +113,7 @@
             </td>
             <td class="text-left">
               {{ item.templateName }}
-            </td>
-            <td class="text-left">
-              {{ item.companyName }}
-            </td>
+            </td> 
             <td class="text-left">
               {{ item.modifiedDate | date: 'dd/MM/yy' }}
             </td>

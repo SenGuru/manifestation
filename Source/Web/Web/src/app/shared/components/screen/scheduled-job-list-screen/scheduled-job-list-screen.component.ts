@@ -1,5 +1,5 @@
 import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, JobTemplateModel, JobTemplateSearchCriteria, ScheduledJobModel, ScheduledJobSearchCriteria, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
+import { JobTemplateModel, JobTemplateSearchCriteria, ScheduledJobModel, ScheduledJobSearchCriteria, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -29,10 +29,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
   @Input() public globalSearchText: string | undefined;
   public override searchModel: ScheduledJobSearchCriteria = new ScheduledJobSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public jobTemplateTypeahead$ = new Subject<string>();
   public jobTemplateTypeaheadLoading = false;
   public jobTemplates: JobTemplateModel[] = [];
@@ -60,13 +57,6 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
       align: 'left',
       sortable: true,
       value: 'predefinedJobOrReportTypeName',
-      width: '115px',
-    },
-    {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
       width: '115px',
     },
     {
@@ -394,7 +384,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
   public ngOnInit(): void {
     this.initialUrl = this.sessionService.getInitialUrl();
     this.getScheduledJobs(this.searchModel);
-    this.getCompanies();
+   
     this.getJobTemplates();
     this.predefinedJobOrReportTypes = this.selectService.GetPredefinedJobOrReportTypes();
     this.getRunAsUsers();
@@ -402,23 +392,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
   }
 
   public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    
     this.jobTemplateTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
       this.jobTemplateTypeaheadLoading = true;
       const jobTemplateSearchCriteria = new JobTemplateSearchCriteria();
@@ -452,23 +426,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
     });
   }
 
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
+ 
 
   public getJobTemplates(): void {
     const searchModel = new JobTemplateSearchCriteria();
@@ -571,7 +529,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+    
     this.searchModel.jobTemplateId = this.selectedJobTemplate ? this.selectedJobTemplate.jobTemplateId : null;
     const predefinedJobOrReportTypesArray = this.selectedPredefinedJobOrReportTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedJobOrReportTypeIds = predefinedJobOrReportTypesArray;
@@ -582,7 +540,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.jobTemplateId = null;
     this.searchModel.predefinedJobOrReportTypeIds = null;
     this.searchModel.submittedByUserId = null;

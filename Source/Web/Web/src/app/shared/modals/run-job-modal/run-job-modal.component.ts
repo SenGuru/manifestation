@@ -72,13 +72,6 @@ export class RunJobModalComponent implements OnInit {
       width: '115px',
     },
     {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
-      width: '115px',
-    },
-    {
       text: 'Modified Date',
       align: 'left',
       sortable: true,
@@ -121,13 +114,6 @@ export class RunJobModalComponent implements OnInit {
       align: 'left',
       sortable: true,
       value: 'templateName',
-      width: '115px',
-    },
-    {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
       width: '115px',
     },
     {

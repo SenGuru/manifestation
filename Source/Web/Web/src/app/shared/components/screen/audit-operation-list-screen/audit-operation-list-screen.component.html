@@ -43,13 +43,7 @@
             [items]="users" [clearable]="true" [typeahead]="userTypeahead$" [loading]="userTypeaheadLoading"
             [(ngModel)]="selectedUser">
           </ng-select>
-        </div>
-        <div class="col-md-2">
-          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-        </div>
+        </div> 
         <div class="d-flex justify-content-sm-end col-sm">
           <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal"
             id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
@@ -94,10 +88,7 @@
             </td>
             <td class="text-left">
               {{ item.userName }}
-            </td>
-            <td class="text-left">
-              {{ item.companyName }}
-            </td>
+            </td> 
             <td class="text-left">
               <span
                 class="badge bg-{{enumViewService.getPredefinedResourceTypeClass(item.predefinedResourceTypeId ?? 0)}}-subtle text-{{enumViewService.getPredefinedResourceTypeClass(item.predefinedResourceTypeId ?? 0)}}">{{

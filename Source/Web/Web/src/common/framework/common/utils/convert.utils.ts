@@ -1,5 +1,4 @@
 import { ObjectUtils } from './object.utils';
-import { PredefinedCurrencyTypes } from 'src/common/models/app-enums';
 
 export class ConvertUtils {
   public static toNumber(obj: unknown, defaultValue = 0): number {
@@ -33,19 +32,19 @@ export class ConvertUtils {
   }
 
   public static getFormattedCurrecyText(value: number, predefinedCurrencyTypeId?: number): string {
-    if (predefinedCurrencyTypeId === PredefinedCurrencyTypes.USD) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2
-      }).format(value);
-    } else {
+    // if (predefinedCurrencyTypeId === PredefinedCurrencyTypes.USD) {
+    //   return new Intl.NumberFormat('en-US', {
+    //     style: 'currency',
+    //     currency: 'USD',
+    //     minimumFractionDigits: 2
+    //   }).format(value);
+    // } else {
       return new Intl.NumberFormat('en-IN', {
         style: 'currency',
         currency: 'INR',
         minimumFractionDigits: 2
       }).format(value);
-    }
+    // }
   }
 
 }

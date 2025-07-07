@@ -106,12 +106,7 @@ public ngOnInit(): void {
     this.initialUrl = this.enumViewService.getInititalUrl(this.currentUser?.userTypeId ?? 0);
     if (this.currentUser && this.currentUser.userTypeId && this.currentUser.userTypeId == PredefinedUserTypes.SuperAdmin) {
       this.isSuperAdmin = true;
-    } else if (this.currentUser && this.currentUser.userTypeId && (this.currentUser.userTypeId == PredefinedUserTypes.CompanyAdmin)) {
-      this.isConfigurator = true;
-      this.companyId = this.currentUser?.companyId ?? 0;
-      this.columns = this.columns.filter(item => item.value != 'companyName');
-    }
-    this.searchModel.companyId = this.companyId ?? 0;
+    } 
     this.getSmsServers(this.searchModel);
   }
 
@@ -190,7 +185,7 @@ public onSearch(f: NgForm): void {
 public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.selectedId = null;
     this.getSmsServers(this.searchModel);
   }

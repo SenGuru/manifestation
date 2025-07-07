@@ -1,5 +1,5 @@
 import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, WhatsAppNotificationServerModel, WhatsAppNotificationServerSearchCriteria } from 'src/common/models/app-model';
+import { WhatsAppNotificationServerModel, WhatsAppNotificationServerSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,10 +28,7 @@ export class WhatsAppNotificationServerListScreenComponent extends BaseListCompo
 
   public override searchModel: WhatsAppNotificationServerSearchCriteria = new WhatsAppNotificationServerSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public predefinedSmsAndVoiceServerTypes: Status[] = [];
   public selectedPredefinedSmsAndVoiceServerTypes: Status[] = [];
 
@@ -89,47 +86,10 @@ export class WhatsAppNotificationServerListScreenComponent extends BaseListCompo
 
 public ngOnInit(): void {
     this.getWhatsAppNotificationServers(this.searchModel);
-    this.getCompanies();
     this.predefinedSmsAndVoiceServerTypes = this.selectService.GetPredefinedSmsAndVoiceServerTypes();
-    this.initTypeAheads();
   }
+ 
 
-public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-         if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
 
 public getWhatsAppNotificationServers(searchModel: WhatsAppNotificationServerSearchCriteria): void {
     this.httpService.getWhatsAppNotificationServers(searchModel).subscribe({
@@ -194,7 +154,7 @@ public deleteWhatsAppNotificationServer(item: WhatsAppNotificationServerModel): 
 
 public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+    
     const predefinedSmsAndVoiceServerTypesArray = this.selectedPredefinedSmsAndVoiceServerTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedSmsAndVoiceServerTypeIds = predefinedSmsAndVoiceServerTypesArray;
 
@@ -204,7 +164,7 @@ public onSearch(f: NgForm): void {
 public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.predefinedSmsAndVoiceServerTypeIds = null;
     this.getWhatsAppNotificationServers(this.searchModel);
   }

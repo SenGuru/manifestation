@@ -32,12 +32,6 @@
           <input type="text" class="form-control" name="example-text-input" placeholder="Search Text"
             [(ngModel)]="this.searchModel.keyword" />
         </div>
-        <div *ngIf="isSuperAdmin && !layoutTypeId" class="col-md-2">
-          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-        </div>
         <div class="col-md-2 pr-0">
           <ng-select name="selectedPredefinedUserTypes" bindLabel="type" placeholder="User Type"
             [items]="predefinedUserTypes" [multiple]="true" [clearable]="true"
@@ -116,7 +110,6 @@
                 item.predefinedUserTypeName }}</span>
             </td>
             <td *ngIf="isSuperAdmin" class="text-left">
-              {{ item.companyName }}
             </td>
             <td class="text-left">
               {{ item.workPhone }}

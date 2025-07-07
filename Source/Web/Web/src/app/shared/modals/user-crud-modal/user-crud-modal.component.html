@@ -260,29 +260,7 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="form-group row mb-4">
-      <div *ngIf="isSuperAdmin && (layoutTypeId === sidebarLayoutType.CompanyList || !layoutTypeId)" class="col-sm-3">
-        <label class="form-label" for="selectedCompany">Company
-          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
-          <span *ngIf="!isViewMode" class="pull-right cursor-pointer" (click)="showAddCompanyModal()"><i
-              class="ri-add-line"></i> Add</span>
-        </label>
-        <div *ngIf="!isViewMode">
-          <ng-select #vcCompanyId #lvCompany="ngModel" placeholder="Company" class="form-control" name="selectedCompany"
-            id="selectedCompany" bindLabel="companyName" required [items]="companys" [clearable]="false"
-            [dropdownPosition]="'top'" [ngClass]="{'is-invalid': lvUserForm.submitted && lvCompany.invalid }"
-            [typeahead]="companyTypeahead$" [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-          <div *ngIf="lvUserForm.submitted && lvCompany.invalid" class="invalid-feedback invalid-feedback-fixed">
-            <div *ngIf="lvCompany.errors?.['required']">Company is required</div>
-          </div>
-        </div>
-        <div *ngIf="isViewMode">
-          {{userModel.companyName ? userModel.companyName : '-'}}
-        </div>
-      </div>
-    </div>
+    </div> 
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-user-modal-close-btn"

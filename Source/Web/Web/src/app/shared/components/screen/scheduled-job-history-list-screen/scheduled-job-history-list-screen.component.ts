@@ -1,4 +1,4 @@
-import { CompanyModel, CompanySearchCriteria, ScheduledJobHistoryModel, ScheduledJobHistorySearchCriteria, ScheduledJobModel, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
+import { ScheduledJobHistoryModel, ScheduledJobHistorySearchCriteria, ScheduledJobModel, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,10 +28,7 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
   @Input() public globalSearchText: string | undefined;
   public override searchModel: ScheduledJobHistorySearchCriteria = new ScheduledJobHistorySearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public scheduledJobTypeahead$ = new Subject<string>();
   public scheduledJobTypeaheadLoading = false;
   public scheduledJobs: ScheduledJobModel[] = [];
@@ -45,13 +42,6 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
       align: 'left',
       sortable: true,
       value: 'scheduledJobName',
-      width: '115px',
-    },
-    {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
       width: '115px',
     },
     {
@@ -126,29 +116,13 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
 
   public ngOnInit(): void {
     this.getScheduledJobHistorys(this.searchModel);
-    this.getCompanies();
+   
     this.getScheduledJobs();
     this.initTypeAheads();
   }
 
   public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    
     this.scheduledJobTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
       this.scheduledJobTypeaheadLoading = true;
       const scheduledJobSearchCriteria = new ScheduledJobSearchCriteria();
@@ -166,23 +140,7 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
     });
   }
 
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
+ 
 
   public getScheduledJobs(): void {
     const searchModel = new ScheduledJobSearchCriteria();
@@ -251,7 +209,7 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
   }
 
   public deleteScheduledJobHistory(item: ScheduledJobHistoryModel): void {
-    this.dialogService.confirmWithTitle(`Delete Scheduled Job History`, `Do you want to delete the scheduledJobHistory - ${item.companyName}?`).then(res => {
+    this.dialogService.confirmWithTitle(`Delete Scheduled Job History`, `Do you want to delete the scheduledJobHistory ?`).then(res => {
       if (!res) return;
       this.httpService.markScheduledJobHistoryAsDeleted(item.scheduledJobHistoryId).subscribe(result => {
         if (!result.isSuccess) return this.dialogService.errorWithDefaultTitleForModel(result, "Unable to delete the Scheduled Job History");
@@ -264,7 +222,7 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+    
     this.searchModel.scheduledJobId = this.selectedScheduledJob ? this.selectedScheduledJob.scheduledJobId : null;
 
     this.getScheduledJobHistorys(this.searchModel);
@@ -273,7 +231,7 @@ export class ScheduledJobHistoryListScreenComponent extends BaseListComponent<Sc
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.scheduledJobId = null;
     this.searchModel.pickupProcessId = null;
     this.getScheduledJobHistorys(this.searchModel);

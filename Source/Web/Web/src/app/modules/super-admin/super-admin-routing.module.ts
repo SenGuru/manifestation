@@ -2,8 +2,6 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { AppLogModelListScreenComponent } from "src/app/shared/components/screen/app-log-model-list-screen/app-log-model-list-screen.component";
 import { AuditOperationListScreenComponent } from "src/app/shared/components/screen/audit-operation-list-screen/audit-operation-list-screen.component";
-import { CompanyConfigScreenComponent } from "src/app/shared/components/screen/company-config-screen/company-config-screen.component";
-import { CompanyListScreenComponent } from "src/app/shared/components/screen/company-list-screen/company-list-screen.component";
 import { GlobalSearchDetailsComponent } from "src/app/shared/components/global-search-details/global-search-details.component";
 import { JobListScreenComponent } from "src/app/shared/components/screen/job-list-screen/job-list-screen.component";
 import { JobTemplateCrudModalComponent } from "src/app/shared/modals/job-template-crud-modal/job-template-crud-modal.component";
@@ -28,10 +26,8 @@ const routes: Routes = [
     path: "",
     component: LayoutComponent,
     children: [
-      { path: "", component: CompanyListScreenComponent },
-      { path: "home", component: CompanyListScreenComponent },
+      { path: '', component: UserListScreenComponent },
       { path: "profile", component: ProfileComponent },
-      { path: 'companies', component: CompanyListScreenComponent },
       { path: 'jobs', component: JobListScreenComponent },
       { path: 'app-logs', component: AppLogModelListScreenComponent },
       { path: 'perf-logs', component: PerfLogModelListScreenComponent },
@@ -58,15 +54,7 @@ const routes: Routes = [
           { path: 'job-template-item/:actionType/:jobTemplateId', component: JobTemplateCrudModalComponent },
           { path: 'job-template-item/:actionType', component: JobTemplateCrudModalComponent },
         ]
-      },
-{
-        path: 'company/:layoutTypeId/:companyId',
-        children: [
-         { path: "company-config", component: CompanyConfigScreenComponent, data: { companyConfig: true } },
-          { path: "users", component: UserListScreenComponent },
-        ]
-      },
-
+      }, 
       { path: 'global-search/:layoutTypeId', component: GlobalSearchDetailsComponent },
     ],
   },

@@ -1,6 +1,6 @@
-import { CompanyModel, CompanySearchCriteria, JobCreateModel, JobModel, JobTemplateModel, JobTemplateSearchCriteria, JobUpdateModel, JobWithDiffModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { JobCreateModel, JobModel, JobTemplateModel, JobTemplateSearchCriteria, JobUpdateModel, JobWithDiffModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
@@ -48,10 +48,7 @@ export class JobCrudModalComponent implements OnInit {
   public jobTemplateTypeaheadLoading = false;
   public jobTemplates: JobTemplateModel[] = [];
   public selectedJobTemplate: JobTemplateModel | undefined;
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public predefinedJobOrReportTypes: Status[] = [];
   public selectedPredefinedJobOrReportType: Status | undefined;
   public predefinedJobStatusTypes: Status[] = [];
@@ -102,7 +99,7 @@ export class JobCrudModalComponent implements OnInit {
     this.predefinedJobTypes = this.selectService.GetPredefinedJobTypes();
     if (!this.isCreateMode) this.selectedPredefinedJobType = this.predefinedJobTypes.find(item => item.id === this.jobModel.predefinedJobTypeId);
     this.getJobTemplates();
-    this.getCompanies();
+   
     this.predefinedJobOrReportTypes = this.selectService.GetPredefinedJobOrReportTypes();
     if (!this.isCreateMode) this.selectedPredefinedJobOrReportType = this.predefinedJobOrReportTypes.find(item => item.id === this.jobModel.predefinedJobOrReportTypeId);
     this.predefinedJobStatusTypes = this.selectService.GetPredefinedJobStatusTypes();
@@ -132,25 +129,7 @@ export class JobCrudModalComponent implements OnInit {
         this.jobTemplateTypeaheadLoading = false;
       },
       complete: () => null,
-    });
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      if (!this.isCreateMode) companySearchCriteria.selectedId = this.jobModel.companyId;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    }); 
     // this.submittedByUserTypeahead$.pipe(debounceTime(500),distinctUntilChanged(),switchMap((searchValue) => {
     //   this.submittedByUserTypeaheadLoading = true;
     //   let submittedByUserSearchCriteria = new SubmittedByUserSearchCriteria();
@@ -232,27 +211,7 @@ export class JobCrudModalComponent implements OnInit {
       },
       complete: () => null,
     });
-  }
-  public getCompanies(): void {
-    const searchModel: CompanySearchCriteria = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    if (!this.isCreateMode) searchModel.selectedId = this.jobModel.companyId;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.jobModel.companyId);
-        }
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
+  } 
   public getSubmittedByUsers(): void {
     // let searchModel: SubmittedByUserSearchCriteria = new SubmittedByUserSearchCriteria();
     // searchModel.sortAscending = false;
@@ -347,8 +306,6 @@ export class JobCrudModalComponent implements OnInit {
       return;
     if (this.selectedJobTemplate == null)
       return;
-    if (this.selectedCompany == null)
-      return;
     if (this.selectedPredefinedJobOrReportType == null)
       return;
     if (this.selectedPredefinedJobStatusType == null)
@@ -372,7 +329,6 @@ export class JobCrudModalComponent implements OnInit {
 
     this.jobModel.predefinedJobTypeId = this.selectedPredefinedJobType ? this.selectedPredefinedJobType.id : null;
     this.jobModel.jobTemplateId = this.selectedJobTemplate?.jobTemplateId ?? 0;
-    this.jobModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     this.jobModel.predefinedJobOrReportTypeId = this.selectedPredefinedJobOrReportType ? this.selectedPredefinedJobOrReportType.id : null;
     this.jobModel.predefinedJobStatusTypeId = this.selectedPredefinedJobStatusType?.id ?? 0;
     // this.jobModel.submittedByUserId = this.selectedSubmittedByUser ? this.selectedSubmittedByUser.submittedByUserId : null;

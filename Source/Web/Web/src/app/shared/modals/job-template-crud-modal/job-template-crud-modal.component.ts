@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { CompanyModel, CompanySearchCriteria, JobTemplateCategoryModel, JobTemplateCategorySearchCriteria, JobTemplateCreateModel, JobTemplateModel, JobTemplateParameterCreateModel, JobTemplateParameterUpdateModel, JobTemplateUpdateModel, JobTemplateWithDiffModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { JobTemplateCategoryModel, JobTemplateCategorySearchCriteria, JobTemplateCreateModel, JobTemplateModel, JobTemplateParameterCreateModel, JobTemplateParameterUpdateModel, JobTemplateUpdateModel, JobTemplateWithDiffModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ScreenActionTypes, Status } from 'src/common/models/app-custom-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
@@ -9,7 +9,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
 
 import { CommonDialogService } from '../../services/common-dialog.service';
-import { CompanyCrudModalComponent } from '../company-crud-modal/company-crud-modal.component';
 import { HttpService } from 'src/common/services/app-http-client';
 import { JobTemplateCategoryCrudModalComponent } from '../job-template-category-crud-modal/job-template-category-crud-modal.component';
 import { JobTemplateParameterListScreenComponent } from '../../components/screen/job-template-parameter-list-screen/job-template-parameter-list-screen.component';
@@ -56,13 +55,9 @@ export class JobTemplateCrudModalComponent implements OnInit {
   public jobTemplateCategoryTypeaheadLoading = false;
   public jobTemplateCategorys: JobTemplateCategoryModel[] = [];
   public selectedJobTemplateCategory: JobTemplateCategoryModel | null | undefined;
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public initialUrl: string | undefined;
   public jobTemplateCategorySearchCriteria: JobTemplateCategorySearchCriteria = new JobTemplateCategorySearchCriteria();
-  public companySearchCriteria: CompanySearchCriteria = new CompanySearchCriteria();
 
   public constructor(
     private httpService: HttpService,
@@ -111,7 +106,6 @@ export class JobTemplateCrudModalComponent implements OnInit {
     }
 
     this.getJobTemplateCategorys(this.jobTemplateCategorySearchCriteria);
-    this.getCompanies(this.companySearchCriteria);
     this.initTypeAheads();
   }
 
@@ -133,26 +127,7 @@ export class JobTemplateCrudModalComponent implements OnInit {
         this.jobTemplateCategoryTypeaheadLoading = false;
       },
       complete: () => null,
-    });
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      companySearchCriteria.isActive = true;
-      if (!this.isCreateMode) companySearchCriteria.selectedId = this.jobTemplateModel.companyId;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    }); 
   }
 
   public showAddJobTemplateCategoryModal(): void {
@@ -192,43 +167,7 @@ export class JobTemplateCrudModalComponent implements OnInit {
       });
     });
   }
-
-  public showAddCompanyModal(): void {
-    const modalRef = this.modalService.open(CompanyCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
-    const componentInstance = modalRef.componentInstance as CompanyCrudModalComponent;
-    componentInstance.isCreateMode = true;
-    componentInstance.buttonText = 'Create';
-    componentInstance.title = 'Create Company';
-    componentInstance.onCloseCallback = (res: CompanyModel | null): void => {
-      if (ObjectUtils.isObjNullOrUndefined(res)) return;
-      this.getCompanies(this.companySearchCriteria, res?.companyId);
-    }
-  }
-
-  public getCompanies(searchModel: CompanySearchCriteria, selectedCompanyId?: number): void {
-    searchModel.sortAscending = false;
-    searchModel.isActive = true;
-    searchModel.sortBy = 'createdDate';
-    if (!this.isCreateMode) searchModel.selectedId = this.jobTemplateModel.companyId;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.jobTemplateModel.companyId);
-          if (selectedCompanyId) {
-            this.selectedCompany = this.companys.find(item => item.companyId == selectedCompanyId);
-          }
-        }
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+ 
   public getJobTemplate(jobTemplateId: number): void {
     this.httpService.getJobTemplate(jobTemplateId).subscribe({
       next: result => {
@@ -291,8 +230,6 @@ export class JobTemplateCrudModalComponent implements OnInit {
       return;
     if (this.selectedJobTemplateCategory == null)
       return;
-    if (this.selectedCompany == null)
-      return;
     Object.assign(this.jobTemplateModel, obj);
     Object.keys(this.jobTemplateModel).forEach(key => {
       //@ts-expect-error  --- following line expected to have an error
@@ -305,7 +242,6 @@ export class JobTemplateCrudModalComponent implements OnInit {
     this.jobTemplateModel.predefinedJobTypeId = this.selectedPredefinedJobType?.id ?? 0;
     this.jobTemplateModel.predefinedJobOrReportTypeId = this.selectedPredefinedJobOrReportType ? this.selectedPredefinedJobOrReportType.id : null;
     this.jobTemplateModel.jobTemplateCategoryId = this.selectedJobTemplateCategory?.jobTemplateCategoryId ?? 0;
-    this.jobTemplateModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     if (this.jobTemplateParameterListScreenComponent && this.jobTemplateParameterListScreenComponent.listData) {
       this.jobTemplateModel.existingParameters = [];
       this.jobTemplateModel.newParameters = [];

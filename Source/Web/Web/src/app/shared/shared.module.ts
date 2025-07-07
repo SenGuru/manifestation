@@ -11,10 +11,6 @@ import { AuditOperationListScreenComponent } from './components/screen/audit-ope
 import { BlockUiComponent } from './components/block-ui/block-ui.component';
 import { ChangePasswordComponent } from './modals/change-password/change-password.component';
 import { CommonModule } from '@angular/common';
-import { CompanyConfigScreenComponent } from './components/screen/company-config-screen/company-config-screen.component';
-import { CompanyCrudModalComponent } from './modals/company-crud-modal/company-crud-modal.component';
-import { CompanyHeaderComponent } from './components/screen/company-header/company-header.component';
-import { CompanyListScreenComponent } from './components/screen/company-list-screen/company-list-screen.component';
 import { ConfigurationFileStorageEditorComponent } from './modals/configuration-file-storage-editor/configuration-file-storage-editor.component';
 import { ConfirmDialogueComponent } from './modals/confirm-dialogue/confirm-dialogue.component';
 import { CsvFileImportModalComponent } from './modals/csv-file-import-modal/csv-file-import-modal.component';
@@ -106,12 +102,8 @@ import lottie from 'lottie-web';
     ProfileTitleComponent,
     UtcToBrowserTimePipe,
     CsvFileImportModalComponent,
-    CompanyListScreenComponent,
-    CompanyCrudModalComponent,
     EmailvalidatorDirective,
-    SuperAdminHeaderComponent,
-    CompanyHeaderComponent,
-    CompanyConfigScreenComponent,
+    SuperAdminHeaderComponent, 
     SecondsToHourPipe,
     LastItemPipe,
     FocusOnErrorDirective,
@@ -203,13 +195,9 @@ import lottie from 'lottie-web';
     PaginationComponent,
     ProfileTitleComponent,
     UtcToBrowserTimePipe,
-    CsvFileImportModalComponent,
-    CompanyListScreenComponent,
-    CompanyCrudModalComponent,
+    CsvFileImportModalComponent, 
     EmailvalidatorDirective,
-    SuperAdminHeaderComponent,
-    CompanyHeaderComponent,
-    CompanyConfigScreenComponent,
+    SuperAdminHeaderComponent, 
     SecondsToHourPipe,
     LastItemPipe,
     PhoneNumberValidatorDirective,
