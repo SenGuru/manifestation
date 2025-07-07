@@ -230,7 +230,7 @@ export class VisionBoardSessionListScreenComponent extends BaseListComponent<Vis
   }
 
   public deleteVisionBoardSession(item: VisionBoardSessionModel): void {
-   this.dialogService.confirmWithTitle(`Delete Vision Board Session`, `Do you want to delete the Vision Board Session - ${item.visionBoardSessionName}?`).then(res => {
+   this.dialogService.confirmWithTitle(`Delete Vision Board Session`, `Do you want to delete the Vision Board Session  ?`).then(res => {
     if(!res) return;
     this.httpService.markVisionBoardSessionAsDeleted(item.visionBoardSessionId, getHeaderWithLoadingText("Deleting..")).subscribe(result => {
       if(!result.isSuccess) return this.dialogService.errorWithDefaultTitleForModel(result, "Unable to delete the Vision Board Session");

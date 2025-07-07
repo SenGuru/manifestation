@@ -6,7 +6,7 @@ import { DefaultVisionBoardPictureCrudModalComponent } from '../../../modals/def
 import { CrudService } from '../../../services/crud.service';
 import { BaseListComponent } from 'src/common/base-components/base.list.component';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
-import { AstroClassColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import {  DefaultVisionBoardPictureModel, DefaultVisionBoardPictureSearchCriteria, LoggedInUserModel } from 'src/common/models/app-model';
 import { HttpService } from 'src/common/services/app-http-client';
 import { SelectService } from 'src/common/services/select-service';
@@ -249,7 +249,7 @@ export class DefaultVisionBoardPictureListScreenComponent extends BaseListCompon
     this.getDefaultVisionBoardPictures(this.searchModel);
   }
 
-   public changeSort(header: AstroClassColumnModel): void {
+   public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header,this.searchModel,{ currentSort : this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up': 'down';
     this.getDefaultVisionBoardPictures(this.searchModel);

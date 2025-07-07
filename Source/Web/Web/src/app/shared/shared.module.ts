@@ -93,6 +93,8 @@ import { SuperAdminHeaderComponent } from './components/screen/super-admin-heade
 import { UserCrudModalComponent } from './modals/user-crud-modal/user-crud-modal.component';
 import { UserListScreenComponent } from './components/screen/user-list-screen/user-list-screen.component';
 import { UtcToBrowserTimePipe } from 'src/common/services/utc-to-browser/utc-to-browser-time.pipe';
+import { VisionBoardSessionCrudModalComponent } from './modals/vision-board-session-crud-modal/vision-board-session-crud-modal.component';
+import { VisionBoardSessionListScreenComponent } from './components/screen/vision-board-session-list-screen/vision-board-session-list-screen.component';
 import { VoiceNotificationServerCrudModalComponent } from './modals/voice-notification-server-crud-modal/voice-notification-server-crud-modal.component';
 import { VoiceNotificationServerListScreenComponent } from './components/screen/voice-notification-server-list-screen/voice-notification-server-list-screen.component';
 import { WhatsAppNotificationServerCrudModalComponent } from './modals/whats-app-notification-server-crud-modal/whats-app-notification-server-crud-modal.component';
@@ -191,6 +193,8 @@ import lottie from 'lottie-web';
     DefaultGoalTrackerCategoryCrudModalComponent,
     DefaultGoalTrackerCrudModalComponent,
     DefaultVisionBoardPictureCrudModalComponent, 
+    VisionBoardSessionCrudModalComponent,
+    VisionBoardSessionListScreenComponent,
   ],
   imports: [
     CommonModule,
@@ -301,6 +305,8 @@ import lottie from 'lottie-web';
     DefaultGoalTrackerCategoryCrudModalComponent,
     DefaultGoalTrackerCrudModalComponent,
     DefaultVisionBoardPictureCrudModalComponent,
+    VisionBoardSessionCrudModalComponent,
+    VisionBoardSessionListScreenComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

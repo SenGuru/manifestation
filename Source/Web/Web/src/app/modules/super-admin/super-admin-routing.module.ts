@@ -45,12 +45,12 @@ const routes: Routes = [
       { path: 'push-notification', component: PushNotificationServerListScreenComponent },
       { path: 'voice-notification', component: VoiceNotificationServerListScreenComponent },
       { path: 'whatsapp-notification', component: WhatsAppNotificationServerListScreenComponent },
-      { path: 'daily-affirmation-text', component: DailyAffirmationTextListScreenComponent },
-      { path: 'default-category', component: UserListScreenComponent },
-      { path: 'default-daily-affirmation-text', component: DefaultDailyAffirmationTextListScreenComponent },
-      { path: 'default-goal-tracker-category', component: DefaultGoalTrackerCategoryListScreenComponent },
-      { path: 'default-goal-tracker', component: DefaultGoalTrackerListScreenComponent },
-      { path: 'default-vision-board-picture', component: DefaultVisionBoardPictureListScreenComponent },
+      { path: 'daily-affirmation-texts', component: DailyAffirmationTextListScreenComponent },
+      { path: 'default-categorys', component: UserListScreenComponent },
+      { path: 'default-daily-affirmation-texts', component: DefaultDailyAffirmationTextListScreenComponent },
+      { path: 'default-goal-tracker-categorys', component: DefaultGoalTrackerCategoryListScreenComponent },
+      { path: 'default-goal-trackers', component: DefaultGoalTrackerListScreenComponent },
+      { path: 'default-vision-board-pictures', component: DefaultVisionBoardPictureListScreenComponent },
       {
         path: 'jobs',
         children: [
