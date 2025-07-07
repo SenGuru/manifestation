@@ -8,8 +8,8 @@ import { @(Model.CapitalizeEntityName)ListScreenComponent as @(Model.CapitalizeE
 
 @@Component({
   selector: 'app-super-admin-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-screen',
-  templateUrl: './super-admin-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-screen.component.html',
-  styleUrls: ['./super-admin-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-screen.component.css']
+  templateUrl: './super-admin-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-screen.component.html', 
+  standalone: false,
 })
 export class SuperAdmin@(Model.CapitalizeEntityName)ScreenComponent implements OnInit {
 

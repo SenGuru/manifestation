@@ -16,7 +16,7 @@
 	  {
         continue;
     }
-    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "StateId") || (p.Name == "CountryId") || p.Name.EndsWith("TypeId"))
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "StateId") || (p.Name == "CountryId") || p.Name.EndsWith("TypeId") || p.Name == "CompanyId")
 	  {
         continue;
     }
@@ -30,6 +30,7 @@ import { Component, Input, OnInit, ViewChild } from '@@angular/core';
 import { FormGroup, NgForm } from '@@angular/forms';
 import { NgbActiveModal, NgbModal } from '@@ng-bootstrap/ng-bootstrap';
 import { @(modelImports) @(Model.CapitalizeEntityName)Model, @(Model.CapitalizeEntityName)CreateModel, @(Model.CapitalizeEntityName)UpdateModel, LoggedInUserModel } from 'src/common/models/app-model';
+import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
 import { HttpService } from 'src/common/services/app-http-client';
 import { SelectService } from 'src/common/services/select-service';
 import { Status } from 'src/common/models/app-custom-model';
@@ -37,13 +38,14 @@ import { ObjectUtils } from 'src/common/framework/common/utils/object.utils';
 import { CommonDialogService } from '../../services/common-dialog.service';
 import { SessionService } from 'src/common/framework/web/infrastructure/session/session.service';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
-import { getHeaderWithBlockUI } from 'src/common/interceptors/httpconfig.interceptor';
+import { TitleService } from 'src/app/shared/services/title.service';
 import { UntilDestroy, untilDestroyed } from '@@ngneat/until-destroy';
 
 @@UntilDestroy()
 @@Component({
   selector: 'app-@(Model.SmallDashEntityName)-crud-modal',
-  templateUrl: './@(Model.SmallDashEntityName)-crud-modal.component.html'
+  templateUrl: './@(Model.SmallDashEntityName)-crud-modal.component.html',
+  standalone: false,
 })
 export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
 
@@ -55,9 +57,11 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
   @@Input() public isViewMode: boolean = false;
   @@Input() public isEditMode: boolean = false;
   @@Input() public isSuperAdmin: boolean = false;
+  @@Input() public @(Model.SmallEntityName)Id: number = 0;
   @@Input() public companyId: number = 0;
   @@Input() public companyName: string | null = null;
   @@Input() public layoutTypeId: number | null = null;
+  @@Input() public isShowFullScreen: boolean = false;
   public currentUser: LoggedInUserModel | undefined | null;
   public onCloseCallback: ((res: @(Model.CapitalizeEntityName)Model | null) => void) | null = null;
 
@@ -67,7 +71,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
 	{
         continue;
     }
-    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "StateId") || p.Name.EndsWith("TypeId") || p.Name.EndsWith("Id"))
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "StateId") || p.Name.EndsWith("TypeId") || p.Name.EndsWith("Id") || p.Name == "CompanyId")
 	{
         continue;
     }
@@ -90,7 +94,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
 	{
         continue;
   }
-  else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+  else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate") || p.Name == "CompanyId")
   {
         continue;
   }
@@ -140,67 +144,105 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
     private dialogService: CommonDialogService,
     private sessionService: SessionService,
     public activeModal: NgbActiveModal,
+    private titleService: TitleService,
     private modalService: NgbModal,
     private selectService: SelectService,) {
      }
 
   public ngOnInit(): void {
   this.currentUser = this.sessionService.getCurrentUserInfo();
-  @foreach(var p in Model.EntityType.GetProperties())
-  {
-    if (p.Name == (Model.EntityType.Name+"Id"))
-	  {
-        continue;
-    }
-	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
-	  {
-        continue;
-    }
-    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate"))
+    this.init@(Model.CapitalizeEntityName)InfoAsFullScreen();
+    this.initTypeAheads();
+  }
+
+  public initLoadData(): void {
+
+@foreach (var p in Model.EntityType.GetProperties())
+{
+    if (p.Name == (Model.EntityType.Name + "Id"))
     {
         continue;
     }
-	  else if (p.Name == "StateId")
-	  {
+    else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+    {
         continue;
     }
-	  else if (p.Name == "CountryId")
-	  {
-	   @:this.getCountrys("");
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate") || p.Name == "CompanyId")
+    {
         continue;
-    }	
+    }
+    else if (p.Name == "StateId")
+    {
+        continue;
+    }
+    else if (p.Name == "CountryId")
+    {
+        @:this.getCountrys("");
+        continue;
+    }
     else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
-	  {
-        var vCapName = p.Name.Replace("TypeId","Types");
-        var vCapNameWithoutS = p.Name.Replace("TypeId","Type");
+    {
+        var vCapName = p.Name.Replace("TypeId", "Types");
+        var vCapNameWithoutS = p.Name.Replace("TypeId", "Type");
 
-        var vName = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId","Types"));
-        var vNameWithoutS = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId","Type"));
+        var vName = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId", "Types"));
+        var vNameWithoutS = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId", "Type"));
         var lName = StringUtils.MakeFirstCharAsLower(p.Name);
 
-        @:this.@(vName) = this.selectService.Get@(p.Name.Replace("TypeId","Types"))();
+        @:this.@(vName) = this.selectService.Get@(p.Name.Replace("TypeId", "Types"))();
         @:if (!this.isCreateMode) this.selected@(vCapNameWithoutS) = this.@(vName).find(item => item.id === this.@(Model.SmallEntityName)Model.@(lName));
     }
     else if (p.Name.EndsWith("TypeIds") && p.Name.StartsWith("Predefined"))
-	  {
-        @:this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeIds","Types"))) = this.selectService.Get@(p.Name.Replace("TypeIds","Types"))();
+    {
+        @:this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeIds", "Types"))) = this.selectService.Get@(p.Name.Replace("TypeIds", "Types"))();
     }
-	  else if (p.Name.EndsWith("Id"))
-	  {
-	    @:this.get@(p.Name.Replace("Id",""))s(this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id", "")))SearchCriteria);
+    else if (p.Name.EndsWith("Id"))
+    {
+        @:this.get@(p.Name.Replace("Id", ""))s(this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id", "")))SearchCriteria);
     }
     else if (p.Name.EndsWith("Ids"))
     {
         @:this.get@(p.Name.Replace("Ids", ""))s(this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Ids", "")))SearchCriteria);
     }
-  }
-    this.initTypeAheads();
-  }
+}
+
+        }
  
+  public init@(Model.CapitalizeEntityName)InfoAsFullScreen(): void {
+    if (this.isShowFullScreen) {
+      this.buttonText = "Save";
+      this.isEditMode = true;
+      this.get@(Model.CapitalizeEntityName)Info(this.@(Model.SmallEntityName)Id);
+      this.titleService.pageTitle = "@(Model.SplitetCapitalizeEntityName) info";
+    } else {
+        this.initLoadData();
+    }
+  }
+  
+ public get@(Model.CapitalizeEntityName)Info(@(Model.SmallEntityName)Id: number): void {
+    this.httpService.get@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Id).subscribe({
+      next: (result) => {
+        if (!result.isSuccess) {
+        this.dialogService.errorWithReturnModel('Not Able to get @(Model.SplitetCapitalizeEntityName)', result);
+          return;
+        }
+        
+        if(result.model) {
+        this.@(Model.SmallEntityName)Model = result.model; 
+         if(!this.isShowFullScreen) {
+          this.initLoadData();
+          }
+        }
+      },
+      error: (err) => this.dialogService.error('Not Able to get @(Model.SplitetCapitalizeEntityName)'),
+      complete: () => null,
+    });
+  }
+
  public initTypeAheads(): void {
   @foreach(var p in Model.EntityType.GetProperties())
   {
-    if (p.Name == (Model.EntityType.Name+"Id"))
+    if (p.Name == (Model.EntityType.Name + "Id") || p.Name == "CompanyId")
 	  {
         continue;
     }
@@ -217,6 +259,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
 @:        this.@(pLName)TypeaheadLoading = true;
 @:        const @(pLName)SearchCriteria = new @(pName)SearchCriteria();
 @:        @(pLName)SearchCriteria.keyword = searchValue;
+@:        @(pLName)SearchCriteria.companyId = this.companyId;
 @:        if(!this.isCreateMode) @(pLName)SearchCriteria.selectedId = this.@(StringUtils.MakeFirstCharAsLower(Model.CapitalizeEntityName))Model.@(StringUtils.MakeFirstCharAsLower(p.Name));
 @:        return this.httpService.get@(pName)s(@(pLName)SearchCriteria, getHeaderWithBlockUI());
 @:      }),untilDestroyed(this)).subscribe({
@@ -246,7 +289,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
 	  {
         continue;
     }
-	  else if (p.Name == "StateId")
+    else if (p.Name == "StateId" || p.Name == "CompanyId")
 	  {
 	    continue;
     }
@@ -363,7 +406,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
 	{
         continue;
     }
-    else if ((p.Name == "StateId"))
+    else if ((p.Name == "StateId") || p.Name == "CompanyId")
     {
         continue;
     }
@@ -402,7 +445,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
     {
         continue;
     }
-    else if ((p.Name == "StateId"))
+    else if ((p.Name == "StateId") || p.Name == "CompanyId")
     {
         continue;
     }
@@ -428,11 +471,13 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
         @:this.@(Model.SmallEntityName)Model.@(StringUtils.MakeFirstCharAsLower(p.Name)) = this.selected@(p.Name.Replace("Ids",""))s?.map(item => item.id);
     }    
 }
+
+    this.@(Model.SmallEntityName)Model.companyId =  this.companyId;
     return this.@(Model.SmallEntityName)Model;
  }
   
    public create@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Model: @(Model.CapitalizeEntityName)CreateModel, f: NgForm): void {
-    this.httpService.create@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Model).subscribe({
+        this.httpService.create@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Model, getHeaderWithLoadingText("Saving..")).subscribe({
       next: (result) => {
         if (!result.isSuccess) {
         this.dialogService.errorWithReturnModel('Not Able to Create @(Model.SplitetCapitalizeEntityName)', result);
@@ -449,7 +494,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
   }
 
  public update@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Model: @(Model.CapitalizeEntityName)UpdateModel, f: NgForm): void {
-    this.httpService.update@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Model).subscribe({
+    this.httpService.update@(Model.CapitalizeEntityName)(@(Model.SmallEntityName)Model, getHeaderWithLoadingText("Updating..")).subscribe({
       next: (result) => {
         if (!result.isSuccess) {
         this.dialogService.errorWithReturnModel('Not Able to update @(Model.SplitetCapitalizeEntityName)', result);
@@ -458,6 +503,7 @@ export class @(Model.CapitalizeEntityName)CrudModalComponent implements OnInit {
         this.dialogService.success('Successfully updated the @(Model.SplitetCapitalizeEntityName).');
         f.resetForm();
         this.activeModal.close();
+        if (this.isShowFullScreen && result.model?.@(Model.SmallEntityName)Id) this.get@(Model.CapitalizeEntityName)Info(result.model?.@(Model.SmallEntityName)Id);
         if (this.onCloseCallback) this.onCloseCallback(result.model);
       },
       error: (err) => this.dialogService.error('Not Able to update @(Model.SplitetCapitalizeEntityName)'),

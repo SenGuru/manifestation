@@ -1,13 +1,15 @@
 @using Framework.Infrastructure.Utils
 @using CodeGenerator
 
-<form name="form" @("#")lv@(Model.CapitalizeEntityName)Form="ngForm" appFocusOnError (ngSubmit)="lv@(Model.CapitalizeEntityName)Form.form.valid && onSubmit(lv@(Model.CapitalizeEntityName)Form)">
-  <div class="modal-header bg-light p-3">
+<form name="form" @("#")lv@(Model.CapitalizeEntityName)Form="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lv@(Model.CapitalizeEntityName)Form.form.valid && onSubmit(lv@(Model.CapitalizeEntityName)Form)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
     <h5 class="modal-title" id="vagncart-@(Model.SmallDashEntityName)-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
       id="vagncart-@(Model.SmallDashEntityName)-modal-cancel-btn" (click)="cancel(true)"></button>
-  </div>
-  <div class="modal-body">
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
 
     <div class="form-group row mb-3">        
     @{
@@ -37,7 +39,7 @@
     {
         continue;
     }
-    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate"))
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate") || p.Name == "CompanyId")
     {
         continue;
     }
@@ -58,7 +60,7 @@
 @:           [(ngModel)]="selectedState">
 @:          </ng-select>
 @:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lvState.invalid" class="invalid-feedback invalid-feedback-fixed">
-@:            <div *ngIf="lvState.errors?.required">State is required</div>
+@:            <div *ngIf="lvState.errors?.['required']">State is required</div>
 @:          </div>
 @:        </div>
 @:        <div *ngIf="isViewMode">
@@ -77,7 +79,7 @@
 @:            [(ngModel)]="selectedCountry" (change)="onChangeCountry(selectedCountry)">
 @:          </ng-select>
 @:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lvUserCountry.invalid" class="invalid-feedback invalid-feedback-fixed">
-@:            <div *ngIf="lvCountry.errors?.required">Country is required</div>
+@:            <div *ngIf="lvCountry.errors?.['required']">Country is required</div>
 @:          </div>
 @:        </div>
 @:        <div *ngIf="isViewMode">
@@ -99,7 +101,7 @@
 @:           [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)" />
 @:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid"
 @:            class="invalid-feedback invalid-feedback-fixed">
-@:            <div *ngIf="lv@(pName).errors?.required">@pCamelNameWithOutId is required</div>
+@:            <div *ngIf="lv@(pName).errors?.['required']">@pCamelNameWithOutId is required</div>
 @:          </div>
 @:        </div>
 @:        <div *ngIf="isViewMode">
@@ -136,7 +138,7 @@
 @:            [(ngModel)]="selected@(pNameWithOutId)">
 @:          </ng-select>
 @:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pNameWithOutId).invalid" class="invalid-feedback invalid-feedback-fixed">
-@:            <div *ngIf="lv@(pNameWithOutId).errors?.required">@pCamelNameWithOutId is required</div>
+@:            <div *ngIf="lv@(pNameWithOutId).errors?.['required']">@pCamelNameWithOutId is required</div>
 @:          </div>
 @:        </div>
 @:        <div *ngIf="isViewMode">
@@ -159,7 +161,7 @@
 @:            [typeahead]="@(pLNameWithOutId)Typeahead$" [loading]="@(pLNameWithOutId)TypeaheadLoading" [(ngModel)]="selected@(pNameWithOutId)">
 @:          </ng-select>
 @:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pNameWithOutId).invalid" class="invalid-feedback invalid-feedback-fixed">
-@:            <div *ngIf="lv@(pNameWithOutId).errors?.required">@pCamelNameWithOutId is required</div>
+@:            <div *ngIf="lv@(pNameWithOutId).errors?.['required']">@pCamelNameWithOutId is required</div>
 @:          </div>
 @:        </div>
 @:        <div *ngIf="isViewMode">
@@ -184,10 +186,10 @@
  @:               @(appEmailvalidatorStr) class="form-control" [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid }"
  @:               [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)">
  @:             <div class="invalid-feedback invalid-feedback-fixed">
- @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).errors?.required">
+ @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).errors?.['required']">
  @:                 @pCamelNameWithOutId is required
  @:               </span>
-                    <span *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).errors?.maxlength">
+                    <span *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).errors?.['maxlength']">
                         Maximum {{ @(pLName)__size }} characters allowed.
                     </span>
                    if (isEmail)
@@ -203,7 +205,7 @@
  @:           </div>
  @:         </div>
         }
-        else if (p.PropertyType.Name == "Double" || p.PropertyType.Name == "Integer" || p.Name.EndsWith("Amount") )
+        else if (p.PropertyType.Name == "Double" || p.PropertyType.Name == "Integer" || p.Name.EndsWith("Amount") || p.Name.EndsWith("Position") )
         {
  @:         <div class="col-sm-6">
  @:           <label class="form-label" for="@(pLName)">@pCamelNameWithOutId
@@ -214,7 +216,7 @@
  @:               class="form-control" [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid }"
  @:               [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)">
  @:             <div class="invalid-feedback invalid-feedback-fixed">
- @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).errors?.required">
+ @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).errors?.['required']">
  @:                 @pCamelNameWithOutId is required
  @:               </span> 
  @:             </div>
@@ -233,8 +235,9 @@
   </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-@(Model.SmallDashEntityName)-modal-close-btn" data-bs-dismiss="modal"
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-@(Model.SmallDashEntityName)-modal-close-btn" data-bs-dismiss="modal"
      (click)="cancel(true)">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-@(Model.SmallDashEntityName)-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-@(Model.SmallDashEntityName)-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
   </div>
 </form>

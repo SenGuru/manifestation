@@ -1,0 +1,514 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+@{
+    var modelImports = "";
+}
+@foreach (var p in Model.EntityType.GetProperties())
+{
+    var pName = p.Name;
+    var pNameWithoutId = p.Name.Replace("Ids", "").Replace("Id", "");
+    var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+    var pCamelCaseNameWithoutId = StringUtils.SplitCamelCase(pNameWithoutId);
+
+
+    if (p.Name == (Model.EntityType.Name + "Id"))
+    {
+        continue;
+    }
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "StateId") || (p.Name == "CountryId") || p.Name.EndsWith("TypeId") || p.Name == "CompanyId")
+    {
+        continue;
+    }
+    else if ((p.Name.EndsWith("Id") || p.Name.EndsWith("Ids")) && p.Name.StartsWith("Predefined") == false)
+    {
+        modelImports = modelImports + pNameWithoutId + "Model , " + (pNameWithoutId) + "SearchCriteria" + " ,";
+    }
+}
+
+import { Component, Input, OnInit, ViewChild } from '@@angular/core';
+import { FormBuilder, NgForm, Validators, FormGroup } from '@@angular/forms';
+import { NgbActiveModal, NgbModal } from '@@ng-bootstrap/ng-bootstrap';
+import { @(Model.CapitalizeEntityName)CrudModalComponent } from 'src/app/shared/modals/@(Model.SmallDashEntityName)-crud-modal/@(Model.SmallDashEntityName)-crud-modal.component';
+import { BaseListComponent } from 'src/common/base-components/base.list.component';
+import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
+import { AstroClassColumnModel, Status } from 'src/common/models/app-custom-model';
+import { @(modelImports) @(Model.CapitalizeEntityName)Model, @(Model.CapitalizeEntityName)SearchCriteria, LoggedInUserModel } from 'src/common/models/app-model';
+import { HttpService } from 'src/common/services/app-http-client';
+import { SelectService } from 'src/common/services/select-service';
+import { SessionService } from 'src/common/framework/web/infrastructure/session/session.service';
+import { CommonDialogService } from 'src/app/shared/services/common-dialog.service';
+import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@@ngneat/until-destroy';
+import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
+import { TitleService } from 'src/app/shared/services/title.service';
+import { PredefinedUserTypes } from 'src/common/models/app-enums';
+import { EnumViewService } from 'src/common/models/app-enum-view';
+import { CustomSelectService } from 'src/common/services/custom-select-service';
+import { ObjectUtils } from 'src/common/framework/common/utils/object.utils';
+import { ConvertUtils } from 'src/common/framework/common/utils/convert.utils';
+import { StringUtils } from 'src/common/framework/common/utils/string.utils';
+import { Router } from '@@angular/router';
+import { RouterDataService } from 'src/common/services/router/router-data.service';
+import { RouterUtils } from 'src/common/framework/common/utils/router.utils';
+import { SidebarLayoutTypes } from 'src/common/models/app-custom-enums';
+
+@if (Model.SearchHasIdOrIds)
+{
+@:@@UntilDestroy()
+}
+@@Component({
+  selector: 'app-@(Model.SmallDashEntityName)-inline-crud-modal',
+  templateUrl: './@(Model.SmallDashEntityName)-inline-crud-modal.component.html'
+})
+export class @(Model.CapitalizeEntityName)ImportModalComponent implements OnInit {
+  
+    @@ViewChild('form') public importForm!: NgForm;
+    @@Input() public title: string = "";
+    @@Input() public onCloseCallback: (() => void) | null = null;
+    @@Input() public companyId: number | null = null;
+    @@Input() public layoutTypeId: number | null = null;
+    @@Input() public isSuperAdmin: boolean = false;
+    @@Input() public companyName: string = "";
+    
+  public searchModel: @(Model.CapitalizeEntityName)SearchCriteria = new @(Model.CapitalizeEntityName)SearchCriteria();
+
+  public currentUser: LoggedInUserModel | null = null;
+
+  public @(Model.SmallEntityName)s: @(Model.CapitalizeEntityName)Model[] = [];
+  
+@foreach (var p in Model.EntityType.GetProperties())
+{
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	{
+        continue;
+    }
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "StateId") || p.Name.EndsWith("TypeId") || p.Name.EndsWith("Id") || p.Name == "CompanyId")
+	{
+        continue;
+    }
+    else
+	{
+        if (p.PropertyType.Name == "String" || p.PropertyType.Name == "string")
+        {
+            @:public @(StringUtils.MakeFirstCharAsLower(p.Name))__size: number = @(Model.CapitalizeEntityName)Model.@(StringUtils.MakeFirstCharAsLower(p.Name))__size;
+        }
+    }
+}
+
+
+  @foreach(var p in Model.SearchCriteriaType.GetProperties())
+  {
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	{
+        continue;
+    }
+	else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	{
+        continue;
+  }
+  else if ((p.Name == "StateId") || (p.Name == "SelectedId") || p.Name == "CompanyId" || p.Name == "CompanyName")
+  {
+    continue;
+  }
+  else if ((p.Name == "CountryId"))
+	{
+
+@:  public countrySearchCriteria = new CountrySearchCriteria();
+@:  public countryTypeahead$ = new Subject<string>();
+@:  public countryTypeaheadLoading: boolean = false;
+@:  public stateSearchCriteria = new StateSearchCriteria();
+@:  public stateTypeahead$ = new Subject<string>();
+@:  public stateTypeaheadLoading: boolean = false;
+    @:public states: StateModel[] = [];
+    @:public countrys: CountryModel[] = [];
+    continue;
+  }  
+  else if (p.Name.EndsWith("TypeId"))
+	{
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId","Types"))): Status[] = [];  
+    }
+    else if (p.Name.EndsWith("TypeIds"))
+	{
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeIds","Types"))): Status[] = [];  
+    }
+	else if (p.Name.EndsWith("Id"))
+	{
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id", "")))SearchCriteria = new @(StringUtils.MakeFirstCharAsUpper(p.Name.Replace("Id", "")))SearchCriteria();
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id","")))Typeahead$ = new Subject<string>();
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id","")))TypeaheadLoading:boolean = false;    
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id","")))s: @(p.Name.Replace("Id",""))Model[] = [];
+    }
+	else if (p.Name.EndsWith("Ids"))
+	{
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id", "")))SearchCriteria = new @(StringUtils.MakeFirstCharAsUpper(p.Name.Replace("Id", "")))SearchCriteria();
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Ids","")))Typeahead$ = new Subject<string>();
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Ids","")))TypeaheadLoading:boolean = false;    
+  @:public @(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Ids","")))s: @(p.Name.Replace("Ids",""))Model[] = [];
+    }
+
+  }
+  
+   public headerList: AstroClassColumnModel[] = [
+  @foreach(var p in Model.EntityType.GetProperties())
+  {
+    var propName = p.Name;
+	var anotherValue = "";
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	{
+        continue;
+    }
+    else if (p.Name == "CreatedByUserId" || p.Name == "CreatedDate" || p.Name == "IsDeleted" || p.Name == "CompanyId")
+	{
+        continue;
+    } 
+    else if (p.Name == "ModifiedByUserId")
+	{
+        anotherValue = "modifiedByUserFirstName";
+    }
+    else if (p.Name.EndsWith("TypeId"))
+	{
+        propName = p.Name.Replace("TypeId","TypeName");
+    }
+    else if (p.Name.EndsWith("TypeIds"))
+	{
+        propName = p.Name.Replace("TypeIds","TypeName");
+    }
+    else if (p.Name.EndsWith("Id"))
+	{
+        propName = p.Name.Replace("Id","Name");
+    }
+
+	var propValue = StringUtils.MakeFirstCharAsLower(propName);
+	if (anotherValue != "")
+        propValue =  anotherValue;
+
+    @:{
+    @:  text: '@(StringUtils.SplitCamelCase(propName))',
+    @:  align: 'left',
+    @:  sortable: true,
+    @:  value: '@propValue',
+    @:  width: '115px',
+    @:},
+  }
+  ];
+
+public constructor(
+    private activeModal: NgbActiveModal,
+    private httpService: HttpService,
+    public sessionService: SessionService,
+    private modalService: NgbModal,
+    private fb: FormBuilder,
+    public selectService: SelectService,
+    public customSelectService: CustomSelectService,
+    private dialogService: CommonDialogService) {
+  }
+
+ public ngOnInit(): void {
+    this.currentUser = this.sessionService.getCurrentUserInfo();
+@foreach (var p in Model.EntityType.GetProperties())
+{
+    if (p.Name == (Model.EntityType.Name + "Id"))
+    {
+        continue;
+    }
+    else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+    {
+        continue;
+    }
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted") || (p.Name == "CreatedDate") || (p.Name == "ModifiedDate") || p.Name == "CompanyId")
+    {
+        continue;
+    }
+    else if (p.Name == "StateId")
+    {
+        continue;
+    }
+    else if (p.Name == "CountryId")
+    {
+        @:this.getCountrys("");
+        continue;
+    }
+    else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+    {
+        var vCapName = p.Name.Replace("TypeId", "Types");
+        var vCapNameWithoutS = p.Name.Replace("TypeId", "Type");
+
+        var vName = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId", "Types"));
+        var vNameWithoutS = StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeId", "Type"));
+        var lName = StringUtils.MakeFirstCharAsLower(p.Name);
+
+        @:this.@(vName) = this.selectService.Get@(p.Name.Replace("TypeId", "Types"))();
+    }
+    else if (p.Name.EndsWith("TypeIds") && p.Name.StartsWith("Predefined"))
+    {
+        @:this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("TypeIds", "Types"))) = this.selectService.Get@(p.Name.Replace("TypeIds", "Types"))();
+    }
+    else if (p.Name.EndsWith("Id"))
+    {
+        @:this.get@(p.Name.Replace("Id", ""))s(this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Id", "")))SearchCriteria);
+    }
+    else if (p.Name.EndsWith("Ids"))
+    {
+        @:this.get@(p.Name.Replace("Ids", ""))s(this.@(StringUtils.MakeFirstCharAsLower(p.Name.Replace("Ids", "")))SearchCriteria);
+    }
+}
+    this.initTypeAheads();
+  }
+  
+ public initTypeAheads(): void {
+  @foreach(var p in Model.EntityType.GetProperties())
+  {
+    if (p.Name == (Model.EntityType.Name + "Id") || p.Name == "CompanyId")
+	  {
+        continue;
+    }
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+    else if ( ( p.Name.EndsWith("Id") || p.Name.EndsWith("Ids") ) && p.Name.StartsWith("Predefined") == false)
+    {
+      var pName = p.Name.Replace("Id","").Replace("Ids","");
+      var pLName = StringUtils.MakeFirstCharAsLower(pName);
+
+@:      this.@(pLName)Typeahead$.pipe(debounceTime(500),distinctUntilChanged(),switchMap((searchValue) => {
+@:        this.@(pLName)TypeaheadLoading = true;
+@:        const @(pLName)SearchCriteria = new @(pName)SearchCriteria();
+@:        @(pLName)SearchCriteria.keyword = searchValue;
+@:        @(pLName)SearchCriteria.companyId = this.companyId;
+@:        return this.httpService.get@(pName)s(@(pLName)SearchCriteria, getHeaderWithBlockUI());
+@:      }),untilDestroyed(this)).subscribe({
+@:        next: (data) => {
+@:          if(data.model) this.@(pLName)s = data.model;
+@:      },  
+@:      error: err => {
+@:       //
+@:      },
+@:      complete: () => this.@(pLName)TypeaheadLoading = false,});
+      }
+    }
+  }
+
+@foreach (var p in Model.EntityType.GetProperties())
+  {
+    var pName = p.Name;
+    var pNameWithoutId = p.Name.Replace("Ids","").Replace("Id","");
+    var pLNameWithoutId = StringUtils.MakeFirstCharAsLower(pNameWithoutId);
+    var pCamelCaseNameWithoutId = StringUtils.SplitCamelCase(pNameWithoutId);                
+
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+        continue;
+    }
+	  else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+        continue;
+    }
+    else if (p.Name == "StateId" || p.Name == "CompanyId")
+	  {
+	    continue;
+    }
+	  else if (p.Name == "CountryId")
+	  {
+  @:
+  @:public getStates(stateSearchCriteria: StateSearchCriteria): void {
+  @:  this.httpService.getStates(stateSearchCriteria).subscribe(data => {
+  @:    if (!data.isSuccess) {
+  @:      return this.dialogService.error('Unable to fetch States');
+  @:    }
+  @:   if(data.model) this.states = data.model;
+  @:  });
+  @:}
+  @:
+  @:public getCountrys(keyword: string): void {
+  @:  this.httpService.getCountriesByKeyword(keyword).subscribe(result => {
+  @:    if(!result.isSuccess) return;
+  @:    if(result.model) {
+  @:    this.countrys = result.model;
+  @:    if(this.countrys.length === 0) return;
+  @:       const stateSearchCriteria = new StateSearchCriteria();
+  @:       stateSearchCriteria.countryId = this.selectedCountry ? this.selectedCountry.countryId : null;
+  @:       this.getStates(stateSearchCriteria);
+  @:      }
+  @:  });
+  @:}	
+  @: 
+    continue;
+    }
+    else if (p.Name.EndsWith("TypeId"))
+	  {
+        continue;
+    }
+    else if (p.Name.EndsWith("TypeIds"))
+	  {
+        continue;
+    }
+	  else if ((p.Name.EndsWith("Id") || p.Name.EndsWith("Ids")) && p.Name.StartsWith("Predefined") == false)
+	  {
+      @:public showAdd@(pNameWithoutId)Modal(): void {
+      @:   const modalRef = this.modalService.open(@(pNameWithoutId)CrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
+      @:   const componentInstance = modalRef.componentInstance as @(pNameWithoutId)CrudModalComponent;
+      @:   componentInstance.isCreateMode = true;
+      @:   componentInstance.buttonText = 'Create';
+      @:   componentInstance.title = 'Create @(pCamelCaseNameWithoutId)';
+      @:   componentInstance.isSuperAdmin = this.isSuperAdmin;
+      @:   componentInstance.companyId = this.companyId;
+      @:   componentInstance.companyName = this.companyName;
+      @:   componentInstance.layoutTypeId = this.layoutTypeId;
+      @:   componentInstance.onCloseCallback = (res: @(pNameWithoutId)Model | null): void => {
+      @:     if (ObjectUtils.isObjNullOrUndefined(res)) return;
+      @:     this.get@(pNameWithoutId)s(this.@(pLNameWithoutId)SearchCriteria, res?.@(pLNameWithoutId)Id);
+      @:   }
+      @: }
+      @:
+      @:
+      @:
+      @:public get@(pNameWithoutId)s(searchModel: @(pNameWithoutId)SearchCriteria, selected@(pLNameWithoutId)Id?: number): void {
+      @:  searchModel.sortAscending = false;
+      @:  searchModel.companyId = this.companyId;
+      @:  searchModel.sortBy = 'createdDate';
+      @:  this.httpService.get@(pNameWithoutId)s(searchModel).subscribe({
+      @:  next: (data) => {
+      @:    if (!data.isSuccess)
+      @:      return;
+      @:   if(data.model) {
+      @:    this.@(pLNameWithoutId)s = data.model;
+      @:    }
+      @:  },
+      @:  error: (error) => this.dialogService.error('Not Able to get @(pCamelCaseNameWithoutId)'),
+      @:  complete: () => null,
+      @:  });
+      @:}
+    }
+  }
+
+  public add@(Model.CapitalizeEntityName)(): void {
+      const obj = new @(Model.CapitalizeEntityName)Model();
+      this.@(Model.SmallEntityName)s.push(obj);
+  }
+  
+  @foreach (var p in Model.EntityType.GetProperties())
+{
+    var pName = p.Name;
+
+    var pNameWithOutTypeId = p.Name.Replace("TypeId","");
+    var pLNameWithOutTypeId = StringUtils.MakeFirstCharAsLower(pNameWithOutTypeId);
+    var pCamelNameWithOutTypeId = StringUtils.SplitCamelCase(pNameWithOutTypeId);                
+    var pNameWithOutTypesId = p.Name.Replace("TypesId","");                
+
+    var pNameWithOutId = p.Name.Replace("Id","");
+    var pLNameWithOutId = StringUtils.MakeFirstCharAsLower(pNameWithOutId);
+    var pCamelNameWithOutId = StringUtils.SplitCamelCase(pNameWithOutId);
+    
+    var pLName = StringUtils.MakeFirstCharAsLower(p.Name);
+    var pCamelName = StringUtils.SplitCamelCase(pName);
+    var pCamelLName = StringUtils.SplitCamelCase((pLName));
+
+    if (p.Name == (Model.EntityType.Name + "Id"))
+    {
+        continue;
+    }
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate") || p.Name == "CompanyId")
+    {
+        continue;
+    }
+    else if ((p.Name == "StateId"))
+    {
+        continue;
+    } 
+    else if ((p.Name == "CountryId"))
+    {
+
+@:        public changeCountry(item: CountryModel, index: number): void {
+@:            if (ObjectUtils.isObjNullOrUndefined(item) || ObjectUtils.isObjNullOrUndefined(this.@(Model.SmallEntityName)s[index]) || !this.@(Model.SmallEntityName)s[index]) return;
+@:            this.@(Model.SmallEntityName)s[index].countryId = item.countryId ?? 0;
+@:            this.@(Model.SmallEntityName)s[index].countryName = item.countryName ?? "";
+@:            this.@(Model.SmallEntityName)s[index].stateId = null;
+@:            this.@(Model.SmallEntityName)s[index].stateName = null;
+@:            const stateSearchCriteria = new StateSearchCriteria();
+@:            stateSearchCriteria.countryId = item.countryId;
+@:            this.getStates(stateSearchCriteria);
+@:        }
+
+    }
+    else if (p.PropertyType.Name == "DateTime" || p.PropertyType.Name == "Date"|| p.PropertyType.Name == "DateOnly" || p.Name.EndsWith("Date"))
+    { 
+        continue;
+    }
+    else if (p.PropertyType.Name == "boolean" || p.PropertyType.Name == "Boolean")
+    { 
+        continue;
+    } 
+    else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+    {
+
+@:       public change@(pNameWithOutId)(item: Status, index: number): void {
+@:            if (ObjectUtils.isObjNullOrUndefined(item) || ObjectUtils.isObjNullOrUndefined(this.@(Model.SmallEntityName)s[index]) || !this.@(Model.SmallEntityName)s[index]) return;
+@:            this.@(Model.SmallEntityName)s[index].@(pLName) = item.id ?? 0;
+@:            this.@(Model.SmallEntityName)s[index].@(pLNameWithOutId)Name = item.type ?? "";
+@:        }
+         
+    }
+    else if (p.Name.EndsWith("Id"))
+    {
+
+@:       public change@(pNameWithOutId)(item: @(pNameWithOutId)Model, index: number): void {
+@:            if (ObjectUtils.isObjNullOrUndefined(item) || ObjectUtils.isObjNullOrUndefined(this.@(Model.SmallEntityName)s[index]) || !this.@(Model.SmallEntityName)s[index]) return;
+@:            this.@(Model.SmallEntityName)s[index].@(pLName) = item.@(pLNameWithOutId)Id;
+@:            this.@(Model.SmallEntityName)s[index].@(pLNameWithOutId)Name = item.@(pLNameWithOutId)Name;
+@:        }
+    }
+     
+}
+ 
+  public onSubmit(f: NgForm): void {
+    if (!f.valid) {
+      return;
+    }
+
+    const multiple@(Model.CapitalizeEntityName)CreateModel = new Multiple@(Model.CapitalizeEntityName)CreateModel();
+    multiple@(Model.CapitalizeEntityName)CreateModel.new@(Model.CapitalizeEntityName)s = [];
+
+    for (const data of this.users) {
+      const @(Model.SmallEntityName) = new @(Model.CapitalizeEntityName)CreateModel();
+      Object.assign(@(Model.SmallEntityName) , data);
+      multiple@(Model.CapitalizeEntityName)CreateModel.new@(Model.CapitalizeEntityName)s.push(@(Model.SmallEntityName) );
+    }
+    this.create@(Model.CapitalizeEntityName)(multiple@(Model.CapitalizeEntityName)CreateModel);
+  }
+
+  public create@(Model.CapitalizeEntityName)(obj: Multiple@(Model.CapitalizeEntityName)CreateModel): void {
+    if (!ObjectUtils.isNullOrUndefined(obj)) {
+      this.httpService.createMultiple@(Model.CapitalizeEntityName)(obj, getHeaderWithLoadingText("Saving ...")).subscribe({
+        next: (result) => {
+          if (!result.isSuccess) {
+            this.dialogService.errorWithReturnModel('Not Able to Create @(Model.CapitalizeEntityName)', result);
+            return;
+          }
+          this.dialogService.success('Successfully Created the @(Model.CapitalizeEntityName).');
+          this.activeModal.close();
+          if (this.onCloseCallback) this.onCloseCallback();
+        },
+        error: (err: unknown) => this.dialogService.error('Not Able to create @(Model.CapitalizeEntityName)'),
+        complete: () => null,
+      });
+    }
+  }
+
+ public cancel(checkDirty: boolean): void {
+
+    if (!checkDirty && this.onCloseCallback) this.onCloseCallback();
+
+    if (this.importForm.dirty && checkDirty) {
+      this.dialogService.cancelConfirmWithTitle('Discard the changes?', 'If you proceed, you cannot undo later.', 'Discard').then(res => {
+        if (res)
+          return this.activeModal.close();
+      });
+    }
+    else {
+      this.activeModal.close();
+    }
+  }
+ 
+}
