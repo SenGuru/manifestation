@@ -1,6 +1,6 @@
-import { AuditDuoColumnModel } from 'src/common/models/app-custom-model';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
 import { Injectable } from '@angular/core';
+import { ManifestColumnModel } from 'src/common/models/app-custom-model';
 import { NgForm } from '@angular/forms';
 
 @Injectable({
@@ -37,7 +37,7 @@ public baseOnReset(f: NgForm, search: BaseSearchCriteria, sortyBy = 'name'): voi
     search.page = 1;
   }
 
-public baseChangeSort(header: AuditDuoColumnModel, search: BaseSearchCriteria, sortData: { currentSort: string }): void {
+public baseChangeSort(header: ManifestColumnModel, search: BaseSearchCriteria, sortData: { currentSort: string }): void {
     if (!header.sortable) return;
 
     search.sortBy = header.value ?? '';

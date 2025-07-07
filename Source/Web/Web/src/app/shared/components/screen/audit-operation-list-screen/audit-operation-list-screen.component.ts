@@ -6,7 +6,7 @@ import {
 } from "src/common/models/app-model";
 import { Component, Input, OnInit } from "@angular/core";
 import {
-  AuditDuoColumnModel,
+  ManifestColumnModel,
   Status,
 } from "src/common/models/app-custom-model";
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from "rxjs";
@@ -295,7 +295,7 @@ export class AuditOperationListScreenComponent
     this.getAuditOperations(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, {
       currentSort: this.currentSort,
     });

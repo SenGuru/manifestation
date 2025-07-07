@@ -1,4 +1,4 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import { JobTemplateModel, JobTemplateSearchCriteria, ScheduledJobModel, ScheduledJobSearchCriteria, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
@@ -548,7 +548,7 @@ export class ScheduledJobListScreenComponent extends BaseListComponent<Scheduled
     this.getScheduledJobs(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getScheduledJobs(this.searchModel);

@@ -16,7 +16,7 @@ export interface TextValueString {
   value: string | undefined;
 }
 
-export interface AuditDuoColumnModel {
+export interface ManifestColumnModel {
   text: string | undefined;
   align: string | undefined;
   sortable: boolean;

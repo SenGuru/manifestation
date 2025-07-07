@@ -1,5 +1,5 @@
 
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import { MessageToSendModel, MessageToSendSearchCriteria } from 'src/common/models/app-model';
 import { Component, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
@@ -159,7 +159,7 @@ export class MessageToSendListScreenComponent extends BaseListComponent<MessageT
     this.getMessageToSends(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getMessageToSends(this.searchModel);

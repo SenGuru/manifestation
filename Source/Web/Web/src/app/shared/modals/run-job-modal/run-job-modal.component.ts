@@ -2,11 +2,11 @@ import { AbstractControl, NgForm, UntypedFormArray, UntypedFormBuilder, UntypedF
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { JobTemplateModel, JobTemplateSearchCriteria, JobWithDiffModel, LoggedInUserModel, ScheduledJobModel, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
 
-import { AuditDuoColumnModel } from 'src/common/models/app-custom-model';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
 import { CommonDialogService } from '../../services/common-dialog.service';
 import { CrudService } from '../../services/crud.service';
 import { HttpService } from 'src/common/services/app-http-client';
+import { ManifestColumnModel } from 'src/common/models/app-custom-model';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SessionService } from 'src/common/framework/web/infrastructure/session/session.service';
 
@@ -274,7 +274,7 @@ export class RunJobModalComponent implements OnInit {
     this.getScheduledJobs(this.scheduledJobSearchModel);
   }
 
-  public jobTemplatechangeSort(header: AuditDuoColumnModel): void {
+  public jobTemplatechangeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.jobTemplateSearchModel, { currentSort: this.jobTemplateCurrentSort });
     this.jobTemplateCurrentSort = this.jobTemplateSearchModel.sortAscending ? 'up' : 'down';
     this.getJobTemplates(this.jobTemplateSearchModel);
@@ -286,7 +286,7 @@ export class RunJobModalComponent implements OnInit {
     this.getJobTemplates(this.jobTemplateSearchModel);
   }
 
-  public scheduledJobchangeSort(header: AuditDuoColumnModel): void {
+  public scheduledJobchangeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.scheduledJobSearchModel, { currentSort: this.scheduledJobCurrentSort });
     this.scheduledJobCurrentSort = this.scheduledJobSearchModel.sortAscending ? 'up' : 'down';
     this.getScheduledJobs(this.scheduledJobSearchModel);

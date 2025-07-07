@@ -1,0 +1,88 @@
+<form name="form" #lvDailyAffirmationTextForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+  (ngSubmit)="lvDailyAffirmationTextForm.form.valid && onSubmit(lvDailyAffirmationTextForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-daily-affirmation-text-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-daily-affirmation-text-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div>
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">
+
+      <div class="col-sm-6">
+        <label class="form-label" for="dailyAffirmationTextValue">Daily Affirmation Text Value
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvDailyAffirmationTextValue="ngModel" type="text" name="dailyAffirmationTextValue"
+            id="dailyAffirmationTextValue" placeholder="Daily Affirmation Text Value" required
+            maxlength="{{ dailyAffirmationTextValue__size }}" class="form-control"
+            [ngClass]="{'is-invalid': lvDailyAffirmationTextForm.submitted && lvDailyAffirmationTextValue.invalid }"
+            [(ngModel)]="dailyAffirmationTextModel.dailyAffirmationTextValue">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvDailyAffirmationTextForm.submitted) && lvDailyAffirmationTextValue.errors?.['required']">
+              Daily Affirmation Text Value is required
+            </span>
+            <span *ngIf="lvDailyAffirmationTextForm.submitted && lvDailyAffirmationTextValue.errors?.['maxlength']">
+              Maximum {{ dailyAffirmationTextValue__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationTextModel?.dailyAffirmationTextValue ? dailyAffirmationTextModel.dailyAffirmationTextValue :
+          '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedCategory">Category
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+          <span *ngIf="!isViewMode" class="pull-right cursor-pointer mr-1" (click)="showAddCategoryModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvCategory="ngModel" placeholder="Category" name="selectedCategory" id="selectedCategory" required
+            [items]="categorys" class="form-control" bindLabel="categoryName" [clearable]="false"
+            [ngClass]="{'is-invalid': lvDailyAffirmationTextForm.submitted && lvCategory.invalid }"
+            [typeahead]="categoryTypeahead$" [loading]="categoryTypeaheadLoading" [(ngModel)]="selectedCategory">
+          </ng-select>
+          <div *ngIf="lvDailyAffirmationTextForm.submitted && lvCategory.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvCategory.errors?.['required']">Category is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationTextModel?.categoryId ? dailyAffirmationTextModel.categoryId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedUser">User
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+          <span *ngIf="!isViewMode" class="pull-right cursor-pointer mr-1" (click)="showAddUserModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvUser="ngModel" placeholder="User" name="selectedUser" id="selectedUser" required [items]="users"
+            class="form-control" bindLabel="userName" [clearable]="false"
+            [ngClass]="{'is-invalid': lvDailyAffirmationTextForm.submitted && lvUser.invalid }"
+            [typeahead]="userTypeahead$" [loading]="userTypeaheadLoading" [(ngModel)]="selectedUser">
+          </ng-select>
+          <div *ngIf="lvDailyAffirmationTextForm.submitted && lvUser.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvUser.errors?.['required']">User is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationTextModel?.userId ? dailyAffirmationTextModel.userId : '-'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light"
+      id="vagncart-daily-affirmation-text-modal-close-btn" data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success"
+      id="vagncart-daily-affirmation-text-modal-submit-btn"
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

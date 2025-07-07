@@ -1,5 +1,5 @@
 
-import { AppLogExtendedModel, AuditDuoColumnModel, LogSeverityType, Status } from 'src/common/models/app-custom-model';
+import { AppLogExtendedModel, ManifestColumnModel, LogSeverityType, Status } from 'src/common/models/app-custom-model';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -37,12 +37,12 @@ export class AppLogModelListScreenComponent extends BaseListComponent<AppLogExte
   public isSelectedForCollapse = true;
   public selectedIndexForCollapse: number | undefined;
   public isWordWrap = false;
-  public initColumns: AuditDuoColumnModel[] = [];
+  public initColumns: ManifestColumnModel[] = [];
   public listCheckArray: AppLogExtendedModel[] = [];
   public appLogDataList: AppLogExtendedModel[] = [];
   public appActivityId: string | null = null;
   public logSeverityType: LogSeverityType | undefined;
-  public override columns: AuditDuoColumnModel[] = [
+  public override columns: ManifestColumnModel[] = [
     {
       text: '',
       align: 'left',
@@ -192,7 +192,7 @@ export class AppLogModelListScreenComponent extends BaseListComponent<AppLogExte
     this.resetSelectedLogCache();
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     if (this.showLogCacheScreen) return;
     this.resetSelectedLogCache();
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });

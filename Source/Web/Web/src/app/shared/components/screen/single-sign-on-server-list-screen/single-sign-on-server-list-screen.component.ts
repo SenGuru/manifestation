@@ -1,4 +1,4 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import { Component, OnInit } from '@angular/core';
 import { SingleSignOnServerModel, SingleSignOnServerSearchCriteria } from 'src/common/models/app-model';
 
@@ -174,7 +174,7 @@ public onReset(f: NgForm): void {
     this.getSingleSignOnServers(this.searchModel);
   }
 
-public changeSort(header: AuditDuoColumnModel): void {
+public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getSingleSignOnServers(this.searchModel);

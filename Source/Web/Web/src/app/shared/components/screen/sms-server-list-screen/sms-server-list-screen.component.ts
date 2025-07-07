@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoggedInUserModel, SmsServerModel, SmsServerSearchCriteria } from 'src/common/models/app-model';
-import { AuditDuoColumnModel } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel } from 'src/common/models/app-custom-model';
 
 import { BaseListComponent } from 'src/common/base-components/base.list.component';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
@@ -190,7 +190,7 @@ public onReset(f: NgForm): void {
     this.getSmsServers(this.searchModel);
   }
 
-public changeSort(header: AuditDuoColumnModel): void {
+public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getSmsServers(this.searchModel);

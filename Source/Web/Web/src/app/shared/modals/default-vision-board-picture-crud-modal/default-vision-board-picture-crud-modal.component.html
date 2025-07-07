@@ -1,0 +1,65 @@
+
+<form name="form" #lvDefaultVisionBoardPictureForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lvDefaultVisionBoardPictureForm.form.valid && onSubmit(lvDefaultVisionBoardPictureForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-default-vision-board-picture-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-default-vision-board-picture-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">        
+
+          <div class="col-sm-6">
+            <label class="form-label" for="location">Location
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvLocation="ngModel" type="text" name="location" id="location" placeholder="Location" required  maxlength="{{ location__size }}"
+                 class="form-control" [ngClass]="{'is-invalid': lvDefaultVisionBoardPictureForm.submitted && lvLocation.invalid }"
+                [(ngModel)]="defaultVisionBoardPictureModel.location">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvDefaultVisionBoardPictureForm.submitted) && lvLocation.errors?.['required']">
+                  Location is required
+                </span>
+                    <span *ngIf="lvDefaultVisionBoardPictureForm.submitted && lvLocation.errors?.['maxlength']">
+                        Maximum {{ location__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{defaultVisionBoardPictureModel?.location ? defaultVisionBoardPictureModel.location : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="fileName">File Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvFileName="ngModel" type="text" name="fileName" id="fileName" placeholder="File Name" required  maxlength="{{ fileName__size }}"
+                 class="form-control" [ngClass]="{'is-invalid': lvDefaultVisionBoardPictureForm.submitted && lvFileName.invalid }"
+                [(ngModel)]="defaultVisionBoardPictureModel.fileName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvDefaultVisionBoardPictureForm.submitted) && lvFileName.errors?.['required']">
+                  File Name is required
+                </span>
+                    <span *ngIf="lvDefaultVisionBoardPictureForm.submitted && lvFileName.errors?.['maxlength']">
+                        Maximum {{ fileName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{defaultVisionBoardPictureModel?.fileName ? defaultVisionBoardPictureModel.fileName : '-'}}
+            </div>
+          </div>
+            {{ Not implemented for FileSize }}
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-default-vision-board-picture-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-default-vision-board-picture-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

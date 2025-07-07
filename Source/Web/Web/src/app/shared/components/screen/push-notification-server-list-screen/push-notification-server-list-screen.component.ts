@@ -2,7 +2,7 @@ import { PushNotificationServerModel, PushNotificationServerSearchCriteria } fro
 import { Component, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 
-import { AuditDuoColumnModel } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel } from 'src/common/models/app-custom-model';
 import { BaseListComponent } from 'src/common/base-components/base.list.component';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
 import { CommonDialogService } from 'src/app/shared/services/common-dialog.service';
@@ -163,7 +163,7 @@ export class PushNotificationServerListScreenComponent extends BaseListComponent
     this.getPushNotificationServers(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getPushNotificationServers(this.searchModel);

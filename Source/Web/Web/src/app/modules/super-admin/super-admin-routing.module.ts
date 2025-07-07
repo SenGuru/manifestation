@@ -2,6 +2,11 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { AppLogModelListScreenComponent } from "src/app/shared/components/screen/app-log-model-list-screen/app-log-model-list-screen.component";
 import { AuditOperationListScreenComponent } from "src/app/shared/components/screen/audit-operation-list-screen/audit-operation-list-screen.component";
+import { DailyAffirmationTextListScreenComponent } from "src/app/shared/components/screen/daily-affirmation-text-list-screen/daily-affirmation-text-list-screen.component";
+import { DefaultDailyAffirmationTextListScreenComponent } from "src/app/shared/components/screen/default-daily-affirmation-text-list-screen/default-daily-affirmation-text-list-screen.component";
+import { DefaultGoalTrackerCategoryListScreenComponent } from "src/app/shared/components/screen/default-goal-tracker-category-list-screen/default-goal-tracker-category-list-screen.component";
+import { DefaultGoalTrackerListScreenComponent } from "src/app/shared/components/screen/default-goal-tracker-list-screen/default-goal-tracker-list-screen.component";
+import { DefaultVisionBoardPictureListScreenComponent } from "src/app/shared/components/screen/default-vision-board-picture-list-screen/default-vision-board-picture-list-screen.component";
 import { GlobalSearchDetailsComponent } from "src/app/shared/components/global-search-details/global-search-details.component";
 import { JobListScreenComponent } from "src/app/shared/components/screen/job-list-screen/job-list-screen.component";
 import { JobTemplateCrudModalComponent } from "src/app/shared/modals/job-template-crud-modal/job-template-crud-modal.component";
@@ -40,6 +45,12 @@ const routes: Routes = [
       { path: 'push-notification', component: PushNotificationServerListScreenComponent },
       { path: 'voice-notification', component: VoiceNotificationServerListScreenComponent },
       { path: 'whatsapp-notification', component: WhatsAppNotificationServerListScreenComponent },
+      { path: 'daily-affirmation-text', component: DailyAffirmationTextListScreenComponent },
+      { path: 'default-category', component: UserListScreenComponent },
+      { path: 'default-daily-affirmation-text', component: DefaultDailyAffirmationTextListScreenComponent },
+      { path: 'default-goal-tracker-category', component: DefaultGoalTrackerCategoryListScreenComponent },
+      { path: 'default-goal-tracker', component: DefaultGoalTrackerListScreenComponent },
+      { path: 'default-vision-board-picture', component: DefaultVisionBoardPictureListScreenComponent },
       {
         path: 'jobs',
         children: [
@@ -54,7 +65,7 @@ const routes: Routes = [
           { path: 'job-template-item/:actionType/:jobTemplateId', component: JobTemplateCrudModalComponent },
           { path: 'job-template-item/:actionType', component: JobTemplateCrudModalComponent },
         ]
-      }, 
+      },
       { path: 'global-search/:layoutTypeId', component: GlobalSearchDetailsComponent },
     ],
   },

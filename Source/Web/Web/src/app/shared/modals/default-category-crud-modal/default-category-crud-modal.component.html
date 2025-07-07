@@ -1,0 +1,61 @@
+
+<form name="form" #lvDefaultCategoryForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lvDefaultCategoryForm.form.valid && onSubmit(lvDefaultCategoryForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-default-category-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-default-category-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">        
+
+          <div class="col-sm-6">
+            <label class="form-label" for="defaultCategoryName">Default Category Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvDefaultCategoryName="ngModel" type="text" name="defaultCategoryName" id="defaultCategoryName" placeholder="Default Category Name" required  maxlength="{{ defaultCategoryName__size }}"
+                 class="form-control" [ngClass]="{'is-invalid': lvDefaultCategoryForm.submitted && lvDefaultCategoryName.invalid }"
+                [(ngModel)]="defaultCategoryModel.defaultCategoryName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvDefaultCategoryForm.submitted) && lvDefaultCategoryName.errors?.['required']">
+                  Default Category Name is required
+                </span>
+                    <span *ngIf="lvDefaultCategoryForm.submitted && lvDefaultCategoryName.errors?.['maxlength']">
+                        Maximum {{ defaultCategoryName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{defaultCategoryModel?.defaultCategoryName ? defaultCategoryModel.defaultCategoryName : '-'}}
+            </div>
+          </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedCategoryType">Predefined Category Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedCategoryType="ngModel" name="selectedPredefinedCategoryType" id="selectedPredefinedCategoryType" required
+            placeholder="Select Predefined Category Type" bindLabel="type"  class="form-control" [clearable]="false" [items]="predefinedCategoryTypes" 
+            [ngClass]="{'is-invalid': lvDefaultCategoryForm.submitted && lvPredefinedCategoryType.invalid }"
+            [(ngModel)]="selectedPredefinedCategoryType">
+          </ng-select>
+          <div *ngIf="lvDefaultCategoryForm.submitted && lvPredefinedCategoryType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedCategoryType.errors?.['required']">Predefined Category Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{defaultCategoryModel?.predefinedCategoryTypeName ? defaultCategoryModel.predefinedCategoryTypeName : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-default-category-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-default-category-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

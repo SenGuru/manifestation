@@ -15,6 +15,22 @@ import { ConfigurationFileStorageEditorComponent } from './modals/configuration-
 import { ConfirmDialogueComponent } from './modals/confirm-dialogue/confirm-dialogue.component';
 import { CsvFileImportModalComponent } from './modals/csv-file-import-modal/csv-file-import-modal.component';
 import { CurrencySymbolComponent } from './components/currency-symbol/currency-symbol.component';
+import { DailyAffirmationSessionCategoryCrudModalComponent } from './modals/daily-affirmation-session-category-crud-modal/daily-affirmation-session-category-crud-modal.component';
+import { DailyAffirmationSessionCategoryListScreenComponent } from './components/screen/daily-affirmation-session-category-list-screen/daily-affirmation-session-category-list-screen.component';
+import { DailyAffirmationSessionCrudModalComponent } from './modals/daily-affirmation-session-crud-modal/daily-affirmation-session-crud-modal.component';
+import { DailyAffirmationSessionListScreenComponent } from './components/screen/daily-affirmation-session-list-screen/daily-affirmation-session-list-screen.component';
+import { DailyAffirmationTextCrudModalComponent } from './modals/daily-affirmation-text-crud-modal/daily-affirmation-text-crud-modal.component';
+import { DailyAffirmationTextListScreenComponent } from './components/screen/daily-affirmation-text-list-screen/daily-affirmation-text-list-screen.component';
+import { DefaultCategoryCrudModalComponent } from './modals/default-category-crud-modal/default-category-crud-modal.component';
+import { DefaultCategoryListScreenComponent } from './components/screen/default-category-list-screen/default-category-list-screen.component';
+import { DefaultDailyAffirmationTextCrudModalComponent } from './modals/default-daily-affirmation-text-crud-modal/default-daily-affirmation-text-crud-modal.component';
+import { DefaultDailyAffirmationTextListScreenComponent } from './components/screen/default-daily-affirmation-text-list-screen/default-daily-affirmation-text-list-screen.component';
+import { DefaultGoalTrackerCategoryCrudModalComponent } from './modals/default-goal-tracker-category-crud-modal/default-goal-tracker-category-crud-modal.component';
+import { DefaultGoalTrackerCategoryListScreenComponent } from './components/screen/default-goal-tracker-category-list-screen/default-goal-tracker-category-list-screen.component';
+import { DefaultGoalTrackerCrudModalComponent } from './modals/default-goal-tracker-crud-modal/default-goal-tracker-crud-modal.component';
+import { DefaultGoalTrackerListScreenComponent } from './components/screen/default-goal-tracker-list-screen/default-goal-tracker-list-screen.component';
+import { DefaultVisionBoardPictureCrudModalComponent } from './modals/default-vision-board-picture-crud-modal/default-vision-board-picture-crud-modal.component';
+import { DefaultVisionBoardPictureListScreenComponent } from './components/screen/default-vision-board-picture-list-screen/default-vision-board-picture-list-screen.component';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 import { EmailvalidatorDirective } from './directives/email-validatior.directive';
 import { ErrorModalComponent } from './modals/error-modal/error-modal.component';
@@ -103,7 +119,7 @@ import lottie from 'lottie-web';
     UtcToBrowserTimePipe,
     CsvFileImportModalComponent,
     EmailvalidatorDirective,
-    SuperAdminHeaderComponent, 
+    SuperAdminHeaderComponent,
     SecondsToHourPipe,
     LastItemPipe,
     FocusOnErrorDirective,
@@ -159,6 +175,22 @@ import lottie from 'lottie-web';
     RealtimeMessageListScreenComponent,
     RunJobModalComponent,
     ResetPasswordComponent,
+    DailyAffirmationSessionCategoryListScreenComponent,
+    DailyAffirmationSessionCategoryCrudModalComponent,
+    DailyAffirmationSessionListScreenComponent,
+    DailyAffirmationSessionCrudModalComponent,
+    DailyAffirmationTextListScreenComponent,
+    DefaultCategoryListScreenComponent,
+    DefaultDailyAffirmationTextListScreenComponent,
+    DefaultGoalTrackerCategoryListScreenComponent,
+    DefaultGoalTrackerListScreenComponent,
+    DefaultVisionBoardPictureListScreenComponent,
+     DailyAffirmationTextCrudModalComponent,
+    DefaultCategoryCrudModalComponent,
+    DefaultDailyAffirmationTextCrudModalComponent,
+    DefaultGoalTrackerCategoryCrudModalComponent,
+    DefaultGoalTrackerCrudModalComponent,
+    DefaultVisionBoardPictureCrudModalComponent, 
   ],
   imports: [
     CommonModule,
@@ -195,9 +227,9 @@ import lottie from 'lottie-web';
     PaginationComponent,
     ProfileTitleComponent,
     UtcToBrowserTimePipe,
-    CsvFileImportModalComponent, 
+    CsvFileImportModalComponent,
     EmailvalidatorDirective,
-    SuperAdminHeaderComponent, 
+    SuperAdminHeaderComponent,
     SecondsToHourPipe,
     LastItemPipe,
     PhoneNumberValidatorDirective,
@@ -253,6 +285,22 @@ import lottie from 'lottie-web';
     RealtimeMessageListScreenComponent,
     RunJobModalComponent,
     ResetPasswordComponent,
+    DailyAffirmationSessionCategoryListScreenComponent,
+    DailyAffirmationSessionCategoryCrudModalComponent,
+    DailyAffirmationSessionListScreenComponent,
+    DailyAffirmationSessionCrudModalComponent,
+    DailyAffirmationTextListScreenComponent,
+    DefaultCategoryListScreenComponent,
+    DefaultDailyAffirmationTextListScreenComponent,
+    DefaultGoalTrackerCategoryListScreenComponent,
+    DefaultGoalTrackerListScreenComponent,
+    DefaultVisionBoardPictureListScreenComponent,
+     DailyAffirmationTextCrudModalComponent,
+    DefaultCategoryCrudModalComponent,
+    DefaultDailyAffirmationTextCrudModalComponent,
+    DefaultGoalTrackerCategoryCrudModalComponent,
+    DefaultGoalTrackerCrudModalComponent,
+    DefaultVisionBoardPictureCrudModalComponent,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
