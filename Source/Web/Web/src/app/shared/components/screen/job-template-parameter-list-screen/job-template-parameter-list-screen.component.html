@@ -9,16 +9,16 @@
       </div>
      <!-- add jobTemplateParameter btn -->
       <div *ngIf="!isViewMode" class="d-flex justify-content-sm-end col-sm"> 
-          <button type="button" class="btn btn-success btn-sm aduo-btn-sm" 
+          <button type="button" class="btn btn-success btn-sm mnf-btn-sm" 
            data-bs-toggle="modal" id="create-job-template-parameter-btn" (click)="showAddJobTemplateParameterModal();"><i class="ri-add-line align-bottom me-1"></i> Add Job Template Parameter</button>
       </div>
   </div>
 </div>
 <div class="card mb-2">
 <div class="card-body">
-<div class="table-responsive table-card auditduo-table" >
+<div class="table-responsive table-card manifest-table" >
 <table *ngIf="listData.length > 0; else nodata" class="table">
-  <thead class="auditduo-table-header">
+  <thead class="manifest-table-header">
     <tr>
       <th
         *ngFor="let column of columns"
@@ -69,10 +69,10 @@
       <td class="text-left last-col-floating-container">
         <div *ngIf="!isViewMode" class="d-flex gap-2">
           <div class="edit">
-              <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showUpdateJobTemplateParameterModal(item, i)">Edit</button>
+              <button class="btn btn-sm mnf-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showUpdateJobTemplateParameterModal(item, i)">Edit</button>
           </div>
           <div class="remove">
-              <button class="btn btn-sm aduo-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button" (click)="deleteJobTemplateParameter(item, i)">Remove</button>
+              <button class="btn btn-sm mnf-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button" (click)="deleteJobTemplateParameter(item, i)">Remove</button>
           </div>
        </div>
 

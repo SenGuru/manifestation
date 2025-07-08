@@ -14,11 +14,11 @@
     </div>
     <!-- add user btn -->
     <div class="d-flex justify-content-sm-end col-sm gap-2">
-      <button type="button" class="btn btn-sm aduo-btn-sm btn-secondary" data-bs-toggle="modal" id="create-user-btn"><i
+      <button type="button" class="btn btn-sm mnf-btn-sm btn-secondary" data-bs-toggle="modal" id="create-user-btn"><i
           class="ri-download-cloud-2-fill"></i> Import</button>
-      <button type="button" class="btn btn-sm aduo-btn-sm btn-info" data-bs-toggle="modal" id="create-user-btn"><i
+      <button type="button" class="btn btn-sm mnf-btn-sm btn-info" data-bs-toggle="modal" id="create-user-btn"><i
           class=" ri-upload-cloud-2-fill"></i> Export</button>
-      <button type="button" class="btn btn-sm aduo-btn-sm btn-success" data-bs-toggle="modal" id="create-user-btn"
+      <button type="button" class="btn btn-sm mnf-btn-sm btn-success" data-bs-toggle="modal" id="create-user-btn"
         (click)="showAddUserModal();"><i class="ri-add-line align-bottom me-1"></i> Add User</button>
     </div>
   </div>
@@ -59,9 +59,9 @@
           </ng-select>
         </div>
         <div class="d-flex justify-content-sm-end col-sm">
-          <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal"
+          <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal"
             id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-          <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(userSearch)">
+          <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onReset(userSearch)">
             Reset
           </button>
         </div>
@@ -70,9 +70,9 @@
   </div>
 
   <div class="card-body">
-    <div class="table-responsive table-card" [ngClass]="isMovieConfig ? 'auditduo-table-sm' : 'auditduo-table'">
+    <div class="table-responsive table-card" [ngClass]="isMovieConfig ? 'manifest-table-sm' : 'manifest-table'">
       <table *ngIf="listData.length > 0; else nodata" class="table">
-        <thead class="auditduo-table-header">
+        <thead class="manifest-table-header">
           <tr>
             <th *ngFor="let column of columns" class="text-left" [ngClass]="{
           'w-1': column.value === 'action',
@@ -129,15 +129,15 @@
             <td class="text-left last-col-floating-container">
               <div class="d-flex gap-2">
                 <div class="view">
-                  <button class="btn btn-sm aduo-btn-sm btn-success view-item-btn" data-bs-toggle="modal" type="button"
+                  <button class="btn btn-sm mnf-btn-sm btn-success view-item-btn" data-bs-toggle="modal" type="button"
                     (click)="showViewUserModal(item)">View</button>
                 </div>
                 <div class="edit">
-                  <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button"
+                  <button class="btn btn-sm mnf-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button"
                     (click)="showUpdateUserModal(item)">Edit</button>
                 </div>
                 <div *ngIf="currentUser?.userId !== item.userId" class="remove">
-                  <button class="btn btn-sm aduo-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button"
+                  <button class="btn btn-sm mnf-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button"
                     (click)="deleteUser(item)">Remove</button>
                 </div>
               </div>

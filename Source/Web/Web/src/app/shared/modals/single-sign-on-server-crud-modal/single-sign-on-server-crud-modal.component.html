@@ -1,9 +1,9 @@
 <form #lvSingleSignOnServerForm="ngForm" name="form" appFocusOnError
   (ngSubmit)="lvSingleSignOnServerForm.form.valid && onSubmit(lvSingleSignOnServerForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-single-sign-on-server-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-single-sign-on-server-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-single-sign-on-server-modal-cancel-btn" (click)="cancel(true)"></button>
+      id="manifest-single-sign-on-server-modal-cancel-btn" (click)="cancel(true)"></button>
   </div>
   <div class="modal-body">
 
@@ -148,9 +148,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-single-sign-on-server-modal-close-btn"
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-single-sign-on-server-modal-close-btn"
       data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success"
-      id="auditduo-single-sign-on-server-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+      id="manifest-single-sign-on-server-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

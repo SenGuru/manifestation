@@ -59,9 +59,9 @@
           </ng-select>
         </div>
         <div class="d-flex justify-content-sm-end col-sm">
-          <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal"
+          <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal"
             id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-          <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(scheduledJobSearch)">
+          <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onReset(scheduledJobSearch)">
             Reset
           </button>
         </div>
@@ -70,9 +70,9 @@
   </div>
 
   <div class="card-body">
-    <div class="table-responsive table-card auditduo-table">
+    <div class="table-responsive table-card manifest-table">
       <table *ngIf="listData.length > 0; else nodata" class="table">
-        <thead class="auditduo-table-header">
+        <thead class="manifest-table-header">
           <tr>
             <th *ngFor="let column of columns" class="text-left" [ngClass]="{
           'w-1': column.value === 'action',

@@ -4,7 +4,7 @@
   <div class="d-flex align-items-center">
     <div class="col-sm-auto">
       <!-- Page title -->
-      <h3 class="card-title mb-0 flex-grow-1 mt-2" id="auditduo-page-title-perf-log-viewer">
+      <h3 class="card-title mb-0 flex-grow-1 mt-2" id="manifest-page-title-perf-log-viewer">
         Perf Log Viewer
       </h3>
     </div>
@@ -91,11 +91,11 @@
         </div>
 
         <div class="col-auto ml-auto mt-auto">
-          <button type="button" class="btn btn-primary aduo-btn-sm mx-2" id="perf-log-list-form-search-btn">
+          <button type="button" class="btn btn-primary mnf-btn-sm mx-2" id="perf-log-list-form-search-btn">
             <app-icon-search></app-icon-search>
             Search
           </button>
-          <button type="button" class="btn btn-secondary aduo-btn-sm ml-1" id="perf-log-list-form-reset-btn"
+          <button type="button" class="btn btn-secondary mnf-btn-sm ml-1" id="perf-log-list-form-reset-btn"
             (click)="onReset(perfLogModelSearch)">
             Reset
           </button>
@@ -104,9 +104,9 @@
     </form>
   </div>
   <div class="card-body">
-    <div class="table-responsive table-card auditduo-table" id="perf-log-list-container">
+    <div class="table-responsive table-card manifest-table" id="perf-log-list-container">
       <table *ngIf="listData.length > 0; else nodata" class="table" id="perf-log-list-table">
-        <thead class="auditduo-table-header">
+        <thead class="manifest-table-header">
           <tr>
             <th *ngFor="let column of columns" class="text-left" [ngClass]="{
             'w-1': column.value === 'action',

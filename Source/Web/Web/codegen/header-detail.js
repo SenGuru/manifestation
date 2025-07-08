@@ -33,7 +33,7 @@ console.log(`
                                     <div class="col-auto">
                                         <div class="avatar-md">
                                             <img [src]="hostProfilePicture" alt="host-information-img"
-                                                class="img-thumbnail rounded-circle auditduo-header-img" />
+                                                class="img-thumbnail rounded-circle manifest-header-img" />
                                         </div>
                                     </div>
                                 </div>

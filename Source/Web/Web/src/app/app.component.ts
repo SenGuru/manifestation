@@ -17,7 +17,7 @@ import { SessionService } from 'src/common/framework/web/infrastructure/session/
 export class AppComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('childModal', { static: false }) public childModal!: TemplateRef<ModalDirective>;
-  public title = 'AuditDuo';
+  public title = 'Manifest';
   public idleState = 'Not started.';
   public timedOut = false;
   public lastPing: Date | undefined;
@@ -96,7 +96,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   public ngAfterViewInit(): void {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const loader = this.renderer.selectRootElement('#aduoPreloader');
+    const loader = this.renderer.selectRootElement('#mnfPreloader');
     this.renderer.setStyle(loader, 'display', 'none');
     const isOtherValidPathExist = window.location.href.includes('sso-callback');
     if (!this.sessionService.getCurrentUserInfo() && !isOtherValidPathExist) {

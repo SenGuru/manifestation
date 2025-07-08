@@ -3,7 +3,7 @@
   <div class="d-flex align-items-center">
     <div class="col-sm-auto">
       <!-- Page title -->
-      <h3 class="card-title mb-0 flex-grow-1 mt-2" id="auditduo-company-page-title-audit-operations">
+      <h3 class="card-title mb-0 flex-grow-1 mt-2" id="manifest-company-page-title-audit-operations">
         Audit Operations
       </h3>
     </div>
@@ -45,9 +45,9 @@
           </ng-select>
         </div> 
         <div class="d-flex justify-content-sm-end col-sm">
-          <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal"
+          <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal"
             id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-          <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(auditOperationSearch)">
+          <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onReset(auditOperationSearch)">
             Reset
           </button>
         </div>
@@ -56,9 +56,9 @@
   </div>
 
   <div class="card-body">
-    <div class="table-responsive table-card auditduo-table">
+    <div class="table-responsive table-card manifest-table">
       <table *ngIf="listData.length > 0; else nodata" class="table">
-        <thead class="auditduo-table-header">
+        <thead class="manifest-table-header">
           <tr>
             <th *ngFor="let column of columns" class="text-left" [ngClass]="{
           'w-1': column.value === 'action',
@@ -114,7 +114,7 @@
             <td class="text-left last-col-floating-container">
               <div class="d-flex gap-2">
                 <div class="view">
-                  <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button"
+                  <button class="btn btn-sm mnf-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button"
                     (click)="showViewAuditOperationModal(item)">View</button>
                 </div>
               </div>

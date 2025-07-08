@@ -1,9 +1,9 @@
 <form #lvJobTemplateForm="ngForm" name="form" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
   (ngSubmit)="lvJobTemplateForm.form.valid && onSubmit(lvJobTemplateForm)">
   <div *ngIf="!isShowFullScreen" class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-job-template-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-job-template-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-job-template-modal-cancel-btn" (click)="cancel()"></button>
+      id="manifest-job-template-modal-cancel-btn" (click)="cancel()"></button>
   </div>
 
   <div *ngIf="isShowFullScreen">
@@ -11,7 +11,7 @@
       <button type="button" class="btn bg-light search" data-bs-toggle="modal" id="back-to-job-templates-btn"
         (click)="cancel();"><i class="ri-arrow-go-back-fill align-bottom me-1"></i> Back to templates</button>
     </div>
-    <h5 class="page-title" id="auditduo-company-page-title">Information</h5>
+    <h5 class="page-title" id="manifest-company-page-title">Information</h5>
     <hr class="mt-1" />
   </div>
 
@@ -448,9 +448,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light mx-2" id="auditduo-job-template-modal-close-btn" data-bs-dismiss="modal"
+    <button type="button" class="btn btn-light mx-2" id="manifest-job-template-modal-close-btn" data-bs-dismiss="modal"
       (click)="cancel()">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success"
-      id="auditduo-job-template-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+      id="manifest-job-template-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

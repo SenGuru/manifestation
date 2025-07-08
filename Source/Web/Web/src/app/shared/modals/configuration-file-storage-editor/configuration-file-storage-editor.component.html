@@ -1,9 +1,9 @@
 <div class="modal-content">
   <form #configurationReportForm="ngForm" novalidate focusOnError (ngSubmit)="onSubmit(configurationReportForm)">
     <div class="modal-header p-3">
-      <h5 class="modal-title" id="auditduo-file-storage-modal-title">{{title}}</h5>
+      <h5 class="modal-title" id="manifest-file-storage-modal-title">{{title}}</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-        id="auditduo-file-storage-modal-cancel-btn" (click)="close(configurationReportForm)"></button>
+        id="manifest-file-storage-modal-cancel-btn" (click)="close(configurationReportForm)"></button>
     </div>
 
     <div class="modal-body">
@@ -202,10 +202,10 @@
     </div>
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-file-storage-modal-close-btn"
+      <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-file-storage-modal-close-btn"
         data-bs-dismiss="modal" (click)="close(configurationReportForm)">Close</button>
-      <button type="submit" class="btn btn-sm aduo-btn-sm btn-success"
-        id="auditduo-file-storage-modal-submit-btn">Save</button>
+      <button type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+        id="manifest-file-storage-modal-submit-btn">Save</button>
     </div>
 
   </form>

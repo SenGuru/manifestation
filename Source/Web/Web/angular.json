@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "auditduo": {
+    "manifest": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -21,7 +21,7 @@
           "builder": "@angular/build:application",
           "options": {
             "outputPath": {
-              "base": "dist/auditduo"
+              "base": "dist/manifest"
             },
             "index": "src/index.html",
             "polyfills": [
@@ -138,14 +138,14 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "buildTarget": "auditduo:build"
+            "buildTarget": "manifest:build"
           },
           "configurations": {
             "production": {
-              "buildTarget": "auditduo:build:production"
+              "buildTarget": "manifest:build:production"
             },
             "development": {
-              "buildTarget": "auditduo:build:development"
+              "buildTarget": "manifest:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -153,7 +153,7 @@
         "extract-i18n": {
           "builder": "@angular/build:extract-i18n",
           "options": {
-            "buildTarget": "auditduo:build"
+            "buildTarget": "manifest:build"
           }
         },
         "test": {

@@ -1,9 +1,9 @@
 <form #lvPushNotificationServerForm="ngForm" name="form" appFocusOnError
   (ngSubmit)="lvPushNotificationServerForm.form.valid && onSubmit(lvPushNotificationServerForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-push-notification-server-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-push-notification-server-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-push-notification-server-modal-cancel-btn" (click)="cancel(true)"></button>
+      id="manifest-push-notification-server-modal-cancel-btn" (click)="cancel(true)"></button>
   </div>
   <div class="modal-body">
 
@@ -229,9 +229,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-sm aduo-btn-sm btn-light" id="auditduo-push-notification-server-modal-close-btn"
+    <button type="button" class="btn btn-sm mnf-btn-sm btn-light" id="manifest-push-notification-server-modal-close-btn"
       data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
     <button *ngIf="!isViewMode" type="submit"
-      class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-push-notification-server-modal-submit-btn">{{buttonText}}</button>
+      class="btn btn-sm mnf-btn-sm btn-success" id="manifest-push-notification-server-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

@@ -1,9 +1,9 @@
 <form #lvSmsServerForm="ngForm" name="form" appFocusOnError
   (ngSubmit)="lvSmsServerForm.form.valid && onSubmit(lvSmsServerForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-sms-server-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-sms-server-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-sms-server-modal-cancel-btn" (click)="cancel(true)"></button>
+      id="manifest-sms-server-modal-cancel-btn" (click)="cancel(true)"></button>
   </div>
   <div class="modal-body">
     <div class="form-group row mb-4">
@@ -218,9 +218,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-sms-server-modal-close-btn" data-bs-dismiss="modal"
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-sms-server-modal-close-btn" data-bs-dismiss="modal"
       (click)="cancel(true)">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success"
-      id="auditduo-sms-server-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+      id="manifest-sms-server-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>
