@@ -48,30 +48,12 @@
 // ];
 
 var tables = [
-    'Catalog'
-    , 'CatalogProductPrice'
-    , 'CatalogProductPriceHistory'
-    , 'CompanyConfiguration'
-    , 'CompanyCreditTier'
-    , 'CompanyLocation'
-    , 'CompanyUser'
-    , 'CompanyUserCredit'
-    , 'CompanyUserCreditHistory'
-    , 'Invoice'
-    , 'InvoiceOrder'
-    , 'Order'
-    , 'OrderDeliveryPartner'
-    , 'OrderPayment'
-    , 'OrderProduct'
-    , 'OtpServer'
-    , 'Product'
-    , 'ProductBrand'
-    , 'ProductCategory'
-    , 'ProductInventoryHistory'
-    , 'UserAddress'
-    , 'UserGroup'
-    , 'UserGroupUser'
-    , 'UserLoyaltyPointHistory'
+    'DailyAffirmationText',
+'DefaultCategory',
+'DefaultDailyAffirmationText',
+'DefaultGoalTrackerCategory',
+'DefaultGoalTracker',
+'DefaultVisionBoardPicture',
 ];
 
 

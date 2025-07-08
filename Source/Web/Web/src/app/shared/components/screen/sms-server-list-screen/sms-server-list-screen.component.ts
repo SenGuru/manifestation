@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { LoggedInUserModel, SmsServerModel, SmsServerSearchCriteria } from 'src/common/models/app-model';
-import { AuditDuoColumnModel } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel } from 'src/common/models/app-custom-model';
 
 import { BaseListComponent } from 'src/common/base-components/base.list.component';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
@@ -106,12 +106,7 @@ public ngOnInit(): void {
     this.initialUrl = this.enumViewService.getInititalUrl(this.currentUser?.userTypeId ?? 0);
     if (this.currentUser && this.currentUser.userTypeId && this.currentUser.userTypeId == PredefinedUserTypes.SuperAdmin) {
       this.isSuperAdmin = true;
-    } else if (this.currentUser && this.currentUser.userTypeId && (this.currentUser.userTypeId == PredefinedUserTypes.CompanyAdmin)) {
-      this.isConfigurator = true;
-      this.companyId = this.currentUser?.companyId ?? 0;
-      this.columns = this.columns.filter(item => item.value != 'companyName');
-    }
-    this.searchModel.companyId = this.companyId ?? 0;
+    } 
     this.getSmsServers(this.searchModel);
   }
 
@@ -190,12 +185,12 @@ public onSearch(f: NgForm): void {
 public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.selectedId = null;
     this.getSmsServers(this.searchModel);
   }
 
-public changeSort(header: AuditDuoColumnModel): void {
+public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getSmsServers(this.searchModel);

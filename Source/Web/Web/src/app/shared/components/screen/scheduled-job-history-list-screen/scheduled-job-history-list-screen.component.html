@@ -30,13 +30,7 @@
         placeholder="Search Text"
         [(ngModel)]="this.searchModel.keyword"
       />
-    </div>
-    <div class="col-md-2">
-      <ng-select placeholder="Company" class="form-control"
-      name="selectedCompany" id="selectedCompany" bindLabel="companyName"
-      [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$" [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-    </ng-select>
-    </div>      
+    </div>     
     <div class="col-md-2">
       <ng-select placeholder="Scheduled Job" class="form-control"
       name="selectedScheduledJob" id="selectedScheduledJob" bindLabel="scheduledJobName"
@@ -87,10 +81,7 @@
     <tr *ngFor="let item of listData">
       <td class="text-left">
         <!-- {{ item.scheduledJobName  }} -->
-      </td>
-      <td class="text-left">
-        {{ item.companyName  }}
-      </td>
+      </td> 
       <td class="text-left">
         {{ item.pickupDate |  date: 'dd/MM/yy' }}
       </td>

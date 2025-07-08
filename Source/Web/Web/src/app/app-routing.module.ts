@@ -15,7 +15,6 @@ const routes: Routes = [
   { path: 'forgot-password', loadChildren: () => import('./modules/forgot-password/forgot-password.module').then(m => m.ForgotPasswordModule) },
   { path: 'alternatelogin', loadChildren: () => import('./modules/alternate-login/alternate-login.module').then(m => m.AlternateLoginModule) },
   { path: 'sa', loadChildren: () => import('./modules/super-admin/super-admin.module').then(m => m.SuperAdminModule), canActivate: [AuthGuard], data: { predefinedUserTypeId: PredefinedUserTypes.SuperAdmin, } },
-  { path: 'admin', loadChildren: () => import('./modules/admin/admin.module').then(m => m.AdminModule), canActivate: [AuthGuard], data: { predefinedUserTypeId: PredefinedUserTypes.CompanyAdmin } },
   { path: '**', redirectTo: '' },
 ];
 

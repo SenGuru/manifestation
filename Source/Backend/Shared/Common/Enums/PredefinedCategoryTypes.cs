@@ -1,5 +1,7 @@
 namespace Manifest.Common.Enums
 {
+    
+
     public enum PredefinedCategoryTypes
     {
         DailyAffirmation = 3400001,

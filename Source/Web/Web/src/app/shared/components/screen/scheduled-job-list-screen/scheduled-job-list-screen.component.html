@@ -25,12 +25,7 @@
           <input type="text" class="form-control" name="example-text-input" placeholder="Search Text"
             [(ngModel)]="this.searchModel.keyword" />
         </div>
-        <div class="col-md-2">
-          <ng-select placeholder="Company" class="form-control" name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" [items]="companys" [clearable]="true" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-        </div>
+        
         <div class="col-md-2">
           <ng-select placeholder="Job Template" class="form-control" name="selectedJobTemplate" id="selectedJobTemplate"
             bindLabel="jobTemplateName" [items]="jobTemplates" [clearable]="true" [typeahead]="jobTemplateTypeahead$"
@@ -102,9 +97,6 @@
             </td>
             <td class="text-left">
               <!-- {{ item.predefinedJobOrReportTypeName  }} -->
-            </td>
-            <td class="text-left">
-              {{ item.companyName }}
             </td>
             <td class="text-left">
               {{ item.submittedByUserName }}

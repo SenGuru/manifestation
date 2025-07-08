@@ -1,6 +1,6 @@
-import { CompanyModel, CompanySearchCriteria, LoggedInUserModel, ScheduledJobHistoryCreateModel, ScheduledJobHistoryModel, ScheduledJobHistoryUpdateModel, ScheduledJobModel, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { LoggedInUserModel, ScheduledJobHistoryCreateModel, ScheduledJobHistoryModel, ScheduledJobHistoryUpdateModel, ScheduledJobModel, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
@@ -35,11 +35,7 @@ export class ScheduledJobHistoryCrudModalComponent implements OnInit {
   public scheduledJobTypeahead$ = new Subject<string>();
   public scheduledJobTypeaheadLoading = false;
   public scheduledJobs: ScheduledJobModel[] = [];
-  public selectedScheduledJob: ScheduledJobModel | undefined;
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+  public selectedScheduledJob: ScheduledJobModel | undefined; 
   public pickupProcessTypeahead$ = new Subject<string>();
   public pickupProcessTypeaheadLoading = false;
   // pickupProcesss: PickupProcessModel[] = [];
@@ -58,7 +54,6 @@ export class ScheduledJobHistoryCrudModalComponent implements OnInit {
   public ngOnInit(): void {
     this.currentUser = this.sessionService.getCurrentUserInfo();
     this.getScheduledJobs();
-    this.getCompanies();
     this.getPickupProcesss();
     this.initTypeAheads();
   }
@@ -78,24 +73,7 @@ export class ScheduledJobHistoryCrudModalComponent implements OnInit {
         this.scheduledJobTypeaheadLoading = false;
       },
       complete: () => null,
-    });
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    }); 
     // this.pickupProcessTypeahead$.pipe(debounceTime(500),distinctUntilChanged(),switchMap((searchValue) => {
     //   this.pickupProcessTypeaheadLoading = true;
     //   let pickupProcessSearchCriteria = new PickupProcessSearchCriteria();
@@ -132,27 +110,7 @@ export class ScheduledJobHistoryCrudModalComponent implements OnInit {
       complete: () => null,
     });
   }
-
-  public getCompanies(): void {
-    const searchModel: CompanySearchCriteria = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.scheduledJobHistoryModel.companyId);
-        }
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+ 
   public getPickupProcesss(): void {
     // let searchModel: PickupProcessSearchCriteria = new PickupProcessSearchCriteria();
     // searchModel.sortAscending = false;
@@ -190,9 +148,7 @@ export class ScheduledJobHistoryCrudModalComponent implements OnInit {
 
   public generateModel(obj: ScheduledJobHistoryModel): ScheduledJobHistoryModel | undefined {
     if (this.selectedScheduledJob == null)
-      return;
-    if (this.selectedCompany == null)
-      return;
+      return; 
     if (this.selectedPickupProcess == null)
       return;
     Object.assign(this.scheduledJobHistoryModel, obj);
@@ -205,7 +161,6 @@ export class ScheduledJobHistoryCrudModalComponent implements OnInit {
     });
 
     this.scheduledJobHistoryModel.scheduledJobId = this.selectedScheduledJob?.scheduledJobId ?? 0;
-    this.scheduledJobHistoryModel.companyId = this.selectedCompany?.companyId ?? 0;
     // this.scheduledJobHistoryModel.pickupProcessId = this.selectedPickupProcess ? this.selectedPickupProcess.pickupProcessId : null;
     return this.scheduledJobHistoryModel;
   }

@@ -1,6 +1,6 @@
-import { CompanyModel, CompanySearchCriteria, JobTemplateCategoryCreateModel, JobTemplateCategoryModel, JobTemplateCategoryUpdateModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
+import { JobTemplateCategoryCreateModel, JobTemplateCategoryModel, JobTemplateCategoryUpdateModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
@@ -33,10 +33,7 @@ export class JobTemplateCategoryCrudModalComponent implements OnInit {
 
   public name__size: number = JobTemplateCategoryModel.name__size;
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
 
   public constructor(
     private httpService: HttpService,
@@ -48,53 +45,9 @@ export class JobTemplateCategoryCrudModalComponent implements OnInit {
 
   public ngOnInit(): void {
     this.currentUser = this.sessionService.getCurrentUserInfo();
-    this.getCompanies();
-    this.initTypeAheads();
+   
   }
-
-  public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      if (!this.isCreateMode) companySearchCriteria.selectedId = this.jobTemplateCategoryModel.companyId;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-  public getCompanies(): void {
-    const searchModel: CompanySearchCriteria = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.isActive = true;
-    searchModel.sortBy = 'createdDate';
-    if (!this.isCreateMode) searchModel.selectedId = this.jobTemplateCategoryModel.companyId;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.jobTemplateCategoryModel.companyId);
-        }
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+ 
   public onSubmit(f: NgForm): void {
     if (!f.valid) {
       return;
@@ -112,8 +65,6 @@ export class JobTemplateCategoryCrudModalComponent implements OnInit {
   }
 
   public generateModel(obj: JobTemplateCategoryModel): JobTemplateCategoryModel | undefined {
-    if (this.selectedCompany == null)
-      return;
     Object.assign(this.jobTemplateCategoryModel, obj);
     Object.keys(this.jobTemplateCategoryModel).forEach(key => {
       //@ts-expect-error  --- following line expected to have an error
@@ -123,7 +74,6 @@ export class JobTemplateCategoryCrudModalComponent implements OnInit {
       }
     });
 
-    this.jobTemplateCategoryModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     return this.jobTemplateCategoryModel;
   }
 

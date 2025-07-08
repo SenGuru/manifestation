@@ -1,0 +1,84 @@
+<form name="form" #lvVisionBoardSessionForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+  (ngSubmit)="lvVisionBoardSessionForm.form.valid && onSubmit(lvVisionBoardSessionForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-vision-board-session-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-vision-board-session-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div>
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">
+
+      <div class="col-sm-6">
+        <label class="form-label" for="visionBoardSessionDate"> Vision Board Session Date
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input mwlFlatpickr #lvVisionBoardSessionDate="ngModel" type="text"
+            placeholder="Select Vision Board Session Date" name="visionBoardSessionDate" id="visionBoardSessionDate"
+            class="form-control flatpickr-input" [altInput]="true" altFormat="F j, Y" dateFormat="Y-m-d" required
+            [convertModelValue]="true"
+            [ngClass]="{'is-invalid': lvVisionBoardSessionForm.submitted && lvVisionBoardSessionDate.invalid }"
+            [(ngModel)]="visionBoardSessionModel.visionBoardSessionDate" />
+          <div *ngIf="lvVisionBoardSessionForm.submitted && lvVisionBoardSessionDate.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvVisionBoardSessionDate.errors?.['required']">Vision Board Session Date is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{visionBoardSessionModel?.visionBoardSessionDate ? (visionBoardSessionModel.visionBoardSessionDate | date :
+          'MM/dd/yy') : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedUser">User
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+          <span *ngIf="!isViewMode" class="pull-right cursor-pointer mr-1" (click)="showAddUserModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvUser="ngModel" placeholder="User" name="selectedUser" id="selectedUser" required [items]="users"
+            class="form-control" bindLabel="userName" [clearable]="false"
+            [ngClass]="{'is-invalid': lvVisionBoardSessionForm.submitted && lvUser.invalid }"
+            [typeahead]="userTypeahead$" [loading]="userTypeaheadLoading" [(ngModel)]="selectedUser">
+          </ng-select>
+          <div *ngIf="lvVisionBoardSessionForm.submitted && lvUser.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvUser.errors?.['required']">User is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{visionBoardSessionModel?.userId ? visionBoardSessionModel.userId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="addedToFeedDate"> Added To Feed Date
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input mwlFlatpickr #lvAddedToFeedDate="ngModel" type="text" placeholder="Select Added To Feed Date"
+            name="addedToFeedDate" id="addedToFeedDate" class="form-control flatpickr-input" [altInput]="true"
+            altFormat="F j, Y" dateFormat="Y-m-d" required [convertModelValue]="true"
+            [ngClass]="{'is-invalid': lvVisionBoardSessionForm.submitted && lvAddedToFeedDate.invalid }"
+            [(ngModel)]="visionBoardSessionModel.addedToFeedDate" />
+          <div *ngIf="lvVisionBoardSessionForm.submitted && lvAddedToFeedDate.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvAddedToFeedDate.errors?.['required']">Added To Feed Date is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{visionBoardSessionModel?.addedToFeedDate ? (visionBoardSessionModel.addedToFeedDate | date : 'MM/dd/yy') :
+          '-'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light"
+      id="vagncart-vision-board-session-modal-close-btn" data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success"
+      id="vagncart-vision-board-session-modal-submit-btn"
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

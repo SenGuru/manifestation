@@ -1,10 +1,9 @@
-import { CompanyModel, CompanySearchCriteria, LoggedInUserModel, MessageTemplateCreateModel, MessageTemplateModel, MessageTemplateUpdateModel } from 'src/common/models/app-model';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { LoggedInUserModel, MessageTemplateCreateModel, MessageTemplateModel, MessageTemplateUpdateModel } from 'src/common/models/app-model';
 import { MessageTemplateTabs, Status } from 'src/common/models/app-custom-model';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { CommonDialogService } from '../../services/common-dialog.service';
-import { CompanyCrudModalComponent } from '../company-crud-modal/company-crud-modal.component';
 import { CustomSelectService } from 'src/common/services/custom-select-service';
 import { HttpService } from 'src/common/services/app-http-client';
 import { NgForm } from '@angular/forms';
@@ -15,9 +14,9 @@ import { SessionService } from 'src/common/framework/web/infrastructure/session/
 import { Subject } from 'rxjs';
 
 @Component({
-    selector: 'app-message-template-crud-modal',
-    templateUrl: './message-template-crud-modal.component.html',
-    standalone: false
+  selector: 'app-message-template-crud-modal',
+  templateUrl: './message-template-crud-modal.component.html',
+  standalone: false
 })
 export class MessageTemplateCrudModalComponent implements OnInit {
 
@@ -52,9 +51,6 @@ export class MessageTemplateCrudModalComponent implements OnInit {
   public additionalRecipientEmail: number | undefined;
   public companyTypeahead$ = new Subject<string>();
   public companyTypeaheadLoading: boolean = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
-  public companySearchModel: CompanySearchCriteria = new CompanySearchCriteria();
 
   public constructor(
     private httpService: HttpService,
@@ -75,43 +71,6 @@ export class MessageTemplateCrudModalComponent implements OnInit {
       this.messageTemplateModel.sendEmailForExternalUser = true;
       this.messageTemplateModel.sendEmailForInternalUser = true;
     }
-    this.getCompanies(this.companySearchModel);
-  }
-
-  public showAddCompanyModal(): void {
-    const modalRef = this.modalService.open(CompanyCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
-    const componentInstance = modalRef.componentInstance as CompanyCrudModalComponent;
-    componentInstance.isCreateMode = true;
-    componentInstance.buttonText = 'Create';
-    componentInstance.title = 'Create Company';
-    componentInstance.onCloseCallback = (res: CompanyModel | null): void => {
-      if (ObjectUtils.isObjNullOrUndefined(res)) return;
-      this.getCompanies(this.companySearchModel, res?.companyId);
-    }
-  }
-
-  public getCompanies(searchModel: CompanySearchCriteria, selectedCompanyId?: number): void {
-    searchModel.sortAscending = false;
-    searchModel.isActive = true;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.messageTemplateModel.companyId);
-          if (selectedCompanyId) {
-            this.selectedCompany = this.companys.find(item => item.companyId == selectedCompanyId);
-          }
-        }
-      },
-      error: (error) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
   }
 
   public changeTab(tab: MessageTemplateTabs): void {
@@ -216,7 +175,6 @@ export class MessageTemplateCrudModalComponent implements OnInit {
       }
     });
     this.messageTemplateModel.predefinedMessageTemplateTypeId = this.selectedPredefinedMessageTemplateType?.id ?? 0;
-    this.messageTemplateModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
   }
 
   public createMessageTemplate(messageTemplateModel: MessageTemplateModel): void {

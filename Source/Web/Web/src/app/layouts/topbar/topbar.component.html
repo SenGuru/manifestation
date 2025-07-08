@@ -61,19 +61,7 @@
 
                             <div class="dropdown-header mt-2">
                                 <h6 class="text-overflow text-muted mb-1 text-uppercase">Pages</h6>
-                            </div>
-                            <ng-container *ngIf="enable.includes('company') && isSuperAdmin">
-                                <span *ngIf="(isCompanySearchLoading || (companySearchResult?.model?.length ?? 0) > 0)"
-                                    class="dropdown-header fs-14">Company
-                                </span>
-                                <div *ngIf="isCompanySearchLoading" class="dropdown-item">
-                                    <div class="spinner-border spinner-border-sm ml-4" role="status"></div>
-                                </div>
-                                <div *ngFor="let item of companySearchResult?.model"
-                                    class="dropdown-item cursor-pointer" (mousedown)="selectCompany(item)">
-                                    <div class="ml-4">{{item.companyName}}</div>
-                                </div>
-                            </ng-container>
+                            </div> 
 
                             <ng-container *ngIf="enable.includes('user') && isSuperAdmin">
                                 <span *ngIf="(isUserSearchLoading || (userSearchResult?.model?.length ?? 0) > 0)"
@@ -85,20 +73,7 @@
                                     (mousedown)="selectUser(item)">
                                     <div class="ml-4">{{item.userName}}</div>
                                 </div>
-                            </ng-container>
-
-                            <div *ngIf="
-                                companySearchResult?.totalRecords ?? 0 > 0 ||
-                                userSearchResult?.totalRecords ?? 0 > 0
-                                " class="dropdown-divider"></div>
-
-                            <ng-container *ngIf="enable.includes('company') && isSuperAdmin">
-                                <div *ngIf="companySearchResult?.totalRecords ?? 0 > 0"
-                                    class="dropdown-item cursor-pointer" (mousedown)="goToDetailsPage('company')">
-                                    <i class="ri-list-unordered"></i>
-                                    <span class="mx-2">View Companies ({{companySearchResult?.totalRecords}})</span>
-                                </div>
-                            </ng-container>
+                            </ng-container> 
 
                             <ng-container *ngIf="enable.includes('user') && isSuperAdmin">
                                 <div *ngIf="userSearchResult?.totalRecords ?? 0 > 0"

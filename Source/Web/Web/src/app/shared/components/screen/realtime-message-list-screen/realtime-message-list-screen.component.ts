@@ -1,5 +1,5 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, RealtimeMessageModel, RealtimeMessageSearchCriteria, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
+import { RealtimeMessageModel, RealtimeMessageSearchCriteria, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,10 +28,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
   @Input() public globalSearchText: string | undefined;
   public override searchModel: RealtimeMessageSearchCriteria = new RealtimeMessageSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public predefinedMessagePriorityTypes: Status[] = [];
   public selectedPredefinedMessagePriorityTypes: Status[] = [];
   public predefinedRealtimeMessageStatusTypes: Status[] = [];
@@ -197,7 +194,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
 
   public ngOnInit(): void {
     this.getRealtimeMessages(this.searchModel);
-    this.getCompanies();
+   
     this.predefinedMessagePriorityTypes = this.selectService.GetPredefinedMessagePriorityTypes();
     this.predefinedRealtimeMessageStatusTypes = this.selectService.GetPredefinedRealtimeMessageStatusTypes();
     this.predefinedNotificationMessageTypes = this.selectService.GetPredefinedNotificationMessageTypes();
@@ -207,23 +204,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
   }
 
   public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    
 
     this.userTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
       this.userTypeaheadLoading = true;
@@ -244,24 +225,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
     });
   }
 
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+  
   public getUsers(): void {
     const searchModel = new UserSearchCriteria();
     searchModel.sortAscending = false;
@@ -330,7 +294,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+    
     const predefinedMessagePriorityTypesArray = this.selectedPredefinedMessagePriorityTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedMessagePriorityTypeIds = predefinedMessagePriorityTypesArray;
     const predefinedRealtimeMessageStatusTypesArray = this.selectedPredefinedRealtimeMessageStatusTypes?.map(item => item.id ?? 0);
@@ -346,7 +310,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.predefinedMessagePriorityTypeIds = null;
     this.searchModel.predefinedRealtimeMessageStatusTypeIds = null;
     this.searchModel.predefinedNotificationMessageTypeIds = null;
@@ -356,7 +320,7 @@ export class RealtimeMessageListScreenComponent extends BaseListComponent<Realti
     this.getRealtimeMessages(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getRealtimeMessages(this.searchModel);

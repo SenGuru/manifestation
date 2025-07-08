@@ -11,10 +11,7 @@ export class AppSessionService {
 
   public constructor(private sessionService: SessionService) {
 
-  }
-  public get isCompanyAdmin(): boolean {
-    return !ObjectUtils.isNullOrUndefined(this.sessionService.currentUser) ? this.sessionService.currentUser?.userTypeId === PredefinedUserTypes.CompanyAdmin : false;
-  }
+  } 
 
   public get currentUserId(): number {
     return !ObjectUtils.isNullOrUndefined(this.sessionService.currentUser) ? this.sessionService.currentUser?.userId ?? 0 : 0;

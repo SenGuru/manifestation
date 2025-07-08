@@ -1,7 +1,6 @@
 import { ADMIN_COMPANY_MENU, SUPER_ADMIN_MENU } from '../menus/super-admin-menu';
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { CompanyMenuTypes, CustomerMenuTypes, SidebarLayoutTypes } from 'src/common/models/app-custom-enums';
-import { CompanyModel, LoggedInUserModel } from 'src/common/models/app-model';
 import { NavigationEnd, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -10,6 +9,7 @@ import { CommonDialogService } from 'src/app/shared/services/common-dialog.servi
 import { CompanySessionService } from 'src/common/services/session/company-session-service';
 import { EnumViewService } from 'src/common/models/app-enum-view';
 import { HttpService } from 'src/common/services/app-http-client';
+import { LoggedInUserModel } from 'src/common/models/app-model';
 import { MenuItem } from 'src/common/models/app-custom-model';
 import { ObjectUtils } from 'src/common/framework/common/utils/object.utils';
 import { PredefinedUserTypes } from 'src/common/models/app-enums';
@@ -34,7 +34,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   public menuItems: MenuItem[] = [];
   public currentUser: LoggedInUserModel | null = null;
   public initialUrl = '';
-  public companyInfo: CompanyModel | undefined;
   public destinationUrl = '';
   public isLoadingSidebarMenu: boolean = false;
 
@@ -76,7 +75,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
     let companyId = RouterUtils.getRouterDataNumber(routerParams?.companyId) ?? 0;
 
     if (this.currentUser?.userTypeId !== PredefinedUserTypes.SuperAdmin) {
-      companyId = this.currentUser?.companyId ?? 0;
     }
 
     //@ts-expect-error -- this line expected to have an error
@@ -110,30 +108,13 @@ export class SidebarComponent implements OnInit, AfterViewInit {
         this.defaultSidebarMovieInformation();
       }
     }
-    // eslint-disable-next-line 
-    else if (this.currentUser && this.currentUser?.userTypeId == PredefinedUserTypes.CompanyAdmin) {
-      this.menuItems = JSON.parse(JSON.stringify(ADMIN_MENU)) as MenuItem[];
-      if (routerParams && !ObjectUtils.isObjNullOrUndefined(routerParams)) {
-        this.menuItems = JSON.parse(JSON.stringify(ADMIN_MENU)) as MenuItem[];
-      } else {
-        this.defaultSidebarMovieInformation();
-      }
-    }
+   
 
     // update url path 
 
     // company id
     if (!ObjectUtils.isNullOrUndefined(companyId) && companyId > 0) {
       this.menuItems = this.updateUrlWithId(this.menuItems, 'companyId', companyId?.toString() ?? '');
-
-      const sessionCompany = this.companySessionService.getCurrentCompany();
-      if (sessionCompany && sessionCompany?.companyId === companyId) {
-        this.companyInfo = sessionCompany;
-        this.applyPermission(layoutTypeId, this.companyInfo);
-      } else {
-        this.isLoadingSidebarMenu = true;
-        this.getCompanyInfo(layoutTypeId, companyId);
-      }
 
     } else {
       this.isLoadingSidebarMenu = false;
@@ -153,26 +134,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
       this.menuItems = this.updateUrlWithId(this.menuItems, 'analysisRuleId', analysisRuleId?.toString());
     }
   }
-
-  public applyPermission(layoutTypeId: number, companyInfo: CompanyModel): void {
-
-    if ((this.currentUser?.userTypeId == PredefinedUserTypes.SuperAdmin && !ObjectUtils.isObjNullOrUndefined(companyInfo) && layoutTypeId === SidebarLayoutTypes.CompanyDetail)
-      || (ObjectUtils.isNullOrUndefined(layoutTypeId) && this.currentUser?.userTypeId == PredefinedUserTypes.CompanyAdmin && !ObjectUtils.isObjNullOrUndefined(companyInfo))) {
-
-      const filteredMenus: MenuItem[] = JSON.parse(JSON.stringify(this.menuItems)) as MenuItem[];
-      this.menuItems = JSON.parse(JSON.stringify(filteredMenus)) as MenuItem[];
-
-    }
-
-    else if (layoutTypeId === SidebarLayoutTypes.CompanyDetail) {
-
-      const filteredMenus = this.menuItems.filter(x => x.id == CompanyMenuTypes.CompanyInformation || x.id == CompanyMenuTypes.CompanyConfig);
-      this.menuItems = JSON.parse(JSON.stringify(filteredMenus)) as MenuItem[];
-
-    }
-    this.isLoadingSidebarMenu = false;
-  }
-
+ 
   public defaultSidebarCompanyInformation(): void {
     this.menuItems = JSON.parse(JSON.stringify(SUPER_ADMIN_MENU)) as MenuItem[];
   }
@@ -223,25 +185,6 @@ export class SidebarComponent implements OnInit, AfterViewInit {
   public removeActivation(items: Element[]): void {
     items.forEach((item: Element) => {
       item.classList.remove("active");
-    });
-  }
-
-  public getCompanyInfo(layoutTypeId: number, companyId: number): void {
-    this.httpService.getCompany(companyId).subscribe({
-      next: result => {
-        if (!result.isSuccess) {
-          this.dialogService.errorWithReturnModel("Unable to get Company", result);
-          return;
-        }
-
-        if (result.model) {
-          this.companyInfo = result.model;
-          this.companySessionService.setCurrentCompany(result.model);
-          this.applyPermission(layoutTypeId, this.companyInfo);
-        }
-      },
-      error: (err: unknown) => this.dialogService.error("Unable to get Company"),
-      complete: () => null,
     });
   }
 

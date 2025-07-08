@@ -1,9 +1,9 @@
-import { CompanyModel, CompanySearchCriteria, SavedJobModel, SavedJobNotificationEmailModel, SavedJobNotificationEmailSearchCriteria, SavedJobSearchCriteria } from 'src/common/models/app-model';
+import { SavedJobModel, SavedJobNotificationEmailModel, SavedJobNotificationEmailSearchCriteria, SavedJobSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { AuditDuoColumnModel } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel } from 'src/common/models/app-custom-model';
 import { BaseListComponent } from 'src/common/base-components/base.list.component';
 import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
 import { CommonDialogService } from 'src/app/shared/services/common-dialog.service';
@@ -28,10 +28,7 @@ export class SavedJobNotificationEmailListScreenComponent extends BaseListCompon
   @Input() public globalSearchText: string | undefined;
   public override searchModel: SavedJobNotificationEmailSearchCriteria = new SavedJobNotificationEmailSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public savedJobTypeahead$ = new Subject<string>();
   public savedJobTypeaheadLoading = false;
   public savedJobs: SavedJobModel[] = [];
@@ -117,29 +114,13 @@ export class SavedJobNotificationEmailListScreenComponent extends BaseListCompon
 
   public ngOnInit(): void {
     this.getSavedJobNotificationEmails(this.searchModel);
-    this.getCompanies();
+   
     this.getSavedJobs();
     this.initTypeAheads();
   }
 
   public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    
     this.savedJobTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
       this.savedJobTypeaheadLoading = true;
       const savedJobSearchCriteria = new SavedJobSearchCriteria();
@@ -157,22 +138,7 @@ export class SavedJobNotificationEmailListScreenComponent extends BaseListCompon
     });
   }
 
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
+  
   public getSavedJobs(): void {
     const searchModel = new SavedJobSearchCriteria();
     searchModel.sortAscending = false;
@@ -240,7 +206,7 @@ export class SavedJobNotificationEmailListScreenComponent extends BaseListCompon
   }
 
   public deleteSavedJobNotificationEmail(item: SavedJobNotificationEmailModel): void {
-    this.dialogService.confirmWithTitle(`Delete Saved Job Notification Email`, `Do you want to delete the Saved Job Notification Email - ${item.companyName}?`).then(res => {
+    this.dialogService.confirmWithTitle(`Delete Saved Job Notification Email`, `Do you want to delete the Saved Job Notification Email ?`).then(res => {
       if (!res) return;
       this.httpService.markSavedJobNotificationEmailAsDeleted(item.savedJobNotificationEmailId).subscribe(result => {
         if (!result.isSuccess) return this.dialogService.errorWithDefaultTitleForModel(result, "Unable to delete the Saved Job Notification Email");
@@ -253,7 +219,7 @@ export class SavedJobNotificationEmailListScreenComponent extends BaseListCompon
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+    
     this.searchModel.savedJobId = this.selectedSavedJob ? this.selectedSavedJob.savedJobId : null;
 
     this.getSavedJobNotificationEmails(this.searchModel);
@@ -261,12 +227,12 @@ export class SavedJobNotificationEmailListScreenComponent extends BaseListCompon
 
   public onReset(f: NgForm): void {
     f.resetForm();
-    this.searchModel.companyId = null;
+    
     this.searchModel.savedJobId = null;
     this.getSavedJobNotificationEmails(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getSavedJobNotificationEmails(this.searchModel);

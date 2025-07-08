@@ -42,9 +42,6 @@ export class NotificationCardComponent implements OnInit {
     this.isNotificationLoading = true;
     const searchModel: RealtimeMessageSearchCriteria = new RealtimeMessageSearchCriteria();
     searchModel.sortAscending = false;
-    if (this.currentUser) {
-      searchModel.companyId = this.currentUser?.companyId;
-    }
     searchModel.sortBy = 'messageDateTime';
     searchModel.pageSize = 5;
     this.httpService.getRealtimeMessages(searchModel, getHeaderWithBlockUI()).subscribe({

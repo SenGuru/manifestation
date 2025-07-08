@@ -1,6 +1,6 @@
 import { ALLOWED_PROFILE_IMAGE_EXTENSIONS, MAXIMUM_PASSWORD_CHARACTER_LENGTH, MINIMUM_PASSWORD_CHARACTER_LENGTH } from 'src/common/constants/app.constants';
-import { CompanyModel, CompanySearchCriteria, LoggedInUserModel, UserCreateWithFileFormModel, UserModel, UserPictureWithFileFormModel, UserUpdateWithFileFormModel } from 'src/common/models/app-model';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { LoggedInUserModel, UserCreateWithFileFormModel, UserModel, UserPictureWithFileFormModel, UserUpdateWithFileFormModel } from 'src/common/models/app-model';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PredefinedUserPermissionTypes, PredefinedUserTypes } from 'src/common/models/app-enums';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
@@ -8,7 +8,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
 
 import { CommonDialogService } from '../../services/common-dialog.service';
-import { CompanyCrudModalComponent } from '../company-crud-modal/company-crud-modal.component';
 import { CustomSelectService } from 'src/common/services/custom-select-service';
 import { HttpService } from 'src/common/services/app-http-client';
 import { NgForm } from '@angular/forms';
@@ -35,7 +34,6 @@ export class UserCrudModalComponent implements OnInit {
   @Input() public isViewMode: boolean = false;
   @Input() public isEditMode: boolean = false;
   @Input() public isDeletable: boolean = false;
-  @Input() public movieId: number | undefined;
   @Input() public companyId: number = 0;
   @Input() public layoutTypeId: number | undefined;
   @Input() public companyName: string | undefined;
@@ -62,10 +60,7 @@ export class UserCrudModalComponent implements OnInit {
   public predefinedUserTypes: Status[] = [];
   public selectedPredefinedUserType: Status | undefined;
   public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading: boolean = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
-  public companySearchModel: CompanySearchCriteria = new CompanySearchCriteria();
+  public companyTypeaheadLoading: boolean = false; 
   public userType: typeof PredefinedUserTypes = PredefinedUserTypes;
 
   public constructor(
@@ -83,8 +78,6 @@ export class UserCrudModalComponent implements OnInit {
     if (this.isSuperAdmin) {
       this.predefinedUserTypes = this.selectService.GetPredefinedUserTypes();
       if ((this.layoutTypeId == SidebarLayoutTypes.CompanyList || !this.layoutTypeId)) {
-        this.getCompanies(this.companySearchModel);
-        this.initTypeAheads();
       }
     } else {
       this.predefinedUserTypes = this.selectService.GetPredefinedUserTypes().filter(item => item.id !== PredefinedUserTypes.SuperAdmin);
@@ -93,28 +86,6 @@ export class UserCrudModalComponent implements OnInit {
       this.selectedPredefinedUserType = this.predefinedUserTypes.find(item => item.id === this.userModel.predefinedUserTypeId);
     }
     this.getUserPictureUrl(this.userModel?.userId, this.currentUser?.userProfileGuid ?? "", this.currentUser?.token ?? "");
-  }
-
-  public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      Object.assign(companySearchCriteria, this.companySearchModel);
-      companySearchCriteria.keyword = searchValue;
-      if (!this.isCreateMode) companySearchCriteria.selectedId = this.userModel.companyId;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: err => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
   }
 
   public getUserPictureUrl(userId: number, profileGuid: string, token: string): void {
@@ -160,44 +131,7 @@ export class UserCrudModalComponent implements OnInit {
       complete: () => null,
     });
   }
-
-  public showAddCompanyModal(): void {
-    const modalRef = this.modalService.open(CompanyCrudModalComponent, { windowClass: 'my-class', size: 'xl', beforeDismiss: () => false });
-    const componentInstance = modalRef.componentInstance as CompanyCrudModalComponent;
-    componentInstance.isCreateMode = true;
-    componentInstance.buttonText = 'Create';
-    componentInstance.title = 'Create Company';
-    componentInstance.onCloseCallback = (res: CompanyModel | null): void => {
-      if (ObjectUtils.isObjNullOrUndefined(res)) return;
-      this.getCompanies(this.companySearchModel, res?.companyId);
-    }
-  }
-
-  public getCompanies(searchModel: CompanySearchCriteria, selectedCompanyId?: number): void {
-    searchModel.sortAscending = false;
-    searchModel.isActive = true;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    if (!this.isCreateMode) searchModel.selectedId = this.userModel.companyId;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-        if (!this.isCreateMode) this.selectedCompany = data.model?.find(item => item.companyId === this.userModel?.companyId);
-        else this.selectedCompany = this.companys.find(item => item.companyId == this.companyId);
-
-        if (selectedCompanyId) {
-          this.selectedCompany = this.companys.find(item => item.companyId == selectedCompanyId);
-        }
-      },
-      error: (error) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+  
   public onSubmit(f: NgForm): void {
     if (!f.valid) {
       return;
@@ -232,12 +166,6 @@ export class UserCrudModalComponent implements OnInit {
     this.userModel.predefinedUserTypeId = this.selectedPredefinedUserType?.id ?? 0;
     this.userModel.accountLockedUntil = new Date();
     this.userModel.userGuid = '';
-    if (this.isSuperAdmin && (this.layoutTypeId == SidebarLayoutTypes.CompanyList || !this.layoutTypeId)) {
-      this.userModel.companyId = this.selectedCompany?.companyId ?? 0;
-    }
-    else {
-      this.userModel.companyId = this.companyId;
-    }
     if (this.isCreateMode) this.userModel.active = true;
     return this.userModel;
   }

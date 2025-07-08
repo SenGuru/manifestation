@@ -102,8 +102,6 @@ export class SsoCallbackScreenComponent implements OnInit {
                 result.model.userTypeId,
                 result.model.userTypeName,
                 result.model.userId,
-                result.model.companyId,
-                result.model.companyName,
                 result.model.permissions ?? []);
               this.sessionService.setUserLoggedIn(true);
               this.enumViewService.navigateToModule(result.model.userTypeId);

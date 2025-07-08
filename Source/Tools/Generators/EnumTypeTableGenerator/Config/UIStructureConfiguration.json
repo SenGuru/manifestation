@@ -1,0 +1,187 @@
+[
+  {
+    "Title": "Configuration",
+    "Table": "",
+    "isTitle": true,
+    "isCollapsed": false,
+    "Icon": "",
+    "Tabs": [
+    ],
+    "Child": [
+    ],
+    "HighLevelButtons": [
+      {
+        "Title": "",
+        "Table": ""
+      }
+    ],
+    "ColumnButtons": [
+      {
+        "Title": "",
+        "Function": "functionName",
+        "AskForConfirmation": false
+      }
+    ]
+  },
+  {
+    "Title": "Information",
+    "Table": "Company",
+    "isCollapsed": false,
+    "isInfo": true,
+    "Icon": "bx bx-cog",
+    "Tabs": [
+      {
+        "Title": "Information",
+        "Table": "Company",
+        "IsInfo": true
+      }
+    ],
+    "Child": [
+    ],
+    "HighLevelButtons": [
+    ],
+    "ColumnButtons": [
+    ]
+  },
+  {
+    "Title": "Enrollment",
+    "Table": "User",
+    "Icon": "bx bxs-spreadsheet",
+    "isCollapsed": false,
+    "Child": [
+      {
+        "Title": "Information",
+        "Table": "User",
+        "isInfo": true,
+        "Tabs": [
+          {
+            "Title": "Information",
+            "Table": "User",
+            "IsInfo": true
+          }
+        ]
+      }
+    ], 
+    "HighLevelButtons": [
+      {
+        "Title": "",
+        "Table": ""
+      }
+    ],
+    "ColumnButtons": [
+      {
+        "Title": "",
+        "Function": "functionName",
+        "AskForConfirmation": false
+      }
+    ]
+  }, 
+  {
+    "Title": "Students",
+    "Table": "User",
+    "isCollapsed": false,
+    "Child": [
+      {
+        "Title": "Information",
+        "Table": "User",
+        "isInfo": true,
+        "Tabs": [
+          {
+            "Title": "Information",
+            "Table": "User",
+            "IsInfo": true
+          }
+        ]
+      },
+      {
+        "Title": "Enrollments",
+        "Table": "User"
+      },
+      {
+        "Title": "Messages",
+        "Table": "Message"
+      },
+      {
+        "Title": "Audit",
+        "Table": "AuditOperation"
+        }
+      ]
+     },
+  {
+    "Title": "Courses",
+    "Table": "Course",
+    "isCollapsed": false,
+    "Child": [
+      {
+        "Title": "Information",
+        "Table": "Course",
+        "isInfo": true,
+        "Tabs": [
+          {
+            "Title": "Information",
+            "Table": "Course",
+            "IsInfo": true
+          }
+        ]
+      },
+      {
+        "Title": "Batches",
+        "Table": "CourseBatch",
+        "Child": [
+          {
+            "Title": "Information",
+            "Table": "CourseBatch",
+            "isInfo": true,
+            "Tabs": [
+              {
+                "Title": "Information",
+                "Table": "CourseBatch",
+                "IsInfo": true
+              }
+            ]
+          },
+          {
+            "Title": "Video files",
+            "Table": "CourseFile"
+          },
+          {
+            "Title": "Other files",
+            "Table": "CourseFile"
+          },
+          {
+            "Title": "Enrollments",
+            "Table": "User"
+          },
+          {
+            "Title": "Messages",
+            "Table": "Message"
+          },
+          {
+            "Title": "Audit",
+            "Table": "AuditOperation"
+          }
+        ]
+      },
+      {
+        "Title": "Enrollments",
+        "Table": "User"
+      },
+      {
+        "Title": "Files",
+        "Table": "CourseFile"
+      },
+      {
+        "Title": "Messages",
+        "Table": "Message"
+      },
+      {
+        "Title": "Audit",
+        "Table": "AuditOperation"
+      }
+    ]
+  },
+  {
+    "Title": "Batches",
+    "Table": "CourseBatch"
+  }
+]

@@ -4,8 +4,6 @@
 
 export enum EnumGroupTypes{
   PredefinedAuditOperationType = 1,
-  PredefinedCompanyType = 2,
-  PredefinedCurrencyType = 3,
   PredefinedEmailNotificationStatusType = 4,
   PredefinedFieldControlType = 5,
   PredefinedFieldPopulatorType = 6,
@@ -18,7 +16,6 @@ export enum EnumGroupTypes{
   PredefinedMessagePriorityType = 13,
   PredefinedMessageTemplateType = 14,
   PredefinedMessageToSendType = 15,
-  PredefinedMetaDataGroupType = 16,
   PredefinedNotificationMessageType = 17,
   PredefinedPhoneCallNotificationStatusType = 18,
   PredefinedPushNotificationServerType = 19,
@@ -32,17 +29,9 @@ export enum EnumGroupTypes{
   PredefinedUserType = 27,
   PredefinedValidatorType = 28,
   PredefinedWhatsAppNotificationStatusType = 29,
-  PredefinedProjectControlStatusType = 30,
-  PredefinedProjectStatusType = 31,
-  PredefinedReviewSessionStatusType = 32,
-  PredefinedApprovalStatusType = 33,
-  PredefinedCustomFieldTemplateType = 34,
-}
-
-export enum PredefinedApprovalStatusTypes{
-  Open = 3300001,
-  Completed = 3300002,
-  Abandoned = 3300003,
+  PredefinedGoalStatusType = 33,
+  PredefinedCategoryType = 34,
+  PredefinedMeditationType = 35,
 }
 
 export enum PredefinedAuditOperationTypes{
@@ -77,20 +66,11 @@ export enum PredefinedAuditOperationTypes{
   DownloadReport = 101024,
 }
 
-export enum PredefinedCompanyTypes{
-  System = 200001,
-  ProductionHouse = 200002,
-}
-
-export enum PredefinedCurrencyTypes{
-  INR = 300001,
-  USD = 300002,
-}
-
-export enum PredefinedCustomFieldTemplateTypes{
-  Control = 3400001,
-  Review = 3400002,
-  Approval = 3400003,
+export enum PredefinedCategoryTypes{
+  DailyAffirmation = 3400001,
+  VisionBoard = 3400002,
+  Meditation = 3400003,
+  GoalTracker = 3400004,
 }
 
 export enum PredefinedEmailNotificationStatusTypes{
@@ -150,6 +130,12 @@ export enum PredefinedFileStorageTypes{
   FileAttachmentFileStorage = 800003,
 }
 
+export enum PredefinedGoalStatusTypes{
+  Open = 3300001,
+  Completed = 3300002,
+  Abandoned = 3300003,
+}
+
 export enum PredefinedJobOrReportTypes{
   None = 900001,
   UserList = 900002,
@@ -202,6 +188,13 @@ export enum PredefinedJobUsageForTypes{
   CompanyAdmins = 1200003,
 }
 
+export enum PredefinedMeditationTypes{
+  Candle = 3500001,
+  Moon = 3500002,
+  LavaLamp = 3500003,
+  Calm = 3500004,
+}
+
 export enum PredefinedMessagePriorityTypes{
   Error = 1300001,
   High = 1300002,
@@ -224,10 +217,6 @@ export enum PredefinedMessageToSendTypes{
   RealtimeMessage = 1500003,
 }
 
-export enum PredefinedMetaDataGroupTypes{
-  ActorType = 1600001,
-}
-
 export enum PredefinedNotificationMessageTypes{
   TaskAssigned = 1700001,
 }
@@ -248,19 +237,6 @@ export enum PredefinedPhoneCallNotificationStatusTypes{
   Declined = 1800005,
   NotificationError = 1800006,
   ServerNotConfigured = 1800007,
-}
-
-export enum PredefinedProjectControlStatusTypes{
-  Open = 3000001,
-  Completed = 3000002,
-  Abandoned = 3000003,
-}
-
-export enum PredefinedProjectStatusTypes{
-  InPlanning = 3100001,
-  Open = 3100002,
-  Abandoned = 3100003,
-  Completed = 3100004,
 }
 
 export enum PredefinedPushNotificationServerTypes{
@@ -335,12 +311,25 @@ export enum PredefinedResourceTypes{
   WhatsAppNotificationServer = 2200041,
   UserGroup = 2200042,
   CompanyEntity = 2200043,
-}
-
-export enum PredefinedReviewSessionStatusTypes{
-  Open = 3200001,
-  Completed = 3200002,
-  Abandoned = 3200003,
+  Category = 2200044,
+  VisionBoardSessionPicture = 2200045,
+  DailyAffirmationSession = 2200046,
+  DailyAffirmationText = 2200047,
+  DailyAffirmationSessionCategory = 2200048,
+  DefaultCategory = 2200049,
+  DefaultDailyAffirmationText = 2200050,
+  DefaultGoalTrackerCategory = 2200051,
+  DefaultGoalTracker = 2200052,
+  VisionBoardSession = 2200053,
+  DefaultVisionBoardPicture = 2200054,
+  Feed = 2200055,
+  GoalTracker = 2200056,
+  GoalTrackerCategory = 2200057,
+  GoalTrackerMileStone = 2200058,
+  MeditationFile = 2200059,
+  MeditationSession = 2200060,
+  VisionBoardPicture = 2200061,
+  DefaultMeditationFile = 2200062,
 }
 
 export enum PredefinedSingleSignOnServerTypes{
@@ -395,7 +384,8 @@ export enum PredefinedUserPermissionTypes{
 
 export enum PredefinedUserTypes{
   SuperAdmin = 2700001,
-  CompanyAdmin = 2700002,
+  Manager = 2700002,
+  User = 2700003,
 }
 
 export enum PredefinedValidatorTypes{

@@ -38,8 +38,6 @@ export class SessionService {
     userTypeId: number,
     userTypeName: string,
     userId: number,
-    companyId: number,
-    companyName: string,
     permissions: number[] = []
   ): void {
     this.currentUser = new LoggedInUserModel();
@@ -50,8 +48,6 @@ export class SessionService {
     this.currentUser.userTypeId = userTypeId;
     this.currentUser.userTypeName = userTypeName;
     this.currentUser.userId = userId;
-    this.currentUser.companyId = companyId;
-    this.currentUser.companyName = companyName;
     this.currentUser.permissions = permissions;
     localStorage.setItem(STORAGE_KEYS.CURRENT_USER_LOCAL_STORAGE_NAME, JSON.stringify(this.currentUser));
     this.isLoggedIn = true;

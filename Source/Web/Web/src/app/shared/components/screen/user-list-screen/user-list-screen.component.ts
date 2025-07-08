@@ -1,6 +1,6 @@
-import { CompanyModel, CompanySearchCriteria, LoggedInUserModel, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
+import {  LoggedInUserModel, UserModel, UserSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import { SidebarLayoutTypes, UserStatusTypes } from 'src/common/models/app-custom-enums';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -43,11 +43,7 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
   @Input() public isConfigurator = false;
   @Input() public isProductionExecutive = false;
   public override searchModel: UserSearchCriteria = new UserSearchCriteria();
-  public currentUser: LoggedInUserModel | null = null;
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+  public currentUser: LoggedInUserModel | null = null; 
   public predefinedUserTypes: Status[] = [];
   public selectedPredefinedUserTypes: Status[] = [];
   public userStatus: Status[] = [];
@@ -154,25 +150,7 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
     if (this.currentUser && this.currentUser.userTypeId && this.currentUser.userTypeId == PredefinedUserTypes.SuperAdmin) {
       this.predefinedUserTypes = this.selectService.GetPredefinedUserTypes();
       this.isSuperAdmin = true;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-      this.companyId = RouterUtils.getRouterDataNumber(routerParams?.['companyId']) ?? 0;
-      if (!this.layoutTypeId || this.layoutTypeId == SidebarLayoutTypes.CompanyList) {
-        this.getCompanies();
-      } else {
-        const sessionCompany = this.companySessionService.getCurrentCompany();
-        if (sessionCompany && sessionCompany?.companyId === this.companyId) {
-          this.companyName = sessionCompany?.companyName;
-        } else {
-          this.getCompanyInfo(this.companyId);
-        }
-      }
-      this.initTypeAheads();
-    } else if (this.currentUser && this.currentUser.userTypeId && (this.currentUser.userTypeId == PredefinedUserTypes.CompanyAdmin)) {
-      this.predefinedUserTypes = this.selectService.GetPredefinedUserTypes().filter(item => item.id !== PredefinedUserTypes.SuperAdmin);
-      this.companyId = this.currentUser?.companyId ?? 0;
-      this.companyName = this.currentUser?.companyName;
-      this.isConfigurator = true;
-    }
+    }  
 
     if (this.currentUser && this.currentUser.userTypeId) {
       this.isProductionExecutive = true;
@@ -183,69 +161,10 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
       this.columns = this.columns.filter(item => item.value != 'companyName');
     }
     this.searchModel.active = true;
-    if (this.companyId) this.searchModel.companyIds = [this.companyId];
     this.getUsers(this.searchModel);
   }
 
-  public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      companySearchCriteria.companyId = this.companyId;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-  public getCompanyInfo(companyId: number): void {
-    this.httpService.getCompany(companyId).subscribe({
-      next: result => {
-        if (!result.isSuccess) {
-          this.dialogService.errorWithReturnModel("Unable to get Company", result);
-          return;
-        }
-        if (result.model) {
-          this.companyName = result.model?.companyName;
-          this.companySessionService.setCurrentCompany(result.model);
-        }
-      },
-      error: (err: unknown) => this.dialogService.error("Unable to get Company"),
-      complete: () => null,
-    });
-  }
-
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    searchModel.isActive = true;
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-        this.selectedCompany = this.companys.find(item => item.companyId == this.companyId);
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
   public getUsers(searchModel: UserSearchCriteria): void {
-    if (!this.isSuperAdmin && this.companyId) searchModel.companyIds = [this.companyId];
     this.httpService.getUsers(searchModel).subscribe({
       next: result => {
         if (!result.isSuccess) {
@@ -269,7 +188,6 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
     componentInstance.buttonText = 'Create';
     componentInstance.title = 'Create User';
     componentInstance.isSuperAdmin = this.isSuperAdmin;
-    componentInstance.movieId = this.movieId;
     componentInstance.companyId = this.companyId;
     componentInstance.companyName = this.companyName;
     componentInstance.layoutTypeId = this.layoutTypeId;
@@ -285,7 +203,6 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
     componentInstance.buttonText = 'View';
     componentInstance.title = 'View User';
     componentInstance.isSuperAdmin = this.isSuperAdmin;
-    componentInstance.movieId = this.movieId;
     componentInstance.companyId = this.companyId;
     componentInstance.companyName = this.companyName;
     componentInstance.layoutTypeId = this.layoutTypeId;
@@ -299,7 +216,6 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
     componentInstance.buttonText = 'Update';
     componentInstance.title = 'Edit User';
     componentInstance.isSuperAdmin = this.isSuperAdmin;
-    componentInstance.movieId = this.movieId;
     componentInstance.companyId = this.companyId;
     componentInstance.companyName = this.companyName;
     componentInstance.layoutTypeId = this.layoutTypeId;
@@ -323,9 +239,6 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    if (!this.layoutTypeId || this.layoutTypeId == SidebarLayoutTypes.CompanyList) {
-      this.searchModel.companyIds = this.selectedCompany ? [this.selectedCompany.companyId] : null;
-    }
     const predefinedUserTypesArray = this.selectedPredefinedUserTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedUserTypeIds = predefinedUserTypesArray;
     if (this.selectedUserStatus && this.selectedUserStatus.id == UserStatusTypes.Active) {
@@ -341,15 +254,12 @@ export class UserListScreenComponent extends BaseListComponent<UserModel, UserSe
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    if (!this.layoutTypeId || this.layoutTypeId == SidebarLayoutTypes.CompanyList) {
-      this.searchModel.companyIds = null;
-    }
     this.searchModel.predefinedUserTypeIds = null;
     this.searchModel.active = null;
     this.getUsers(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getUsers(this.searchModel);

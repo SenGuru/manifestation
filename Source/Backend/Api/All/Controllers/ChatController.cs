@@ -32,10 +32,10 @@ namespace Manifest.Api.All.Controllers
     public partial class ChatController : BaseController
     {
         private readonly ChatService chatService;
-        private readonly MovieService movieService;
+        private readonly ManifestService movieService;
         private readonly DummyDataGenerationService dummyDataGenerationService;
         private readonly CompanyService companyService;
-        public ChatController(ChatService chatService, CompanyService companyService, MovieService movieService, DummyDataGenerationService dummyDataGenerationService, ILog log)
+        public ChatController(ChatService chatService, CompanyService companyService, ManifestService movieService, DummyDataGenerationService dummyDataGenerationService, ILog log)
             : base(log)
         {
             this.chatService = chatService;

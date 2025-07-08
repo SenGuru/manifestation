@@ -1,0 +1,63 @@
+
+<form name="form" #lvDefaultDailyAffirmationTextForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lvDefaultDailyAffirmationTextForm.form.valid && onSubmit(lvDefaultDailyAffirmationTextForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-default-daily-affirmation-text-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-default-daily-affirmation-text-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">        
+
+          <div class="col-sm-6">
+            <label class="form-label" for="defaultDailyAffirmationTextName">Default Daily Affirmation Text Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvDefaultDailyAffirmationTextName="ngModel" type="text" name="defaultDailyAffirmationTextName" id="defaultDailyAffirmationTextName" placeholder="Default Daily Affirmation Text Name" required  maxlength="{{ defaultDailyAffirmationTextName__size }}"
+                 class="form-control" [ngClass]="{'is-invalid': lvDefaultDailyAffirmationTextForm.submitted && lvDefaultDailyAffirmationTextName.invalid }"
+                [(ngModel)]="defaultDailyAffirmationTextModel.defaultDailyAffirmationTextName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvDefaultDailyAffirmationTextForm.submitted) && lvDefaultDailyAffirmationTextName.errors?.['required']">
+                  Default Daily Affirmation Text Name is required
+                </span>
+                    <span *ngIf="lvDefaultDailyAffirmationTextForm.submitted && lvDefaultDailyAffirmationTextName.errors?.['maxlength']">
+                        Maximum {{ defaultDailyAffirmationTextName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{defaultDailyAffirmationTextModel?.defaultDailyAffirmationTextName ? defaultDailyAffirmationTextModel.defaultDailyAffirmationTextName : '-'}}
+            </div>
+          </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedDefaultCategory">Default Category
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            <span *ngIf="!isViewMode"  class="pull-right cursor-pointer mr-1" (click)="showAddDefaultCategoryModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvDefaultCategory="ngModel" placeholder="Default Category" name="selectedDefaultCategory" id="selectedDefaultCategory" required
+            [items]="defaultCategorys" class="form-control" bindLabel="defaultCategoryName" [clearable]="false" 
+            [ngClass]="{'is-invalid': lvDefaultDailyAffirmationTextForm.submitted && lvDefaultCategory.invalid }"
+            [typeahead]="defaultCategoryTypeahead$" [loading]="defaultCategoryTypeaheadLoading" [(ngModel)]="selectedDefaultCategory">
+          </ng-select>
+          <div *ngIf="lvDefaultDailyAffirmationTextForm.submitted && lvDefaultCategory.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvDefaultCategory.errors?.['required']">Default Category is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{defaultDailyAffirmationTextModel?.defaultCategoryId ? defaultDailyAffirmationTextModel.defaultCategoryId : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-default-daily-affirmation-text-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-default-daily-affirmation-text-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

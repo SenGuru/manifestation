@@ -237,14 +237,18 @@ namespace Manifest.Service.App
             return (true, true, "");
         }
 
-        public Task<(bool resultValue, bool canAssign, string errorStr)> CanViewCompany(long companyId)
+        public async Task<(bool resultValue, bool canAssign, string errorStr)> CanModifyResource(long userId)
         {
-            return HaveCompanyWithPermissionLevelAsync(companyId, PredefinedUserPermissionTypes.ViewCompany, PredefinedUserPermissionTypes.ConfigureCompany);
+            if (!await currentSessionService.IsCurrentUserASuperAdminAsync())
+            {
+                if (userId != await currentSessionService.GetCurrentUserIdAsync())
+                {
+                    return (false, false, "This resource does not belong to you");
+                }
+            }
+            
+            return (true, !await currentSessionService.IsCurrentUserASuperAdminAsync(), null);
         }
 
-        public Task<(bool resultValue, bool canAssign, string errorStr)> CanConfigureCompany(long companyId)
-        {
-            return HaveCompanyWithPermissionLevelAsync(companyId, PredefinedUserPermissionTypes.ConfigureCompany);
-        }
     }
 }

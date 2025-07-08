@@ -1,0 +1,164 @@
+<div class="page-header px-3 py-2 bg-white" *ngIf="!isConfigScreen">
+  <div class="d-flex align-items-center">
+    <div class="col-sm-auto">
+      <!-- Page title -->
+      <h3 class="card-title mb-0 flex-grow-1" id="vagncart-daily-affirmation-session-category-page-title">
+        Daily Affirmation Session Categorys
+      </h3>
+    </div>
+    <!-- add dailyAffirmationSessionCategory btn -->
+    <div class="d-flex justify-content-sm-end col-sm">
+      <!--
+      <button type="button" class="btn btn-sm vagn-btn-sm btn-secondary" data-bs-toggle="modal" id="create-daily-affirmation-session-category-btn"><i
+          class="ri-download-cloud-2-fill"></i> Import</button>
+      <button type="button" class="btn btn-sm vagn-btn-sm btn-info" data-bs-toggle="modal" id="create-daily-affirmation-session-category-btn"><i
+          class=" ri-upload-cloud-2-fill"></i> Export</button>
+       -->
+
+      <button type="button" class="btn btn-success btn-sm vagn-btn-sm"
+        (click)="showAddDailyAffirmationSessionCategoryModal();" data-bs-toggle="modal"
+        id="create-daily-affirmation-session-category-btn"><i class="ri-add-line align-bottom me-1"></i> Add Daily
+        Affirmation Session Category</button>
+    </div>
+  </div>
+</div>
+<div class="card mb-2 pt-2">
+  <div class="card-header pt-2">
+    <form #dailyAffirmationSessionCategorySearch="ngForm" novalidate focusOnError
+      (ngSubmit)="onSearch(dailyAffirmationSessionCategorySearch)">
+
+      <div class="row">
+        <div class="col-md-2 pr-0">
+          <input type="text" class="form-control" name="daily-affirmation-session-category-search-input"
+            placeholder="Search Text" [(ngModel)]="this.searchModel.keyword" />
+        </div>
+        <div class="col-md-2">
+          <ng-select class="form-control" placeholder="Category" name="selectedCategory" id="selectedCategory"
+            [items]="categorys" bindLabel="categoryName" [clearable]="true" [typeahead]="categoryTypeahead$"
+            [loading]="categoryTypeaheadLoading" [(ngModel)]="selectedCategory">
+          </ng-select>
+        </div>
+        <div class="col-md-2">
+          <ng-select class="form-control" placeholder="Daily Affirmation Session" name="selectedDailyAffirmationSession"
+            id="selectedDailyAffirmationSession" [items]="dailyAffirmationSessions"
+            bindLabel="dailyAffirmationSessionName" [clearable]="true" [typeahead]="dailyAffirmationSessionTypeahead$"
+            [loading]="dailyAffirmationSessionTypeaheadLoading" [(ngModel)]="selectedDailyAffirmationSession">
+          </ng-select>
+        </div>
+        <div class="col-md-2">
+          <ng-select class="form-control" placeholder="User" name="selectedUser" id="selectedUser" [items]="users"
+            bindLabel="userName" [clearable]="true" [typeahead]="userTypeahead$" [loading]="userTypeaheadLoading"
+            [(ngModel)]="selectedUser">
+          </ng-select>
+        </div>
+        <div class="d-flex justify-content-sm-end col-sm gap-1">
+          <button type="submit" class="btn btn-primary btn-sm vagn-btn-sm search" data-bs-toggle="modal"
+            id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+          <button type="button" class="btn bg-light btn-sm vagn-btn-sm"
+            (click)="onReset(dailyAffirmationSessionCategorySearch)">
+            Reset
+          </button>
+          <button *ngIf="isConfigScreen" type="button" class="btn btn-success btn-sm vagn-btn-sm"
+            (click)="showAddDailyAffirmationSessionCategoryModal();" data-bs-toggle="modal"
+            id="create-daily-affirmation-session-category-btn"><i class="ri-add-line align-bottom me-1"></i> Add Daily
+            Affirmation Session Category</button>
+
+          <!--
+      <div *ngIf="isConfigScreen" class="btn-group" role="group" ngbDropdown [container]="'body'">
+        <button id="btnGroupDrop1" type="button"
+          class="btn btn-sm vagn-btn-sm btn-secondary dropdown-toggle material-shadow-none arrow-none"
+          data-bs-toggle="dropdown" aria-expanded="false" ngbDropdownToggle>
+          Actions
+        </button>
+         <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" ngbDropdownMenu>
+           <li><a class="dropdown-item cursor-pointer" (click)="exportDailyAffirmationSessionCategory();"><i
+                class=" ri-download-cloud-2-fill"></i> Export</a></li>
+           <li><a class="dropdown-item cursor-pointer" (click)="showImportDailyAffirmationSessionCategoryModal()"><i
+                class="ri-upload-cloud-2-fill"></i> Import</a></li>
+         </ul>
+      </div> 
+        -->
+
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="card-body">
+    <div class="table-responsive table-card mb-1" id="vagncart-daily-affirmation-session-category-page-table"
+      [ngClass]="isConfigScreen ? 'vagncart-table-sm' : 'vagncart-table'">
+      <table class="table" *ngIf="listData.length > 0; else nodata">
+        <thead>
+          <tr>
+            <th *ngFor="let column of columns" class="text-left" [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }" (click)="changeSort(column)">
+              <span class="mr-1" [innerHTML]="column.text"></span>
+              <i [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "></i>
+            </th>
+            <th class="text-left w-1">
+              <span class="mr-1">ACTION</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of listData">
+            <td class="text-left">
+              {{ item.categoryName }}
+            </td>
+            <td class="text-left">
+              <!-- {{ item.dailyAffirmationSessionName }} -->
+            </td>
+            <td class="text-left">
+              {{ item.dailyAffirmationSessionCategoryTimeSpentInSeconds | date: 'MM/dd/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.userName }}
+            </td>
+            <td class="text-left">
+              {{ item.modifiedDate | date: 'MM/dd/yy' }}
+            </td>
+            <td class="text-left">
+              {{ item.modifiedByUserFirstName }} {{ item.modifiedByUserLastName }}
+            </td>
+            <td class="text-left">
+              <div class="d-flex gap-2">
+                <div class="view">
+                  <button type="button" class="btn btn-sm vagn-btn-sm btn-success edit-item-btn" data-bs-toggle="modal"
+                    (click)="showViewDailyAffirmationSessionCategoryModal(item)">View</button>
+                </div>
+                <div class="edit">
+                  <button type="button" class="btn btn-sm vagn-btn-sm btn-success edit-item-btn" data-bs-toggle="modal"
+                    (click)="showUpdateDailyAffirmationSessionCategoryModal(item)">Edit</button>
+                </div>
+                <div class="remove">
+                  <button type="button" class="btn btn-sm vagn-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal"
+                    (click)="deleteDailyAffirmationSessionCategory(item)">Remove</button>
+                </div>
+
+                <!-- 
+          <div class="enable">
+              <button *ngIf="!item.active" class="btn btn-sm vagn-btn-sm btn-danger enable-item-btn" data-bs-toggle="modal"
+                type="button" (click)="enableDailyAffirmationSessionCategory(item)">Enable</button>
+                <button *ngIf="item.active" class="btn btn-sm vagn-btn-sm btn-danger disable-item-btn" data-bs-toggle="modal"
+                type="button" (click)="disableDailyAffirmationSessionCategory(item)">Disable</button>
+           </div>
+           -->
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #nodata>
+        <app-no-data-found></app-no-data-found>
+      </ng-template>
+    </div>
+    <app-pagination #pagination [totalItems]="totalItems" [currentPage]="searchModel.page"
+      (pageOptionChanged)="paginationChange($event)"></app-pagination>
+  </div>
+</div>

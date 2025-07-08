@@ -26,25 +26,7 @@
         <div *ngIf="isViewMode">
           {{scheduledJobHistoryModel.scheduledJobId ? scheduledJobHistoryModel.scheduledJobId : '-'}}
         </div>
-      </div>
-      <div class="col-sm-6">
-        <label class="form-label" for="selectedCompany">Company
-          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
-        </label>
-        <div *ngIf="!isViewMode">
-          <ng-select #vcCompanyId #lvCompany="ngModel" placeholder="Company" class="form-control"
-            name="selectedCompany" id="selectedCompany"
-            bindLabel="companyName" required
-            [items]="companys" [clearable]="false" [ngClass]="{'is-invalid': lvScheduledJobHistoryForm.submitted && lvCompany.invalid }" [typeahead]="companyTypeahead$"  [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-          <div *ngIf="lvScheduledJobHistoryForm.submitted && lvCompany.invalid" class="invalid-feedback invalid-feedback-fixed">
-            <div *ngIf="lvCompany.errors?.['required']">Company is required</div>
-          </div>
-        </div>
-        <div *ngIf="isViewMode">
-          {{scheduledJobHistoryModel.companyName ? scheduledJobHistoryModel.companyName : '-'}}
-        </div>
-      </div>
+      </div> 
       <div class="col-sm-6">
         <label class="form-label" for="pickupDate">Date
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>

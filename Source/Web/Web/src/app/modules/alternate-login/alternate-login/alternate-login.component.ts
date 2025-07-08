@@ -51,9 +51,7 @@ export class AlternateLoginComponent implements OnInit, AfterViewInit {
             result.model.lastName,
             result.model.userTypeId,
             result.model.userTypeName,
-            result.model.userId,
-            result.model.companyId,
-            result.model.companyName,
+            result.model.userId, 
           );
           this.sessionService.setCurrentUser(result.model);
           this.selected = (result.model.userTypeId / 100);

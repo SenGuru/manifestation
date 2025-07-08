@@ -1,5 +1,5 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, JobTemplateCategoryModel, JobTemplateCategorySearchCriteria, JobTemplateModel, JobTemplateSearchCriteria } from 'src/common/models/app-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
+import { JobTemplateCategoryModel, JobTemplateCategorySearchCriteria, JobTemplateModel, JobTemplateSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -18,9 +18,9 @@ import { getHeaderWithBlockUI } from 'src/common/interceptors/httpconfig.interce
 
 @UntilDestroy()
 @Component({
-    selector: 'app-job-template-list-screen',
-    templateUrl: './job-template-list-screen.component.html',
-    standalone: false
+  selector: 'app-job-template-list-screen',
+  templateUrl: './job-template-list-screen.component.html',
+  standalone: false
 })
 export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplateModel, JobTemplateSearchCriteria> implements OnInit {
 
@@ -28,10 +28,6 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
   @Input() public globalSearchText: string | undefined;
   public override searchModel: JobTemplateSearchCriteria = new JobTemplateSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
   public predefinedJobTypes: Status[] = [];
   public selectedPredefinedJobTypes: Status[] = [];
   public predefinedJobOrReportTypes: Status[] = [];
@@ -62,13 +58,6 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
       align: 'left',
       sortable: true,
       value: 'templateName',
-      width: '115px',
-    },
-    {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
       width: '115px',
     },
     {
@@ -104,7 +93,6 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
   public ngOnInit(): void {
     this.initialUrl = this.sessionService.getInitialUrl();
     this.getJobTemplates(this.searchModel);
-    this.getCompanies();
     this.predefinedJobTypes = this.selectService.GetPredefinedJobTypes();
     this.predefinedJobOrReportTypes = this.selectService.GetPredefinedJobOrReportTypes();
     this.getJobTemplateCategorys();
@@ -112,23 +100,6 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
   }
 
   public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
     this.jobTemplateCategoryTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
       this.jobTemplateCategoryTypeaheadLoading = true;
       const jobTemplateCategorySearchCriteria = new JobTemplateCategorySearchCriteria();
@@ -141,23 +112,6 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
       },
       error: (err: unknown) => {
         this.jobTemplateCategoryTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
       },
       complete: () => null,
     });
@@ -223,7 +177,6 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     const predefinedJobTypesArray = this.selectedPredefinedJobTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedJobTypeIds = predefinedJobTypesArray;
     const predefinedJobOrReportTypesArray = this.selectedPredefinedJobOrReportTypes?.map(item => item.id ?? 0);
@@ -236,14 +189,13 @@ export class JobTemplateListScreenComponent extends BaseListComponent<JobTemplat
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
     this.searchModel.predefinedJobTypeIds = null;
     this.searchModel.predefinedJobOrReportTypeIds = null;
     this.searchModel.jobTemplateCategoryId = null;
     this.getJobTemplates(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getJobTemplates(this.searchModel);

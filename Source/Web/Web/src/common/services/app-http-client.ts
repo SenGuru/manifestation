@@ -490,91 +490,1633 @@ export class HttpService {
     // tslint:disable-next-line:max-line-length
     public getFileAttachmentFolders(search: models.FileAttachmentFolderSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FileAttachmentFolderModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('movie/getfileattachmentfolders', search, headers);
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfileattachmentfolders', search, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public getFileAttachmentFolder(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.FileAttachmentFolderModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getWithParams('movie/getfileattachmentfolder', {id}, headers);
+        return this.frameworkHttpClientService.getWithParams('manifest/getfileattachmentfolder', {id}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public createFileAttachmentFolder(fileAttachmentFolderModel: models.FileAttachmentFolderCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.FileAttachmentFolderModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('movie/createfileattachmentfolder', fileAttachmentFolderModel, headers);
+        return this.frameworkHttpClientService.postWithModel('manifest/createfileattachmentfolder', fileAttachmentFolderModel, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public createMultipleFileAttachmentFolder(fileAttachmentFolderModels: models.MultipleFileAttachmentFolderCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.FileAttachmentFolderModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postListWithModel('movie/createmultiplefileattachmentfolder', fileAttachmentFolderModels, headers);
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplefileattachmentfolder', fileAttachmentFolderModels, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public updateFileAttachmentFolder(fileAttachmentFolderModel: models.FileAttachmentFolderUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.FileAttachmentFolderModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('movie/updatefileattachmentfolder', fileAttachmentFolderModel, headers);
+        return this.frameworkHttpClientService.postWithModel('manifest/updatefileattachmentfolder', fileAttachmentFolderModel, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public markFileAttachmentFolderAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.deleteWithParams('movie/markfileattachmentfolderasdeleted', {id}, headers);
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markfileattachmentfolderasdeleted', {id}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public markFileAttachmentFolderAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('movie/markfileattachmentfolderasnotdeleted', {id}, headers);
+        return this.frameworkHttpClientService.postWithModel('manifest/markfileattachmentfolderasnotdeleted', {id}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public getFileAttachments(search: models.FileAttachmentSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FileAttachmentModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('movie/getfileattachments', search, headers);
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfileattachments', search, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public getFileAttachment(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.FileAttachmentModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getWithParams('movie/getfileattachment', {id}, headers);
+        return this.frameworkHttpClientService.getWithParams('manifest/getfileattachment', {id}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public createFileAttachment(model: models.FileAttachmentCreateWithFileFormModel, headers ?: HttpHeaders): Observable<ReturnModel<models.FileAttachmentModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithUploadWithModel('movie/createfileattachment', model, headers);
+        return this.frameworkHttpClientService.postWithUploadWithModel('manifest/createfileattachment', model, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public updateFileAttachment(fileAttachmentModel: models.FileAttachmentUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.FileAttachmentModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('movie/updatefileattachment', fileAttachmentModel, headers);
+        return this.frameworkHttpClientService.postWithModel('manifest/updatefileattachment', fileAttachmentModel, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public markFileAttachmentAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.deleteWithParams('movie/markfileattachmentasdeleted', {id}, headers);
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markfileattachmentasdeleted', {id}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public markFileAttachmentAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('movie/markfileattachmentasnotdeleted', {id}, headers);
+        return this.frameworkHttpClientService.postWithModel('manifest/markfileattachmentasnotdeleted', {id}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public isFileAttachmentFileValid(fileAttachmentId: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getWithParams('movie/isfileattachmentfilevalid', {fileAttachmentId}, headers);
+        return this.frameworkHttpClientService.getWithParams('manifest/isfileattachmentfilevalid', {fileAttachmentId}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
     public downloadFileAttachmentFileUrl(fileAttachmentId: number, accessToken ?: string): string {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getUrlWithParams('movie/downloadfileattachmentfile', {fileAttachmentId},accessToken);
+        return this.frameworkHttpClientService.getUrlWithParams('manifest/downloadfileattachmentfile', {fileAttachmentId},accessToken);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictures(search: models.VisionBoardSessionPictureSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpictures', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPicture(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getvisionboardsessionpicture', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createVisionBoardSessionPicture(visionBoardSessionPictureModel: models.VisionBoardSessionPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createvisionboardsessionpicture', visionBoardSessionPictureModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleVisionBoardSessionPicture(visionBoardSessionPictureModels: models.MultipleVisionBoardSessionPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplevisionboardsessionpicture', visionBoardSessionPictureModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateVisionBoardSessionPicture(visionBoardSessionPictureModel: models.VisionBoardSessionPictureUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatevisionboardsessionpicture', visionBoardSessionPictureModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markVisionBoardSessionPictureAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markvisionboardsessionpictureasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markVisionBoardSessionPictureAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markvisionboardsessionpictureasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictureByVisionBoardSessionId(visionBoardSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpicturebyvisionboardsessionid', {visionBoardSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictureByVisionBoardSessionIdSearch(search: models.VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpicturebyvisionboardsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionByVisionBoardSessionPictureId(visionBoardSessionPictureId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyvisionboardsessionpictureid', {visionBoardSessionPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionByVisionBoardSessionPictureIdSearch(search: models.VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyvisionboardsessionpictureidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictureByVisionBoardPictureId(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpicturebyvisionboardpictureid', {visionBoardPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictureByVisionBoardPictureIdSearch(search: models.VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpicturebyvisionboardpictureidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardPictureByVisionBoardSessionPictureId(visionBoardSessionPictureId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardpicturebyvisionboardsessionpictureid', {visionBoardSessionPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardPictureByVisionBoardSessionPictureIdSearch(search: models.VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardpicturebyvisionboardsessionpictureidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictureByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpicturebyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionPictureByUserIdSearch(search: models.VisionBoardSessionPictureByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionpicturebyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByVisionBoardSessionPictureId(visionBoardSessionPictureId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionpictureid', {visionBoardSessionPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByVisionBoardSessionPictureIdSearch(search: models.UserByVisionBoardSessionPictureIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionpictureidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategorys(search: models.CategorySearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorys', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategory(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getcategory', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createCategory(categoryModel: models.CategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createcategory', categoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleCategory(categoryModels: models.MultipleCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplecategory', categoryModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateCategory(categoryModel: models.CategoryUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatecategory', categoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markCategoryAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markcategoryasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markCategoryAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markcategoryasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByDefaultCategoryId(defaultCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydefaultcategoryid', {defaultCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByDefaultCategoryIdSearch(search: models.CategoryByDefaultCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydefaultcategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategoryByCategoryId(categoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorybycategoryid', {categoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategoryByCategoryIdSearch(search: models.DefaultCategoryByCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorybycategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByUserIdSearch(search: models.CategoryByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByCategoryId(categoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbycategoryid', {categoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByCategoryIdSearch(search: models.UserByCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbycategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessions(search: models.DailyAffirmationSessionSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessions', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSession(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdailyaffirmationsession', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDailyAffirmationSession(dailyAffirmationSessionModel: models.DailyAffirmationSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdailyaffirmationsession', dailyAffirmationSessionModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDailyAffirmationSession(dailyAffirmationSessionModels: models.MultipleDailyAffirmationSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledailyaffirmationsession', dailyAffirmationSessionModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDailyAffirmationSession(dailyAffirmationSessionModel: models.DailyAffirmationSessionUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedailyaffirmationsession', dailyAffirmationSessionModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyAffirmationSessionAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdailyaffirmationsessionasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyAffirmationSessionAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdailyaffirmationsessionasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessionbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionByUserIdSearch(search: models.DailyAffirmationSessionByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessionbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyAffirmationSessionId(dailyAffirmationSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyaffirmationsessionid', {dailyAffirmationSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyAffirmationSessionIdSearch(search: models.UserByDailyAffirmationSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyaffirmationsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategorys(search: models.DailyAffirmationSessionCategorySearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorys', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategory(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdailyaffirmationsessioncategory', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDailyAffirmationSessionCategory(dailyAffirmationSessionCategoryModel: models.DailyAffirmationSessionCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdailyaffirmationsessioncategory', dailyAffirmationSessionCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDailyAffirmationSessionCategory(dailyAffirmationSessionCategoryModels: models.MultipleDailyAffirmationSessionCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledailyaffirmationsessioncategory', dailyAffirmationSessionCategoryModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDailyAffirmationSessionCategory(dailyAffirmationSessionCategoryModel: models.DailyAffirmationSessionCategoryUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedailyaffirmationsessioncategory', dailyAffirmationSessionCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyAffirmationSessionCategoryAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdailyaffirmationsessioncategoryasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyAffirmationSessionCategoryAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdailyaffirmationsessioncategoryasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategoryByCategoryId(categoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorybycategoryid', {categoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategoryByCategoryIdSearch(search: models.DailyAffirmationSessionCategoryByCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorybycategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByDailyAffirmationSessionCategoryId(dailyAffirmationSessionCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydailyaffirmationsessioncategoryid', {dailyAffirmationSessionCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByDailyAffirmationSessionCategoryIdSearch(search: models.CategoryByDailyAffirmationSessionCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydailyaffirmationsessioncategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategoryByDailyAffirmationSessionId(dailyAffirmationSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorybydailyaffirmationsessionid', {dailyAffirmationSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearch(search: models.DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorybydailyaffirmationsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionByDailyAffirmationSessionCategoryId(dailyAffirmationSessionCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessionbydailyaffirmationsessioncategoryid', {dailyAffirmationSessionCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearch(search: models.DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessionbydailyaffirmationsessioncategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategoryByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorybyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionCategoryByUserIdSearch(search: models.DailyAffirmationSessionCategoryByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessioncategorybyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyAffirmationSessionCategoryId(dailyAffirmationSessionCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyaffirmationsessioncategoryid', {dailyAffirmationSessionCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyAffirmationSessionCategoryIdSearch(search: models.UserByDailyAffirmationSessionCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyaffirmationsessioncategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTexts(search: models.DailyAffirmationTextSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationtexts', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationText(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdailyaffirmationtext', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDailyAffirmationText(dailyAffirmationTextModel: models.DailyAffirmationTextCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdailyaffirmationtext', dailyAffirmationTextModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDailyAffirmationText(dailyAffirmationTextModels: models.MultipleDailyAffirmationTextCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledailyaffirmationtext', dailyAffirmationTextModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDailyAffirmationText(dailyAffirmationTextModel: models.DailyAffirmationTextUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedailyaffirmationtext', dailyAffirmationTextModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyAffirmationTextAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdailyaffirmationtextasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyAffirmationTextAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdailyaffirmationtextasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTextByCategoryId(categoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationtextbycategoryid', {categoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTextByCategoryIdSearch(search: models.DailyAffirmationTextByCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationtextbycategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByDailyAffirmationTextId(dailyAffirmationTextId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydailyaffirmationtextid', {dailyAffirmationTextId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByDailyAffirmationTextIdSearch(search: models.CategoryByDailyAffirmationTextIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydailyaffirmationtextidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTextByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationtextbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTextByUserIdSearch(search: models.DailyAffirmationTextByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationtextbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyAffirmationTextId(dailyAffirmationTextId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyaffirmationtextid', {dailyAffirmationTextId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyAffirmationTextIdSearch(search: models.UserByDailyAffirmationTextIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyaffirmationtextidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategorys(search: models.DefaultCategorySearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorys', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategory(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdefaultcategory', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDefaultCategory(defaultCategoryModel: models.DefaultCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdefaultcategory', defaultCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDefaultCategory(defaultCategoryModels: models.MultipleDefaultCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledefaultcategory', defaultCategoryModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDefaultCategory(defaultCategoryModel: models.DefaultCategoryUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedefaultcategory', defaultCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultCategoryAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdefaultcategoryasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultCategoryAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdefaultcategoryasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultDailyAffirmationTexts(search: models.DefaultDailyAffirmationTextSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultdailyaffirmationtexts', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultDailyAffirmationText(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdefaultdailyaffirmationtext', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDefaultDailyAffirmationText(defaultDailyAffirmationTextModel: models.DefaultDailyAffirmationTextCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdefaultdailyaffirmationtext', defaultDailyAffirmationTextModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDefaultDailyAffirmationText(defaultDailyAffirmationTextModels: models.MultipleDefaultDailyAffirmationTextCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledefaultdailyaffirmationtext', defaultDailyAffirmationTextModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDefaultDailyAffirmationText(defaultDailyAffirmationTextModel: models.DefaultDailyAffirmationTextUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedefaultdailyaffirmationtext', defaultDailyAffirmationTextModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultDailyAffirmationTextAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdefaultdailyaffirmationtextasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultDailyAffirmationTextAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdefaultdailyaffirmationtextasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultDailyAffirmationTextByDefaultCategoryId(defaultCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultdailyaffirmationtextbydefaultcategoryid', {defaultCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultDailyAffirmationTextByDefaultCategoryIdSearch(search: models.DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultDailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultdailyaffirmationtextbydefaultcategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategoryByDefaultDailyAffirmationTextId(defaultDailyAffirmationTextId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorybydefaultdailyaffirmationtextid', {defaultDailyAffirmationTextId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategoryByDefaultDailyAffirmationTextIdSearch(search: models.DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorybydefaultdailyaffirmationtextidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackers(search: models.DefaultGoalTrackerSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackers', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTracker(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdefaultgoaltracker', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDefaultGoalTracker(defaultGoalTrackerModel: models.DefaultGoalTrackerCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdefaultgoaltracker', defaultGoalTrackerModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDefaultGoalTracker(defaultGoalTrackerModels: models.MultipleDefaultGoalTrackerCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledefaultgoaltracker', defaultGoalTrackerModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDefaultGoalTracker(defaultGoalTrackerModel: models.DefaultGoalTrackerUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedefaultgoaltracker', defaultGoalTrackerModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultGoalTrackerAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdefaultgoaltrackerasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultGoalTrackerAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdefaultgoaltrackerasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerCategorys(search: models.DefaultGoalTrackerCategorySearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackercategorys', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerCategory(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdefaultgoaltrackercategory', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDefaultGoalTrackerCategory(defaultGoalTrackerCategoryModel: models.DefaultGoalTrackerCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdefaultgoaltrackercategory', defaultGoalTrackerCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDefaultGoalTrackerCategory(defaultGoalTrackerCategoryModels: models.MultipleDefaultGoalTrackerCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledefaultgoaltrackercategory', defaultGoalTrackerCategoryModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDefaultGoalTrackerCategory(defaultGoalTrackerCategoryModel: models.DefaultGoalTrackerCategoryUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedefaultgoaltrackercategory', defaultGoalTrackerCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultGoalTrackerCategoryAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdefaultgoaltrackercategoryasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultGoalTrackerCategoryAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdefaultgoaltrackercategoryasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerCategoryByDefaultCategoryId(defaultCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackercategorybydefaultcategoryid', {defaultCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerCategoryByDefaultCategoryIdSearch(search: models.DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackercategorybydefaultcategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategoryByDefaultGoalTrackerCategoryId(defaultGoalTrackerCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorybydefaultgoaltrackercategoryid', {defaultGoalTrackerCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultCategoryByDefaultGoalTrackerCategoryIdSearch(search: models.DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultcategorybydefaultgoaltrackercategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerCategoryByDefaultGoalTrackerId(defaultGoalTrackerId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackercategorybydefaultgoaltrackerid', {defaultGoalTrackerId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearch(search: models.DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackercategorybydefaultgoaltrackeridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerByDefaultGoalTrackerCategoryId(defaultGoalTrackerCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackerbydefaultgoaltrackercategoryid', {defaultGoalTrackerCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearch(search: models.DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultGoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultgoaltrackerbydefaultgoaltrackercategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultMeditationFiles(search: models.DefaultMeditationFileSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultMeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultmeditationfiles', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultMeditationFile(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultMeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdefaultmeditationfile', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDefaultMeditationFile(defaultMeditationFileModel: models.DefaultMeditationFileCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultMeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdefaultmeditationfile', defaultMeditationFileModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDefaultMeditationFile(defaultMeditationFileModels: models.MultipleDefaultMeditationFileCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultMeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledefaultmeditationfile', defaultMeditationFileModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDefaultMeditationFile(defaultMeditationFileModel: models.DefaultMeditationFileUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultMeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedefaultmeditationfile', defaultMeditationFileModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultMeditationFileAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdefaultmeditationfileasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultMeditationFileAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdefaultmeditationfileasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultVisionBoardPictures(search: models.DefaultVisionBoardPictureSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultVisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdefaultvisionboardpictures', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDefaultVisionBoardPicture(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultVisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdefaultvisionboardpicture', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDefaultVisionBoardPicture(defaultVisionBoardPictureModel: models.DefaultVisionBoardPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultVisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdefaultvisionboardpicture', defaultVisionBoardPictureModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDefaultVisionBoardPicture(defaultVisionBoardPictureModels: models.MultipleDefaultVisionBoardPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DefaultVisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledefaultvisionboardpicture', defaultVisionBoardPictureModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDefaultVisionBoardPicture(defaultVisionBoardPictureModel: models.DefaultVisionBoardPictureUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DefaultVisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedefaultvisionboardpicture', defaultVisionBoardPictureModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultVisionBoardPictureAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdefaultvisionboardpictureasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDefaultVisionBoardPictureAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdefaultvisionboardpictureasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeeds(search: models.FeedSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeeds', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeed(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getfeed', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createFeed(feedModel: models.FeedCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createfeed', feedModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleFeed(feedModels: models.MultipleFeedCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplefeed', feedModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateFeed(feedModel: models.FeedUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatefeed', feedModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markFeedAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markfeedasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markFeedAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markfeedasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByUserIdSearch(search: models.FeedByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByFeedId(feedId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyfeedid', {feedId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByFeedIdSearch(search: models.UserByFeedIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyfeedidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByDailyAffirmationSessionId(dailyAffirmationSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbydailyaffirmationsessionid', {dailyAffirmationSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByDailyAffirmationSessionIdSearch(search: models.FeedByDailyAffirmationSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbydailyaffirmationsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionByFeedId(feedId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessionbyfeedid', {feedId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationSessionByFeedIdSearch(search: models.DailyAffirmationSessionByFeedIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyaffirmationsessionbyfeedidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByVisionBoardSessionId(visionBoardSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbyvisionboardsessionid', {visionBoardSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByVisionBoardSessionIdSearch(search: models.FeedByVisionBoardSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbyvisionboardsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionByFeedId(feedId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyfeedid', {feedId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionByFeedIdSearch(search: models.VisionBoardSessionByFeedIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyfeedidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByMeditationSessionId(meditationSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbymeditationsessionid', {meditationSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByMeditationSessionIdSearch(search: models.FeedByMeditationSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbymeditationsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessionByFeedId(feedId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessionbyfeedid', {feedId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessionByFeedIdSearch(search: models.MeditationSessionByFeedIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessionbyfeedidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByGoalTrackerId(goalTrackerId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbygoaltrackerid', {goalTrackerId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByGoalTrackerIdSearch(search: models.FeedByGoalTrackerIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbygoaltrackeridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByFeedId(feedId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbyfeedid', {feedId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByFeedIdSearch(search: models.GoalTrackerByFeedIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbyfeedidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByGoalTrackerMileStoneId(goalTrackerMileStoneId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbygoaltrackermilestoneid', {goalTrackerMileStoneId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getFeedByGoalTrackerMileStoneIdSearch(search: models.FeedByGoalTrackerMileStoneIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.FeedModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getfeedbygoaltrackermilestoneidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStoneByFeedId(feedId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestonebyfeedid', {feedId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStoneByFeedIdSearch(search: models.GoalTrackerMileStoneByFeedIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestonebyfeedidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackers(search: models.GoalTrackerSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackers', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTracker(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getgoaltracker', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createGoalTracker(goalTrackerModel: models.GoalTrackerCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/creategoaltracker', goalTrackerModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleGoalTracker(goalTrackerModels: models.MultipleGoalTrackerCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplegoaltracker', goalTrackerModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateGoalTracker(goalTrackerModel: models.GoalTrackerUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updategoaltracker', goalTrackerModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markGoalTrackerAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markgoaltrackerasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markGoalTrackerAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markgoaltrackerasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByUserIdSearch(search: models.GoalTrackerByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByGoalTrackerId(goalTrackerId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackerid', {goalTrackerId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByGoalTrackerIdSearch(search: models.UserByGoalTrackerIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackeridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategorys(search: models.GoalTrackerCategorySearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorys', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategory(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getgoaltrackercategory', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createGoalTrackerCategory(goalTrackerCategoryModel: models.GoalTrackerCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/creategoaltrackercategory', goalTrackerCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleGoalTrackerCategory(goalTrackerCategoryModels: models.MultipleGoalTrackerCategoryCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplegoaltrackercategory', goalTrackerCategoryModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateGoalTrackerCategory(goalTrackerCategoryModel: models.GoalTrackerCategoryUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updategoaltrackercategory', goalTrackerCategoryModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markGoalTrackerCategoryAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markgoaltrackercategoryasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markGoalTrackerCategoryAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markgoaltrackercategoryasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategoryByCategoryId(categoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorybycategoryid', {categoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategoryByCategoryIdSearch(search: models.GoalTrackerCategoryByCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorybycategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByGoalTrackerCategoryId(goalTrackerCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybygoaltrackercategoryid', {goalTrackerCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getCategoryByGoalTrackerCategoryIdSearch(search: models.CategoryByGoalTrackerCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybygoaltrackercategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategoryByGoalTrackerId(goalTrackerId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorybygoaltrackerid', {goalTrackerId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategoryByGoalTrackerIdSearch(search: models.GoalTrackerCategoryByGoalTrackerIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorybygoaltrackeridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByGoalTrackerCategoryId(goalTrackerCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbygoaltrackercategoryid', {goalTrackerCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByGoalTrackerCategoryIdSearch(search: models.GoalTrackerByGoalTrackerCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbygoaltrackercategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategoryByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorybyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerCategoryByUserIdSearch(search: models.GoalTrackerCategoryByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerCategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackercategorybyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByGoalTrackerCategoryId(goalTrackerCategoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackercategoryid', {goalTrackerCategoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByGoalTrackerCategoryIdSearch(search: models.UserByGoalTrackerCategoryIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackercategoryidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStones(search: models.GoalTrackerMileStoneSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestones', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStone(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getgoaltrackermilestone', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createGoalTrackerMileStone(goalTrackerMileStoneModel: models.GoalTrackerMileStoneCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/creategoaltrackermilestone', goalTrackerMileStoneModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleGoalTrackerMileStone(goalTrackerMileStoneModels: models.MultipleGoalTrackerMileStoneCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplegoaltrackermilestone', goalTrackerMileStoneModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateGoalTrackerMileStone(goalTrackerMileStoneModel: models.GoalTrackerMileStoneUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updategoaltrackermilestone', goalTrackerMileStoneModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markGoalTrackerMileStoneAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markgoaltrackermilestoneasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markGoalTrackerMileStoneAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markgoaltrackermilestoneasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStoneByGoalTrackerId(goalTrackerId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestonebygoaltrackerid', {goalTrackerId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStoneByGoalTrackerIdSearch(search: models.GoalTrackerMileStoneByGoalTrackerIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestonebygoaltrackeridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByGoalTrackerMileStoneId(goalTrackerMileStoneId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbygoaltrackermilestoneid', {goalTrackerMileStoneId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerByGoalTrackerMileStoneIdSearch(search: models.GoalTrackerByGoalTrackerMileStoneIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackerbygoaltrackermilestoneidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStoneByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestonebyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getGoalTrackerMileStoneByUserIdSearch(search: models.GoalTrackerMileStoneByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerMileStoneModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackermilestonebyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByGoalTrackerMileStoneId(goalTrackerMileStoneId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackermilestoneid', {goalTrackerMileStoneId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByGoalTrackerMileStoneIdSearch(search: models.UserByGoalTrackerMileStoneIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackermilestoneidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationFiles(search: models.MeditationFileSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationfiles', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationFile(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getmeditationfile', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMeditationFile(meditationFileModel: models.MeditationFileCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createmeditationfile', meditationFileModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleMeditationFile(meditationFileModels: models.MultipleMeditationFileCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplemeditationfile', meditationFileModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateMeditationFile(meditationFileModel: models.MeditationFileUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatemeditationfile', meditationFileModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markMeditationFileAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markmeditationfileasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markMeditationFileAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markmeditationfileasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationFileByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationfilebyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationFileByUserIdSearch(search: models.MeditationFileByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationfilebyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByMeditationFileId(meditationFileId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbymeditationfileid', {meditationFileId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByMeditationFileIdSearch(search: models.UserByMeditationFileIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbymeditationfileidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessions(search: models.MeditationSessionSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessions', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSession(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getmeditationsession', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMeditationSession(meditationSessionModel: models.MeditationSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createmeditationsession', meditationSessionModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleMeditationSession(meditationSessionModels: models.MultipleMeditationSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplemeditationsession', meditationSessionModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateMeditationSession(meditationSessionModel: models.MeditationSessionUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatemeditationsession', meditationSessionModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markMeditationSessionAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markmeditationsessionasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markMeditationSessionAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markmeditationsessionasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessionByMeditationFileId(meditationFileId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessionbymeditationfileid', {meditationFileId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessionByMeditationFileIdSearch(search: models.MeditationSessionByMeditationFileIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessionbymeditationfileidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationFileByMeditationSessionId(meditationSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationfilebymeditationsessionid', {meditationSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationFileByMeditationSessionIdSearch(search: models.MeditationFileByMeditationSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationFileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationfilebymeditationsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessionByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessionbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getMeditationSessionByUserIdSearch(search: models.MeditationSessionByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.MeditationSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getmeditationsessionbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByMeditationSessionId(meditationSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbymeditationsessionid', {meditationSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByMeditationSessionIdSearch(search: models.UserByMeditationSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbymeditationsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardPictures(search: models.VisionBoardPictureSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardpictures', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardPicture(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getvisionboardpicture', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createVisionBoardPicture(visionBoardPictureModel: models.VisionBoardPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createvisionboardpicture', visionBoardPictureModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleVisionBoardPicture(visionBoardPictureModels: models.MultipleVisionBoardPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplevisionboardpicture', visionBoardPictureModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateVisionBoardPicture(visionBoardPictureModel: models.VisionBoardPictureUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatevisionboardpicture', visionBoardPictureModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markVisionBoardPictureAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markvisionboardpictureasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markVisionBoardPictureAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markvisionboardpictureasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardPictureByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardpicturebyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardPictureByUserIdSearch(search: models.VisionBoardPictureByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardPictureModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardpicturebyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByVisionBoardPictureId(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardpictureid', {visionBoardPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByVisionBoardPictureIdSearch(search: models.UserByVisionBoardPictureIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardpictureidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessions(search: models.VisionBoardSessionSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessions', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSession(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getvisionboardsession', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createVisionBoardSession(visionBoardSessionModel: models.VisionBoardSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createvisionboardsession', visionBoardSessionModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleVisionBoardSession(visionBoardSessionModels: models.MultipleVisionBoardSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplevisionboardsession', visionBoardSessionModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateVisionBoardSession(visionBoardSessionModel: models.VisionBoardSessionUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatevisionboardsession', visionBoardSessionModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markVisionBoardSessionAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markvisionboardsessionasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markVisionBoardSessionAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markvisionboardsessionasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getVisionBoardSessionByUserIdSearch(search: models.VisionBoardSessionByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByVisionBoardSessionId(visionBoardSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionid', {visionBoardSessionId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByVisionBoardSessionIdSearch(search: models.UserByVisionBoardSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionidsearch', search, headers);
     }
 
     // tslint:disable-next-line:max-line-length

@@ -81,30 +81,6 @@
         </div>
       </div>
 
-      <div class="form-group row mb-4">
-        <div class="col-sm-4">
-          <label class="form-label" for="selectedCompany">Company
-            <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
-            <span *ngIf="!isViewMode" class="pull-right cursor-pointer" (click)="showAddCompanyModal()"><i
-                class="ri-add-line"></i> Add</span>
-          </label>
-          <div *ngIf="!isViewMode">
-            <ng-select #vcCompany #lvCompany="ngModel" placeholder="Company" class="form-control" name="selectedCompany"
-              id="selectedCompany" bindLabel="companyName" required [items]="companys" [clearable]="false"
-              [ngClass]="{'is-invalid': lvMessageTemplateForm.submitted && lvCompany.invalid }"
-              [typeahead]="companyTypeahead$" [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-            </ng-select>
-            <div *ngIf="lvMessageTemplateForm.submitted && lvCompany.invalid"
-              class="invalid-feedback invalid-feedback-fixed">
-              <div *ngIf="lvCompany.errors?.['required']">Company is required</div>
-            </div>
-          </div>
-          <div *ngIf="isViewMode">
-            {{messageTemplateModel.companyName ? messageTemplateModel.companyName : '-'}}
-          </div>
-        </div>
-      </div>
-
       <div class="row">
         <div class="col-sm-6">
 

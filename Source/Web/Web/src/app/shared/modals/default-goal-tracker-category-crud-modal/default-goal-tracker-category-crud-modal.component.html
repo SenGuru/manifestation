@@ -1,0 +1,62 @@
+
+<form name="form" #lvDefaultGoalTrackerCategoryForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lvDefaultGoalTrackerCategoryForm.form.valid && onSubmit(lvDefaultGoalTrackerCategoryForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-default-goal-tracker-category-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-default-goal-tracker-category-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedDefaultCategory">Default Category
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            <span *ngIf="!isViewMode"  class="pull-right cursor-pointer mr-1" (click)="showAddDefaultCategoryModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvDefaultCategory="ngModel" placeholder="Default Category" name="selectedDefaultCategory" id="selectedDefaultCategory" required
+            [items]="defaultCategorys" class="form-control" bindLabel="defaultCategoryName" [clearable]="false" 
+            [ngClass]="{'is-invalid': lvDefaultGoalTrackerCategoryForm.submitted && lvDefaultCategory.invalid }"
+            [typeahead]="defaultCategoryTypeahead$" [loading]="defaultCategoryTypeaheadLoading" [(ngModel)]="selectedDefaultCategory">
+          </ng-select>
+          <div *ngIf="lvDefaultGoalTrackerCategoryForm.submitted && lvDefaultCategory.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvDefaultCategory.errors?.['required']">Default Category is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{defaultGoalTrackerCategoryModel?.defaultCategoryId ? defaultGoalTrackerCategoryModel.defaultCategoryId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedDefaultGoalTracker">Default Goal Tracker
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            <span *ngIf="!isViewMode"  class="pull-right cursor-pointer mr-1" (click)="showAddDefaultGoalTrackerModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvDefaultGoalTracker="ngModel" placeholder="Default Goal Tracker" name="selectedDefaultGoalTracker" id="selectedDefaultGoalTracker" required
+            [items]="defaultGoalTrackers" class="form-control" bindLabel="defaultGoalTrackerName" [clearable]="false" 
+            [ngClass]="{'is-invalid': lvDefaultGoalTrackerCategoryForm.submitted && lvDefaultGoalTracker.invalid }"
+            [typeahead]="defaultGoalTrackerTypeahead$" [loading]="defaultGoalTrackerTypeaheadLoading" [(ngModel)]="selectedDefaultGoalTracker">
+          </ng-select>
+          <div *ngIf="lvDefaultGoalTrackerCategoryForm.submitted && lvDefaultGoalTracker.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvDefaultGoalTracker.errors?.['required']">Default Goal Tracker is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{defaultGoalTrackerCategoryModel?.defaultGoalTrackerId ? defaultGoalTrackerCategoryModel.defaultGoalTrackerId : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-default-goal-tracker-category-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-default-goal-tracker-category-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

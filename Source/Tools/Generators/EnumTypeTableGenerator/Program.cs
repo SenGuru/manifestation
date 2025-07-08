@@ -66,6 +66,10 @@ namespace CodeGenerator
             {
                 FlutterUIGeneratorProgram.MainApp(args);
             }
+            else if (args[0] == "gui")
+            {
+                GenericUIGeneratorProgram.MainApp(args);
+            }
             else if (args[0] == "cred-list")
             {
                 UIGeneratorProgram.MainApp(args, true);
@@ -81,6 +85,10 @@ namespace CodeGenerator
             else if (args[0] == "ui-input-block")
             {
                 UIHtmlInputBlockGeneratorProgram.MainApp(args);
+            }
+            else if (args[0] == "ui-struct")
+            {
+                UIStructureGeneratorProgram.MainApp(args[0] == "angular", args[1]);
             }
             else if (args[0] == "db-fkey")
             {

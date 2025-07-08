@@ -109,12 +109,12 @@ const string terminalProdDb = "terminal-prod-db";
 const string terminalDemo = "terminal-demo";
 const string terminalDemoDb = "terminal-demo-db";
 
-const string qaServerIp = "167.71.236.147";
-const string prodServerIp = "139.59.70.93";
-const string demoServerIp = "167.71.236.147";
+const string qaServerIp = "24.199.119.33";
+const string prodServerIp = "24.199.119.33";
+const string demoServerIp = "24.199.119.33";
 
 const string qaDbServerIp = "159.65.153.42";
-const string prodDbServerIp = "134.209.155.131";
+const string prodDbServerIp = "159.65.153.42";
 const string demoDbServerIp = "159.65.153.42";
 
 //////////////////////////////////////////////////////////////////////

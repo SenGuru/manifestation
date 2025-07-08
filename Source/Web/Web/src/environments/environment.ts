@@ -5,8 +5,8 @@
 export const environment = {
   production: false,
   defaultauth: 'fackbackend',
-  baseUrl: 'http://qa-1.filmicall.com/',
-  // baseUrl: 'http://localhost:9009/',
+  // baseUrl: 'http://qa-1.filmicall.com/',
+  baseUrl: 'http://localhost:9009/',
   queryParam : 'api/v1/',
   firebaseConfig: {
     apiKey: '',

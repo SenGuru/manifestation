@@ -1,4 +1,4 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { JobModel, JobSearchCriteria, JobTemplateModel, JobTemplateSearchCriteria, JobWithDiffModel } from 'src/common/models/app-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
@@ -53,13 +53,6 @@ export class JobListScreenComponent extends BaseListComponent<JobModel, JobSearc
       align: 'left',
       sortable: true,
       value: 'jobTemplateName',
-      width: '115px',
-    },
-    {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
       width: '115px',
     },
     {
@@ -250,7 +243,7 @@ export class JobListScreenComponent extends BaseListComponent<JobModel, JobSearc
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
+    
     this.searchModel.predefinedJobTypeIds = null;
     this.searchModel.jobTemplateId = null;
     this.searchModel.predefinedJobOrReportTypeIds = null;
@@ -261,7 +254,7 @@ export class JobListScreenComponent extends BaseListComponent<JobModel, JobSearc
     this.getJobs(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getJobs(this.searchModel);

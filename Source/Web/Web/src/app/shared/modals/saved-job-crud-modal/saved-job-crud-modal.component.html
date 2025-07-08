@@ -15,10 +15,10 @@
         </label>
         <div *ngIf="!isViewMode">
           <ng-select #lvPredefinedJobType="ngModel" placeholder="Select Job Type" class="form-control"
-            name="selectedPredefinedJobType" id="selectedPredefinedJobType"
-            bindLabel="type"
-            required [items]="predefinedJobTypes" [clearable]="false"
-            [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvPredefinedJobType.invalid }" [(ngModel)]="selectedPredefinedJobType">
+            name="selectedPredefinedJobType" id="selectedPredefinedJobType" bindLabel="type" required
+            [items]="predefinedJobTypes" [clearable]="false"
+            [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvPredefinedJobType.invalid }"
+            [(ngModel)]="selectedPredefinedJobType">
           </ng-select>
           <div *ngIf="lvSavedJobForm.submitted && lvPredefinedJobType.invalid"
             class="invalid-feedback invalid-feedback-fixed">
@@ -34,11 +34,11 @@
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
-          <ng-select #lvPredefinedJobOrReportType="ngModel" placeholder="Select Job Or Report Type"
-            class="form-control" name="selectedPredefinedJobOrReportType" id="selectedPredefinedJobOrReportType"
-            bindLabel="type"
-            required [items]="predefinedJobOrReportTypes" [clearable]="false"
-            [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvPredefinedJobOrReportType.invalid }" [(ngModel)]="selectedPredefinedJobOrReportType">
+          <ng-select #lvPredefinedJobOrReportType="ngModel" placeholder="Select Job Or Report Type" class="form-control"
+            name="selectedPredefinedJobOrReportType" id="selectedPredefinedJobOrReportType" bindLabel="type" required
+            [items]="predefinedJobOrReportTypes" [clearable]="false"
+            [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvPredefinedJobOrReportType.invalid }"
+            [(ngModel)]="selectedPredefinedJobOrReportType">
           </ng-select>
           <div *ngIf="lvSavedJobForm.submitted && lvPredefinedJobOrReportType.invalid"
             class="invalid-feedback invalid-feedback-fixed">
@@ -55,10 +55,11 @@
         </label>
         <div *ngIf="!isViewMode">
           <ng-select #vcJobTemplateId #lvJobTemplate="ngModel" placeholder="Job Template" class="form-control"
-            name="selectedJobTemplate" id="selectedJobTemplate"
-            bindLabel="jobTemplateName" required
-            [items]="jobTemplates" [clearable]="false" [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvJobTemplate.invalid }" [typeahead]="jobTemplateTypeahead$"
-            [loading]="jobTemplateTypeaheadLoading" [(ngModel)]="selectedJobTemplate">
+            name="selectedJobTemplate" id="selectedJobTemplate" bindLabel="jobTemplateName" required
+            [items]="jobTemplates" [clearable]="false"
+            [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvJobTemplate.invalid }"
+            [typeahead]="jobTemplateTypeahead$" [loading]="jobTemplateTypeaheadLoading"
+            [(ngModel)]="selectedJobTemplate">
           </ng-select>
           <div *ngIf="lvSavedJobForm.submitted && lvJobTemplate.invalid"
             class="invalid-feedback invalid-feedback-fixed">
@@ -70,31 +71,13 @@
         </div>
       </div>
       <div class="col-sm-6">
-        <label class="form-label" for="selectedCompany">Company
-          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
-        </label>
-        <div *ngIf="!isViewMode">
-          <ng-select #vcCompanyId #lvCompany="ngModel" placeholder="Company" class="form-control" name="selectedCompany"
-            id="selectedCompany" bindLabel="companyName"
-            required [items]="companys" [clearable]="false" [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvCompany.invalid }" [typeahead]="companyTypeahead$"
-            [loading]="companyTypeaheadLoading" [(ngModel)]="selectedCompany">
-          </ng-select>
-          <div *ngIf="lvSavedJobForm.submitted && lvCompany.invalid" class="invalid-feedback invalid-feedback-fixed">
-            <div *ngIf="lvCompany.errors?.['required']">Company is required</div>
-          </div>
-        </div>
-        <div *ngIf="isViewMode">
-          {{savedJobModel.companyName ? savedJobModel.companyName : '-'}}
-        </div>
-      </div>
-      <div class="col-sm-6">
         <label class="form-label" for="submittedDate">Date
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
           <input #lvSubmittedDate="ngModel" class="form-control flatpickr-input" type="text" mwlFlatpickr
-            name="submittedDate" id="submittedDate" required altFormat="F j, Y"
-            dateFormat="Y-m-d" placeholder="Select Submitted Date" [altInput]="true" [convertModelValue]="true"
+            name="submittedDate" id="submittedDate" required altFormat="F j, Y" dateFormat="Y-m-d"
+            placeholder="Select Submitted Date" [altInput]="true" [convertModelValue]="true"
             [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvSubmittedDate.invalid }"
             [(ngModel)]="aSubmittedDate" />
           <div *ngIf="lvSavedJobForm.submitted && lvSubmittedDate.invalid"
@@ -111,8 +94,8 @@
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
-          <input #lvExecutableFolder="ngModel" type="text" name="executableFolder" id="executableFolder"
-            required class="form-control" placeholder="Executable Folder"
+          <input #lvExecutableFolder="ngModel" type="text" name="executableFolder" id="executableFolder" required
+            class="form-control" placeholder="Executable Folder"
             [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvExecutableFolder.invalid }"
             [(ngModel)]="savedJobModel.executableFolder">
           <div class="invalid-feedback invalid-feedback-fixed">
@@ -130,8 +113,8 @@
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
-          <input #lvExecutableName="ngModel" type="text" name="executableName" id="executableName"
-            required class="form-control" placeholder="Executable Name"
+          <input #lvExecutableName="ngModel" type="text" name="executableName" id="executableName" required
+            class="form-control" placeholder="Executable Name"
             [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvExecutableName.invalid }"
             [(ngModel)]="savedJobModel.executableName">
           <div class="invalid-feedback invalid-feedback-fixed">
@@ -168,8 +151,8 @@
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
-          <input #lvSerializedJobParameter="ngModel" type="text" name="serializedJobParameter" id="serializedJobParameter"
-            required class="form-control" placeholder="Serialized Job Parameter"
+          <input #lvSerializedJobParameter="ngModel" type="text" name="serializedJobParameter"
+            id="serializedJobParameter" required class="form-control" placeholder="Serialized Job Parameter"
             [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvSerializedJobParameter.invalid }"
             [(ngModel)]="savedJobModel.serializedJobParameter">
           <div class="invalid-feedback invalid-feedback-fixed">
@@ -187,8 +170,8 @@
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
-          <input #lvReportTemplateFile="ngModel" type="text" name="reportTemplateFile" id="reportTemplateFile"
-            required class="form-control" placeholder="Report Template File"
+          <input #lvReportTemplateFile="ngModel" type="text" name="reportTemplateFile" id="reportTemplateFile" required
+            class="form-control" placeholder="Report Template File"
             [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvReportTemplateFile.invalid }"
             [(ngModel)]="savedJobModel.reportTemplateFile">
           <div class="invalid-feedback invalid-feedback-fixed">
@@ -297,8 +280,8 @@
           <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
         </label>
         <div *ngIf="!isViewMode">
-          <input #lvCustomExportName="ngModel" type="text" name="customExportName" id="customExportName"
-            required class="form-control" placeholder="Custom Export Name"
+          <input #lvCustomExportName="ngModel" type="text" name="customExportName" id="customExportName" required
+            class="form-control" placeholder="Custom Export Name"
             [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvCustomExportName.invalid }"
             [(ngModel)]="savedJobModel.customExportName">
           <div class="invalid-feedback invalid-feedback-fixed">
@@ -335,8 +318,8 @@
         </label>
         <div *ngIf="!isViewMode">
           <ng-select #vcUserId #lvUser="ngModel" placeholder="User" class="form-control" name="selectedUser"
-            id="selectedUser" bindLabel="userName"
-            required [items]="users" [clearable]="false" [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvUser.invalid }" [typeahead]="userTypeahead$"
+            id="selectedUser" bindLabel="userName" required [items]="users" [clearable]="false"
+            [ngClass]="{'is-invalid': lvSavedJobForm.submitted && lvUser.invalid }" [typeahead]="userTypeahead$"
             [loading]="userTypeaheadLoading" [(ngModel)]="selectedUser">
           </ng-select>
           <div *ngIf="lvSavedJobForm.submitted && lvUser.invalid" class="invalid-feedback invalid-feedback-fixed">

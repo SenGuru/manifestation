@@ -1,5 +1,5 @@
-import { CompanyModel, CompanySearchCriteria, JobTemplateModel, JobTemplateSearchCriteria, LoggedInUserModel, ScheduledJobCreateModel, ScheduledJobModel, ScheduledJobUpdateModel } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
+import { JobTemplateModel, JobTemplateSearchCriteria, LoggedInUserModel, ScheduledJobCreateModel, ScheduledJobModel, ScheduledJobUpdateModel } from 'src/common/models/app-model';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { getHeaderWithBlockUI, getHeaderWithLoadingText } from 'src/common/interceptors/httpconfig.interceptor';
@@ -44,11 +44,7 @@ export class ScheduledJobCrudModalComponent implements OnInit {
   public jobTemplates: JobTemplateModel[] = [];
   public selectedJobTemplate: JobTemplateModel | undefined;
   public predefinedJobOrReportTypes: Status[] = [];
-  public selectedPredefinedJobOrReportType: Status | undefined;
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+  public selectedPredefinedJobOrReportType: Status | undefined; 
 
   public constructor(
     private httpService: HttpService,
@@ -63,7 +59,6 @@ export class ScheduledJobCrudModalComponent implements OnInit {
     this.getJobTemplates();
     this.predefinedJobOrReportTypes = this.selectService.GetPredefinedJobOrReportTypes();
     if (!this.isCreateMode) this.selectedPredefinedJobOrReportType = this.predefinedJobOrReportTypes.find(item => item.id === this.scheduledJobModel.predefinedJobOrReportTypeId);
-    this.getCompanies();
     this.initTypeAheads();
   }
 
@@ -82,24 +77,7 @@ export class ScheduledJobCrudModalComponent implements OnInit {
         this.jobTemplateTypeaheadLoading = false;
       },
       complete: () => null,
-    });
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
+    }); 
   }
 
   public getJobTemplates(): void {
@@ -120,27 +98,7 @@ export class ScheduledJobCrudModalComponent implements OnInit {
       },
       complete: () => null,
     });
-  }
-  public getCompanies(): void {
-    const searchModel: CompanySearchCriteria = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) {
-          this.companys = data.model;
-          if (!this.isCreateMode) this.selectedCompany = data.model.find(item => item.companyId === this.scheduledJobModel.companyId);
-        }
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+  } 
   public onSubmit(f: NgForm): void {
     if (!f.valid) {
       return;
@@ -161,9 +119,7 @@ export class ScheduledJobCrudModalComponent implements OnInit {
     if (this.selectedJobTemplate == null)
       return;
     if (this.selectedPredefinedJobOrReportType == null)
-      return;
-    if (this.selectedCompany == null)
-      return;
+      return; 
     Object.assign(this.scheduledJobModel, obj);
     Object.keys(this.scheduledJobModel).forEach(key => {
       //@ts-expect-error  --- following line expected to have an error
@@ -175,7 +131,6 @@ export class ScheduledJobCrudModalComponent implements OnInit {
 
     this.scheduledJobModel.jobTemplateId = this.selectedJobTemplate?.jobTemplateId ?? 0;
     this.scheduledJobModel.predefinedJobOrReportTypeId = this.selectedPredefinedJobOrReportType ? this.selectedPredefinedJobOrReportType.id : null;
-    this.scheduledJobModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     return this.scheduledJobModel;
   }
 

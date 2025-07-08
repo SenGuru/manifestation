@@ -1,4 +1,4 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { PerfLogModel, PerfLogSearchCriteria } from 'src/common/models/app-model';
 
@@ -139,7 +139,7 @@ export class PerfLogModelListScreenComponent extends BaseListComponent<PerfLogMo
     this.getPerfLogModels(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getPerfLogModels(this.searchModel);

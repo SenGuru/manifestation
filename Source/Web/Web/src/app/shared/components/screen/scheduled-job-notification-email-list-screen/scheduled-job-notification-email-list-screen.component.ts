@@ -1,5 +1,5 @@
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, ScheduledJobModel, ScheduledJobNotificationEmailModel, ScheduledJobNotificationEmailSearchCriteria, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
+import { ScheduledJobModel, ScheduledJobNotificationEmailModel, ScheduledJobNotificationEmailSearchCriteria, ScheduledJobSearchCriteria } from 'src/common/models/app-model';
 import { Component, Input, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -28,10 +28,7 @@ export class ScheduledJobNotificationEmailListScreenComponent extends BaseListCo
   @Input() public globalSearchText: string | undefined;
   public override searchModel: ScheduledJobNotificationEmailSearchCriteria = new ScheduledJobNotificationEmailSearchCriteria();
 
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
+ 
   public scheduledJobTypeahead$ = new Subject<string>();
   public scheduledJobTypeaheadLoading = false;
   public scheduledJobs: ScheduledJobModel[] = [];
@@ -117,29 +114,12 @@ export class ScheduledJobNotificationEmailListScreenComponent extends BaseListCo
 
   public ngOnInit(): void {
     this.getScheduledJobNotificationEmails(this.searchModel);
-    this.getCompanies();
+   
     this.getScheduledJobs();
     this.initTypeAheads();
   }
 
   public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
     this.scheduledJobTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
       this.scheduledJobTypeaheadLoading = true;
       const scheduledJobSearchCriteria = new ScheduledJobSearchCriteria();
@@ -157,22 +137,7 @@ export class ScheduledJobNotificationEmailListScreenComponent extends BaseListCo
     });
   }
 
-  public getCompanies(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
+  
 
   public getScheduledJobs(): void {
     const searchModel = new ScheduledJobSearchCriteria();
@@ -241,7 +206,7 @@ export class ScheduledJobNotificationEmailListScreenComponent extends BaseListCo
   }
 
   public deleteScheduledJobNotificationEmail(item: ScheduledJobNotificationEmailModel): void {
-    this.dialogService.confirmWithTitle(`Delete Scheduled Job Notification Email`, `Do you want to delete the Scheduled Job Notification Email - ${item.companyName}?`).then(res => {
+    this.dialogService.confirmWithTitle(`Delete Scheduled Job Notification Email`, `Do you want to delete the Scheduled Job Notification Email?`).then(res => {
       if (!res) return;
       this.httpService.markScheduledJobNotificationEmailAsDeleted(item.scheduledJobNotificationEmailId).subscribe(result => {
         if (!result.isSuccess) return this.dialogService.errorWithDefaultTitleForModel(result, "Unable to delete the Scheduled Job Notification Email");
@@ -254,7 +219,7 @@ export class ScheduledJobNotificationEmailListScreenComponent extends BaseListCo
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
+    
     this.searchModel.scheduledJobId = this.selectedScheduledJob ? this.selectedScheduledJob.scheduledJobId : null;
 
     this.getScheduledJobNotificationEmails(this.searchModel);
@@ -262,12 +227,12 @@ export class ScheduledJobNotificationEmailListScreenComponent extends BaseListCo
 
   public onReset(f: NgForm): void {
     f.resetForm();
-    this.searchModel.companyId = null;
+    
     this.searchModel.scheduledJobId = null;
     this.getScheduledJobNotificationEmails(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getScheduledJobNotificationEmails(this.searchModel);

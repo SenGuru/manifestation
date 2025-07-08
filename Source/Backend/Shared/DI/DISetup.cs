@@ -199,7 +199,7 @@ namespace Manifest.DI
                 .AddScoped<WipRepository>()
                 .AddScoped<AuditRepository>()
                 .AddScoped<SettingRepository>()
-                .AddScoped<MovieRepository>()
+                .AddScoped<ManifestRepository>()
                 .AddScoped<SystemRepository>()
                 .AddScoped<ReportRepository>()
                 .AddScoped<ChatRepository>()
@@ -209,7 +209,7 @@ namespace Manifest.DI
                 //Services
                 .AddScoped<AccountService>()
                 .AddScoped<CompanyService>()
-                .AddScoped<MovieService>()
+                .AddScoped<ManifestService>()
                 .AddScoped<DummyDataGenerationService>()
                 .AddScoped<SystemService>()
                 .AddScoped<WipService>()

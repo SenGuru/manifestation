@@ -20,10 +20,10 @@ import { UserCrudModalComponent } from 'src/app/shared/modals/user-crud-modal/us
 
 // Light Box
 @Component({
-    selector: 'app-chat',
-    templateUrl: './chat.component.html',
-    styleUrls: ['./chat.component.scss'],
-    standalone: false
+  selector: 'app-chat',
+  templateUrl: './chat.component.html',
+  styleUrls: ['./chat.component.scss'],
+  standalone: false
 })
 export class ChatComponent implements OnInit, AfterViewInit {
   @ViewChild('scrollRef') public scrollRef!: ElementRef;
@@ -93,9 +93,7 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public ngOnInit(): void {
     this.currentUser = this.sessionService.getCurrentUserInfo();
-    this.companyId = this.currentUser?.companyId ?? 0;
     this.userId = this.currentUser?.userId;
-    this.companyName = this.currentUser?.companyName;
     if (this.currentUser && this.currentUser?.userTypeId && this.currentUser?.userTypeId == PredefinedUserTypes.SuperAdmin) {
       this.isSuperAdmin = true;
     }
@@ -135,7 +133,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public getContacts(searchModel: UserSearchCriteria): void {
     searchModel.active = true;
-    searchModel.companyIds = [this.companyId ?? 0];
     this.httpService.getUsers(searchModel).subscribe({
       next: result => {
         if (!result.isSuccess) {
@@ -151,7 +148,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
   }
 
   public getChatMessages(searchModel: ChatMessageSearchCriteria): void {
-    searchModel.companyId = this.companyId ?? 0;
     searchModel.sortBy = 'createdDate';
     this.httpService.getChatMessages(searchModel).subscribe({
       next: result => {
@@ -168,7 +164,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public getChatUsers(searchModel: ChatUserSearchCriteria): void {
     if (!this.selectedChat) return;
-    searchModel.companyId = this.companyId ?? 0;
     searchModel.chatId = this.selectedChat.chatId;
     searchModel.sortBy = 'createdDate';
     this.httpService.getChatUsers(searchModel).subscribe({
@@ -186,7 +181,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
   public getChats(searchModel: ChatSearchCriteria): void {
     this.isLoading = true;
-    searchModel.companyId = this.companyId ?? 0;
     this.httpService.getChats(searchModel).subscribe({
       next: result => {
         this.isLoading = false;
@@ -237,7 +231,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
     const chatUpdateModel: ChatUpdateModel = new ChatUpdateModel();
     chatUpdateModel.chatName = this.selectedChat.chatName;
     chatUpdateModel.chatId = this.selectedChat.chatId;
-    chatUpdateModel.companyId = this.selectedChat.companyId;
     chatUpdateModel.existingChatUsers = this.chatGroupUsers;
     this.httpService.updateChat(chatUpdateModel).subscribe((result) => {
       if (!result.isSuccess) return this.dialogService.errorWithDefaultTitleForModel(result, "Unable to update the Chat Name");
@@ -320,7 +313,6 @@ export class ChatComponent implements OnInit, AfterViewInit {
     const newMessage = new ChatMessageCreateModel();
     newMessage.chatId = this.selectedChat.chatId;
     newMessage.chatMessageText = this.userMessage;
-    newMessage.companyId = this.companyId ?? 0;
     newMessage.userId = this.userId ?? 0;
     this.realtimeClientService.sendMessage(newMessage);
     f.resetForm();

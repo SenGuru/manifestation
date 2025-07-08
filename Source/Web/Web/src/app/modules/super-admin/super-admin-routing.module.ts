@@ -2,8 +2,11 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { AppLogModelListScreenComponent } from "src/app/shared/components/screen/app-log-model-list-screen/app-log-model-list-screen.component";
 import { AuditOperationListScreenComponent } from "src/app/shared/components/screen/audit-operation-list-screen/audit-operation-list-screen.component";
-import { CompanyConfigScreenComponent } from "src/app/shared/components/screen/company-config-screen/company-config-screen.component";
-import { CompanyListScreenComponent } from "src/app/shared/components/screen/company-list-screen/company-list-screen.component";
+import { DailyAffirmationTextListScreenComponent } from "src/app/shared/components/screen/daily-affirmation-text-list-screen/daily-affirmation-text-list-screen.component";
+import { DefaultDailyAffirmationTextListScreenComponent } from "src/app/shared/components/screen/default-daily-affirmation-text-list-screen/default-daily-affirmation-text-list-screen.component";
+import { DefaultGoalTrackerCategoryListScreenComponent } from "src/app/shared/components/screen/default-goal-tracker-category-list-screen/default-goal-tracker-category-list-screen.component";
+import { DefaultGoalTrackerListScreenComponent } from "src/app/shared/components/screen/default-goal-tracker-list-screen/default-goal-tracker-list-screen.component";
+import { DefaultVisionBoardPictureListScreenComponent } from "src/app/shared/components/screen/default-vision-board-picture-list-screen/default-vision-board-picture-list-screen.component";
 import { GlobalSearchDetailsComponent } from "src/app/shared/components/global-search-details/global-search-details.component";
 import { JobListScreenComponent } from "src/app/shared/components/screen/job-list-screen/job-list-screen.component";
 import { JobTemplateCrudModalComponent } from "src/app/shared/modals/job-template-crud-modal/job-template-crud-modal.component";
@@ -28,10 +31,8 @@ const routes: Routes = [
     path: "",
     component: LayoutComponent,
     children: [
-      { path: "", component: CompanyListScreenComponent },
-      { path: "home", component: CompanyListScreenComponent },
+      { path: '', component: UserListScreenComponent },
       { path: "profile", component: ProfileComponent },
-      { path: 'companies', component: CompanyListScreenComponent },
       { path: 'jobs', component: JobListScreenComponent },
       { path: 'app-logs', component: AppLogModelListScreenComponent },
       { path: 'perf-logs', component: PerfLogModelListScreenComponent },
@@ -44,6 +45,12 @@ const routes: Routes = [
       { path: 'push-notification', component: PushNotificationServerListScreenComponent },
       { path: 'voice-notification', component: VoiceNotificationServerListScreenComponent },
       { path: 'whatsapp-notification', component: WhatsAppNotificationServerListScreenComponent },
+      { path: 'daily-affirmation-texts', component: DailyAffirmationTextListScreenComponent },
+      { path: 'default-categorys', component: UserListScreenComponent },
+      { path: 'default-daily-affirmation-texts', component: DefaultDailyAffirmationTextListScreenComponent },
+      { path: 'default-goal-tracker-categorys', component: DefaultGoalTrackerCategoryListScreenComponent },
+      { path: 'default-goal-trackers', component: DefaultGoalTrackerListScreenComponent },
+      { path: 'default-vision-board-pictures', component: DefaultVisionBoardPictureListScreenComponent },
       {
         path: 'jobs',
         children: [
@@ -59,14 +66,6 @@ const routes: Routes = [
           { path: 'job-template-item/:actionType', component: JobTemplateCrudModalComponent },
         ]
       },
-{
-        path: 'company/:layoutTypeId/:companyId',
-        children: [
-         { path: "company-config", component: CompanyConfigScreenComponent, data: { companyConfig: true } },
-          { path: "users", component: UserListScreenComponent },
-        ]
-      },
-
       { path: 'global-search/:layoutTypeId', component: GlobalSearchDetailsComponent },
     ],
   },

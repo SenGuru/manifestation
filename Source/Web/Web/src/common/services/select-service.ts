@@ -14,8 +14,6 @@ export class SelectService {
     return [
       { id: null, type: 'All' },
       { id: 1, type: 'Predefined Audit Operation Type' },
-      { id: 2, type: 'Predefined Company Type' },
-      { id: 3, type: 'Predefined Currency Type' },
       { id: 4, type: 'Predefined Email Notification Status Type' },
       { id: 5, type: 'Predefined Field Control Type' },
       { id: 6, type: 'Predefined Field Populator Type' },
@@ -28,7 +26,6 @@ export class SelectService {
       { id: 13, type: 'Predefined Message Priority Type' },
       { id: 14, type: 'Predefined Message Template Type' },
       { id: 15, type: 'Predefined Message To Send Type' },
-      { id: 16, type: 'Predefined Meta Data Group Type' },
       { id: 17, type: 'Predefined Notification Message Type' },
       { id: 18, type: 'Predefined Phone Call Notification Status Type' },
       { id: 19, type: 'Predefined Push Notification Server Type' },
@@ -42,11 +39,9 @@ export class SelectService {
       { id: 27, type: 'Predefined User Type' },
       { id: 28, type: 'Predefined Validator Type' },
       { id: 29, type: 'Predefined Whats App Notification Status Type' },
-      { id: 30, type: 'Predefined Project Control Status Type' },
-      { id: 31, type: 'Predefined Project Status Type' },
-      { id: 32, type: 'Predefined Review Session Status Type' },
-      { id: 33, type: 'Predefined Approval Status Type' },
-      { id: 34, type: 'Predefined Custom Field Template Type' },
+      { id: 33, type: 'Predefined Goal Status Type' },
+      { id: 34, type: 'Predefined Category Type' },
+      { id: 35, type: 'Predefined Meditation Type' },
     ];
   }
 
@@ -54,8 +49,6 @@ export class SelectService {
     return [
       { id: null, type: '' },
       { id: 1, type: 'Predefined Audit Operation Type' },
-      { id: 2, type: 'Predefined Company Type' },
-      { id: 3, type: 'Predefined Currency Type' },
       { id: 4, type: 'Predefined Email Notification Status Type' },
       { id: 5, type: 'Predefined Field Control Type' },
       { id: 6, type: 'Predefined Field Populator Type' },
@@ -68,7 +61,6 @@ export class SelectService {
       { id: 13, type: 'Predefined Message Priority Type' },
       { id: 14, type: 'Predefined Message Template Type' },
       { id: 15, type: 'Predefined Message To Send Type' },
-      { id: 16, type: 'Predefined Meta Data Group Type' },
       { id: 17, type: 'Predefined Notification Message Type' },
       { id: 18, type: 'Predefined Phone Call Notification Status Type' },
       { id: 19, type: 'Predefined Push Notification Server Type' },
@@ -82,19 +74,15 @@ export class SelectService {
       { id: 27, type: 'Predefined User Type' },
       { id: 28, type: 'Predefined Validator Type' },
       { id: 29, type: 'Predefined Whats App Notification Status Type' },
-      { id: 30, type: 'Predefined Project Control Status Type' },
-      { id: 31, type: 'Predefined Project Status Type' },
-      { id: 32, type: 'Predefined Review Session Status Type' },
-      { id: 33, type: 'Predefined Approval Status Type' },
-      { id: 34, type: 'Predefined Custom Field Template Type' },
+      { id: 33, type: 'Predefined Goal Status Type' },
+      { id: 34, type: 'Predefined Category Type' },
+      { id: 35, type: 'Predefined Meditation Type' },
     ];
   }
 
  public GetEnumGroupTypes(): Status[] {
     return [
       { id: 1, type: 'Predefined Audit Operation Type' },
-      { id: 2, type: 'Predefined Company Type' },
-      { id: 3, type: 'Predefined Currency Type' },
       { id: 4, type: 'Predefined Email Notification Status Type' },
       { id: 5, type: 'Predefined Field Control Type' },
       { id: 6, type: 'Predefined Field Populator Type' },
@@ -107,7 +95,6 @@ export class SelectService {
       { id: 13, type: 'Predefined Message Priority Type' },
       { id: 14, type: 'Predefined Message Template Type' },
       { id: 15, type: 'Predefined Message To Send Type' },
-      { id: 16, type: 'Predefined Meta Data Group Type' },
       { id: 17, type: 'Predefined Notification Message Type' },
       { id: 18, type: 'Predefined Phone Call Notification Status Type' },
       { id: 19, type: 'Predefined Push Notification Server Type' },
@@ -121,37 +108,9 @@ export class SelectService {
       { id: 27, type: 'Predefined User Type' },
       { id: 28, type: 'Predefined Validator Type' },
       { id: 29, type: 'Predefined Whats App Notification Status Type' },
-      { id: 30, type: 'Predefined Project Control Status Type' },
-      { id: 31, type: 'Predefined Project Status Type' },
-      { id: 32, type: 'Predefined Review Session Status Type' },
-      { id: 33, type: 'Predefined Approval Status Type' },
-      { id: 34, type: 'Predefined Custom Field Template Type' },
-    ];
-  }
-
- public GetAllPredefinedApprovalStatusTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 3300001, type: 'Open' },
-      { id: 3300002, type: 'Completed' },
-      { id: 3300003, type: 'Abandoned' },
-    ];
-  }
-
- public GetWithBlankPredefinedApprovalStatusTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 3300001, type: 'Open' },
-      { id: 3300002, type: 'Completed' },
-      { id: 3300003, type: 'Abandoned' },
-    ];
-  }
-
- public GetPredefinedApprovalStatusTypes(): Status[] {
-    return [
-      { id: 3300001, type: 'Open' },
-      { id: 3300002, type: 'Completed' },
-      { id: 3300003, type: 'Abandoned' },
+      { id: 33, type: 'Predefined Goal Status Type' },
+      { id: 34, type: 'Predefined Category Type' },
+      { id: 35, type: 'Predefined Meditation Type' },
     ];
   }
 
@@ -259,75 +218,32 @@ export class SelectService {
     ];
   }
 
- public GetAllPredefinedCompanyTypes(): Status[] {
+ public GetAllPredefinedCategoryTypes(): Status[] {
     return [
       { id: null, type: 'All' },
-      { id: 200001, type: 'System' },
-      { id: 200002, type: 'Production House' },
+      { id: 3400001, type: 'Daily Affirmation' },
+      { id: 3400002, type: 'Vision Board' },
+      { id: 3400003, type: 'Meditation' },
+      { id: 3400004, type: 'Goal Tracker' },
     ];
   }
 
- public GetWithBlankPredefinedCompanyTypes(): Status[] {
+ public GetWithBlankPredefinedCategoryTypes(): Status[] {
     return [
       { id: null, type: '' },
-      { id: 200001, type: 'System' },
-      { id: 200002, type: 'Production House' },
+      { id: 3400001, type: 'Daily Affirmation' },
+      { id: 3400002, type: 'Vision Board' },
+      { id: 3400003, type: 'Meditation' },
+      { id: 3400004, type: 'Goal Tracker' },
     ];
   }
 
- public GetPredefinedCompanyTypes(): Status[] {
+ public GetPredefinedCategoryTypes(): Status[] {
     return [
-      { id: 200001, type: 'System' },
-      { id: 200002, type: 'Production House' },
-    ];
-  }
-
- public GetAllPredefinedCurrencyTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 300001, type: 'INR' },
-      { id: 300002, type: 'USD' },
-    ];
-  }
-
- public GetWithBlankPredefinedCurrencyTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 300001, type: 'INR' },
-      { id: 300002, type: 'USD' },
-    ];
-  }
-
- public GetPredefinedCurrencyTypes(): Status[] {
-    return [
-      { id: 300001, type: 'INR' },
-      { id: 300002, type: 'USD' },
-    ];
-  }
-
- public GetAllPredefinedCustomFieldTemplateTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 3400001, type: 'Control' },
-      { id: 3400002, type: 'Review' },
-      { id: 3400003, type: 'Approval' },
-    ];
-  }
-
- public GetWithBlankPredefinedCustomFieldTemplateTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 3400001, type: 'Control' },
-      { id: 3400002, type: 'Review' },
-      { id: 3400003, type: 'Approval' },
-    ];
-  }
-
- public GetPredefinedCustomFieldTemplateTypes(): Status[] {
-    return [
-      { id: 3400001, type: 'Control' },
-      { id: 3400002, type: 'Review' },
-      { id: 3400003, type: 'Approval' },
+      { id: 3400001, type: 'Daily Affirmation' },
+      { id: 3400002, type: 'Vision Board' },
+      { id: 3400003, type: 'Meditation' },
+      { id: 3400004, type: 'Goal Tracker' },
     ];
   }
 
@@ -550,6 +466,32 @@ export class SelectService {
     ];
   }
 
+ public GetAllPredefinedGoalStatusTypes(): Status[] {
+    return [
+      { id: null, type: 'All' },
+      { id: 3300001, type: 'Open' },
+      { id: 3300002, type: 'Completed' },
+      { id: 3300003, type: 'Abandoned' },
+    ];
+  }
+
+ public GetWithBlankPredefinedGoalStatusTypes(): Status[] {
+    return [
+      { id: null, type: '' },
+      { id: 3300001, type: 'Open' },
+      { id: 3300002, type: 'Completed' },
+      { id: 3300003, type: 'Abandoned' },
+    ];
+  }
+
+ public GetPredefinedGoalStatusTypes(): Status[] {
+    return [
+      { id: 3300001, type: 'Open' },
+      { id: 3300002, type: 'Completed' },
+      { id: 3300003, type: 'Abandoned' },
+    ];
+  }
+
  public GetAllPredefinedJobOrReportTypes(): Status[] {
     return [
       { id: null, type: 'All' },
@@ -746,6 +688,35 @@ export class SelectService {
     ];
   }
 
+ public GetAllPredefinedMeditationTypes(): Status[] {
+    return [
+      { id: null, type: 'All' },
+      { id: 3500001, type: 'Candle' },
+      { id: 3500002, type: 'Moon' },
+      { id: 3500003, type: 'Lava Lamp' },
+      { id: 3500004, type: 'Calm' },
+    ];
+  }
+
+ public GetWithBlankPredefinedMeditationTypes(): Status[] {
+    return [
+      { id: null, type: '' },
+      { id: 3500001, type: 'Candle' },
+      { id: 3500002, type: 'Moon' },
+      { id: 3500003, type: 'Lava Lamp' },
+      { id: 3500004, type: 'Calm' },
+    ];
+  }
+
+ public GetPredefinedMeditationTypes(): Status[] {
+    return [
+      { id: 3500001, type: 'Candle' },
+      { id: 3500002, type: 'Moon' },
+      { id: 3500003, type: 'Lava Lamp' },
+      { id: 3500004, type: 'Calm' },
+    ];
+  }
+
  public GetAllPredefinedMessagePriorityTypes(): Status[] {
     return [
       { id: null, type: 'All' },
@@ -836,26 +807,6 @@ export class SelectService {
     ];
   }
 
- public GetAllPredefinedMetaDataGroupTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 1600001, type: 'Actor Type' },
-    ];
-  }
-
- public GetWithBlankPredefinedMetaDataGroupTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 1600001, type: 'Actor Type' },
-    ];
-  }
-
- public GetPredefinedMetaDataGroupTypes(): Status[] {
-    return [
-      { id: 1600001, type: 'Actor Type' },
-    ];
-  }
-
  public GetAllPredefinedNotificationMessageTypes(): Status[] {
     return [
       { id: null, type: 'All' },
@@ -943,61 +894,6 @@ export class SelectService {
       { id: 1800005, type: 'Declined' },
       { id: 1800006, type: 'Notification Error' },
       { id: 1800007, type: 'Server Not Configured' },
-    ];
-  }
-
- public GetAllPredefinedProjectControlStatusTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 3000001, type: 'Open' },
-      { id: 3000002, type: 'Completed' },
-      { id: 3000003, type: 'Abandoned' },
-    ];
-  }
-
- public GetWithBlankPredefinedProjectControlStatusTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 3000001, type: 'Open' },
-      { id: 3000002, type: 'Completed' },
-      { id: 3000003, type: 'Abandoned' },
-    ];
-  }
-
- public GetPredefinedProjectControlStatusTypes(): Status[] {
-    return [
-      { id: 3000001, type: 'Open' },
-      { id: 3000002, type: 'Completed' },
-      { id: 3000003, type: 'Abandoned' },
-    ];
-  }
-
- public GetAllPredefinedProjectStatusTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 3100001, type: 'In Planning' },
-      { id: 3100002, type: 'Open' },
-      { id: 3100003, type: 'Abandoned' },
-      { id: 3100004, type: 'Completed' },
-    ];
-  }
-
- public GetWithBlankPredefinedProjectStatusTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 3100001, type: 'In Planning' },
-      { id: 3100002, type: 'Open' },
-      { id: 3100003, type: 'Abandoned' },
-      { id: 3100004, type: 'Completed' },
-    ];
-  }
-
- public GetPredefinedProjectStatusTypes(): Status[] {
-    return [
-      { id: 3100001, type: 'In Planning' },
-      { id: 3100002, type: 'Open' },
-      { id: 3100003, type: 'Abandoned' },
-      { id: 3100004, type: 'Completed' },
     ];
   }
 
@@ -1155,6 +1051,25 @@ export class SelectService {
       { id: 2200041, type: 'Whats App Notification Server' },
       { id: 2200042, type: 'User Group' },
       { id: 2200043, type: 'Company Entity' },
+      { id: 2200044, type: 'Category' },
+      { id: 2200045, type: 'Vision Board Session Picture' },
+      { id: 2200046, type: 'Daily Affirmation Session' },
+      { id: 2200047, type: 'Daily Affirmation Text' },
+      { id: 2200048, type: 'Daily Affirmation Session Category' },
+      { id: 2200049, type: 'Default Category' },
+      { id: 2200050, type: 'Default Daily Affirmation Text' },
+      { id: 2200051, type: 'Default Goal Tracker Category' },
+      { id: 2200052, type: 'Default Goal Tracker' },
+      { id: 2200053, type: 'Vision Board Session' },
+      { id: 2200054, type: 'Default Vision Board Picture' },
+      { id: 2200055, type: 'Feed' },
+      { id: 2200056, type: 'Goal Tracker' },
+      { id: 2200057, type: 'Goal Tracker Category' },
+      { id: 2200058, type: 'Goal Tracker Mile Stone' },
+      { id: 2200059, type: 'Meditation File' },
+      { id: 2200060, type: 'Meditation Session' },
+      { id: 2200061, type: 'Vision Board Picture' },
+      { id: 2200062, type: 'Default Meditation File' },
     ];
   }
 
@@ -1204,6 +1119,25 @@ export class SelectService {
       { id: 2200041, type: 'Whats App Notification Server' },
       { id: 2200042, type: 'User Group' },
       { id: 2200043, type: 'Company Entity' },
+      { id: 2200044, type: 'Category' },
+      { id: 2200045, type: 'Vision Board Session Picture' },
+      { id: 2200046, type: 'Daily Affirmation Session' },
+      { id: 2200047, type: 'Daily Affirmation Text' },
+      { id: 2200048, type: 'Daily Affirmation Session Category' },
+      { id: 2200049, type: 'Default Category' },
+      { id: 2200050, type: 'Default Daily Affirmation Text' },
+      { id: 2200051, type: 'Default Goal Tracker Category' },
+      { id: 2200052, type: 'Default Goal Tracker' },
+      { id: 2200053, type: 'Vision Board Session' },
+      { id: 2200054, type: 'Default Vision Board Picture' },
+      { id: 2200055, type: 'Feed' },
+      { id: 2200056, type: 'Goal Tracker' },
+      { id: 2200057, type: 'Goal Tracker Category' },
+      { id: 2200058, type: 'Goal Tracker Mile Stone' },
+      { id: 2200059, type: 'Meditation File' },
+      { id: 2200060, type: 'Meditation Session' },
+      { id: 2200061, type: 'Vision Board Picture' },
+      { id: 2200062, type: 'Default Meditation File' },
     ];
   }
 
@@ -1252,32 +1186,25 @@ export class SelectService {
       { id: 2200041, type: 'Whats App Notification Server' },
       { id: 2200042, type: 'User Group' },
       { id: 2200043, type: 'Company Entity' },
-    ];
-  }
-
- public GetAllPredefinedReviewSessionStatusTypes(): Status[] {
-    return [
-      { id: null, type: 'All' },
-      { id: 3200001, type: 'Open' },
-      { id: 3200002, type: 'Completed' },
-      { id: 3200003, type: 'Abandoned' },
-    ];
-  }
-
- public GetWithBlankPredefinedReviewSessionStatusTypes(): Status[] {
-    return [
-      { id: null, type: '' },
-      { id: 3200001, type: 'Open' },
-      { id: 3200002, type: 'Completed' },
-      { id: 3200003, type: 'Abandoned' },
-    ];
-  }
-
- public GetPredefinedReviewSessionStatusTypes(): Status[] {
-    return [
-      { id: 3200001, type: 'Open' },
-      { id: 3200002, type: 'Completed' },
-      { id: 3200003, type: 'Abandoned' },
+      { id: 2200044, type: 'Category' },
+      { id: 2200045, type: 'Vision Board Session Picture' },
+      { id: 2200046, type: 'Daily Affirmation Session' },
+      { id: 2200047, type: 'Daily Affirmation Text' },
+      { id: 2200048, type: 'Daily Affirmation Session Category' },
+      { id: 2200049, type: 'Default Category' },
+      { id: 2200050, type: 'Default Daily Affirmation Text' },
+      { id: 2200051, type: 'Default Goal Tracker Category' },
+      { id: 2200052, type: 'Default Goal Tracker' },
+      { id: 2200053, type: 'Vision Board Session' },
+      { id: 2200054, type: 'Default Vision Board Picture' },
+      { id: 2200055, type: 'Feed' },
+      { id: 2200056, type: 'Goal Tracker' },
+      { id: 2200057, type: 'Goal Tracker Category' },
+      { id: 2200058, type: 'Goal Tracker Mile Stone' },
+      { id: 2200059, type: 'Meditation File' },
+      { id: 2200060, type: 'Meditation Session' },
+      { id: 2200061, type: 'Vision Board Picture' },
+      { id: 2200062, type: 'Default Meditation File' },
     ];
   }
 
@@ -1483,7 +1410,8 @@ export class SelectService {
     return [
       { id: null, type: 'All' },
       { id: 2700001, type: 'Super Admin' },
-      { id: 2700002, type: 'Company Admin' },
+      { id: 2700002, type: 'Manager' },
+      { id: 2700003, type: 'User' },
     ];
   }
 
@@ -1491,14 +1419,16 @@ export class SelectService {
     return [
       { id: null, type: '' },
       { id: 2700001, type: 'Super Admin' },
-      { id: 2700002, type: 'Company Admin' },
+      { id: 2700002, type: 'Manager' },
+      { id: 2700003, type: 'User' },
     ];
   }
 
  public GetPredefinedUserTypes(): Status[] {
     return [
       { id: 2700001, type: 'Super Admin' },
-      { id: 2700002, type: 'Company Admin' },
+      { id: 2700002, type: 'Manager' },
+      { id: 2700003, type: 'User' },
     ];
   }
 

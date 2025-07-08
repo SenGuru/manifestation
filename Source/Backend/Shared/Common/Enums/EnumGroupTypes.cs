@@ -32,6 +32,7 @@ namespace Manifest.Common.Enums
         PredefinedValidatorType = 28,
         PredefinedWhatsAppNotificationStatusType = 29,
         PredefinedGoalStatusType = 33,
-        PredefinedCategoryType = 34
+        PredefinedCategoryType = 34,
+        PredefinedMeditationType = 35
     }
 }

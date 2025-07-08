@@ -1,6 +1,6 @@
 
-import { AuditDuoColumnModel, Status } from 'src/common/models/app-custom-model';
-import { CompanyModel, CompanySearchCriteria, MessageTemplateModel, MessageTemplateSearchCriteria } from 'src/common/models/app-model';
+import { ManifestColumnModel, Status } from 'src/common/models/app-custom-model';
+import { MessageTemplateModel, MessageTemplateSearchCriteria } from 'src/common/models/app-model';
 import { Component, OnInit } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,18 +20,13 @@ import { getHeaderWithBlockUI } from 'src/common/interceptors/httpconfig.interce
 
 @UntilDestroy()
 @Component({
-    selector: 'app-message-template-list-screen',
-    templateUrl: './message-template-list-screen.component.html',
-    standalone: false
+  selector: 'app-message-template-list-screen',
+  templateUrl: './message-template-list-screen.component.html',
+  standalone: false
 })
 export class MessageTemplateListScreenComponent extends BaseListComponent<MessageTemplateModel, MessageTemplateSearchCriteria> implements OnInit {
 
   public override searchModel: MessageTemplateSearchCriteria = new MessageTemplateSearchCriteria();
-
-  public companyTypeahead$ = new Subject<string>();
-  public companyTypeaheadLoading = false;
-  public companys: CompanyModel[] = [];
-  public selectedCompany: CompanyModel | undefined;
   public predefinedMessageTemplateTypes: Status[] = [];
   public selectedPredefinedMessageTemplateTypes: Status[] = [];
 
@@ -41,13 +36,6 @@ export class MessageTemplateListScreenComponent extends BaseListComponent<Messag
       align: 'left',
       sortable: true,
       value: 'predefinedMessageTemplateTypeName',
-      width: '115px',
-    },
-    {
-      text: 'Company Name',
-      align: 'left',
-      sortable: true,
-      value: 'companyName',
       width: '115px',
     },
     {
@@ -89,49 +77,10 @@ export class MessageTemplateListScreenComponent extends BaseListComponent<Messag
 
   public ngOnInit(): void {
     this.getMessageTemplates(this.searchModel);
-    this.getCompanys();
     this.predefinedMessageTemplateTypes = this.selectService.GetPredefinedMessageTemplateTypes();
-    this.initTypeAheads();
   }
-
-  public initTypeAheads(): void {
-    this.companyTypeahead$.pipe(debounceTime(500), distinctUntilChanged(), switchMap((searchValue) => {
-      this.companyTypeaheadLoading = true;
-      const companySearchCriteria = new CompanySearchCriteria();
-      companySearchCriteria.keyword = searchValue;
-      return this.httpService.getCompanies(companySearchCriteria, getHeaderWithBlockUI());
-    }), untilDestroyed(this)).subscribe({
-      next: (data) => {
-        if (data.model) {
-          this.companyTypeaheadLoading = false;
-          if (data.model) this.companys = data.model;
-        }
-      },
-      error: (err: unknown) => {
-        this.companyTypeaheadLoading = false;
-      },
-      complete: () => null,
-    });
-  }
-
-  public getCompanys(): void {
-    const searchModel = new CompanySearchCriteria();
-    searchModel.sortAscending = false;
-    searchModel.isActive = true;
-    searchModel.sortBy = 'createdDate';
-    this.httpService.getCompanies(searchModel).subscribe({
-      next: (data) => {
-        if (!data.isSuccess)
-          return;
-        if (data.model) this.companys = data.model;
-      },
-      error: (error: unknown) => {
-        this.dialogService.error('Not Able to get Company');
-      },
-      complete: () => null,
-    });
-  }
-
+ 
+ 
   public getMessageTemplates(searchModel: MessageTemplateSearchCriteria): void {
     this.httpService.getMessageTemplates(searchModel).subscribe({
       next: result => {
@@ -195,7 +144,6 @@ export class MessageTemplateListScreenComponent extends BaseListComponent<Messag
 
   public onSearch(f: NgForm): void {
     if (f.invalid) return;
-    this.searchModel.companyId = this.selectedCompany ? this.selectedCompany.companyId : null;
     const predefinedMessageTemplateTypesArray = this.selectedPredefinedMessageTemplateTypes?.map(item => item.id ?? 0);
     this.searchModel.predefinedMessageTemplateTypeIds = predefinedMessageTemplateTypesArray;
 
@@ -205,12 +153,11 @@ export class MessageTemplateListScreenComponent extends BaseListComponent<Messag
   public onReset(f: NgForm): void {
     f.resetForm();
     this.searchModel.page = 1;
-    this.searchModel.companyId = null;
     this.searchModel.predefinedMessageTemplateTypeIds = null;
     this.getMessageTemplates(this.searchModel);
   }
 
-  public changeSort(header: AuditDuoColumnModel): void {
+  public changeSort(header: ManifestColumnModel): void {
     this.crudService.baseChangeSort(header, this.searchModel, { currentSort: this.currentSort });
     this.currentSort = this.searchModel.sortAscending ? 'up' : 'down';
     this.getMessageTemplates(this.searchModel);

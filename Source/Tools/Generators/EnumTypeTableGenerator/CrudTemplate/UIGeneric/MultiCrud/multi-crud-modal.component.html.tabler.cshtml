@@ -1,0 +1,295 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+<form name="form" @("#")lv@(Model.CapitalizeEntityName)Form="ngForm" appFocusOnError
+      (ngSubmit)="lv@(Model.CapitalizeEntityName)Form.form.valid && onSubmit(lv@(Model.CapitalizeEntityName)Form)">
+    <div class="modal-header bg-light p-3" *ngIf="!isFullScreenMode">
+        <h5 class="modal-title" id="vagncart-@(Model.SmallDashEntityName)-modal-title">
+            {{title}}<span *ngIf="isSuperAdmin">
+                -
+                {{companyName}}
+            </span>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+                id="vagncart-@(Model.SmallDashEntityName)-modal-cancel-btn" (click)="cancel(true)"></button>
+    </div>
+    <div [ngClass]="isFullScreenMode ? '' : 'modal-body'"
+         [ngStyle]="!isFullScreenMode ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+        <div class="d-flex justify-content-sm-end col-sm mb-3">
+            <button type="button" class="btn btn-sm vagn-btn-sm btn-success" (click)="add@(Model.CapitalizeEntityName)();"
+                    data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn">
+                <i class="ri-add-line align-bottom me-1"></i> Add {{ screenText }}
+            </button>
+        </div>
+
+        <div class="@(Model.SmallDashEntityName)-container" *ngFor="let @(Model.SmallEntityName) of @(Model.SmallEntityName)List; let i = index">
+            <div class="card bg-light">
+                <div class="card-header bg-light">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-title mb-0">
+                                @(Model.SplitetCapitalizeEntityName) #{{i+1}}
+                            </h6>
+                        </div>
+                        <div class="flex-shrink-0">
+                            <ul class="list-inline card-toolbar-menu d-flex align-items-center mb-0">
+                                <li class="list-inline-item">
+                                    <a class="align-middle minimize-card" data-bs-toggle="collapse" href="javascript:void(0);"
+                                       (click)="minimize(i)" role="button" aria-expanded="false"
+                                       [attr.aria-controls]="'collapseContent' + i">
+                                        <i class="mdi mdi-plus align-middle plus"></i>
+                                        <i class="mdi mdi-minus align-middle minus"></i>
+                                    </a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <button type="button" (click)="deleteItem(@(Model.SmallEntityName), i)" class="btn-close fs-10 align-middle"></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body collapse" [ngClass]="@(Model.SmallEntityName).isCollapsed ? 'hide' : 'show'" id="collapseContent{{i}}">
+                    <div class="@(Model.SmallDashEntityName)-container" [ngClass]="isFullScreenMode ? 'row' : ''">
+                        <div class="form-group row mb-4" [ngClass]="isFullScreenMode ? 'col-sm-12' : ''">
+                             @{
+                                var i = -1;
+                            }
+@foreach (var p in Model.EntityType.GetProperties())
+{
+    ++i;
+    
+    var pName = p.Name;
+
+    var pNameWithOutTypeId = p.Name.Replace("TypeId","");
+    var pLNameWithOutTypeId = StringUtils.MakeFirstCharAsLower(pNameWithOutTypeId);
+    var pCamelNameWithOutTypeId = StringUtils.SplitCamelCase(pNameWithOutTypeId);                
+    var pNameWithOutTypesId = p.Name.Replace("TypesId","");                
+
+    var pNameWithOutId = p.Name.Replace("Id","");
+    var pLNameWithOutId = StringUtils.MakeFirstCharAsLower(pNameWithOutId);
+    var pCamelNameWithOutId = StringUtils.SplitCamelCase(pNameWithOutId);
+    
+    var pLName = StringUtils.MakeFirstCharAsLower(p.Name);
+    var pCamelName = StringUtils.SplitCamelCase(pName);
+    var pCamelLName = StringUtils.SplitCamelCase((pLName));
+
+    if (p.Name == (Model.EntityType.Name + "Id"))
+    {
+        continue;
+    }
+    else if ((p.Name == "CreatedByUserId") || (p.Name == "ModifiedByUserId") || (p.Name == "IsDeleted")|| (p.Name == "CreatedDate")|| (p.Name == "ModifiedDate") || p.Name == "CompanyId")
+    {
+        continue;
+    }
+    else if ((p.Name == "StateId"))
+    {
+        continue;
+    } 
+    else if ((p.Name == "CountryId"))
+    {
+@:    <div class="col-sm-6">
+@:        <label class="form-label" for="selectedState">State
+@:          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+@:        </label>
+@:        <div *ngIf="!isViewMode">
+@:          <ng-select #vcUserState #lvUserState="ngModel" placeholder="State" name="selectedState" id="selectedState" 
+@:           bindLabel="StateName" required [items]="states" class="form-control" [clearable]="false"
+@:           [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lvState.invalid }" 
+@:           [(ngModel)]="selectedState">
+@:          </ng-select>
+@:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lvState.invalid" class="invalid-feedback invalid-feedback-fixed">
+@:            <div *ngIf="lvState.errors?.['required']">State is required</div>
+@:          </div>
+@:        </div>
+@:        <div *ngIf="isViewMode">
+@:          {{@(Model.SmallEntityName)Model?.stateName ? @(Model.SmallEntityName)Model.stateName : '-'}}
+@:        </div>
+@:      </div>
+@:
+@:      <div class="col-sm-6">
+@:        <label class="form-label" for="selectedCountry">Country
+@:          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+@:        </label>
+@:        <div *ngIf="!isViewMode">
+@:          <ng-select  #vcCountry #lvCountry="ngModel" placeholder="Country" name="selectedCountry" id="selectedCountry"
+@:            required [items]="countrys" bindLabel="Country" class="form-control" [clearable]="false"
+@:            [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lvUserCountry.invalid }" 
+@:            [(ngModel)]="selectedCountry" (change)="changeCountry(selectedCountry)">
+@:          </ng-select>
+@:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lvUserCountry.invalid" class="invalid-feedback invalid-feedback-fixed">
+@:            <div *ngIf="lvCountry.errors?.['required']">Country is required</div>
+@:          </div>
+@:        </div>
+@:        <div *ngIf="isViewMode">
+@:          {{@(Model.SmallEntityName)Model?.countryName ? @(Model.SmallEntityName)Model.countryName : '-'}}
+@:        </div>
+@:      </div>
+        continue;
+    }
+    else if (p.PropertyType.Name == "DateTime" || p.PropertyType.Name == "Date"|| p.PropertyType.Name == "DateOnly" || p.Name.EndsWith("Date"))
+    {
+@:      <div class="col-sm-6">
+@:        <label class="form-label" for="@(pLName)"> @pCamelNameWithOutId
+@:          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+@:        </label>
+@:        <div *ngIf="!isViewMode">
+@:          <input mwlFlatpickr #lv@(pName)="ngModel" type="text" placeholder="Select @pCamelNameWithOutId" name="@pLName" id="@pLName"
+@:            class="form-control flatpickr-input" [altInput]="true" altFormat="F j, Y" dateFormat="Y-m-d"
+@:            required  [convertModelValue]="true" [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid }"
+@:           [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)" />
+@:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid"
+@:            class="invalid-feedback invalid-feedback-fixed">
+@:            <div *ngIf="lv@(pName).errors?.['required']">@pCamelNameWithOutId is required</div>
+@:          </div>
+@:        </div>
+@:        <div *ngIf="isViewMode">
+@:          {{@(Model.SmallEntityName)Model?.@(pLName) ? (@(Model.SmallEntityName)Model.@(pLName) | date : 'MM/dd/yy')  : '-'}}
+@:        </div>
+@:      </div>
+    }
+    else if (p.PropertyType.Name == "boolean" || p.PropertyType.Name == "Boolean")
+    {
+@:     <div class="col-sm-6">
+@:        <div class="mt-3">
+@:          <label class="form-label" for="@(pLName)">
+@:          </label>
+@:          <div class="form-check">
+@:            <input type="checkbox" name="@(pLName)" id="@(pLName)" value="true" 
+@:             class="form-check-input" [disabled]="isViewMode">
+@:            <label for="@(pLName)" class="form-check-label"  [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)">
+@:              @pCamelNameWithOutId
+@:            </label>
+@:          </div>
+@:        </div>
+@:      </div>      
+    } 
+    else if (p.Name.EndsWith("TypeId") && p.Name.StartsWith("Predefined"))
+    {
+@:      <div class="col-sm-6">
+@:        <label class="form-label" for="selected@(pNameWithOutId)">@pCamelNameWithOutId
+@:          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+@:        </label>
+@:        <div *ngIf="!isViewMode">
+@:          <ng-select #lv@(pNameWithOutId)="ngModel" name="selected@(pNameWithOutId)" id="selected@(pNameWithOutId)" required
+@:            placeholder="Select @pCamelNameWithOutId" bindLabel="type"  class="form-control" [clearable]="false" [items]="@(pLNameWithOutId)s" 
+@:            [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pNameWithOutId).invalid }"
+@:            [(ngModel)]="selected@(pNameWithOutId)">
+@:          </ng-select>
+@:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pNameWithOutId).invalid" class="invalid-feedback invalid-feedback-fixed">
+@:            <div *ngIf="lv@(pNameWithOutId).errors?.['required']">@pCamelNameWithOutId is required</div>
+@:          </div>
+@:        </div>
+@:        <div *ngIf="isViewMode">
+@:          {{@(Model.SmallEntityName)Model?.@(pLNameWithOutId)Name ? @(Model.SmallEntityName)Model.@(pLNameWithOutId)Name : '-'}}
+@:        </div>
+@:      </div>
+    }
+    else if (p.Name.EndsWith("Id"))
+    {
+@:      <div class="col-sm-6">
+@:        <label class="form-label" for="selected@(pNameWithOutId)">@pCamelNameWithOutId
+@:          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+@:            <span *ngIf="!isViewMode"  class="pull-right cursor-pointer mr-1" (click)="showAdd@(pNameWithOutId)Modal(i)"><i
+@:              class="ri-add-line"></i> Add</span>
+@:        </label>
+@:        <div *ngIf="!isViewMode">
+@:          <ng-select #lv@(pNameWithOutId)="ngModel" placeholder="@(pCamelNameWithOutId)" name="selected@(pNameWithOutId)" id="selected@(pNameWithOutId)" required
+@:            [items]="@(pLNameWithOutId)s" class="form-control" bindLabel="@(pLNameWithOutId)Name" [clearable]="false" 
+@:            [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pNameWithOutId).invalid }"
+@:            [typeahead]="@(pLNameWithOutId)Typeahead$" [loading]="@(pLNameWithOutId)TypeaheadLoading" [(ngModel)]="selected@(pNameWithOutId)">
+@:          </ng-select>
+@:          <div *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pNameWithOutId).invalid" class="invalid-feedback invalid-feedback-fixed">
+@:            <div *ngIf="lv@(pNameWithOutId).errors?.['required']">@pCamelNameWithOutId is required</div>
+@:          </div>
+@:        </div>
+@:        <div *ngIf="isViewMode">
+@:          {{@(Model.SmallEntityName)Model?.@(pLName) ? @(Model.SmallEntityName)Model.@(pLName) : '-'}}
+@:        </div>
+@:      </div>
+    }
+    else
+    {
+        if (p.PropertyType.Name == "String" || p.PropertyType.Name == "string")
+        {
+            var isEmail = p.Name.ToLower().Contains("email");
+            var appEmailvalidatorStr = isEmail ? "appEmailvalidator" : "";
+
+            var maxLen = "{{"+StringUtils.MakeFirstCharAsLower(pName)+"__size}}";
+ @:         <div class="col-sm-6">
+ @:           <label class="form-label" for="@(pLName)">@pCamelNameWithOutId
+ @:             <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+ @:           </label>
+ @:           <div *ngIf="!isViewMode">
+ @:             <input #lv@(pName)="ngModel" type="text" name="@(pLName)" id="@(pLName)" placeholder="@pCamelNameWithOutId" required  maxlength="{{ @(pLName)__size }}"
+ @:               @(appEmailvalidatorStr) class="form-control" [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid }"
+ @:               [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)">
+ @:             <div class="invalid-feedback invalid-feedback-fixed">
+ @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).errors?.['required']">
+ @:                 @pCamelNameWithOutId is required
+ @:               </span>
+                    <span *ngIf="lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).errors?.['maxlength']">
+                        Maximum {{ @(pLName)__size }} characters allowed.
+                    </span>
+                   if (isEmail)
+                   {
+ @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).hasError('emailvalidator')">
+ @:                 Please provide a valid @pCamelNameWithOutId
+ @:               </span>
+                    }
+ @:             </div>
+ @:           </div>
+ @:           <div *ngIf="isViewMode">
+ @:             {{@(Model.SmallEntityName)Model?.@(pLName) ? @(Model.SmallEntityName)Model.@(pLName) : '-'}}
+ @:           </div>
+ @:         </div>
+        }
+        else if (p.PropertyType.Name == "Double" || p.PropertyType.Name == "Integer" || p.Name.EndsWith("Amount") || p.Name.EndsWith("Position") )
+        {
+ @:         <div class="col-sm-6">
+ @:           <label class="form-label" for="@(pLName)">@pCamelNameWithOutId
+ @:             <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+ @:           </label>
+ @:           <div *ngIf="!isViewMode">
+ @:             <input #lv@(pName)="ngModel" type="number" name="@(pLName)" id="@(pLName)" placeholder="@pCamelNameWithOutId" required 
+ @:               class="form-control" [ngClass]="{'is-invalid': lv@(Model.CapitalizeEntityName)Form.submitted && lv@(pName).invalid }"
+ @:               [(ngModel)]="@(Model.SmallEntityName)Model.@(pLName)">
+ @:             <div class="invalid-feedback invalid-feedback-fixed">
+ @:               <span *ngIf="(lv@(Model.CapitalizeEntityName)Form.submitted) && lv@(pName).errors?.['required']">
+ @:                 @pCamelNameWithOutId is required
+ @:               </span> 
+ @:             </div>
+ @:           </div>
+ @:           <div *ngIf="isViewMode">
+ @:             {{@(Model.SmallEntityName)Model?.@(pLName) ? @(Model.SmallEntityName)Model.@(pLName) : '-'}}
+ @:           </div>
+ @:         </div>
+        }
+        else
+        {
+            @:{{ Not implemented for @(pName) }}
+        }
+    }     
+}
+                        </div> 
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!@(Model.SmallEntityName)List || @(Model.SmallEntityName)List?.length === 0">
+            <app-no-data-found></app-no-data-found>
+        </div>
+
+    </div>
+    <div class="modal-footer" *ngIf="!isFullScreenMode">
+        <button type="button" class="btn btn-light btn-sm vagn-btn-sm" id="vagncart-@(Model.SmallDashEntityName)-modal-close-btn"
+                data-bs-dismiss="modal" (click)="cancel(true)">
+            Close
+        </button>
+        <button type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-@(Model.SmallDashEntityName)-modal-submit-btn"
+                *ngIf="!isViewMode">
+            {{buttonText}}
+        </button>
+    </div>
+</form>

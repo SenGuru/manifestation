@@ -2,7 +2,7 @@
 @using CodeGenerator
 
 <div class="px-4 py-2 vagn-list-screen-wrapper">
-<div class="page-header px-3 py-2 bg-white">
+<div class="page-header px-3 py-2 bg-white" *ngIf="!isConfigScreen">
   <div class="d-flex align-items-center">
       <div class="col-sm-auto">
           <!-- Page title -->
@@ -12,6 +12,21 @@
       </div>
      <!-- add @(Model.SmallEntityName) btn -->
       <div class="d-flex justify-content-sm-end col-sm"> 
+
+          <!--
+
+          <button type="button" class="btn btn-sm vagn-btn-sm btn-secondary" data-bs-toggle="modal" id="export-@(Model.SmallDashEntityName)-btn" (click)="export@(Model.CapitalizeEntityName)();">
+                 <i-tabler name="plus" class="tabler-icon-sm tabler-icon-stroke-white mx-1"></i-tabler> 
+                 Export @(Model.SplitetCapitalizeEntityName)
+           </button>
+
+          <button type="button" class="btn btn-sm vagn-btn-sm btn-secondary" data-bs-toggle="modal" id="import-@(Model.SmallDashEntityName)-btn" (click)="showImport@(Model.CapitalizeEntityName)Modal();">
+                 <i-tabler name="plus" class="tabler-icon-sm tabler-icon-stroke-white mx-1"></i-tabler> 
+                 Import @(Model.SplitetCapitalizeEntityName)
+           </button>
+          
+           --->
+
           <button type="button" class="btn btn-sm vagn-btn-sm btn-primary" data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn" (click)="showAdd@(Model.CapitalizeEntityName)Modal();">
                  <i-tabler name="plus" class="tabler-icon-sm tabler-icon-stroke-white mx-1"></i-tabler> 
                  Add @(Model.SplitetCapitalizeEntityName)
@@ -67,7 +82,7 @@
 	  {
       continue;
     }
-	else if (p.Name == "StateId" || (p.Name == "SelectedId"))
+	else if (p.Name == "StateId" || (p.Name == "SelectedId") || p.Name == "CompanyId")
 	 {
       continue;
     }
@@ -127,17 +142,31 @@
       {
       }      
 }
-    <div class="d-flex justify-content-sm-end col-sm">
+    <div class="d-flex justify-content-sm-end col-sm gap-1">
       <button type="submit" class="btn btn-sm vagn-btn-sm btn-primary search" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
       <button type="button" (click)="onReset(@(Model.SmallEntityName)Search)"  class="btn btn-sm vagn-btn-sm bg-light">
         Reset
       </button>
-    </div>
+      <button *ngIf="isConfigScreen" type="button" class="btn btn-success btn-sm vagn-btn-sm"  (click)="showAdd@(Model.CapitalizeEntityName)Modal();" data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn"><i class="ri-add-line align-bottom me-1"></i> Add @(Model.SplitetCapitalizeEntityName)</button>
+      <div *ngIf="isConfigScreen" class="btn-group" role="group" ngbDropdown [container]="'body'">
+        <button id="btnGroupDrop1" type="button"
+          class="btn btn-sm vagn-btn-sm btn-secondary dropdown-toggle material-shadow-none arrow-none"
+          data-bs-toggle="dropdown" aria-expanded="false" ngbDropdownToggle>
+          Actions
+        </button>
+         <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" ngbDropdownMenu>
+           <li><a class="dropdown-item cursor-pointer" (click)="export@(Model.CapitalizeEntityName)();"><i
+                class=" ri-download-cloud-2-fill"></i> Export</a></li>
+           <li><a class="dropdown-item cursor-pointer" (click)="showImport@(Model.CapitalizeEntityName)Modal()"><i
+                class="ri-upload-cloud-2-fill"></i> Import</a></li>
+         </ul>
+      </div> 
+  </div>
   </div>
 </form>
 </div>
 
-<div class="table-responsive mb-1 vagn-table" id="vagncart-@(Model.SmallDashEntityName)-page-table">
+<div class="table-responsive mb-1" id="vagncart-@(Model.SmallDashEntityName)-page-table" [ngClass]="isConfigScreen ? 'vagn-table-sm' : 'vagn-table'">
 <table class="table card-table table-vcenter text-nowrap datatable table-striped" *ngIf="listData.length > 0; else nodata">
   <thead class="vagn-table-header">
    <tr>
@@ -165,7 +194,7 @@
 	{
         continue;
     }
-    else if (p.Name == "CreatedByUserId" || p.Name == "CreatedDate" || p.Name == "IsDeleted")
+    else if (p.Name == "CreatedByUserId" || p.Name == "CreatedDate" || p.Name == "IsDeleted" || p.Name == "CompanyId")
 	{
         continue;
     }

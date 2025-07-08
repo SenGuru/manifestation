@@ -44,11 +44,17 @@ const string buildGenerateReact = "build-generate-react";
 const string generateAngular = "generate-angular";
 const string buildGenerateAngular = "build-generate-angular";
 
+const string generateAngularUIStructure = "generate-ui-struct";
+const string buildGenerateAngularUIStructure = "build-generate-ui-struct";
+
 const string generateFlutter = "generate-flutter";
 const string buildGenerateFlutter = "build-generate-flutter";
 
 const string generateUI = "generate-ui";
 const string buildGenerateUI = "build-generate-ui";
+
+const string generateGenericUI = "generate-generic-ui";
+const string buildGenerateGenericUI = "build-generic-generate-ui";
 
 const string generateFlutterUI = "generate-flutter-ui";
 const string buildGenerateFlutterUI = "build-generate-flutter-ui";
@@ -105,6 +111,7 @@ const string crudColumnName = "column";
 const string enumTableName = "enum";
 const string uiPropertyName = "property";
 const string uiPropertyType = "property-type";
+const string genericUITypeName = "ui-type";
 const string branchName = "branch";
 const string runWeb = "runWeb";
 const string installWeb = "installWeb";
@@ -438,6 +445,18 @@ Task(generateAngular)
     Warning($"Completed generating Angular Models...");
 });
 
+Task(generateAngularUIStructure)
+.Does(() =>
+{
+    Warning($"Generating Angular UI Structure {appNameStr}:");
+    var path = MakeAbsolute(Directory(webAppPath)).FullPath;;
+
+    DotNetRun(crudGenProjectFileStr, $"ui-struct \"{path}\"", new DotNetRunSettings  { Configuration = "Debug", WorkingDirectory = crudGenExeWorkingDir });
+    //if (code != 0)
+    //    throw new Exception("Ui Structure generator errored out");
+    Warning($"Completed generating Angular UI Structure...");
+});
+
 Task(generateFlutter)
 .Does(() =>
 {
@@ -453,7 +472,7 @@ Task(generateFlutter)
     DotNetRun(crudGenProjectFileStr, $"flutter \"{path}\"", new DotNetRunSettings  { Configuration = "Debug", WorkingDirectory = crudGenExeWorkingDir });
     //if (code != 0)
     //    throw new Exception("Model generator errored out");
-    Warning($"Completed generating Angular Models...");
+    Warning($"Completed generating Flutter Models...");
 });
 
 
@@ -468,8 +487,7 @@ Task(gitStats)
     Warning($"Completed generating Git Stats ...");
 });
 
-
-
+ 
 Task(generateUI)
 .Does(() =>
 {
@@ -481,6 +499,26 @@ Task(generateUI)
 
 
     DotNetRun(crudGenProjectFileStr, "ui " + tableName + " " + theme, new DotNetRunSettings  { Configuration = "Debug", WorkingDirectory = crudGenExeWorkingDir });
+    //if (code != 0)
+   //     throw new Exception("Model UI errored out");
+    Warning($"Completed generating Angular UI ...");
+});
+
+Task(generateGenericUI)
+.Does(() =>
+{
+    Warning($"Generating Angular Generic UI {appNameStr}:");
+
+    var tableName = GetArgumentValue(crudTableName,"");
+    if (tableName == null || tableName.Trim() == "")
+        throw new Exception("Table Name parameter ( --table=<TableName> ) is missing");
+
+    var uiType = GetArgumentValue(genericUITypeName,"");
+    if (uiType == null || uiType.Trim() == "")
+        throw new Exception("Property Type parameter (--table=<TableName> --ui-type=<UITypeName>) is missing");
+
+
+    DotNetRun(crudGenProjectFileStr, "gui " + tableName + " " + theme + " " + uiType, new DotNetRunSettings  { Configuration = "Debug", WorkingDirectory = crudGenExeWorkingDir });
     //if (code != 0)
    //     throw new Exception("Model UI errored out");
     Warning($"Completed generating Angular UI ...");
@@ -583,6 +621,13 @@ Task(buildGenerateAngular)
 {
 });
 
+Task(buildGenerateAngularUIStructure)
+ .IsDependentOn(buildCodeGenerator)
+ .IsDependentOn(generateAngularUIStructure)
+.Does(() =>
+{
+});
+
 Task(buildGenerateFlutter)
  .IsDependentOn(buildCodeGenerator)
  .IsDependentOn(generateFlutter)
@@ -593,6 +638,13 @@ Task(buildGenerateFlutter)
 Task(buildGenerateUI)
  .IsDependentOn(buildCodeGenerator)
  .IsDependentOn(generateUI)
+.Does(() =>
+{
+});
+
+Task(buildGenerateGenericUI)
+ .IsDependentOn(buildCodeGenerator)
+ .IsDependentOn(generateGenericUI)
 .Does(() =>
 {
 });
@@ -1498,13 +1550,17 @@ List<CommandProcess> commandList = new List<CommandProcess>()
     new CommandProcess(buildGenerateCrud , "bcrud", "", "", "Build Generator and Generate Crud"),
     new CommandProcess(generateReact , "react", "", "", "Generate React"),
     new CommandProcess(buildGenerateReact , "breact", "", "", "Build Generator and Generate React"),
+    new CommandProcess(generateAngularUIStructure , "ui-struct", "", "", "Generate Angular UI Structure"),
+    new CommandProcess(buildGenerateAngularUIStructure , "bui-struct", "", "", "Build Generator and Generate Angular UI Structure"),
     new CommandProcess(generateAngular , "angular", "", "", "Generate Angular Models"),
     new CommandProcess(buildGenerateAngular, "bangular", "", "", "Build Generator and Generate Angular Models"),
     new CommandProcess(generateFlutter , "flutter", "", "", "Generate Flutter Models"),
     new CommandProcess(buildGenerateFlutter, "bflutter", "", "", "Build Generator and Generate Flutter Models"),
     new CommandProcess(generateUI , "ui", "", "", "Generate Angular UI"),
+    new CommandProcess(generateGenericUI , "gui", "", "", "Generate Angular Generic UI"),
     new CommandProcess(generateFlutterUI , "fui", "", "", "Generate Flutter UI"),
     new CommandProcess(buildGenerateUI, "bui", "", "", "Build Generator and Generate Angular UI"),
+    new CommandProcess(buildGenerateGenericUI, "bgui", "", "", "Build Generator and Generate Angular Generic UI"),
     new CommandProcess(buildGenerateFlutterUI, "bfui", "", "", "Build Generator and Generate Flutter UI"),
 	new CommandProcess(generateCredList , "clst", "", "", "Generate Angular Cred list"),
     new CommandProcess(buildGenerateCredList, "bclst", "", "", "Build Generator and Generate Angular Cred list"),
@@ -1528,7 +1584,7 @@ List<CommandProcess> commandList = new List<CommandProcess>()
     new CommandProcess(localPgMigrate , "lpgm", "lpgmig", "", "Delete Local PG DB and Migrate"),
     new CommandProcess(checkEnumWithProd , "check-enum", "cenum", "", "Check Enum in production"),
     new CommandProcess(generateUiPill, "ui-pill", "upill","", "Generate UI pill"),
-    new CommandProcess(generateUiInputBlock, "ui-input-block", "uiBlock","", "Generate UI Input Block"),
+    new CommandProcess(generateUiInputBlock, "ui-input-block", "uiblock","", "Generate UI Input Block"),
     new CommandProcess(regionExtractor, "reg-extract", "reg-ext","", "Extract Region and Output to a file"),
 
     new CommandProcess(installWeb, "install-web", "iw","", "Install Web App"),
