@@ -55,9 +55,25 @@ class AppColors {
     Color(0xFFC084FC),
   ];
   
-  static List<Color> candleMeditationGradient = [
-    Color(0xFFD4AF37),
-    Color(0xFFFF8A50),
+  // Calendar-specific gradients
+  static List<Color> calendarGradient = [
+    Color(0xFF8B5CF6),    // Purple
+    Color(0xFF06B6D4),    // Teal
+  ];
+  
+  static List<Color> statsGradient = [
+    Color(0xFFFBBF24),    // Gold
+    Color(0xFFFF8A50),    // Orange
+  ];
+  
+  static List<Color> analyticsGradient = [
+    Color(0xFF3B82F6),    // Blue
+    Color(0xFF8B5CF6),    // Purple
+  ];
+  
+  static List<Color> visualMeditationGradient = [
+    Color(0xFFcc2b5e),
+    Color(0xFF753a88),
   ];
   
   static List<Color> goalTrackerGradient = [
@@ -73,6 +89,41 @@ class AppColors {
   static List<Color> socialGradient = [
     Color(0xFF34D399),  // Mint green
     Color(0xFF06B6D4),  // Teal
+  ];
+  
+  // Journal Entry Status Colors
+  static const Color entryComplete = Color(0xFF10B981);    // Green for complete entries
+  static const Color entryPartial = Color(0xFFF59E0B);     // Amber for partial entries
+  static const Color entryEmpty = Color(0xFF6B7280);       // Gray for empty days
+  static const Color entryToday = Color(0xFFFBBF24);       // Gold for today
+  
+  // Mood-based colors for calendar indicators
+  static const Color moodHappy = Color(0xFF10B981);        // Bright green
+  static const Color moodExcited = Color(0xFFFF8A50);      // Orange
+  static const Color moodContent = Color(0xFF06B6D4);      // Teal
+  static const Color moodCalm = Color(0xFF8B5CF6);         // Purple
+  static const Color moodNeutral = Color(0xFF6B7280);      // Gray
+  static const Color moodSad = Color(0xFF3B82F6);          // Blue
+  static const Color moodAnxious = Color(0xFFEF4444);      // Red
+  static const Color moodOverwhelmed = Color(0xFFF59E0B);  // Amber
+  static const Color moodGrateful = Color(0xFFFF6B9D);     // Pink
+  static const Color moodPeaceful = Color(0xFF34D399);     // Emerald
+  
+  // Streak colors for analytics
+  static const Color streakFire = Color(0xFFFF4500);       // Orange-red for fire
+  static const Color streakGold = Color(0xFFFFD700);       // Gold for achievements
+  static const Color streakSilver = Color(0xFFC0C0C0);     // Silver for milestones
+  
+  // Chart colors for analytics
+  static List<Color> chartColors = [
+    Color(0xFF8B5CF6),    // Purple
+    Color(0xFF06B6D4),    // Teal
+    Color(0xFFFF6B9D),    // Pink
+    Color(0xFFFBBF24),    // Gold
+    Color(0xFF34D399),    // Emerald
+    Color(0xFFFF8A50),    // Orange
+    Color(0xFF3B82F6),    // Blue
+    Color(0xFFEF4444),    // Red
   ];
   
   // Visual Type Gradients (used in meditation screen)
@@ -144,6 +195,11 @@ class AppColors {
   static Color get shimmer => white.withOpacity(0.1);
   static Color get shadow => black.withOpacity(0.3);
   
+  // Calendar-specific opacity variants
+  static Color get calendarToday => accentGold.withOpacity(0.3);
+  static Color get calendarSelected => gradientPurple.withOpacity(0.2);
+  static Color get calendarHover => white.withOpacity(0.1);
+  
   // Helper method to get gradient by visual type
   static List<Color> getVisualGradient(String visualType) {
     switch (visualType.toLowerCase()) {
@@ -182,6 +238,83 @@ class AppColors {
     }
   }
   
+  // Helper method to get mood color
+  static Color getMoodColor(String mood) {
+    switch (mood.toLowerCase()) {
+      case 'happy':
+      case 'joyful':
+        return moodHappy;
+      case 'excited':
+      case 'energetic':
+        return moodExcited;
+      case 'content':
+      case 'satisfied':
+        return moodContent;
+      case 'calm':
+      case 'relaxed':
+        return moodCalm;
+      case 'neutral':
+      case 'okay':
+        return moodNeutral;
+      case 'sad':
+      case 'down':
+        return moodSad;
+      case 'anxious':
+      case 'worried':
+        return moodAnxious;
+      case 'overwhelmed':
+      case 'stressed':
+        return moodOverwhelmed;
+      case 'grateful':
+      case 'thankful':
+        return moodGrateful;
+      case 'peaceful':
+      case 'serene':
+        return moodPeaceful;
+      default:
+        return moodNeutral;
+    }
+  }
+  
+  // Helper method to get streak color based on count
+  static Color getStreakColor(int streakCount) {
+    if (streakCount >= 30) {
+      return streakGold;
+    } else if (streakCount >= 14) {
+      return streakSilver;
+    } else if (streakCount >= 7) {
+      return streakFire;
+    } else if (streakCount >= 3) {
+      return accentGold;
+    } else {
+      return textMedium;
+    }
+  }
+  
+  // Helper method to get chart color by index
+  static Color getChartColor(int index) {
+    return chartColors[index % chartColors.length];
+  }
+  
+  // Helper method to get calendar gradient for different features
+  static List<Color> getCalendarGradient(String feature) {
+    switch (feature.toLowerCase()) {
+      case 'calendar':
+        return calendarGradient;
+      case 'stats':
+      case 'analytics':
+        return statsGradient;
+      case 'journal':
+        return journalGradient;
+      case 'mood':
+        return [moodHappy, moodCalm];
+      case 'gratitude':
+        return gratitudeGradient;
+      default:
+        return calendarGradient;
+    }
+  }
+  
   // Dynamic color based on time of day
   static Color getTimeBasedAccent() {
     final hour = DateTime.now().hour;
@@ -193,6 +326,35 @@ class AppColors {
       return accentLavender; // Evening - Lavender
     } else {
       return secondaryTeal; // Night - Teal
+    }
+  }
+  
+  // Method to get entry completion color
+  static Color getEntryCompletionColor(bool hasEntry, bool isToday, double completionPercentage) {
+    if (isToday) {
+      return entryToday;
+    } else if (!hasEntry) {
+      return entryEmpty;
+    } else if (completionPercentage >= 0.8) {
+      return entryComplete;
+    } else if (completionPercentage >= 0.4) {
+      return entryPartial;
+    } else {
+      return entryEmpty;
+    }
+  }
+  
+  // Method to get gradient for time-based features
+  static List<Color> getTimeBasedGradient() {
+    final hour = DateTime.now().hour;
+    if (hour >= 5 && hour < 12) {
+      return [accentGold, gradientOrange]; // Morning
+    } else if (hour >= 12 && hour < 17) {
+      return [gradientOrange, accentCoral]; // Afternoon
+    } else if (hour >= 17 && hour < 21) {
+      return [accentLavender, gradientPurple]; // Evening
+    } else {
+      return [secondaryTeal, gradientTeal]; // Night
     }
   }
 }

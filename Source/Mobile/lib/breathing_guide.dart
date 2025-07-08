@@ -83,22 +83,30 @@ class _BreathingGuideState extends State<BreathingGuide>
       child: AnimatedBuilder(
         animation: widget.controller,
         builder: (context, child) {
-          return Container(
-            width: 250.w,
-            height: 250.h,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Breathing circle
-                _buildBreathingCircle(),
-                
-                // Instruction text
-                _buildInstructionText(),
-                
-                // Progress indicator
-                _buildProgressIndicator(),
-              ],
-            ),
+          return Column( // Removed fixed height container to prevent overflow
+            mainAxisSize: MainAxisSize.min, // Use minimum space needed
+            children: [
+              // Breathing circle section
+              Container(
+                width: 180.w, // Reduced size
+                height: 180.h, // Reduced size
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Breathing circle
+                    _buildBreathingCircle(),
+                    
+                    // Instruction text
+                    _buildInstructionText(),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 15.h), // Reduced spacing
+              
+              // Progress indicator section - now separated
+              _buildProgressIndicator(),
+            ],
           );
         },
       ),
@@ -196,60 +204,56 @@ class _BreathingGuideState extends State<BreathingGuide>
   Widget _buildProgressIndicator() {
     final primaryColor = widget.color ?? AppColors.accentLavender;
     
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: Container(
-        height: 60.h,
-        child: Column(
-          children: [
-            // Progress bar
-            Container(
-              width: 200.w,
-              height: 4.h,
-              decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    width: 200.w * widget.controller.value,
-                    height: 4.h,
-                    decoration: BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.circular(2.r),
-                    ),
-                  ),
-                ],
-              ),
+    return Container(
+      height: 60.h, // Reduced height to prevent overflow
+      child: Column(
+        mainAxisSize: MainAxisSize.min, // Use minimum space needed
+        children: [
+          // Progress bar
+          Container(
+            width: 180.w, // Reduced width to match circle
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: primaryColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(2.r),
             ),
-            
-            SizedBox(height: 8.h),
-            
-            // Phase indicator dots
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
               children: [
-                _buildPhaseDot(true, _isInhaling, primaryColor),
-                SizedBox(width: 8.w),
-                _buildPhaseDot(false, !_isInhaling, primaryColor),
+                Container(
+                  width: 180.w * widget.controller.value,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
               ],
             ),
-            
-            SizedBox(height: 8.h),
-            
-            // Helpful tip
-            Text(
-              'Focus on the circle\'s rhythm',
-              style: TextStyle(
-                fontSize: 10.sp,
-                color: AppColors.textMedium.withOpacity(0.6),
-              ),
+          ),
+          
+          SizedBox(height: 8.h), // Reduced spacing
+          
+          // Phase indicator dots
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildPhaseDot(true, _isInhaling, primaryColor),
+              SizedBox(width: 8.w),
+              _buildPhaseDot(false, !_isInhaling, primaryColor),
+            ],
+          ),
+          
+          SizedBox(height: 8.h), // Reduced spacing
+          
+          // Helpful tip
+          Text(
+            'Focus on the circle\'s rhythm',
+            style: TextStyle(
+              fontSize: 10.sp,
+              color: AppColors.textMedium.withOpacity(0.6),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

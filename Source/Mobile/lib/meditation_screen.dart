@@ -29,11 +29,14 @@ class _MeditationScreenState extends State<MeditationScreen>
   MeditationType selectedMeditationType = MeditationType.manifestation;
   VisualType selectedVisualType = VisualType.candle;
   
-  // Visual-specific settings
+  // Visual-specific settings - EXPANDED to include all settings
   CandleColor selectedCandleColor = CandleColor.warm;
   MoonPhase selectedMoonPhase = MoonPhase.fullMoon;
   NaturePattern selectedNaturePattern = NaturePattern.ripples;
   GeometricPattern selectedGeometricPattern = GeometricPattern.mandala;
+  
+  // NEW: Specific breathing speed setting
+  double breathingSpeed = 0.8;
   
   // Animation controllers
   late AnimationController _sessionController;
@@ -150,80 +153,88 @@ class _MeditationScreenState extends State<MeditationScreen>
     );
   }
 
-  Widget _buildActiveSession() {
-    return Stack(
-      children: [
-        // Background gradient
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                AppColors.backgroundDark,
-                AppColors.backgroundMedium,
-                AppColors.backgroundDark,
-              ],
+Widget _buildActiveSession() {
+  return Stack(
+    children: [
+      // Background gradient
+      Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              AppColors.backgroundDark,
+              AppColors.backgroundMedium,
+              AppColors.backgroundDark,
+            ],
+          ),
+        ),
+      ),
+      
+      // Session timer - Top Left
+      SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(AppConstants.paddingLarge.w),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: SessionTimer(
+              remainingSeconds: remainingSeconds,
+              totalSeconds: selectedDuration * 60,
+              currentPhase: currentPhase,
+              isActive: isPlaying,
+              accentColor: _getCurrentGradient()[0],
             ),
           ),
         ),
-        
-        // Top controls
-        SafeArea(
-          child: Padding(
-            padding: EdgeInsets.all(AppConstants.paddingLarge.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Session timer
-                SessionTimer(
-                  remainingSeconds: remainingSeconds,
-                  totalSeconds: selectedDuration * 60,
-                  currentPhase: currentPhase,
-                  isActive: isPlaying,
-                  accentColor: _getCurrentGradient()[0],
-                ),
-                
-                // Play/Pause button
-                _buildPlayPauseButton(),
-              ],
-            ),
+      ),
+      
+      // Play/Pause button - Top Right
+      SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(AppConstants.paddingLarge.w),
+          child: Align(
+            alignment: Alignment.topRight,
+            child: _buildPlayPauseButton(),
           ),
         ),
-        
-        // Main visual in center
-        Positioned.fill(
-          child: Center(
-            child: GestureDetector(
-              onTap: _toggleBreathingGuide,
-              child: _buildActiveVisual(),
-            ),
-          ),
-        ),
-        
-        // Breathing guide overlay
-        if (showBreathingGuide)
-          Positioned(
-            top: 200.h,
-            left: 0,
-            right: 0,
+      ),
+      
+      // Breathing guide overlay - Positioned much higher, right below top controls
+      if (showBreathingGuide)
+        Positioned(
+          top: 90.h, // Much higher up, closer to top controls
+          left: 0,
+          right: 0,
+          child: Container(
+            height: 100.h, // Reduced height to keep it compact
             child: BreathingGuide(
               controller: _breathingController,
               isActive: isPlaying,
               color: _getCurrentGradient()[0],
             ),
           ),
-        
-        // Bottom controls
-        Positioned(
-          bottom: 50.h,
-          left: 0,
-          right: 0,
-          child: _buildSessionControls(),
         ),
-      ],
-    );
-  }
+      
+      // Main visual in center
+      Positioned.fill(
+        child: Center(
+          child: GestureDetector(
+            onTap: _toggleBreathingGuide,
+            child: _buildActiveVisual(),
+          ),
+        ),
+      ),
+      
+      // Bottom controls
+      Positioned(
+        bottom: 50.h,
+        left: 0,
+        right: 0,
+        child: _buildSessionControls(),
+      ),
+    ],
+  );
+}
 
   Widget _buildHeader() {
     return Row(
@@ -313,9 +324,10 @@ class _MeditationScreenState extends State<MeditationScreen>
         );
       case VisualType.minimal:
         return AnimatedMinimal(
-          key: ValueKey('minimal'),
+          key: ValueKey('minimal-$breathingSpeed'), // KEY: Include breathing speed in key
           intensity: intensity,
           size: size,
+          breathingSpeed: breathingSpeed, // KEY: Pass breathing speed to preview
         );
       case VisualType.geometric:
         return AnimatedGeometric(
@@ -694,6 +706,7 @@ class _MeditationScreenState extends State<MeditationScreen>
         return AnimatedMinimal(
           intensity: intensity,
           size: size,
+          breathingSpeed: breathingSpeed, // KEY: Pass breathing speed to active visual
         );
       case VisualType.geometric:
         return AnimatedGeometric(
@@ -728,6 +741,7 @@ class _MeditationScreenState extends State<MeditationScreen>
     return AppColors.getVisualGradient(selectedVisualType.name);
   }
 
+  // FIXED: Updated to properly handle breathing speed
   Map<String, dynamic> _getCurrentVisualSettings() {
     switch (selectedVisualType) {
       case VisualType.candle:
@@ -737,12 +751,13 @@ class _MeditationScreenState extends State<MeditationScreen>
       case VisualType.nature:
         return {'naturePattern': selectedNaturePattern};
       case VisualType.minimal:
-        return {'breathingSpeed': 0.8};
+        return {'breathingSpeed': breathingSpeed}; // KEY: Return actual breathing speed
       case VisualType.geometric:
         return {'geometricPattern': selectedGeometricPattern};
     }
   }
 
+  // FIXED: Updated to properly store breathing speed
   void _updateVisualSettings(Map<String, dynamic> settings) {
     setState(() {
       switch (selectedVisualType) {
@@ -762,7 +777,9 @@ class _MeditationScreenState extends State<MeditationScreen>
           }
           break;
         case VisualType.minimal:
-          // Breathing speed handled in the widget
+          if (settings.containsKey('breathingSpeed')) {
+            breathingSpeed = settings['breathingSpeed']; // KEY: Store breathing speed
+          }
           break;
         case VisualType.geometric:
           if (settings.containsKey('geometricPattern')) {
@@ -777,14 +794,22 @@ class _MeditationScreenState extends State<MeditationScreen>
   void _startSession() {
     setState(() {
       isSessionActive = true;
+      isPlaying = false; // Explicitly start paused
       remainingSeconds = selectedDuration * 60;
       currentPhase = SessionPhase.preparation;
+      showBreathingGuide = false; // Reset breathing guide
     });
+    
+    // Reset and configure session controller
+    _sessionController.reset();
     _sessionController.duration = Duration(minutes: selectedDuration);
     
-    // Auto-start after a brief preparation
-    Future.delayed(Duration(seconds: 3), () {
-      if (mounted && isSessionActive) {
+    // Reset other controllers
+    _breathingController.reset();
+    
+    // Auto-start after a brief preparation - give time for UI to settle
+    Future.delayed(Duration(seconds: 2), () {
+      if (mounted && isSessionActive && !isPlaying) {
         _togglePlayPause();
       }
     });
@@ -796,12 +821,18 @@ class _MeditationScreenState extends State<MeditationScreen>
     });
     
     if (isPlaying) {
+      // Start session timer
       _sessionController.forward();
+      
+      // Start breathing guide if enabled
       if (showBreathingGuide) {
         _breathingController.repeat();
       }
     } else {
+      // Pause session timer
       _sessionController.stop();
+      
+      // Stop breathing guide
       _breathingController.stop();
     }
   }

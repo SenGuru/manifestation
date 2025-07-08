@@ -120,11 +120,18 @@ class _AnimatedCandleState extends State<AnimatedCandle>
     super.dispose();
   }
 
+  // Determine if this is a preview based on size
+  bool get isPreview => widget.size < 200;
+
   @override
   Widget build(BuildContext context) {
+    // Adjust proportions based on preview vs active session
+    final aspectRatio = isPreview ? 1.8 : 2.5;
+    final containerHeight = widget.size * aspectRatio;
+    
     return SizedBox(
       width: widget.size.w,
-      height: (widget.size * 2.5).h, // Taller to accommodate flame
+      height: containerHeight.h,
       child: AnimatedBuilder(
         animation: Listenable.merge([
           _flameController,
@@ -133,7 +140,7 @@ class _AnimatedCandleState extends State<AnimatedCandle>
         ]),
         builder: (context, child) {
           return CustomPaint(
-            size: Size(widget.size.w, (widget.size * 2.5).h),
+            size: Size(widget.size.w, containerHeight.h),
             painter: CandlePainter(
               color: widget.color,
               intensity: widget.intensity,
@@ -141,6 +148,7 @@ class _AnimatedCandleState extends State<AnimatedCandle>
               flameWidth: _flameWidth.value,
               flickerOffset: _flickerOffset.value,
               glowIntensity: _glowIntensity.value,
+              isPreview: isPreview,
             ),
           );
         },
@@ -156,6 +164,7 @@ class CandlePainter extends CustomPainter {
   final double flameWidth;
   final double flickerOffset;
   final double glowIntensity;
+  final bool isPreview;
 
   CandlePainter({
     required this.color,
@@ -164,66 +173,78 @@ class CandlePainter extends CustomPainter {
     required this.flameWidth,
     required this.flickerOffset,
     required this.glowIntensity,
+    required this.isPreview,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     final centerX = size.width / 2;
-    final candleHeight = size.height * 0.55; // Space for flame
-    final flameStartY = size.height - candleHeight - 20.h;
+    
+    // Adjust proportions for preview vs active session
+    final candleHeightRatio = isPreview ? 0.65 : 0.55;
+    final flameHeightRatio = isPreview ? 0.3 : 0.4;
+    final candleWidthRatio = isPreview ? 0.6 : 0.8;
+    
+    final candleHeight = size.height * candleHeightRatio;
+    final flameStartY = size.height - candleHeight - (isPreview ? 5.h : 20.h);
     
     // Draw glow effect first
     _drawGlow(canvas, centerX, flameStartY, size);
     
     // Draw candle body
-    _drawCandleBody(canvas, centerX, candleHeight, size);
+    _drawCandleBody(canvas, centerX, candleHeight, size, candleWidthRatio);
     
     // Draw wick
     _drawWick(canvas, centerX, flameStartY);
     
     // Draw flame on top
-    _drawFlame(canvas, centerX, flameStartY);
+    _drawFlame(canvas, centerX, flameStartY, size, flameHeightRatio);
   }
 
   void _drawGlow(Canvas canvas, double centerX, double flameY, Size size) {
     if (intensity < 0.3) return;
     
-    // Synchronize glow with flame
-    final adjustedCenterX = centerX + flickerOffset;
-    final currentFlameHeight = 160.h * flameHeight * intensity;
+    // Scale glow for preview
+    final glowScale = isPreview ? 0.5 : 1.0;
+    final adjustedCenterX = centerX + (flickerOffset * glowScale);
+    
+    final baseFlameHeight = isPreview ? 60.h : 160.h;
+    final currentFlameHeight = baseFlameHeight * flameHeight * intensity;
     final glowCenterY = flameY - (currentFlameHeight * 0.4);
     
     // Main glow
+    final glowSize = isPreview ? 40.r : 60.r;
     final glowPaint = Paint()
       ..color = color.primaryColor.withOpacity(0.25 * intensity * glowIntensity)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, (60 + (20 * currentFlameHeight / 160)).r);
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, (glowSize + (10 * currentFlameHeight / baseFlameHeight)).r);
 
     canvas.drawOval(
       Rect.fromCenter(
         center: Offset(adjustedCenterX, glowCenterY),
-        width: (100.w + currentFlameHeight * 0.8) * intensity * flameWidth,
-        height: (80.h + currentFlameHeight * 0.6) * intensity * flameHeight,
+        width: ((isPreview ? 50.w : 100.w) + currentFlameHeight * 0.8) * intensity * flameWidth,
+        height: ((isPreview ? 40.h : 80.h) + currentFlameHeight * 0.6) * intensity * flameHeight,
       ),
       glowPaint,
     );
 
     // Outer soft glow
+    final outerGlowSize = isPreview ? 60.r : 120.r;
     final softGlowPaint = Paint()
       ..color = color.primaryColor.withOpacity(0.12 * intensity * glowIntensity)
-      ..maskFilter = MaskFilter.blur(BlurStyle.normal, (120 + (30 * currentFlameHeight / 160)).r);
+      ..maskFilter = MaskFilter.blur(BlurStyle.normal, (outerGlowSize + (15 * currentFlameHeight / baseFlameHeight)).r);
 
     canvas.drawOval(
       Rect.fromCenter(
         center: Offset(adjustedCenterX, glowCenterY),
-        width: (180.w + currentFlameHeight * 1.2) * intensity * flameWidth,
-        height: (140.h + currentFlameHeight * 0.8) * intensity * flameHeight,
+        width: ((isPreview ? 90.w : 180.w) + currentFlameHeight * 1.2) * intensity * flameWidth,
+        height: ((isPreview ? 70.h : 140.h) + currentFlameHeight * 0.8) * intensity * flameHeight,
       ),
       softGlowPaint,
     );
   }
 
-  void _drawCandleBody(Canvas canvas, double centerX, double candleHeight, Size size) {
-    final candleWidth = size.width * 0.8; // Wide candle
+  void _drawCandleBody(Canvas canvas, double centerX, double candleHeight, Size size, double candleWidthRatio) {
+    final candleWidth = size.width * candleWidthRatio;
     final candlePaint = Paint()
       ..shader = LinearGradient(
         begin: Alignment.centerLeft,
@@ -244,6 +265,7 @@ class CandlePainter extends CustomPainter {
       ));
 
     // Main candle body
+    final borderRadius = isPreview ? 5.r : 10.r;
     canvas.drawRRect(
       RRect.fromRectAndRadius(
         Rect.fromLTWH(
@@ -252,16 +274,16 @@ class CandlePainter extends CustomPainter {
           candleWidth,
           candleHeight,
         ),
-        Radius.circular(10.r),
+        Radius.circular(borderRadius),
       ),
       candlePaint,
     );
 
     // Add texture lines
-    _drawCandleTexture(canvas, centerX, candleWidth, size.height - candleHeight, candleHeight);
-
-    // Wax drips
-    _drawWaxDrips(canvas, centerX, candleWidth, size.height - candleHeight);
+    if (!isPreview) {
+      _drawCandleTexture(canvas, centerX, candleWidth, size.height - candleHeight, candleHeight);
+      _drawWaxDrips(canvas, centerX, candleWidth, size.height - candleHeight);
+    }
   }
 
   void _drawCandleTexture(Canvas canvas, double centerX, double candleWidth, double candleTop, double candleHeight) {
@@ -334,39 +356,44 @@ class CandlePainter extends CustomPainter {
   }
 
   void _drawWick(Canvas canvas, double centerX, double flameY) {
+    // Scale wick for preview
+    final wickScale = isPreview ? 0.6 : 1.0;
+    final wickWidth = 5.w * wickScale;
+    final wickHeight = 20.h * wickScale;
+    
     // Wick shadow
     final wickShadowPaint = Paint()
       ..color = Color(0xFF1A0F0A).withOpacity(0.8)
-      ..strokeWidth = 6.w
+      ..strokeWidth = (6.w * wickScale)
       ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(
       Offset(centerX + 1.w, flameY + 2.h),
-      Offset(centerX + 1.w, flameY - 18.h),
+      Offset(centerX + 1.w, flameY - (18.h * wickScale)),
       wickShadowPaint,
     );
 
     // Main wick body
     final wickPaint = Paint()
       ..color = Color(0xFF2F1B14)
-      ..strokeWidth = 5.w
+      ..strokeWidth = wickWidth
       ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(
       Offset(centerX, flameY),
-      Offset(centerX, flameY - 20.h),
+      Offset(centerX, flameY - wickHeight),
       wickPaint,
     );
 
     // Upper wick part
     final upperWickPaint = Paint()
       ..color = Color(0xFF3A2418)
-      ..strokeWidth = 3.w
+      ..strokeWidth = (3.w * wickScale)
       ..strokeCap = StrokeCap.round;
 
     canvas.drawLine(
-      Offset(centerX, flameY - 12.h),
-      Offset(centerX, flameY - 20.h),
+      Offset(centerX, flameY - (12.h * wickScale)),
+      Offset(centerX, flameY - wickHeight),
       upperWickPaint,
     );
 
@@ -375,77 +402,87 @@ class CandlePainter extends CustomPainter {
       ..color = Color(0xFF0D0502);
 
     canvas.drawCircle(
-      Offset(centerX, flameY - 20.h),
-      2.8.r,
+      Offset(centerX, flameY - wickHeight),
+      (2.8.r * wickScale),
       burntTipPaint,
     );
 
-    // Burnt particles
-    final particlePaint = Paint()
-      ..color = Color(0xFF1A0F0A);
+    // Only draw details if not preview
+    if (!isPreview) {
+      // Burnt particles
+      final particlePaint = Paint()
+        ..color = Color(0xFF1A0F0A);
 
-    canvas.drawCircle(Offset(centerX - 1.5.w, flameY - 19.h), 0.8.r, particlePaint);
-    canvas.drawCircle(Offset(centerX + 1.2.w, flameY - 18.5.h), 0.6.r, particlePaint);
-    canvas.drawCircle(Offset(centerX - 0.8.w, flameY - 21.h), 0.5.r, particlePaint);
+      canvas.drawCircle(Offset(centerX - 1.5.w, flameY - 19.h), 0.8.r, particlePaint);
+      canvas.drawCircle(Offset(centerX + 1.2.w, flameY - 18.5.h), 0.6.r, particlePaint);
+      canvas.drawCircle(Offset(centerX - 0.8.w, flameY - 21.h), 0.5.r, particlePaint);
+
+      // Wick fibers for texture
+      final fiberPaint = Paint()
+        ..color = Color(0xFF4A3226).withOpacity(0.7)
+        ..strokeWidth = 0.5.w;
+
+      for (int i = 0; i < 3; i++) {
+        final offsetX = (i - 1) * 0.8.w;
+        canvas.drawLine(
+          Offset(centerX + offsetX, flameY - 5.h),
+          Offset(centerX + offsetX, flameY - 16.h),
+          fiberPaint,
+        );
+      }
+    }
 
     // Tip glow where flame meets wick
     if (intensity > 0.5) {
       final tipGlowPaint = Paint()
         ..color = color.flameGradient[0].withOpacity(0.6)
-        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 3.r);
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, (3.r * wickScale));
 
       canvas.drawCircle(
-        Offset(centerX, flameY - 20.h),
-        (4 * intensity).r,
+        Offset(centerX, flameY - wickHeight),
+        ((4 * intensity) * wickScale).r,
         tipGlowPaint,
-      );
-    }
-
-    // Wick fibers for texture
-    final fiberPaint = Paint()
-      ..color = Color(0xFF4A3226).withOpacity(0.7)
-      ..strokeWidth = 0.5.w;
-
-    for (int i = 0; i < 3; i++) {
-      final offsetX = (i - 1) * 0.8.w;
-      canvas.drawLine(
-        Offset(centerX + offsetX, flameY - 5.h),
-        Offset(centerX + offsetX, flameY - 16.h),
-        fiberPaint,
       );
     }
   }
 
-  void _drawFlame(Canvas canvas, double centerX, double flameY) {
+  void _drawFlame(Canvas canvas, double centerX, double flameY, Size size, double flameHeightRatio) {
     if (intensity < 0.1) return;
 
-    final adjustedCenterX = centerX + flickerOffset;
-    final flameBaseWidth = 60.w * flameWidth * intensity;
-    final flameTopHeight = 160.h * flameHeight * intensity;
+    // Scale flame proportions for preview
+    final flameScale = isPreview ? 0.5 : 1.0;
+    final adjustedCenterX = centerX + (flickerOffset * flameScale);
+    
+    final baseFlameWidth = isPreview ? 30.w : 60.w;
+    final baseFlameHeight = isPreview ? 60.h : 160.h;
+    
+    final flameBaseWidth = baseFlameWidth * flameWidth * intensity;
+    final flameTopHeight = baseFlameHeight * flameHeight * intensity;
 
     // Create flame path
     final flamePath = Path();
     
     // Elliptical base
+    final baseHeight = isPreview ? 15.h : 30.h;
     flamePath.addOval(Rect.fromCenter(
-      center: Offset(adjustedCenterX, flameY - 15.h),
+      center: Offset(adjustedCenterX, flameY - (15.h * flameScale)),
       width: flameBaseWidth,
-      height: 30.h,
+      height: baseHeight,
     ));
     
     // Main flame body
-    flamePath.moveTo(adjustedCenterX - flameBaseWidth / 2, flameY - 15.h);
+    flamePath.moveTo(adjustedCenterX - flameBaseWidth / 2, flameY - (15.h * flameScale));
     flamePath.quadraticBezierTo(
       adjustedCenterX - flameBaseWidth / 2.2, flameY - flameTopHeight * 0.6,
-      adjustedCenterX - 8.w, flameY - flameTopHeight * 0.9,
+      adjustedCenterX - (8.w * flameScale), flameY - flameTopHeight * 0.9,
     );
     flamePath.quadraticBezierTo(
       adjustedCenterX, flameY - flameTopHeight,
-      adjustedCenterX + 8.w, flameY - flameTopHeight * 0.9,
+      adjustedCenterX + (8.w * flameScale), flameY - flameTopHeight * 0.9,
     );
     flamePath.quadraticBezierTo(
       adjustedCenterX + flameBaseWidth / 2.2, flameY - flameTopHeight * 0.6,
-      adjustedCenterX + flameBaseWidth / 2, flameY - 15.h,
+      adjustedCenterX + flameBaseWidth / 2, flameY - (15.h * flameScale),
     );
     flamePath.close();
 
@@ -468,18 +505,18 @@ class CandlePainter extends CustomPainter {
 
     // Inner flame highlight
     final innerFlamePath = Path();
-    innerFlamePath.moveTo(adjustedCenterX - flameBaseWidth / 2.3, flameY - 10.h);
+    innerFlamePath.moveTo(adjustedCenterX - flameBaseWidth / 2.3, flameY - (10.h * flameScale));
     innerFlamePath.quadraticBezierTo(
       adjustedCenterX - flameBaseWidth / 3.2, flameY - flameTopHeight * 0.4,
-      adjustedCenterX - 5.w, flameY - flameTopHeight * 0.75,
+      adjustedCenterX - (5.w * flameScale), flameY - flameTopHeight * 0.75,
     );
     innerFlamePath.quadraticBezierTo(
       adjustedCenterX, flameY - flameTopHeight * 0.85,
-      adjustedCenterX + 5.w, flameY - flameTopHeight * 0.75,
+      adjustedCenterX + (5.w * flameScale), flameY - flameTopHeight * 0.75,
     );
     innerFlamePath.quadraticBezierTo(
       adjustedCenterX + flameBaseWidth / 3.2, flameY - flameTopHeight * 0.4,
-      adjustedCenterX + flameBaseWidth / 2.3, flameY - 10.h,
+      adjustedCenterX + flameBaseWidth / 2.3, flameY - (10.h * flameScale),
     );
     innerFlamePath.close();
 
@@ -490,18 +527,18 @@ class CandlePainter extends CustomPainter {
 
     // Secondary inner flame for depth
     final secondaryInnerPath = Path();
-    secondaryInnerPath.moveTo(adjustedCenterX - flameBaseWidth / 3.5, flameY - 8.h);
+    secondaryInnerPath.moveTo(adjustedCenterX - flameBaseWidth / 3.5, flameY - (8.h * flameScale));
     secondaryInnerPath.quadraticBezierTo(
       adjustedCenterX - flameBaseWidth / 5.5, flameY - flameTopHeight * 0.3,
-      adjustedCenterX - 3.w, flameY - flameTopHeight * 0.6,
+      adjustedCenterX - (3.w * flameScale), flameY - flameTopHeight * 0.6,
     );
     secondaryInnerPath.quadraticBezierTo(
       adjustedCenterX, flameY - flameTopHeight * 0.7,
-      adjustedCenterX + 3.w, flameY - flameTopHeight * 0.6,
+      adjustedCenterX + (3.w * flameScale), flameY - flameTopHeight * 0.6,
     );
     secondaryInnerPath.quadraticBezierTo(
       adjustedCenterX + flameBaseWidth / 5.5, flameY - flameTopHeight * 0.3,
-      adjustedCenterX + flameBaseWidth / 3.5, flameY - 8.h,
+      adjustedCenterX + flameBaseWidth / 3.5, flameY - (8.h * flameScale),
     );
     secondaryInnerPath.close();
 

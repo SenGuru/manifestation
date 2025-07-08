@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/gratitude_selection.dart';
-import 'package:manifestation_app/journal_prompt.dart';
+import 'package:manifestation_app/journal_prompt.dart' hide GratitudeSection;
 import 'package:manifestation_app/journey_entry.dart';
 import 'package:manifestation_app/mood_selector.dart';
+import 'package:manifestation_app/calendar_view_screen.dart';
 import '../colors.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
@@ -20,6 +21,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   List<String> gratitudeItems = ['', '', ''];
   String reflection = '';
   String intention = '';
+  bool isEditingExistingEntry = false;
+  JournalEntry? existingEntry;
   
   final List<String> journalPrompts = [
     "What am I most grateful for today?",
@@ -34,7 +37,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   @override
   void initState() {
     super.initState();
-    _loadTodaysEntry();
+    _checkForExistingEntry();
   }
 
   @override
@@ -51,8 +54,11 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       body: SafeArea(
         child: Column(
           children: [
-            // Header
+            // Header with calendar integration
             _buildHeader(),
+            
+            // Show existing entry warning if editing
+            if (isEditingExistingEntry) _buildEditingWarning(),
             
             // Progress indicator
             _buildProgressIndicator(),
@@ -111,7 +117,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Daily Journal',
+                  isEditingExistingEntry ? 'Edit Journal Entry' : 'Daily Journal',
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
@@ -153,9 +159,42 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
-  Widget _buildProgressIndicator() {
+  Widget _buildEditingWarning() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.accentGold.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: AppColors.accentGold.withOpacity(0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            Icons.edit,
+            color: AppColors.accentGold,
+            size: 16.sp,
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: Text(
+              'You\'re editing today\'s journal entry. Your changes will overwrite the existing entry.',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.accentGold,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressIndicator() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Row(
         children: List.generate(5, (index) {
           return Expanded(
@@ -181,7 +220,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Text(
             'How are you feeling?',
             style: TextStyle(
@@ -198,7 +237,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               color: AppColors.textMedium,
             ),
           ),
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Expanded(
             child: MoodSelector(
               selectedMood: selectedMood,
@@ -220,7 +259,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Text(
             'Three Gratitudes',
             style: TextStyle(
@@ -237,7 +276,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               color: AppColors.textMedium,
             ),
           ),
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Expanded(
             child: GratitudeSection(
               gratitudeItems: gratitudeItems,
@@ -261,7 +300,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Text(
             'Daily Reflection',
             style: TextStyle(
@@ -278,7 +317,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               color: AppColors.textMedium,
             ),
           ),
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Expanded(
             child: JournalPrompt(
               prompt: prompt,
@@ -301,7 +340,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Text(
             'Tomorrow\'s Intention',
             style: TextStyle(
@@ -318,7 +357,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               color: AppColors.textMedium,
             ),
           ),
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Expanded(
             child: Container(
               padding: EdgeInsets.all(20.w),
@@ -335,6 +374,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     intention = value;
                   });
                 },
+                controller: TextEditingController(text: intention)
+                  ..selection = TextSelection.fromPosition(
+                    TextPosition(offset: intention.length),
+                  ),
                 style: TextStyle(
                   color: AppColors.textLight,
                   fontSize: 16.sp,
@@ -351,6 +394,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 maxLines: null,
                 expands: true,
                 textAlignVertical: TextAlignVertical.top,
+                textCapitalization: TextCapitalization.sentences,
               ),
             ),
           ),
@@ -365,7 +409,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Text(
             'Journal Complete!',
             style: TextStyle(
@@ -382,7 +426,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               color: AppColors.textMedium,
             ),
           ),
-          SizedBox(height: 20.h), // Reduced from 40.h
+          SizedBox(height: 20.h),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -417,7 +461,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       icon: Icons.flag,
                       color: AppColors.secondaryTeal,
                     ),
-                  SizedBox(height: 20.h), // Add bottom padding
+                  SizedBox(height: 20.h),
                 ],
               ),
             ),
@@ -519,7 +563,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
                 child: Center(
                   child: Text(
-                    currentPage < 4 ? 'Next' : 'Save Entry',
+                    currentPage < 4 ? 'Next' : (isEditingExistingEntry ? 'Update Entry' : 'Save Entry'),
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
@@ -555,7 +599,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   void _saveEntry() {
     final entry = JournalEntry(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: isEditingExistingEntry 
+          ? existingEntry?.id ?? DateTime.now().millisecondsSinceEpoch.toString()
+          : DateTime.now().millisecondsSinceEpoch.toString(),
       date: DateTime.now(),
       mood: selectedMood,
       gratitudes: gratitudeItems.where((item) => item.isNotEmpty).toList(),
@@ -569,7 +615,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     // Show success and return to home
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Journal entry saved!'),
+        content: Text(isEditingExistingEntry ? 'Journal entry updated!' : 'Journal entry saved!'),
         backgroundColor: AppColors.gradientPurple,
       ),
     );
@@ -577,14 +623,58 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     Navigator.pop(context);
   }
 
-  void _loadTodaysEntry() {
-    // TODO: Load existing entry for today if it exists
-    print('Loading today\'s entry...');
+  void _checkForExistingEntry() {
+    // TODO: Check if there's already an entry for today
+    // For now, we'll simulate this check
+    if (_hasEntryForToday()) {
+      _loadExistingEntry();
+    }
   }
 
-  void _showCalendarView() {
-    // TODO: Show calendar view with past entries
-    print('Showing calendar view...');
+  bool _hasEntryForToday() {
+    // TODO: Implement actual check against local storage
+    // This would check your storage mechanism
+    return false; // Change this based on actual data
+  }
+
+  void _loadExistingEntry() {
+    // TODO: Load existing entry data from storage
+    setState(() {
+      isEditingExistingEntry = true;
+      // Populate fields with existing data when you implement storage
+      // selectedMood = existingEntry!.mood;
+      // gratitudeItems = List.from(existingEntry!.gratitudes);
+      // reflection = existingEntry!.reflection;
+      // intention = existingEntry!.intention;
+    });
+  }
+
+  void _showCalendarView() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CalendarViewScreen(),
+      ),
+    );
+    
+    if (result != null) {
+      if (result == 'create_new') {
+        // User wants to create a new entry for today
+        _checkForExistingEntry();
+      } else if (result.toString().startsWith('edit_')) {
+        // User wants to edit an existing entry
+        final entryId = result.toString().substring(5);
+        _loadEntryForEdit(entryId);
+      }
+    }
+  }
+
+  void _loadEntryForEdit(String entryId) {
+    // TODO: Load specific entry for editing
+    setState(() {
+      isEditingExistingEntry = true;
+      // Load entry data by ID from your storage
+    });
   }
 
   String _formatDate(DateTime date) {

@@ -244,7 +244,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                     '${widget.user.stats.meditationMinutes}m',
                     'Meditation',
                     Icons.self_improvement,
-                    AppColors.candleMeditationGradient[0],
+                    AppColors.visualMeditationGradient[0],
                   ),
                 ),
                 Expanded(
@@ -390,7 +390,7 @@ class _UserProfileCardState extends State<UserProfileCard>
         return {
           'name': 'Zen',
           'emoji': '🧘‍♀️',
-          'color': AppColors.candleMeditationGradient[0],
+          'color': AppColors.visualMeditationGradient[0],
         };
       case 'goal_achiever':
         return {

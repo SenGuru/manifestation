@@ -7,7 +7,8 @@ import 'package:manifestation_app/category_chip.dart';
 import 'package:manifestation_app/storage_service.dart';
 import 'package:manifestation_app/add_affirmation_dialog.dart';
 import 'package:manifestation_app/add_category_dialog.dart';
-import 'package:manifestation_app/ttservice.dart';
+import 'package:manifestation_app/hybrid_voice_service.dart';
+import 'package:manifestation_app/favorites_screen.dart';
 import '../colors.dart';
 
 class DailyAffirmationsScreen extends StatefulWidget {
@@ -22,7 +23,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   bool isLoading = true;
   
   List<AffirmationCategory> categories = [];
-  final TTSService _ttsService = TTSService();
+  final HybridVoiceService _ttsService = HybridVoiceService();
 
   @override
   void initState() {
@@ -165,22 +166,44 @@ Future<void> _initializeTTS() async {
               ],
             ),
           ),
-          // Add category button
-          GestureDetector(
-            onTap: _showAddCategoryDialog,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.accentGold.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12.r),
+          Row(
+            children: [
+              // TTS Settings button
+              GestureDetector(
+                onTap: _showTTSSettings,
+                child: Container(
+                  width: 44.w,
+                  height: 44.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.secondaryTeal.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.settings_voice,
+                    color: AppColors.secondaryTeal,
+                    size: 20.sp,
+                  ),
+                ),
               ),
-              child: Icon(
-                Icons.add_circle_outline,
-                color: AppColors.accentGold,
-                size: 20.sp,
+              SizedBox(width: 12.w),
+              // Add category button
+              GestureDetector(
+                onTap: _showAddCategoryDialog,
+                child: Container(
+                  width: 44.w,
+                  height: 44.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.accentGold.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.add_circle_outline,
+                    color: AppColors.accentGold,
+                    size: 20.sp,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -375,6 +398,16 @@ Future<void> _initializeTTS() async {
               ),
               Row(
                 children: [
+                  // View Favorites button
+                  GestureDetector(
+                    onTap: _goToFavorites,
+                    child: Icon(
+                      Icons.favorite_border,
+                      color: AppColors.accentGold,
+                      size: 20.sp,
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
                   // Favorite button
                   GestureDetector(
                     onTap: _toggleFavorite,
@@ -822,9 +855,361 @@ void _startTTSStatusCheck() {
     );
   }
 
+  void _goToFavorites() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => FavoritesScreen(),
+      ),
+    );
+  }
+
+  void _showTTSSettings() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      builder: (context) => TTSSettingsSheet(ttsService: _ttsService),
+    );
+  }
+
   @override
   void dispose() {
     _ttsService.stop();
     super.dispose();
+  }
+}
+
+class TTSSettingsSheet extends StatefulWidget {
+  final HybridVoiceService ttsService;
+
+  const TTSSettingsSheet({Key? key, required this.ttsService}) : super(key: key);
+
+  @override
+  _TTSSettingsSheetState createState() => _TTSSettingsSheetState();
+}
+
+class _TTSSettingsSheetState extends State<TTSSettingsSheet> {
+  late double speechRate;
+  late double volume;
+  late double pitch;
+  String selectedVoice = '';
+  List<String> availableVoices = [];
+
+  @override
+  void initState() {
+    super.initState();
+    speechRate = widget.ttsService.speechRate;
+    volume = widget.ttsService.volume;
+    pitch = widget.ttsService.pitch;
+    selectedVoice = widget.ttsService.selectedVoice;
+    availableVoices = widget.ttsService.availableVoices;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          Row(
+            children: [
+              Text(
+                'Voice Settings',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textLight,
+                ),
+              ),
+              Spacer(),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Icon(
+                  Icons.close,
+                  color: AppColors.textMedium,
+                  size: 24.sp,
+                ),
+              ),
+            ],
+          ),
+          
+          SizedBox(height: 24.h),
+          
+          // Voice selection
+          if (availableVoices.isNotEmpty) ...[
+            Text(
+              'Voice',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textLight,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Container(
+              height: 100.h,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: availableVoices.length > 5 ? 5 : availableVoices.length,
+                itemBuilder: (context, index) {
+                  final voice = availableVoices[index];
+                  final isSelected = voice == selectedVoice;
+                  final quality = widget.ttsService.getVoiceQuality(voice);
+                  
+                  return GestureDetector(
+                    onTap: () => _selectVoice(voice),
+                    child: Container(
+                      width: 150.w,
+                      margin: EdgeInsets.only(right: 12.w),
+                      padding: EdgeInsets.all(12.w),
+                      decoration: BoxDecoration(
+                        color: isSelected 
+                            ? AppColors.accentGold.withOpacity(0.2)
+                            : AppColors.backgroundMedium,
+                        borderRadius: BorderRadius.circular(12.r),
+                        border: Border.all(
+                          color: isSelected 
+                              ? AppColors.accentGold
+                              : quality == 'Human + AI Hybrid'
+                                  ? AppColors.affirmationGradient[0].withOpacity(0.8)
+                                  : Colors.transparent,
+                          width: quality == 'Human + AI Hybrid' ? 3 : 1,
+                        ),
+                        gradient: quality == 'Human + AI Hybrid' 
+                            ? LinearGradient(
+                                colors: [
+                                  AppColors.affirmationGradient[0].withOpacity(0.3),
+                                  AppColors.visionBoardGradient[1].withOpacity(0.3),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              )
+                            : null,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              if (quality == 'Ultra Human')
+                                Icon(
+                                  Icons.psychology,
+                                  size: 14.sp,
+                                  color: AppColors.affirmationGradient[0],
+                                ),
+                              if (quality == 'Ultra Human') SizedBox(width: 4.w),
+                              if (quality == 'Very Human')
+                                Icon(
+                                  Icons.record_voice_over,
+                                  size: 14.sp,
+                                  color: AppColors.visionBoardGradient[0],
+                                ),
+                              if (quality == 'Very Human') SizedBox(width: 4.w),
+                              Expanded(
+                                child: Text(
+                                  voice.length > 12 ? '${voice.substring(0, 12)}...' : voice,
+                                  style: TextStyle(
+                                    fontSize: 11.sp,
+                                    color: AppColors.textLight,
+                                    fontWeight: quality == 'Ultra Human' || quality == 'Very Human'
+                                        ? FontWeight.w600 
+                                        : FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            quality,
+                            style: TextStyle(
+                              fontSize: 9.sp,
+                              color: quality == 'Ultra Human' 
+                                  ? AppColors.affirmationGradient[0]
+                                  : quality == 'Very Human'
+                                      ? AppColors.visionBoardGradient[0]
+                                      : quality == 'Premium' 
+                                          ? AppColors.accentGold
+                                          : AppColors.textMedium,
+                              fontWeight: quality == 'Ultra Human' || quality == 'Very Human'
+                                  ? FontWeight.w600 
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                          if (quality == 'Ultra Human')
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.h),
+                              child: Text(
+                                'Sounds Like Human',
+                                style: TextStyle(
+                                  fontSize: 8.sp,
+                                  color: AppColors.affirmationGradient[0],
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          if (quality == 'Very Human')
+                            Padding(
+                              padding: EdgeInsets.only(top: 2.h),
+                              child: Text(
+                                'Natural Speech',
+                                style: TextStyle(
+                                  fontSize: 8.sp,
+                                  color: AppColors.visionBoardGradient[0],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 24.h),
+          ],
+          
+          // Speech Rate
+          _buildSlider(
+            'Speech Rate',
+            speechRate,
+            0.1,
+            2.0,
+            (value) {
+              setState(() {
+                speechRate = value;
+              });
+              widget.ttsService.setRate(value);
+            },
+          ),
+          
+          SizedBox(height: 20.h),
+          
+          // Volume
+          _buildSlider(
+            'Volume',
+            volume,
+            0.0,
+            1.0,
+            (value) {
+              setState(() {
+                volume = value;
+              });
+              widget.ttsService.setVolume(value);
+            },
+          ),
+          
+          SizedBox(height: 20.h),
+          
+          // Pitch
+          _buildSlider(
+            'Pitch',
+            pitch,
+            0.5,
+            2.0,
+            (value) {
+              setState(() {
+                pitch = value;
+              });
+              widget.ttsService.setPitch(value);
+            },
+          ),
+          
+          SizedBox(height: 24.h),
+          
+          // Test button
+          Container(
+            width: double.infinity,
+            height: 50.h,
+            child: ElevatedButton(
+              onPressed: _testVoice,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.accentGold,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: Text(
+                'Test Voice',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.white,
+                ),
+              ),
+            ),
+          ),
+          
+          SizedBox(height: 20.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSlider(
+    String title,
+    double value,
+    double min,
+    double max,
+    Function(double) onChanged,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textLight,
+              ),
+            ),
+            Text(
+              value.toStringAsFixed(1),
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppColors.textMedium,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 8.h),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: AppColors.accentGold,
+            inactiveTrackColor: AppColors.accentGold.withOpacity(0.3),
+            thumbColor: AppColors.accentGold,
+            overlayColor: AppColors.accentGold.withOpacity(0.2),
+          ),
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            onChanged: onChanged,
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _selectVoice(String voice) {
+    setState(() {
+      selectedVoice = voice;
+    });
+    widget.ttsService.setVoice(voice);
+  }
+
+  void _testVoice() {
+    widget.ttsService.speak('I am worthy of love, success, and happiness. My voice sounds beautiful and natural as I speak my truth.');
   }
 }

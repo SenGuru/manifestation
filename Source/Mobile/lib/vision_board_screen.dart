@@ -2,46 +2,72 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/vision_board.dart';
 import 'package:manifestation_app/vision_board_canvas.dart';
-import 'package:manifestation_app/vision_board_toolbar.dart';
-import '../colors.dart';
+import 'colors.dart';
 
 class VisionBoardScreen extends StatefulWidget {
   final VisionBoard? existingBoard;
 
   const VisionBoardScreen({
-    Key? key,
+    super.key,
     this.existingBoard,
-  }) : super(key: key);
+  });
 
   @override
   _VisionBoardScreenState createState() => _VisionBoardScreenState();
 }
 
-class _VisionBoardScreenState extends State<VisionBoardScreen> {
+class _VisionBoardScreenState extends State<VisionBoardScreen>
+    with TickerProviderStateMixin {
   late VisionBoard currentBoard;
-  bool isEditing = false;
   VisionBoardTool selectedTool = VisionBoardTool.select;
+  bool showToolbar = true;
+  bool isFullscreen = false;
   List<VisionBoard> undoStack = [];
   int undoIndex = -1;
   
+  late AnimationController _toolbarController;
+  late Animation<double> _toolbarAnimation;
+  
+  late AnimationController _zoomController;
+
   @override
   void initState() {
     super.initState();
     currentBoard = widget.existingBoard ?? VisionBoard.empty();
     _saveToUndoStack();
+    
+    _toolbarController = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _toolbarAnimation = CurvedAnimation(
+      parent: _toolbarController,
+      curve: Curves.easeInOut,
+    );
+    
+    _zoomController = AnimationController(
+      duration: Duration(milliseconds: 200),
+      vsync: this,
+    );
+    
+    _toolbarController.forward();
+  }
+
+  @override
+  void dispose() {
+    _toolbarController.dispose();
+    _zoomController.dispose();
+    super.dispose();
   }
 
   void _saveToUndoStack() {
-    // Remove any redo states
     if (undoIndex < undoStack.length - 1) {
       undoStack = undoStack.sublist(0, undoIndex + 1);
     }
     
-    // Add current state
-    undoStack.add(currentBoard);
+    undoStack.add(currentBoard.copyWith());
     undoIndex = undoStack.length - 1;
     
-    // Limit undo stack size
     if (undoStack.length > 50) {
       undoStack.removeAt(0);
       undoIndex--;
@@ -55,53 +81,71 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            _buildHeader(),
+            // Top header
+            if (!isFullscreen) _buildHeader(),
             
-            // Canvas area
+            // Main canvas area
             Expanded(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(20.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.black.withOpacity(0.1),
-                      blurRadius: 20.r,
-                      offset: Offset(0, 10.h),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.r),
-                  child: VisionBoardCanvas(
-                    board: currentBoard,
-                    selectedTool: selectedTool,
-                    onBoardChanged: _onBoardChanged,
+              child: Stack(
+                children: [
+                  _buildCanvasArea(),
+                  
+                  // Quick actions
+                  if (!isFullscreen) _buildQuickActions(),
+                  
+                  // Fullscreen toggle
+                  _buildFullscreenToggle(),
+                ],
+              ),
+            ),
+            
+            // Floating toolbar
+            AnimatedBuilder(
+              animation: _toolbarAnimation,
+              builder: (context, child) {
+                return Transform.translate(
+                  offset: Offset(0, (1 - _toolbarAnimation.value) * 100.h),
+                  child: Opacity(
+                    opacity: _toolbarAnimation.value,
+                    child: _buildFloatingToolbar(),
                   ),
-                ),
-              ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCanvasArea() {
+    return Container(
+      margin: EdgeInsets.all(isFullscreen ? 0 : 16.w),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
+        boxShadow: isFullscreen ? null : [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.1),
+            blurRadius: 20.r,
+            offset: Offset(0, 10.h),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
+        child: Stack(
+          children: [
+            // Canvas
+            VisionBoardCanvas(
+              board: currentBoard,
+              selectedTool: selectedTool,
+              onBoardChanged: _onBoardChanged,
             ),
             
-            SizedBox(height: 20.h),
-            
-            // Toolbar
-            Builder(
-              builder: (context) => VisionBoardToolbar(
-                selectedTool: selectedTool,
-                onToolSelected: _onToolSelected,
-                onAddImage: _addImage,
-                onAddText: _addText,
-                onUndo: _undo,
-                onRedo: _redo,
-                onSave: _saveBoard,
-                canUndo: undoIndex > 0,
-                canRedo: undoIndex < undoStack.length - 1,
-              ),
-            ),
-            
-            SizedBox(height: 20.h),
+            // Canvas overlay controls
+            if (currentBoard.elements.isNotEmpty)
+              _buildCanvasOverlay(),
           ],
         ),
       ),
@@ -109,284 +153,401 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.all(20.w),
+    return Container(
+      height: 80.h,
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.textLight,
-                size: 20.sp,
+            // Back button
+            GestureDetector(
+              onTap: () => _showExitDialog(),
+              child: Container(
+                width: 48.w,
+                height: 48.h,
+                decoration: BoxDecoration(
+                  color: AppColors.cardBackground,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: AppColors.textMedium.withOpacity(0.1),
+                  ),
+                ),
+                child: Icon(
+                  Icons.arrow_back,
+                  color: AppColors.textLight,
+                  size: 20.sp,
+                ),
               ),
             ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                GestureDetector(
-                  onTap: _editTitle,
-                  child: Text(
-                    currentBoard.title.isEmpty ? 'Untitled Board' : currentBoard.title,
-                    style: TextStyle(
-                      fontSize: 24.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textLight,
+            
+            SizedBox(width: 16.w),
+            
+            // Board title
+            Expanded(
+              child: GestureDetector(
+                onTap: _editTitle,
+                child: Container(
+                  height: 48.h,
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardBackground,
+                    borderRadius: BorderRadius.circular(16.r),
+                    border: Border.all(
+                      color: AppColors.textMedium.withOpacity(0.1),
                     ),
                   ),
-                ),
-                Text(
-                  'Visualize your dreams • ${currentBoard.elements.length} items',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.edit,
+                        color: AppColors.textMedium,
+                        size: 16.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Expanded(
+                        child: Text(
+                          currentBoard.title.isEmpty ? 'Untitled Board' : currentBoard.title,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.textLight,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-          
-          // Zoom controls
-          Container(
-            margin: EdgeInsets.only(right: 12.w),
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: AppColors.cardBackground,
-              borderRadius: BorderRadius.circular(8.r),
-              border: Border.all(
-                color: AppColors.textMedium.withOpacity(0.2),
               ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  onTap: _zoomOut,
-                  child: Icon(
-                    Icons.zoom_out,
-                    color: AppColors.textMedium,
-                    size: 18.sp,
+            
+            SizedBox(width: 16.w),
+            
+            // Save button
+            GestureDetector(
+              onTap: _saveBoard,
+              child: Container(
+                height: 48.h,
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.visionBoardGradient,
                   ),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.visionBoardGradient[0].withOpacity(0.3),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8.w),
-                Text(
-                  '100%',
-                  style: TextStyle(
-                    fontSize: 12.sp,
-                    color: AppColors.textMedium,
-                    fontWeight: FontWeight.w500,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.save,
+                      color: AppColors.white,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Save',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 8.w),
-                GestureDetector(
-                  onTap: _zoomIn,
-                  child: Icon(
-                    Icons.zoom_in,
-                    color: AppColors.textMedium,
-                    size: 18.sp,
-                  ),
-                ),
-              ],
+              ),
             ),
+          ],
+        ),
+    );
+  }
+
+  Widget _buildFloatingToolbar() {
+    return Container(
+      height: 80.h,
+      margin: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(
+            color: AppColors.textMedium.withOpacity(0.1),
           ),
-          
-          // Templates button
-          GestureDetector(
-            onTap: _showTemplates,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.1),
+              blurRadius: 20.r,
+              offset: Offset(0, 10.h),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Tool selector
+            Expanded(
+              child: _buildToolSelector(),
+            ),
+            
+            // Divider
+            Container(
+              width: 1.w,
+              height: 40.h,
+              color: AppColors.textMedium.withOpacity(0.1),
+            ),
+            
+            // Action buttons
+            _buildActionButtons(),
+          ],
+        ),
+    );
+  }
+
+  Widget _buildToolSelector() {
+    return Container(
+      height: 80.h,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: VisionBoardTool.values.map((tool) {
+          final isSelected = selectedTool == tool;
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => _selectTool(tool),
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 200),
+                margin: EdgeInsets.symmetric(horizontal: 2.w),
+                height: 56.h,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: AppColors.visionBoardGradient,
-                ),
-                borderRadius: BorderRadius.circular(12.r),
+                gradient: isSelected
+                    ? LinearGradient(colors: AppColors.visionBoardGradient)
+                    : null,
+                color: isSelected ? null : Colors.transparent,
+                borderRadius: BorderRadius.circular(16.r),
+                boxShadow: isSelected ? [
+                  BoxShadow(
+                    color: AppColors.visionBoardGradient[0].withOpacity(0.3),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 4.h),
+                  ),
+                ] : null,
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
-                    Icons.grid_view,
-                    color: AppColors.white,
-                    size: 16.sp,
+                    tool.icon,
+                    color: isSelected ? AppColors.white : AppColors.textMedium,
+                    size: 20.sp,
                   ),
-                  SizedBox(width: 4.w),
+                  SizedBox(height: 4.h),
                   Text(
-                    'Templates',
+                    tool.shortName,
                     style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
+                      fontSize: 10.sp,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected ? AppColors.white : AppColors.textMedium,
                     ),
                   ),
                 ],
               ),
             ),
+          ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Row(
+        children: [
+          // Add Image
+          _buildActionButton(
+            icon: Icons.image,
+            onTap: _showImagePicker,
+            tooltip: 'Add Image',
+          ),
+          
+          SizedBox(width: 12.w),
+          
+          // Add Text
+          _buildActionButton(
+            icon: Icons.text_fields,
+            onTap: _showTextEditor,
+            tooltip: 'Add Text',
+          ),
+          
+          SizedBox(width: 12.w),
+          
+          // Undo
+          _buildActionButton(
+            icon: Icons.undo,
+            onTap: undoIndex > 0 ? _undo : null,
+            tooltip: 'Undo',
+            isEnabled: undoIndex > 0,
+          ),
+          
+          SizedBox(width: 12.w),
+          
+          // Redo
+          _buildActionButton(
+            icon: Icons.redo,
+            onTap: undoIndex < undoStack.length - 1 ? _redo : null,
+            tooltip: 'Redo',
+            isEnabled: undoIndex < undoStack.length - 1,
           ),
         ],
       ),
     );
   }
 
-  void _onBoardChanged(VisionBoard newBoard) {
-    setState(() {
-      currentBoard = newBoard;
-      isEditing = true;
-    });
-    _saveToUndoStack();
-  }
-
-  void _onToolSelected(VisionBoardTool tool) {
-    setState(() {
-      selectedTool = tool;
-    });
-  }
-
-  void _showToolSelector(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        margin: EdgeInsets.all(20.w),
+  Widget _buildActionButton({
+    required IconData icon,
+    required VoidCallback? onTap,
+    required String tooltip,
+    bool isEnabled = true,
+  }) {
+    return GestureDetector(
+      onTap: isEnabled ? onTap : null,
+      child: Container(
+        width: 40.w,
+        height: 40.h,
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: isEnabled
+              ? AppColors.backgroundMedium
+              : AppColors.backgroundMedium.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Icon(
+          icon,
+          color: isEnabled ? AppColors.textLight : AppColors.textMedium.withOpacity(0.5),
+          size: 18.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActions() {
+    return Positioned(
+      top: 20.h,
+      right: 20.w,
+      child: Column(
+        children: [
+          // Templates
+          _buildQuickActionButton(
+            icon: Icons.grid_view,
+            onTap: _showTemplates,
+            tooltip: 'Templates',
+            color: AppColors.accentGold,
+          ),
+          
+          SizedBox(height: 12.h),
+          
+          // Backgrounds
+          _buildQuickActionButton(
+            icon: Icons.color_lens,
+            onTap: _showBackgrounds,
+            tooltip: 'Backgrounds',
+            color: AppColors.secondaryTeal,
+          ),
+          
+          SizedBox(height: 12.h),
+          
+          // Export
+          _buildQuickActionButton(
+            icon: Icons.share,
+            onTap: _showExportOptions,
+            tooltip: 'Share',
+            color: AppColors.gradientPurple,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionButton({
+    required IconData icon,
+    required VoidCallback onTap,
+    required String tooltip,
+    required Color color,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 48.w,
+        height: 48.h,
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: color.withOpacity(0.2),
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: color,
+          size: 20.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFullscreenToggle() {
+    return Positioned(
+      top: 20.h,
+      left: 20.w,
+      child: GestureDetector(
+        onTap: _toggleFullscreen,
+        child: Container(
+          width: 48.w,
+          height: 48.h,
+          decoration: BoxDecoration(
+            color: AppColors.cardBackground.withOpacity(0.9),
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: AppColors.textMedium.withOpacity(0.1),
+            ),
+          ),
+          child: Icon(
+            isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
+            color: AppColors.textLight,
+            size: 20.sp,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCanvasOverlay() {
+    return Positioned(
+      top: 16.h,
+      left: 16.w,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: AppColors.black.withOpacity(0.7),
           borderRadius: BorderRadius.circular(20.r),
         ),
-        child: Column(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 40.w,
-              height: 4.h,
-              margin: EdgeInsets.only(top: 12.h),
-              decoration: BoxDecoration(
-                color: AppColors.textMedium.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(2.r),
-              ),
+            Icon(
+              Icons.dashboard,
+              color: AppColors.white,
+              size: 14.sp,
             ),
-            Padding(
-              padding: EdgeInsets.all(24.w),
-              child: Column(
-                children: [
-                  Text(
-                    'Select Tool',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textLight,
-                    ),
-                  ),
-                  SizedBox(height: 24.h),
-                  Wrap(
-                    spacing: 16.w,
-                    runSpacing: 16.h,
-                    children: VisionBoardTool.values.map((tool) {
-                      final isSelected = selectedTool == tool;
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                          _onToolSelected(tool);
-                        },
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 200),
-                          width: 80.w,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 12.w,
-                            vertical: 16.h,
-                          ),
-                          decoration: BoxDecoration(
-                            gradient: isSelected
-                                ? LinearGradient(
-                                    colors: [
-                                      AppColors.gradientPurple.withOpacity(0.1),
-                                      AppColors.gradientBlue.withOpacity(0.1),
-                                    ],
-                                  )
-                                : null,
-                            color: isSelected ? null : AppColors.backgroundMedium,
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(
-                              color: isSelected
-                                  ? AppColors.gradientPurple.withOpacity(0.3)
-                                  : AppColors.textMedium.withOpacity(0.2),
-                              width: isSelected ? 2 : 1,
-                            ),
-                            boxShadow: isSelected ? [
-                              BoxShadow(
-                                color: AppColors.gradientPurple.withOpacity(0.2),
-                                blurRadius: 8.r,
-                                offset: Offset(0, 4.h),
-                              ),
-                            ] : null,
-                          ),
-                          child: Column(
-                            children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 200),
-                                padding: EdgeInsets.all(8.w),
-                                decoration: BoxDecoration(
-                                  color: isSelected 
-                                      ? AppColors.gradientPurple.withOpacity(0.1)
-                                      : Colors.transparent,
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                child: Icon(
-                                  tool.icon,
-                                  color: isSelected
-                                      ? AppColors.gradientPurple
-                                      : AppColors.textMedium,
-                                  size: 24.sp,
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              Text(
-                                tool.name,
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                                  color: isSelected
-                                      ? AppColors.gradientPurple
-                                      : AppColors.textMedium,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              if (isSelected) ...[
-                                SizedBox(height: 4.h),
-                                Container(
-                                  width: 20.w,
-                                  height: 2.h,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.gradientPurple,
-                                    borderRadius: BorderRadius.circular(1.r),
-                                  ),
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    _getToolDescription(selectedTool),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: AppColors.textMedium,
-                      height: 1.4,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+            SizedBox(width: 6.w),
+            Text(
+              '${currentBoard.elements.length} items',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.white,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -395,31 +556,185 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
     );
   }
 
-  String _getToolDescription(VisionBoardTool tool) {
-    switch (tool) {
-      case VisionBoardTool.select:
-        return 'Tap to select elements. Drag to move selected items.';
-      case VisionBoardTool.move:
-        return 'Drag any element to move it around the canvas.';
-      case VisionBoardTool.resize:
-        return 'Select an element to see resize handles at the corners.';
-      case VisionBoardTool.rotate:
-        return 'Select an element to see the rotation handle above it.';
-      case VisionBoardTool.delete:
-        return 'Select elements to see the delete button.';
-    }
+  void _selectTool(VisionBoardTool tool) {
+    setState(() {
+      selectedTool = tool;
+    });
+    
+    // Animate tool selection
+    _zoomController.forward().then((_) {
+      _zoomController.reverse();
+    });
   }
 
-  void _addImage() {
+  void _onBoardChanged(VisionBoard newBoard) {
+    setState(() {
+      currentBoard = newBoard;
+    });
+    _saveToUndoStack();
+  }
+
+  void _showImagePicker() {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
-      builder: (context) => _buildImageSourceSelector(),
+      isScrollControlled: true,
+      builder: (context) => _buildImagePickerSheet(),
     );
   }
 
-  void _addText() {
-    _showTextEditor();
+  Widget _buildImagePickerSheet() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.6,
+      margin: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        color: AppColors.cardBackground,
+        borderRadius: BorderRadius.circular(24.r),
+      ),
+      child: Column(
+        children: [
+          // Handle
+          Container(
+            width: 40.w,
+            height: 4.h,
+            margin: EdgeInsets.only(top: 12.h),
+            decoration: BoxDecoration(
+              color: AppColors.textMedium.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(2.r),
+            ),
+          ),
+          
+          // Header
+          Padding(
+            padding: EdgeInsets.all(24.w),
+            child: Text(
+              'Add Image',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textLight,
+              ),
+            ),
+          ),
+          
+          // Options grid
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 2,
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              crossAxisSpacing: 16.w,
+              mainAxisSpacing: 16.h,
+              children: [
+                _buildImageSourceCard(
+                  icon: Icons.camera_alt,
+                  title: 'Camera',
+                  subtitle: 'Take a photo',
+                  color: AppColors.accentGold,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _addImageFromCamera();
+                  },
+                ),
+                _buildImageSourceCard(
+                  icon: Icons.photo_library,
+                  title: 'Gallery',
+                  subtitle: 'Choose from photos',
+                  color: AppColors.secondaryTeal,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _addImageFromGallery();
+                  },
+                ),
+                _buildImageSourceCard(
+                  icon: Icons.search,
+                  title: 'Search',
+                  subtitle: 'Find online images',
+                  color: AppColors.gradientPurple,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _addImageFromSearch();
+                  },
+                ),
+                _buildImageSourceCard(
+                  icon: Icons.auto_awesome,
+                  title: 'AI Generate',
+                  subtitle: 'Create with AI',
+                  color: AppColors.accentCoral,
+                  onTap: () {
+                    Navigator.pop(context);
+                    _addImageFromAI();
+                  },
+                ),
+              ],
+            ),
+          ),
+          
+          SizedBox(height: 20.h),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildImageSourceCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.backgroundMedium,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: AppColors.textMedium.withOpacity(0.1),
+          ),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 60.w,
+              height: 60.h,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Icon(
+                icon,
+                color: color,
+                size: 28.sp,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textLight,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              subtitle,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppColors.textMedium,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showTextEditor() {
+    // TODO: Implement text editor
+    print('Show text editor');
   }
 
   void _undo() {
@@ -440,681 +755,83 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
     }
   }
 
-  void _zoomIn() {
-    // TODO: Implement zoom in functionality
-    print('Zoom in');
-  }
-
-  void _zoomOut() {
-    // TODO: Implement zoom out functionality
-    print('Zoom out');
+  void _toggleFullscreen() {
+    setState(() {
+      isFullscreen = !isFullscreen;
+    });
+    
+    if (isFullscreen) {
+      _toolbarController.reverse();
+    } else {
+      _toolbarController.forward();
+    }
   }
 
   void _editTitle() {
-    String newTitle = currentBoard.title;
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
-        ),
-        title: Text(
-          'Edit Title',
-          style: TextStyle(
-            color: AppColors.textLight,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        content: TextField(
-          onChanged: (value) => newTitle = value,
-          controller: TextEditingController(text: currentBoard.title),
-          style: TextStyle(color: AppColors.textLight),
-          decoration: InputDecoration(
-            hintText: 'Board title...',
-            hintStyle: TextStyle(color: AppColors.textMedium),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.textMedium.withOpacity(0.3)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.secondaryTeal),
-            ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.textMedium),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              setState(() {
-                currentBoard = currentBoard.copyWith(title: newTitle);
-                isEditing = true;
-              });
-              _saveToUndoStack();
-            },
-            child: Text(
-              'Save',
-              style: TextStyle(color: AppColors.secondaryTeal),
-            ),
-          ),
-        ],
-      ),
-    );
+    // TODO: Implement title editing
+    print('Edit title');
   }
 
   void _saveBoard() {
-    _showSaveDialog();
+    // TODO: Implement save functionality
+    print('Save board');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Vision board saved!'),
+        backgroundColor: AppColors.accentMint,
+      ),
+    );
   }
 
   void _showTemplates() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => _buildTemplateSelector(),
-    );
+    // TODO: Implement templates
+    print('Show templates');
   }
 
-  Widget _buildImageSourceSelector() {
-    return Container(
-      margin: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40.w,
-            height: 4.h,
-            margin: EdgeInsets.only(top: 12.h),
-            decoration: BoxDecoration(
-              color: AppColors.textMedium.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2.r),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(24.w),
-            child: Column(
-              children: [
-                Text(
-                  'Add Image',
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildImageSourceOption(
-                        icon: Icons.camera_alt,
-                        title: 'Camera',
-                        subtitle: 'Take a photo',
-                        onTap: () {
-                          Navigator.pop(context);
-                          _addImageFromCamera();
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: _buildImageSourceOption(
-                        icon: Icons.photo_library,
-                        title: 'Gallery',
-                        subtitle: 'Choose from photos',
-                        onTap: () {
-                          Navigator.pop(context);
-                          _addImageFromGallery();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 16.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildImageSourceOption(
-                        icon: Icons.search,
-                        title: 'Search',
-                        subtitle: 'Find online images',
-                        onTap: () {
-                          Navigator.pop(context);
-                          _addImageFromSearch();
-                        },
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: _buildImageSourceOption(
-                        icon: Icons.auto_awesome,
-                        title: 'AI Generate',
-                        subtitle: 'Create with AI',
-                        onTap: () {
-                          Navigator.pop(context);
-                          _addImageFromAI();
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  void _showBackgrounds() {
+    // TODO: Implement backgrounds
+    print('Show backgrounds');
   }
 
-  Widget _buildImageSourceOption({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundMedium,
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.2),
-          ),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: AppColors.secondaryTeal,
-              size: 24.sp,
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textLight,
-              ),
-            ),
-            SizedBox(height: 2.h),
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 11.sp,
-                color: AppColors.textMedium,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
+  void _showExportOptions() {
+    // TODO: Implement export
+    print('Show export options');
   }
 
-  Widget _buildTemplateSelector() {
-    final templates = VisionBoardTemplate.getDefaultTemplates();
-    
-    return DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      maxChildSize: 0.9,
-      minChildSize: 0.5,
-      builder: (context, scrollController) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.cardBackground,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40.w,
-                height: 4.h,
-                margin: EdgeInsets.only(top: 12.h),
-                decoration: BoxDecoration(
-                  color: AppColors.textMedium.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(24.w),
-                child: Text(
-                  'Choose Template',
-                  style: TextStyle(
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GridView.builder(
-                  controller: scrollController,
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.w,
-                    mainAxisSpacing: 16.h,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: templates.length + 1, // +1 for blank template
-                  itemBuilder: (context, index) {
-                    if (index == 0) {
-                      // Blank template
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                          setState(() {
-                            currentBoard = VisionBoard.empty();
-                          });
-                          _saveToUndoStack();
-                        },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: AppColors.backgroundMedium,
-                            borderRadius: BorderRadius.circular(12.r),
-                            border: Border.all(
-                              color: AppColors.textMedium.withOpacity(0.2),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  margin: EdgeInsets.all(12.w),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.white,
-                                    borderRadius: BorderRadius.circular(8.r),
-                                    border: Border.all(
-                                      color: AppColors.textMedium.withOpacity(0.3),
-                                      style: BorderStyle.solid,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.add,
-                                      color: AppColors.textMedium,
-                                      size: 32.sp,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.all(12.w),
-                                child: Text(
-                                  'Blank Canvas',
-                                  style: TextStyle(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: AppColors.textLight,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }
-                    
-                    final template = templates[index - 1];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                        _applyTemplate(template);
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.backgroundMedium,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: AppColors.textMedium.withOpacity(0.2),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.all(12.w),
-                                decoration: BoxDecoration(
-                                  color: template.backgroundColor,
-                                  borderRadius: BorderRadius.circular(8.r),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    template.icon,
-                                    color: template.color,
-                                    size: 32.sp,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(12.w),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    template.name,
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.w600,
-                                      color: AppColors.textLight,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 2.h),
-                                  Text(
-                                    template.description,
-                                    style: TextStyle(
-                                      fontSize: 10.sp,
-                                      color: AppColors.textMedium,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void _showTextEditor({VisionBoardTextElement? existingElement}) {
-    String text = existingElement?.text ?? '';
-    Color textColor = existingElement?.style.color ?? AppColors.textMedium;
-    double fontSize = existingElement?.style.fontSize ?? 16.sp;
-    FontWeight fontWeight = existingElement?.style.fontWeight ?? FontWeight.normal;
-    Color backgroundColor = existingElement?.style.backgroundColor ?? Colors.transparent;
-    
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: AppColors.cardBackground,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          title: Text(
-            existingElement != null ? 'Edit Text' : 'Add Text',
-            style: TextStyle(
-              color: AppColors.textLight,
-              fontSize: 18.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Text input
-                TextField(
-                  onChanged: (value) => text = value,
-                  controller: TextEditingController(text: text),
-                  style: TextStyle(color: AppColors.textLight),
-                  decoration: InputDecoration(
-                    hintText: 'Enter your manifestation...',
-                    hintStyle: TextStyle(color: AppColors.textMedium),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.r),
-                      borderSide: BorderSide(color: AppColors.textMedium.withOpacity(0.3)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.r),
-                      borderSide: BorderSide(color: AppColors.secondaryTeal),
-                    ),
-                  ),
-                  maxLines: 3,
-                ),
-                
-                SizedBox(height: 20.h),
-                
-                // Text formatting options
-                Text(
-                  'Formatting',
-                  style: TextStyle(
-                    color: AppColors.textLight,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                
-                // Font size
-                Row(
-                  children: [
-                    Text(
-                      'Size: ',
-                      style: TextStyle(color: AppColors.textMedium, fontSize: 12.sp),
-                    ),
-                    Expanded(
-                      child: Slider(
-                        value: fontSize,
-                        min: 12.0,
-                        max: 48.0,
-                        divisions: 36,
-                        activeColor: AppColors.secondaryTeal,
-                        onChanged: (value) {
-                          setDialogState(() {
-                            fontSize = value;
-                          });
-                        },
-                      ),
-                    ),
-                    Text(
-                      '${fontSize.round()}',
-                      style: TextStyle(color: AppColors.textMedium, fontSize: 12.sp),
-                    ),
-                  ],
-                ),
-                
-                // Font weight
-                Row(
-                  children: [
-                    Text(
-                      'Weight: ',
-                      style: TextStyle(color: AppColors.textMedium, fontSize: 12.sp),
-                    ),
-                    ToggleButtons(
-                      isSelected: [
-                        fontWeight == FontWeight.normal,
-                        fontWeight == FontWeight.bold,
-                      ],
-                      onPressed: (index) {
-                        setDialogState(() {
-                          fontWeight = index == 0 ? FontWeight.normal : FontWeight.bold;
-                        });
-                      },
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: Text('Normal', style: TextStyle(fontSize: 10.sp)),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w),
-                          child: Text('Bold', style: TextStyle(fontSize: 10.sp)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                
-                SizedBox(height: 12.h),
-                
-                // Color selection
-                Text(
-                  'Text Color',
-                  style: TextStyle(color: AppColors.textMedium, fontSize: 12.sp),
-                ),
-                SizedBox(height: 8.h),
-                Wrap(
-                  spacing: 8.w,
-                  children: [
-                    AppColors.textMedium,
-                    AppColors.white,
-                    AppColors.secondaryTeal,
-                    AppColors.accentGold,
-                    AppColors.gradientPurple,
-                    Colors.red,
-                    Colors.green,
-                    Colors.blue,
-                  ].map((color) => GestureDetector(
-                    onTap: () {
-                      setDialogState(() {
-                        textColor = color;
-                      });
-                    },
-                    child: Container(
-                      width: 32.w,
-                      height: 32.h,
-                      decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: textColor == color ? AppColors.secondaryTeal : Colors.transparent,
-                          width: 3,
-                        ),
-                      ),
-                    ),
-                  )).toList(),
-                ),
-                
-                SizedBox(height: 12.h),
-                
-                // Background color
-                Text(
-                  'Background Color',
-                  style: TextStyle(color: AppColors.textMedium, fontSize: 12.sp),
-                ),
-                SizedBox(height: 8.h),
-                Wrap(
-                  spacing: 8.w,
-                  children: [
-                    Colors.transparent,
-                    AppColors.white,
-                    AppColors.cardBackground,
-                    AppColors.secondaryTeal.withOpacity(0.1),
-                    AppColors.accentGold.withOpacity(0.1),
-                    AppColors.gradientPurple.withOpacity(0.1),
-                  ].map((color) => GestureDetector(
-                    onTap: () {
-                      setDialogState(() {
-                        backgroundColor = color;
-                      });
-                    },
-                    child: Container(
-                      width: 32.w,
-                      height: 32.h,
-                      decoration: BoxDecoration(
-                        color: color == Colors.transparent ? AppColors.backgroundMedium : color,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: backgroundColor == color ? AppColors.secondaryTeal : AppColors.textMedium.withOpacity(0.3),
-                          width: backgroundColor == color ? 3 : 1,
-                        ),
-                      ),
-                      child: color == Colors.transparent ? Icon(
-                        Icons.block,
-                        color: AppColors.textMedium,
-                        size: 16.sp,
-                      ) : null,
-                    ),
-                  )).toList(),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: AppColors.textMedium),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                if (text.isNotEmpty) {
-                  if (existingElement != null) {
-                    _updateTextElement(existingElement, text, textColor, fontSize, fontWeight, backgroundColor);
-                  } else {
-                    _addTextToBoard(text, textColor, fontSize, fontWeight, backgroundColor);
-                  }
-                }
-              },
-              child: Text(
-                existingElement != null ? 'Update' : 'Add',
-                style: TextStyle(color: AppColors.secondaryTeal),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showSaveDialog() {
-    String title = currentBoard.title;
+  void _showExitDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.cardBackground,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(20.r),
         ),
         title: Text(
-          'Save Vision Board',
+          'Save Changes?',
           style: TextStyle(
             color: AppColors.textLight,
-            fontSize: 18.sp,
+            fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
-        content: TextField(
-          onChanged: (value) => title = value,
-          controller: TextEditingController(text: currentBoard.title),
-          style: TextStyle(color: AppColors.textLight),
-          decoration: InputDecoration(
-            hintText: 'Board title...',
-            hintStyle: TextStyle(color: AppColors.textMedium),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.textMedium.withOpacity(0.3)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: AppColors.secondaryTeal),
-            ),
+        content: Text(
+          'You have unsaved changes. Would you like to save before leaving?',
+          style: TextStyle(
+            color: AppColors.textMedium,
+            fontSize: 16.sp,
           ),
         ),
         actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Discard',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
@@ -1125,11 +842,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              _performSave(title);
+              _saveBoard();
+              Navigator.pop(context);
             },
             child: Text(
               'Save',
-              style: TextStyle(color: AppColors.secondaryTeal),
+              style: TextStyle(color: AppColors.visionBoardGradient[0]),
             ),
           ),
         ],
@@ -1137,127 +855,64 @@ class _VisionBoardScreenState extends State<VisionBoardScreen> {
     );
   }
 
-  void _applyTemplate(VisionBoardTemplate template) {
-    setState(() {
-      currentBoard = VisionBoard.fromTemplate(template);
-      isEditing = true;
-    });
-    _saveToUndoStack();
-  }
-
-  void _addTextToBoard(String text, Color textColor, double fontSize, FontWeight fontWeight, Color backgroundColor) {
-    final textElement = VisionBoardTextElement(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      position: Offset(100.w, 100.h), // Default position
-      size: Size(200.w, 100.h), // Default size
-      text: text,
-      style: TextStyle(
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColor == Colors.transparent ? null : backgroundColor,
-      ),
-      alignment: TextAlign.center,
-    );
-
-    final updatedElements = [...currentBoard.elements, textElement];
-    final updatedBoard = currentBoard.copyWith(elements: updatedElements);
-    
-    setState(() {
-      currentBoard = updatedBoard;
-      isEditing = true;
-    });
-    _saveToUndoStack();
-  }
-
-  void _updateTextElement(VisionBoardTextElement element, String text, Color textColor, double fontSize, FontWeight fontWeight, Color backgroundColor) {
-    final updatedElement = element.copyWith(
-      text: text,
-      style: TextStyle(
-        color: textColor,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        backgroundColor: backgroundColor == Colors.transparent ? null : backgroundColor,
-      ),
-    );
-
-    final updatedElements = currentBoard.elements.map((e) {
-      return e.id == element.id ? updatedElement : e;
-    }).toList();
-
-    final updatedBoard = currentBoard.copyWith(elements: updatedElements);
-    
-    setState(() {
-      currentBoard = updatedBoard;
-      isEditing = true;
-    });
-    _saveToUndoStack();
-  }
-
   void _addImageFromCamera() {
-    // TODO: Implement camera functionality
-    _addPlaceholderImage('Camera Image');
+    // TODO: Implement camera
+    _addPlaceholderImage('Camera');
   }
 
   void _addImageFromGallery() {
-    // TODO: Implement gallery picker
-    _addPlaceholderImage('Gallery Image');
+    // TODO: Implement gallery
+    _addPlaceholderImage('Gallery');
   }
 
   void _addImageFromSearch() {
-    // TODO: Implement image search
-    _addPlaceholderImage('Search Image');
+    // TODO: Implement search
+    _addPlaceholderImage('Search');
   }
 
   void _addImageFromAI() {
-    // TODO: Implement AI image generation
-    _addPlaceholderImage('AI Generated');
+    // TODO: Implement AI generation
+    _addPlaceholderImage('AI');
   }
 
   void _addPlaceholderImage(String source) {
     final imageElement = VisionBoardImageElement(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      position: Offset(50.w, 50.h),
-      size: Size(150.w, 150.h),
-      imagePath: '', // Empty path for placeholder
+      position: Offset(100.w, 100.h),
+      size: Size(200.w, 200.h),
+      imagePath: '',
       fit: BoxFit.cover,
     );
 
     final updatedElements = [...currentBoard.elements, imageElement];
     final updatedBoard = currentBoard.copyWith(elements: updatedElements);
     
-    setState(() {
-      currentBoard = updatedBoard;
-      isEditing = true;
-    });
-    _saveToUndoStack();
-    
-    // Show snackbar
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$source placeholder added. Tap to replace with actual image.'),
-        backgroundColor: AppColors.secondaryTeal,
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
-  void _performSave(String title) {
-    setState(() {
-      currentBoard = currentBoard.copyWith(title: title);
-      isEditing = false;
-    });
-    
-    // TODO: Save to local storage or cloud
-    print('Saving board: $title');
-    print('Board JSON: ${currentBoard.toJson()}');
+    _onBoardChanged(updatedBoard);
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Vision board saved successfully!'),
+        content: Text('$source image placeholder added'),
         backgroundColor: AppColors.accentMint,
         duration: Duration(seconds: 2),
       ),
     );
+  }
+}
+
+// Extension for tool short names (using the original names to avoid conflicts)
+extension VisionBoardToolShortName on VisionBoardTool {
+  String get shortName {
+    switch (this) {
+      case VisionBoardTool.select:
+        return 'Select';
+      case VisionBoardTool.move:
+        return 'Move';
+      case VisionBoardTool.resize:
+        return 'Resize';
+      case VisionBoardTool.rotate:
+        return 'Rotate';
+      case VisionBoardTool.delete:
+        return 'Delete';
+    }
   }
 }

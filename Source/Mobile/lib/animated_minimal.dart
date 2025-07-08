@@ -8,11 +8,13 @@ import 'package:manifestation_app/meditation_constants.dart';
 class AnimatedMinimal extends StatefulWidget {
   final double intensity;
   final double size;
+  final double breathingSpeed; // NEW: Add breathing speed parameter
 
   const AnimatedMinimal({
     Key? key,
     required this.intensity,
     required this.size,
+    this.breathingSpeed = 0.8, // Default speed
   }) : super(key: key);
 
   @override
@@ -32,22 +34,30 @@ class _AnimatedMinimalState extends State<AnimatedMinimal>
   @override
   void initState() {
     super.initState();
+    _setupAnimations();
+  }
+
+  void _setupAnimations() {
+    // Calculate dynamic duration based on breathing speed
+    // Base duration from AppConstants, adjusted by speed
+    final baseDuration = AppConstants.minimalBreathing.inMilliseconds;
+    final adjustedDuration = (baseDuration / widget.breathingSpeed).round();
     
-    // Main breathing animation (inhale/exhale)
+    // Main breathing animation (inhale/exhale) - now dynamic
     _breathingController = AnimationController(
-      duration: AppConstants.minimalBreathing,
+      duration: Duration(milliseconds: adjustedDuration),
       vsync: this,
     );
     
-    // Pulse animation for depth
+    // Pulse animation for depth - also adjusted
     _pulseController = AnimationController(
-      duration: Duration(milliseconds: 2000),
+      duration: Duration(milliseconds: (2000 / widget.breathingSpeed).round()),
       vsync: this,
     );
     
-    // Subtle rotation animation
+    // Subtle rotation animation - slightly adjusted
     _rotationController = AnimationController(
-      duration: Duration(milliseconds: 12000),
+      duration: Duration(milliseconds: (12000 / widget.breathingSpeed).round()),
       vsync: this,
     );
     
@@ -80,22 +90,47 @@ class _AnimatedMinimalState extends State<AnimatedMinimal>
 
   void _startAnimations() {
     if (widget.intensity > 0.3) {
-      _breathingController.repeat(reverse: true);
-      _pulseController.repeat(reverse: true);
+      _breathingController.repeat(reverse: true); // BACK TO ORIGINAL - this was actually better
+      _pulseController.repeat(reverse: true); // BACK TO ORIGINAL - this was actually better
       _rotationController.repeat();
     }
+  }
+
+  void _stopAnimations() {
+    _breathingController.stop();
+    _pulseController.stop();
+    _rotationController.stop();
+  }
+
+  void _restartAnimationsWithNewSpeed() {
+    // Stop current animations
+    _stopAnimations();
+    
+    // Dispose old controllers
+    _breathingController.dispose();
+    _pulseController.dispose();
+    _rotationController.dispose();
+    
+    // Setup new animations with updated speed
+    _setupAnimations();
   }
 
   @override
   void didUpdateWidget(AnimatedMinimal oldWidget) {
     super.didUpdateWidget(oldWidget);
+    
+    // Check if breathing speed changed
+    if (widget.breathingSpeed != oldWidget.breathingSpeed) {
+      _restartAnimationsWithNewSpeed();
+      return;
+    }
+    
+    // Check if intensity changed
     if (widget.intensity != oldWidget.intensity) {
       if (widget.intensity > 0.3) {
         _startAnimations();
       } else {
-        _breathingController.stop();
-        _pulseController.stop();
-        _rotationController.stop();
+        _stopAnimations();
       }
     }
   }
@@ -129,6 +164,7 @@ class _AnimatedMinimalState extends State<AnimatedMinimal>
                 breathingScale: _breathingAnimation.value,
                 pulseScale: _pulseAnimation.value,
                 rotation: _rotationAnimation.value,
+                breathingSpeed: widget.breathingSpeed, // Pass speed to painter
               ),
             ),
           );
@@ -143,12 +179,14 @@ class MinimalPainter extends CustomPainter {
   final double breathingScale;
   final double pulseScale;
   final double rotation;
+  final double breathingSpeed; // NEW: Add breathing speed
 
   MinimalPainter({
     required this.intensity,
     required this.breathingScale,
     required this.pulseScale,
     required this.rotation,
+    required this.breathingSpeed,
   });
 
   @override
@@ -172,12 +210,15 @@ class MinimalPainter extends CustomPainter {
   void _drawBreathingCircles(Canvas canvas, Offset center, double baseRadius) {
     final colors = AppColors.minimalGradient;
     
+    // Adjust stroke width based on breathing speed for visual feedback
+    final speedMultiplier = 0.5 + (breathingSpeed * 0.5); // Range: 0.75 - 1.25
+    
     // Outer circle - main breathing circle
     final outerRadius = baseRadius * breathingScale * 1.3;
     final outerPaint = Paint()
       ..color = colors[0].withOpacity(0.3 * intensity)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.w;
+      ..strokeWidth = 3.w * speedMultiplier;
     
     canvas.drawCircle(center, outerRadius, outerPaint);
     
@@ -186,7 +227,7 @@ class MinimalPainter extends CustomPainter {
     final middlePaint = Paint()
       ..color = colors[0].withOpacity(0.6 * intensity)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.w;
+      ..strokeWidth = 4.w * speedMultiplier;
     
     canvas.drawCircle(center, middleRadius, middlePaint);
     
@@ -195,7 +236,7 @@ class MinimalPainter extends CustomPainter {
     final innerPaint = Paint()
       ..color = colors[1].withOpacity(0.8 * intensity)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.w;
+      ..strokeWidth = 2.w * speedMultiplier;
     
     canvas.drawCircle(center, innerRadius, innerPaint);
     
@@ -213,6 +254,7 @@ class MinimalPainter extends CustomPainter {
     
     final colors = AppColors.minimalGradient;
     final patternRadius = baseRadius * breathingScale * 0.8;
+    final speedMultiplier = 0.5 + (breathingSpeed * 0.5);
     
     // Draw petals/leaves pattern
     for (int i = 0; i < 8; i++) {
@@ -224,7 +266,7 @@ class MinimalPainter extends CustomPainter {
       
       final petalPaint = Paint()
         ..color = colors[i % 2].withOpacity(0.4 * intensity)
-        ..strokeWidth = 2.w
+        ..strokeWidth = 2.w * speedMultiplier
         ..strokeCap = StrokeCap.round;
       
       canvas.drawLine(
@@ -240,7 +282,7 @@ class MinimalPainter extends CustomPainter {
       
       canvas.drawCircle(
         Offset(endX, endY),
-        3.r * pulseScale,
+        3.r * pulseScale * speedMultiplier,
         dotPaint,
       );
     }
@@ -248,9 +290,10 @@ class MinimalPainter extends CustomPainter {
 
   void _drawCenterPoint(Canvas canvas, Offset center, double baseRadius) {
     final colors = AppColors.minimalGradient;
+    final speedMultiplier = 0.8 + (breathingSpeed * 0.4); // Subtle size adjustment
     
     // Breathing center point
-    final centerRadius = 8.r * breathingScale * intensity;
+    final centerRadius = 8.r * breathingScale * intensity * speedMultiplier;
     final centerPaint = Paint()
       ..shader = RadialGradient(
         colors: [
@@ -268,7 +311,7 @@ class MinimalPainter extends CustomPainter {
       ..color = Colors.white.withOpacity(0.8 * intensity)
       ..style = PaintingStyle.fill;
     
-    canvas.drawCircle(center, 4.r * pulseScale, corePaint);
+    canvas.drawCircle(center, 4.r * pulseScale * speedMultiplier, corePaint);
   }
 
   void _drawGlow(Canvas canvas, Offset center, double baseRadius) {
@@ -276,24 +319,25 @@ class MinimalPainter extends CustomPainter {
     
     final colors = AppColors.minimalGradient;
     final glowRadius = baseRadius * breathingScale * 1.5;
+    final speedMultiplier = 0.7 + (breathingSpeed * 0.6); // More pronounced glow adjustment
     
     // Outer glow
     final outerGlowPaint = Paint()
-      ..color = colors[0].withOpacity(0.1 * intensity)
+      ..color = colors[0].withOpacity(0.1 * intensity * speedMultiplier)
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 30.r);
     
     canvas.drawCircle(center, glowRadius, outerGlowPaint);
     
     // Inner glow
     final innerGlowPaint = Paint()
-      ..color = colors[1].withOpacity(0.15 * intensity)
+      ..color = colors[1].withOpacity(0.15 * intensity * speedMultiplier)
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 15.r);
     
     canvas.drawCircle(center, glowRadius * 0.7, innerGlowPaint);
     
     // Core glow
     final coreGlowPaint = Paint()
-      ..color = Colors.white.withOpacity(0.2 * intensity)
+      ..color = Colors.white.withOpacity(0.2 * intensity * speedMultiplier)
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, 8.r);
     
     canvas.drawCircle(center, baseRadius * 0.3 * breathingScale, coreGlowPaint);

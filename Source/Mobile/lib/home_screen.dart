@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  
 import 'package:manifestation_app/daily_affirmations.dart';
 import 'package:manifestation_app/daily_inspiration.dart';
 import 'package:manifestation_app/feature_card.dart';
@@ -9,7 +9,7 @@ import 'package:manifestation_app/wide_feature_card.dart';
 import 'package:manifestation_app/goal_tracker_screen.dart';
 import 'package:manifestation_app/manifestation_journal.dart';
 import 'package:manifestation_app/streak_counter.dart';
-import 'package:manifestation_app/vision_board_screen.dart';
+import 'package:manifestation_app/vision_board_home.dart';
 import 'package:manifestation_app/social_feed_screen.dart'; // Add this import
 import 'colors.dart';
 
@@ -162,10 +162,10 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(width: 16.w),
             Expanded(
               child: FeatureCard(
-                title: 'Candle Meditation',
-                subtitle: 'Guided Peace',
-                icon: Icons.local_fire_department,
-                gradientColors: AppColors.candleMeditationGradient,
+                title: 'Visual Meditation',
+                subtitle: 'Guided Focus',
+                icon: Icons.visibility,
+                gradientColors: AppColors.visualMeditationGradient,
                 onTap: () => _navigateToFeature('candle_meditation'),
               ),
             ),
@@ -228,7 +228,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VisionBoardScreen(),
+            builder: (context) => VisionBoardHome(),
           ),
         );
         break;

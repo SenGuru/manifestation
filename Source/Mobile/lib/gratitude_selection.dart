@@ -141,7 +141,10 @@ class GratitudeSection extends StatelessWidget {
                   fontSize: 16.sp,
                 ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 12.h,
+                  horizontal: 16.w,
+                ),
               ),
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,

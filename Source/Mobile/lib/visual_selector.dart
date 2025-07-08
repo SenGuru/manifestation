@@ -83,16 +83,17 @@ class _VisualSelectorState extends State<VisualSelector>
         ],
         SizedBox(height: 16.h),
         Container(
-          height: 140.h,
+          height: 160.h,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
             itemCount: VisualType.values.length,
             itemBuilder: (context, index) {
               final visualType = VisualType.values[index];
               final isSelected = widget.selectedVisual == visualType;
               
               return Padding(
-                padding: EdgeInsets.only(right: 16.w),
+                padding: EdgeInsets.only(right: 24.w),
                 child: _buildVisualCard(visualType, isSelected),
               );
             },
@@ -110,90 +111,87 @@ class _VisualSelectorState extends State<VisualSelector>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: isSelected ? _scaleAnimation.value : 1.0,
-            child: AnimatedContainer(
-              duration: AppConstants.normalAnimation,
-              curve: Curves.easeInOut,
-              width: 110.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.r),
-                gradient: isSelected
-                    ? LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: gradient,
-                      )
-                    : null,
-                color: isSelected ? null : AppColors.cardBackground,
-                border: Border.all(
-                  color: isSelected
-                      ? Colors.transparent
-                      : AppColors.textMedium.withOpacity(0.1),
-                  width: 1.5.w,
+          return Container(
+            padding: EdgeInsets.all(8.w),
+            child: Transform.scale(
+              scale: isSelected ? _scaleAnimation.value : 1.0,
+              child: AnimatedContainer(
+                duration: AppConstants.normalAnimation,
+                curve: Curves.easeInOut,
+                width: 110.w,
+                height: 140.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.r),
+                  gradient: isSelected
+                      ? LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: gradient,
+                        )
+                      : null,
+                  color: isSelected ? null : AppColors.cardBackground,
+                  border: Border.all(
+                    color: isSelected
+                        ? Colors.transparent
+                        : AppColors.textMedium.withOpacity(0.1),
+                    width: 1.5.w,
+                  ),
+                  boxShadow: isSelected
+                      ? [
+                          BoxShadow(
+                            color: gradient[0].withOpacity(0.3),
+                            blurRadius: 20.r,
+                            offset: Offset(0, 8.h),
+                          ),
+                        ]
+                      : [],
                 ),
-                boxShadow: isSelected
-                    ? [
-                        BoxShadow(
-                          color: gradient[0].withOpacity(0.3),
-                          blurRadius: 20.r,
-                          offset: Offset(0, 8.h),
-                        ),
-                      ]
-                    : [],
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icon container
-                  AnimatedContainer(
-                    duration: AppConstants.normalAnimation,
-                    width: 48.w,
-                    height: 48.h,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: isSelected
-                          ? AppColors.white.withOpacity(0.2)
-                          : AppColors.textMedium.withOpacity(0.1),
-                    ),
-                    child: Icon(
-                      visualType.icon,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
-                      size: 24.sp,
-                    ),
-                  ),
-                  
-                  SizedBox(height: 12.h),
-                  
-                  // Visual type name
-                  Text(
-                    visualType.name,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
-                    ),
-                  ),
-                  
-                  SizedBox(height: 4.h),
-                  
-                  // Description
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: Text(
-                      visualType.description,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        color: isSelected 
-                            ? AppColors.white.withOpacity(0.8) 
-                            : AppColors.textMedium.withOpacity(0.6),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedContainer(
+                      duration: AppConstants.normalAnimation,
+                      width: 48.w,
+                      height: 48.h,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: isSelected
+                            ? AppColors.white.withOpacity(0.2)
+                            : AppColors.textMedium.withOpacity(0.1),
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      child: Icon(
+                        visualType.icon,
+                        color: isSelected ? AppColors.white : AppColors.textMedium,
+                        size: 24.sp,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(height: 12.h),
+                    Text(
+                      visualType.name,
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected ? AppColors.white : AppColors.textMedium,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Text(
+                        visualType.description,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 10.sp,
+                          color: isSelected 
+                              ? AppColors.white.withOpacity(0.8) 
+                              : AppColors.textMedium.withOpacity(0.6),
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -291,8 +289,8 @@ class CompactVisualSelector extends StatelessWidget {
   }
 }
 
-// Visual type customization options
-class VisualCustomization extends StatelessWidget {
+// FIXED: Visual type customization options - now StatefulWidget for proper state management
+class VisualCustomization extends StatefulWidget {
   final VisualType visualType;
   final Map<String, dynamic> settings;
   final Function(Map<String, dynamic>) onSettingsChanged;
@@ -305,8 +303,36 @@ class VisualCustomization extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _VisualCustomizationState createState() => _VisualCustomizationState();
+}
+
+class _VisualCustomizationState extends State<VisualCustomization> {
+  late Map<String, dynamic> _currentSettings;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentSettings = Map<String, dynamic>.from(widget.settings);
+  }
+
+  @override
+  void didUpdateWidget(VisualCustomization oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.settings != widget.settings) {
+      _currentSettings = Map<String, dynamic>.from(widget.settings);
+    }
+  }
+
+  void _updateSettings(Map<String, dynamic> newSettings) {
+    setState(() {
+      _currentSettings = newSettings;
+    });
+    widget.onSettingsChanged(newSettings);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    switch (visualType) {
+    switch (widget.visualType) {
       case VisualType.candle:
         return _buildCandleCustomization();
       case VisualType.moon:
@@ -340,15 +366,15 @@ class VisualCustomization extends StatelessWidget {
             itemCount: CandleColor.values.length,
             itemBuilder: (context, index) {
               final color = CandleColor.values[index];
-              final isSelected = settings['candleColor'] == color;
+              final isSelected = _currentSettings['candleColor'] == color;
               
               return Padding(
                 padding: EdgeInsets.only(right: 12.w),
                 child: GestureDetector(
                   onTap: () {
-                    final newSettings = Map<String, dynamic>.from(settings);
+                    final newSettings = Map<String, dynamic>.from(_currentSettings);
                     newSettings['candleColor'] = color;
-                    onSettingsChanged(newSettings);
+                    _updateSettings(newSettings);
                   },
                   child: AnimatedContainer(
                     duration: AppConstants.fastAnimation,
@@ -426,15 +452,15 @@ class VisualCustomization extends StatelessWidget {
             itemCount: MoonPhase.values.length,
             itemBuilder: (context, index) {
               final phase = MoonPhase.values[index];
-              final isSelected = settings['moonPhase'] == phase;
+              final isSelected = _currentSettings['moonPhase'] == phase;
               
               return Padding(
                 padding: EdgeInsets.only(right: 12.w),
                 child: GestureDetector(
                   onTap: () {
-                    final newSettings = Map<String, dynamic>.from(settings);
+                    final newSettings = Map<String, dynamic>.from(_currentSettings);
                     newSettings['moonPhase'] = phase;
-                    onSettingsChanged(newSettings);
+                    _updateSettings(newSettings);
                   },
                   child: AnimatedContainer(
                     duration: AppConstants.fastAnimation,
@@ -515,15 +541,15 @@ class VisualCustomization extends StatelessWidget {
             itemCount: NaturePattern.values.length,
             itemBuilder: (context, index) {
               final pattern = NaturePattern.values[index];
-              final isSelected = settings['naturePattern'] == pattern;
+              final isSelected = _currentSettings['naturePattern'] == pattern;
               
               return Padding(
                 padding: EdgeInsets.only(right: 12.w),
                 child: GestureDetector(
                   onTap: () {
-                    final newSettings = Map<String, dynamic>.from(settings);
+                    final newSettings = Map<String, dynamic>.from(_currentSettings);
                     newSettings['naturePattern'] = pattern;
-                    onSettingsChanged(newSettings);
+                    _updateSettings(newSettings);
                   },
                   child: AnimatedContainer(
                     duration: AppConstants.fastAnimation,
@@ -570,6 +596,7 @@ class VisualCustomization extends StatelessWidget {
     );
   }
 
+  // FIXED: Minimal customization with proper state management
   Widget _buildMinimalCustomization() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -585,37 +612,66 @@ class VisualCustomization extends StatelessWidget {
         SizedBox(height: 12.h),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
+          decoration: BoxDecoration(
+            color: AppColors.cardBackground,
+            borderRadius: BorderRadius.circular(12.r),
+            border: Border.all(
+              color: AppColors.textMedium.withOpacity(0.1),
+              width: 1.w,
+            ),
+          ),
+          child: Column(
             children: [
-              Text(
-                'Slow',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.textMedium,
-                ),
+              SizedBox(height: 12.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Slow',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppColors.textMedium,
+                    ),
+                  ),
+                  Text(
+                    'Speed: ${(_currentSettings['breathingSpeed'] ?? 0.8).toStringAsFixed(1)}x',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.minimalGradient[0],
+                    ),
+                  ),
+                  Text(
+                    'Fast',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppColors.textMedium,
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: 4.h,
+                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 8.r),
+                  overlayShape: RoundSliderOverlayShape(overlayRadius: 16.r),
+                ),
                 child: Slider(
-                  value: settings['breathingSpeed'] ?? 0.8,
+                  value: _currentSettings['breathingSpeed'] ?? 0.8,
                   min: 0.5,
                   max: 1.5,
                   divisions: 10,
                   activeColor: AppColors.minimalGradient[0],
                   inactiveColor: AppColors.textMedium.withOpacity(0.2),
+                  thumbColor: AppColors.minimalGradient[0],
                   onChanged: (value) {
-                    final newSettings = Map<String, dynamic>.from(settings);
+                    final newSettings = Map<String, dynamic>.from(_currentSettings);
                     newSettings['breathingSpeed'] = value;
-                    onSettingsChanged(newSettings);
+                    _updateSettings(newSettings);
                   },
                 ),
               ),
-              Text(
-                'Fast',
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  color: AppColors.textMedium,
-                ),
-              ),
+              SizedBox(height: 8.h),
             ],
           ),
         ),
@@ -643,15 +699,15 @@ class VisualCustomization extends StatelessWidget {
             itemCount: GeometricPattern.values.length,
             itemBuilder: (context, index) {
               final pattern = GeometricPattern.values[index];
-              final isSelected = settings['geometricPattern'] == pattern;
+              final isSelected = _currentSettings['geometricPattern'] == pattern;
               
               return Padding(
                 padding: EdgeInsets.only(right: 12.w),
                 child: GestureDetector(
                   onTap: () {
-                    final newSettings = Map<String, dynamic>.from(settings);
+                    final newSettings = Map<String, dynamic>.from(_currentSettings);
                     newSettings['geometricPattern'] = pattern;
-                    onSettingsChanged(newSettings);
+                    _updateSettings(newSettings);
                   },
                   child: AnimatedContainer(
                     duration: AppConstants.fastAnimation,

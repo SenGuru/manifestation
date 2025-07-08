@@ -456,7 +456,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   '${currentUser.stats.meditationMinutes}m',
                   'Meditation',
                   Icons.self_improvement,
-                  AppColors.candleMeditationGradient[0],
+                  AppColors.visualMeditationGradient[0],
                 ),
               ),
               Expanded(
