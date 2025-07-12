@@ -542,6 +542,175 @@ namespace Manifest.Tests.Common
         public const string ShowAllLinksWithoutPermissionCheck__Name = "ShowAllLinksWithoutPermissionCheck";
     }
 
+    public class UserCreateModel
+    {
+
+        public UserCreateModel()
+        {
+        }
+
+        public UserCreateModel(Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted)
+        {
+            UserGuid = userGuid;
+            UserName = userName;
+            PredefinedUserTypeId = predefinedUserTypeId;
+            Email = email;
+            FirstName = firstName;
+            Active = active;
+            IsDeleted = isDeleted;
+        }
+
+        [JsonPropertyName("captchaCode")]
+        public String CaptchaCode {set; get;}
+        [JsonPropertyName("newPermissionTypeIds")]
+        public List<Int64> NewPermissionTypeIds {set; get;}
+        [JsonPropertyName("initialPassword")]
+        public String InitialPassword {set; get;}
+        [JsonPropertyName("companyCode")]
+        public String CompanyCode {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("userGuid")]
+        public Guid UserGuid {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedUserTypeId")]
+        public Int64 PredefinedUserTypeId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("workPhone")]
+        public String WorkPhone {set; get;}
+        [JsonPropertyName("workPhoneExt")]
+        public String WorkPhoneExt {set; get;}
+        [JsonPropertyName("cellPhone")]
+        public String CellPhone {set; get;}
+        [JsonPropertyName("active")]
+        public Boolean Active {set; get;}
+        [JsonPropertyName("notificationThroughEmail")]
+        public Boolean? NotificationThroughEmail {set; get;}
+        [JsonPropertyName("isAccountLocked")]
+        public Boolean? IsAccountLocked {set; get;}
+        [JsonPropertyName("accountLockedUntil")]
+        public DateTime? AccountLockedUntil {set; get;}
+        [JsonPropertyName("profileImageGuid")]
+        public Guid? ProfileImageGuid {set; get;}
+        [JsonPropertyName("profileImageActualFileName")]
+        public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+
+        public UserCreateModel GetCopy()
+        {
+            var obj = new UserCreateModel();
+            obj.CaptchaCode = CaptchaCode;
+            obj.NewPermissionTypeIds = NewPermissionTypeIds;
+            obj.InitialPassword = InitialPassword;
+            obj.CompanyCode = CompanyCode;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.UserGuid = UserGuid;
+            obj.UserName = UserName;
+            obj.PredefinedUserTypeId = PredefinedUserTypeId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.WorkPhone = WorkPhone;
+            obj.WorkPhoneExt = WorkPhoneExt;
+            obj.CellPhone = CellPhone;
+            obj.Active = Active;
+            obj.NotificationThroughEmail = NotificationThroughEmail;
+            obj.IsAccountLocked = IsAccountLocked;
+            obj.AccountLockedUntil = AccountLockedUntil;
+            obj.ProfileImageGuid = ProfileImageGuid;
+            obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.IsDeleted = IsDeleted;
+            return obj;
+        }
+
+        // Property Names
+        public const string CaptchaCode__Name = "CaptchaCode";
+        public const string NewPermissionTypeIds__Name = "NewPermissionTypeIds";
+        public const string InitialPassword__Name = "InitialPassword";
+        public const string CompanyCode__Name = "CompanyCode";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string UserGuid__Name = "UserGuid";
+        public const string UserName__Name = "UserName";
+        public const string PredefinedUserTypeId__Name = "PredefinedUserTypeId";
+        public const string PasswordHash__Name = "PasswordHash";
+        public const string PasswordChangedDate__Name = "PasswordChangedDate";
+        public const string Email__Name = "Email";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string WorkPhone__Name = "WorkPhone";
+        public const string WorkPhoneExt__Name = "WorkPhoneExt";
+        public const string CellPhone__Name = "CellPhone";
+        public const string Active__Name = "Active";
+        public const string NotificationThroughEmail__Name = "NotificationThroughEmail";
+        public const string OneTimeToken__Name = "OneTimeToken";
+        public const string OneTimeExpireDateTime__Name = "OneTimeExpireDateTime";
+        public const string LoginFailedAttempt__Name = "LoginFailedAttempt";
+        public const string IsAccountLocked__Name = "IsAccountLocked";
+        public const string AccountLockedUntil__Name = "AccountLockedUntil";
+        public const string NewUserActivationGuid__Name = "NewUserActivationGuid";
+        public const string NewUserActivationCompletedOn__Name = "NewUserActivationCompletedOn";
+        public const string ProfileImageGuid__Name = "ProfileImageGuid";
+        public const string ProfileImageLocation__Name = "ProfileImageLocation";
+        public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string IsDeleted__Name = "IsDeleted";
+        // String Column Sizes
+        public const int UserName__Size = 50;
+        public const int Email__Size = 100;
+        public const int FirstName__Size = 100;
+        public const int LastName__Size = 100;
+        public const int WorkPhone__Size = 20;
+        public const int WorkPhoneExt__Size = 10;
+        public const int CellPhone__Size = 20;
+        public const int ProfileImageActualFileName__Size = 125;
+    }
+
+    public class CaptchaUrlResponseModel
+    {
+
+        public CaptchaUrlResponseModel()
+        {
+        }
+        [JsonPropertyName("captchaImageUrl")]
+        public String CaptchaImageUrl {set; get;}
+        [JsonPropertyName("captchaSoundUrl")]
+        public String CaptchaSoundUrl {set; get;}
+        [JsonPropertyName("reloadIconUrl")]
+        public String ReloadIconUrl {set; get;}
+        [JsonPropertyName("soundIconUrl")]
+        public String SoundIconUrl {set; get;}
+
+        public CaptchaUrlResponseModel GetCopy()
+        {
+            var obj = new CaptchaUrlResponseModel();
+            obj.CaptchaImageUrl = CaptchaImageUrl;
+            obj.CaptchaSoundUrl = CaptchaSoundUrl;
+            obj.ReloadIconUrl = ReloadIconUrl;
+            obj.SoundIconUrl = SoundIconUrl;
+            return obj;
+        }
+
+        // Property Names
+        public const string CaptchaImageUrl__Name = "CaptchaImageUrl";
+        public const string CaptchaSoundUrl__Name = "CaptchaSoundUrl";
+        public const string ReloadIconUrl__Name = "ReloadIconUrl";
+        public const string SoundIconUrl__Name = "SoundIconUrl";
+    }
+
     public class AppLogModel
     {
 
@@ -2298,9 +2467,9 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("modifiedByUserId")]
         public Int64? ModifiedByUserId {set; get;}
 
-        public UserCreateWithFileFormModel GetAsCreateModel()
+        public UserCreateModel GetAsCreateModel()
         {
-            var obj = new UserCreateWithFileFormModel();
+            var obj = new UserCreateModel();
             obj.CompanyCode = CompanyCode;
             obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
             obj.ModifiedByUserLastName = ModifiedByUserLastName;
@@ -2324,7 +2493,7 @@ namespace Manifest.Tests.Common
             return obj;
         }
 
-        public bool IsSameAsCreateModel(UserCreateWithFileFormModel obj)
+        public bool IsSameAsCreateModel(UserCreateModel obj)
         {
             var result = true;
             result = result && (obj.CompanyCode == CompanyCode);
@@ -2573,6 +2742,8 @@ namespace Manifest.Tests.Common
 
         [JsonPropertyName("uploadedFile")]
         public FileStreamModel UploadedFile {set; get;}
+        [JsonPropertyName("captchaCode")]
+        public String CaptchaCode {set; get;}
         [JsonPropertyName("newPermissionTypeIds")]
         public List<Int64> NewPermissionTypeIds {set; get;}
         [JsonPropertyName("initialPassword")]
@@ -2622,6 +2793,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new UserCreateWithFileFormModel();
             obj.UploadedFile = UploadedFile;
+            obj.CaptchaCode = CaptchaCode;
             obj.NewPermissionTypeIds = NewPermissionTypeIds;
             obj.InitialPassword = InitialPassword;
             obj.CompanyCode = CompanyCode;
@@ -2649,6 +2821,7 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string UploadedFile__Name = "UploadedFile";
+        public const string CaptchaCode__Name = "CaptchaCode";
         public const string NewPermissionTypeIds__Name = "NewPermissionTypeIds";
         public const string InitialPassword__Name = "InitialPassword";
         public const string CompanyCode__Name = "CompanyCode";

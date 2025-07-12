@@ -148,3 +148,20 @@ public void GlobalSettings_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
 {
     
 }
+public void CreateAccount_WithValidData_ReturnsValidData()
+{
+    var model = new UserCreateModel();
+    var r = CreateAccount();
+}
+public void CreateAccount_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GenerateCaptchUrl_WithValidData_ReturnsValidData()
+{
+    var r = GenerateCaptchUrl();
+}
+public void GenerateCaptchUrl_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

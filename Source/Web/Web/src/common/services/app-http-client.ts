@@ -134,6 +134,18 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public createAccount(companyModel: models.UserCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.LoggedInUserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('account/createaccount', companyModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public generateCaptchUrl(headers ?: HttpHeaders): Observable<ReturnModel<models.CaptchaUrlResponseModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.get('account/generatecaptchurl', headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getAppLogs(search: models.AppLogSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.AppLogModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('adminutils/getapplogs', search, headers);

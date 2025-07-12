@@ -133,6 +133,16 @@ namespace Manifest.Tests.Common
            return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/account/azureadcallback"),null,appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnModel<LoggedInUserModel> result)> CreateAccount(UserCreateModel companyModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<LoggedInUserModel>,UserCreateModel>(token,Url("/api/v1/account/createaccount"),companyModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<CaptchaUrlResponseModel> result)> GenerateCaptchUrl(string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<CaptchaUrlResponseModel>,Object>(token,Url("/api/v1/account/generatecaptchurl"),null,appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<AppLogModel> result)> GetAppLogs(AppLogSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<AppLogModel>,AppLogSearchCriteria>(token,Url("/api/v1/adminutils/getapplogs"),search,appHeader);
