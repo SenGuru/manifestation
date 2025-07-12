@@ -233,7 +233,7 @@ namespace Manifest.Api.All.Controllers
 
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "Account" })]
-        public async Task<ReturnModel<LoggedInUserModel>> CreateAccount([FromForm] UserCreateModel companyModel)
+        public async Task<ReturnModel<LoggedInUserModel>> CreateAccount([FromForm] AccountCreateModel accountModel)
         {
             //SimpleCaptcha captcha = new SimpleCaptcha(CaptchaId);
             //bool isValid = captcha.Validate(companyModel.CaptchaCode);
@@ -242,7 +242,7 @@ namespace Manifest.Api.All.Controllers
             //    return log.WarnAndReturnModel<LoggedInUserModel>("Unable to validate if you are a human.");
             //}
 
-            return await accountService.CreateUserAsync(companyModel);
+            return await accountService.CreateUserAsync(accountModel);
         }
 
         [HttpGet]

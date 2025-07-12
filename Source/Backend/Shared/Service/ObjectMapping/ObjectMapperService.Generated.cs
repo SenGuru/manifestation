@@ -380,6 +380,9 @@ namespace Manifest.Service.ObjectMapping
                 [MapperRequiredMapping(RequiredMappingStrategy.None)]
                 public partial UserModel UserViewToUserModel(UserView vw);
 
+                [MapperRequiredMapping(RequiredMappingStrategy.None)]
+                public partial UserCreateModel AccountCreateModelToUserCreateModel(AccountCreateModel acm);
+
                 public partial User UserCreateModelToUser(UserCreateModel model);
 
                 public partial User UserUpdateModelToUser(UserUpdateModel model);
