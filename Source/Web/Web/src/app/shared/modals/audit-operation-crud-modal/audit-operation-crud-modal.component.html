@@ -1,9 +1,9 @@
 <form #lvAuditOperationForm="ngForm" name="form" appFocusOnError
   (ngSubmit)="lvAuditOperationForm.form.valid && onSubmit(lvAuditOperationForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-audit-operation-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-audit-operation-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-audit-operation-modal-cancel-btn" (click)="cancel()"></button>
+      id="manifest-audit-operation-modal-cancel-btn" (click)="cancel()"></button>
   </div>
   <div class="modal-body">
 
@@ -100,9 +100,9 @@
 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn aduo-btn-sm btn-sm btn-light" id="auditduo-audit-operation-modal-close-btn" data-bs-dismiss="modal"
+    <button type="button" class="btn mnf-btn-sm btn-sm btn-light" id="manifest-audit-operation-modal-close-btn" data-bs-dismiss="modal"
       (click)="cancel()">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn aduo-btn-sm btn-sm btn-success"
-      id="auditduo-audit-operation-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn mnf-btn-sm btn-sm btn-success"
+      id="manifest-audit-operation-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

@@ -16,6 +16,8 @@ using Microsoft.AspNetCore.Authentication;
 using Manifest.Web.Authentication;
 using Manifest.Common.Interfaces.Web.Authentication;
 using Manifest.Service.App;
+using BotDetect.Web;
+using SecurityAssessment.Common.Models.ViewModels;
 
 namespace Manifest.Api.All.Controllers
 {
@@ -23,6 +25,7 @@ namespace Manifest.Api.All.Controllers
     [Route("api/v1/[controller]/[action]")]
     public class AccountController : Controller
     {
+        private const string CaptchaId = "ExampleCaptcha-b2e2e2e2-7c7a-4e2a-9b1a-2e6e2e2e2e2e";
         private readonly AccountService accountService;
         private readonly ILog log;
         private readonly ICurrentSessionService currentSessionService;
@@ -226,6 +229,27 @@ namespace Manifest.Api.All.Controllers
             // Handle the callback
             var result = await HttpContext.AuthenticateAsync("ExternalCookie");
             return Redirect("/");
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "Account" })]
+        public async Task<ReturnModel<LoggedInUserModel>> CreateAccount([FromBody] AccountCreateModel accountModel)
+        {
+            //SimpleCaptcha captcha = new SimpleCaptcha(CaptchaId);
+            //bool isValid = captcha.Validate(companyModel.CaptchaCode);
+            //if (!isValid)
+            //{
+            //    return log.WarnAndReturnModel<LoggedInUserModel>("Unable to validate if you are a human.");
+            //}
+
+            return await accountService.CreateUserAsync(accountModel);
+        }
+
+        [HttpGet]
+        public Task<ReturnModel<CaptchaUrlResponseModel>> GenerateCaptchUrl()
+        {
+            SimpleCaptcha captchaHandler = new SimpleCaptcha(CaptchaId);
+            return Task<ReturnModel<CaptchaUrlResponseModel>>.FromResult(ReturnModel<CaptchaUrlResponseModel>.Success(new CaptchaUrlResponseModel { CaptchaImageUrl = captchaHandler.CaptchaImageUrl, CaptchaSoundUrl = captchaHandler.CaptchaSoundUrl, ReloadIconUrl = captchaHandler.ReloadIconUrl, SoundIconUrl = captchaHandler.SoundIconUrl }));
         }
     }
 }

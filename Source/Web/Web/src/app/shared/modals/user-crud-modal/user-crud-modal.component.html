@@ -1,10 +1,10 @@
 <form #lvUserForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvUserForm.form.valid && onSubmit(lvUserForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-user-modal-title">{{title}} <span
+    <h5 class="modal-title" id="manifest-user-modal-title">{{title}} <span
         *ngIf="isSuperAdmin && layoutTypeId === sidebarLayoutType.CompanyDetail"> - {{companyName}}</span>
     </h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-user-modal-cancel-btn" (click)="cancel(true)"></button>
+      id="manifest-user-modal-cancel-btn" (click)="cancel(true)"></button>
   </div>
   <div class="modal-body" style="height: calc(100vh - 265px); overflow-y: auto">
     <div class="form-group row mb-4">
@@ -263,9 +263,9 @@
     </div> 
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-user-modal-close-btn"
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-user-modal-close-btn"
       data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success"
-      id="auditduo-user-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+      id="manifest-user-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

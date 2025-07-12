@@ -18,6 +18,7 @@ using Framework.Infrastructure.Interfaces.DbAccess;
 using Framework.Infrastructure.Logging;
 using Framework.Infrastructure.Models.Result;
 using Framework.Infrastructure.Utils;
+using System.Linq;
 
 namespace Manifest.Service.App
 {
@@ -32,6 +33,7 @@ namespace Manifest.Service.App
         private readonly AppConfigurationFile appConfigurationFile;
         private readonly ProfilePictureFileStorage profilePictureFileStorage;
         private readonly CompanyRepository wipRepository;
+        private readonly ManifestRepository manifestRepository;
 
         public CompanyService(
                            ILog log,
@@ -43,7 +45,8 @@ namespace Manifest.Service.App
                            ITransactionManager transactionManager,
                            ICurrentSessionService currentSessionService,
                            AppConfigurationFile appConfigurationFile,
-                           ProfilePictureFileStorage profilePictureFileStorage)
+                           ProfilePictureFileStorage profilePictureFileStorage,
+                           ManifestRepository manifestRepository)
             : base(log, objectMapperService)
         {
             this.companyRepository = companyRepository;
@@ -55,6 +58,7 @@ namespace Manifest.Service.App
             this.appConfigurationFile = appConfigurationFile;
             this.profilePictureFileStorage = profilePictureFileStorage;
             wipRepository = companyRepository;
+            this.manifestRepository = manifestRepository;
         }
 
         #region User
@@ -181,7 +185,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public async Task<ReturnModel<UserModel>> CreateUserAsync(UserCreateModel user, FileStreamModel streamModel)
+        public async Task<ReturnModel<UserModel>> CreateUserAsync(UserCreateModel user, FileStreamModel streamModel, bool useAnonymnous = false)
         {
             try
             {
@@ -190,12 +194,19 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<UserModel>($"Unable to create User", new ReturnErrorItem("", "User information is not valid"));
                 }
 
-                if (!await currentSessionService.IsCurrentUserASuperAdminAsync())
+                if (!useAnonymnous)
                 {
-                    if (user.PredefinedUserTypeId == (int)PredefinedUserTypes.SuperAdmin)
+                    if (!await currentSessionService.IsCurrentUserASuperAdminAsync())
                     {
-                        return log.ErrorAndReturnModel<UserModel>($"You cannot create Super Admin Account");
+                        if (user.PredefinedUserTypeId == (int)PredefinedUserTypes.SuperAdmin)
+                        {
+                            return log.ErrorAndReturnModel<UserModel>($"You cannot create Super Admin Account");
+                        }
                     }
+                }
+                if (user.InitialPassword.IsTrimmedStringNullOrEmpty())
+                {
+                    return log.ErrorAndReturnModel<UserModel>($"Initial Password is empty");
                 }
 
                 user.PasswordHash = PasswordHash.CreateHash(user.InitialPassword, out _);
@@ -225,7 +236,7 @@ namespace Manifest.Service.App
                     {
                         throw new Exception($"Unable to create new user");
                     }
-
+                    
                     if (streamModel != null)
                     {
                         try
@@ -238,6 +249,13 @@ namespace Manifest.Service.App
                         {
                             FileUtils.CloseSafely(streamModel.FileData);
                         }
+                    }
+
+                    var dResult = await CreateUserDependents(item);
+
+                    if (!dResult.IsSuccess)
+                    {
+                        throw new RollbackException($"Unable to create user dependents for {item.UserId}");
                     }
 
                     await trx.CompleteAsync();
@@ -259,6 +277,115 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnModel<UserModel>($"Unexpected error when creating User", new { user?.UserId }, ex);
             }
         }
+
+        public async Task<ReturnModel<bool>> CreateUserDependents(User user)
+        {
+            try
+            {
+                if (user == null)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Unable to create User", new ReturnErrorItem("", "User information is not valid"));
+                }
+
+                if (user.UserId <= 0)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Invalid User", new { user.UserId });
+                }
+
+                bool result = false;
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    // 1. Get all default categories
+                    var defaultCategoriesResult = await manifestRepository.GetAllDefaultCategorys();
+                    if (defaultCategoriesResult.Count == 0)
+                    {
+                        throw new RollbackException("No default categories found to create for user.");
+                    }
+
+                    // 2. Create user categories from default categories
+                    var newCategories = new List<Category>();
+                    var defaultCategoryIdToCategoryId = new Dictionary<long, long>();
+                    foreach (var defaultCategory in defaultCategoriesResult)
+                    {
+                        var category = new Category
+                        {
+                            UserId = user.UserId,
+                            CategoryName = defaultCategory.DefaultCategoryName,
+                            PredefinedCategoryTypeId = defaultCategory.PredefinedCategoryTypeId,
+                            IsDeleted = false,
+                            CreatedDate = DateTime.UtcNow,
+                            ModifiedDate = DateTime.UtcNow,
+                            DefaultCategoryId = defaultCategory.DefaultCategoryId,
+                        };
+                        newCategories.Add(category);
+                    }
+
+                    var createdCategories = await manifestRepository.CreateCategorysAsync(newCategories, await currentSessionService.GetCurrentUserIdAsync());
+                    if (createdCategories == null || createdCategories.Count == 0)
+                    {
+                        throw new RollbackException($"Unable to create default Categories");
+                    }
+
+                    // 3. Map DefaultCategoryId to new CategoryId
+                    foreach (var cat in createdCategories)
+                    {
+                        defaultCategoryIdToCategoryId[cat.DefaultCategoryId] = cat.CategoryId;
+                    }
+
+                    var allDefaultDailyAffirmationTexts = await manifestRepository.GetAllDefaultDailyAffirmationTexts();
+
+                    // 4. For each default category, create DailyAffirmationText for the user from DefaultDailyAffirmationText
+                    foreach (var defaultCategory in defaultCategoriesResult)
+                    {
+                        var defaultDailyAffirmationTexts = allDefaultDailyAffirmationTexts.Where(x => x.DefaultCategoryId == defaultCategory.DefaultCategoryId).ToList();
+                        if (defaultDailyAffirmationTexts == null || defaultDailyAffirmationTexts.Count == 0)
+                        {
+                            continue;
+                        }
+
+                        var userCategoryId = defaultCategoryIdToCategoryId.ContainsKey(defaultCategory.DefaultCategoryId)
+                            ? defaultCategoryIdToCategoryId[defaultCategory.DefaultCategoryId]
+                            : (long?)null;
+
+                        if (!userCategoryId.HasValue)
+                        {
+                            continue;
+                        }
+
+                        var newDailyAffirmationTexts = new List<DailyAffirmationText>();
+                        foreach (var defaultText in defaultDailyAffirmationTexts)
+                        {
+                            var dailyAffirmationText = new DailyAffirmationText
+                            {
+                                UserId = user.UserId,
+                                CategoryId = userCategoryId.Value,
+                                DailyAffirmationTextValue = defaultText.DefaultDailyAffirmationTextName,
+                                IsDeleted = false,
+                                CreatedDate = DateTime.UtcNow,
+                                ModifiedDate = DateTime.UtcNow,
+                            };
+                            newDailyAffirmationTexts.Add(dailyAffirmationText);
+                        }
+
+                        if (newDailyAffirmationTexts.Count == 0)
+                        {
+                            continue;
+                        }
+
+                        await manifestRepository.CreateDailyAffirmationTextsAsync(newDailyAffirmationTexts, await currentSessionService.GetCurrentUserIdAsync());
+                    }
+
+                    result = true;
+                    await trx.CompleteAsync();
+                }
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when creating User defaults", new { user?.UserId }, ex);
+            }
+        }
+
 
         public async Task<ReturnModel<UserModel>> UpdateUserAsync(UserUpdateModel user, FileStreamModel streamModel)
         {

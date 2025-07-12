@@ -3,6 +3,7 @@ using Manifest.Common.Constants;
 using Manifest.Common.Enums;
 using FluentMigrator;
 using Framework.Infrastructure.Utils;
+using Manifest.Common.Models.DB;
 
 namespace Manifest.Repository.Migration.Application
 {
@@ -504,6 +505,50 @@ namespace Manifest.Repository.Migration.Application
             };
 
             IdentityInsertData("ScheduledJob", defaultScheduledJobParams);
+
+            dynamic[] defaultCategoryParams =
+            {
+                new {DefaultCategoryId = 1, DefaultCategoryName = "Love", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 2,DefaultCategoryName = "Success", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 3,DefaultCategoryName = "Health", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 4,DefaultCategoryName = "Abundance", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 5,DefaultCategoryName = "Confidence", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+
+                new {DefaultCategoryId = 100,DefaultCategoryName = "Career", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 101,DefaultCategoryName = "Health", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 102,DefaultCategoryName = "Love", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 103,DefaultCategoryName = "Money", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 104,DefaultCategoryName = "Personal", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultCategoryId = 105, DefaultCategoryName = "Spiritual", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker, IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow } ,
+            }; 
+
+
+            IdentityInsertData("DefaultCategory", defaultCategoryParams);
+
+            dynamic[] defaultDailyAffirmationTextParams =
+{
+                new { DefaultDailyAffirmationTextId = 1, DefaultCategoryId = 1, DefaultDailyAffirmationTextName = "I am worthy of deep, unconditional love",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 2, DefaultCategoryId = 1, DefaultDailyAffirmationTextName = "Love flows to me effortlessly and abundantly",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 3, DefaultCategoryId = 1, DefaultDailyAffirmationTextName = "I attract healthy, loving relationships into my life",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+
+                new { DefaultDailyAffirmationTextId = 10, DefaultCategoryId = 2, DefaultDailyAffirmationTextName = "Success flows to me naturally and easily",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 11, DefaultCategoryId = 2, DefaultDailyAffirmationTextName = "I am capable of achieving anything I set my mind to",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 12, DefaultCategoryId = 2, DefaultDailyAffirmationTextName = "Every challenge is an opportunity for growth",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+
+                new { DefaultDailyAffirmationTextId = 20, DefaultCategoryId = 3, DefaultDailyAffirmationTextName = "My body is strong, healthy, and full of energy",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 21,DefaultCategoryId = 3, DefaultDailyAffirmationTextName = "I nourish my body with love and healthy choices",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 22,DefaultCategoryId = 3, DefaultDailyAffirmationTextName = "Healing energy flows through every cell of my being",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+
+                new { DefaultDailyAffirmationTextId = 30, DefaultCategoryId = 4, DefaultDailyAffirmationTextName = "Abundance flows into my life from multiple sources",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 31, DefaultCategoryId = 4, DefaultDailyAffirmationTextName = "I am a magnet for prosperity and wealth",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 32, DefaultCategoryId = 4, DefaultDailyAffirmationTextName = "The universe provides for all my needs abundantly",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+
+                new { DefaultDailyAffirmationTextId = 40, DefaultCategoryId = 5, DefaultDailyAffirmationTextName = "I believe in myself and my abilities completely",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 41, DefaultCategoryId = 5, DefaultDailyAffirmationTextName = "I radiate confidence and positive energy",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultDailyAffirmationTextId = 42, DefaultCategoryId = 5, DefaultDailyAffirmationTextName = "I trust myself to make the right decisions",  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+            };
+
+            IdentityInsertData("DefaultDailyAffirmationText", defaultDailyAffirmationTextParams);
 
             //dynamic[] defaultUserRolePermissionParams =
             //{

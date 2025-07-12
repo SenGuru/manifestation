@@ -134,6 +134,18 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public createAccount(accountModel: models.AccountCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.LoggedInUserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('account/createaccount', accountModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public generateCaptchUrl(headers ?: HttpHeaders): Observable<ReturnModel<models.CaptchaUrlResponseModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.get('account/generatecaptchurl', headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getAppLogs(search: models.AppLogSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.AppLogModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('adminutils/getapplogs', search, headers);
@@ -764,6 +776,12 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public getCategoryForCurrentUser(headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getList('manifest/getcategoryforcurrentuser', headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getCategoryByUserIdSearch(search: models.CategoryByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybyuseridsearch', search, headers);
@@ -1025,6 +1043,12 @@ export class HttpService {
     public getCategoryByDailyAffirmationTextIdSearch(search: models.CategoryByDailyAffirmationTextIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydailyaffirmationtextidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTextForCurrentUser(headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getList('manifest/getdailyaffirmationtextforcurrentuser', headers);
     }
 
     // tslint:disable-next-line:max-line-length

@@ -1,9 +1,9 @@
 <form #lvMessageTemplateForm="ngForm" name="form" appFocusOnError
   (ngSubmit)="lvMessageTemplateForm.form.valid && onSubmit(lvMessageTemplateForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-message-template-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-message-template-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-message-template-modal-cancel-btn" (click)="cancel(true)"></button>
+      id="manifest-message-template-modal-cancel-btn" (click)="cancel(true)"></button>
   </div>
   <div class="modal-body" style="height: calc(100vh - 265px); overflow: auto;">
     <div class="col-lg-12 col-sm-12 col-md-12">
@@ -380,9 +380,9 @@
     </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-message-template-modal-close-btn"
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-message-template-modal-close-btn"
       data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success"
-      id="auditduo-message-template-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+      id="manifest-message-template-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

@@ -542,6 +542,74 @@ namespace Manifest.Tests.Common
         public const string ShowAllLinksWithoutPermissionCheck__Name = "ShowAllLinksWithoutPermissionCheck";
     }
 
+    public class AccountCreateModel
+    {
+
+        public AccountCreateModel()
+        {
+        }
+        [JsonPropertyName("captchaCode")]
+        public String CaptchaCode {set; get;}
+        [JsonPropertyName("initialPassword")]
+        public String InitialPassword {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+
+        public AccountCreateModel GetCopy()
+        {
+            var obj = new AccountCreateModel();
+            obj.CaptchaCode = CaptchaCode;
+            obj.InitialPassword = InitialPassword;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            return obj;
+        }
+
+        // Property Names
+        public const string CaptchaCode__Name = "CaptchaCode";
+        public const string InitialPassword__Name = "InitialPassword";
+        public const string Email__Name = "Email";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+    }
+
+    public class CaptchaUrlResponseModel
+    {
+
+        public CaptchaUrlResponseModel()
+        {
+        }
+        [JsonPropertyName("captchaImageUrl")]
+        public String CaptchaImageUrl {set; get;}
+        [JsonPropertyName("captchaSoundUrl")]
+        public String CaptchaSoundUrl {set; get;}
+        [JsonPropertyName("reloadIconUrl")]
+        public String ReloadIconUrl {set; get;}
+        [JsonPropertyName("soundIconUrl")]
+        public String SoundIconUrl {set; get;}
+
+        public CaptchaUrlResponseModel GetCopy()
+        {
+            var obj = new CaptchaUrlResponseModel();
+            obj.CaptchaImageUrl = CaptchaImageUrl;
+            obj.CaptchaSoundUrl = CaptchaSoundUrl;
+            obj.ReloadIconUrl = ReloadIconUrl;
+            obj.SoundIconUrl = SoundIconUrl;
+            return obj;
+        }
+
+        // Property Names
+        public const string CaptchaImageUrl__Name = "CaptchaImageUrl";
+        public const string CaptchaSoundUrl__Name = "CaptchaSoundUrl";
+        public const string ReloadIconUrl__Name = "ReloadIconUrl";
+        public const string SoundIconUrl__Name = "SoundIconUrl";
+    }
+
     public class AppLogModel
     {
 
@@ -2573,6 +2641,8 @@ namespace Manifest.Tests.Common
 
         [JsonPropertyName("uploadedFile")]
         public FileStreamModel UploadedFile {set; get;}
+        [JsonPropertyName("captchaCode")]
+        public String CaptchaCode {set; get;}
         [JsonPropertyName("newPermissionTypeIds")]
         public List<Int64> NewPermissionTypeIds {set; get;}
         [JsonPropertyName("initialPassword")]
@@ -2622,6 +2692,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new UserCreateWithFileFormModel();
             obj.UploadedFile = UploadedFile;
+            obj.CaptchaCode = CaptchaCode;
             obj.NewPermissionTypeIds = NewPermissionTypeIds;
             obj.InitialPassword = InitialPassword;
             obj.CompanyCode = CompanyCode;
@@ -2649,6 +2720,7 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string UploadedFile__Name = "UploadedFile";
+        public const string CaptchaCode__Name = "CaptchaCode";
         public const string NewPermissionTypeIds__Name = "NewPermissionTypeIds";
         public const string InitialPassword__Name = "InitialPassword";
         public const string CompanyCode__Name = "CompanyCode";

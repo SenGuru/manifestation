@@ -133,6 +133,16 @@ namespace Manifest.Tests.Common
            return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/account/azureadcallback"),null,appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnModel<LoggedInUserModel> result)> CreateAccount(AccountCreateModel accountModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<LoggedInUserModel>,AccountCreateModel>(token,Url("/api/v1/account/createaccount"),accountModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<CaptchaUrlResponseModel> result)> GenerateCaptchUrl(string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<CaptchaUrlResponseModel>,Object>(token,Url("/api/v1/account/generatecaptchurl"),null,appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<AppLogModel> result)> GetAppLogs(AppLogSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<AppLogModel>,AppLogSearchCriteria>(token,Url("/api/v1/adminutils/getapplogs"),search,appHeader);
@@ -658,6 +668,11 @@ namespace Manifest.Tests.Common
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategorybyuserid"),new { userId },appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryForCurrentUser(string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getcategoryforcurrentuser"),null,appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByUserIdSearch(CategoryByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybyuseridsearch"),search,appHeader);
@@ -876,6 +891,11 @@ namespace Manifest.Tests.Common
         public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetCategoryByDailyAffirmationTextIdSearch(CategoryByDailyAffirmationTextIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,CategoryByDailyAffirmationTextIdSearchCriteria>(token,Url("/api/v1/manifest/getcategorybydailyaffirmationtextidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTextForCurrentUser(string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyAffirmationTextModel>,Object>(token,Url("/api/v1/manifest/getdailyaffirmationtextforcurrentuser"),null,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyAffirmationTextModel> result)> GetDailyAffirmationTextByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)

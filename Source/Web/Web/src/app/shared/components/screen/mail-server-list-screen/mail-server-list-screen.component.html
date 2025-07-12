@@ -9,7 +9,7 @@
       </div>
      <!-- add mailServer btn -->
       <div class="d-flex justify-content-sm-end col-sm"> 
-          <button type="button" class="btn btn-success btn-sm aduo-btn-sm"  data-bs-toggle="modal" id="create-user-btn" (click)="showAddMailServerModal();"><i class="ri-add-line align-bottom me-1"></i> Add Mail Server</button>
+          <button type="button" class="btn btn-success btn-sm mnf-btn-sm"  data-bs-toggle="modal" id="create-user-btn" (click)="showAddMailServerModal();"><i class="ri-add-line align-bottom me-1"></i> Add Mail Server</button>
       </div>
   </div>
 </div>
@@ -32,8 +32,8 @@
       />
     </div>  
     <div class="d-flex justify-content-sm-end col-sm">
-      <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-      <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(mailServerSearch)">
+      <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+      <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onReset(mailServerSearch)">
         Reset
       </button>
     </div>
@@ -42,9 +42,9 @@
 </div>
 
 <div class="card-body">
-<div class="table-responsive table-card auditduo-table" >
+<div class="table-responsive table-card manifest-table" >
 <table *ngIf="listData.length > 0; else nodata" class="table">
-  <thead class="auditduo-table-header">
+  <thead class="manifest-table-header">
     <tr>
       <th
         *ngFor="let column of columns"
@@ -100,13 +100,13 @@
       <td class="text-left last-col-floating-container">
           <div class="d-flex gap-2">
           <div class="view">
-            <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showViewMailServerModal(item)">View</button>
+            <button class="btn btn-sm mnf-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showViewMailServerModal(item)">View</button>
           </div>
           <div class="edit">
-              <button class="btn btn-sm aduo-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showUpdateMailServerModal(item)">Edit</button>
+              <button class="btn btn-sm mnf-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" type="button" (click)="showUpdateMailServerModal(item)">Edit</button>
           </div>
           <div class="remove">
-              <button class="btn btn-sm aduo-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button" (click)="deleteMailServer(item)">Remove</button>
+              <button class="btn btn-sm mnf-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" type="button" (click)="deleteMailServer(item)">Remove</button>
           </div>
          </div>
       </td>

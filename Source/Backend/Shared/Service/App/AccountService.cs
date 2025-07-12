@@ -1,9 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Framework.Infrastructure.Exceptions;
+using Framework.Infrastructure.Interfaces.Services;
+using Framework.Infrastructure.Logging;
+using Framework.Infrastructure.Models;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Utils;
 using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Service.App;
 using Manifest.Common.Interfaces.Service.Cache;
@@ -15,12 +16,12 @@ using Manifest.Common.Models.ViewModels;
 using Manifest.Common.Models.ViewModels.Account;
 using Manifest.Repository.Common;
 using Manifest.Service.ObjectMapping;
-using Framework.Infrastructure.Exceptions;
-using Framework.Infrastructure.Interfaces.Services;
-using Framework.Infrastructure.Logging;
-using Framework.Infrastructure.Models;
-using Framework.Infrastructure.Models.Result;
-using Framework.Infrastructure.Utils;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Manifest.Service.App
 {
@@ -715,6 +716,26 @@ namespace Manifest.Service.App
 
             var memberModel = objectMapperService.UserViewToUserModel(user);
             return ReturnModel<UserModel>.Success(memberModel);
+        }
+
+        
+        public async Task<ReturnModel<LoggedInUserModel>> CreateUserAsync(AccountCreateModel accountModel)
+        {
+            if (accountModel == null)
+            {
+                return log.ErrorAndReturnModel<LoggedInUserModel>("Registration information is not valid");
+            }
+
+            var userModel = objectMapperService.AccountCreateModelToUserCreateModel(accountModel);
+            userModel.PredefinedUserTypeId = (int)PredefinedUserTypes.User;
+            userModel.UserName = userModel.Email;
+            userModel.InitialPassword = accountModel.InitialPassword;
+
+            var result = await companyService.CreateUserAsync(userModel, null, useAnonymnous: true);
+            if (!result.IsSuccess)
+                return log.ErrorAndReturnModel<LoggedInUserModel>(result);
+
+            return await AuthenticateAsync(userModel.Email, userModel.InitialPassword);
         }
     }
 }

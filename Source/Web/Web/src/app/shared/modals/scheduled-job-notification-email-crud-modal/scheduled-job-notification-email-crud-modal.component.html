@@ -1,9 +1,9 @@
 
 <form #lvScheduledJobNotificationEmailForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvScheduledJobNotificationEmailForm.form.valid && onSubmit(lvScheduledJobNotificationEmailForm)">
   <div class="modal-header p-3">
-    <h5 class="modal-title" id="auditduo-scheduled-job-notification-email-modal-title">{{title}}</h5>
+    <h5 class="modal-title" id="manifest-scheduled-job-notification-email-modal-title">{{title}}</h5>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-      id="auditduo-scheduled-job-notification-email-modal-cancel-btn" (click)="cancel()"></button>
+      id="manifest-scheduled-job-notification-email-modal-cancel-btn" (click)="cancel()"></button>
   </div>
   <div class="modal-body">
 
@@ -69,8 +69,8 @@
   </div>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-scheduled-job-notification-email-modal-close-btn" data-bs-dismiss="modal"
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-scheduled-job-notification-email-modal-close-btn" data-bs-dismiss="modal"
      (click)="cancel()">Close</button>
-    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-scheduled-job-notification-email-modal-submit-btn">{{buttonText}}</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success" id="manifest-scheduled-job-notification-email-modal-submit-btn">{{buttonText}}</button>
   </div>
 </form>

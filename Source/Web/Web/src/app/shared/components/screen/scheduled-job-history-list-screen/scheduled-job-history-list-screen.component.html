@@ -9,7 +9,7 @@
       </div>
      <!-- add scheduledJobHistory btn -->
       <div class="d-flex justify-content-sm-end col-sm"> 
-          <button type="button" class="btn btn-success btn-sm aduo-btn-sm"  data-bs-toggle="modal" id="create-user-btn" (click)="showAddScheduledJobHistoryModal();"><i class="ri-add-line align-bottom me-1"></i> Add User</button>
+          <button type="button" class="btn btn-success btn-sm mnf-btn-sm"  data-bs-toggle="modal" id="create-user-btn" (click)="showAddScheduledJobHistoryModal();"><i class="ri-add-line align-bottom me-1"></i> Add User</button>
       </div>
   </div>
 </div>
@@ -38,8 +38,8 @@
     </ng-select>
     </div>       
     <div class="d-flex justify-content-sm-end col-sm">
-      <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-      <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onReset(scheduledJobHistorySearch)">
+      <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+      <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onReset(scheduledJobHistorySearch)">
         Reset
       </button>
     </div>
@@ -48,9 +48,9 @@
 </div>
 
 <div class="card-body">
-<div class="table-responsive table-card auditduo-table" >
+<div class="table-responsive table-card manifest-table" >
 <table *ngIf="listData.length > 0; else nodata" class="table">
-  <thead class="auditduo-table-header">
+  <thead class="manifest-table-header">
     <tr>
       <th
         *ngFor="let column of columns"

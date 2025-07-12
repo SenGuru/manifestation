@@ -29,7 +29,7 @@ html {
   color: #dc3545;
 }
 
-.auditduo-table-header {
+.manifest-table-header {
   top: 0;
   background: white;
   position: sticky;
@@ -40,55 +40,55 @@ th {
   text-transform: uppercase !important;
 }
 
-.auditduo-table {
+.manifest-table {
   height: calc(100vh - 444px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-sm {
+.manifest-table-sm {
   height: calc(100vh - 442px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-no-btn {
+.manifest-table-no-btn {
   height: calc(100vh - 440px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-read-only-without-pagination {
+.manifest-table-read-only-without-pagination {
   height: calc(100vh - 325px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-read-only {
+.manifest-table-read-only {
   height: calc(100vh - 385px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-read-only-sm {
+.manifest-table-read-only-sm {
   height: calc(100vh - 425px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-xl {
+.manifest-table-xl {
   height: calc(100vh - 385px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-lg {
+.manifest-table-lg {
   height: calc(100vh - 250px) !important;
   overflow-y: auto;
   min-height: 280px !important;
 }
 
-.auditduo-table-task-summary {
+.manifest-table-task-summary {
   height: calc(100vh - 315px) !important;
   overflow-y: auto;
   min-height: 280px !important;
@@ -308,15 +308,15 @@ th {
 
 [data-bs-theme="dark"] {
   .fc {
-    .aduo-multimonth-daygrid {
+    .mnf-multimonth-daygrid {
       background: #212529 !important;
     }
 
-    .aduo-day-disabled {
+    .mnf-day-disabled {
       background: #282b2e !important;
     }
 
-    .aduo-multimonth {
+    .mnf-multimonth {
       border-color: #32383e !important;
     }
   }
@@ -453,18 +453,18 @@ modal style
   font-size: 12px !important;
 }
 
-.auditduo-pagination-bar .pagination {
+.manifest-pagination-bar .pagination {
   margin: 0 !important;
   padding: 0 !important;
 }
 
-.auditduo-footer {
+.manifest-footer {
   padding: 13px calc(var(--vz-grid-gutter-width) * 0.5) !important;
   margin: 0 !important;
   height: fit-content !important;
 }
 
-.auditduo-login-form-app-version-info {
+.manifest-login-form-app-version-info {
   font-size: 14px !important;
   text-align: end;
   margin-top: 20px;
@@ -550,12 +550,12 @@ modal style
 
 // movie wizard style end
 
-.auditduo-header-img {
+.manifest-header-img {
   height: 75px !important;
   width: 85px !important;
 }
 
-.auditduo-movie-wizard-completion-container {
+.manifest-movie-wizard-completion-container {
   text-align: left;
   padding: 10px 28%;
 }
@@ -576,7 +576,7 @@ pdf-stamp-editor {
   display: none;
 }
 
-.auditduo-contract-approval-container {
+.manifest-contract-approval-container {
   position: absolute !important;
   bottom: 0 !important;
   background: white !important;
@@ -593,17 +593,17 @@ input[type="time"] {
   padding-right: 1rem !important;
 }
 
-.auditduo-calllsheet-table-header {
+.manifest-calllsheet-table-header {
   background-color: #4d4d4d !important;
   color: white !important;
   border-radius: 5px;
 }
 
-.auditduo-calllsheet-radio-channel-text {
+.manifest-calllsheet-radio-channel-text {
   background-color: #fbfba6 !important;
 }
 
-.aduo-btn-sm {
+.mnf-btn-sm {
   padding: 0.25rem 0.5rem !important;
   height: fit-content !important;
 }
@@ -613,7 +613,7 @@ input[type="time"] {
   padding: 10px !important;
 }
 
-#auditduo-calllsheet .table > :not(caption) > * > * {
+#manifest-calllsheet .table > :not(caption) > * > * {
   margin: 0 !important;
   padding: 4px !important;
 }
@@ -628,7 +628,7 @@ input[type="time"] {
   padding-left: 0 !important;
 }
 
-.auditduo-calllsheet-movie-name {
+.manifest-calllsheet-movie-name {
   font-size: 40px;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -638,7 +638,7 @@ input[type="time"] {
   padding: 4px !important;
 }
 
-.auditduo-calllsheet-container-min-height {
+.manifest-calllsheet-container-min-height {
   min-height: 150px;
 }
 
@@ -646,11 +646,11 @@ input[type="time"] {
   min-height: fit-content !important;
 }
 
-.auditduo-daily-status-report-container-min-height {
+.manifest-daily-status-report-container-min-height {
   min-height: 150px;
 }
 
-.auditduo-tabs-btn-contanier {
+.manifest-tabs-btn-contanier {
   position: absolute;
   right: 20px;
   z-index: 10;
@@ -671,7 +671,7 @@ input[type="time"] {
 }
 
 // style override - only for budget / expense dropdown options
-.aduo-dropdown-option-padding-0
+.mnf-dropdown-option-padding-0
   .ng-dropdown-panel
   .ng-dropdown-panel-items
   .ng-option {
@@ -696,7 +696,7 @@ input[type="time"] {
 }
 
 //  dropdown override
-.aduo-hide-arrow {
+.mnf-hide-arrow {
   .dropdown-toggle {
     &.arrow-none {
       &::after {
@@ -709,12 +709,12 @@ input[type="time"] {
 
 // budget category button text
 .budget-category-table {
-  .aduo-btn-sm {
+  .mnf-btn-sm {
     font-size: 12px;
   }
 }
 
-.aduo-movie-wizard-table-lg {
+.mnf-movie-wizard-table-lg {
   height: calc(100vh - 379px) !important;
   overflow-y: auto;
   min-height: 280px !important;
@@ -731,7 +731,7 @@ input[type="time"] {
   width: 30% !important;
 }
 
-.aduo-chat-error-message {
+.mnf-chat-error-message {
   position: absolute;
   top: -25px;
 }
@@ -956,8 +956,8 @@ input:checked + .slider:before {
   box-shadow: 0 -2px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* Custom styles for the specific div with class #aduo-folder-container-navigation-bar' */
-#aduo-folder-container-navigation-bar {
+/* Custom styles for the specific div with class #mnf-folder-container-navigation-bar' */
+#mnf-folder-container-navigation-bar {
   overflow-x: auto;
   overflow-y: hidden;
   height: 45px;
@@ -966,61 +966,61 @@ input:checked + .slider:before {
 }
 
 /* Custom styles for the scrollbar in WebKit browsers */
-#aduo-folder-container-navigation-bar::-webkit-scrollbar {
+#mnf-folder-container-navigation-bar::-webkit-scrollbar {
   width: 1px;
   height: 1px;
 }
 
-#aduo-folder-container-navigation-bar::-webkit-scrollbar-track {
+#mnf-folder-container-navigation-bar::-webkit-scrollbar-track {
   background: #e0e0e0;
 }
 
-#aduo-folder-container-navigation-bar::-webkit-scrollbar-thumb {
+#mnf-folder-container-navigation-bar::-webkit-scrollbar-thumb {
   background: white;
   border-radius: 1px;
 }
 
 /* Custom styles for the scrollbar in Firefox */
-#aduo-folder-container-navigation-bar {
+#mnf-folder-container-navigation-bar {
   scrollbar-width: thin;
   scrollbar-color: #e0e0e0 #ebebeb;
 }
 
 /* Remove the scrollbar buttons in WebKit browsers */
-#aduo-folder-container-navigation-bar::-webkit-scrollbar-button {
+#mnf-folder-container-navigation-bar::-webkit-scrollbar-button {
   display: none !important;
 }
 
-/* Custom styles for the specific div with class #aduo-header-container-navigation-bar' */
-#aduo-header-container-navigation-bar {
+/* Custom styles for the specific div with class #mnf-header-container-navigation-bar' */
+#mnf-header-container-navigation-bar {
   overflow-x: auto;
   overflow-y: hidden;
   background: #fcf5e5;
 }
 
 /* Custom styles for the scrollbar in WebKit browsers */
-#aduo-header-container-navigation-bar::-webkit-scrollbar {
+#mnf-header-container-navigation-bar::-webkit-scrollbar {
   width: 1px;
   height: 1px;
 }
 
-#aduo-header-container-navigation-bar::-webkit-scrollbar-track {
+#mnf-header-container-navigation-bar::-webkit-scrollbar-track {
   background: #e0e0e0;
 }
 
-#aduo-header-container-navigation-bar::-webkit-scrollbar-thumb {
+#mnf-header-container-navigation-bar::-webkit-scrollbar-thumb {
   background: white;
   border-radius: 1px;
 }
 
 /* Custom styles for the scrollbar in Firefox */
-#aduo-header-container-navigation-bar {
+#mnf-header-container-navigation-bar {
   scrollbar-width: thin;
   scrollbar-color: #f3efe7 #fcf5e5;
 }
 
 /* Remove the scrollbar buttons in WebKit browsers */
-#aduo-header-container-navigation-bar::-webkit-scrollbar-button {
+#mnf-header-container-navigation-bar::-webkit-scrollbar-button {
   display: none !important;
 }
 
@@ -1094,7 +1094,7 @@ input:checked + .slider:before {
     }
   }
 
-  .auditduo-table-header {
+  .manifest-table-header {
     background-color: #1a1d21 !important;
     color: white !important;
   }

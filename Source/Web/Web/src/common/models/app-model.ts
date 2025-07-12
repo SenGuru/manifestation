@@ -357,6 +357,49 @@ export class GlobalSettingModel {
     }
 }
 
+export class AccountCreateModel {
+    captchaCode : string = '';
+    initialPassword : string = '';
+    email : string = '';
+    firstName : string = '';
+    lastName : string = '';
+
+    static getCopy(self : AccountCreateModel,adjustDateToUTC : boolean = false) : AccountCreateModel {
+      let obj = new AccountCreateModel();
+      if (self.hasOwnProperty('captchaCode'))
+        obj.captchaCode = self.captchaCode;
+      if (self.hasOwnProperty('initialPassword'))
+        obj.initialPassword = self.initialPassword;
+      if (self.hasOwnProperty('email'))
+        obj.email = self.email;
+      if (self.hasOwnProperty('firstName'))
+        obj.firstName = self.firstName;
+      if (self.hasOwnProperty('lastName'))
+        obj.lastName = self.lastName;
+      return obj;
+    }
+}
+
+export class CaptchaUrlResponseModel {
+    captchaImageUrl : string = '';
+    captchaSoundUrl : string = '';
+    reloadIconUrl : string = '';
+    soundIconUrl : string = '';
+
+    static getCopy(self : CaptchaUrlResponseModel,adjustDateToUTC : boolean = false) : CaptchaUrlResponseModel {
+      let obj = new CaptchaUrlResponseModel();
+      if (self.hasOwnProperty('captchaImageUrl'))
+        obj.captchaImageUrl = self.captchaImageUrl;
+      if (self.hasOwnProperty('captchaSoundUrl'))
+        obj.captchaSoundUrl = self.captchaSoundUrl;
+      if (self.hasOwnProperty('reloadIconUrl'))
+        obj.reloadIconUrl = self.reloadIconUrl;
+      if (self.hasOwnProperty('soundIconUrl'))
+        obj.soundIconUrl = self.soundIconUrl;
+      return obj;
+    }
+}
+
 export class AppLogModel {
     logDate : Date | null = null;
     activityId : string = '';
@@ -1499,6 +1542,7 @@ export class UserSearchCriteria extends BaseSearchCriteria{
 
 export class UserCreateWithFileFormModel {
     uploadedFile : File | null = null;
+    captchaCode : string = '';
     newPermissionTypeIds : number[] | null = null;
     initialPassword : string = '';
     companyCode : string = '';
@@ -1534,6 +1578,8 @@ export class UserCreateWithFileFormModel {
       let obj = new UserCreateWithFileFormModel();
       if (self.hasOwnProperty('uploadedFile'))
         obj.uploadedFile = self.uploadedFile;
+      if (self.hasOwnProperty('captchaCode'))
+        obj.captchaCode = self.captchaCode;
       if (self.hasOwnProperty('newPermissionTypeIds'))
         obj.newPermissionTypeIds = self.newPermissionTypeIds;
       if (self.hasOwnProperty('initialPassword'))

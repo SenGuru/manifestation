@@ -1,9 +1,9 @@
 
 <form #lvJobForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvJobForm.form.valid && onSubmit(lvJobForm)">
     <div class="modal-header p-3">
-      <h5 class="modal-title" id="auditduo-job-modal-title">{{title}}</h5>
+      <h5 class="modal-title" id="manifest-job-modal-title">{{title}}</h5>
       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
-        id="auditduo-job-modal-cancel-btn" (click)="cancel(true)"></button>
+        id="manifest-job-modal-cancel-btn" (click)="cancel(true)"></button>
     </div>
     <div class="modal-body">
         
@@ -60,8 +60,8 @@
                       />
                     </div>       
                     <div class="d-flex justify-content-sm-end col-sm">
-                      <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-                      <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onJobTemplateReset(jobSearch)">
+                      <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+                      <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onJobTemplateReset(jobSearch)">
                         Reset
                       </button>
                     </div>
@@ -70,9 +70,9 @@
                 </div>
                 
             <div class="card-body">
-                <div class="table-responsive table-card auditduo-table">
+                <div class="table-responsive table-card manifest-table">
                   <table *ngIf="jobTemplates.length > 0; else nodata" class="table">
-                    <thead class="auditduo-table-header">
+                    <thead class="manifest-table-header">
                       <tr>
                         <th *ngFor="let column of jobTemplateColumns" class="text-left" [ngClass]="{
                       'w-1': column.value === 'action',
@@ -157,8 +157,8 @@
                         />
                       </div>       
                       <div class="d-flex justify-content-sm-end col-sm">
-                        <button type="submit" class="btn btn-primary btn-sm aduo-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
-                        <button type="button" class="btn btn-sm aduo-btn-sm bg-light" (click)="onScheduledJobReset(jobSearch)">
+                        <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+                        <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onScheduledJobReset(jobSearch)">
                           Reset
                         </button>
                       </div>
@@ -167,9 +167,9 @@
                   </div>
                   
               <div class="card-body">
-                  <div class="table-responsive table-card auditduo-table">
+                  <div class="table-responsive table-card manifest-table">
                     <table *ngIf="scheduledJobs.length > 0; else nodata" class="table">
-                      <thead class="auditduo-table-header">
+                      <thead class="manifest-table-header">
                         <tr>
                           <th *ngFor="let column of scheduledJobColumns" class="text-left" [ngClass]="{
                         'w-1': column.value === 'action',
@@ -226,8 +226,8 @@
 
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-light btn-sm aduo-btn-sm" id="auditduo-job-modal-close-btn" data-bs-dismiss="modal"
+      <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-job-modal-close-btn" data-bs-dismiss="modal"
        (click)="cancel(true)">Close</button>
-      <button *ngIf="!isViewMode" type="submit" class="btn btn-sm aduo-btn-sm btn-success" id="auditduo-job-modal-submit-btn">{{buttonText}}</button>
+      <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success" id="manifest-job-modal-submit-btn">{{buttonText}}</button>
     </div>
   </form>

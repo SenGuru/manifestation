@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 namespace Manifest.Common.Models.ViewModels
 {
-    public class UserCreateModel : UserModel
+
+        public class UserCreateModel : UserModel
     {
+        public string CaptchaCode { get; set; }
+
         public List<long> NewPermissionTypeIds { get; set; }
 
         public string InitialPassword { get; set; }

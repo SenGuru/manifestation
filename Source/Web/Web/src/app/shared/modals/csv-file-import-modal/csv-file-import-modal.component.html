@@ -1,7 +1,7 @@
 <div>
     <div class="modal-header p-3">
-        <h5 class="modal-title" id="auditduo-csv-dialoge-title">{{title}} {{currentStep}}/4</h5>
-        <button type="button" id="auditduo-csv-dialoge-close-btn" class="btn-close" (click)="cancel(true)"></button>
+        <h5 class="modal-title" id="manifest-csv-dialoge-title">{{title}} {{currentStep}}/4</h5>
+        <button type="button" id="manifest-csv-dialoge-close-btn" class="btn-close" (click)="cancel(true)"></button>
     </div>
     <form #form="ngForm" novalidate appFocusOnError (ngSubmit)="onSubmit(form)">
         <div class="modal-body" style="height:calc(100vh - 315px);">
@@ -120,14 +120,14 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button *ngIf="currentStep !== 4" type="button" class="btn btn-light btn-sm aduo-btn-sm"
-                id="auditduo-csv-import-modal-cancel-btn" (click)="cancel(true)">Cancel</button>
-            <button *ngIf="currentStep === 2" type="button" class="btn btn-primary btn-sm aduo-btn-sm mr-1"
-                id="auditduo-csv-import-modal-previous-btn" (click)="goToPrevious()">Previous</button>
-            <button *ngIf="currentStep !== 4" type="submit" class="btn btn-primary btn-sm aduo-btn-sm mr-1"
-                id="auditduo-csv-import-modal-next-btn">Next</button>
-            <button *ngIf="currentStep === 4" type="button" class="btn btn-primary btn-sm aduo-btn-sm mr-1"
-                id="auditduo-csv-import-modal-okay-btn" (click)="cancel(false)">Okay</button>
+            <button *ngIf="currentStep !== 4" type="button" class="btn btn-light btn-sm mnf-btn-sm"
+                id="manifest-csv-import-modal-cancel-btn" (click)="cancel(true)">Cancel</button>
+            <button *ngIf="currentStep === 2" type="button" class="btn btn-primary btn-sm mnf-btn-sm mr-1"
+                id="manifest-csv-import-modal-previous-btn" (click)="goToPrevious()">Previous</button>
+            <button *ngIf="currentStep !== 4" type="submit" class="btn btn-primary btn-sm mnf-btn-sm mr-1"
+                id="manifest-csv-import-modal-next-btn">Next</button>
+            <button *ngIf="currentStep === 4" type="button" class="btn btn-primary btn-sm mnf-btn-sm mr-1"
+                id="manifest-csv-import-modal-okay-btn" (click)="cancel(false)">Okay</button>
         </div>
     </form>
 </div>

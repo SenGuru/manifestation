@@ -98,7 +98,7 @@ namespace Manifest.Api.All
             }
             else
             {
-                host.RunAsync();
+                await host.RunAsync();
             }
         }
     }

@@ -67,7 +67,7 @@ namespace Manifest.Tests.TestDataGenerator
 
             var env = new FrameworkTestEnvironment<string>(false, true);
             var http = new HttpService<string>(server, env);
-            await SampleDataCodeGenerator.Main(http, importFromFile, filePath, companyCode, companyName);
+            await SampleDataCodeGenerator.Main(http);
         }
 
     }
