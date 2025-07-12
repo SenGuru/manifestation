@@ -181,7 +181,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public async Task<ReturnModel<UserModel>> CreateUserAsync(UserCreateModel user, FileStreamModel streamModel)
+        public async Task<ReturnModel<UserModel>> CreateUserAsync(UserCreateModel user, FileStreamModel streamModel, bool useAnonymnous = false)
         {
             try
             {
@@ -190,11 +190,14 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<UserModel>($"Unable to create User", new ReturnErrorItem("", "User information is not valid"));
                 }
 
-                if (!await currentSessionService.IsCurrentUserASuperAdminAsync())
+                if (!useAnonymnous)
                 {
-                    if (user.PredefinedUserTypeId == (int)PredefinedUserTypes.SuperAdmin)
+                    if (!await currentSessionService.IsCurrentUserASuperAdminAsync())
                     {
-                        return log.ErrorAndReturnModel<UserModel>($"You cannot create Super Admin Account");
+                        if (user.PredefinedUserTypeId == (int)PredefinedUserTypes.SuperAdmin)
+                        {
+                            return log.ErrorAndReturnModel<UserModel>($"You cannot create Super Admin Account");
+                        }
                     }
                 }
 

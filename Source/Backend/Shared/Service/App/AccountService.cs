@@ -716,5 +716,15 @@ namespace Manifest.Service.App
             var memberModel = objectMapperService.UserViewToUserModel(user);
             return ReturnModel<UserModel>.Success(memberModel);
         }
+
+        
+        public async Task<ReturnModel<LoggedInUserModel>> CreateUserAsync(UserCreateModel userModel)
+        {
+            var result = await companyService.CreateUserAsync(userModel, null, useAnonymnous: true);
+            if (!result.IsSuccess)
+                return log.ErrorAndReturnModel<LoggedInUserModel>(result);
+
+            return await AuthenticateAsync(userModel.Email, userModel.InitialPassword);
+        }
     }
 }
