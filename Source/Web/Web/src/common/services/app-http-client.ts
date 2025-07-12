@@ -776,6 +776,12 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public getCategoryForCurrentUser(headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getList('manifest/getcategoryforcurrentuser', headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getCategoryByUserIdSearch(search: models.CategoryByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybyuseridsearch', search, headers);
@@ -1037,6 +1043,12 @@ export class HttpService {
     public getCategoryByDailyAffirmationTextIdSearch(search: models.CategoryByDailyAffirmationTextIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getcategorybydailyaffirmationtextidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyAffirmationTextForCurrentUser(headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyAffirmationTextModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getList('manifest/getdailyaffirmationtextforcurrentuser', headers);
     }
 
     // tslint:disable-next-line:max-line-length

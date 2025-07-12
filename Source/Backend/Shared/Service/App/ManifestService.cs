@@ -4883,6 +4883,10 @@ namespace Manifest.Service.App
             }
         }
 
+        public async Task<ReturnListModel<CategoryModel>> GetCategoryForCurrentUserAsync()
+        {
+            return await GetCategoryByUserIdAsync(await currentSessionService.GetCurrentUserIdAsync() ?? 0);
+        }
 
         public async Task<ReturnListModel<CategoryModel>> GetCategoryByUserIdAsync(long userId)
         {
@@ -8980,6 +8984,10 @@ namespace Manifest.Service.App
             }
         }
 
+        public async Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextForCurrentUserAsync()
+        {
+            return await GetDailyAffirmationTextByUserIdAsync(await currentSessionService.GetCurrentUserIdAsync() ?? 0);
+        }
 
         public async Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextByUserIdAsync(long userId)
         {

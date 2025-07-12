@@ -403,6 +403,14 @@ public void GetCategoryByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus(
 {
     
 }
+public void GetCategoryForCurrentUser_WithValidData_ReturnsValidData()
+{
+    var r = GetCategoryForCurrentUser();
+}
+public void GetCategoryForCurrentUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
 public void GetCategoryByUserIdSearch_WithValidData_ReturnsValidData()
 {
     var model = new CategoryByUserIdSearchCriteria();
@@ -796,6 +804,14 @@ public void GetCategoryByDailyAffirmationTextIdSearch_WithValidData_ReturnsValid
     var r = GetCategoryByDailyAffirmationTextIdSearch();
 }
 public void GetCategoryByDailyAffirmationTextIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyAffirmationTextForCurrentUser_WithValidData_ReturnsValidData()
+{
+    var r = GetDailyAffirmationTextForCurrentUser();
+}
+public void GetDailyAffirmationTextForCurrentUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
 {
     
 }

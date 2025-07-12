@@ -1,31 +1,31 @@
+using Framework.Infrastructure.Interfaces.Helpers;
+using Framework.Infrastructure.Interfaces.Services;
+using Framework.Infrastructure.Logging;
+using Framework.Infrastructure.Models;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Models.Search;
+using Framework.Infrastructure.Utils;
 using Manifest.Common.Enums;
+using Manifest.Common.Interfaces.Repository.DbAccess;
+using Manifest.Common.Models.DB;
 using Manifest.Common.Models.DBView;
 using Manifest.Common.Models.SearchCriteria;
-using Manifest.Common.Models.ViewModels;
-using Manifest.Web.Filters;
-using Framework.Infrastructure.Models.Result;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Framework.Infrastructure.Models.Search;
-using Manifest.Common.Interfaces.Repository.DbAccess;
-using Framework.Infrastructure.Logging;
-using Swashbuckle.AspNetCore.Annotations;
-using Framework.Infrastructure.Models;
-using Framework.Infrastructure.Interfaces.Services;
-using Framework.Infrastructure.Interfaces.Helpers;
-using Manifest.Service.App;
-using Manifest.Web.Models;
-using Manifest.Service.Storage;
-using Framework.Infrastructure.Utils;
-using System.IO;
 using Manifest.Common.Models.SearchCriteria;
 using Manifest.Common.Models.ViewModels;
-using System.Net;
+using Manifest.Common.Models.ViewModels;
 using Manifest.Common.Models.ViewModels.ImportExportModels;
-using Manifest.Common.Models.DB;
+using Manifest.Service.App;
+using Manifest.Service.Storage;
+using Manifest.Web.Filters;
+using Manifest.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Manifest.Api.All.Controllers
 {
@@ -452,92 +452,92 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkVisionBoardSessionPictureAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionPictureModel>> GetVisionBoardSessionPictureByVisionBoardSessionId([FromQuery] long visionBoardSessionId)
         {
-                return manifestService.GetVisionBoardSessionPictureByVisionBoardSessionIdAsync(visionBoardSessionId);
+            return manifestService.GetVisionBoardSessionPictureByVisionBoardSessionIdAsync(visionBoardSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionPictureModel>> GetVisionBoardSessionPictureByVisionBoardSessionIdSearch(VisionBoardSessionPictureByVisionBoardSessionIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardSessionPictureByVisionBoardSessionIdAsync(search);
+            return manifestService.GetVisionBoardSessionPictureByVisionBoardSessionIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessionByVisionBoardSessionPictureId(long visionBoardSessionPictureId)
         {
-                return manifestService.GetVisionBoardSessionByVisionBoardSessionPictureIdAsync(visionBoardSessionPictureId);
+            return manifestService.GetVisionBoardSessionByVisionBoardSessionPictureIdAsync(visionBoardSessionPictureId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessionByVisionBoardSessionPictureIdSearch(VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardSessionByVisionBoardSessionPictureIdAsync(search);
+            return manifestService.GetVisionBoardSessionByVisionBoardSessionPictureIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionPictureModel>> GetVisionBoardSessionPictureByVisionBoardPictureId([FromQuery] long visionBoardPictureId)
         {
-                return manifestService.GetVisionBoardSessionPictureByVisionBoardPictureIdAsync(visionBoardPictureId);
+            return manifestService.GetVisionBoardSessionPictureByVisionBoardPictureIdAsync(visionBoardPictureId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionPictureModel>> GetVisionBoardSessionPictureByVisionBoardPictureIdSearch(VisionBoardSessionPictureByVisionBoardPictureIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardSessionPictureByVisionBoardPictureIdAsync(search);
+            return manifestService.GetVisionBoardSessionPictureByVisionBoardPictureIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByVisionBoardSessionPictureId(long visionBoardSessionPictureId)
         {
-                return manifestService.GetVisionBoardPictureByVisionBoardSessionPictureIdAsync(visionBoardSessionPictureId);
+            return manifestService.GetVisionBoardPictureByVisionBoardSessionPictureIdAsync(visionBoardSessionPictureId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByVisionBoardSessionPictureIdSearch(VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardPictureByVisionBoardSessionPictureIdAsync(search);
+            return manifestService.GetVisionBoardPictureByVisionBoardSessionPictureIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionPictureModel>> GetVisionBoardSessionPictureByUserId([FromQuery] long userId)
         {
-                return manifestService.GetVisionBoardSessionPictureByUserIdAsync(userId);
+            return manifestService.GetVisionBoardSessionPictureByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionPictureModel>> GetVisionBoardSessionPictureByUserIdSearch(VisionBoardSessionPictureByUserIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardSessionPictureByUserIdAsync(search);
+            return manifestService.GetVisionBoardSessionPictureByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByVisionBoardSessionPictureId(long visionBoardSessionPictureId)
         {
-                return manifestService.GetUserByVisionBoardSessionPictureIdAsync(visionBoardSessionPictureId);
+            return manifestService.GetUserByVisionBoardSessionPictureIdAsync(visionBoardSessionPictureId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByVisionBoardSessionPictureIdSearch(UserByVisionBoardSessionPictureIdSearchCriteria search)
         {
-                return manifestService.GetUserByVisionBoardSessionPictureIdAsync(search);
+            return manifestService.GetUserByVisionBoardSessionPictureIdAsync(search);
         }
 
 
@@ -731,63 +731,70 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkCategoryAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByDefaultCategoryId([FromQuery] long defaultCategoryId)
         {
-                return manifestService.GetCategoryByDefaultCategoryIdAsync(defaultCategoryId);
+            return manifestService.GetCategoryByDefaultCategoryIdAsync(defaultCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByDefaultCategoryIdSearch(CategoryByDefaultCategoryIdSearchCriteria search)
         {
-                return manifestService.GetCategoryByDefaultCategoryIdAsync(search);
+            return manifestService.GetCategoryByDefaultCategoryIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategoryByCategoryId(long categoryId)
         {
-                return manifestService.GetDefaultCategoryByCategoryIdAsync(categoryId);
+            return manifestService.GetDefaultCategoryByCategoryIdAsync(categoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategoryByCategoryIdSearch(DefaultCategoryByCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDefaultCategoryByCategoryIdAsync(search);
+            return manifestService.GetDefaultCategoryByCategoryIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByUserId([FromQuery] long userId)
         {
-                return manifestService.GetCategoryByUserIdAsync(userId);
+            return manifestService.GetCategoryByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<CategoryModel>> GetCategoryForCurrentUser()
+        {
+            return manifestService.GetCategoryForCurrentUserAsync();
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByUserIdSearch(CategoryByUserIdSearchCriteria search)
         {
-                return manifestService.GetCategoryByUserIdAsync(search);
+            return manifestService.GetCategoryByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByCategoryId(long categoryId)
         {
-                return manifestService.GetUserByCategoryIdAsync(categoryId);
+            return manifestService.GetUserByCategoryIdAsync(categoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByCategoryIdSearch(UserByCategoryIdSearchCriteria search)
         {
-                return manifestService.GetUserByCategoryIdAsync(search);
+            return manifestService.GetUserByCategoryIdAsync(search);
         }
 
 
@@ -981,34 +988,34 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDailyAffirmationSessionAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessionByUserId([FromQuery] long userId)
         {
-                return manifestService.GetDailyAffirmationSessionByUserIdAsync(userId);
+            return manifestService.GetDailyAffirmationSessionByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessionByUserIdSearch(DailyAffirmationSessionByUserIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationSessionByUserIdAsync(search);
+            return manifestService.GetDailyAffirmationSessionByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByDailyAffirmationSessionId(long dailyAffirmationSessionId)
         {
-                return manifestService.GetUserByDailyAffirmationSessionIdAsync(dailyAffirmationSessionId);
+            return manifestService.GetUserByDailyAffirmationSessionIdAsync(dailyAffirmationSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByDailyAffirmationSessionIdSearch(UserByDailyAffirmationSessionIdSearchCriteria search)
         {
-                return manifestService.GetUserByDailyAffirmationSessionIdAsync(search);
+            return manifestService.GetUserByDailyAffirmationSessionIdAsync(search);
         }
 
 
@@ -1202,92 +1209,92 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDailyAffirmationSessionCategoryAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategoryByCategoryId([FromQuery] long categoryId)
         {
-                return manifestService.GetDailyAffirmationSessionCategoryByCategoryIdAsync(categoryId);
+            return manifestService.GetDailyAffirmationSessionCategoryByCategoryIdAsync(categoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategoryByCategoryIdSearch(DailyAffirmationSessionCategoryByCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationSessionCategoryByCategoryIdAsync(search);
+            return manifestService.GetDailyAffirmationSessionCategoryByCategoryIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByDailyAffirmationSessionCategoryId(long dailyAffirmationSessionCategoryId)
         {
-                return manifestService.GetCategoryByDailyAffirmationSessionCategoryIdAsync(dailyAffirmationSessionCategoryId);
+            return manifestService.GetCategoryByDailyAffirmationSessionCategoryIdAsync(dailyAffirmationSessionCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByDailyAffirmationSessionCategoryIdSearch(CategoryByDailyAffirmationSessionCategoryIdSearchCriteria search)
         {
-                return manifestService.GetCategoryByDailyAffirmationSessionCategoryIdAsync(search);
+            return manifestService.GetCategoryByDailyAffirmationSessionCategoryIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategoryByDailyAffirmationSessionId([FromQuery] long dailyAffirmationSessionId)
         {
-                return manifestService.GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdAsync(dailyAffirmationSessionId);
+            return manifestService.GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdAsync(dailyAffirmationSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearch(DailyAffirmationSessionCategoryByDailyAffirmationSessionIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdAsync(search);
+            return manifestService.GetDailyAffirmationSessionCategoryByDailyAffirmationSessionIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessionByDailyAffirmationSessionCategoryId(long dailyAffirmationSessionCategoryId)
         {
-                return manifestService.GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdAsync(dailyAffirmationSessionCategoryId);
+            return manifestService.GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdAsync(dailyAffirmationSessionCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearch(DailyAffirmationSessionByDailyAffirmationSessionCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdAsync(search);
+            return manifestService.GetDailyAffirmationSessionByDailyAffirmationSessionCategoryIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategoryByUserId([FromQuery] long userId)
         {
-                return manifestService.GetDailyAffirmationSessionCategoryByUserIdAsync(userId);
+            return manifestService.GetDailyAffirmationSessionCategoryByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategoryByUserIdSearch(DailyAffirmationSessionCategoryByUserIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationSessionCategoryByUserIdAsync(search);
+            return manifestService.GetDailyAffirmationSessionCategoryByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByDailyAffirmationSessionCategoryId(long dailyAffirmationSessionCategoryId)
         {
-                return manifestService.GetUserByDailyAffirmationSessionCategoryIdAsync(dailyAffirmationSessionCategoryId);
+            return manifestService.GetUserByDailyAffirmationSessionCategoryIdAsync(dailyAffirmationSessionCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByDailyAffirmationSessionCategoryIdSearch(UserByDailyAffirmationSessionCategoryIdSearchCriteria search)
         {
-                return manifestService.GetUserByDailyAffirmationSessionCategoryIdAsync(search);
+            return manifestService.GetUserByDailyAffirmationSessionCategoryIdAsync(search);
         }
 
 
@@ -1481,63 +1488,70 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDailyAffirmationTextAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextByCategoryId([FromQuery] long categoryId)
         {
-                return manifestService.GetDailyAffirmationTextByCategoryIdAsync(categoryId);
+            return manifestService.GetDailyAffirmationTextByCategoryIdAsync(categoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextByCategoryIdSearch(DailyAffirmationTextByCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationTextByCategoryIdAsync(search);
+            return manifestService.GetDailyAffirmationTextByCategoryIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByDailyAffirmationTextId(long dailyAffirmationTextId)
         {
-                return manifestService.GetCategoryByDailyAffirmationTextIdAsync(dailyAffirmationTextId);
+            return manifestService.GetCategoryByDailyAffirmationTextIdAsync(dailyAffirmationTextId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByDailyAffirmationTextIdSearch(CategoryByDailyAffirmationTextIdSearchCriteria search)
         {
-                return manifestService.GetCategoryByDailyAffirmationTextIdAsync(search);
+            return manifestService.GetCategoryByDailyAffirmationTextIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextForCurrentUser()
+        {
+            return manifestService.GetDailyAffirmationTextForCurrentUserAsync();
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextByUserId([FromQuery] long userId)
         {
-                return manifestService.GetDailyAffirmationTextByUserIdAsync(userId);
+            return manifestService.GetDailyAffirmationTextByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTextByUserIdSearch(DailyAffirmationTextByUserIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationTextByUserIdAsync(search);
+            return manifestService.GetDailyAffirmationTextByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByDailyAffirmationTextId(long dailyAffirmationTextId)
         {
-                return manifestService.GetUserByDailyAffirmationTextIdAsync(dailyAffirmationTextId);
+            return manifestService.GetUserByDailyAffirmationTextIdAsync(dailyAffirmationTextId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByDailyAffirmationTextIdSearch(UserByDailyAffirmationTextIdSearchCriteria search)
         {
-                return manifestService.GetUserByDailyAffirmationTextIdAsync(search);
+            return manifestService.GetUserByDailyAffirmationTextIdAsync(search);
         }
 
 
@@ -1731,7 +1745,7 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDefaultCategoryAsNotDeletedByIdAsync(id);
         }
 
-        
+
 
 
         /*
@@ -1923,34 +1937,34 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDefaultDailyAffirmationTextAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultDailyAffirmationTextModel>> GetDefaultDailyAffirmationTextByDefaultCategoryId([FromQuery] long defaultCategoryId)
         {
-                return manifestService.GetDefaultDailyAffirmationTextByDefaultCategoryIdAsync(defaultCategoryId);
+            return manifestService.GetDefaultDailyAffirmationTextByDefaultCategoryIdAsync(defaultCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultDailyAffirmationTextModel>> GetDefaultDailyAffirmationTextByDefaultCategoryIdSearch(DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDefaultDailyAffirmationTextByDefaultCategoryIdAsync(search);
+            return manifestService.GetDefaultDailyAffirmationTextByDefaultCategoryIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategoryByDefaultDailyAffirmationTextId(long defaultDailyAffirmationTextId)
         {
-                return manifestService.GetDefaultCategoryByDefaultDailyAffirmationTextIdAsync(defaultDailyAffirmationTextId);
+            return manifestService.GetDefaultCategoryByDefaultDailyAffirmationTextIdAsync(defaultDailyAffirmationTextId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategoryByDefaultDailyAffirmationTextIdSearch(DefaultCategoryByDefaultDailyAffirmationTextIdSearchCriteria search)
         {
-                return manifestService.GetDefaultCategoryByDefaultDailyAffirmationTextIdAsync(search);
+            return manifestService.GetDefaultCategoryByDefaultDailyAffirmationTextIdAsync(search);
         }
 
 
@@ -2144,7 +2158,7 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDefaultGoalTrackerAsNotDeletedByIdAsync(id);
         }
 
-        
+
 
 
         /*
@@ -2336,63 +2350,63 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDefaultGoalTrackerCategoryAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerCategoryModel>> GetDefaultGoalTrackerCategoryByDefaultCategoryId([FromQuery] long defaultCategoryId)
         {
-                return manifestService.GetDefaultGoalTrackerCategoryByDefaultCategoryIdAsync(defaultCategoryId);
+            return manifestService.GetDefaultGoalTrackerCategoryByDefaultCategoryIdAsync(defaultCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerCategoryModel>> GetDefaultGoalTrackerCategoryByDefaultCategoryIdSearch(DefaultGoalTrackerCategoryByDefaultCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDefaultGoalTrackerCategoryByDefaultCategoryIdAsync(search);
+            return manifestService.GetDefaultGoalTrackerCategoryByDefaultCategoryIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategoryByDefaultGoalTrackerCategoryId(long defaultGoalTrackerCategoryId)
         {
-                return manifestService.GetDefaultCategoryByDefaultGoalTrackerCategoryIdAsync(defaultGoalTrackerCategoryId);
+            return manifestService.GetDefaultCategoryByDefaultGoalTrackerCategoryIdAsync(defaultGoalTrackerCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategoryByDefaultGoalTrackerCategoryIdSearch(DefaultCategoryByDefaultGoalTrackerCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDefaultCategoryByDefaultGoalTrackerCategoryIdAsync(search);
+            return manifestService.GetDefaultCategoryByDefaultGoalTrackerCategoryIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerCategoryModel>> GetDefaultGoalTrackerCategoryByDefaultGoalTrackerId([FromQuery] long defaultGoalTrackerId)
         {
-                return manifestService.GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdAsync(defaultGoalTrackerId);
+            return manifestService.GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdAsync(defaultGoalTrackerId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerCategoryModel>> GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearch(DefaultGoalTrackerCategoryByDefaultGoalTrackerIdSearchCriteria search)
         {
-                return manifestService.GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdAsync(search);
+            return manifestService.GetDefaultGoalTrackerCategoryByDefaultGoalTrackerIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerModel>> GetDefaultGoalTrackerByDefaultGoalTrackerCategoryId(long defaultGoalTrackerCategoryId)
         {
-                return manifestService.GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdAsync(defaultGoalTrackerCategoryId);
+            return manifestService.GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdAsync(defaultGoalTrackerCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerModel>> GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearch(DefaultGoalTrackerByDefaultGoalTrackerCategoryIdSearchCriteria search)
         {
-                return manifestService.GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdAsync(search);
+            return manifestService.GetDefaultGoalTrackerByDefaultGoalTrackerCategoryIdAsync(search);
         }
 
 
@@ -2586,7 +2600,7 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDefaultMeditationFileAsNotDeletedByIdAsync(id);
         }
 
-        
+
 
 
         /*
@@ -2778,7 +2792,7 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkDefaultVisionBoardPictureAsNotDeletedByIdAsync(id);
         }
 
-        
+
 
 
         /*
@@ -2920,7 +2934,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region Feed
+        #region Feed
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeeds([FromQuery] FeedSearchCriteria search)
@@ -2970,179 +2984,179 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkFeedAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByUserId([FromQuery] long userId)
         {
-                return manifestService.GetFeedByUserIdAsync(userId);
+            return manifestService.GetFeedByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByUserIdSearch(FeedByUserIdSearchCriteria search)
         {
-                return manifestService.GetFeedByUserIdAsync(search);
+            return manifestService.GetFeedByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByFeedId(long feedId)
         {
-                return manifestService.GetUserByFeedIdAsync(feedId);
+            return manifestService.GetUserByFeedIdAsync(feedId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByFeedIdSearch(UserByFeedIdSearchCriteria search)
         {
-                return manifestService.GetUserByFeedIdAsync(search);
+            return manifestService.GetUserByFeedIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByDailyAffirmationSessionId([FromQuery] long dailyAffirmationSessionId)
         {
-                return manifestService.GetFeedByDailyAffirmationSessionIdAsync(dailyAffirmationSessionId);
+            return manifestService.GetFeedByDailyAffirmationSessionIdAsync(dailyAffirmationSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByDailyAffirmationSessionIdSearch(FeedByDailyAffirmationSessionIdSearchCriteria search)
         {
-                return manifestService.GetFeedByDailyAffirmationSessionIdAsync(search);
+            return manifestService.GetFeedByDailyAffirmationSessionIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessionByFeedId(long feedId)
         {
-                return manifestService.GetDailyAffirmationSessionByFeedIdAsync(feedId);
+            return manifestService.GetDailyAffirmationSessionByFeedIdAsync(feedId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessionByFeedIdSearch(DailyAffirmationSessionByFeedIdSearchCriteria search)
         {
-                return manifestService.GetDailyAffirmationSessionByFeedIdAsync(search);
+            return manifestService.GetDailyAffirmationSessionByFeedIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByVisionBoardSessionId([FromQuery] long visionBoardSessionId)
         {
-                return manifestService.GetFeedByVisionBoardSessionIdAsync(visionBoardSessionId);
+            return manifestService.GetFeedByVisionBoardSessionIdAsync(visionBoardSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByVisionBoardSessionIdSearch(FeedByVisionBoardSessionIdSearchCriteria search)
         {
-                return manifestService.GetFeedByVisionBoardSessionIdAsync(search);
+            return manifestService.GetFeedByVisionBoardSessionIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessionByFeedId(long feedId)
         {
-                return manifestService.GetVisionBoardSessionByFeedIdAsync(feedId);
+            return manifestService.GetVisionBoardSessionByFeedIdAsync(feedId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessionByFeedIdSearch(VisionBoardSessionByFeedIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardSessionByFeedIdAsync(search);
+            return manifestService.GetVisionBoardSessionByFeedIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByMeditationSessionId([FromQuery] long meditationSessionId)
         {
-                return manifestService.GetFeedByMeditationSessionIdAsync(meditationSessionId);
+            return manifestService.GetFeedByMeditationSessionIdAsync(meditationSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByMeditationSessionIdSearch(FeedByMeditationSessionIdSearchCriteria search)
         {
-                return manifestService.GetFeedByMeditationSessionIdAsync(search);
+            return manifestService.GetFeedByMeditationSessionIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessionByFeedId(long feedId)
         {
-                return manifestService.GetMeditationSessionByFeedIdAsync(feedId);
+            return manifestService.GetMeditationSessionByFeedIdAsync(feedId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessionByFeedIdSearch(MeditationSessionByFeedIdSearchCriteria search)
         {
-                return manifestService.GetMeditationSessionByFeedIdAsync(search);
+            return manifestService.GetMeditationSessionByFeedIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByGoalTrackerId([FromQuery] long goalTrackerId)
         {
-                return manifestService.GetFeedByGoalTrackerIdAsync(goalTrackerId);
+            return manifestService.GetFeedByGoalTrackerIdAsync(goalTrackerId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByGoalTrackerIdSearch(FeedByGoalTrackerIdSearchCriteria search)
         {
-                return manifestService.GetFeedByGoalTrackerIdAsync(search);
+            return manifestService.GetFeedByGoalTrackerIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByFeedId(long feedId)
         {
-                return manifestService.GetGoalTrackerByFeedIdAsync(feedId);
+            return manifestService.GetGoalTrackerByFeedIdAsync(feedId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByFeedIdSearch(GoalTrackerByFeedIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerByFeedIdAsync(search);
+            return manifestService.GetGoalTrackerByFeedIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByGoalTrackerMileStoneId([FromQuery] long goalTrackerMileStoneId)
         {
-                return manifestService.GetFeedByGoalTrackerMileStoneIdAsync(goalTrackerMileStoneId);
+            return manifestService.GetFeedByGoalTrackerMileStoneIdAsync(goalTrackerMileStoneId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<FeedModel>> GetFeedByGoalTrackerMileStoneIdSearch(FeedByGoalTrackerMileStoneIdSearchCriteria search)
         {
-                return manifestService.GetFeedByGoalTrackerMileStoneIdAsync(search);
+            return manifestService.GetFeedByGoalTrackerMileStoneIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByFeedId(long feedId)
         {
-                return manifestService.GetGoalTrackerMileStoneByFeedIdAsync(feedId);
+            return manifestService.GetGoalTrackerMileStoneByFeedIdAsync(feedId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByFeedIdSearch(GoalTrackerMileStoneByFeedIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerMileStoneByFeedIdAsync(search);
+            return manifestService.GetGoalTrackerMileStoneByFeedIdAsync(search);
         }
 
 
@@ -3286,7 +3300,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region GoalTracker
+        #region GoalTracker
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackers([FromQuery] GoalTrackerSearchCriteria search)
@@ -3336,34 +3350,34 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkGoalTrackerAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByUserId([FromQuery] long userId)
         {
-                return manifestService.GetGoalTrackerByUserIdAsync(userId);
+            return manifestService.GetGoalTrackerByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByUserIdSearch(GoalTrackerByUserIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerByUserIdAsync(search);
+            return manifestService.GetGoalTrackerByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByGoalTrackerId(long goalTrackerId)
         {
-                return manifestService.GetUserByGoalTrackerIdAsync(goalTrackerId);
+            return manifestService.GetUserByGoalTrackerIdAsync(goalTrackerId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByGoalTrackerIdSearch(UserByGoalTrackerIdSearchCriteria search)
         {
-                return manifestService.GetUserByGoalTrackerIdAsync(search);
+            return manifestService.GetUserByGoalTrackerIdAsync(search);
         }
 
 
@@ -3507,7 +3521,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region GoalTrackerCategory
+        #region GoalTrackerCategory
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategorys([FromQuery] GoalTrackerCategorySearchCriteria search)
@@ -3557,92 +3571,92 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkGoalTrackerCategoryAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategoryByCategoryId([FromQuery] long categoryId)
         {
-                return manifestService.GetGoalTrackerCategoryByCategoryIdAsync(categoryId);
+            return manifestService.GetGoalTrackerCategoryByCategoryIdAsync(categoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategoryByCategoryIdSearch(GoalTrackerCategoryByCategoryIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerCategoryByCategoryIdAsync(search);
+            return manifestService.GetGoalTrackerCategoryByCategoryIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByGoalTrackerCategoryId(long goalTrackerCategoryId)
         {
-                return manifestService.GetCategoryByGoalTrackerCategoryIdAsync(goalTrackerCategoryId);
+            return manifestService.GetCategoryByGoalTrackerCategoryIdAsync(goalTrackerCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategoryByGoalTrackerCategoryIdSearch(CategoryByGoalTrackerCategoryIdSearchCriteria search)
         {
-                return manifestService.GetCategoryByGoalTrackerCategoryIdAsync(search);
+            return manifestService.GetCategoryByGoalTrackerCategoryIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategoryByGoalTrackerId([FromQuery] long goalTrackerId)
         {
-                return manifestService.GetGoalTrackerCategoryByGoalTrackerIdAsync(goalTrackerId);
+            return manifestService.GetGoalTrackerCategoryByGoalTrackerIdAsync(goalTrackerId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategoryByGoalTrackerIdSearch(GoalTrackerCategoryByGoalTrackerIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerCategoryByGoalTrackerIdAsync(search);
+            return manifestService.GetGoalTrackerCategoryByGoalTrackerIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByGoalTrackerCategoryId(long goalTrackerCategoryId)
         {
-                return manifestService.GetGoalTrackerByGoalTrackerCategoryIdAsync(goalTrackerCategoryId);
+            return manifestService.GetGoalTrackerByGoalTrackerCategoryIdAsync(goalTrackerCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByGoalTrackerCategoryIdSearch(GoalTrackerByGoalTrackerCategoryIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerByGoalTrackerCategoryIdAsync(search);
+            return manifestService.GetGoalTrackerByGoalTrackerCategoryIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategoryByUserId([FromQuery] long userId)
         {
-                return manifestService.GetGoalTrackerCategoryByUserIdAsync(userId);
+            return manifestService.GetGoalTrackerCategoryByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategoryByUserIdSearch(GoalTrackerCategoryByUserIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerCategoryByUserIdAsync(search);
+            return manifestService.GetGoalTrackerCategoryByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByGoalTrackerCategoryId(long goalTrackerCategoryId)
         {
-                return manifestService.GetUserByGoalTrackerCategoryIdAsync(goalTrackerCategoryId);
+            return manifestService.GetUserByGoalTrackerCategoryIdAsync(goalTrackerCategoryId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByGoalTrackerCategoryIdSearch(UserByGoalTrackerCategoryIdSearchCriteria search)
         {
-                return manifestService.GetUserByGoalTrackerCategoryIdAsync(search);
+            return manifestService.GetUserByGoalTrackerCategoryIdAsync(search);
         }
 
 
@@ -3786,7 +3800,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region GoalTrackerMileStone
+        #region GoalTrackerMileStone
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStones([FromQuery] GoalTrackerMileStoneSearchCriteria search)
@@ -3836,63 +3850,63 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkGoalTrackerMileStoneAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByGoalTrackerId([FromQuery] long goalTrackerId)
         {
-                return manifestService.GetGoalTrackerMileStoneByGoalTrackerIdAsync(goalTrackerId);
+            return manifestService.GetGoalTrackerMileStoneByGoalTrackerIdAsync(goalTrackerId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByGoalTrackerIdSearch(GoalTrackerMileStoneByGoalTrackerIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerMileStoneByGoalTrackerIdAsync(search);
+            return manifestService.GetGoalTrackerMileStoneByGoalTrackerIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByGoalTrackerMileStoneId(long goalTrackerMileStoneId)
         {
-                return manifestService.GetGoalTrackerByGoalTrackerMileStoneIdAsync(goalTrackerMileStoneId);
+            return manifestService.GetGoalTrackerByGoalTrackerMileStoneIdAsync(goalTrackerMileStoneId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByGoalTrackerMileStoneIdSearch(GoalTrackerByGoalTrackerMileStoneIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerByGoalTrackerMileStoneIdAsync(search);
+            return manifestService.GetGoalTrackerByGoalTrackerMileStoneIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByUserId([FromQuery] long userId)
         {
-                return manifestService.GetGoalTrackerMileStoneByUserIdAsync(userId);
+            return manifestService.GetGoalTrackerMileStoneByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByUserIdSearch(GoalTrackerMileStoneByUserIdSearchCriteria search)
         {
-                return manifestService.GetGoalTrackerMileStoneByUserIdAsync(search);
+            return manifestService.GetGoalTrackerMileStoneByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByGoalTrackerMileStoneId(long goalTrackerMileStoneId)
         {
-                return manifestService.GetUserByGoalTrackerMileStoneIdAsync(goalTrackerMileStoneId);
+            return manifestService.GetUserByGoalTrackerMileStoneIdAsync(goalTrackerMileStoneId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByGoalTrackerMileStoneIdSearch(UserByGoalTrackerMileStoneIdSearchCriteria search)
         {
-                return manifestService.GetUserByGoalTrackerMileStoneIdAsync(search);
+            return manifestService.GetUserByGoalTrackerMileStoneIdAsync(search);
         }
 
 
@@ -4036,7 +4050,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region MeditationFile
+        #region MeditationFile
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationFileModel>> GetMeditationFiles([FromQuery] MeditationFileSearchCriteria search)
@@ -4086,34 +4100,34 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkMeditationFileAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationFileModel>> GetMeditationFileByUserId([FromQuery] long userId)
         {
-                return manifestService.GetMeditationFileByUserIdAsync(userId);
+            return manifestService.GetMeditationFileByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationFileModel>> GetMeditationFileByUserIdSearch(MeditationFileByUserIdSearchCriteria search)
         {
-                return manifestService.GetMeditationFileByUserIdAsync(search);
+            return manifestService.GetMeditationFileByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByMeditationFileId(long meditationFileId)
         {
-                return manifestService.GetUserByMeditationFileIdAsync(meditationFileId);
+            return manifestService.GetUserByMeditationFileIdAsync(meditationFileId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByMeditationFileIdSearch(UserByMeditationFileIdSearchCriteria search)
         {
-                return manifestService.GetUserByMeditationFileIdAsync(search);
+            return manifestService.GetUserByMeditationFileIdAsync(search);
         }
 
 
@@ -4257,7 +4271,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region MeditationSession
+        #region MeditationSession
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessions([FromQuery] MeditationSessionSearchCriteria search)
@@ -4307,63 +4321,63 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkMeditationSessionAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessionByMeditationFileId([FromQuery] long meditationFileId)
         {
-                return manifestService.GetMeditationSessionByMeditationFileIdAsync(meditationFileId);
+            return manifestService.GetMeditationSessionByMeditationFileIdAsync(meditationFileId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessionByMeditationFileIdSearch(MeditationSessionByMeditationFileIdSearchCriteria search)
         {
-                return manifestService.GetMeditationSessionByMeditationFileIdAsync(search);
+            return manifestService.GetMeditationSessionByMeditationFileIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationFileModel>> GetMeditationFileByMeditationSessionId(long meditationSessionId)
         {
-                return manifestService.GetMeditationFileByMeditationSessionIdAsync(meditationSessionId);
+            return manifestService.GetMeditationFileByMeditationSessionIdAsync(meditationSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationFileModel>> GetMeditationFileByMeditationSessionIdSearch(MeditationFileByMeditationSessionIdSearchCriteria search)
         {
-                return manifestService.GetMeditationFileByMeditationSessionIdAsync(search);
+            return manifestService.GetMeditationFileByMeditationSessionIdAsync(search);
         }
 
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessionByUserId([FromQuery] long userId)
         {
-                return manifestService.GetMeditationSessionByUserIdAsync(userId);
+            return manifestService.GetMeditationSessionByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<MeditationSessionModel>> GetMeditationSessionByUserIdSearch(MeditationSessionByUserIdSearchCriteria search)
         {
-                return manifestService.GetMeditationSessionByUserIdAsync(search);
+            return manifestService.GetMeditationSessionByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByMeditationSessionId(long meditationSessionId)
         {
-                return manifestService.GetUserByMeditationSessionIdAsync(meditationSessionId);
+            return manifestService.GetUserByMeditationSessionIdAsync(meditationSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByMeditationSessionIdSearch(UserByMeditationSessionIdSearchCriteria search)
         {
-                return manifestService.GetUserByMeditationSessionIdAsync(search);
+            return manifestService.GetUserByMeditationSessionIdAsync(search);
         }
 
 
@@ -4507,7 +4521,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region VisionBoardPicture
+        #region VisionBoardPicture
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictures([FromQuery] VisionBoardPictureSearchCriteria search)
@@ -4557,34 +4571,34 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkVisionBoardPictureAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByUserId([FromQuery] long userId)
         {
-                return manifestService.GetVisionBoardPictureByUserIdAsync(userId);
+            return manifestService.GetVisionBoardPictureByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByUserIdSearch(VisionBoardPictureByUserIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardPictureByUserIdAsync(search);
+            return manifestService.GetVisionBoardPictureByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByVisionBoardPictureId(long visionBoardPictureId)
         {
-                return manifestService.GetUserByVisionBoardPictureIdAsync(visionBoardPictureId);
+            return manifestService.GetUserByVisionBoardPictureIdAsync(visionBoardPictureId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByVisionBoardPictureIdSearch(UserByVisionBoardPictureIdSearchCriteria search)
         {
-                return manifestService.GetUserByVisionBoardPictureIdAsync(search);
+            return manifestService.GetUserByVisionBoardPictureIdAsync(search);
         }
 
 
@@ -4728,7 +4742,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region VisionBoardSession
+        #region VisionBoardSession
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessions([FromQuery] VisionBoardSessionSearchCriteria search)
@@ -4778,34 +4792,34 @@ namespace Manifest.Api.All.Controllers
             return manifestService.MarkVisionBoardSessionAsNotDeletedByIdAsync(id);
         }
 
-        
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessionByUserId([FromQuery] long userId)
         {
-                return manifestService.GetVisionBoardSessionByUserIdAsync(userId);
+            return manifestService.GetVisionBoardSessionByUserIdAsync(userId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<VisionBoardSessionModel>> GetVisionBoardSessionByUserIdSearch(VisionBoardSessionByUserIdSearchCriteria search)
         {
-                return manifestService.GetVisionBoardSessionByUserIdAsync(search);
+            return manifestService.GetVisionBoardSessionByUserIdAsync(search);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByVisionBoardSessionId(long visionBoardSessionId)
         {
-                return manifestService.GetUserByVisionBoardSessionIdAsync(visionBoardSessionId);
+            return manifestService.GetUserByVisionBoardSessionIdAsync(visionBoardSessionId);
         }
 
-[HttpGet]
-[SwaggerOperation(Tags = new[] {"ToTest"})]
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<UserModel>> GetUserByVisionBoardSessionIdSearch(UserByVisionBoardSessionIdSearchCriteria search)
         {
-                return manifestService.GetUserByVisionBoardSessionIdAsync(search);
+            return manifestService.GetUserByVisionBoardSessionIdAsync(search);
         }
 
 
