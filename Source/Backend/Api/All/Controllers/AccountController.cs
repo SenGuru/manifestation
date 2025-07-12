@@ -233,7 +233,7 @@ namespace Manifest.Api.All.Controllers
 
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "Account" })]
-        public async Task<ReturnModel<LoggedInUserModel>> CreateAccount([FromForm] AccountCreateModel accountModel)
+        public async Task<ReturnModel<LoggedInUserModel>> CreateAccount([FromBody] AccountCreateModel accountModel)
         {
             //SimpleCaptcha captcha = new SimpleCaptcha(CaptchaId);
             //bool isValid = captcha.Validate(companyModel.CaptchaCode);

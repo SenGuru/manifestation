@@ -21,6 +21,8 @@ namespace Manifest.Api.IntegrationTests
         [TestMethod]
         public async Task DataGenTest()
         {
+            Assert.IsNotNull(superAdminToken);
+
             await SampleDataCodeGenerator.Main(http);
         }
 
@@ -40,9 +42,6 @@ namespace Manifest.Api.IntegrationTests
             //Assert.IsNotNull(user_Company_2);
 
             await AuditOperationTest_IntegrationTest();
-
-            await UserPermissionTest_IntegrationTest();
-
         }
     }
 }

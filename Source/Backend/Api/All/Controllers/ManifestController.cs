@@ -681,7 +681,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region Category
+        #region Category
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<CategoryModel>> GetCategorys([FromQuery] CategorySearchCriteria search)
@@ -931,7 +931,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DailyAffirmationSession
+        #region DailyAffirmationSession
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionModel>> GetDailyAffirmationSessions([FromQuery] DailyAffirmationSessionSearchCriteria search)
@@ -1152,7 +1152,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DailyAffirmationSessionCategory
+        #region DailyAffirmationSessionCategory
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationSessionCategoryModel>> GetDailyAffirmationSessionCategorys([FromQuery] DailyAffirmationSessionCategorySearchCriteria search)
@@ -1431,7 +1431,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DailyAffirmationText
+        #region DailyAffirmationText
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DailyAffirmationTextModel>> GetDailyAffirmationTexts([FromQuery] DailyAffirmationTextSearchCriteria search)
@@ -1681,7 +1681,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DefaultCategory
+        #region DefaultCategory
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultCategoryModel>> GetDefaultCategorys([FromQuery] DefaultCategorySearchCriteria search)
@@ -1873,7 +1873,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DefaultDailyAffirmationText
+        #region DefaultDailyAffirmationText
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultDailyAffirmationTextModel>> GetDefaultDailyAffirmationTexts([FromQuery] DefaultDailyAffirmationTextSearchCriteria search)
@@ -2094,7 +2094,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DefaultGoalTracker
+        #region DefaultGoalTracker
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerModel>> GetDefaultGoalTrackers([FromQuery] DefaultGoalTrackerSearchCriteria search)
@@ -2286,7 +2286,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DefaultGoalTrackerCategory
+        #region DefaultGoalTrackerCategory
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultGoalTrackerCategoryModel>> GetDefaultGoalTrackerCategorys([FromQuery] DefaultGoalTrackerCategorySearchCriteria search)
@@ -2536,7 +2536,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DefaultMeditationFile
+        #region DefaultMeditationFile
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultMeditationFileModel>> GetDefaultMeditationFiles([FromQuery] DefaultMeditationFileSearchCriteria search)
@@ -2728,7 +2728,7 @@ namespace Manifest.Api.All.Controllers
         */
         #endregion
 
-#region DefaultVisionBoardPicture
+        #region DefaultVisionBoardPicture
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<DefaultVisionBoardPictureModel>> GetDefaultVisionBoardPictures([FromQuery] DefaultVisionBoardPictureSearchCriteria search)

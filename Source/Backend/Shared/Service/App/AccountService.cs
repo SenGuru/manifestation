@@ -729,6 +729,8 @@ namespace Manifest.Service.App
             var userModel = objectMapperService.AccountCreateModelToUserCreateModel(accountModel);
             userModel.PredefinedUserTypeId = (int)PredefinedUserTypes.User;
             userModel.UserName = userModel.Email;
+            userModel.InitialPassword = accountModel.InitialPassword;
+
             var result = await companyService.CreateUserAsync(userModel, null, useAnonymnous: true);
             if (!result.IsSuccess)
                 return log.ErrorAndReturnModel<LoggedInUserModel>(result);

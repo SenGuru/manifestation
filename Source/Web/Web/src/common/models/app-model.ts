@@ -357,87 +357,25 @@ export class GlobalSettingModel {
     }
 }
 
-export class UserCreateModel {
+export class AccountCreateModel {
     captchaCode : string = '';
-    newPermissionTypeIds : number[] | null = null;
     initialPassword : string = '';
-    companyCode : string = '';
-    modifiedByUserFirstName : string = '';
-    modifiedByUserLastName : string = '';
-    modifiedByUserEmail : string = '';
-    userGuid : string = '';
-    userName : string = '';
-    predefinedUserTypeId : number = 0;
     email : string = '';
     firstName : string = '';
     lastName : string = '';
-    workPhone : string = '';
-    workPhoneExt : string = '';
-    cellPhone : string = '';
-    active : boolean = false;
-    notificationThroughEmail : boolean | null = false;
-    isAccountLocked : boolean | null = false;
-    accountLockedUntil : Date | null = null;
-    profileImageGuid : string | null = null;
-    profileImageActualFileName : string = '';
-    isDeleted : boolean = false;
-    static userName__size : number = 50;
-    static email__size : number = 100;
-    static firstName__size : number = 100;
-    static lastName__size : number = 100;
-    static workPhone__size : number = 20;
-    static workPhoneExt__size : number = 10;
-    static cellPhone__size : number = 20;
-    static profileImageActualFileName__size : number = 125;
 
-    static getCopy(self : UserCreateModel,adjustDateToUTC : boolean = false) : UserCreateModel {
-      let obj = new UserCreateModel();
+    static getCopy(self : AccountCreateModel,adjustDateToUTC : boolean = false) : AccountCreateModel {
+      let obj = new AccountCreateModel();
       if (self.hasOwnProperty('captchaCode'))
         obj.captchaCode = self.captchaCode;
-      if (self.hasOwnProperty('newPermissionTypeIds'))
-        obj.newPermissionTypeIds = self.newPermissionTypeIds;
       if (self.hasOwnProperty('initialPassword'))
         obj.initialPassword = self.initialPassword;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
-      if (self.hasOwnProperty('modifiedByUserFirstName'))
-        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
-      if (self.hasOwnProperty('modifiedByUserLastName'))
-        obj.modifiedByUserLastName = self.modifiedByUserLastName;
-      if (self.hasOwnProperty('modifiedByUserEmail'))
-        obj.modifiedByUserEmail = self.modifiedByUserEmail;
-      if (self.hasOwnProperty('userGuid'))
-        obj.userGuid = self.userGuid;
-      if (self.hasOwnProperty('userName'))
-        obj.userName = self.userName;
-      if (self.hasOwnProperty('predefinedUserTypeId'))
-        obj.predefinedUserTypeId = self.predefinedUserTypeId;
       if (self.hasOwnProperty('email'))
         obj.email = self.email;
       if (self.hasOwnProperty('firstName'))
         obj.firstName = self.firstName;
       if (self.hasOwnProperty('lastName'))
         obj.lastName = self.lastName;
-      if (self.hasOwnProperty('workPhone'))
-        obj.workPhone = self.workPhone;
-      if (self.hasOwnProperty('workPhoneExt'))
-        obj.workPhoneExt = self.workPhoneExt;
-      if (self.hasOwnProperty('cellPhone'))
-        obj.cellPhone = self.cellPhone;
-      if (self.hasOwnProperty('active'))
-        obj.active = self.active;
-      if (self.hasOwnProperty('notificationThroughEmail'))
-        obj.notificationThroughEmail = self.notificationThroughEmail;
-      if (self.hasOwnProperty('isAccountLocked'))
-        obj.isAccountLocked = self.isAccountLocked;
-      if (self.hasOwnProperty('accountLockedUntil'))
-        obj.accountLockedUntil = self.accountLockedUntil ?? (!adjustDateToUTC ? self.accountLockedUntil : (self.accountLockedUntil !== null ? DateUtils.parseAsUTC(self.accountLockedUntil) : self.accountLockedUntil ));
-      if (self.hasOwnProperty('profileImageGuid'))
-        obj.profileImageGuid = self.profileImageGuid;
-      if (self.hasOwnProperty('profileImageActualFileName'))
-        obj.profileImageActualFileName = self.profileImageActualFileName;
-      if (self.hasOwnProperty('isDeleted'))
-        obj.isDeleted = self.isDeleted;
       return obj;
     }
 }
@@ -1567,102 +1505,6 @@ export class UserModel {
         obj.createdByUserId = self.createdByUserId;
       if (self.hasOwnProperty('modifiedDate'))
         obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
-      if (self.hasOwnProperty('modifiedByUserId'))
-        obj.modifiedByUserId = self.modifiedByUserId;
-      return obj;
-    }
-
-    static getAsCreateModel(self : UserModel) : UserCreateModel {
-      let obj = new UserCreateModel();
-      if ((self as UserWithDiffModel)['captchaCode'] !== undefined)
-        obj.captchaCode = (self as UserWithDiffModel)['captchaCode'];
-      if ((self as UserWithDiffModel)['newPermissionTypeIds'] !== undefined)
-        obj.newPermissionTypeIds = (self as UserWithDiffModel)['newPermissionTypeIds'];
-      if ((self as UserWithDiffModel)['initialPassword'] !== undefined)
-        obj.initialPassword = (self as UserWithDiffModel)['initialPassword'];
-      obj.companyCode = self.companyCode;
-      obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
-      obj.modifiedByUserLastName = self.modifiedByUserLastName;
-      obj.modifiedByUserEmail = self.modifiedByUserEmail;
-      obj.userGuid = self.userGuid;
-      obj.userName = self.userName;
-      obj.predefinedUserTypeId = self.predefinedUserTypeId;
-      obj.email = self.email;
-      obj.firstName = self.firstName;
-      obj.lastName = self.lastName;
-      obj.workPhone = self.workPhone;
-      obj.workPhoneExt = self.workPhoneExt;
-      obj.cellPhone = self.cellPhone;
-      obj.active = self.active;
-      obj.notificationThroughEmail = self.notificationThroughEmail;
-      obj.isAccountLocked = self.isAccountLocked;
-      obj.accountLockedUntil = self.accountLockedUntil;
-      obj.profileImageGuid = self.profileImageGuid;
-      obj.profileImageActualFileName = self.profileImageActualFileName;
-      obj.isDeleted = self.isDeleted;
-      return obj;
-    }
-}
-
-export class UserWithDiffModel extends UserModel {
-    captchaCode : string = '';
-    newPermissionTypeIds : number[] | null = null;
-    initialPassword : string = '';
-
-    static override getCopy(self : UserWithDiffModel,adjustDateToUTC : boolean = false) : UserWithDiffModel {
-      let obj = new UserWithDiffModel();
-      if (self.hasOwnProperty('existingPermissionTypeIds'))
-        obj.existingPermissionTypeIds = self.existingPermissionTypeIds;
-      if (self.hasOwnProperty('predefinedUserTypeName'))
-        obj.predefinedUserTypeName = self.predefinedUserTypeName;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
-      if (self.hasOwnProperty('modifiedByUserFirstName'))
-        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
-      if (self.hasOwnProperty('modifiedByUserLastName'))
-        obj.modifiedByUserLastName = self.modifiedByUserLastName;
-      if (self.hasOwnProperty('modifiedByUserEmail'))
-        obj.modifiedByUserEmail = self.modifiedByUserEmail;
-      if (self.hasOwnProperty('userId'))
-        obj.userId = self.userId;
-      if (self.hasOwnProperty('userGuid'))
-        obj.userGuid = self.userGuid;
-      if (self.hasOwnProperty('userName'))
-        obj.userName = self.userName;
-      if (self.hasOwnProperty('predefinedUserTypeId'))
-        obj.predefinedUserTypeId = self.predefinedUserTypeId;
-      if (self.hasOwnProperty('email'))
-        obj.email = self.email;
-      if (self.hasOwnProperty('firstName'))
-        obj.firstName = self.firstName;
-      if (self.hasOwnProperty('lastName'))
-        obj.lastName = self.lastName;
-      if (self.hasOwnProperty('workPhone'))
-        obj.workPhone = self.workPhone;
-      if (self.hasOwnProperty('workPhoneExt'))
-        obj.workPhoneExt = self.workPhoneExt;
-      if (self.hasOwnProperty('cellPhone'))
-        obj.cellPhone = self.cellPhone;
-      if (self.hasOwnProperty('active'))
-        obj.active = self.active;
-      if (self.hasOwnProperty('notificationThroughEmail'))
-        obj.notificationThroughEmail = self.notificationThroughEmail;
-      if (self.hasOwnProperty('isAccountLocked'))
-        obj.isAccountLocked = self.isAccountLocked;
-      if (self.hasOwnProperty('accountLockedUntil'))
-        obj.accountLockedUntil = self.accountLockedUntil ?? (!adjustDateToUTC ? self.accountLockedUntil : (self.accountLockedUntil !== null ? DateUtils.parseAsUTC(self.accountLockedUntil) : self.accountLockedUntil ));
-      if (self.hasOwnProperty('profileImageGuid'))
-        obj.profileImageGuid = self.profileImageGuid;
-      if (self.hasOwnProperty('profileImageActualFileName'))
-        obj.profileImageActualFileName = self.profileImageActualFileName;
-      if (self.hasOwnProperty('isDeleted'))
-        obj.isDeleted = self.isDeleted;
-      if (self.hasOwnProperty('createdDate'))
-        obj.createdDate = !adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate);
-      if (self.hasOwnProperty('createdByUserId'))
-        obj.createdByUserId = self.createdByUserId;
-      if (self.hasOwnProperty('modifiedDate'))
-        obj.modifiedDate = !adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate);
       if (self.hasOwnProperty('modifiedByUserId'))
         obj.modifiedByUserId = self.modifiedByUserId;
       return obj;

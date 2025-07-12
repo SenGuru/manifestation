@@ -134,9 +134,9 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
-    public createAccount(companyModel: models.UserCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.LoggedInUserModel>> {
+    public createAccount(accountModel: models.AccountCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.LoggedInUserModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('account/createaccount', companyModel, headers);
+        return this.frameworkHttpClientService.postWithModel('account/createaccount', accountModel, headers);
     }
 
     // tslint:disable-next-line:max-line-length
