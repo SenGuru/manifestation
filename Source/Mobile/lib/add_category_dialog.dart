@@ -21,7 +21,6 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   Color _selectedColor = AppColors.gradientPink;
-
   final List<Color> _availableColors = [
     AppColors.gradientPink,
     AppColors.gradientOrange,
@@ -37,6 +36,11 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     AppColors.secondaryTeal,
   ];
 
+// use link2db as the orm
+// load the configuration file locally from a separate folder that resides outside the source folder. 
+// when returning data in the api, you need to return using a return model or a return list model
+// create appropriate loggging and store configuration in the database in the configuration item table. 
+// create a separate service layer and a repository layer. 
   @override
   void initState() {
     super.initState();

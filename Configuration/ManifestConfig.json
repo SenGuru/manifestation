@@ -19,9 +19,9 @@
       },
       "connectionStrings": {
         "default": {
-          "databaseType": "sqlserver",
-          "databaseName": "ManifestDb",
-          "databaseServer": "(localdb)\\ManifestDbServer",
+          "databaseType": "sqlite3",
+          "databaseName": "|ConfigPath|\\..\\Data\\Database\\Manifest.sqlite3",
+          "databaseServer": "(localdb)\\ManifestServer",
           "databaseUserName": "admin",
           "databasePassword": "@Dmin123##",
           "ignoreValidation": true,

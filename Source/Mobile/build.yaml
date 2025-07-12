@@ -1,0 +1,18 @@
+targets:
+  $default:
+    builders:
+      openapi_generator:
+        enabled: true
+        options:
+          generator: dart
+          input_spec: openapi.yaml
+          output_dir: lib/api
+          additional_properties:
+            pubName: manifestation_app_api
+            pubVersion: 1.0.0
+            pubDescription: Generated API client for Manifestation App
+            packageName: manifestation_app_api
+            clientPackage: api_client
+            useEnumExtension: true
+            nullableFields: true
+            serialization: json

@@ -139,8 +139,7 @@ class _DualFeatureCardState extends State<DualFeatureCard>
     required Animation<double> opacityAnimation,
     required bool isLeft,
   }) {
-    return Expanded(
-      child: GestureDetector(
+    return GestureDetector(
         onTap: onTap,
         child: Container(
           height: 180.h,
@@ -306,8 +305,7 @@ class _DualFeatureCardState extends State<DualFeatureCard>
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 
   @override

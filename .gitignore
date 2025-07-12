@@ -345,3 +345,4 @@ CI/.vscode/settings.json
 Build/app-intermediate/*
 Build/app-published/*
 /Source/Backend/Tests/IntegrationTests/Api/Data
+Configuration/ManifestConfig.json

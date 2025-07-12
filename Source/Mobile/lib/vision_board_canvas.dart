@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/vision_board.dart';
+import 'dart:io';
 import '../colors.dart';
 
 class VisionBoardCanvas extends StatefulWidget {
@@ -42,37 +43,28 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       color: widget.board.backgroundColor,
       child: GestureDetector(
         onTapDown: _onTapDown,
-        child: InteractiveViewer(
-          transformationController: transformController,
-          minScale: 0.1,
-          maxScale: 5.0,
-          constrained: false,
-          child: Container(
-            width: MediaQuery.of(context).size.width * 2,
-            height: MediaQuery.of(context).size.height * 2,
-            child: Stack(
-              children: [
-                // Background grid
-                if (widget.selectedTool != VisionBoardTool.select)
-                  _buildGrid(),
-                
-                // Board elements
-                ...widget.board.elements.asMap().entries.map((entry) {
-                  final index = entry.key;
-                  final element = entry.value;
-                  return _buildElement(element, index);
-                }),
-                
-                // Selection overlay
-                if (selectedElement != null)
-                  _buildSelectionOverlay(selectedElement!),
-                
-                // Empty state
-                if (widget.board.elements.isEmpty)
-                  _buildEmptyState(),
-              ],
-            ),
-          ),
+        behavior: HitTestBehavior.translucent,
+        child: Stack(
+          children: [
+            // Background grid
+            if (widget.selectedTool != VisionBoardTool.select)
+              _buildGrid(),
+            
+            // Board elements
+            ...widget.board.elements.asMap().entries.map((entry) {
+              final index = entry.key;
+              final element = entry.value;
+              return _buildElement(element, index);
+            }),
+            
+            // Selection overlay
+            if (selectedElement != null)
+              _buildSelectionOverlay(_getCurrentElementState(selectedElement!)),
+            
+            // Empty state
+            if (widget.board.elements.isEmpty)
+              _buildEmptyState(),
+          ],
         ),
       ),
     );
@@ -93,10 +85,11 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       left: element.position.dx,
       top: element.position.dy,
       child: GestureDetector(
-        onTapDown: (_) => _selectElement(element),
+        onTap: () => _selectElement(element),
         onPanStart: (details) => _onElementPanStart(element, details),
         onPanUpdate: (details) => _onElementPanUpdate(element, details),
         onPanEnd: (details) => _onElementPanEnd(element, details),
+        behavior: HitTestBehavior.opaque,
         child: Transform.rotate(
           angle: element.rotation,
           child: Container(
@@ -135,8 +128,8 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.r),
           child: element.imagePath.isNotEmpty
-              ? Image.asset(
-                  element.imagePath,
+              ? Image.file(
+                  File(element.imagePath),
                   fit: element.fit,
                   width: double.infinity,
                   height: double.infinity,
@@ -457,42 +450,65 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   void _onTapDown(TapDownDetails details) {
-    if (widget.selectedTool == VisionBoardTool.select) {
-      final tappedElement = _getElementAtPosition(details.localPosition);
+    // Only handle background taps for clearing selection
+    // Individual elements handle their own selection via their GestureDetector
+    final tappedElement = _getElementAtPosition(details.localPosition);
+    if (tappedElement == null) {
       setState(() {
-        selectedElement = tappedElement;
+        selectedElement = null;
       });
     }
   }
 
   void _selectElement(VisionBoardElement element) {
+    // If delete tool is selected, immediately delete the element
+    if (widget.selectedTool == VisionBoardTool.delete) {
+      _deleteElement(element);
+      return;
+    }
+    
     setState(() {
       selectedElement = element;
     });
   }
 
   void _onElementPanStart(VisionBoardElement element, DragStartDetails details) {
-    if (widget.selectedTool == VisionBoardTool.move || widget.selectedTool == VisionBoardTool.select) {
+    // Always allow pan start for movement tools
+    if (widget.selectedTool == VisionBoardTool.move || 
+        widget.selectedTool == VisionBoardTool.select) {
       setState(() {
         selectedElement = element;
-        dragOffset = details.localPosition;
         isDragging = true;
       });
     }
   }
 
   void _onElementPanUpdate(VisionBoardElement element, DragUpdateDetails details) {
-    if (isDragging && (widget.selectedTool == VisionBoardTool.move || widget.selectedTool == VisionBoardTool.select)) {
-      final newPosition = element.position + (details.localPosition - dragOffset!);
+    // Simple: if the right tool is selected, allow movement
+    if (widget.selectedTool == VisionBoardTool.move || 
+        widget.selectedTool == VisionBoardTool.select) {
+      
+      // Make sure element is selected
+      if (selectedElement?.id != element.id) {
+        setState(() {
+          selectedElement = element;
+        });
+      }
+      
+      // Always update position based on delta
+      final delta = details.delta;
+      final newPosition = element.position + delta;
       _updateElementPosition(element, newPosition);
     }
   }
 
   void _onElementPanEnd(VisionBoardElement element, DragEndDetails details) {
-    setState(() {
-      isDragging = false;
-      dragOffset = null;
-    });
+    // Simple cleanup
+    if (mounted) {
+      setState(() {
+        isDragging = false;
+      });
+    }
   }
 
   // Resize functionality
@@ -639,8 +655,26 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     return null;
   }
 
+  VisionBoardElement _getCurrentElementState(VisionBoardElement selectedElement) {
+    // Find the current state of the selected element from the board
+    final currentElement = widget.board.elements.firstWhere(
+      (element) => element.id == selectedElement.id,
+      orElse: () => selectedElement,
+    );
+    return currentElement;
+  }
+
   void _updateElementPosition(VisionBoardElement element, Offset newPosition) {
-    _updateElement(element, position: newPosition);
+    // Get the current canvas container size from the rendering context
+    final RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+    final canvasSize = renderBox?.size ?? MediaQuery.of(context).size;
+    
+    // Add basic boundary constraints within the actual canvas area
+    final constrainedPosition = Offset(
+      newPosition.dx.clamp(0.0, canvasSize.width - element.size.width),
+      newPosition.dy.clamp(0.0, canvasSize.height - element.size.height),
+    );
+    _updateElement(element, position: constrainedPosition);
   }
 
   void _updateElement(VisionBoardElement element, {
