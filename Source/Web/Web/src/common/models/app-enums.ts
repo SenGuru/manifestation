@@ -32,6 +32,7 @@ export enum EnumGroupTypes{
   PredefinedGoalStatusType = 33,
   PredefinedCategoryType = 34,
   PredefinedMeditationType = 35,
+  PredefinedIconType = 36,
 }
 
 export enum PredefinedAuditOperationTypes{
@@ -134,6 +135,19 @@ export enum PredefinedGoalStatusTypes{
   Open = 3300001,
   Completed = 3300002,
   Abandoned = 3300003,
+}
+
+export enum PredefinedIconTypes{
+  Icon1 = 3600001,
+  Icon2 = 3600002,
+  Icon3 = 3600003,
+  Icon4 = 3600004,
+  Icon5 = 3600005,
+  Icon6 = 3600006,
+  Icon7 = 3600007,
+  Icon8 = 3600008,
+  Icon9 = 3600009,
+  Icon10 = 3600010,
 }
 
 export enum PredefinedJobOrReportTypes{

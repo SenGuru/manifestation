@@ -1,5 +1,7 @@
 namespace Manifest.Common.Enums
 {
+    
+
     public enum PredefinedMeditationTypes
     {
         Candle = 3500001,

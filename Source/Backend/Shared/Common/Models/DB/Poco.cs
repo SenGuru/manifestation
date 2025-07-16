@@ -429,6 +429,8 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_CategoryName = "CategoryName";
         public const string COLUMN_PredefinedCategoryTypeId = "PredefinedCategoryTypeId";
         public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_ColorAsInteger = "ColorAsInteger";
+        public const string COLUMN_PredefinedIconTypeId = "PredefinedIconTypeId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
         public const string COLUMN_CreatedByUserId = "CreatedByUserId";
@@ -446,6 +448,8 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_CategoryName = false;
         public const bool COLUMN_NULLABLE_PredefinedCategoryTypeId = true;
         public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_ColorAsInteger = false;
+        public const bool COLUMN_NULLABLE_PredefinedIconTypeId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
         public const bool COLUMN_NULLABLE_CreatedByUserId = true;
@@ -475,6 +479,14 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long UserId { get; set; }
         
+        [Column("ColorAsInteger")]
+        [NotNull]
+        public long ColorAsInteger { get; set; }
+        
+        [Column("PredefinedIconTypeId")]
+        [NotNull]
+        public long PredefinedIconTypeId { get; set; }
+        
         [Column("IsDeleted")]
         [NotNull]
         public bool IsDeleted { get; set; }
@@ -501,6 +513,8 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"CategoryName = {CategoryName} , ");
             sb.AppendLine($"PredefinedCategoryTypeId = {PredefinedCategoryTypeId} , ");
             sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"ColorAsInteger = {ColorAsInteger} , ");
+            sb.AppendLine($"PredefinedIconTypeId = {PredefinedIconTypeId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
             sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
@@ -521,6 +535,8 @@ namespace Manifest.Common.Models.DB
             CategoryName = item.CategoryName,
             PredefinedCategoryTypeId = item.PredefinedCategoryTypeId,
             UserId = item.UserId,
+            ColorAsInteger = item.ColorAsInteger,
+            PredefinedIconTypeId = item.PredefinedIconTypeId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
             CreatedByUserId = item.CreatedByUserId,
@@ -3600,10 +3616,10 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_GoalTrackerMileStoneId = false;
         public const bool COLUMN_NULLABLE_GoalTrackerId = false;
         public const bool COLUMN_NULLABLE_GoalTrackerMileStoneName = false;
-        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneStartDate = false;
-        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneEndDate = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneStartDate = true;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneEndDate = true;
         public const bool COLUMN_NULLABLE_PredefinedGoalStatusTypeId = false;
-        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneCompletedDate = false;
+        public const bool COLUMN_NULLABLE_GoalTrackerMileStoneCompletedDate = true;
         public const bool COLUMN_NULLABLE_UserId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
@@ -3628,20 +3644,17 @@ namespace Manifest.Common.Models.DB
         public string GoalTrackerMileStoneName { get; set; }
         
         [Column("GoalTrackerMileStoneStartDate")]
-        [NotNull]
-        public DateTime GoalTrackerMileStoneStartDate { get; set; }
+        public DateTime? GoalTrackerMileStoneStartDate { get; set; }
         
         [Column("GoalTrackerMileStoneEndDate")]
-        [NotNull]
-        public DateTime GoalTrackerMileStoneEndDate { get; set; }
+        public DateTime? GoalTrackerMileStoneEndDate { get; set; }
         
         [Column("PredefinedGoalStatusTypeId")]
         [NotNull]
         public long PredefinedGoalStatusTypeId { get; set; }
         
         [Column("GoalTrackerMileStoneCompletedDate")]
-        [NotNull]
-        public DateTime GoalTrackerMileStoneCompletedDate { get; set; }
+        public DateTime? GoalTrackerMileStoneCompletedDate { get; set; }
         
         [Column("UserId")]
         [NotNull]

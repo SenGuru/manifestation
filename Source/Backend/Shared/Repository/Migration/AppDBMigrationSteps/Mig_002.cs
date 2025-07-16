@@ -44,6 +44,7 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedGoalStatusType,  EnumGroupName = "PredefinedGoalStatusType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedCategoryType,  EnumGroupName = "PredefinedCategoryType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedMeditationType,  EnumGroupName = "PredefinedMeditationType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumGroupId = (int)EnumGroupTypes.PredefinedIconType,  EnumGroupName = "PredefinedIconType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
             };
                 InsertData("EnumGroup", enumGroupParams);
 
@@ -293,6 +294,16 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumTypeId = (int)PredefinedMeditationTypes.Moon,  EnumGroupId = (int)EnumGroupTypes.PredefinedMeditationType, EnumTypeName = "Moon", InternalValue = 3500002 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedMeditationTypes.LavaLamp,  EnumGroupId = (int)EnumGroupTypes.PredefinedMeditationType, EnumTypeName = "Lava Lamp", InternalValue = 3500003 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedMeditationTypes.Calm,  EnumGroupId = (int)EnumGroupTypes.PredefinedMeditationType, EnumTypeName = "Calm", InternalValue = 3500004 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon1,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon1", InternalValue = 3600001 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon2,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon2", InternalValue = 3600002 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon3,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon3", InternalValue = 3600003 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon4,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon4", InternalValue = 3600004 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon5,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon5", InternalValue = 3600005 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon6,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon6", InternalValue = 3600006 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon7,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon7", InternalValue = 3600007 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon8,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon8", InternalValue = 3600008 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon9,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon9", InternalValue = 3600009 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedIconTypes.Icon10,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Icon10", InternalValue = 3600010 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
             };
                 InsertData("EnumType", enumTypeParams);
         }

@@ -33,6 +33,7 @@ namespace Manifest.Common.Enums
         PredefinedWhatsAppNotificationStatusType = 29,
         PredefinedGoalStatusType = 33,
         PredefinedCategoryType = 34,
-        PredefinedMeditationType = 35
+        PredefinedMeditationType = 35,
+        PredefinedIconType = 36
     }
 }

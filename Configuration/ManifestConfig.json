@@ -19,6 +19,19 @@
       },
       "connectionStrings": {
         "default": {
+          "databaseType": "sqlserver",
+          "databaseName": "ManifestDb",
+          "databaseServer": "(localdb)\\ManifestDbServer",
+          "databaseUserName": "admin",
+          "databasePassword": "@Dmin123##",
+          "ignoreValidation": true,
+          "databaseCommandTimeout": 99999,
+          "maxPoolSize": 99,
+          "automaticMigration": true,
+          "migrationNamespace": "Manifest.Repository.Migration.Application",
+          "migrationProfile": null
+        },
+        "default.sqlite": {
           "databaseType": "sqlite3",
           "databaseName": "|ConfigPath|\\..\\Data\\Database\\Manifest.sqlite3",
           "databaseServer": "(localdb)\\ManifestServer",

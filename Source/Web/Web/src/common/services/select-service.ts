@@ -42,6 +42,7 @@ export class SelectService {
       { id: 33, type: 'Predefined Goal Status Type' },
       { id: 34, type: 'Predefined Category Type' },
       { id: 35, type: 'Predefined Meditation Type' },
+      { id: 36, type: 'Predefined Icon Type' },
     ];
   }
 
@@ -77,6 +78,7 @@ export class SelectService {
       { id: 33, type: 'Predefined Goal Status Type' },
       { id: 34, type: 'Predefined Category Type' },
       { id: 35, type: 'Predefined Meditation Type' },
+      { id: 36, type: 'Predefined Icon Type' },
     ];
   }
 
@@ -111,6 +113,7 @@ export class SelectService {
       { id: 33, type: 'Predefined Goal Status Type' },
       { id: 34, type: 'Predefined Category Type' },
       { id: 35, type: 'Predefined Meditation Type' },
+      { id: 36, type: 'Predefined Icon Type' },
     ];
   }
 
@@ -489,6 +492,53 @@ export class SelectService {
       { id: 3300001, type: 'Open' },
       { id: 3300002, type: 'Completed' },
       { id: 3300003, type: 'Abandoned' },
+    ];
+  }
+
+ public GetAllPredefinedIconTypes(): Status[] {
+    return [
+      { id: null, type: 'All' },
+      { id: 3600001, type: 'Icon1' },
+      { id: 3600002, type: 'Icon2' },
+      { id: 3600003, type: 'Icon3' },
+      { id: 3600004, type: 'Icon4' },
+      { id: 3600005, type: 'Icon5' },
+      { id: 3600006, type: 'Icon6' },
+      { id: 3600007, type: 'Icon7' },
+      { id: 3600008, type: 'Icon8' },
+      { id: 3600009, type: 'Icon9' },
+      { id: 3600010, type: 'Icon10' },
+    ];
+  }
+
+ public GetWithBlankPredefinedIconTypes(): Status[] {
+    return [
+      { id: null, type: '' },
+      { id: 3600001, type: 'Icon1' },
+      { id: 3600002, type: 'Icon2' },
+      { id: 3600003, type: 'Icon3' },
+      { id: 3600004, type: 'Icon4' },
+      { id: 3600005, type: 'Icon5' },
+      { id: 3600006, type: 'Icon6' },
+      { id: 3600007, type: 'Icon7' },
+      { id: 3600008, type: 'Icon8' },
+      { id: 3600009, type: 'Icon9' },
+      { id: 3600010, type: 'Icon10' },
+    ];
+  }
+
+ public GetPredefinedIconTypes(): Status[] {
+    return [
+      { id: 3600001, type: 'Icon1' },
+      { id: 3600002, type: 'Icon2' },
+      { id: 3600003, type: 'Icon3' },
+      { id: 3600004, type: 'Icon4' },
+      { id: 3600005, type: 'Icon5' },
+      { id: 3600006, type: 'Icon6' },
+      { id: 3600007, type: 'Icon7' },
+      { id: 3600008, type: 'Icon8' },
+      { id: 3600009, type: 'Icon9' },
+      { id: 3600010, type: 'Icon10' },
     ];
   }
 

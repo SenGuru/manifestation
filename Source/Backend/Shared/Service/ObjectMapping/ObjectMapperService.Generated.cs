@@ -554,6 +554,7 @@ public partial Feed FeedUpdateModelToFeed(FeedUpdateModel model);
 
 public partial List<GoalTrackerModel> GoalTrackerViewListToGoalTrackerModelList(List<GoalTrackerView> lst);
 public partial List<GoalTrackerModel> GoalTrackerListToGoalTrackerModelList(List<GoalTracker> lst);
+[MapperRequiredMapping(RequiredMappingStrategy.None)]
 public partial GoalTrackerModel GoalTrackerViewToGoalTrackerModel(GoalTrackerView vw);
 [MapperRequiredMapping(RequiredMappingStrategy.None)]
 public partial GoalTrackerModel GoalTrackerToGoalTrackerModel(GoalTracker model);

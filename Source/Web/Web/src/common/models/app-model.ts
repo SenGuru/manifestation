@@ -3016,6 +3016,8 @@ export class CategoryModel {
     categoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
     userId : number = 0;
+    colorAsInteger : number = 0;
+    predefinedIconTypeId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -3057,6 +3059,10 @@ export class CategoryModel {
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
+      if (self.hasOwnProperty('colorAsInteger'))
+        obj.colorAsInteger = self.colorAsInteger;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -3076,6 +3082,8 @@ export class CategoryModel {
       obj.categoryName = self.categoryName;
       obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
       obj.userId = self.userId;
+      obj.colorAsInteger = self.colorAsInteger;
+      obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 
@@ -3086,6 +3094,8 @@ export class CategoryModel {
       obj.categoryName = self.categoryName;
       obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
       obj.userId = self.userId;
+      obj.colorAsInteger = self.colorAsInteger;
+      obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -3133,6 +3143,8 @@ export class CategoryCreateModel {
     categoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
     userId : number = 0;
+    colorAsInteger : number = 0;
+    predefinedIconTypeId : number = 0;
     static categoryName__size : number = 255;
 
     static getCopy(self : CategoryCreateModel,adjustDateToUTC : boolean = false) : CategoryCreateModel {
@@ -3145,6 +3157,10 @@ export class CategoryCreateModel {
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
+      if (self.hasOwnProperty('colorAsInteger'))
+        obj.colorAsInteger = self.colorAsInteger;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -3166,6 +3182,8 @@ export class CategoryUpdateModel {
     categoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
     userId : number = 0;
+    colorAsInteger : number = 0;
+    predefinedIconTypeId : number = 0;
     static categoryName__size : number = 255;
 
     static getCopy(self : CategoryUpdateModel,adjustDateToUTC : boolean = false) : CategoryUpdateModel {
@@ -3180,6 +3198,10 @@ export class CategoryUpdateModel {
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
+      if (self.hasOwnProperty('colorAsInteger'))
+        obj.colorAsInteger = self.colorAsInteger;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -5888,6 +5910,8 @@ export class FeedByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
 }
 
 export class GoalTrackerModel {
+    existingGoalTrackerMileStones : GoalTrackerMileStoneModel[] | null = null;
+    existingCategorys : CategoryModel[] | null = null;
     predefinedGoalStatusTypeName : string = '';
     userName : string = '';
     createdByUserFirstName : string = '';
@@ -5916,6 +5940,10 @@ export class GoalTrackerModel {
 
     static getCopy(self : GoalTrackerModel,adjustDateToUTC : boolean = false) : GoalTrackerModel {
       let obj = new GoalTrackerModel();
+      if (self.hasOwnProperty('existingGoalTrackerMileStones'))
+        obj.existingGoalTrackerMileStones = self.existingGoalTrackerMileStones;
+      if (self.hasOwnProperty('existingCategorys'))
+        obj.existingCategorys = self.existingCategorys;
       if (self.hasOwnProperty('predefinedGoalStatusTypeName'))
         obj.predefinedGoalStatusTypeName = self.predefinedGoalStatusTypeName;
       if (self.hasOwnProperty('userName'))
@@ -6056,10 +6084,10 @@ export class GoalTrackerMileStoneModel {
     goalTrackerMileStoneId : number = 0;
     goalTrackerId : number = 0;
     goalTrackerMileStoneName : string = '';
-    goalTrackerMileStoneStartDate : Date = new Date();
-    goalTrackerMileStoneEndDate : Date = new Date();
+    goalTrackerMileStoneStartDate : Date | null = null;
+    goalTrackerMileStoneEndDate : Date | null = null;
     predefinedGoalStatusTypeId : number = 0;
-    goalTrackerMileStoneCompletedDate : Date = new Date();
+    goalTrackerMileStoneCompletedDate : Date | null = null;
     userId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
@@ -6099,13 +6127,13 @@ export class GoalTrackerMileStoneModel {
       if (self.hasOwnProperty('goalTrackerMileStoneName'))
         obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
       if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
-        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate));
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : (self.goalTrackerMileStoneStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate) : self.goalTrackerMileStoneStartDate ));
       if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
-        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate));
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : (self.goalTrackerMileStoneEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate) : self.goalTrackerMileStoneEndDate ));
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
       if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
-        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate));
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : (self.goalTrackerMileStoneCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate) : self.goalTrackerMileStoneCompletedDate ));
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       if (self.hasOwnProperty('isDeleted'))
@@ -6681,10 +6709,10 @@ export class GoalTrackerMileStoneSearchCriteria extends BaseSearchCriteria{
 export class GoalTrackerMileStoneCreateModel {
     goalTrackerId : number = 0;
     goalTrackerMileStoneName : string = '';
-    goalTrackerMileStoneStartDate : Date = new Date();
-    goalTrackerMileStoneEndDate : Date = new Date();
+    goalTrackerMileStoneStartDate : Date | null = null;
+    goalTrackerMileStoneEndDate : Date | null = null;
     predefinedGoalStatusTypeId : number = 0;
-    goalTrackerMileStoneCompletedDate : Date = new Date();
+    goalTrackerMileStoneCompletedDate : Date | null = null;
     userId : number = 0;
     static goalTrackerMileStoneName__size : number = 255;
 
@@ -6695,13 +6723,13 @@ export class GoalTrackerMileStoneCreateModel {
       if (self.hasOwnProperty('goalTrackerMileStoneName'))
         obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
       if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
-        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate));
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : (self.goalTrackerMileStoneStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate) : self.goalTrackerMileStoneStartDate ));
       if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
-        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate));
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : (self.goalTrackerMileStoneEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate) : self.goalTrackerMileStoneEndDate ));
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
       if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
-        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate));
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : (self.goalTrackerMileStoneCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate) : self.goalTrackerMileStoneCompletedDate ));
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -6723,10 +6751,10 @@ export class GoalTrackerMileStoneUpdateModel {
     goalTrackerMileStoneId : number = 0;
     goalTrackerId : number = 0;
     goalTrackerMileStoneName : string = '';
-    goalTrackerMileStoneStartDate : Date = new Date();
-    goalTrackerMileStoneEndDate : Date = new Date();
+    goalTrackerMileStoneStartDate : Date | null = null;
+    goalTrackerMileStoneEndDate : Date | null = null;
     predefinedGoalStatusTypeId : number = 0;
-    goalTrackerMileStoneCompletedDate : Date = new Date();
+    goalTrackerMileStoneCompletedDate : Date | null = null;
     userId : number = 0;
     static goalTrackerMileStoneName__size : number = 255;
 
@@ -6739,13 +6767,13 @@ export class GoalTrackerMileStoneUpdateModel {
       if (self.hasOwnProperty('goalTrackerMileStoneName'))
         obj.goalTrackerMileStoneName = self.goalTrackerMileStoneName;
       if (self.hasOwnProperty('goalTrackerMileStoneStartDate'))
-        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate));
+        obj.goalTrackerMileStoneStartDate = self.goalTrackerMileStoneStartDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneStartDate : (self.goalTrackerMileStoneStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneStartDate) : self.goalTrackerMileStoneStartDate ));
       if (self.hasOwnProperty('goalTrackerMileStoneEndDate'))
-        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate));
+        obj.goalTrackerMileStoneEndDate = self.goalTrackerMileStoneEndDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneEndDate : (self.goalTrackerMileStoneEndDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneEndDate) : self.goalTrackerMileStoneEndDate ));
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
       if (self.hasOwnProperty('goalTrackerMileStoneCompletedDate'))
-        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate));
+        obj.goalTrackerMileStoneCompletedDate = self.goalTrackerMileStoneCompletedDate ?? (!adjustDateToUTC ? self.goalTrackerMileStoneCompletedDate : (self.goalTrackerMileStoneCompletedDate !== null ? DateUtils.parseAsUTC(self.goalTrackerMileStoneCompletedDate) : self.goalTrackerMileStoneCompletedDate ));
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;

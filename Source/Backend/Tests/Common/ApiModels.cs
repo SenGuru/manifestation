@@ -5231,12 +5231,14 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public CategoryModel(Int64 categoryId,Int64 defaultCategoryId,String categoryName,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public CategoryModel(Int64 categoryId,Int64 defaultCategoryId,String categoryName,Int64 userId,Int64 colorAsInteger,Int64 predefinedIconTypeId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             CategoryId = categoryId;
             DefaultCategoryId = defaultCategoryId;
             CategoryName = categoryName;
             UserId = userId;
+            ColorAsInteger = colorAsInteger;
+            PredefinedIconTypeId = predefinedIconTypeId;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
             ModifiedDate = modifiedDate;
@@ -5274,6 +5276,10 @@ namespace Manifest.Tests.Common
         public Int64? PredefinedCategoryTypeId {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
+        [JsonPropertyName("colorAsInteger")]
+        public Int64 ColorAsInteger {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
         [JsonPropertyName("isDeleted")]
         public Boolean IsDeleted {set; get;}
         [JsonPropertyName("createdDate")]
@@ -5292,6 +5298,8 @@ namespace Manifest.Tests.Common
             obj.CategoryName = CategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
             obj.UserId = UserId;
+            obj.ColorAsInteger = ColorAsInteger;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -5302,6 +5310,8 @@ namespace Manifest.Tests.Common
             result = result && (obj.CategoryName == CategoryName);
             result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
             result = result && (obj.UserId == UserId);
+            result = result && (obj.ColorAsInteger == ColorAsInteger);
+            result = result && (obj.PredefinedIconTypeId == PredefinedIconTypeId);
             return result;
         }
 
@@ -5314,6 +5324,8 @@ namespace Manifest.Tests.Common
             obj.CategoryName = CategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
             obj.UserId = UserId;
+            obj.ColorAsInteger = ColorAsInteger;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -5325,6 +5337,8 @@ namespace Manifest.Tests.Common
             result = result && (obj.CategoryName == CategoryName);
             result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
             result = result && (obj.UserId == UserId);
+            result = result && (obj.ColorAsInteger == ColorAsInteger);
+            result = result && (obj.PredefinedIconTypeId == PredefinedIconTypeId);
             return result;
         }
 
@@ -5348,6 +5362,8 @@ namespace Manifest.Tests.Common
             obj.CategoryName = CategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
             obj.UserId = UserId;
+            obj.ColorAsInteger = ColorAsInteger;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
             obj.CreatedByUserId = CreatedByUserId;
@@ -5373,6 +5389,8 @@ namespace Manifest.Tests.Common
         public const string CategoryName__Name = "CategoryName";
         public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
         public const string UserId__Name = "UserId";
+        public const string ColorAsInteger__Name = "ColorAsInteger";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         public const string IsDeleted__Name = "IsDeleted";
         public const string CreatedDate__Name = "CreatedDate";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -5456,11 +5474,13 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public CategoryCreateModel(Int64 defaultCategoryId,String categoryName,Int64 userId)
+        public CategoryCreateModel(Int64 defaultCategoryId,String categoryName,Int64 userId,Int64 colorAsInteger,Int64 predefinedIconTypeId)
         {
             DefaultCategoryId = defaultCategoryId;
             CategoryName = categoryName;
             UserId = userId;
+            ColorAsInteger = colorAsInteger;
+            PredefinedIconTypeId = predefinedIconTypeId;
         }
 
         [JsonPropertyName("defaultCategoryId")]
@@ -5471,6 +5491,10 @@ namespace Manifest.Tests.Common
         public Int64? PredefinedCategoryTypeId {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
+        [JsonPropertyName("colorAsInteger")]
+        public Int64 ColorAsInteger {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
 
         public CategoryCreateModel GetCopy()
         {
@@ -5479,6 +5503,8 @@ namespace Manifest.Tests.Common
             obj.CategoryName = CategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
             obj.UserId = UserId;
+            obj.ColorAsInteger = ColorAsInteger;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -5487,6 +5513,8 @@ namespace Manifest.Tests.Common
         public const string CategoryName__Name = "CategoryName";
         public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
         public const string UserId__Name = "UserId";
+        public const string ColorAsInteger__Name = "ColorAsInteger";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         // String Column Sizes
         public const int CategoryName__Size = 255;
     }
@@ -5518,12 +5546,14 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public CategoryUpdateModel(Int64 categoryId,Int64 defaultCategoryId,String categoryName,Int64 userId)
+        public CategoryUpdateModel(Int64 categoryId,Int64 defaultCategoryId,String categoryName,Int64 userId,Int64 colorAsInteger,Int64 predefinedIconTypeId)
         {
             CategoryId = categoryId;
             DefaultCategoryId = defaultCategoryId;
             CategoryName = categoryName;
             UserId = userId;
+            ColorAsInteger = colorAsInteger;
+            PredefinedIconTypeId = predefinedIconTypeId;
         }
 
         [JsonPropertyName("categoryId")]
@@ -5536,6 +5566,10 @@ namespace Manifest.Tests.Common
         public Int64? PredefinedCategoryTypeId {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
+        [JsonPropertyName("colorAsInteger")]
+        public Int64 ColorAsInteger {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
 
         public CategoryUpdateModel GetCopy()
         {
@@ -5545,6 +5579,8 @@ namespace Manifest.Tests.Common
             obj.CategoryName = CategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
             obj.UserId = UserId;
+            obj.ColorAsInteger = ColorAsInteger;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -5554,6 +5590,8 @@ namespace Manifest.Tests.Common
         public const string CategoryName__Name = "CategoryName";
         public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
         public const string UserId__Name = "UserId";
+        public const string ColorAsInteger__Name = "ColorAsInteger";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         // String Column Sizes
         public const int CategoryName__Size = 255;
     }
@@ -10578,6 +10616,10 @@ namespace Manifest.Tests.Common
             ModifiedDate = modifiedDate;
         }
 
+        [JsonPropertyName("existingGoalTrackerMileStones")]
+        public List<GoalTrackerMileStoneModel> ExistingGoalTrackerMileStones {set; get;}
+        [JsonPropertyName("existingCategorys")]
+        public List<CategoryModel> ExistingCategorys {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeName")]
         public String PredefinedGoalStatusTypeName {set; get;}
         [JsonPropertyName("userName")]
@@ -10690,6 +10732,8 @@ namespace Manifest.Tests.Common
         public GoalTrackerModel GetCopy()
         {
             var obj = new GoalTrackerModel();
+            obj.ExistingGoalTrackerMileStones = ExistingGoalTrackerMileStones;
+            obj.ExistingCategorys = ExistingCategorys;
             obj.PredefinedGoalStatusTypeName = PredefinedGoalStatusTypeName;
             obj.UserName = UserName;
             obj.CreatedByUserFirstName = CreatedByUserFirstName;
@@ -10718,6 +10762,8 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string ExistingGoalTrackerMileStones__Name = "ExistingGoalTrackerMileStones";
+        public const string ExistingCategorys__Name = "ExistingCategorys";
         public const string PredefinedGoalStatusTypeName__Name = "PredefinedGoalStatusTypeName";
         public const string UserName__Name = "UserName";
         public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
@@ -10847,15 +10893,12 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public GoalTrackerMileStoneModel(Int64 goalTrackerMileStoneId,Int64 goalTrackerId,String goalTrackerMileStoneName,DateTime goalTrackerMileStoneStartDate,DateTime goalTrackerMileStoneEndDate,Int64 predefinedGoalStatusTypeId,DateTime goalTrackerMileStoneCompletedDate,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public GoalTrackerMileStoneModel(Int64 goalTrackerMileStoneId,Int64 goalTrackerId,String goalTrackerMileStoneName,Int64 predefinedGoalStatusTypeId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             GoalTrackerMileStoneId = goalTrackerMileStoneId;
             GoalTrackerId = goalTrackerId;
             GoalTrackerMileStoneName = goalTrackerMileStoneName;
-            GoalTrackerMileStoneStartDate = goalTrackerMileStoneStartDate;
-            GoalTrackerMileStoneEndDate = goalTrackerMileStoneEndDate;
             PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
-            GoalTrackerMileStoneCompletedDate = goalTrackerMileStoneCompletedDate;
             UserId = userId;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
@@ -10891,13 +10934,13 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("goalTrackerMileStoneName")]
         public String GoalTrackerMileStoneName {set; get;}
         [JsonPropertyName("goalTrackerMileStoneStartDate")]
-        public DateTime GoalTrackerMileStoneStartDate {set; get;}
+        public DateTime? GoalTrackerMileStoneStartDate {set; get;}
         [JsonPropertyName("goalTrackerMileStoneEndDate")]
-        public DateTime GoalTrackerMileStoneEndDate {set; get;}
+        public DateTime? GoalTrackerMileStoneEndDate {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
         public Int64 PredefinedGoalStatusTypeId {set; get;}
         [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
-        public DateTime GoalTrackerMileStoneCompletedDate {set; get;}
+        public DateTime? GoalTrackerMileStoneCompletedDate {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
         [JsonPropertyName("isDeleted")]
@@ -12039,14 +12082,11 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public GoalTrackerMileStoneCreateModel(Int64 goalTrackerId,String goalTrackerMileStoneName,DateTime goalTrackerMileStoneStartDate,DateTime goalTrackerMileStoneEndDate,Int64 predefinedGoalStatusTypeId,DateTime goalTrackerMileStoneCompletedDate,Int64 userId)
+        public GoalTrackerMileStoneCreateModel(Int64 goalTrackerId,String goalTrackerMileStoneName,Int64 predefinedGoalStatusTypeId,Int64 userId)
         {
             GoalTrackerId = goalTrackerId;
             GoalTrackerMileStoneName = goalTrackerMileStoneName;
-            GoalTrackerMileStoneStartDate = goalTrackerMileStoneStartDate;
-            GoalTrackerMileStoneEndDate = goalTrackerMileStoneEndDate;
             PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
-            GoalTrackerMileStoneCompletedDate = goalTrackerMileStoneCompletedDate;
             UserId = userId;
         }
 
@@ -12055,13 +12095,13 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("goalTrackerMileStoneName")]
         public String GoalTrackerMileStoneName {set; get;}
         [JsonPropertyName("goalTrackerMileStoneStartDate")]
-        public DateTime GoalTrackerMileStoneStartDate {set; get;}
+        public DateTime? GoalTrackerMileStoneStartDate {set; get;}
         [JsonPropertyName("goalTrackerMileStoneEndDate")]
-        public DateTime GoalTrackerMileStoneEndDate {set; get;}
+        public DateTime? GoalTrackerMileStoneEndDate {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
         public Int64 PredefinedGoalStatusTypeId {set; get;}
         [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
-        public DateTime GoalTrackerMileStoneCompletedDate {set; get;}
+        public DateTime? GoalTrackerMileStoneCompletedDate {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 
@@ -12117,15 +12157,12 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public GoalTrackerMileStoneUpdateModel(Int64 goalTrackerMileStoneId,Int64 goalTrackerId,String goalTrackerMileStoneName,DateTime goalTrackerMileStoneStartDate,DateTime goalTrackerMileStoneEndDate,Int64 predefinedGoalStatusTypeId,DateTime goalTrackerMileStoneCompletedDate,Int64 userId)
+        public GoalTrackerMileStoneUpdateModel(Int64 goalTrackerMileStoneId,Int64 goalTrackerId,String goalTrackerMileStoneName,Int64 predefinedGoalStatusTypeId,Int64 userId)
         {
             GoalTrackerMileStoneId = goalTrackerMileStoneId;
             GoalTrackerId = goalTrackerId;
             GoalTrackerMileStoneName = goalTrackerMileStoneName;
-            GoalTrackerMileStoneStartDate = goalTrackerMileStoneStartDate;
-            GoalTrackerMileStoneEndDate = goalTrackerMileStoneEndDate;
             PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
-            GoalTrackerMileStoneCompletedDate = goalTrackerMileStoneCompletedDate;
             UserId = userId;
         }
 
@@ -12136,13 +12173,13 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("goalTrackerMileStoneName")]
         public String GoalTrackerMileStoneName {set; get;}
         [JsonPropertyName("goalTrackerMileStoneStartDate")]
-        public DateTime GoalTrackerMileStoneStartDate {set; get;}
+        public DateTime? GoalTrackerMileStoneStartDate {set; get;}
         [JsonPropertyName("goalTrackerMileStoneEndDate")]
-        public DateTime GoalTrackerMileStoneEndDate {set; get;}
+        public DateTime? GoalTrackerMileStoneEndDate {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
         public Int64 PredefinedGoalStatusTypeId {set; get;}
         [JsonPropertyName("goalTrackerMileStoneCompletedDate")]
-        public DateTime GoalTrackerMileStoneCompletedDate {set; get;}
+        public DateTime? GoalTrackerMileStoneCompletedDate {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 

@@ -1190,7 +1190,8 @@ namespace Manifest.Repository.Common
                        DefaultCategoryName = a.DefaultCategoryName,
                        PredefinedCategoryTypeName = b.EnumTypeName,
                        UserName = c.UserName,
-
+                       ColorAsInteger = item.ColorAsInteger,
+                       PredefinedIconTypeId = item.PredefinedIconTypeId,
                        CategoryId = item.CategoryId,
                        DefaultCategoryId = item.DefaultCategoryId,
                        CategoryName = item.CategoryName,
@@ -5556,10 +5557,21 @@ ModifiedByUserId = item.ModifiedByUserId,
                 return GetCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && idsSql.Contains(x.CategoryId)).ReturnListModelResultAsync(search);
         }
 
+        public Task<List<Category>> GetBareCategoryByGoalTrackerIdAsync(long goalTrackerId)
+        {
+            var idsSql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.IsDeleted == false && goalTrackerId == x.GoalTrackerId).Select(x => x.CategoryId);
+            return appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && idsSql.Contains(x.CategoryId)).ToListAsync();
+        }
+
+        public Task<List<Category>> GetBareCategoryByGoalTrackerCategoryIdAsync(List<long> goalTrackerCategoryIds)
+        {
+            var idsSql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.IsDeleted == false && goalTrackerCategoryIds.Contains(x.GoalTrackerCategoryId)).Select(x => x.CategoryId);
+            return appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && idsSql.Contains(x.CategoryId)).ToListAsync();
+        }
+
         public Task<List<Category>> GetBareCategoryByGoalTrackerCategoryIdAsync(long goalTrackerCategoryId)
         {
-                var idsSql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.IsDeleted == false && x.GoalTrackerCategoryId == goalTrackerCategoryId).Select(x => x.CategoryId);
-                return appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && idsSql.Contains(x.CategoryId)).ToListAsync();
+            return GetBareCategoryByGoalTrackerCategoryIdAsync(new List<long> { goalTrackerCategoryId });
         }
 
         public Task<DbReturnListModel<Category>> GetBareCategoryByGoalTrackerCategoryIdAsync(CategoryByGoalTrackerCategoryIdSearchCriteria search)

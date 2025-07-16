@@ -1,8 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+using Framework.Infrastructure.Exceptions;
+using Framework.Infrastructure.Interfaces.DbAccess;
+using Framework.Infrastructure.Logging;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Utils;
+using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Service.App;
+using Manifest.Common.Models.DB;
 using Manifest.Common.Models.SearchCriteria;
 using Manifest.Common.Models.ViewModels;
 using Manifest.Repository.Common;
@@ -10,12 +13,11 @@ using Manifest.Service.Manager;
 using Manifest.Service.ObjectMapping;
 using Manifest.Service.Storage;
 using Manifest.Service.Utils;
-using Framework.Infrastructure.Exceptions;
-using Framework.Infrastructure.Interfaces.DbAccess;
-using Framework.Infrastructure.Logging;
-using Framework.Infrastructure.Models.Result;
-using Framework.Infrastructure.Utils;
-using Manifest.Common.Models.DB;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Manifest.Service.App
 {
@@ -17961,6 +17963,7 @@ namespace Manifest.Service.App
                 }
 
                 return this.ConvertToList(await manifestRepository.GetGoalTrackersAsync(search), objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
+
             }
             catch (Exception ex)
             {
@@ -18001,12 +18004,20 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<GoalTrackerModel>(errorStr);
                 }
 
-                //var result = this.ConvertToItem(item,objectMapperService.GoalTrackerViewToGoalTrackerModel);
-                //var childItems = await GetGoalTrackerXYZZYXsAsync(new GoalTrackerXYZZYXSearchCriteria { GoalTrackerId = item.GoalTrackerId, Page = 1, PageSize = int.MaxValue });
-                //result.Model.ExistingGoalTrackerXYZZYXs = childItems.Model.Where(x => x.GoalTrackerId == item.GoalTrackerId).ToList();
-                //return result;
+                var result = this.ConvertToItem(item,objectMapperService.GoalTrackerViewToGoalTrackerModel);
+                var childItems = await GetGoalTrackerMileStoneByGoalTrackerIdAsync(item.GoalTrackerId);
+                if (!childItems.IsSuccess)
+                    return log.ErrorAndReturnModel<GoalTrackerModel>(childItems);
 
-                return this.ConvertToItem(item, objectMapperService.GoalTrackerViewToGoalTrackerModel);
+                result.Model.ExistingGoalTrackerMileStones = childItems.Model.Where(x => x.GoalTrackerId == item.GoalTrackerId).ToList();
+
+                var cchildItems = await manifestRepository.GetBareCategoryByGoalTrackerIdAsync(item.GoalTrackerId);
+                var cmodels = this.ConvertToList<Category,CategoryModel>(cchildItems, objectMapperService.CategoryListToCategoryModelList);
+                result.Model.ExistingCategorys = cmodels.Model;
+
+                return result;
+
+                //return this.ConvertToItem(item, objectMapperService.GoalTrackerViewToGoalTrackerModel);
             }
             catch (Exception ex)
             {
@@ -21158,27 +21169,27 @@ namespace Manifest.Service.App
             }
             if (goalTrackerMileStoneModel.GoalTrackerMileStoneName != null && goalTrackerMileStoneModel.GoalTrackerMileStoneName.Length > GoalTrackerMileStoneModel.COLUMN_SIZE_GoalTrackerMileStoneName)
             {
-                result.Add(new ReturnErrorItem("GoalTrackerMileStoneName", $"GoalTrackerMileStoneName size should not exceed {GoalTrackerMileStoneModel.COLUMN_SIZE_GoalTrackerMileStoneName}"));
+                result.Add(new ReturnErrorItem("GoalTrackerMileStoneName", $"MileStone Name size should not exceed {GoalTrackerMileStoneModel.COLUMN_SIZE_GoalTrackerMileStoneName}"));
             }
             if (goalTrackerMileStoneModel.GoalTrackerMileStoneName == null)
             {
-                result.Add(new ReturnErrorItem("GoalTrackerMileStoneName", "GoalTrackerMileStoneName is required "));
+                result.Add(new ReturnErrorItem("GoalTrackerMileStoneName", "MileStone Text is required "));
             }
-            if (!DateUtils.IsValidDate(goalTrackerMileStoneModel.GoalTrackerMileStoneStartDate))
+            if (goalTrackerMileStoneModel.GoalTrackerMileStoneStartDate != null && !DateUtils.IsValidDate(goalTrackerMileStoneModel.GoalTrackerMileStoneStartDate))
             {
-                result.Add(new ReturnErrorItem("GoalTrackerMileStoneStartDate", $"GoalTrackerMileStoneStartDate is not a valid date"));
+                result.Add(new ReturnErrorItem("GoalTrackerMileStoneStartDate", $"Mile Stone Start Date is not a valid date"));
             }
-            if (!DateUtils.IsValidDate(goalTrackerMileStoneModel.GoalTrackerMileStoneEndDate))
+            if (goalTrackerMileStoneModel.GoalTrackerMileStoneEndDate != null && !DateUtils.IsValidDate(goalTrackerMileStoneModel.GoalTrackerMileStoneEndDate))
             {
-                result.Add(new ReturnErrorItem("GoalTrackerMileStoneEndDate", $"GoalTrackerMileStoneEndDate is not a valid date"));
+                result.Add(new ReturnErrorItem("GoalTrackerMileStoneEndDate", $"Mile Stone End Date is not a valid date"));
             }
-            if (goalTrackerMileStoneModel.PredefinedGoalStatusTypeId == 0)
+            if (goalTrackerMileStoneModel.PredefinedGoalStatusTypeId == 0 || ValidationUtils.IsEnumValid<PredefinedGoalStatusTypes,long>(goalTrackerMileStoneModel.PredefinedGoalStatusTypeId))
             {
-                result.Add(new ReturnErrorItem("PredefinedGoalStatusTypeId", "PredefinedGoalStatusTypeId cannot be empty"));
+                result.Add(new ReturnErrorItem("PredefinedGoalStatusTypeId", "Goal Status Type cannot be empty"));
             }
-            if (!DateUtils.IsValidDate(goalTrackerMileStoneModel.GoalTrackerMileStoneCompletedDate))
+            if (goalTrackerMileStoneModel.GoalTrackerMileStoneCompletedDate != null && !DateUtils.IsValidDate(goalTrackerMileStoneModel.GoalTrackerMileStoneCompletedDate))
             {
-                result.Add(new ReturnErrorItem("GoalTrackerMileStoneCompletedDate", $"GoalTrackerMileStoneCompletedDate is not a valid date"));
+                result.Add(new ReturnErrorItem("GoalTrackerMileStoneCompletedDate", $"Mile Stone Completed Date is not a valid date"));
             }
             if (!ValidationUtils.IsLongValid(goalTrackerMileStoneModel.UserId))
             {
@@ -21200,11 +21211,8 @@ namespace Manifest.Service.App
                 }
             }
 
-
             return result.Count > 0 ? result : null;
         }
-
-
 
         public async Task<ReturnListModel<GoalTrackerMileStoneModel>> GetGoalTrackerMileStoneByGoalTrackerIdAsync(long goalTrackerId)
         {
