@@ -1,18 +1,10 @@
 targets:
   $default:
     builders:
-      openapi_generator:
-        enabled: true
+      swagger_dart_code_generator:
         options:
-          generator: dart
-          input_spec: openapi.yaml
-          output_dir: lib/api
-          additional_properties:
-            pubName: manifestation_app_api
-            pubVersion: 1.0.0
-            pubDescription: Generated API client for Manifestation App
-            packageName: manifestation_app_api
-            clientPackage: api_client
-            useEnumExtension: true
-            nullableFields: true
-            serialization: json
+          input_folder: 'lib/api/generated/swaggers/'
+          output_folder: 'lib/api/generated/code/'
+          input_urls:
+            - url: "http://SpecialUser:SpecialPassword1@manifestation-qa-1.senthilguru.net/swagger/v1/swagger.json"
+              file_name: "manifestation.json"
