@@ -3301,6 +3301,15 @@ namespace Manifest.Api.All.Controllers
         #endregion
 
         #region GoalTracker
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackersByCategoryId([FromQuery] long categoryId)
+        {
+            return manifestService.GetGoalTrackersByCategoryIdAsync(categoryId < 0 ? null : categoryId);
+        }
+
+
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackers([FromQuery] GoalTrackerSearchCriteria search)
@@ -3522,6 +3531,14 @@ namespace Manifest.Api.All.Controllers
         #endregion
 
         #region GoalTrackerCategory
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<CategoryModel>> GetAllDistinctCategorysForAllGoalTrackerForCurrentUser()
+        {
+            return manifestService.GetAllDistinctCategorysForAllGoalTrackerForCurrentUserAsync();
+        }
+
+
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategorys([FromQuery] GoalTrackerCategorySearchCriteria search)

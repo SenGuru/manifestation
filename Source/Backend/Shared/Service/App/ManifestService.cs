@@ -6,6 +6,7 @@ using Framework.Infrastructure.Utils;
 using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Service.App;
 using Manifest.Common.Models.DB;
+using Manifest.Common.Models.DBView;
 using Manifest.Common.Models.SearchCriteria;
 using Manifest.Common.Models.ViewModels;
 using Manifest.Repository.Common;
@@ -17953,6 +17954,36 @@ namespace Manifest.Service.App
 
         #region GoalTracker
 
+        public async Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackersByCategoryIdAsync(long? categoryId)
+        {
+            try
+            {
+                List<GoalTrackerView> items;
+                if(categoryId != null)
+                {
+                    var view = await GetCategoryByIdForReadAsync(categoryId?? 0);
+                    if (!view.IsSuccess)
+                    {
+                        return log.ErrorAndReturnListModel<GoalTrackerModel>($"Unable to find the Category", new { categoryId });
+                    }
+
+                    items = await manifestRepository.GetGoalTrackersByCatalogIdAsync(categoryId ?? 0);
+                }
+                else
+                {
+                    items = await manifestRepository.GetGoalTrackersByUserIdAsync(await currentSessionService.GetCurrentUserIdAsync() ?? 0);
+                }
+
+                return this.ConvertToList(items, objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
+
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<GoalTrackerModel>($"Unexpected error when getting Goal Trackers by Category", new { categoryId }, ex);
+            }
+        }
+
+
         public async Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackersAsync(GoalTrackerSearchCriteria search)
         {
             try
@@ -19164,6 +19195,18 @@ namespace Manifest.Service.App
 
         #region GoalTrackerCategory
 
+        public async Task<ReturnListModel<CategoryModel>> GetAllDistinctCategorysForAllGoalTrackerForCurrentUserAsync()
+        {
+            try
+            {
+                return this.ConvertToList(await manifestRepository.GetAllDistinctCategorysForAllGoalTrackerAsync(await currentSessionService.GetCurrentUserIdAsync() ?? 0), objectMapperService.CategoryListToCategoryModelList);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<CategoryModel>($"Unexpected error when getting Goal Tracker Categorys", ex);
+            }
+        }
+
         public async Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategorysAsync(GoalTrackerCategorySearchCriteria search)
         {
             try
@@ -19765,7 +19808,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<CategoryModel>> GetCategoryByGoalTrackerCategoryIdAsync(CategoryByGoalTrackerCategoryIdSearchCriteria search)
         {
             try
@@ -19904,7 +19946,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<GoalTrackerCategory>($"Unexpected error when getting Goal Tracker Category by GoalTrackerId", new { search.GoalTrackerId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByGoalTrackerCategoryIdAsync(long goalTrackerCategoryId)
         {

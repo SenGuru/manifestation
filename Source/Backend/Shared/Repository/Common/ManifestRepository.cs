@@ -2,15 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Framework.Data.Utils;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Utils;
+using LinqToDB;
 using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Repository.DbAccess;
 using Manifest.Common.Models.DB;
 using Manifest.Common.Models.DBView;
 using Manifest.Common.Models.SearchCriteria;
-using Framework.Data.Utils;
-using Framework.Infrastructure.Models.Result;
-using Framework.Infrastructure.Utils;
-using LinqToDB;
+using static LinqToDB.Common.Configuration;
 
 namespace Manifest.Repository.Common
 {
@@ -5097,6 +5098,17 @@ ModifiedByUserId = item.ModifiedByUserId,
             return result;
         }
 
+        public Task<List<GoalTrackerView>> GetGoalTrackersByUserIdAsync(long userId)
+        {
+            return GetGoalTrackersViewAsIQueryable().Where(x => x.IsDeleted == false && x.UserId == userId).ToListAsync();
+        }
+
+        public Task<List<GoalTrackerView>> GetGoalTrackersByCatalogIdAsync(long categoryId)
+        {
+            var sql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.CategoryId == categoryId).Select(x=> x.GoalTrackerId).Distinct();
+            return GetGoalTrackersViewAsIQueryable().Where(x => x.IsDeleted == false && sql.Contains(x.GoalTrackerId)).ToListAsync();
+        }
+
         public Task<DbReturnListModel<GoalTrackerView>> GetGoalTrackersAsync(GoalTrackerSearchCriteria search)
         {
             return GetGoalTrackersInternalAsync(search);
@@ -5424,6 +5436,12 @@ ModifiedByUserId = item.ModifiedByUserId,
             }
 
             return result;
+        }
+
+        public Task<List<Category>> GetAllDistinctCategorysForAllGoalTrackerAsync(long userId)
+        {
+            var sql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.UserId == userId).Select(x => x.CategoryId).Distinct();
+            return appDBManager.GetTable<Category>().Where(x => x.UserId == userId && sql.Contains(x.CategoryId)).ToListAsync();
         }
 
         public Task<DbReturnListModel<GoalTrackerCategoryView>> GetGoalTrackerCategorysAsync(GoalTrackerCategorySearchCriteria search)
