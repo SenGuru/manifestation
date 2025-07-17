@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/auth_models.dart';
+import 'package:manifestation_app/auth_service.dart';
+import 'package:manifestation_app/session_service.dart';
 import 'package:manifestation_app/home_screen.dart';
 import '../colors.dart';
 
@@ -16,6 +18,7 @@ class _SignUpScreenState extends State<SignUpScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _authService = AuthService();
   
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -711,24 +714,29 @@ class _SignUpScreenState extends State<SignUpScreen>
     });
 
     try {
-      // TODO: Implement actual sign up logic
-      final signUpRequest = SignUpRequest(
+      final fullName = _nameController.text.trim();
+      final nameParts = fullName.split(' ');
+      final firstName = nameParts.first;
+      final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+      
+      final result = await _authService.signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
-        displayName: _nameController.text.trim(),
-        agreeToTerms: _agreeToTerms,
-        subscribeToNewsletter: _subscribeToNewsletter,
+        firstName: firstName,
+        lastName: lastName,
       );
       
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
-      
-      // Navigate to home screen on success
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      if (result.isSuccess) {
+        // Navigate to home screen on success
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        _showErrorSnackBar(result.message ?? 'Sign up failed. Please try again.');
+      }
     } catch (e) {
-      _showErrorSnackBar('Sign up failed. Please try again.');
+      _showErrorSnackBar('Network error. Please check your connection.');
     } finally {
       setState(() {
         _isLoading = false;

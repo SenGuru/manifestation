@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/auth_models.dart';
+import 'package:manifestation_app/auth_service.dart';
+import 'package:manifestation_app/session_service.dart';
 import 'package:manifestation_app/signup_page.dart';
 import 'package:manifestation_app/home_screen.dart';
 import 'package:manifestation_app/forgot_password_screen.dart';
@@ -17,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen>
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _authService = AuthService();
   
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
@@ -41,6 +44,9 @@ class _LoginScreenState extends State<LoginScreen>
       vsync: this,
     );
     
+    // Check for existing session on startup
+    _checkExistingSession();
+    
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -56,10 +62,6 @@ class _LoginScreenState extends State<LoginScreen>
       parent: _slideController,
       curve: Curves.easeOutCubic,
     ));
-    
-    // Start animations
-    _fadeController.forward();
-    _slideController.forward();
   }
 
   @override
@@ -641,16 +643,23 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     try {
-      // TODO: Implement actual login logic
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
-      
-      // Navigate to home screen on success
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+      final result = await _authService.login(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+        rememberMe: _rememberMe,
       );
+      
+      if (result.isSuccess) {
+        // Navigate to home screen on success
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        _showErrorSnackBar(result.message ?? 'Login failed. Please try again.');
+      }
     } catch (e) {
-      _showErrorSnackBar('Login failed. Please try again.');
+      _showErrorSnackBar('Network error. Please check your connection.');
     } finally {
       setState(() {
         _isLoading = false;
@@ -726,6 +735,31 @@ class _LoginScreenState extends State<LoginScreen>
       context,
       MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
     );
+  }
+
+  /// Check if user already has a valid session
+  Future<void> _checkExistingSession() async {
+    try {
+      final isLoggedIn = await SessionService.instance.isLoggedIn();
+      if (isLoggedIn) {
+        // Verify with server that session is still valid
+        final isAuthenticated = await _authService.isAuthenticated();
+        if (isAuthenticated) {
+          // User has valid session, navigate to home
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+          return;
+        }
+      }
+    } catch (e) {
+      print('Error checking existing session: $e');
+    }
+    
+    // Start animations if no valid session
+    _fadeController.forward();
+    _slideController.forward();
   }
 
   void _showErrorSnackBar(String message) {
