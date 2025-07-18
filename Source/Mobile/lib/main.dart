@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/onboarding_screen.dart';
+import 'package:manifestation_app/auth_wrapper.dart';
 import 'colors.dart';
 
 void main() {
@@ -176,8 +177,8 @@ class ManifestationApp extends StatelessWidget {
               ),
             ),
           ),
-          // Start with the welcome screen
-          home: WelcomeScreen(),
+          // Start with auth wrapper to check session
+          home: AuthWrapper(),
         );
       },
     );

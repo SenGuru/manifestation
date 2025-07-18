@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:manifestation_app/auth_models.dart';
+import 'package:manifestation_app/auth_service.dart';
 import '../colors.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -12,6 +13,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _authService = AuthService();
   
   bool _isLoading = false;
   bool _emailSent = false;
@@ -445,20 +447,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     });
 
     try {
-      // TODO: Implement actual password reset logic
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
+      final result = await _authService.resetPassword(
+        email: _emailController.text.trim(),
+      );
       
-      setState(() {
-        _emailSent = true;
-        _isLoading = false;
-      });
-      
-      // Restart animations for success state
-      _scaleController.reset();
-      _scaleController.forward();
-      
+      if (result.isSuccess) {
+        setState(() {
+          _emailSent = true;
+          _isLoading = false;
+        });
+        
+        // Restart animations for success state
+        _scaleController.reset();
+        _scaleController.forward();
+      } else {
+        _showErrorSnackBar(result.message ?? 'Failed to send reset email. Please try again.');
+        setState(() {
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      _showErrorSnackBar('Failed to send reset email. Please try again.');
+      _showErrorSnackBar('Network error. Please check your connection.');
       setState(() {
         _isLoading = false;
       });

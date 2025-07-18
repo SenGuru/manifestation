@@ -21,14 +21,8 @@ class VisionBoardCanvas extends StatefulWidget {
 }
 
 class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
-  VisionBoardElement? selectedElement;
-  Offset? dragOffset;
-  Offset? initialPanPosition;
-  Size? initialElementSize;
-  double? initialRotation;
+  // Simple dragging state
   bool isDragging = false;
-  bool isResizing = false;
-  bool isRotating = false;
 
   // Canvas zoom and pan
   double canvasScale = 1.0;
@@ -46,9 +40,8 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
         behavior: HitTestBehavior.translucent,
         child: Stack(
           children: [
-            // Background grid
-            if (widget.selectedTool != VisionBoardTool.select)
-              _buildGrid(),
+            // Background grid - always show for better visual reference
+            _buildGrid(),
             
             // Board elements
             ...widget.board.elements.asMap().entries.map((entry) {
@@ -57,9 +50,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
               return _buildElement(element, index);
             }),
             
-            // Selection overlay
-            if (selectedElement != null)
-              _buildSelectionOverlay(_getCurrentElementState(selectedElement!)),
+            // No more selection overlay - removed for better UX
             
             // Empty state
             if (widget.board.elements.isEmpty)
@@ -79,33 +70,45 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   Widget _buildElement(VisionBoardElement element, int index) {
-    final isSelected = selectedElement?.id == element.id;
+    // Remove selection check - no more visual selection needed
     
     return Positioned(
       left: element.position.dx,
       top: element.position.dy,
       child: GestureDetector(
         onTap: () => _selectElement(element),
-        onPanStart: (details) => _onElementPanStart(element, details),
-        onPanUpdate: (details) => _onElementPanUpdate(element, details),
-        onPanEnd: (details) => _onElementPanEnd(element, details),
+        onPanStart: (details) {
+          if (widget.selectedTool == VisionBoardTool.move) {
+            setState(() => isDragging = true);
+          }
+        },
+        onPanUpdate: (details) {
+          // Simple direct dragging - only for move tool
+          if (widget.selectedTool == VisionBoardTool.move) {
+            final newPosition = element.position + details.delta;
+            _updateElementPosition(element, newPosition);
+          }
+        },
+        onPanEnd: (details) {
+          if (widget.selectedTool == VisionBoardTool.move) {
+            setState(() => isDragging = false);
+          }
+        },
         behavior: HitTestBehavior.opaque,
-        child: Transform.rotate(
-          angle: element.rotation,
-          child: Container(
-            width: element.size.width,
-            height: element.size.height,
-            decoration: BoxDecoration(
-              border: isSelected
-                  ? Border.all(
-                      color: AppColors.secondaryTeal.withOpacity(0.3),
-                      width: 1,
-                    )
-                  : null,
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-            child: _buildElementContent(element),
+        child: Container(
+          width: element.size.width,
+          height: element.size.height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.black.withOpacity(0.1),
+                blurRadius: 8.r,
+                offset: Offset(0, 4.h),
+              ),
+            ],
           ),
+          child: _buildElementContent(element),
         ),
       ),
     );
@@ -113,20 +116,13 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   Widget _buildElementContent(VisionBoardElement element) {
     if (element is VisionBoardImageElement) {
-      return Container(
-        decoration: BoxDecoration(
-          color: AppColors.textMedium.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8.r),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
-              blurRadius: 4.r,
-              offset: Offset(0, 2.h),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.r),
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8.r),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.backgroundLight,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
           child: element.imagePath.isNotEmpty
               ? Image.file(
                   File(element.imagePath),
@@ -140,23 +136,16 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       );
     } else if (element is VisionBoardTextElement) {
       return Container(
-        padding: EdgeInsets.all(12.w),
+        padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: element.style.backgroundColor ?? Colors.transparent,
+          color: element.style.backgroundColor ?? AppColors.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(8.r),
-          boxShadow: element.style.backgroundColor != null ? [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
-              blurRadius: 4.r,
-              offset: Offset(0, 2.h),
-            ),
-          ] : null,
         ),
         child: Center(
           child: Text(
             element.text,
             style: element.style.copyWith(
-              fontSize: (element.style.fontSize ?? 16.sp) * (element.size.width / 200).clamp(0.5, 2.0),
+              fontSize: (element.style.fontSize ?? 16.sp) * (element.size.width / 200).clamp(0.8, 2.0),
             ),
             textAlign: element.alignment,
             overflow: TextOverflow.visible,
@@ -172,12 +161,11 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   Widget _buildImagePlaceholder() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundMedium,
+        color: AppColors.backgroundLight,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.2),
-          width: 2,
-          style: BorderStyle.solid,
+          color: AppColors.textMedium.withOpacity(0.15),
+          width: 1,
         ),
       ),
       child: Center(
@@ -186,15 +174,15 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           children: [
             Icon(
               Icons.image_outlined,
-              color: AppColors.textMedium,
-              size: 32.sp,
+              color: AppColors.textMedium.withOpacity(0.6),
+              size: 28.sp,
             ),
             SizedBox(height: 8.h),
             Text(
-              'Tap to add image',
+              'Add Image',
               style: TextStyle(
-                color: AppColors.textMedium,
-                fontSize: 12.sp,
+                color: AppColors.textMedium.withOpacity(0.7),
+                fontSize: 11.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -204,242 +192,62 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     );
   }
 
-  Widget _buildSelectionOverlay(VisionBoardElement element) {
-    return Positioned(
-      left: element.position.dx - 8.w,
-      top: element.position.dy - 8.h,
-      child: Container(
-        width: element.size.width + 16.w,
-        height: element.size.height + 16.h,
-        child: Stack(
-          children: [
-            // Selection border
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: AppColors.secondaryTeal,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-              ),
-            ),
-            
-            // Corner handles for resizing
-            if (widget.selectedTool == VisionBoardTool.resize)
-              ..._buildResizeHandles(element),
-            
-            // Rotation handle
-            if (widget.selectedTool == VisionBoardTool.rotate)
-              _buildRotationHandle(element),
-            
-            // Delete button
-            _buildDeleteButton(element),
-            
-            // Layer controls
-            _buildLayerControls(element),
-          ],
-        ),
-      ),
-    );
-  }
+  // Selection overlay removed - no more rectangle selection UI
 
-  List<Widget> _buildResizeHandles(VisionBoardElement element) {
-    return [
-      // Corner handles
-      _buildResizeHandle(element, ResizeDirection.topLeft, -8.w, -8.h),
-      _buildResizeHandle(element, ResizeDirection.topRight, element.size.width, -8.h),
-      _buildResizeHandle(element, ResizeDirection.bottomLeft, -8.w, element.size.height),
-      _buildResizeHandle(element, ResizeDirection.bottomRight, element.size.width, element.size.height),
-      
-      // Edge handles
-      _buildResizeHandle(element, ResizeDirection.top, element.size.width / 2 - 6.w, -8.h),
-      _buildResizeHandle(element, ResizeDirection.bottom, element.size.width / 2 - 6.w, element.size.height),
-      _buildResizeHandle(element, ResizeDirection.left, -8.w, element.size.height / 2 - 6.h),
-      _buildResizeHandle(element, ResizeDirection.right, element.size.width, element.size.height / 2 - 6.h),
-    ];
-  }
-
-  Widget _buildResizeHandle(VisionBoardElement element, ResizeDirection direction, double left, double top) {
-    return Positioned(
-      left: left,
-      top: top,
-      child: GestureDetector(
-        onPanStart: (details) => _onResizeStart(element, direction, details),
-        onPanUpdate: (details) => _onResizeUpdate(element, direction, details),
-        onPanEnd: (details) => _onResizeEnd(element, details),
-        child: Container(
-          width: 12.w,
-          height: 12.h,
-          decoration: BoxDecoration(
-            color: AppColors.secondaryTeal,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.white,
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withOpacity(0.2),
-                blurRadius: 4.r,
-                offset: Offset(0, 2.h),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRotationHandle(VisionBoardElement element) {
-    return Positioned(
-      top: -32.h,
-      left: (element.size.width / 2) - 12.w,
-      child: GestureDetector(
-        onPanStart: (details) => _onRotationStart(element, details),
-        onPanUpdate: (details) => _onRotationUpdate(element, details),
-        onPanEnd: (details) => _onRotationEnd(element, details),
-        child: Container(
-          width: 24.w,
-          height: 24.h,
-          decoration: BoxDecoration(
-            color: AppColors.accentGold,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.white,
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withOpacity(0.2),
-                blurRadius: 4.r,
-                offset: Offset(0, 2.h),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.rotate_right,
-            color: AppColors.white,
-            size: 14.sp,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDeleteButton(VisionBoardElement element) {
-    return Positioned(
-      top: -12.h,
-      right: -12.w,
-      child: GestureDetector(
-        onTap: () => _deleteElement(element),
-        child: Container(
-          width: 24.w,
-          height: 24.h,
-          decoration: BoxDecoration(
-            color: Colors.red,
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: AppColors.white,
-              width: 2,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.black.withOpacity(0.2),
-                blurRadius: 4.r,
-                offset: Offset(0, 2.h),
-              ),
-            ],
-          ),
-          child: Icon(
-            Icons.close,
-            color: AppColors.white,
-            size: 14.sp,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLayerControls(VisionBoardElement element) {
-    return Positioned(
-      top: -12.h,
-      left: -12.w,
-      child: Column(
-        children: [
-          // Bring to front
-          GestureDetector(
-            onTap: () => _bringToFront(element),
-            child: Container(
-              width: 20.w,
-              height: 20.h,
-              decoration: BoxDecoration(
-                color: AppColors.gradientPurple,
-                borderRadius: BorderRadius.circular(4.r),
-                border: Border.all(color: AppColors.white, width: 1),
-              ),
-              child: Icon(Icons.keyboard_arrow_up, color: AppColors.white, size: 12.sp),
-            ),
-          ),
-          SizedBox(height: 4.h),
-          // Send to back
-          GestureDetector(
-            onTap: () => _sendToBack(element),
-            child: Container(
-              width: 20.w,
-              height: 20.h,
-              decoration: BoxDecoration(
-                color: AppColors.gradientPurple.withOpacity(0.7),
-                borderRadius: BorderRadius.circular(4.r),
-                border: Border.all(color: AppColors.white, width: 1),
-              ),
-              child: Icon(Icons.keyboard_arrow_down, color: AppColors.white, size: 12.sp),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildEmptyState() {
     return Center(
       child: Container(
-        padding: EdgeInsets.all(32.w),
+        margin: EdgeInsets.symmetric(horizontal: 40.w),
+        padding: EdgeInsets.all(40.w),
         decoration: BoxDecoration(
-          color: AppColors.white.withOpacity(0.9),
-          borderRadius: BorderRadius.circular(20.r),
+          color: AppColors.white.withOpacity(0.95),
+          borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.2),
-            width: 2,
-            style: BorderStyle.solid,
+            color: AppColors.textMedium.withOpacity(0.1),
+            width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.05),
+              blurRadius: 20.r,
+              offset: Offset(0, 8.h),
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.dashboard_outlined,
-              color: AppColors.textMedium.withOpacity(0.5),
-              size: 64.sp,
+            Container(
+              width: 80.w,
+              height: 80.h,
+              decoration: BoxDecoration(
+                color: AppColors.accentGold.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20.r),
+              ),
+              child: Icon(
+                Icons.dashboard_outlined,
+                color: AppColors.accentGold.withOpacity(0.7),
+                size: 40.sp,
+              ),
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: 24.h),
             Text(
               'Your vision board is empty',
               style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textMedium.withOpacity(0.8),
+                fontSize: 22.sp,
+                fontWeight: FontWeight.w700,
+                color: AppColors.textDark,
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 8.h),
+            SizedBox(height: 12.h),
             Text(
-              'Start creating by adding images and text\nUse the toolbar below to get started',
+              'Start creating by adding images and text.\nUse the toolbar below to get started.',
               style: TextStyle(
-                fontSize: 14.sp,
-                color: AppColors.textMedium.withOpacity(0.6),
-                height: 1.4,
+                fontSize: 16.sp,
+                color: AppColors.textMedium.withOpacity(0.8),
+                height: 1.5,
               ),
               textAlign: TextAlign.center,
             ),
@@ -450,219 +258,20 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   void _onTapDown(TapDownDetails details) {
-    // Only handle background taps for clearing selection
-    // Individual elements handle their own selection via their GestureDetector
-    final tappedElement = _getElementAtPosition(details.localPosition);
-    if (tappedElement == null) {
-      setState(() {
-        selectedElement = null;
-      });
-    }
+    // Handle background taps for deselecting elements or other canvas interactions
+    // Could add new element creation logic here in the future
   }
 
   void _selectElement(VisionBoardElement element) {
-    // If delete tool is selected, immediately delete the element
+    // Handle element selection based on current tool
     if (widget.selectedTool == VisionBoardTool.delete) {
       _deleteElement(element);
       return;
     }
-    
-    setState(() {
-      selectedElement = element;
-    });
+    // For move tool, selection is handled directly in gesture detection
   }
 
-  void _onElementPanStart(VisionBoardElement element, DragStartDetails details) {
-    // Always allow pan start for movement tools
-    if (widget.selectedTool == VisionBoardTool.move || 
-        widget.selectedTool == VisionBoardTool.select) {
-      setState(() {
-        selectedElement = element;
-        isDragging = true;
-      });
-    }
-  }
 
-  void _onElementPanUpdate(VisionBoardElement element, DragUpdateDetails details) {
-    // Simple: if the right tool is selected, allow movement
-    if (widget.selectedTool == VisionBoardTool.move || 
-        widget.selectedTool == VisionBoardTool.select) {
-      
-      // Make sure element is selected
-      if (selectedElement?.id != element.id) {
-        setState(() {
-          selectedElement = element;
-        });
-      }
-      
-      // Always update position based on delta
-      final delta = details.delta;
-      final newPosition = element.position + delta;
-      _updateElementPosition(element, newPosition);
-    }
-  }
-
-  void _onElementPanEnd(VisionBoardElement element, DragEndDetails details) {
-    // Simple cleanup
-    if (mounted) {
-      setState(() {
-        isDragging = false;
-      });
-    }
-  }
-
-  // Resize functionality
-  void _onResizeStart(VisionBoardElement element, ResizeDirection direction, DragStartDetails details) {
-    setState(() {
-      isResizing = true;
-      initialPanPosition = details.localPosition;
-      initialElementSize = element.size;
-    });
-  }
-
-  void _onResizeUpdate(VisionBoardElement element, ResizeDirection direction, DragUpdateDetails details) {
-    if (!isResizing || initialElementSize == null || initialPanPosition == null) return;
-
-    final delta = details.localPosition - initialPanPosition!;
-    Size newSize = initialElementSize!;
-    Offset newPosition = element.position;
-
-    switch (direction) {
-      case ResizeDirection.topLeft:
-        newSize = Size(
-          (initialElementSize!.width - delta.dx).clamp(50.0, double.infinity),
-          (initialElementSize!.height - delta.dy).clamp(50.0, double.infinity),
-        );
-        newPosition = Offset(
-          element.position.dx + (initialElementSize!.width - newSize.width),
-          element.position.dy + (initialElementSize!.height - newSize.height),
-        );
-        break;
-      case ResizeDirection.topRight:
-        newSize = Size(
-          (initialElementSize!.width + delta.dx).clamp(50.0, double.infinity),
-          (initialElementSize!.height - delta.dy).clamp(50.0, double.infinity),
-        );
-        newPosition = Offset(
-          element.position.dx,
-          element.position.dy + (initialElementSize!.height - newSize.height),
-        );
-        break;
-      case ResizeDirection.bottomLeft:
-        newSize = Size(
-          (initialElementSize!.width - delta.dx).clamp(50.0, double.infinity),
-          (initialElementSize!.height + delta.dy).clamp(50.0, double.infinity),
-        );
-        newPosition = Offset(
-          element.position.dx + (initialElementSize!.width - newSize.width),
-          element.position.dy,
-        );
-        break;
-      case ResizeDirection.bottomRight:
-        newSize = Size(
-          (initialElementSize!.width + delta.dx).clamp(50.0, double.infinity),
-          (initialElementSize!.height + delta.dy).clamp(50.0, double.infinity),
-        );
-        break;
-      case ResizeDirection.top:
-        newSize = Size(
-          initialElementSize!.width,
-          (initialElementSize!.height - delta.dy).clamp(50.0, double.infinity),
-        );
-        newPosition = Offset(
-          element.position.dx,
-          element.position.dy + (initialElementSize!.height - newSize.height),
-        );
-        break;
-      case ResizeDirection.bottom:
-        newSize = Size(
-          initialElementSize!.width,
-          (initialElementSize!.height + delta.dy).clamp(50.0, double.infinity),
-        );
-        break;
-      case ResizeDirection.left:
-        newSize = Size(
-          (initialElementSize!.width - delta.dx).clamp(50.0, double.infinity),
-          initialElementSize!.height,
-        );
-        newPosition = Offset(
-          element.position.dx + (initialElementSize!.width - newSize.width),
-          element.position.dy,
-        );
-        break;
-      case ResizeDirection.right:
-        newSize = Size(
-          (initialElementSize!.width + delta.dx).clamp(50.0, double.infinity),
-          initialElementSize!.height,
-        );
-        break;
-    }
-
-    _updateElement(element, position: newPosition, size: newSize);
-  }
-
-  void _onResizeEnd(VisionBoardElement element, DragEndDetails details) {
-    setState(() {
-      isResizing = false;
-      initialPanPosition = null;
-      initialElementSize = null;
-    });
-  }
-
-  // Rotation functionality
-  void _onRotationStart(VisionBoardElement element, DragStartDetails details) {
-    setState(() {
-      isRotating = true;
-      initialRotation = element.rotation;
-      initialPanPosition = details.localPosition;
-    });
-  }
-
-  void _onRotationUpdate(VisionBoardElement element, DragUpdateDetails details) {
-    if (!isRotating || initialRotation == null || initialPanPosition == null) return;
-
-    final center = Offset(element.size.width / 2, element.size.height / 2);
-    final initialAngle = (initialPanPosition! - center).direction;
-    final currentAngle = (details.localPosition - center).direction;
-    final deltaAngle = currentAngle - initialAngle;
-    
-    final newRotation = (initialRotation! + deltaAngle) % (2 * 3.14159);
-    _updateElement(element, rotation: newRotation);
-  }
-
-  void _onRotationEnd(VisionBoardElement element, DragEndDetails details) {
-    setState(() {
-      isRotating = false;
-      initialRotation = null;
-      initialPanPosition = null;
-    });
-  }
-
-  VisionBoardElement? _getElementAtPosition(Offset position) {
-    for (int i = widget.board.elements.length - 1; i >= 0; i--) {
-      final element = widget.board.elements[i];
-      final rect = Rect.fromLTWH(
-        element.position.dx,
-        element.position.dy,
-        element.size.width,
-        element.size.height,
-      );
-      
-      if (rect.contains(position)) {
-        return element;
-      }
-    }
-    return null;
-  }
-
-  VisionBoardElement _getCurrentElementState(VisionBoardElement selectedElement) {
-    // Find the current state of the selected element from the board
-    final currentElement = widget.board.elements.firstWhere(
-      (element) => element.id == selectedElement.id,
-      orElse: () => selectedElement,
-    );
-    return currentElement;
-  }
 
   void _updateElementPosition(VisionBoardElement element, Offset newPosition) {
     // Get the current canvas container size from the rendering context
@@ -706,51 +315,21 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
     final updatedBoard = widget.board.copyWith(elements: updatedElements);
     widget.onBoardChanged(updatedBoard);
-    
-    setState(() {
-      selectedElement = null;
-    });
-  }
-
-  void _bringToFront(VisionBoardElement element) {
-    final maxZIndex = widget.board.elements
-        .map((e) => e.zIndex)
-        .fold(0, (max, current) => current > max ? current : max);
-    
-    _updateElement(element, zIndex: maxZIndex + 1);
-  }
-
-  void _sendToBack(VisionBoardElement element) {
-    final minZIndex = widget.board.elements
-        .map((e) => e.zIndex)
-        .fold(0, (min, current) => current < min ? current : min);
-    
-    _updateElement(element, zIndex: minZIndex - 1);
   }
 }
 
-enum ResizeDirection {
-  topLeft,
-  topRight,
-  bottomLeft,
-  bottomRight,
-  top,
-  bottom,
-  left,
-  right,
-}
 
 class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.textMedium.withOpacity(0.1)
+      ..color = AppColors.textMedium.withOpacity(0.05)
       ..strokeWidth = 0.5;
 
-    const gridSize = 20.0;
+    const gridSize = 30.0;
 
-    // Draw vertical lines
-    for (double x = 0; x <= size.width; x += gridSize) {
+    // Draw vertical lines with better spacing
+    for (double x = gridSize; x < size.width; x += gridSize) {
       canvas.drawLine(
         Offset(x, 0),
         Offset(x, size.height),
@@ -758,8 +337,8 @@ class GridPainter extends CustomPainter {
       );
     }
 
-    // Draw horizontal lines
-    for (double y = 0; y <= size.height; y += gridSize) {
+    // Draw horizontal lines with better spacing
+    for (double y = gridSize; y < size.height; y += gridSize) {
       canvas.drawLine(
         Offset(0, y),
         Offset(size.width, y),

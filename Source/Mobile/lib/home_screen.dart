@@ -10,7 +10,9 @@ import 'package:manifestation_app/goal_tracker_screen.dart';
 import 'package:manifestation_app/manifestation_journal.dart';
 import 'package:manifestation_app/streak_counter.dart';
 import 'package:manifestation_app/vision_board_home.dart';
-import 'package:manifestation_app/social_feed_screen.dart'; // Add this import
+import 'package:manifestation_app/social_feed_screen.dart';
+import 'package:manifestation_app/auth_service.dart';
+import 'package:manifestation_app/login_screen.dart';
 import 'colors.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentStreak = 7; // Example streak counter
+  final _authService = AuthService();
   
   Widget _buildTopSection() {
     return Row(
@@ -77,24 +80,48 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   
   Widget _buildHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          'Good ${_getGreeting()}',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: AppColors.textMedium,
-            fontWeight: FontWeight.w400,
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Good ${_getGreeting()}',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppColors.textMedium,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Ready to Manifest?',
+                style: TextStyle(
+                  fontSize: 32.sp,
+                  color: AppColors.textLight,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
         ),
-        SizedBox(height: 8.h),
-        Text(
-          'Ready to Manifest?',
-          style: TextStyle(
-            fontSize: 32.sp,
-            color: AppColors.textLight,
-            fontWeight: FontWeight.bold,
+        // Logout button
+        GestureDetector(
+          onTap: _showLogoutDialog,
+          child: Container(
+            width: 44.w,
+            height: 44.h,
+            decoration: BoxDecoration(
+              color: AppColors.cardBackground,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              Icons.logout,
+              color: AppColors.textMedium,
+              size: 20.sp,
+            ),
           ),
         ),
       ],
@@ -274,6 +301,65 @@ class _HomeScreenState extends State<HomeScreen> {
         break;
       default:
         print('Unknown feature: $feature');
+    }
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.cardBackground,
+        title: Text(
+          'Logout',
+          style: TextStyle(color: AppColors.textLight),
+        ),
+        content: Text(
+          'Are you sure you want to logout?',
+          style: TextStyle(color: AppColors.textMedium),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textMedium),
+            ),
+          ),
+          TextButton(
+            onPressed: _handleLogout,
+            child: Text(
+              'Logout',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleLogout() async {
+    try {
+      // Close the dialog first
+      Navigator.pop(context);
+      
+      // Perform logout
+      await _authService.logout();
+      
+      // Navigate back to login screen and clear the stack
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false,
+      );
+    } catch (e) {
+      print('Logout error: $e');
+      // Show error if needed
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Logout failed. Please try again.'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }
