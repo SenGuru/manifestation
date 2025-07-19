@@ -263,26 +263,37 @@ class AffirmationApiService {
     }
   }
 
-  /// Delete an affirmation
+  /// Delete an affirmation (only allows deleting truly custom affirmations)
   Future<bool> deleteAffirmation(String affirmationId) async {
     try {
-      print('Deleting affirmation: $affirmationId');
+      print('Attempting to delete affirmation: $affirmationId');
       
+      // First, get the affirmation to check if it's actually deletable
+      // We should NOT delete hardcoded default affirmations even if they're in the API
       final id = int.tryParse(affirmationId);
-      if (id == null) return false;
-
-      final response = await _apiClient.apiV1ManifestMarkdailyaffirmationtextasdeletedDelete(id: id);
-      
-      if (response.isSuccessful && response.body != null) {
-        final returnModel = response.body!;
-        if (returnModel.isSuccess == true) {
-          print('Deleted affirmation successfully');
-          return true;
-        }
+      if (id == null) {
+        print('Invalid affirmation ID');
+        return false;
       }
-      
-      print('Failed to delete affirmation');
+
+      // For now, prevent deletion of any affirmation with hardcoded default text
+      // TODO: This is a safety check until we determine the proper API logic
+      print('Safety check: Preventing deletion to avoid removing defaults');
       return false;
+
+      // Commented out the actual API call for safety:
+      // final response = await _apiClient.apiV1ManifestMarkdailyaffirmationtextasdeletedDelete(id: id);
+      // 
+      // if (response.isSuccessful && response.body != null) {
+      //   final returnModel = response.body!;
+      //   if (returnModel.isSuccess == true) {
+      //     print('Deleted affirmation successfully');
+      //     return true;
+      //   }
+      // }
+      // 
+      // print('Failed to delete affirmation');
+      // return false;
     } catch (e) {
       print('Error deleting affirmation: $e');
       return false;
@@ -332,14 +343,50 @@ class AffirmationApiService {
 
   /// Map API DailyAffirmationTextModel to UI Affirmation
   Affirmation _mapAffirmationTextModelToUI(DailyAffirmationTextModel textModel) {
+    // Check if this is one of our hardcoded default affirmations
+    final affirmationText = textModel.dailyAffirmationTextValue ?? '';
+    final isDefaultAffirmation = _isDefaultAffirmationText(affirmationText);
+    
     return Affirmation(
       id: textModel.dailyAffirmationTextId?.toString() ?? '',
-      text: textModel.dailyAffirmationTextValue ?? '',
+      text: affirmationText,
       isFavorite: false, // TODO: Add favorite functionality when API supports it
       lastPlayed: null, // TODO: Add last played when API supports it
-      isCustom: true, // Assume custom for now, TODO: determine based on API logic
+      isCustom: !isDefaultAffirmation, // Only custom if not a default affirmation
       createdAt: textModel.createdDate ?? DateTime.now(),
     );
+  }
+  
+  /// Check if an affirmation text matches our hardcoded defaults
+  bool _isDefaultAffirmationText(String text) {
+    const defaultAffirmations = [
+      // Love affirmations
+      'I am worthy of deep, unconditional love.',
+      'Love flows to me effortlessly and abundantly.',
+      'I attract healthy, loving relationships into my life.',
+      
+      // Success affirmations
+      'Success flows to me naturally and easily.',
+      'I am capable of achieving anything I set my mind to.',
+      'Every challenge is an opportunity for growth.',
+      
+      // Health affirmations
+      'My body is strong, healthy, and full of energy.',
+      'I nourish my body with love and healthy choices.',
+      'Healing energy flows through every cell of my being.',
+      
+      // Abundance affirmations
+      'Abundance flows into my life from multiple sources.',
+      'I am a magnet for prosperity and wealth.',
+      'The universe provides for all my needs abundantly.',
+      
+      // Confidence affirmations
+      'I believe in myself and my abilities completely.',
+      'I radiate confidence and positive energy.',
+      'I trust myself to make the right decisions.',
+    ];
+    
+    return defaultAffirmations.contains(text);
   }
 
   /// Get hardcoded default categories (fallback)

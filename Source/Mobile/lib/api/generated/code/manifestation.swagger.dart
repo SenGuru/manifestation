@@ -4690,7 +4690,7 @@ abstract class Manifestation extends ChopperService {
     optionalBody: true,
   )
   Future<chopper.Response<DailyAffirmationTextModelReturnModel>>
-      _apiV1ManifestUpdatedailyaffirmationtextPost(
+      _apiV1ManifestUpdatedailyaffirmationtextPost(  
           {@Body() required DailyAffirmationTextUpdateModel? body});
 
   ///
