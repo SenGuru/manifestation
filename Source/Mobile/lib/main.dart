@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/onboarding_screen.dart';
-import 'package:manifestation_app/auth_wrapper.dart';
-import 'colors.dart';
+import 'package:manifestation_app/constants/colors.dart';
+import 'package:manifestation_app/screens/auth_wrapper.dart';
 
 void main() {
   runApp(ManifestationApp());
