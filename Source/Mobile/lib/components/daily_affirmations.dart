@@ -394,67 +394,9 @@ Future<void> _initializeTTS() async {
       child: Column(
         children: [
           // Header with counter and actions
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${currentAffirmationIndex + 1} of ${currentCategory.affirmations.length}',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.textMedium,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Row(
-                children: [
-                  // View Favorites button
-                  GestureDetector(
-                    onTap: _goToFavorites,
-                    child: Icon(
-                      Icons.favorite_border,
-                      color: AppColors.accentGold,
-                      size: 20.sp,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  // Favorite button
-                  GestureDetector(
-                    onTap: _toggleFavorite,
-                    child: Icon(
-                      currentAffirmation.isFavorite 
-                          ? Icons.favorite 
-                          : Icons.favorite_border,
-                      color: currentAffirmation.isFavorite 
-                          ? Colors.red 
-                          : AppColors.textMedium,
-                      size: 20.sp,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  // Edit button (only for custom affirmations)
-                  if (currentAffirmation.isCustom)
-                    GestureDetector(
-                      onTap: _showEditAffirmationDialog,
-                      child: Icon(
-                        Icons.edit_outlined,
-                        color: AppColors.textMedium,
-                        size: 20.sp,
-                      ),
-                    ),
-                  if (currentAffirmation.isCustom) SizedBox(width: 12.w),
-                  // Add new affirmation
-                  GestureDetector(
-                    onTap: _showAddAffirmationDialog,
-                    child: Icon(
-                      Icons.add_circle_outline,
-                      color: currentCategory.color,
-                      size: 20.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          currentAffirmation.isCustom 
+            ? _buildCustomAffirmationHeader()
+            : _buildDefaultAffirmationHeader(),
           
           // Larger spacing to push text to true center
           SizedBox(height: 160.h),
@@ -583,6 +525,114 @@ Future<void> _initializeTTS() async {
           size: 24.sp,
         ),
       ),
+    );
+  }
+
+  // Header for default affirmations (no delete button)
+  Widget _buildDefaultAffirmationHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '${currentAffirmationIndex + 1} of ${currentCategory.affirmations.length}',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: AppColors.textMedium,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Row(
+          children: [
+            // Favorite button
+            GestureDetector(
+              onTap: _toggleFavorite,
+              child: Icon(
+                currentAffirmation.isFavorite 
+                    ? Icons.favorite 
+                    : Icons.favorite_border,
+                color: currentAffirmation.isFavorite 
+                    ? Colors.red 
+                    : AppColors.textMedium,
+                size: 20.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            // Add new affirmation
+            GestureDetector(
+              onTap: _showAddAffirmationDialog,
+              child: Icon(
+                Icons.add_circle_outline,
+                color: currentCategory.color,
+                size: 20.sp,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Header for custom affirmations (with delete button)
+  Widget _buildCustomAffirmationHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '${currentAffirmationIndex + 1} of ${currentCategory.affirmations.length}',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: AppColors.textMedium,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        Row(
+          children: [
+            // Delete button
+            GestureDetector(
+              onTap: _confirmDeleteAffirmation,
+              child: Icon(
+                Icons.delete_outline,
+                color: Colors.red,
+                size: 20.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            // Favorite button
+            GestureDetector(
+              onTap: _toggleFavorite,
+              child: Icon(
+                currentAffirmation.isFavorite 
+                    ? Icons.favorite 
+                    : Icons.favorite_border,
+                color: currentAffirmation.isFavorite 
+                    ? Colors.red 
+                    : AppColors.textMedium,
+                size: 20.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            // Edit button
+            GestureDetector(
+              onTap: _showEditAffirmationDialog,
+              child: Icon(
+                Icons.edit_outlined,
+                color: AppColors.textMedium,
+                size: 20.sp,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            // Add new affirmation
+            GestureDetector(
+              onTap: _showAddAffirmationDialog,
+              child: Icon(
+                Icons.add_circle_outline,
+                color: currentCategory.color,
+                size: 20.sp,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -766,6 +816,46 @@ void _showInfoSnackBar(String message) {
     } else {
       _showErrorSnackBar('Failed to update favorite status');
     }
+  }
+
+  void _confirmDeleteAffirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.cardBackground,
+        title: Text('Delete Affirmation', style: TextStyle(color: AppColors.textLight)),
+        content: Text(
+          'Are you sure you want to delete this affirmation?',
+          style: TextStyle(color: AppColors.textMedium),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              final success = await _apiService.deleteAffirmation(currentAffirmation.id);
+              if (success) {
+                await _loadCategories();
+                // Adjust current index if needed
+                if (currentAffirmationIndex >= currentCategory.affirmations.length) {
+                  setState(() {
+                    currentAffirmationIndex = currentCategory.affirmations.length - 1;
+                    if (currentAffirmationIndex < 0) currentAffirmationIndex = 0;
+                  });
+                }
+                _showSuccessSnackBar('Affirmation deleted');
+              } else {
+                _showErrorSnackBar('Failed to delete affirmation');
+              }
+            },
+            child: Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   // Navigation
