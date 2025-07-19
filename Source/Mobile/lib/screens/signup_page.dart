@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/models/auth_models.dart';
-import 'package:manifestation_app/services/auth_service.dart';
-import 'package:manifestation_app/services/session_service.dart';
-import 'package:manifestation_app/screens/home_screen.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import '../models/auth_models.dart';
+import 'home_screen.dart';
+import '../constants/colors.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -18,7 +16,6 @@ class _SignUpScreenState extends State<SignUpScreen>
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  final _authService = AuthService();
   
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
@@ -78,6 +75,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     _fadeController.forward();
     _slideController.forward();
   }
+
 
   @override
   void dispose() {
@@ -714,34 +712,220 @@ class _SignUpScreenState extends State<SignUpScreen>
     });
 
     try {
-      final fullName = _nameController.text.trim();
-      final nameParts = fullName.split(' ');
-      final firstName = nameParts.first;
+      print('Starting signup process...');
+      
+      // Parse the full name into first and last name
+      final nameParts = _nameController.text.trim().split(' ');
+      final firstName = nameParts.isNotEmpty ? nameParts.first : '';
       final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+
+      print('Mock account creation...');
       
-      final result = await _authService.signUp(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        firstName: firstName,
-        lastName: lastName,
+      // Simulate account creation process
+      await Future.delayed(Duration(seconds: 2));
+      
+      print('Registration successful (mock), navigating to home...');
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Account created successfully!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+        ),
       );
-      
-      if (result.isSuccess) {
-        // Navigate to home screen on success
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      } else {
-        _showErrorSnackBar(result.message ?? 'Sign up failed. Please try again.');
-      }
+
+      // Navigate directly to home screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } catch (e) {
-      _showErrorSnackBar('Network error. Please check your connection.');
+      print('Registration exception: $e');
+      _showErrorSnackBar('Network error. Please check your connection and try again.');
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
+  }
+
+  void _showOtpDialog() {
+    final otpController = TextEditingController();
+    bool isVerifying = false;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          backgroundColor: AppColors.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          title: Text(
+            'Verify Email',
+            style: TextStyle(
+              color: AppColors.textLight,
+              fontSize: 20.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'We\'ve sent a verification code to:',
+                style: TextStyle(
+                  color: AppColors.textMedium,
+                  fontSize: 14.sp,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                _emailController.text.trim(),
+                style: TextStyle(
+                  color: AppColors.textLight,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 20.h),
+              TextField(
+                controller: otpController,
+                keyboardType: TextInputType.number,
+                maxLength: 6,
+                style: TextStyle(
+                  color: AppColors.textLight,
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 2.0,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Enter 6-digit code',
+                  hintStyle: TextStyle(
+                    color: AppColors.textMedium.withOpacity(0.6),
+                  ),
+                  filled: true,
+                  fillColor: AppColors.backgroundDark,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
+                  counterText: '',
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: isVerifying ? null : () => Navigator.pop(context),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: AppColors.textMedium,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              onPressed: isVerifying ? null : () async {
+                if (otpController.text.length != 6) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please enter a 6-digit code'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+
+                setDialogState(() {
+                  isVerifying = true;
+                });
+
+                try {
+                  final otpCode = int.parse(otpController.text);
+                  // TODO: Implement OTP verification with generated API
+                  // This is a placeholder implementation as OTP verification endpoint
+                  // is not yet available in the generated API
+                  
+                  try {
+                    Navigator.pop(context); // Close dialog
+                    
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('OTP verification successful! Proceeding to home.'),
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                    );
+
+                    // Navigate to home screen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('OTP verification failed: ${e.toString()}'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please enter a valid 6-digit number'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                } finally {
+                  setDialogState(() {
+                    isVerifying = false;
+                  });
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.affirmationGradient[0],
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+              child: isVerifying
+                  ? SizedBox(
+                      width: 20.w,
+                      height: 20.h,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                      ),
+                    )
+                  : Text(
+                      'Verify',
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _handleSocialSignUp(AuthProvider provider) async {

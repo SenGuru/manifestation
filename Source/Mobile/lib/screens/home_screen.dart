@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/components/daily_affirmations.dart';
-import 'package:manifestation_app/components/daily_inspiration.dart';
-import 'package:manifestation_app/components/feature_card.dart';
-import 'package:manifestation_app/components/dual_feature_card.dart';
-import 'package:manifestation_app/components/wide_feature_card.dart';
-import 'package:manifestation_app/components/streak_counter.dart';
-import 'package:manifestation_app/constants/colors.dart';  
-import 'package:manifestation_app/screens/affirmations.dart';
-import 'package:manifestation_app/screens/meditation_screen.dart';
-import 'package:manifestation_app/screens/manifestation_journal.dart';
-import 'package:manifestation_app/screens/goal_tracker_screen.dart';
-import 'package:manifestation_app/screens/social_feed_screen.dart';
-import 'package:manifestation_app/screens/login_screen.dart';
-import 'package:manifestation_app/services/auth_service.dart';
-import 'package:manifestation_app/screens/vision_board_home.dart';
-import 'package:manifestation_app/screens/stats_screen.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  
+import 'daily_affirmations.dart';
+import '../components/daily_inspiration.dart';
+import '../components/feature_card.dart';
+import '../components/dual_feature_card.dart';
+import 'meditation_screen_premium.dart';
+import 'visual_meditation_screen.dart';
+import '../components/wide_feature_card.dart';
+import 'goal_tracker_screen.dart';
+import 'manifestation_journal.dart';
+import '../components/streak_counter.dart';
+import 'vision_board_home.dart';
+import 'social_feed_screen.dart';
+import '../constants/colors.dart';
+import 'login_screen.dart';
+import 'profile_screen.dart';
+import 'session_stats_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,7 +24,29 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentStreak = 7; // Example streak counter
-  final _authService = AuthService();
+  String userName = 'User'; // Default name, will be updated from user data
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserName();
+  }
+
+  void _loadUserName() async {
+    try {
+      // Hardcoded user name placeholder
+      final firstName = 'Alex';
+      setState(() {
+        userName = firstName.isNotEmpty ? firstName : 'User';
+      });
+      print('Loaded user name: $userName');
+    } catch (e) {
+      print('Error loading user name: $e');
+      setState(() {
+        userName = 'User';
+      });
+    }
+  }
   
   Widget _buildTopSection() {
     return Row(
@@ -83,14 +105,13 @@ class _HomeScreenState extends State<HomeScreen> {
   
   Widget _buildHeader() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Good ${_getGreeting()}',
+                'Good ${_getGreeting()}, $userName',
                 style: TextStyle(
                   fontSize: 16.sp,
                   color: AppColors.textMedium,
@@ -109,50 +130,75 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
-        // Stats and Logout buttons
-        Row(
-          children: [
-            // Stats button
-            GestureDetector(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => StatsScreen()),
+        
+        // Stats button
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SessionStatsScreen()),
+            );
+          },
+          child: Container(
+            width: 44.w,
+            height: 44.h,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppColors.analyticsGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              child: Container(
-                width: 44.w,
-                height: 44.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: AppColors.visualMeditationGradient,
-                  ),
-                  borderRadius: BorderRadius.circular(12.r),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.analyticsGradient[0].withOpacity(0.3),
+                  blurRadius: 8.r,
+                  offset: Offset(0, 4.h),
                 ),
-                child: Icon(
-                  Icons.bar_chart,
-                  color: AppColors.white,
-                  size: 20.sp,
-                ),
-              ),
+              ],
             ),
-            SizedBox(width: 12.w),
-            // Logout button
-            GestureDetector(
-              onTap: _showLogoutDialog,
-              child: Container(
-                width: 44.w,
-                height: 44.h,
-                decoration: BoxDecoration(
-                  color: AppColors.cardBackground,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  Icons.logout,
-                  color: AppColors.textMedium,
-                  size: 20.sp,
-                ),
-              ),
+            child: Icon(
+              Icons.analytics,
+              color: AppColors.white,
+              size: 20.sp,
             ),
-          ],
+          ),
+        ),
+        
+        SizedBox(width: 12.w),
+        
+        // Profile button
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ProfileScreen()),
+            );
+          },
+          child: Container(
+            width: 44.w,
+            height: 44.h,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppColors.affirmationGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                  blurRadius: 8.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.person,
+              color: AppColors.white,
+              size: 24.sp,
+            ),
+          ),
         ),
       ],
     );
@@ -242,20 +288,30 @@ class _HomeScreenState extends State<HomeScreen> {
         
         SizedBox(height: 16.h),
         
-        // Fourth row - Moon Phases (you can add this later)
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: FeatureCard(
-        //         title: 'Moon Phases',
-        //         subtitle: 'Lunar Energy',
-        //         icon: Icons.brightness_3,
-        //         gradientColors: AppColors.moonPhaseGradient,
-        //         onTap: () => _navigateToFeature('moon_phases'),
-        //       ),
-        //     ),
-        //   ],
-        // ),
+        // Fourth row - Stats & Analytics
+        Row(
+          children: [
+            Expanded(
+              child: FeatureCard(
+                title: 'Session Stats',
+                subtitle: 'Track Your Progress',
+                icon: Icons.analytics,
+                gradientColors: AppColors.analyticsGradient,
+                onTap: () => _navigateToFeature('stats'),
+              ),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: FeatureCard(
+                title: 'Moon Phases',
+                subtitle: 'Lunar Energy',
+                icon: Icons.brightness_3,
+                gradientColors: AppColors.moonPhaseGradient,
+                onTap: () => _navigateToFeature('moon_phases'),
+              ),
+            ),
+          ],
+        ),
       ],
     );
   }
@@ -317,7 +373,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VisualMeditationScreen(),
+            builder: (context) => PremiumMeditationScreen(),
           ),
         );
         break;
@@ -329,67 +385,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
         break;
+      case 'stats':
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SessionStatsScreen(),
+          ),
+        );
+        break;
       default:
         print('Unknown feature: $feature');
     }
   }
 
-  void _showLogoutDialog() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
-        title: Text(
-          'Logout',
-          style: TextStyle(color: AppColors.textLight),
-        ),
-        content: Text(
-          'Are you sure you want to logout?',
-          style: TextStyle(color: AppColors.textMedium),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppColors.textMedium),
-            ),
-          ),
-          TextButton(
-            onPressed: _handleLogout,
-            child: Text(
-              'Logout',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _handleLogout() async {
-    try {
-      // Close the dialog first
-      Navigator.pop(context);
-      
-      // Perform logout
-      await _authService.logout();
-      
-      // Navigate back to login screen and clear the stack
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
-        (route) => false,
-      );
-    } catch (e) {
-      print('Logout error: $e');
-      // Show error if needed
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Logout failed. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
 }

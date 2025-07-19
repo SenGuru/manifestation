@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manifestation_app/models/meditation_models.dart';
+import 'package:fun/models/meditation_models.dart';
 
 class AppConstants {
   // Screen dimensions for iPhone 15 Pro Max

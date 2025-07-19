@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/constants/meditation_constants.dart';
-import 'package:manifestation_app/models/meditation_models.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/constants/meditation_constants.dart';
+import 'package:fun/models/meditation_models.dart';
 
 class VisualSelector extends StatefulWidget {
   final VisualType selectedVisual;

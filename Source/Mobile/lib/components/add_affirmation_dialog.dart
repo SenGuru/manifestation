@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/screens/affirmations.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/models/affirmations.dart';
 import 'package:uuid/uuid.dart';
 
 class AddAffirmationDialog extends StatefulWidget {

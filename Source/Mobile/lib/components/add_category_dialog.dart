@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/screens/affirmations.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/models/affirmations.dart';
+import 'package:fun/utils/color_utils.dart';
+import 'package:fun/services/session_manager.dart';
+import 'package:fun/services/user_service.dart';
+import 'package:fun/constants/category_icons.dart';
 import 'package:uuid/uuid.dart';
 
 class AddCategoryDialog extends StatefulWidget {
@@ -21,6 +25,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   Color _selectedColor = AppColors.gradientPink;
+  PredefinedIconTypes _selectedIcon = PredefinedIconTypes.flower;
   final List<Color> _availableColors = [
     AppColors.gradientPink,
     AppColors.gradientOrange,
@@ -36,11 +41,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     AppColors.secondaryTeal,
   ];
 
-// use link2db as the orm
-// load the configuration file locally from a separate folder that resides outside the source folder. 
-// when returning data in the api, you need to return using a return model or a return list model
-// create appropriate loggging and store configuration in the database in the configuration item table. 
-// create a separate service layer and a repository layer. 
+ 
   @override
   void initState() {
     super.initState();
@@ -48,6 +49,17 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
       text: widget.categoryToEdit?.name ?? '',
     );
     _selectedColor = widget.categoryToEdit?.color ?? AppColors.gradientPink;
+    
+    // For user categories: use stored icon or default to first icon in picker
+    // For default categories: they don't get edited, so this is always user categories
+    if (widget.categoryToEdit != null && widget.categoryToEdit!.iconValue != null) {
+      // Use the stored icon value
+      _selectedIcon = PredefinedIconTypes.fromValue(widget.categoryToEdit!.iconValue!) ?? 
+                     PredefinedIconTypes.flower;
+    } else {
+      // New category or no stored icon - default to first icon in picker
+      _selectedIcon = PredefinedIconTypes.flower;
+    }
   }
 
   @override
@@ -82,7 +94,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
-                    isEditing ? Icons.edit : Icons.category,
+                    isEditing ? Icons.edit : _selectedIcon.iconData,
                     color: _selectedColor,
                     size: 20.sp,
                   ),
@@ -169,6 +181,65 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                           return 'Category name should be at least 2 characters';
                         }
                         return null;
+                      },
+                    ),
+                  ),
+                  
+                  SizedBox(height: 20.h),
+                  
+                  // Icon selection
+                  Text(
+                    'Category Icon',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textLight,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Container(
+                    height: 60.h,
+                    child: GridView.builder(
+                      scrollDirection: Axis.horizontal,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 8.w,
+                        crossAxisSpacing: 8.h,
+                        childAspectRatio: 1.0,
+                      ),
+                      itemCount: PredefinedIconTypes.values.length,
+                      itemBuilder: (context, index) {
+                        final iconType = PredefinedIconTypes.values[index];
+                        final isSelected = iconType == _selectedIcon;
+                        
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _selectedIcon = iconType;
+                            });
+                          },
+                          child: Container(
+                            width: 24.w,
+                            height: 24.h,
+                            decoration: BoxDecoration(
+                              color: isSelected 
+                                  ? _selectedColor.withOpacity(0.2)
+                                  : AppColors.backgroundMedium,
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: Border.all(
+                                color: isSelected 
+                                    ? _selectedColor 
+                                    : Colors.transparent,
+                                width: 2,
+                              ),
+                            ),
+                            child: Icon(
+                              iconType.iconData,
+                              color: isSelected ? _selectedColor : AppColors.textMedium,
+                              size: 20.sp,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -321,17 +392,93 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
       _isLoading = true;
     });
 
-    final categoryName = _nameController.text.trim();
-    
-    final category = AffirmationCategory(
-      id: widget.categoryToEdit?.id ?? const Uuid().v4(),
-      name: categoryName,
-      color: _selectedColor,
-      affirmations: widget.categoryToEdit?.affirmations ?? [],
-      isCustom: true,
-      createdAt: widget.categoryToEdit?.createdAt ?? DateTime.now(),
-    );
+    try {
+      final categoryName = _nameController.text.trim();
+      final isEditing = widget.categoryToEdit != null;
+      
+      if (isEditing) {
+        // Update existing category (TODO: implement with generated API)
+        _showErrorDialog('Category update not yet implemented with new API');
+        return;
+      } else {
+        // Create new category
+        print('Creating category with name: $categoryName');
+        print('Color: ${ColorUtils.colorToHex(_selectedColor)}');
+        
+        // Create category with hardcoded data (API temporarily disabled)
+        final newCategory = AffirmationCategory(
+          id: const Uuid().v4(),
+          name: categoryName,
+          color: _selectedColor,
+          iconValue: _selectedIcon.value,
+          affirmations: [],
+          isCustom: true,
+          createdAt: DateTime.now(),
+        );
+        
+        // Simulate a brief delay for better UX
+        await Future.delayed(Duration(milliseconds: 500));
+        
+        Navigator.pop(context, newCategory);
+      }
+    } catch (e) {
+      print('Exception in _saveCategory: $e');
+      print('Exception type: ${e.runtimeType}');
+      _showErrorDialog('An error occurred: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
-    Navigator.pop(context, category);
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.cardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Row(
+          children: [
+            Icon(
+              Icons.error_outline,
+              color: Colors.red,
+              size: 24.sp,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              'Error',
+              style: TextStyle(
+                color: AppColors.textLight,
+                fontSize: 18.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          message,
+          style: TextStyle(
+            color: AppColors.textMedium,
+            fontSize: 14.sp,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'OK',
+              style: TextStyle(
+                color: AppColors.accentGold,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

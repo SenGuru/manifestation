@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/constants/colors.dart';
 import 'dart:math' as math;
 
+import 'package:fun/constants/meditation_constants.dart';
 
 
 class AnimatedMinimal extends StatefulWidget {

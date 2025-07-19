@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/services/daily_quote_service.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/services/daily_quote_service.dart';
 
 class DailyInspiration extends StatefulWidget {
   final bool refreshOnEveryOpen;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/components/journey_entry.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import '../models/journey_entry.dart';
+import '../constants/colors.dart';
 
 class JournalStatsScreen extends StatelessWidget {
   final Map<String, JournalEntry> entries;

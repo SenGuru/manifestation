@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/components/add_goal_sheet.dart';
-import 'package:manifestation_app/components/goal_card.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/screens/goals.dart';
-import 'package:manifestation_app/services/goal_api_service.dart' as api;
+import '../components/add_goal_sheet.dart';
+import '../components/edit_goal_sheet.dart';
+import '../components/goal_card.dart';
+import '../components/progress_update_dialog.dart';
+import '../models/goals.dart';
+import '../constants/colors.dart';
+import 'goal_detail_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class GoalTrackerScreen extends StatefulWidget {
   @override
@@ -13,11 +17,11 @@ class GoalTrackerScreen extends StatefulWidget {
 
 class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     with TickerProviderStateMixin {
+  
   List<Goal> goals = [];
   GoalCategory selectedCategory = GoalCategory.all;
   bool showCompletedGoals = true;
-  bool isLoading = true;
-  final api.GoalApiService _goalService = api.GoalApiService();
+  bool _isLoading = false;
   
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
@@ -64,15 +68,15 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             
             // Goals list
             Expanded(
-              child: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.goalTrackerGradient[0]),
-                      ),
-                    )
+              child: _isLoading
+                  ? _buildLoadingState()
                   : filteredGoals.isEmpty 
                       ? _buildEmptyState()
-                      : _buildGoalsList(filteredGoals),
+                      : RefreshIndicator(
+                          onRefresh: _loadGoals,
+                          color: AppColors.goalTrackerGradient[0],
+                          child: _buildGoalsList(filteredGoals),
+                        ),
             ),
           ],
         ),
@@ -106,6 +110,9 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               decoration: BoxDecoration(
                 color: AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                      color: AppColors.textMedium.withOpacity(0.1),
+                    ),
               ),
               child: Icon(
                 Icons.arrow_back,
@@ -128,13 +135,30 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   ),
                 ),
                 Text(
-                  'Track your manifestation journey',
+                  'Track your manifestation progress',
                   style: TextStyle(
                     fontSize: 14.sp,
                     color: AppColors.textMedium,
                   ),
                 ),
               ],
+            ),
+          ),
+          // Settings button
+          GestureDetector(
+            onTap: _showSettings,
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                Icons.tune,
+                color: AppColors.textLight,
+                size: 20.sp,
+              ),
             ),
           ),
         ],
@@ -145,8 +169,9 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   Widget _buildStatsOverview() {
     final totalGoals = goals.length;
     final completedGoals = goals.where((g) => g.isCompleted).length;
-    final inProgressGoals = goals.where((g) => g.status == GoalStatus.inProgress).length;
-    
+    final activeGoals = goals.where((g) => !g.isCompleted).length;
+    final overallProgress = totalGoals > 0 ? goals.map((g) => g.currentProgress).reduce((a, b) => a + b) / totalGoals : 0.0;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       padding: EdgeInsets.all(20.w),
@@ -156,14 +181,103 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(20.r),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.goalTrackerGradient[0].withOpacity(0.3),
+            blurRadius: 12.r,
+            offset: Offset(0, 6.h),
+          ),
+        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Column(
         children: [
-          _buildStatItem('Total', totalGoals.toString(), Icons.flag),
-          _buildStatItem('Active', inProgressGoals.toString(), Icons.trending_up),
-          _buildStatItem('Completed', completedGoals.toString(), Icons.check_circle),
+          // Overall progress circle
+          Row(
+            children: [
+              Container(
+                width: 80.w,
+                height: 80.h,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: SizedBox(
+                        width: 80.w,
+                        height: 80.h,
+                        child: CircularProgressIndicator(
+                          value: overallProgress / 100,
+                          strokeWidth: 6,
+                          backgroundColor: AppColors.white.withOpacity(0.3),
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                        ),
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        '${overallProgress.round()}%',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(width: 20.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Overall Progress',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      'Keep manifesting your dreams!',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.white.withOpacity(0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          
+          SizedBox(height: 20.h),
+          
+          // Stats row
+          Row(
+            children: [
+              Expanded(
+                child: _buildStatItem('Total', totalGoals.toString(), Icons.flag),
+              ),
+              Container(
+                width: 1,
+                height: 30.h,
+                color: AppColors.white.withOpacity(0.3),
+              ),
+              Expanded(
+                child: _buildStatItem('Active', activeGoals.toString(), Icons.trending_up),
+              ),
+              Container(
+                width: 1,
+                height: 30.h,
+                color: AppColors.white.withOpacity(0.3),
+              ),
+              Expanded(
+                child: _buildStatItem('Done', completedGoals.toString(), Icons.check_circle),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -172,8 +286,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.white, size: 24.sp),
-        SizedBox(height: 8.h),
+        Icon(
+          icon,
+          color: AppColors.white,
+          size: 20.sp,
+        ),
+        SizedBox(height: 4.h),
         Text(
           value,
           style: TextStyle(
@@ -197,11 +315,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     return Container(
       height: 50.h,
       margin: EdgeInsets.only(top: 20.h),
-      child: ListView(
+      child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(horizontal: 20.w),
-        children: GoalCategory.values.map((category) {
+        itemCount: GoalCategory.values.length,
+        itemBuilder: (context, index) {
+          final category = GoalCategory.values[index];
           final isSelected = selectedCategory == category;
+          
           return GestureDetector(
             onTap: () {
               setState(() {
@@ -210,85 +331,78 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             },
             child: Container(
               margin: EdgeInsets.only(right: 12.w),
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
               decoration: BoxDecoration(
-                color: isSelected ? category.color : AppColors.cardBackground,
+                color: isSelected 
+                    ? category.color.withOpacity(0.1)
+                    : AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
-                  color: isSelected ? category.color : AppColors.textMedium.withOpacity(0.3),
+                  color: isSelected 
+                      ? category.color
+                      : AppColors.textMedium.withOpacity(0.3),
                 ),
               ),
-              child: Text(
-                category.displayName,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: isSelected ? AppColors.white : AppColors.textLight,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    category.icon,
+                    color: isSelected ? category.color : AppColors.textMedium,
+                    size: 16.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    category.displayName,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                      color: isSelected ? category.color : AppColors.textMedium,
+                    ),
+                  ),
+                ],
               ),
             ),
           );
-        }).toList(),
+        },
       ),
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildGoalsList(List<Goal> filteredGoals) {
+    return ListView.builder(
+      padding: EdgeInsets.all(20.w),
+      itemCount: filteredGoals.length,
+      itemBuilder: (context, index) {
+        final goal = filteredGoals[index];
+        return Container(
+          margin: EdgeInsets.only(bottom: 16.h),
+          child: GoalCard(
+            goal: goal,
+            onTap: () => _showGoalDetails(goal),
+            onProgressUpdate: () => _updateGoalProgress(goal),
+            onEdit: () => _editGoal(goal),
+            onDelete: () => _deleteGoal(goal),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildLoadingState() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            width: 80.w,
-            height: 80.h,
-            decoration: BoxDecoration(
-              color: AppColors.goalTrackerGradient[0].withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20.r),
-            ),
-            child: Icon(
-              Icons.track_changes,
-              color: AppColors.goalTrackerGradient[0],
-              size: 40.sp,
-            ),
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.goalTrackerGradient[0]),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: 16.h),
           Text(
-            'No Goals Yet',
+            'Loading your goals...',
             style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            selectedCategory == GoalCategory.all
-                ? 'Create your first goal to start tracking progress'
-                : 'No goals in ${selectedCategory.displayName} category',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.sp,
+              fontSize: 16.sp,
               color: AppColors.textMedium,
-              height: 1.4,
-            ),
-          ),
-          SizedBox(height: 24.h),
-          GestureDetector(
-            onTap: _showAddGoalSheet,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: AppColors.goalTrackerGradient),
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Text(
-                'Create Goal',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.white,
-                ),
-              ),
             ),
           ),
         ],
@@ -296,124 +410,243 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     );
   }
 
-  Widget _buildGoalsList(List<Goal> goals) {
-    return ListView.builder(
-      padding: EdgeInsets.all(20.w),
-      itemCount: goals.length,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: EdgeInsets.only(bottom: 16.h),
-          child: GoalCard(
-            goal: goals[index],
-            onTap: () => _showGoalDetails(goals[index]),
-            onEdit: () => _editGoal(goals[index]),
-            onDelete: () => _deleteGoal(goals[index]),
-            onProgressUpdate: () => _updateGoalProgress(goals[index]),
-          ),
-        );
-      },
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: AppColors.goalTrackerGradient[0].withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.track_changes,
+                color: AppColors.goalTrackerGradient[0],
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              selectedCategory == GoalCategory.all 
+                  ? 'No Goals Yet'
+                  : 'No ${selectedCategory.displayName} Goals',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textLight,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              selectedCategory == GoalCategory.all
+                  ? 'Start manifesting by creating your first goal'
+                  : 'Create a goal in this category to get started',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppColors.textMedium,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _showAddGoalSheet,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.goalTrackerGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.add,
+                      color: AppColors.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Create Goal',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   List<Goal> _filterGoals() {
-    var filtered = goals.where((goal) {
-      final categoryMatch = selectedCategory == GoalCategory.all || goal.category == selectedCategory;
-      final completionMatch = showCompletedGoals || !goal.isCompleted;
-      return categoryMatch && completionMatch;
-    }).toList();
+    var filtered = goals;
     
-    // Sort by creation date (newest first)
-    filtered.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    if (selectedCategory != GoalCategory.all) {
+      filtered = filtered.where((goal) => goal.category == selectedCategory).toList();
+    }
+    
+    if (!showCompletedGoals) {
+      filtered = filtered.where((goal) => !goal.isCompleted).toList();
+    }
+    
+    // Sort by priority and creation date
+    filtered.sort((a, b) {
+      if (a.isCompleted != b.isCompleted) {
+        return a.isCompleted ? 1 : -1; // Active goals first
+      }
+      if (a.priority != b.priority) {
+        return b.priority.index - a.priority.index; // High priority first
+      }
+      return b.createdAt.compareTo(a.createdAt); // Newest first
+    });
     
     return filtered;
   }
 
   Future<void> _loadGoals() async {
     setState(() {
-      isLoading = true;
+      _isLoading = true;
     });
 
     try {
-      final apiGoals = await _goalService.getGoals();
-      final convertedGoals = apiGoals.map((apiGoal) => _convertApiGoalToLocal(apiGoal)).toList();
+      print('=== LOADING HARDCODED GOALS ===');
+      
+      // Simulate loading delay
+      await Future.delayed(Duration(milliseconds: 500));
+      
+      // Create hardcoded goals
+      final hardcodedGoals = [
+        Goal(
+          id: '1',
+          title: 'Get Promoted at Work',
+          description: 'Work towards getting a promotion to senior level',
+          category: GoalCategory.career,
+          priority: GoalPriority.high,
+          targetDate: DateTime.now().add(Duration(days: 180)),
+          createdAt: DateTime.now().subtract(Duration(days: 30)),
+          milestones: [
+            Milestone(
+              id: '1',
+              title: 'Complete leadership training',
+              description: 'Finish the leadership development program',
+              isCompleted: true,
+              completedAt: DateTime.now().subtract(Duration(days: 10)),
+              targetDate: DateTime.now().add(Duration(days: 60)),
+            ),
+            Milestone(
+              id: '2',
+              title: 'Present quarterly results',
+              description: 'Successfully present Q4 results to management',
+              isCompleted: false,
+              targetDate: DateTime.now().add(Duration(days: 45)),
+            ),
+          ],
+          currentProgress: 60.0,
+          tags: ['career', 'professional'],
+        ),
+        Goal(
+          id: '2',
+          title: 'Run a Marathon',
+          description: 'Complete a full 26.2 mile marathon',
+          category: GoalCategory.health,
+          priority: GoalPriority.medium,
+          targetDate: DateTime.now().add(Duration(days: 365)),
+          createdAt: DateTime.now().subtract(Duration(days: 15)),
+          milestones: [
+            Milestone(
+              id: '3',
+              title: 'Run 10K consistently',
+              description: 'Be able to run 10K without stopping',
+              isCompleted: true,
+              completedAt: DateTime.now().subtract(Duration(days: 5)),
+              targetDate: DateTime.now().add(Duration(days: 90)),
+            ),
+            Milestone(
+              id: '4',
+              title: 'Complete half marathon',
+              description: 'Finish a 13.1 mile half marathon',
+              isCompleted: false,
+              targetDate: DateTime.now().add(Duration(days: 180)),
+            ),
+          ],
+          currentProgress: 35.0,
+          tags: ['health', 'fitness'],
+        ),
+        Goal(
+          id: '3',
+          title: 'Save \$10,000',
+          description: 'Build an emergency fund of \$10,000',
+          category: GoalCategory.financial,
+          priority: GoalPriority.high,
+          targetDate: DateTime.now().add(Duration(days: 365)),
+          createdAt: DateTime.now().subtract(Duration(days: 60)),
+          milestones: [
+            Milestone(
+              id: '5',
+              title: 'Save \$2,500',
+              description: 'First quarter of emergency fund',
+              isCompleted: true,
+              completedAt: DateTime.now().subtract(Duration(days: 20)),
+              targetDate: DateTime.now().add(Duration(days: 90)),
+            ),
+            Milestone(
+              id: '6',
+              title: 'Save \$5,000',
+              description: 'Halfway to goal',
+              isCompleted: false,
+              targetDate: DateTime.now().add(Duration(days: 180)),
+            ),
+          ],
+          currentProgress: 25.0,
+          tags: ['money', 'savings'],
+        ),
+      ];
       
       setState(() {
-        goals = convertedGoals;
-        isLoading = false;
+        goals = hardcodedGoals;
       });
+      
+      print('✅ Successfully loaded ${goals.length} hardcoded goals');
     } catch (e) {
-      print('Error loading goals: $e');
+      print('Exception loading goals: $e');
       setState(() {
-        isLoading = false;
-        // Keep sample goals if API fails
-        goals = [
-          Goal.sample1(),
-          Goal.sample2(),
-          Goal.sample3(),
-        ];
+        goals = [];
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
 
-  /// Convert API Goal to local Goal model
-  Goal _convertApiGoalToLocal(api.Goal apiGoal) {
-    return Goal(
-      id: apiGoal.id,
-      title: apiGoal.title,
-      description: apiGoal.description,
-      category: _convertApiCategoryToLocal(apiGoal.category),
-      priority: GoalPriority.medium, // Default priority since API doesn't have this
-      targetDate: apiGoal.endDate ?? DateTime.now().add(Duration(days: 30)),
-      createdAt: apiGoal.createdAt,
-      milestones: [], // No milestones for now
-      currentProgress: _calculateProgressFromStatus(apiGoal.status),
-      tags: [], // Default empty tags
-    );
-  }
+  // Goals are now loaded as hardcoded data
 
-  /// Convert API milestones to local milestones
-  List<Milestone> _convertApiMilestonesToLocal(List<api.GoalMilestone> apiMilestones) {
-    return apiMilestones.map((apiMilestone) => Milestone(
-      id: apiMilestone.id,
-      title: apiMilestone.title,
-      description: null, // API milestone doesn't have description
-      isCompleted: apiMilestone.status == api.GoalStatus.completed,
-      completedAt: apiMilestone.completedDate,
-      targetDate: apiMilestone.endDate,
-    )).toList();
-  }
-
-  /// Convert API GoalCategory to local GoalCategory
-  GoalCategory _convertApiCategoryToLocal(api.GoalCategory apiCategory) {
-    switch (apiCategory) {
-      case api.GoalCategory.career:
-        return GoalCategory.career;
-      case api.GoalCategory.health:
-        return GoalCategory.health;
-      case api.GoalCategory.love:
-        return GoalCategory.relationships; // Map love to relationships
-      case api.GoalCategory.money:
-        return GoalCategory.financial; // Map money to financial
-      case api.GoalCategory.personal:
-        return GoalCategory.personal;
-      case api.GoalCategory.spiritual:
-        return GoalCategory.spiritual;
-    }
-  }
-
-  /// Convert API GoalStatus to progress percentage
-  double _calculateProgressFromStatus(api.GoalStatus status) {
-    switch (status) {
-      case api.GoalStatus.notStarted:
-        return 0.0;
-      case api.GoalStatus.inProgress:
-        return 50.0; // Assume 50% for in progress
-      case api.GoalStatus.completed:
-        return 100.0;
-      case api.GoalStatus.paused:
-        return 25.0; // Assume 25% for paused
-      case api.GoalStatus.cancelled:
-        return 0.0;
+  // Store goal-category mapping locally
+  Future<void> _storeGoalCategory(String goalId, GoalCategory category) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final key = 'goal_categories';
+      final existing = prefs.getString(key) ?? '{}';
+      final Map<String, dynamic> categories = json.decode(existing);
+      
+      categories[goalId] = category.name;
+      await prefs.setString(key, json.encode(categories));
+      
+      print('💾 Stored category ${category.name} for goal $goalId');
+    } catch (e) {
+      print('❌ Error storing goal category: $e');
     }
   }
 
@@ -424,71 +657,144 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       isScrollControlled: true,
       builder: (context) => AddGoalSheet(
         onGoalAdded: (goal) async {
-          // Convert local goal to API goal and create it
-          final apiGoal = await _createApiGoalFromLocal(goal);
-          if (apiGoal != null) {
-            await _loadGoals(); // Reload goals from API
-            _showSuccessSnackBar('Goal created successfully!');
-          } else {
-            _showErrorSnackBar('Failed to create goal');
-          }
+          // Add the goal to the UI
+          setState(() {
+            goals.add(goal);
+          });
+          
+          // Store goal category locally
+          await _storeGoalCategory(goal.id, goal.category);
+          
+          print('Goal "${goal.title}" saved locally');
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Goal added successfully!'),
+              backgroundColor: AppColors.goalTrackerGradient[0],
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+          );
         },
       ),
     );
   }
 
-  Future<api.Goal?> _createApiGoalFromLocal(Goal localGoal) async {
-    try {
-      final apiGoal = api.Goal(
-        id: '', // Will be set by API
-        title: localGoal.title,
-        description: localGoal.description,
-        category: _convertLocalCategoryToApi(localGoal.category),
-        startDate: localGoal.createdAt,
-        endDate: localGoal.targetDate,
-        status: localGoal.isCompleted ? api.GoalStatus.completed : api.GoalStatus.notStarted,
-        createdAt: localGoal.createdAt,
-      );
-
-      return await _goalService.createGoal(apiGoal);
-    } catch (e) {
-      print('Error creating API goal: $e');
-      return null;
-    }
-  }
-
-  api.GoalCategory _convertLocalCategoryToApi(GoalCategory localCategory) {
-    switch (localCategory) {
-      case GoalCategory.career:
-        return api.GoalCategory.career;
-      case GoalCategory.health:
-        return api.GoalCategory.health;
-      case GoalCategory.relationships:
-        return api.GoalCategory.love;
-      case GoalCategory.financial:
-        return api.GoalCategory.money;
-      case GoalCategory.personal:
-        return api.GoalCategory.personal;
-      case GoalCategory.spiritual:
-        return api.GoalCategory.spiritual;
-      default:
-        return api.GoalCategory.personal;
-    }
-  }
-
   void _showGoalDetails(Goal goal) {
-    // TODO: Navigate to goal details screen
-    print('Showing details for: ${goal.title}');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GoalDetailScreen(
+          goal: goal,
+          onGoalUpdated: (updatedGoal) async {
+            // Update the goal in the UI
+            setState(() {
+              final index = goals.indexWhere((g) => g.id == goal.id);
+              if (index != -1) {
+                goals[index] = updatedGoal;
+              }
+            });
+            
+            // Goal updated locally - no server sync needed
+          },
+          onGoalDeleted: (deletedGoal) async {
+            // Goal deleted locally
+            setState(() {
+              goals.remove(deletedGoal);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   void _updateGoalProgress(Goal goal) {
-    // TODO: Show progress update dialog
-    print('Updating progress for: ${goal.title}');
+    showDialog(
+      context: context,
+      builder: (context) => ProgressUpdateDialog(
+        goal: goal,
+        onProgressUpdate: (newProgress) async {
+          // Update the goal locally
+          final updatedGoal = Goal(
+            id: goal.id,
+            title: goal.title,
+            description: goal.description,
+            category: goal.category,
+            priority: goal.priority,
+            targetDate: goal.targetDate,
+            createdAt: goal.createdAt,
+            milestones: goal.milestones,
+            currentProgress: newProgress,
+            tags: goal.tags,
+          );
+          
+          setState(() {
+            final index = goals.indexWhere((g) => g.id == goal.id);
+            if (index != -1) {
+              goals[index] = updatedGoal;
+            }
+          });
+          
+          // Update on server
+          // Goal updated locally - no server sync needed
+          
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                newProgress >= 100.0 
+                    ? 'Goal completed! 🎉' 
+                    : 'Progress updated to ${newProgress.round()}%'
+              ),
+              backgroundColor: newProgress >= 100.0 
+                  ? AppColors.accentMint 
+                  : AppColors.goalTrackerGradient[0],
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   void _editGoal(Goal goal) {
-    // TODO: Show edit goal sheet
-    print('Editing goal: ${goal.title}');
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => EditGoalSheet(
+        goal: goal,
+        onGoalUpdated: (updatedGoal) async {
+          // Update the goal in the UI
+          setState(() {
+            final index = goals.indexWhere((g) => g.id == goal.id);
+            if (index != -1) {
+              goals[index] = updatedGoal;
+            }
+          });
+          
+          // Update on server
+          // Goal updated locally - no server sync needed
+          
+          // Show success message
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Goal updated successfully!'),
+              backgroundColor: AppColors.goalTrackerGradient[0],
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   void _deleteGoal(Goal goal) {
@@ -496,55 +802,126 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       context: context,
       builder: (context) => AlertDialog(
         backgroundColor: AppColors.cardBackground,
-        title: Text('Delete Goal', style: TextStyle(color: AppColors.textLight)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          'Delete Goal',
+          style: TextStyle(
+            color: AppColors.textLight,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Text(
-          'Are you sure you want to delete "${goal.title}"?',
-          style: TextStyle(color: AppColors.textMedium),
+          'Are you sure you want to delete "${goal.title}"? This action cannot be undone.',
+          style: TextStyle(
+            color: AppColors.textMedium,
+            fontSize: 14.sp,
+          ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: AppColors.textMedium),
+            ),
           ),
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              try {
-                // Convert local goal ID to API format
-                final success = await _goalService.deleteGoal(goal.id);
-                if (success) {
-                  await _loadGoals();
-                  _showSuccessSnackBar('Goal deleted');
-                } else {
-                  _showErrorSnackBar('Failed to delete goal');
-                }
-              } catch (e) {
-                _showErrorSnackBar('Error deleting goal');
-              }
+              // Delete goal locally
+              setState(() {
+                goals.remove(goal);
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Goal deleted successfully'),
+                  backgroundColor: Colors.green,
+                  behavior: SnackBarBehavior.floating,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                ),
+              );
             },
-            child: Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _showSuccessSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: AppColors.accentMint,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
+  void _showSettings() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        margin: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(24.r),
+        ),
+        child: Column(
+          children: [
+            Container(
+              width: 40.w,
+              height: 4.h,
+              margin: EdgeInsets.only(top: 12.h),
+              decoration: BoxDecoration(
+                color: AppColors.textMedium.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Text(
+                'Goal Settings',
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textLight,
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                children: [
+                  ListTile(
+                    leading: Icon(
+                      Icons.visibility,
+                      color: AppColors.textLight,
+                    ),
+                    title: Text(
+                      'Show Completed Goals',
+                      style: TextStyle(
+                        color: AppColors.textLight,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                    trailing: Switch(
+                      value: showCompletedGoals,
+                      onChanged: (value) {
+                        setState(() {
+                          showCompletedGoals = value;
+                        });
+                        Navigator.pop(context);
+                      },
+                      activeColor: AppColors.goalTrackerGradient[0],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

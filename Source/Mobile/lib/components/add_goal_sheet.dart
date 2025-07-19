@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/screens/goals.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/models/goals.dart';
+
+class MilestoneInput {
+  String title;
+  DateTime? targetDate;
+  
+  MilestoneInput({
+    this.title = '',
+    this.targetDate,
+  });
+}
 
 class AddGoalSheet extends StatefulWidget {
   final Function(Goal) onGoalAdded;
@@ -23,7 +33,12 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
   GoalCategory selectedCategory = GoalCategory.career;
   GoalPriority selectedPriority = GoalPriority.medium;
   DateTime selectedDate = DateTime.now().add(Duration(days: 90));
-  List<String> milestones = ['', '', '', ''];
+  List<MilestoneInput> milestones = [
+    MilestoneInput(),
+    MilestoneInput(),
+    MilestoneInput(),
+    MilestoneInput(),
+  ];
 
   @override
   void dispose() {
@@ -383,63 +398,8 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
         SizedBox(height: 12.h),
         ...milestones.asMap().entries.map((entry) {
           final index = entry.key;
-          final milestone = entry.value;
-          return Container(
-            margin: EdgeInsets.only(bottom: 12.h),
-            child: Row(
-              children: [
-                Container(
-                  width: 24.w,
-                  height: 24.h,
-                  decoration: BoxDecoration(
-                    color: selectedCategory.color.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: selectedCategory.color.withOpacity(0.3),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '${index + 1}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: selectedCategory.color,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 12.w),
-                Expanded(
-                  child: TextField(
-                    onChanged: (value) {
-                      milestones[index] = value;
-                    },
-                    style: TextStyle(
-                      color: AppColors.textLight,
-                      fontSize: 14.sp,
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Milestone ${index + 1}...',
-                      hintStyle: TextStyle(
-                        color: AppColors.textMedium.withOpacity(0.6),
-                      ),
-                      filled: true,
-                      fillColor: AppColors.backgroundMedium,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.r),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12.w,
-                        vertical: 8.h,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
+          final milestoneInput = entry.value;
+          return _buildMilestoneCard(index, milestoneInput);
         }).toList(),
         
         // Create button
@@ -483,6 +443,187 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
     );
   }
 
+  Widget _buildMilestoneCard(int index, MilestoneInput milestoneInput) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 16.h),
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppColors.backgroundMedium,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(
+          color: selectedCategory.color.withOpacity(0.2),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with milestone number and optional indicator
+          Row(
+            children: [
+              Container(
+                width: 28.w,
+                height: 28.h,
+                decoration: BoxDecoration(
+                  color: selectedCategory.color.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: selectedCategory.color.withOpacity(0.3),
+                    width: 1.5,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    '${index + 1}',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.bold,
+                      color: selectedCategory.color,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Text(
+                'Milestone ${index + 1}',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textLight,
+                ),
+              ),
+              Spacer(),
+              if (milestoneInput.title.isNotEmpty || milestoneInput.targetDate != null)
+                Icon(
+                  Icons.check_circle,
+                  color: selectedCategory.color,
+                  size: 20.sp,
+                ),
+            ],
+          ),
+          SizedBox(height: 12.h),
+          
+          // Title input
+          TextField(
+            onChanged: (value) {
+              setState(() {
+                milestoneInput.title = value;
+              });
+            },
+            style: TextStyle(
+              color: AppColors.textLight,
+              fontSize: 14.sp,
+            ),
+            decoration: InputDecoration(
+              hintText: 'What milestone do you want to achieve?',
+              hintStyle: TextStyle(
+                color: AppColors.textMedium.withOpacity(0.6),
+              ),
+              filled: true,
+              fillColor: AppColors.cardBackground,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.r),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12.w,
+                vertical: 12.h,
+              ),
+              prefixIcon: Icon(
+                Icons.flag_outlined,
+                color: AppColors.textMedium,
+                size: 20.sp,
+              ),
+            ),
+          ),
+          SizedBox(height: 12.h),
+          
+          // Target date selection
+          GestureDetector(
+            onTap: () => _selectMilestoneDate(index),
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(
+                  color: milestoneInput.targetDate != null 
+                      ? selectedCategory.color.withOpacity(0.3)
+                      : AppColors.textMedium.withOpacity(0.2),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.schedule,
+                    color: milestoneInput.targetDate != null 
+                        ? selectedCategory.color 
+                        : AppColors.textMedium,
+                    size: 20.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    milestoneInput.targetDate != null
+                        ? _formatDate(milestoneInput.targetDate!)
+                        : 'Set target date (optional)',
+                    style: TextStyle(
+                      color: milestoneInput.targetDate != null 
+                          ? AppColors.textLight 
+                          : AppColors.textMedium.withOpacity(0.6),
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  Spacer(),
+                  if (milestoneInput.targetDate != null)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          milestoneInput.targetDate = null;
+                        });
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: AppColors.textMedium,
+                        size: 18.sp,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _selectMilestoneDate(int index) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: milestones[index].targetDate ?? selectedDate,
+      firstDate: DateTime.now(),
+      lastDate: selectedDate, // Can't be later than goal target date
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: selectedCategory.color,
+              onPrimary: AppColors.white,
+              surface: AppColors.cardBackground,
+              onSurface: AppColors.textLight,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    
+    if (picked != null) {
+      setState(() {
+        milestones[index].targetDate = picked;
+      });
+    }
+  }
+
   void _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -511,8 +652,17 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
     }
   }
 
-  void _createGoal() {
+  void _createGoal() async {
+    print('=== DEBUG: _createGoal() called ===');
+    print('Form validation: ${_formKey.currentState?.validate()}');
+    
     if (_formKey.currentState!.validate()) {
+      print('Form is valid, creating goal...');
+      
+      final validMilestones = milestones.where((m) => m.title.trim().isNotEmpty).toList();
+      print('Valid milestones count: ${validMilestones.length}');
+      print('Valid milestones: ${validMilestones.map((m) => '${m.title} (${m.targetDate != null ? _formatDate(m.targetDate!) : 'no date'})')}');
+      
       final goal = Goal(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         title: _titleController.text.trim(),
@@ -521,19 +671,31 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
         priority: selectedPriority,
         targetDate: selectedDate,
         createdAt: DateTime.now(),
-        milestones: milestones
-            .where((m) => m.trim().isNotEmpty)
+        milestones: validMilestones
             .map((m) => Milestone(
-                  id: DateTime.now().millisecondsSinceEpoch.toString() + m.hashCode.toString(),
-                  title: m.trim(),
+                  id: DateTime.now().millisecondsSinceEpoch.toString() + m.title.hashCode.toString(),
+                  title: m.title.trim(),
                   isCompleted: false,
+                  targetDate: m.targetDate,
                 ))
             .toList(),
         currentProgress: 0.0,
         tags: [],
       );
 
+      print('Goal created with ID: ${goal.id}');
+      print('Goal local milestones: ${goal.milestones.length}');
+
+      // Call the parent callback to save the goal
+      print('Calling widget.onGoalAdded...');
       widget.onGoalAdded(goal);
+      print('widget.onGoalAdded completed');
+      
+      // NOTE: Milestone creation will now happen AFTER the goal is saved to API
+      // This is handled in the goal_tracker_screen.dart in the onGoalAdded callback
+      // The milestones will be created using the real API goal ID, not the local ID
+      print('Milestone creation will happen after goal is saved to API with real goal ID');
+      
       Navigator.pop(context);
       
       ScaffoldMessenger.of(context).showSnackBar(
@@ -542,8 +704,11 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           backgroundColor: AppColors.goalTrackerGradient[0],
         ),
       );
+    } else {
+      print('Form validation failed');
     }
   }
+
 
   String _formatDate(DateTime date) {
     final months = [

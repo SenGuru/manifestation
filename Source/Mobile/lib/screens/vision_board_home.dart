@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/screens/vision_board.dart';
-import 'package:manifestation_app/screens/vision_board_screen.dart';
-import 'package:manifestation_app/services/vision_board_service.dart';
-import 'package:manifestation_app/services/session_service.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import '../models/vision_board.dart';
+import 'vision_board_screen.dart';
+import '../constants/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 
 class VisionBoardHome extends StatefulWidget {
   const VisionBoardHome({super.key});
@@ -16,8 +16,6 @@ class VisionBoardHome extends StatefulWidget {
 class _VisionBoardHomeState extends State<VisionBoardHome> {
   List<VisionBoard> visionBoards = [];
   bool isLoading = false;
-  final VisionBoardService _visionBoardService = VisionBoardService();
-  String? _errorMessage;
 
   @override
   void initState() {
@@ -25,40 +23,82 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     _loadVisionBoards();
   }
 
+
   Future<void> _loadVisionBoards() async {
     setState(() {
       isLoading = true;
-      _errorMessage = null;
     });
     
     try {
-      final userId = await SessionService.instance.getUserId();
-      final result = await _visionBoardService.getUserVisionBoards(userId: userId);
+      // Load from local storage
+      visionBoards = await _loadFromLocalStorage();
       
-      if (result.isSuccess && result.data != null) {
-        setState(() {
-          visionBoards = result.data!.map((session) => VisionBoard(
-            id: session.id,
-            title: session.title,
-            elements: [], // Will be loaded when board is opened
-            createdAt: session.createdAt,
-            updatedAt: session.createdAt, // API doesn't provide updatedAt
-            backgroundColor: AppColors.white,
-          )).toList();
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          _errorMessage = result.message ?? 'Failed to load vision boards';
-          isLoading = false;
-        });
+      if (visionBoards.isEmpty) {
+        // Create sample boards if nothing exists
+        visionBoards = _createSampleBoards();
+        print('📝 Created sample vision boards');
       }
+      
+      print('✅ Loaded ${visionBoards.length} vision boards from local storage');
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Network error: ${e.toString()}';
-        isLoading = false;
-      });
+      print('❌ Error loading vision boards: $e');
+      visionBoards = _createSampleBoards();
     }
+    
+    setState(() {
+      isLoading = false;
+    });
+  }
+  
+  Future<List<VisionBoard>> _loadFromLocalStorage() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final savedBoardIds = prefs.getStringList('saved_vision_boards') ?? [];
+      final List<VisionBoard> boards = [];
+      
+      for (final boardId in savedBoardIds) {
+        final boardJson = prefs.getString('vision_board_$boardId');
+        if (boardJson != null) {
+          final boardData = jsonDecode(boardJson);
+          boards.add(VisionBoard.fromJson(boardData));
+        }
+      }
+      
+      print('📱 Loaded ${boards.length} vision boards from local storage');
+      return boards;
+    } catch (e) {
+      print('❌ Error loading from local storage: $e');
+      return [];
+    }
+  }
+  
+  List<VisionBoard> _createSampleBoards() {
+    return [
+      VisionBoard(
+        id: '1',
+        title: 'Dream Home',
+        elements: [],
+        createdAt: DateTime.now().subtract(Duration(days: 5)),
+        updatedAt: DateTime.now().subtract(Duration(days: 2)),
+        backgroundColor: AppColors.white,
+      ),
+      VisionBoard(
+        id: '2',
+        title: 'Career Goals',
+        elements: [],
+        createdAt: DateTime.now().subtract(Duration(days: 10)),
+        updatedAt: DateTime.now().subtract(Duration(days: 1)),
+        backgroundColor: AppColors.white,
+      ),
+      VisionBoard(
+        id: '3',
+        title: 'Travel Dreams',
+        elements: [],
+        createdAt: DateTime.now().subtract(Duration(days: 15)),
+        updatedAt: DateTime.now().subtract(Duration(days: 3)),
+        backgroundColor: AppColors.white,
+      ),
+    ];
   }
 
   @override
@@ -72,11 +112,9 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             Expanded(
               child: isLoading 
                   ? _buildLoadingState()
-                  : _errorMessage != null
-                      ? _buildErrorState()
-                      : visionBoards.isEmpty
-                          ? _buildEmptyState()
-                          : _buildVisionBoardGrid(),
+                  : visionBoards.isEmpty
+                      ? _buildEmptyState()
+                      : _buildVisionBoardGrid(),
             ),
           ],
         ),
@@ -120,7 +158,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     Text(
                       'Vision Boards',
                       style: TextStyle(
-                        fontSize: 32.sp,
+                        fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
                         color: AppColors.textLight,
                       ),
@@ -128,7 +166,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     Text(
                       'Visualize your dreams',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 14.sp,
                         color: AppColors.textMedium,
                       ),
                     ),
@@ -244,48 +282,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildErrorState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.error_outline,
-            color: Colors.red.withOpacity(0.6),
-            size: 64.sp,
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Failed to load vision boards',
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textLight,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            _errorMessage ?? 'Unknown error occurred',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textMedium,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 24.h),
-          ElevatedButton(
-            onPressed: _loadVisionBoards,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.visionBoardGradient[0],
-              foregroundColor: AppColors.white,
-            ),
-            child: Text('Retry'),
-          ),
-        ],
       ),
     );
   }
@@ -751,50 +747,20 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     }
   }
 
-  Future<void> _createNewBoard() async {
-    try {
-      final userId = await SessionService.instance.getUserId();
-      final result = await _visionBoardService.createVisionBoard(
-        title: 'My Vision Board ${visionBoards.length + 1}',
-        userId: userId,
-      );
-      
-      if (result.isSuccess && result.data != null) {
-        final newBoard = VisionBoard(
-          id: result.data!.id,
-          title: result.data!.title,
-          elements: [],
-          createdAt: result.data!.createdAt,
-          updatedAt: result.data!.createdAt,
-          backgroundColor: AppColors.white,
-        );
-        
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VisionBoardScreen(existingBoard: newBoard),
-          ),
-        ).then((result) {
-          if (result != null) {
-            _loadVisionBoards(); // Refresh the list
-          }
+  void _createNewBoard() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VisionBoardScreen(),
+      ),
+    ).then((result) {
+      if (result != null) {
+        // Add the new board to the list
+        setState(() {
+          visionBoards.add(result);
         });
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.message ?? 'Failed to create vision board'),
-            backgroundColor: Colors.red,
-          ),
-        );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error creating vision board: ${e.toString()}'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    });
   }
 
   void _openBoard(VisionBoard board) {
@@ -805,7 +771,13 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
       ),
     ).then((result) {
       if (result != null) {
-        _loadVisionBoards(); // Refresh the list
+        // Update the specific board in the list
+        setState(() {
+          final index = visionBoards.indexWhere((b) => b.id == result.id);
+          if (index != -1) {
+            visionBoards[index] = result;
+          }
+        });
       }
     });
   }
@@ -1003,45 +975,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              try {
-                final sessionId = int.tryParse(board.id);
-                if (sessionId != null) {
-                  final result = await _visionBoardService.deleteVisionBoard(
-                    sessionId: sessionId,
-                  );
-                  
-                  if (result.isSuccess) {
-                    await _loadVisionBoards(); // Refresh from server
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Vision board deleted'),
-                        backgroundColor: AppColors.accentMint,
-                      ),
-                    );
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(result.message ?? 'Failed to delete vision board'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Invalid board ID'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Error deleting board: ${e.toString()}'),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
+              await _performDelete(board);
             },
             child: Text(
               'Delete',
@@ -1051,6 +985,39 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         ],
       ),
     );
+  }
+  
+  Future<void> _performDelete(VisionBoard board) async {
+    try {
+      // Delete from local storage
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('vision_board_${board.id}');
+      
+      final savedBoards = prefs.getStringList('saved_vision_boards') ?? [];
+      savedBoards.remove(board.id);
+      await prefs.setStringList('saved_vision_boards', savedBoards);
+      
+      print('✅ Board deleted from local storage: ${board.title}');
+      
+      setState(() {
+        visionBoards.remove(board);
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vision board deleted'),
+          backgroundColor: AppColors.accentMint,
+        ),
+      );
+    } catch (e) {
+      print('❌ Delete board error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to delete vision board: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _showSortOptions() {

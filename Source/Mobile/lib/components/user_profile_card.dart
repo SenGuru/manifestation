@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/models/social_models.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/models/social_models.dart';
+import 'package:fun/constants/colors.dart';
+
 
 class UserProfileCard extends StatefulWidget {
   final ManifestationUser user;

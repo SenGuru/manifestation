@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/models/auth_models.dart';
-import 'package:manifestation_app/services/auth_service.dart';
-import 'package:manifestation_app/services/session_service.dart';
-import 'package:manifestation_app/screens/signup_page.dart';
-import 'package:manifestation_app/screens/home_screen.dart';
-import 'package:manifestation_app/screens/forgot_password_screen.dart';
-import 'package:manifestation_app/screens/phone_auth_screen.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import '../models/auth_models.dart';
+import 'signup_page.dart';
+import 'home_screen.dart';
+import 'forgot_password_screen.dart';
+import 'phone_auth_screen.dart';
+import '../constants/colors.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -19,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen>
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _authService = AuthService();
   
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
@@ -44,9 +41,6 @@ class _LoginScreenState extends State<LoginScreen>
       vsync: this,
     );
     
-    // Check for existing session on startup
-    _checkExistingSession();
-    
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -62,7 +56,12 @@ class _LoginScreenState extends State<LoginScreen>
       parent: _slideController,
       curve: Curves.easeOutCubic,
     ));
+    
+    // Start animations
+    _fadeController.forward();
+    _slideController.forward();
   }
+
 
   @override
   void dispose() {
@@ -247,7 +246,7 @@ class _LoginScreenState extends State<LoginScreen>
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Text(
-            'Or continue with email',
+            'Or continue with username',
             style: TextStyle(
               fontSize: 14.sp,
               color: AppColors.textMedium,
@@ -269,14 +268,18 @@ class _LoginScreenState extends State<LoginScreen>
       key: _formKey,
       child: Column(
         children: [
-          // Email field
+          // Username field
           _buildTextField(
             controller: _emailController,
-            label: 'Email',
-            hint: 'Enter your email',
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-            validator: AuthValidation.validateEmail,
+            label: 'Username',
+            hint: 'Enter your username',
+            icon: Icons.person_outline,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Username is required';
+              }
+              return null;
+            },
           ),
           
           SizedBox(height: 20.h),
@@ -489,7 +492,7 @@ class _LoginScreenState extends State<LoginScreen>
                 ),
               )
             : Text(
-                'Sign In with Email',
+                'Sign In',
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
@@ -643,23 +646,40 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     try {
-      final result = await _authService.login(
-        email: _emailController.text.trim(),
-        password: _passwordController.text,
-        rememberMe: _rememberMe,
-      );
+      print('=== LOGIN SCREEN DEBUG START ===');
+      print('Username: ${_emailController.text.trim()}');
+      print('Password length: ${_passwordController.text.length}');
+      print('Remember me: $_rememberMe');
       
-      if (result.isSuccess) {
-        // Navigate to home screen on success
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-      } else {
-        _showErrorSnackBar(result.message ?? 'Login failed. Please try again.');
-      }
+      // Simulate login process
+      await Future.delayed(Duration(seconds: 2));
+      
+      // Mock successful login for demo purposes
+      print('=== LOGIN SCREEN SUCCESS (MOCK) ===');
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Login successful!'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+        ),
+      );
+
+      // Navigate to home screen on success
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     } catch (e) {
-      _showErrorSnackBar('Network error. Please check your connection.');
+      print('=== LOGIN SCREEN EXCEPTION ===');
+      print('Exception: $e');
+      print('Exception type: ${e.runtimeType}');
+      
+      _showErrorSnackBar('Network error. Please check your connection and try again.');
     } finally {
       setState(() {
         _isLoading = false;
@@ -735,31 +755,6 @@ class _LoginScreenState extends State<LoginScreen>
       context,
       MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
     );
-  }
-
-  /// Check if user already has a valid session
-  Future<void> _checkExistingSession() async {
-    try {
-      final isLoggedIn = await SessionService.instance.isLoggedIn();
-      if (isLoggedIn) {
-        // Verify with server that session is still valid
-        final isAuthenticated = await _authService.isAuthenticated();
-        if (isAuthenticated) {
-          // User has valid session, navigate to home
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          );
-          return;
-        }
-      }
-    } catch (e) {
-      print('Error checking existing session: $e');
-    }
-    
-    // Start animations if no valid session
-    _fadeController.forward();
-    _slideController.forward();
   }
 
   void _showErrorSnackBar(String message) {

@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/screens/affirmations.dart';
-import 'package:manifestation_app/services/human_tts_service.dart';
-import 'package:manifestation_app/services/storage_service.dart';
+import '../models/affirmations.dart';
+import '../services/voice/human_tts_service.dart';
+import '../constants/colors.dart';
 
 class FavoritesScreen extends StatefulWidget {
   @override
@@ -39,35 +38,56 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     });
     
     try {
-      final categories = await StorageService.loadCategories();
-      final favorites = <FavoriteAffirmation>[];
+      // Simulate loading delay
+      await Future.delayed(Duration(seconds: 1));
       
-      for (var category in categories) {
-        for (var affirmation in category.affirmations) {
-          if (affirmation.isFavorite) {
-            favorites.add(FavoriteAffirmation(
-              affirmation: affirmation,
-              categoryName: category.name,
-              categoryColor: category.color,
-              categoryId: category.id,
-            ));
-          }
-        }
-      }
-      
-      // Sort by most recently added to favorites
-      favorites.sort((a, b) => b.affirmation.createdAt.compareTo(a.affirmation.createdAt));
-      
+      // Hardcoded favorite affirmations
+      final favorites = <FavoriteAffirmation>[
+        FavoriteAffirmation(
+          affirmation: Affirmation(
+            id: '1',
+            text: 'I am worthy of all the good things that life has to offer.',
+            isFavorite: true,
+            createdAt: DateTime.now().subtract(Duration(days: 1)),
+          ),
+          categoryName: 'Self-Worth',
+          categoryColor: AppColors.affirmationGradient[0],
+          categoryId: 'self_worth',
+        ),
+        FavoriteAffirmation(
+          affirmation: Affirmation(
+            id: '2',
+            text: 'Every day I am becoming more confident and successful.',
+            isFavorite: true,
+            createdAt: DateTime.now().subtract(Duration(days: 2)),
+          ),
+          categoryName: 'Success',
+          categoryColor: AppColors.affirmationGradient[1],
+          categoryId: 'success',
+        ),
+        FavoriteAffirmation(
+          affirmation: Affirmation(
+            id: '3',
+            text: 'I attract abundance and prosperity into my life.',
+            isFavorite: true,
+            createdAt: DateTime.now().subtract(Duration(days: 3)),
+          ),
+          categoryName: 'Abundance',
+          categoryColor: AppColors.affirmationGradient[0],
+          categoryId: 'abundance',
+        ),
+      ];
+        
       setState(() {
-        allCategories = categories;
         favoriteAffirmations = favorites;
         isLoading = false;
       });
+      
     } catch (e) {
       setState(() {
         isLoading = false;
       });
-      _showErrorSnackBar('Failed to load favorites');
+      _showErrorSnackBar('Failed to load favorites: ${e.toString()}');
     }
   }
 
@@ -443,9 +463,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   Future<void> _removeFavorite(FavoriteAffirmation favorite) async {
     try {
-      final updatedAffirmation = favorite.affirmation.copyWith(isFavorite: false);
-      await StorageService.updateAffirmation(favorite.categoryId, updatedAffirmation);
-      await _loadFavorites();
+      // Remove from local list (hardcoded)
+      setState(() {
+        favoriteAffirmations.removeWhere((item) => item.affirmation.id == favorite.affirmation.id);
+      });
       _showSuccessSnackBar('Removed from favorites');
     } catch (e) {
       _showErrorSnackBar('Failed to remove favorite');

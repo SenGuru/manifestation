@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/screens/goals.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/models/goals.dart';
 
 class GoalCard extends StatefulWidget {
   final Goal goal;

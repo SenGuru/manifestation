@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/models/meditation_models.dart';
 import 'dart:math' as math;
+import 'package:fun/models/meditation_models.dart';
 
 class AnimatedNature extends StatefulWidget {
   final NaturePattern pattern;

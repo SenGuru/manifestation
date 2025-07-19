@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/screens/auth_wrapper.dart';
+import 'screens/splash_screen.dart';
+import 'constants/colors.dart';
+import 'services/session_manager.dart';
+import 'widgets/session_activity_tracker.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize services
+  await SessionManager.initialize();
+  // Initialize API client will be done in screens as needed
+  
   runApp(ManifestationApp());
 }
 
@@ -26,7 +34,8 @@ class ManifestationApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
+        return SessionActivityTracker(
+          child: MaterialApp(
           title: 'Manifestation App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -176,8 +185,9 @@ class ManifestationApp extends StatelessWidget {
               ),
             ),
           ),
-          // Start with auth wrapper to check session
-          home: AuthWrapper(),
+          // Start with the welcome screen
+          home: SplashScreen(),
+          ),
         );
       },
     );

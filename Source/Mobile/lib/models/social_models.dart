@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/constants/colors.dart';
 
 class ManifestationUser {
   final String id;

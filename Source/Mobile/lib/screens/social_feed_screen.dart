@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/components/achievement_badge_component.dart';
-import 'package:manifestation_app/models/social_models.dart';
-import 'package:manifestation_app/components/social_post_card_component.dart';
-import 'package:manifestation_app/components/user_profile_card.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import '../components/achievement_badge_component.dart';
+import '../models/social_models.dart';
+import '../components/social_post_card_component.dart';
+import '../components/user_profile_card.dart';
+import '../constants/colors.dart';
 
 class SocialFeedScreen extends StatefulWidget {
   @override

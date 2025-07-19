@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/screens/login_screen.dart';
-import 'package:manifestation_app/screens/signup_page.dart';
-import 'package:manifestation_app/screens/phone_auth_screen.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/constants/colors.dart';
+import 'package:fun/screens/login_screen.dart';
+import 'package:fun/screens/signup_page.dart';
 
 class WelcomeScreen extends StatefulWidget {
   @override

@@ -75,6 +75,7 @@ class DailyQuoteService {
       'quote': 'Don\'t wait for opportunity. Create it.',
       'author': 'Unknown'
     },
+
     {
       'quote': 'Sometimes we\'re tested not to show our weaknesses, but to discover our strengths.',
       'author': 'Unknown'

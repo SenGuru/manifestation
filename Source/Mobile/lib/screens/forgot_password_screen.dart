@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/services/auth_service.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/models/auth_models.dart';
+import '../models/auth_models.dart';
+import '../constants/colors.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -13,7 +12,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     with TickerProviderStateMixin {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
-  final _authService = AuthService();
   
   bool _isLoading = false;
   bool _emailSent = false;
@@ -447,27 +445,21 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
     });
 
     try {
-      final result = await _authService.resetPassword(
-        email: _emailController.text.trim(),
-      );
+      // Simulate API delay
+      await Future.delayed(Duration(seconds: 2));
       
-      if (result.isSuccess) {
-        setState(() {
-          _emailSent = true;
-          _isLoading = false;
-        });
-        
-        // Restart animations for success state
-        _scaleController.reset();
-        _scaleController.forward();
-      } else {
-        _showErrorSnackBar(result.message ?? 'Failed to send reset email. Please try again.');
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      // Hardcoded success response
+      setState(() {
+        _emailSent = true;
+        _isLoading = false;
+      });
+      
+      // Restart animations for success state
+      _scaleController.reset();
+      _scaleController.forward();
+      
     } catch (e) {
-      _showErrorSnackBar('Network error. Please check your connection.');
+      _showErrorSnackBar('Network error. Please check your connection and try again.');
       setState(() {
         _isLoading = false;
       });
@@ -476,12 +468,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
 
   void _handleResendEmail() async {
     try {
-      // TODO: Implement resend logic
-      await Future.delayed(Duration(seconds: 1)); // Simulate API call
+      // Simulate API delay
+      await Future.delayed(Duration(seconds: 1));
       
+      // Hardcoded success response
       _showSuccessSnackBar('Reset email sent again!');
+      
     } catch (e) {
-      _showErrorSnackBar('Failed to resend email. Please try again.');
+      _showErrorSnackBar('Network error. Please check your connection and try again.');
     }
   }
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/models/auth_models.dart';
-import 'package:manifestation_app/screens/home_screen.dart';
-import 'package:manifestation_app/screens/login_screen.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import '../models/auth_models.dart';
+import 'home_screen.dart';
+import 'login_screen.dart';
+import '../constants/colors.dart';
 
 class PhoneAuthScreen extends StatefulWidget {
   @override

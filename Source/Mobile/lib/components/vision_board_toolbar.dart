@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/screens/vision_board.dart';
-import 'package:manifestation_app/constants/colors.dart';
+import 'package:fun/models/vision_board.dart';
+import 'package:fun/constants/colors.dart';
 
 class VisionBoardToolbar extends StatelessWidget {
   final VisionBoardTool selectedTool;
@@ -401,9 +401,7 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
   String _getToolDescription(VisionBoardTool tool) {
     switch (tool) {
       case VisionBoardTool.select:
-        return 'Tap to select elements. Drag any element to move it around the canvas.';
-      case VisionBoardTool.delete:
-        return 'Tap elements to delete them from your vision board.';
+        return 'Tap to select elements. Drag to move selected items.';
     }
   }
 }

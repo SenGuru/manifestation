@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/screens/vision_board.dart';
+import 'package:fun/models/vision_board.dart';
+import 'package:fun/constants/colors.dart';
 import 'dart:io';
-import 'package:manifestation_app/constants/colors.dart';
 
 class VisionBoardCanvas extends StatefulWidget {
   final VisionBoard board;
@@ -21,8 +21,8 @@ class VisionBoardCanvas extends StatefulWidget {
 }
 
 class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
-  // Simple dragging state
   bool isDragging = false;
+  String? draggingElementId; // Track which element is being dragged
 
   // Canvas zoom and pan
   double canvasScale = 1.0;
@@ -36,12 +36,12 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       height: double.infinity,
       color: widget.board.backgroundColor,
       child: GestureDetector(
-        onTapDown: _onTapDown,
-        behavior: HitTestBehavior.translucent,
+        behavior: HitTestBehavior.deferToChild, // Let child elements handle gestures first
         child: Stack(
           children: [
-            // Background grid - always show for better visual reference
-            _buildGrid(),
+            // Background grid
+            if (widget.selectedTool != VisionBoardTool.select)
+              _buildGrid(),
             
             // Board elements
             ...widget.board.elements.asMap().entries.map((entry) {
@@ -50,7 +50,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
               return _buildElement(element, index);
             }),
             
-            // No more selection overlay - removed for better UX
+            // No selection overlay needed - drag-only interaction
             
             // Empty state
             if (widget.board.elements.isEmpty)
@@ -70,29 +70,25 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   Widget _buildElement(VisionBoardElement element, int index) {
-    // Remove selection check - no more visual selection needed
     
     return Positioned(
       left: element.position.dx,
       top: element.position.dy,
       child: GestureDetector(
-        onTap: () => _selectElement(element),
-        onPanStart: (details) {
-          setState(() => isDragging = true);
-        },
-        onPanUpdate: (details) {
-          // Direct dragging - elements are always moveable
-          final newPosition = element.position + details.delta;
-          _updateElementPosition(element, newPosition);
-        },
-        onPanEnd: (details) {
-          setState(() => isDragging = false);
-        },
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          width: element.size.width,
-          height: element.size.height,
-          child: _buildElementContent(element),
+        onPanStart: (details) => _onElementPanStart(element, details),
+        onPanUpdate: (details) => _onElementPanUpdate(element, details),
+        onPanEnd: (details) => _onElementPanEnd(element, details),
+        behavior: HitTestBehavior.opaque, // Opaque for reliable gesture detection
+        child: Transform.rotate(
+          angle: element.rotation,
+          child: Container(
+            width: element.size.width,
+            height: element.size.height,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4.r),
+            ),
+            child: _buildElementContent(element),
+          ),
         ),
       ),
     );
@@ -100,32 +96,42 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   Widget _buildElementContent(VisionBoardElement element) {
     if (element is VisionBoardImageElement) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(8.r),
-        child: Container(
-          decoration: BoxDecoration(
-            color: AppColors.backgroundLight,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: element.imagePath.isNotEmpty
-              ? Image.file(
-                  File(element.imagePath),
-                  fit: element.fit,
-                  width: double.infinity,
-                  height: double.infinity,
-                  errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(),
-                )
-              : _buildImagePlaceholder(),
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.textMedium.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8.r),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.1),
+              blurRadius: 4.r,
+              offset: Offset(0, 2.h),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.r),
+          child: _buildImageWidget(element),
         ),
       );
     } else if (element is VisionBoardTextElement) {
       return Container(
-        padding: EdgeInsets.all(8.w),
+        padding: EdgeInsets.all(12.w),
+        decoration: BoxDecoration(
+          color: element.style.backgroundColor ?? Colors.transparent,
+          borderRadius: BorderRadius.circular(8.r),
+          boxShadow: element.style.backgroundColor != null ? [
+            BoxShadow(
+              color: AppColors.black.withOpacity(0.1),
+              blurRadius: 4.r,
+              offset: Offset(0, 2.h),
+            ),
+          ] : null,
+        ),
         child: Center(
           child: Text(
             element.text,
             style: element.style.copyWith(
-              fontSize: (element.style.fontSize ?? 16.sp) * (element.size.width / 200).clamp(0.8, 2.0),
+              fontSize: (element.style.fontSize ?? 16.sp) * (element.size.width / 200).clamp(0.5, 2.0),
             ),
             textAlign: element.alignment,
             overflow: TextOverflow.visible,
@@ -138,14 +144,62 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     return Container();
   }
 
+  Widget _buildImageWidget(VisionBoardImageElement element) {
+    // Try to load from URL first, then local path, then placeholder
+    if (element.imageUrl != null && element.imageUrl!.isNotEmpty) {
+      return Image.network(
+        element.imageUrl!,
+        fit: element.fit,
+        width: double.infinity,
+        height: double.infinity,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              value: loadingProgress.expectedTotalBytes != null
+                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                  : null,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondaryTeal),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) {
+          print('🌐 Network image failed, trying local: $error');
+          // Fallback to local image
+          if (element.imagePath.isNotEmpty) {
+            return Image.file(
+              File(element.imagePath),
+              fit: element.fit,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(),
+            );
+          }
+          return _buildImagePlaceholder();
+        },
+      );
+    } else if (element.imagePath.isNotEmpty) {
+      return Image.file(
+        File(element.imagePath),
+        fit: element.fit,
+        width: double.infinity,
+        height: double.infinity,
+        errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(),
+      );
+    } else {
+      return _buildImagePlaceholder();
+    }
+  }
+
   Widget _buildImagePlaceholder() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundLight,
+        color: AppColors.backgroundMedium,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.15),
-          width: 1,
+          color: AppColors.textMedium.withOpacity(0.2),
+          width: 2,
+          style: BorderStyle.solid,
         ),
       ),
       child: Center(
@@ -154,15 +208,15 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           children: [
             Icon(
               Icons.image_outlined,
-              color: AppColors.textMedium.withOpacity(0.6),
-              size: 28.sp,
+              color: AppColors.textMedium,
+              size: 32.sp,
             ),
             SizedBox(height: 8.h),
             Text(
-              'Add Image',
+              'Tap to add image',
               style: TextStyle(
-                color: AppColors.textMedium.withOpacity(0.7),
-                fontSize: 11.sp,
+                color: AppColors.textMedium,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -172,62 +226,46 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     );
   }
 
-  // Selection overlay removed - no more rectangle selection UI
-
+  // Removed unused UI building methods - drag-only interaction
 
   Widget _buildEmptyState() {
     return Center(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 40.w),
-        padding: EdgeInsets.all(40.w),
+        padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: AppColors.white.withOpacity(0.95),
-          borderRadius: BorderRadius.circular(24.r),
+          color: AppColors.white.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.1),
-            width: 1,
+            color: AppColors.textMedium.withOpacity(0.2),
+            width: 2,
+            style: BorderStyle.solid,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
-              blurRadius: 20.r,
-              offset: Offset(0, 8.h),
-            ),
-          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              width: 80.w,
-              height: 80.h,
-              decoration: BoxDecoration(
-                color: AppColors.accentGold.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(20.r),
-              ),
-              child: Icon(
-                Icons.dashboard_outlined,
-                color: AppColors.accentGold.withOpacity(0.7),
-                size: 40.sp,
-              ),
+            Icon(
+              Icons.dashboard_outlined,
+              color: AppColors.textMedium.withOpacity(0.5),
+              size: 64.sp,
             ),
-            SizedBox(height: 24.h),
+            SizedBox(height: 16.h),
             Text(
               'Your vision board is empty',
               style: TextStyle(
-                fontSize: 22.sp,
-                fontWeight: FontWeight.w700,
-                color: AppColors.textDark,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textMedium.withOpacity(0.8),
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: 8.h),
             Text(
-              'Start creating by adding images and text.\nUse the toolbar below to get started.',
+              'Start creating by adding images and text\nUse the toolbar below to get started',
               style: TextStyle(
-                fontSize: 16.sp,
-                color: AppColors.textMedium.withOpacity(0.8),
-                height: 1.5,
+                fontSize: 14.sp,
+                color: AppColors.textMedium.withOpacity(0.6),
+                height: 1.4,
               ),
               textAlign: TextAlign.center,
             ),
@@ -237,21 +275,70 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     );
   }
 
-  void _onTapDown(TapDownDetails details) {
-    // Handle background taps for deselecting elements or other canvas interactions
-    // Could add new element creation logic here in the future
+  // Removed tap handling - drag-only interaction
+
+  // Removed selection logic - drag-only interaction
+
+  void _onElementPanStart(VisionBoardElement element, DragStartDetails details) {
+    print('🎯 Pan start for element: ${element.id}');
+    
+    // Always allow dragging - no tool selection needed
+    setState(() {
+      isDragging = true;
+      draggingElementId = element.id;
+    });
+    
+    print('✅ Started dragging element: ${element.id}');
   }
 
-  void _selectElement(VisionBoardElement element) {
-    // Handle element selection based on current tool
-    if (widget.selectedTool == VisionBoardTool.delete) {
-      _deleteElement(element);
-      return;
+  void _onElementPanUpdate(VisionBoardElement element, DragUpdateDetails details) {
+    // Simple: if we're dragging this element, update its position
+    if (isDragging && draggingElementId == element.id) {
+      final delta = details.delta;
+      final newPosition = element.position + delta;
+      _updateElementPosition(element, newPosition);
     }
-    // For move tool, selection is handled directly in gesture detection
+  }
+  
+  bool _canDragElement(VisionBoardElement element) {
+    // Simple check: currently dragging this element
+    return isDragging && draggingElementId == element.id;
   }
 
+  void _onElementPanEnd(VisionBoardElement element, DragEndDetails details) {
+    print('🛑 Pan end for element: ${element.id}');
+    
+    // Clear drag states
+    if (mounted) {
+      setState(() {
+        isDragging = false;
+        draggingElementId = null;
+      });
+      
+      print('✅ Finished dragging element: ${element.id}');
+    }
+  }
 
+  // Removed resize and rotation functionality - drag-only interaction
+
+  VisionBoardElement? _getElementAtPosition(Offset position) {
+    for (int i = widget.board.elements.length - 1; i >= 0; i--) {
+      final element = widget.board.elements[i];
+      final rect = Rect.fromLTWH(
+        element.position.dx,
+        element.position.dy,
+        element.size.width,
+        element.size.height,
+      );
+      
+      if (rect.contains(position)) {
+        return element;
+      }
+    }
+    return null;
+  }
+
+  // Removed selection state methods - drag-only interaction
 
   void _updateElementPosition(VisionBoardElement element, Offset newPosition) {
     // Get the current canvas container size from the rendering context
@@ -288,28 +375,22 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     widget.onBoardChanged(updatedBoard);
   }
 
-  void _deleteElement(VisionBoardElement element) {
-    final updatedElements = widget.board.elements
-        .where((e) => e.id != element.id)
-        .toList();
-
-    final updatedBoard = widget.board.copyWith(elements: updatedElements);
-    widget.onBoardChanged(updatedBoard);
-  }
+  // Removed unused element manipulation methods - drag-only interaction
 }
 
+// Removed resize direction enum - not needed for drag-only interaction
 
 class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.textMedium.withOpacity(0.05)
+      ..color = AppColors.textMedium.withOpacity(0.1)
       ..strokeWidth = 0.5;
 
-    const gridSize = 30.0;
+    const gridSize = 20.0;
 
-    // Draw vertical lines with better spacing
-    for (double x = gridSize; x < size.width; x += gridSize) {
+    // Draw vertical lines
+    for (double x = 0; x <= size.width; x += gridSize) {
       canvas.drawLine(
         Offset(x, 0),
         Offset(x, size.height),
@@ -317,8 +398,8 @@ class GridPainter extends CustomPainter {
       );
     }
 
-    // Draw horizontal lines with better spacing
-    for (double y = gridSize; y < size.height; y += gridSize) {
+    // Draw horizontal lines
+    for (double y = 0; y <= size.height; y += gridSize) {
       canvas.drawLine(
         Offset(0, y),
         Offset(size.width, y),

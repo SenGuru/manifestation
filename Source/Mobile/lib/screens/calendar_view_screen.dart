@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/components/journey_entry.dart';
-import 'package:manifestation_app/constants/colors.dart';
-import 'package:manifestation_app/screens/journal_entry_details_screen.dart';
-import 'package:manifestation_app/screens/journal_stats_screen.dart';
+import 'journal_entry_details_screen.dart';
+import 'journal_stats_screen.dart';
+import '../models/journey_entry.dart';
+import '../models/mood_selector.dart';
+import '../constants/colors.dart';
 
 class CalendarViewScreen extends StatefulWidget {
   @override
