@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fun/services/auth_service.dart';
 import '../constants/colors.dart';
 import 'login_screen.dart';
 
@@ -426,36 +427,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               try {
                 print('Profile screen initiating logout...');
                 
-                // Simulate logout delay
-                await Future.delayed(Duration(seconds: 1));
+                // Use AuthService to logout
+                final authService = AuthService();
+                await authService.logout();
                 
-                // Hardcoded success result
-                final logoutResult = {'success': true, 'message': 'Logout successful'};
-                
-                print('Logout result: $logoutResult');
+                print('Logout successful');
                 
                 // Close loading dialog
                 Navigator.pop(context);
                 
-                if (logoutResult['success'] == true) {
-                  // Show success message briefly
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Successfully logged out'),
-                      backgroundColor: Colors.green,
-                      duration: Duration(seconds: 1),
-                    ),
-                  );
-                } else {
-                  // Show warning but still proceed with navigation
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text((logoutResult['message'] as String?) ?? 'Logout completed with warnings'),
-                      backgroundColor: Colors.orange,
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
+                // Show success message briefly
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Successfully logged out'),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 1),
+                  ),
+                );
                 
                 // Navigate to login screen and clear all previous routes
                 Navigator.pushAndRemoveUntil(

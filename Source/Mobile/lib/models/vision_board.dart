@@ -358,6 +358,10 @@ class VisionBoardTemplate {
 
 enum VisionBoardTool {
   select,
+  move,
+  resize,
+  rotate,
+  delete,
 }
 
 extension VisionBoardToolExtension on VisionBoardTool {
@@ -365,6 +369,14 @@ extension VisionBoardToolExtension on VisionBoardTool {
     switch (this) {
       case VisionBoardTool.select:
         return Icons.touch_app;
+      case VisionBoardTool.move:
+        return Icons.open_with;
+      case VisionBoardTool.resize:
+        return Icons.photo_size_select_large;
+      case VisionBoardTool.rotate:
+        return Icons.rotate_right;
+      case VisionBoardTool.delete:
+        return Icons.delete;
     }
   }
 
@@ -372,6 +384,14 @@ extension VisionBoardToolExtension on VisionBoardTool {
     switch (this) {
       case VisionBoardTool.select:
         return 'Select';
+      case VisionBoardTool.move:
+        return 'Move';
+      case VisionBoardTool.resize:
+        return 'Resize';
+      case VisionBoardTool.rotate:
+        return 'Rotate';
+      case VisionBoardTool.delete:
+        return 'Delete';
     }
   }
 }

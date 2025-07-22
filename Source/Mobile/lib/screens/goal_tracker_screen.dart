@@ -5,10 +5,10 @@ import '../components/edit_goal_sheet.dart';
 import '../components/goal_card.dart';
 import '../components/progress_update_dialog.dart';
 import '../models/goals.dart';
+import '../models/goal_tracker_category.dart';
 import '../constants/colors.dart';
+import '../services/goal_tracker_service.dart';
 import 'goal_detail_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class GoalTrackerScreen extends StatefulWidget {
   @override
@@ -19,16 +19,26 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     with TickerProviderStateMixin {
   
   List<Goal> goals = [];
+  List<GoalTrackerCategory> categories = [];
   GoalCategory selectedCategory = GoalCategory.all;
   bool showCompletedGoals = true;
   bool _isLoading = false;
   
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
+  
+  final GoalTrackerService _goalTrackerService = GoalTrackerService();
 
   @override
   void initState() {
     super.initState();
+    
+    print('🚀 GoalTrackerScreen: Initializing...');
+    
+    // Initialize the service
+    print('🔧 Initializing GoalTrackerService...');
+    _goalTrackerService.initialize();
+    
     _fabAnimationController = AnimationController(
       duration: Duration(milliseconds: 300),
       vsync: this,
@@ -38,8 +48,11 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       curve: Curves.easeInOut,
     );
     
+    print('📊 Starting initial goal load...');
     _loadGoals();
     _fabAnimationController.forward();
+    
+    print('✅ GoalTrackerScreen: Initialization complete');
   }
 
   @override
@@ -51,6 +64,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   @override
   Widget build(BuildContext context) {
     final filteredGoals = _filterGoals();
+    
+    print('🎨 Building UI with:');
+    print('   Total goals: ${goals.length}');
+    print('   Filtered goals: ${filteredGoals.length}');
+    print('   Selected category: ${selectedCategory.displayName}');
+    print('   Show completed: $showCompletedGoals');
+    print('   Is loading: $_isLoading');
     
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
@@ -325,6 +345,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           
           return GestureDetector(
             onTap: () {
+              print('🔄 Category filter changed: ${category.displayName}');
               setState(() {
                 selectedCategory = category;
               });
@@ -491,14 +512,19 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   }
 
   List<Goal> _filterGoals() {
+    print('🔍 Filtering goals: selectedCategory=${selectedCategory.displayName}, showCompleted=$showCompletedGoals');
+    print('📊 Total goals before filtering: ${goals.length}');
+    
     var filtered = goals;
     
     if (selectedCategory != GoalCategory.all) {
       filtered = filtered.where((goal) => goal.category == selectedCategory).toList();
+      print('📊 After category filter: ${filtered.length} goals');
     }
     
     if (!showCompletedGoals) {
       filtered = filtered.where((goal) => !goal.isCompleted).toList();
+      print('📊 After completed filter: ${filtered.length} goals');
     }
     
     // Sort by priority and creation date
@@ -512,16 +538,151 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       return b.createdAt.compareTo(a.createdAt); // Newest first
     });
     
+    print('📊 Final filtered & sorted goals: ${filtered.length}');
     return filtered;
   }
 
   Future<void> _loadGoals() async {
+    print('\n=== 🔄 STARTING GOAL LOAD PROCESS ===');
+    
     setState(() {
       _isLoading = true;
     });
 
     try {
-      print('=== LOADING HARDCODED GOALS ===');
+      print('📋 Loading goals from API...');
+      
+      // Load categories first
+      print('🏷️  Loading categories...');
+      await _loadCategories();
+      
+      // Load user's goal trackers
+      print('🎯 Fetching user goal trackers...');
+      final result = await _goalTrackerService.getUserGoalTrackers();
+      
+      print('📡 API Response - Success: ${result.isSuccess}');
+      print('📡 API Response - Message: ${result.message}');
+      print('📡 API Response - Data Count: ${result.data?.length ?? 0}');
+      
+      if (result.isSuccess && result.data != null) {
+        // Convert API GoalTrackerModel to UI Goal model
+        final apiGoals = result.data!;
+        final convertedGoals = <Goal>[];
+        
+        print('🔄 Converting ${apiGoals.length} API goals to UI goals...');
+        
+        for (int i = 0; i < apiGoals.length; i++) {
+          final apiGoal = apiGoals[i];
+          print('🎯 Processing goal ${i + 1}: ${apiGoal.goalTrackerName} (ID: ${apiGoal.goalTrackerId})');
+          
+          // Skip milestone loading for now to avoid hanging
+          // TODO: Re-enable milestone loading once API performance is optimized
+          print('⏭️  Skipping milestone loading for now (performance optimization)...');
+          final milestones = <Milestone>[]; // Empty milestones list
+          
+          // Determine category based on goal name/context
+          final goalCategory = _determineGoalCategory(apiGoal.goalTrackerName ?? '');
+          
+          // Set a default progress since we're not loading milestones yet
+          final progress = 0.0; // Default to 0% progress
+          
+          print('🏷️  Goal "${apiGoal.goalTrackerName}" categorized as: ${goalCategory.displayName}');
+          print('📊 Goal progress set to default: ${progress.toStringAsFixed(1)}%');
+          
+          convertedGoals.add(Goal(
+            id: apiGoal.goalTrackerId?.toString() ?? '',
+            title: apiGoal.goalTrackerName ?? '',
+            description: '', // API doesn't have description field
+            category: goalCategory,
+            priority: GoalPriority.medium, // Default priority
+            targetDate: apiGoal.goalTrackerEndDate ?? DateTime.now().add(Duration(days: 30)),
+            createdAt: DateTime.now(), // API doesn't expose created date directly
+            milestones: milestones,
+            currentProgress: progress,
+            tags: [goalCategory.displayName.toLowerCase()],
+          ));
+        }
+        
+        setState(() {
+          goals = convertedGoals;
+        });
+        
+        print('✅ Successfully loaded ${goals.length} goals from API');
+        print('📊 Goal breakdown by category:');
+        for (final category in GoalCategory.values) {
+          final count = goals.where((g) => g.category == category).length;
+          if (count > 0) {
+            print('   ${category.displayName}: $count goals');
+          }
+        }
+      } else {
+        print('❌ Failed to load goals from API: ${result.message}');
+        print('🔄 Falling back to hardcoded goals...');
+        await _loadHardcodedGoals();
+      }
+    } catch (e, stackTrace) {
+      print('❌ Exception loading goals: $e');
+      print('📍 Stack trace: $stackTrace');
+      print('🔄 Falling back to hardcoded goals...');
+      await _loadHardcodedGoals();
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+      print('=== ✅ GOAL LOAD PROCESS COMPLETE ===\n');
+    }
+  }
+
+  Future<void> _loadCategories() async {
+    print('🏷️  Starting category load from API...');
+    try {
+      final result = await _goalTrackerService.getAllCategories();
+      print('🏷️  Categories API response - Success: ${result.isSuccess}');
+      print('🏷️  Categories API response - Message: ${result.message}');
+      
+      if (result.isSuccess && result.data != null) {
+        setState(() {
+          categories = result.data!;
+        });
+        print('✅ Loaded ${categories.length} categories from API');
+        for (int i = 0; i < categories.length; i++) {
+          final cat = categories[i];
+          print('   ${i + 1}. ${cat.name} (ID: ${cat.id})');
+        }
+      } else {
+        print('❌ Failed to load categories: ${result.message}');
+      }
+    } catch (e, stackTrace) {
+      print('❌ Exception loading categories: $e');
+      print('📍 Stack trace: $stackTrace');
+    }
+  }
+
+  GoalCategory _determineGoalCategory(String goalName) {
+    final lowerName = goalName.toLowerCase();
+    print('🏷️  Determining category for goal: "$goalName"');
+    
+    GoalCategory category;
+    if (lowerName.contains('work') || lowerName.contains('career') || lowerName.contains('job')) {
+      category = GoalCategory.career;
+    } else if (lowerName.contains('health') || lowerName.contains('fitness') || lowerName.contains('exercise')) {
+      category = GoalCategory.health;
+    } else if (lowerName.contains('love') || lowerName.contains('relationship') || lowerName.contains('marriage')) {
+      category = GoalCategory.relationships;
+    } else if (lowerName.contains('money') || lowerName.contains('financial') || lowerName.contains('save')) {
+      category = GoalCategory.financial;
+    } else if (lowerName.contains('spiritual') || lowerName.contains('meditation') || lowerName.contains('mindful')) {
+      category = GoalCategory.spiritual;
+    } else {
+      category = GoalCategory.personal;
+    }
+    
+    print('🏷️  Categorized as: ${category.displayName}');
+    return category;
+  }
+
+  Future<void> _loadHardcodedGoals() async {
+      print('\n🔄 Loading hardcoded goals as fallback...');
       
       // Simulate loading delay
       await Future.delayed(Duration(milliseconds: 500));
@@ -619,53 +780,216 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       });
       
       print('✅ Successfully loaded ${goals.length} hardcoded goals');
-    } catch (e) {
-      print('Exception loading goals: $e');
-      setState(() {
-        goals = [];
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      print('📊 Hardcoded goals breakdown:');
+      for (final goal in hardcodedGoals) {
+        print('   • ${goal.title} (${goal.category.displayName}) - ${goal.currentProgress.toStringAsFixed(1)}%');
+      }
+  }
+
+  // ========================= API GOAL MANAGEMENT =========================
+
+  Future<void> _createGoalWithService({
+    required String title,
+    required GoalCategory category,
+    required GoalPriority priority,
+    required DateTime targetDate,
+  }) async {
+    print('\n🎯 Creating new goal via API...');
+    print('   Title: $title');
+    print('   Category: ${category.displayName}');
+    print('   Priority: ${priority.name}');
+    print('   Target Date: ${targetDate.toIso8601String()}');
+    
+    try {
+      // Add validation before API call
+      if (title.trim().isEmpty) {
+        throw Exception('Goal title cannot be empty');
+      }
+      
+      // Validate date is not in the past
+      if (targetDate.isBefore(DateTime.now().subtract(Duration(days: 1)))) {
+        print('⚠️ Warning: Target date is in the past, adjusting to future date');
+        targetDate = DateTime.now().add(Duration(days: 30));
+      }
+      
+      print('📋 API Call Parameters:');
+      print('   goalName: "$title"');
+      print('   goalStatusTypeId: 1');
+      print('   startDate: ${DateTime.now().toIso8601String()}');
+      print('   endDate: ${targetDate.toIso8601String()}');
+      print('   userId: 1 (hardcoded - TODO: get from auth)');
+      
+      // Try to get a valid user ID or status type ID first
+      print('🔍 Attempting to validate API parameters...');
+      
+      // Create goal tracker via API
+      final result = await _goalTrackerService.createGoalTracker(
+        goalName: title,
+        goalStatusTypeId: 1, // Active status
+        startDate: DateTime.now(),
+        endDate: targetDate,
+        userId: 1, // Replace with actual user ID from auth service
+      );
+
+      print('📡 Create goal API response:');
+      print('   Success: ${result.isSuccess}');
+      print('   Message: ${result.message}');
+      
+      if (result.data != null) {
+        print('   Data: ${result.data.toString()}');
+        try {
+          print('   Data JSON: ${result.data?.toJson()}');
+        } catch (e) {
+          print('   Data JSON serialization error: $e');
+        }
+      } else {
+        print('   Data: null');
+      }
+
+      if (result.isSuccess && result.data != null) {
+        // Reload goals to get the updated list
+        print('🔄 Reloading goals after creation...');
+        await _loadGoals();
+        
+        print('✅ Goal created successfully: ${result.message}');
+      } else {
+        print('❌ Failed to create goal via API: ${result.message}');
+        print('🔄 Falling back to local goal creation...');
+        
+        // Fallback: Create goal locally if API fails
+        await _createGoalLocally(title, category, priority, targetDate);
+        
+        // Show warning to user
+        _showErrorSnackBar('Goal created locally (API unavailable): ${result.message}');
+      }
+    } catch (e, stackTrace) {
+      print('❌ Exception creating goal: $e');
+      print('📍 Full stack trace:');
+      print(stackTrace.toString());
+      
+      // Fallback: Create goal locally if API throws exception
+      print('🔄 Exception occurred, falling back to local goal creation...');
+      try {
+        await _createGoalLocally(title, category, priority, targetDate);
+        
+        // Try to extract meaningful error from the stack trace
+        String userFriendlyError = 'Goal created locally due to server error';
+        if (e.toString().contains('PostgreSQL') || e.toString().contains('Npgsql')) {
+          userFriendlyError = 'Goal created locally (database error on server)';
+        } else if (e.toString().contains('timeout')) {
+          userFriendlyError = 'Goal created locally (server timeout)';
+        } else if (e.toString().contains('connection')) {
+          userFriendlyError = 'Goal created locally (connection error)';
+        }
+        
+        _showErrorSnackBar(userFriendlyError);
+      } catch (localError) {
+        print('❌ Failed to create goal locally: $localError');
+        _showErrorSnackBar('Failed to create goal: ${e.toString().split('\n').first}');
+      }
     }
   }
 
-  // Goals are now loaded as hardcoded data
-
-  // Store goal-category mapping locally
-  Future<void> _storeGoalCategory(String goalId, GoalCategory category) async {
+  Future<void> _updateGoalWithService({
+    required String goalId,
+    String? title,
+    DateTime? targetDate,
+    bool? isCompleted,
+  }) async {
+    print('\n🔄 Updating goal via API...');
+    print('   Goal ID: $goalId');
+    print('   New Title: $title');
+    print('   New Target Date: ${targetDate?.toIso8601String()}');
+    print('   Is Completed: $isCompleted');
+    
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final key = 'goal_categories';
-      final existing = prefs.getString(key) ?? '{}';
-      final Map<String, dynamic> categories = json.decode(existing);
-      
-      categories[goalId] = category.name;
-      await prefs.setString(key, json.encode(categories));
-      
-      print('💾 Stored category ${category.name} for goal $goalId');
-    } catch (e) {
-      print('❌ Error storing goal category: $e');
+      final result = await _goalTrackerService.updateGoalTracker(
+        goalTrackerId: int.parse(goalId),
+        goalName: title,
+        endDate: targetDate,
+        completedDate: isCompleted == true ? DateTime.now() : null,
+      );
+
+      print('📡 Update goal API response:');
+      print('   Success: ${result.isSuccess}');
+      print('   Message: ${result.message}');
+
+      if (result.isSuccess) {
+        // Reload goals to get the updated list
+        print('🔄 Reloading goals after update...');
+        await _loadGoals();
+        print('✅ Goal updated successfully: ${result.message}');
+      } else {
+        print('❌ Failed to update goal: ${result.message}');
+        _showErrorSnackBar('Failed to update goal: ${result.message}');
+      }
+    } catch (e, stackTrace) {
+      print('❌ Exception updating goal: $e');
+      print('📍 Stack trace: $stackTrace');
+      _showErrorSnackBar('Error updating goal: ${e.toString()}');
     }
+  }
+
+  Future<void> _deleteGoalWithService(String goalId) async {
+    print('\n🗑️  Deleting goal via API...');
+    print('   Goal ID: $goalId');
+    
+    try {
+      final result = await _goalTrackerService.deleteGoalTracker(int.parse(goalId));
+
+      print('📡 Delete goal API response:');
+      print('   Success: ${result.isSuccess}');
+      print('   Message: ${result.message}');
+
+      if (result.isSuccess) {
+        // Reload goals to get the updated list
+        print('🔄 Reloading goals after deletion...');
+        await _loadGoals();
+        print('✅ Goal deleted successfully: ${result.message}');
+      } else {
+        print('❌ Failed to delete goal: ${result.message}');
+        _showErrorSnackBar('Failed to delete goal: ${result.message}');
+      }
+    } catch (e, stackTrace) {
+      print('❌ Exception deleting goal: $e');
+      print('📍 Stack trace: $stackTrace');
+      _showErrorSnackBar('Error deleting goal: ${e.toString()}');
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+    );
   }
 
   void _showAddGoalSheet() {
+    print('➕ Opening add goal sheet...');
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context) => AddGoalSheet(
         onGoalAdded: (goal) async {
-          // Add the goal to the UI
-          setState(() {
-            goals.add(goal);
-          });
+          print('📝 New goal submitted from sheet:');
+          print('   Title: ${goal.title}');
+          print('   Category: ${goal.category.displayName}');
+          print('   Priority: ${goal.priority.name}');
           
-          // Store goal category locally
-          await _storeGoalCategory(goal.id, goal.category);
-          
-          print('Goal "${goal.title}" saved locally');
+          // Create goal using the service
+          await _createGoalWithService(
+            title: goal.title,
+            category: goal.category,
+            priority: goal.priority,
+            targetDate: goal.targetDate,
+          );
           
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -683,27 +1007,29 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   }
 
   void _showGoalDetails(Goal goal) {
+    print('👁️  Opening goal details for: ${goal.title}');
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => GoalDetailScreen(
           goal: goal,
           onGoalUpdated: (updatedGoal) async {
-            // Update the goal in the UI
-            setState(() {
-              final index = goals.indexWhere((g) => g.id == goal.id);
-              if (index != -1) {
-                goals[index] = updatedGoal;
-              }
-            });
+            print('🔄 Goal updated from details screen:');
+            print('   Original: ${goal.title}');
+            print('   Updated: ${updatedGoal.title}');
             
-            // Goal updated locally - no server sync needed
+            // Update goal using the service
+            await _updateGoalWithService(
+              goalId: updatedGoal.id,
+              title: updatedGoal.title,
+              targetDate: updatedGoal.targetDate,
+            );
           },
           onGoalDeleted: (deletedGoal) async {
-            // Goal deleted locally
-            setState(() {
-              goals.remove(deletedGoal);
-            });
+            print('🗑️  Goal deleted from details screen: ${deletedGoal.title}');
+            
+            // Delete goal using the service
+            await _deleteGoalWithService(deletedGoal.id);
           },
         ),
       ),
@@ -711,34 +1037,25 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   }
 
   void _updateGoalProgress(Goal goal) {
+    print('📊 Opening progress update dialog for: ${goal.title}');
+    print('   Current progress: ${goal.currentProgress.toStringAsFixed(1)}%');
+    
     showDialog(
       context: context,
       builder: (context) => ProgressUpdateDialog(
         goal: goal,
         onProgressUpdate: (newProgress) async {
-          // Update the goal locally
-          final updatedGoal = Goal(
-            id: goal.id,
-            title: goal.title,
-            description: goal.description,
-            category: goal.category,
-            priority: goal.priority,
-            targetDate: goal.targetDate,
-            createdAt: goal.createdAt,
-            milestones: goal.milestones,
-            currentProgress: newProgress,
-            tags: goal.tags,
+          print('📊 Progress update submitted:');
+          print('   Goal: ${goal.title}');
+          print('   Old Progress: ${goal.currentProgress.toStringAsFixed(1)}%');
+          print('   New Progress: ${newProgress.toStringAsFixed(1)}%');
+          print('   Is Completed: ${newProgress >= 100.0}');
+          
+          // Update goal progress using the service
+          await _updateGoalWithService(
+            goalId: goal.id,
+            isCompleted: newProgress >= 100.0,
           );
-          
-          setState(() {
-            final index = goals.indexWhere((g) => g.id == goal.id);
-            if (index != -1) {
-              goals[index] = updatedGoal;
-            }
-          });
-          
-          // Update on server
-          // Goal updated locally - no server sync needed
           
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
@@ -763,6 +1080,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   }
 
   void _editGoal(Goal goal) {
+    print('✏️  Opening edit goal sheet for: ${goal.title}');
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -770,16 +1088,17 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       builder: (context) => EditGoalSheet(
         goal: goal,
         onGoalUpdated: (updatedGoal) async {
-          // Update the goal in the UI
-          setState(() {
-            final index = goals.indexWhere((g) => g.id == goal.id);
-            if (index != -1) {
-              goals[index] = updatedGoal;
-            }
-          });
+          print('📝 Goal updated from edit sheet:');
+          print('   Original: ${goal.title}');
+          print('   Updated: ${updatedGoal.title}');
+          print('   New Target Date: ${updatedGoal.targetDate.toIso8601String()}');
           
-          // Update on server
-          // Goal updated locally - no server sync needed
+          // Update goal using the service
+          await _updateGoalWithService(
+            goalId: updatedGoal.id,
+            title: updatedGoal.title,
+            targetDate: updatedGoal.targetDate,
+          );
           
           // Show success message
           ScaffoldMessenger.of(context).showSnackBar(
@@ -907,13 +1226,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                       ),
                     ),
                     trailing: Switch(
-                      value: showCompletedGoals,
-                      onChanged: (value) {
-                        setState(() {
-                          showCompletedGoals = value;
-                        });
-                        Navigator.pop(context);
-                      },
+                      value: showCompletedGoals,                    onChanged: (value) {
+                      print('⚙️  Settings changed: showCompletedGoals = $value');
+                      setState(() {
+                        showCompletedGoals = value;
+                      });
+                      Navigator.pop(context);
+                    },
                       activeColor: AppColors.goalTrackerGradient[0],
                     ),
                   ),
@@ -924,5 +1243,71 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         ),
       ),
     );
+  }
+
+  /// Fallback method to create goal locally when API fails
+  Future<void> _createGoalLocally(
+    String title,
+    GoalCategory category,
+    GoalPriority priority,
+    DateTime targetDate,
+  ) async {
+    print('💾 Creating goal locally as fallback...');
+    
+    final newGoal = Goal(
+      id: DateTime.now().millisecondsSinceEpoch.toString(), // Generate unique ID
+      title: title,
+      description: '',
+      category: category,
+      priority: priority,
+      targetDate: targetDate,
+      createdAt: DateTime.now(),
+      milestones: [], // Empty milestones for now
+      currentProgress: 0.0,
+      tags: [category.displayName.toLowerCase()],
+    );
+    
+    setState(() {
+      goals.add(newGoal);
+    });
+    
+    print('✅ Goal created locally: ${newGoal.title}');
+  }
+
+  /// Test method to try different API parameters to identify the issue
+  Future<void> _testGoalCreationParameters() async {
+    print('\n🧪 Testing goal creation with different parameters...');
+    
+    try {
+      // Test with minimal parameters
+      print('Test 1: Minimal parameters');
+      final testResult1 = await _goalTrackerService.createGoalTracker(
+        goalName: 'Test Goal - Minimal',
+        goalStatusTypeId: 1,
+        userId: 1,
+      );
+      print('   Result: ${testResult1.isSuccess} - ${testResult1.message}');
+      
+      // Test with different user ID
+      print('Test 2: Different user ID');
+      final testResult2 = await _goalTrackerService.createGoalTracker(
+        goalName: 'Test Goal - User 0',
+        goalStatusTypeId: 1,
+        userId: 0, // Try user ID 0
+      );
+      print('   Result: ${testResult2.isSuccess} - ${testResult2.message}');
+      
+      // Test with different status type
+      print('Test 3: Different status type');
+      final testResult3 = await _goalTrackerService.createGoalTracker(
+        goalName: 'Test Goal - Status 0',
+        goalStatusTypeId: 0, // Try status type 0
+        userId: 1,
+      );
+      print('   Result: ${testResult3.isSuccess} - ${testResult3.message}');
+      
+    } catch (e) {
+      print('❌ Test error: $e');
+    }
   }
 }

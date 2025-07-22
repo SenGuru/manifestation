@@ -204,7 +204,7 @@ class Achievement {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      icon: IconData(json['icon'], fontFamily: 'MaterialIcons'),
+      icon: const IconData(0xe7f4, fontFamily: 'MaterialIcons'),
       color: Color(json['color']),
       category: AchievementCategory.values[json['category']],
       unlockedAt: DateTime.parse(json['unlockedAt']),

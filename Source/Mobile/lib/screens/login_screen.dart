@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
+import '../services/unified_auth_service.dart';
 import 'signup_page.dart';
 import 'home_screen.dart';
 import 'forgot_password_screen.dart';
@@ -646,40 +647,37 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     try {
-      print('=== LOGIN SCREEN DEBUG START ===');
-      print('Username: ${_emailController.text.trim()}');
-      print('Password length: ${_passwordController.text.length}');
-      print('Remember me: $_rememberMe');
+      final authService = UnifiedAuthService();
       
-      // Simulate login process
-      await Future.delayed(Duration(seconds: 2));
-      
-      // Mock successful login for demo purposes
-      print('=== LOGIN SCREEN SUCCESS (MOCK) ===');
-      
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Login successful!'),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-        ),
+      final result = await authService.login(
+        username: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+        rememberMe: _rememberMe,
       );
 
-      // Navigate to home screen on success
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      if (result.isSuccess) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+
+        // Navigate to home screen on success
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        _showErrorSnackBar(result.message);
+      }
     } catch (e) {
-      print('=== LOGIN SCREEN EXCEPTION ===');
-      print('Exception: $e');
-      print('Exception type: ${e.runtimeType}');
-      
-      _showErrorSnackBar('Network error. Please check your connection and try again.');
+      _showErrorSnackBar('Unexpected error occurred. Please try again.');
     } finally {
       setState(() {
         _isLoading = false;

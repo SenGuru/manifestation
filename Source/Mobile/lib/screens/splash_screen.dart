@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
-import 'onboarding_screen.dart'; // WelcomeScreen
+import '../services/unified_auth_service.dart';
+import 'onboarding_screen.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
@@ -74,10 +75,14 @@ class _SplashScreenState extends State<SplashScreen>
       // Simulate session check delay
       await Future.delayed(Duration(milliseconds: 1000));
       
-      // Hardcoded session check - always go to login for now
-      final isLoggedIn = false; // Hardcoded to always show login
+      // Check actual authentication state
+      final authService = UnifiedAuthService();
+      final isLoggedIn = authService.isLoggedIn;
       print('=== SPLASH SCREEN SESSION CHECK ===');
       print('Is logged in: $isLoggedIn');
+      print('Session state: ${authService.sessionState}');
+      print('Has current user: ${authService.currentUser != null}');
+      print('Has auth token: ${authService.authToken != null}');
       
       await Future.delayed(Duration(milliseconds: 800)); // Minimum splash time
       
@@ -90,7 +95,10 @@ class _SplashScreenState extends State<SplashScreen>
       
       await Future.delayed(Duration(milliseconds: 500));
       
-      if (hasSeenOnboarding) {
+      if (isLoggedIn) {
+        // User is already logged in, go directly to home
+        _navigateToHome();
+      } else if (hasSeenOnboarding) {
         _navigateToLogin();
       } else {
         _navigateToOnboarding();
@@ -117,15 +125,32 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _navigateToOnboarding() {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => WelcomeScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(opacity: animation, child: child);
-        },
-        transitionDuration: Duration(milliseconds: 500),
-      ),
-    );
+    // Check if user is already logged in
+    final authService = UnifiedAuthService();
+    
+    if (authService.isLoggedIn) {
+      // User is logged in, go to home screen
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: Duration(milliseconds: 500),
+        ),
+      );
+    } else {
+      // User not logged in, go to onboarding
+      Navigator.of(context).pushReplacement(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => WelcomeScreen(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          transitionDuration: Duration(milliseconds: 500),
+        ),
+      );
+    }
   }
 
   void _navigateToLogin() {

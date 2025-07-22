@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
+import '../services/auth_service.dart';
 import 'home_screen.dart';
 import '../constants/colors.dart';
 
@@ -712,40 +713,43 @@ class _SignUpScreenState extends State<SignUpScreen>
     });
 
     try {
-      print('Starting signup process...');
-      
       // Parse the full name into first and last name
       final nameParts = _nameController.text.trim().split(' ');
       final firstName = nameParts.isNotEmpty ? nameParts.first : '';
       final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
-      print('Mock account creation...');
+      final authService = AuthService();
       
-      // Simulate account creation process
-      await Future.delayed(Duration(seconds: 2));
-      
-      print('Registration successful (mock), navigating to home...');
-      
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Account created successfully!'),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-        ),
+      final result = await authService.createAccount(
+        email: _emailController.text.trim(),
+        firstName: firstName,
+        lastName: lastName,
+        password: _passwordController.text.trim(),
       );
 
-      // Navigate directly to home screen
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+      if (result.isSuccess) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(result.message),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+
+        // Navigate directly to home screen
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+      } else {
+        _showErrorSnackBar(result.message);
+      }
     } catch (e) {
-      print('Registration exception: $e');
-      _showErrorSnackBar('Network error. Please check your connection and try again.');
+      _showErrorSnackBar('Unexpected error occurred. Please try again.');
     } finally {
       setState(() {
         _isLoading = false;

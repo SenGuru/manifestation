@@ -1,16 +1,17 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../components/vision_board_canvas.dart';
+import '../services/vision_board_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:io';
 import 'dart:convert';
 import '../constants/colors.dart';
 
 class VisionBoardScreen extends StatefulWidget {
-  final VisionBoard? existingBoard;
+  final VisionBoard? existingBoard;        
 
   const VisionBoardScreen({
     super.key,
@@ -44,6 +45,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   
   // Session tracking
   String? _sessionTrackerId;
+  VisionBoardService? _visionBoardService;
+  Map<String, dynamic>? _currentSession;
 
   @override
   void initState() {
@@ -83,15 +86,54 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     _toolbarController.dispose();
     _zoomController.dispose();
     _textController.dispose();
-    // Session tracking cleanup - local only
+    
+    // Update session with time spent before disposing
+    _updateSessionTimeSpent();
+    
     super.dispose();
   }
+  
+  void _updateSessionTimeSpent() async {
+    if (_currentSession != null && _visionBoardService != null) {
+      try {
+        // Calculate time spent (you could track this more precisely)
+        final sessionDateStr = _currentSession!['visionBoardSessionDate'] as String?;
+        if (sessionDateStr != null) {
+          final sessionDate = DateTime.tryParse(sessionDateStr);
+          if (sessionDate != null) {
+            final timeSpent = DateTime.now().difference(sessionDate).inSeconds;
+            
+            final sessionId = _currentSession!['visionBoardSessionId'] as int?;
+            if (sessionId != null) {
+              final result = await _visionBoardService!.updateSession(
+                sessionId: sessionId,
+                timeSpentInSeconds: timeSpent,
+              );
+              
+              if (result.isSuccess) {
+                print('✅ Session time updated: ${timeSpent}s');
+              } else {
+                print('❌ Failed to update session time: ${result.message}');
+              }
+            }
+          }
+        }
+      } catch (e) {
+        print('❌ Error updating session time: $e');
+      }
+    }
+  }
 
-  /// Start session tracking for vision board (local only)
+  /// Start session tracking for vision board using API
   void _startSessionTracking() async {
-    // Generate local session ID for tracking
-    _sessionTrackerId = DateTime.now().millisecondsSinceEpoch.toString();
-    print('Vision board session started locally with ID: $_sessionTrackerId');
+    try {
+      // Initialize the vision board service
+      _visionBoardService = VisionBoardService();
+      await _visionBoardService!.initialize();
+      print('✅ Vision board service initialized');
+    } catch (e) {
+      print('❌ Error initializing vision board service: $e');
+    }
   }
 
   void _saveToUndoStack() {
@@ -1171,60 +1213,37 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Future<void> _saveBoard() async {
     try {
-      // Generate board ID if it doesn't exist
-      if (currentBoard.id.isEmpty) {
-        final newId = DateTime.now().millisecondsSinceEpoch.toString();
-        currentBoard = currentBoard.copyWith(id: newId);
+      if (_visionBoardService == null) {
+        _showErrorSnackBar('Vision board service not initialized');
+        return;
       }
       
-      bool saveSuccess = false;
-      String saveMethod = '';
+      print('🎯 Saving vision board via API...');
       
-      // Saving vision board to local storage only
-      print('Saving vision board locally: ${currentBoard.title}');
+      // Save to API using the session-based approach
+      final result = await _visionBoardService!.saveVisionBoard(currentBoard);
       
-      // Save locally
-      try {
-        final prefs = await SharedPreferences.getInstance();
-        final boardJson = jsonEncode(currentBoard.toJson());
-        await prefs.setString('vision_board_${currentBoard.id}', boardJson);
-        
-        final savedBoards = prefs.getStringList('saved_vision_boards') ?? [];
-        if (!savedBoards.contains(currentBoard.id)) {
-          savedBoards.add(currentBoard.id);
-          await prefs.setStringList('saved_vision_boards', savedBoards);
-        }
-        
-        if (!saveSuccess) {
-          saveSuccess = true;
-          saveMethod = 'Local storage only';
-        } else {
-          saveMethod = 'Local storage only';
-        }
-        
-        print('✅ Vision board saved locally: ${currentBoard.title}');
-      } catch (localError) {
-        print('❌ Local save error: $localError');
-        if (!saveSuccess) {
-          throw localError;
-        }
-      }
-      
-      if (saveSuccess) {
-        // Update the last saved state
+      if (result.isSuccess && result.data != null) {
+        // Update current board with API response
+        currentBoard = result.data!;
         lastSavedState = currentBoard.copyWith();
         hasUnsavedChanges = false;
         
+        print('✅ Vision board saved via API: ${currentBoard.title}');
+        
+        // Show success feedback
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Vision board saved successfully! ($saveMethod)'),
+            content: Text('Vision board saved to cloud!'),
             backgroundColor: AppColors.accentMint,
             duration: Duration(seconds: 2),
           ),
         );
       } else {
-        throw Exception('Failed to save vision board locally');
+        print('❌ API save failed: ${result.message}');
+        _showErrorSnackBar('Failed to save to cloud: ${result.message}');
       }
+      
     } catch (e) {
       print('❌ Save board error: $e');
       _showErrorSnackBar('Failed to save vision board: $e');
@@ -1232,27 +1251,58 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
   
   Future<void> _loadBoardElements() async {
-    // Board elements are loaded from local storage with the board data
-    print('Board elements loaded from local storage with board data');
+    if (widget.existingBoard != null && widget.existingBoard!.id.isNotEmpty) {
+      await _loadBoardFromAPI(widget.existingBoard!.id);
+    }
   }
   
-  // Elements are saved with board data in local storage
+  Future<void> _loadBoardFromAPI(String sessionId) async {
+    try {
+      if (_visionBoardService == null) {
+        print('Vision board service not initialized');
+        return;
+      }
+      
+      print('🎯 Loading vision board from API: $sessionId');
+      
+      final result = await _visionBoardService!.loadVisionBoard(sessionId);
+      
+      if (result.isSuccess && result.data != null) {
+        if (mounted) {
+          setState(() {
+            currentBoard = result.data!;
+            lastSavedState = currentBoard.copyWith();
+            hasUnsavedChanges = false;
+          });
+          _saveToUndoStack();
+        }
+        
+        print('✅ Vision board loaded from API: ${currentBoard.elements.length} elements');
+      } else {
+        print('❌ Failed to load from API: ${result.message}');
+        _showErrorSnackBar('Failed to load vision board: ${result.message}');
+      }
+      
+    } catch (e) {
+      print('❌ Error loading board from API: $e');
+      _showErrorSnackBar('Error loading vision board: $e');
+    }
+  }
 
   Future<List<VisionBoard>> _loadSavedBoards() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedBoardIds = prefs.getStringList('saved_vision_boards') ?? [];
-      final List<VisionBoard> boards = [];
-      
-      for (final boardId in savedBoardIds) {
-        final boardJson = prefs.getString('vision_board_$boardId');
-        if (boardJson != null) {
-          final boardData = jsonDecode(boardJson);
-          boards.add(VisionBoard.fromJson(boardData));
-        }
+      if (_visionBoardService == null) {
+        return [];
       }
       
-      return boards;
+      final result = await _visionBoardService!.getUserVisionBoards();
+      
+      if (result.isSuccess && result.data != null) {
+        return result.data!;
+      } else {
+        print('Error loading user vision boards: ${result.message}');
+        return [];
+      }
     } catch (e) {
       print('Error loading saved boards: $e');
       return [];
@@ -1261,12 +1311,17 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Future<void> _deleteSavedBoard(String boardId) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('vision_board_$boardId');
+      if (_visionBoardService == null) {
+        return;
+      }
       
-      final savedBoards = prefs.getStringList('saved_vision_boards') ?? [];
-      savedBoards.remove(boardId);
-      await prefs.setStringList('saved_vision_boards', savedBoards);
+      final result = await _visionBoardService!.deleteVisionBoard(boardId);
+      
+      if (result.isSuccess) {
+        print('✅ Vision board deleted via API');
+      } else {
+        print('❌ Failed to delete vision board: ${result.message}');
+      }
     } catch (e) {
       print('Error deleting board: $e');
     }
@@ -1689,9 +1744,184 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     }
   }
 
-  void _addImageFromSearch() {
-    // TODO: Implement search functionality
-    _addPlaceholderImage('Search');
+  void _addImageFromSearch() async {
+    // Load default/stock images from API
+    if (_visionBoardService != null) {
+      try {
+        final result = await _visionBoardService!.getDefaultPictures();
+        if (result.isSuccess && result.data != null) {
+          _showDefaultImagesDialog(result.data!);
+        } else {
+          _showErrorSnackBar('Failed to load stock images: ${result.message}');
+        }
+      } catch (e) {
+        _showErrorSnackBar('Error loading stock images: $e');
+      }
+    } else {
+      _addPlaceholderImage('Search');
+    }
+  }
+  
+  void _showDefaultImagesDialog(List<Map<String, dynamic>> defaultImages) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        margin: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: AppColors.cardBackground,
+          borderRadius: BorderRadius.circular(24.r),
+        ),
+        child: Column(
+          children: [
+            // Handle
+            Container(
+              width: 40.w,
+              height: 4.h,
+              margin: EdgeInsets.only(top: 12.h),
+              decoration: BoxDecoration(
+                color: AppColors.textMedium.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            
+            // Header
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Text(
+                'Choose Stock Image',
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textLight,
+                ),
+              ),
+            ),
+            
+            // Images grid
+            Expanded(
+              child: GridView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.w,
+                  mainAxisSpacing: 16.h,
+                  childAspectRatio: 1.0,
+                ),
+                itemCount: defaultImages.length,
+                itemBuilder: (context, index) {
+                  final image = defaultImages[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                      _addDefaultImageToBoard(image);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundMedium,
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: AppColors.textMedium.withOpacity(0.2),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(16.r),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            // Try to load the image, fallback to placeholder
+                            if (image['location'] != null && image['location'].toString().isNotEmpty)
+                              Image.network(
+                                image['location'].toString(),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => 
+                                    _buildSimplePlaceholder(),
+                              )
+                            else
+                              _buildSimplePlaceholder(),
+                            
+                            // Overlay with image info
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                padding: EdgeInsets.all(8.w),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.7),
+                                    ],
+                                  ),
+                                ),
+                                child: Text(
+                                  image['fileName']?.toString() ?? 'Stock Image',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            
+            SizedBox(height: 20.h),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  void _addDefaultImageToBoard(Map<String, dynamic> defaultImage) {
+    // Create image element using the default image
+    final imageElement = VisionBoardImageElement(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      position: Offset(100.w, 100.h),
+      size: Size(200.w, 200.h),
+      imagePath: '', // No local path for default images
+      imageUrl: defaultImage['location']?.toString(), // Use the API image URL
+      fit: BoxFit.cover,
+    );
+
+    final updatedElements = [...currentBoard.elements, imageElement];
+    final updatedBoard = currentBoard.copyWith(elements: updatedElements);
+    
+    _onBoardChanged(updatedBoard);
+    
+    // Track usage of this default image in the current session
+    final sessionId = _currentSession?['visionBoardSessionId'] as int?;
+    final pictureId = defaultImage['defaultVisionBoardPictureId'] as int?;
+    
+    if (sessionId != null && pictureId != null) {
+      _visionBoardService?.trackPictureView(
+        sessionId: sessionId,
+        pictureId: pictureId,
+      );
+    }
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Stock image added to vision board'),
+        backgroundColor: AppColors.accentMint,
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
 
   void _addImageFromAI() {
@@ -1701,20 +1931,56 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Future<void> _addImageToBoard(XFile image) async {
     try {
-      // Get the app's documents directory
+      // Get the app's documents directory for local storage
       final Directory appDir = await getApplicationDocumentsDirectory();
       final String fileName = 'vision_board_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final String localPath = '${appDir.path}/$fileName';
       
-      // Copy the image to the local storage
+      // Copy the image to local storage for immediate use
       await File(image.path).copy(localPath);
       
-      // Create image element (local storage only)
+      // Try to upload to API if service is available
+      String? apiImageUrl;
+      if (_visionBoardService != null) {
+        try {
+          final file = File(localPath);
+          final fileSize = await file.length();
+          
+          final result = await _visionBoardService!.createPicture(
+            location: localPath, // This would typically be a URL in a real implementation
+            fileName: fileName,
+            fileSize: fileSize,
+          );
+          
+          if (result.isSuccess && result.data != null) {
+            apiImageUrl = result.data!['location']?.toString();
+            print('✅ Image uploaded to API: $apiImageUrl');
+            
+            // Track picture view in current session
+            final sessionId = _currentSession?['visionBoardSessionId'] as int?;
+            final pictureId = result.data!['visionBoardPictureId'] as int?;
+            
+            if (sessionId != null && pictureId != null) {
+              await _visionBoardService!.trackPictureView(
+                sessionId: sessionId,
+                pictureId: pictureId,
+              );
+            }
+          } else {
+            print('❌ Failed to upload image to API: ${result.message}');
+          }
+        } catch (e) {
+          print('❌ Error uploading image to API: $e');
+        }
+      }
+      
+      // Create image element with both local and API paths
       final imageElement = VisionBoardImageElement(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         position: Offset(100.w, 100.h),
         size: Size(200.w, 200.h),
         imagePath: localPath,
+        imageUrl: apiImageUrl, // Will be null if API upload failed
         fit: BoxFit.cover,
       );
 
@@ -1725,7 +1991,9 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Image added to vision board'),
+          content: Text(apiImageUrl != null 
+              ? 'Image added and synced to cloud' 
+              : 'Image added locally'),
           backgroundColor: AppColors.accentMint,
           duration: Duration(seconds: 2),
         ),
@@ -1758,7 +2026,21 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
+  Widget _buildSimplePlaceholder() {
+    return Container(
+      color: AppColors.backgroundMedium,
+      child: Center(
+        child: Icon(
+          Icons.image_outlined,
+          color: AppColors.textMedium,
+          size: 32.sp,
+        ),
+      ),
+    );
+  }
+
   void _showErrorSnackBar(String message) {
+    if (!mounted) return; // Check if widget is still mounted
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -1775,6 +2057,14 @@ extension VisionBoardToolShortName on VisionBoardTool {
     switch (this) {
       case VisionBoardTool.select:
         return 'Select';
+      case VisionBoardTool.move:
+        return 'Move';
+      case VisionBoardTool.resize:
+        return 'Resize';
+      case VisionBoardTool.rotate:
+        return 'Rotate';
+      case VisionBoardTool.delete:
+        return 'Delete';
     }
   }
 }

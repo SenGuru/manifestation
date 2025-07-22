@@ -21,30 +21,47 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
   Future<void> _loadStats() async {
     try {
       print('📊 SESSION STATS SCREEN: Loading stats...');
-      setState(() {
-        _isLoading = true;
-        _errorMessage = '';
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = true;
+          _errorMessage = '';
+        });
+      }
 
       final stats = await _getUserStats();
+      
+      if (stats == null) {
+        throw Exception('Stats data is null');
+      }
       
       print('📊 SESSION STATS SCREEN: Stats loaded successfully');
       print('   Total sessions: ${stats['totalSessions']}');
       print('   Total time: ${stats['totalTimeInSeconds']}s');
-      print('   Meditation: ${stats['meditation']['totalSessions']} sessions, ${stats['meditation']['totalTimeInSeconds']}s');
-      print('   Vision Board: ${stats['visionBoard']['totalSessions']} sessions, ${stats['visionBoard']['totalTimeInSeconds']}s');
-      print('   Affirmations: ${stats['dailyAffirmations']['totalSessions']} sessions, ${stats['dailyAffirmations']['totalTimeInSeconds']}s');
       
-      setState(() {
-        _stats = stats;
-        _isLoading = false;
-      });
+      // Safe access to nested data
+      final activities = stats['activities'] as Map<String, dynamic>? ?? {};
+      final meditation = activities['meditation'] as Map<String, dynamic>? ?? {};
+      final visionBoard = activities['visionBoard'] as Map<String, dynamic>? ?? {};
+      final dailyAffirmations = activities['dailyAffirmations'] as Map<String, dynamic>? ?? {};
+      
+      print('   Meditation: ${meditation['totalSessions'] ?? 0} sessions, ${meditation['totalTimeInSeconds'] ?? 0}s');
+      print('   Vision Board: ${visionBoard['totalSessions'] ?? 0} sessions, ${visionBoard['totalTimeInSeconds'] ?? 0}s');
+      print('   Affirmations: ${dailyAffirmations['totalSessions'] ?? 0} sessions, ${dailyAffirmations['totalTimeInSeconds'] ?? 0}s');
+      
+      if (mounted) {
+        setState(() {
+          _stats = stats;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       print('❌ SESSION STATS SCREEN: Error loading stats: $e');
-      setState(() {
-        _errorMessage = 'Failed to load statistics: $e';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to load statistics: $e';
+          _isLoading = false;
+        });
+      }
     }
   }
 

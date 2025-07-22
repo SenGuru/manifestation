@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
+import '../services/vision_board_service.dart';
 import 'vision_board_screen.dart';
 import '../constants/colors.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class VisionBoardHome extends StatefulWidget {
   const VisionBoardHome({super.key});
@@ -30,16 +29,19 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     });
     
     try {
-      // Load from local storage
-      visionBoards = await _loadFromLocalStorage();
+      // Load from API
+      final visionBoardService = VisionBoardService();
+      visionBoardService.initialize();
+      final result = await visionBoardService.getUserVisionBoards();
       
-      if (visionBoards.isEmpty) {
-        // Create sample boards if nothing exists
+      if (result.isSuccess && result.data != null) {
+        visionBoards = result.data!;
+        print('✅ Loaded ${visionBoards.length} vision boards from API');
+      } else {
+        // Create sample boards if API fails or no boards exist
         visionBoards = _createSampleBoards();
-        print('📝 Created sample vision boards');
+        print('📝 Created sample vision boards (API failed or no boards)');
       }
-      
-      print('✅ Loaded ${visionBoards.length} vision boards from local storage');
     } catch (e) {
       print('❌ Error loading vision boards: $e');
       visionBoards = _createSampleBoards();
@@ -50,27 +52,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     });
   }
   
-  Future<List<VisionBoard>> _loadFromLocalStorage() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedBoardIds = prefs.getStringList('saved_vision_boards') ?? [];
-      final List<VisionBoard> boards = [];
-      
-      for (final boardId in savedBoardIds) {
-        final boardJson = prefs.getString('vision_board_$boardId');
-        if (boardJson != null) {
-          final boardData = jsonDecode(boardJson);
-          boards.add(VisionBoard.fromJson(boardData));
-        }
-      }
-      
-      print('📱 Loaded ${boards.length} vision boards from local storage');
-      return boards;
-    } catch (e) {
-      print('❌ Error loading from local storage: $e');
-      return [];
-    }
-  }
   
   List<VisionBoard> _createSampleBoards() {
     return [
@@ -747,20 +728,62 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     }
   }
 
-  void _createNewBoard() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => VisionBoardScreen(),
-      ),
-    ).then((result) {
-      if (result != null) {
-        // Add the new board to the list
-        setState(() {
-          visionBoards.add(result);
-        });
-      }
-    });
+  void _createNewBoard() async {
+    try {
+      // Create a new session via API
+      // Create a new empty board that will create a session when saved
+      final newBoard = VisionBoard(
+        id: '', // Empty ID will trigger session creation in VisionBoardService
+        title: 'New Vision Board',
+        elements: [],
+        backgroundColor: AppColors.white,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VisionBoardScreen(existingBoard: newBoard),
+        ),
+      ).then((editedBoard) {
+        if (editedBoard != null) {
+          setState(() {
+            // Add to list if it's new, or update if it exists
+            final existingIndex = visionBoards.indexWhere((b) => b.id == editedBoard.id);
+            if (existingIndex >= 0) {
+              visionBoards[existingIndex] = editedBoard;
+            } else {
+              visionBoards.add(editedBoard);
+            }
+          });
+        }
+      });
+    } catch (e) {
+      print('❌ Error creating new board: $e');
+      // Fallback to empty board creation
+      final newBoard = VisionBoard(
+        id: '',
+        title: 'New Vision Board',
+        elements: [],
+        backgroundColor: AppColors.white,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VisionBoardScreen(existingBoard: newBoard),
+        ),
+      ).then((result) {
+        if (result != null) {
+          setState(() {
+            visionBoards.add(result);
+          });
+        }
+      });
+    }
   }
 
   void _openBoard(VisionBoard board) {
@@ -989,16 +1012,20 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   
   Future<void> _performDelete(VisionBoard board) async {
     try {
-      // Delete from local storage
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove('vision_board_${board.id}');
+      // Delete from API if it has a valid session ID
+      if (board.id.isNotEmpty) {
+        final visionBoardService = VisionBoardService();
+        visionBoardService.initialize();
+        final result = await visionBoardService.deleteVisionBoard(board.id);
+        
+        if (result.isSuccess) {
+          print('✅ Board deleted from API: ${board.title}');
+        } else {
+          print('⚠️ API delete failed, removing locally: ${result.message}');
+        }
+      }
       
-      final savedBoards = prefs.getStringList('saved_vision_boards') ?? [];
-      savedBoards.remove(board.id);
-      await prefs.setStringList('saved_vision_boards', savedBoards);
-      
-      print('✅ Board deleted from local storage: ${board.title}');
-      
+      // Remove from local list regardless of API result
       setState(() {
         visionBoards.remove(board);
       });

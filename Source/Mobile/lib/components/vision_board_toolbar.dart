@@ -402,6 +402,14 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
     switch (tool) {
       case VisionBoardTool.select:
         return 'Tap to select elements. Drag to move selected items.';
+      case VisionBoardTool.move:
+        return 'Move elements around the canvas freely.';
+      case VisionBoardTool.resize:
+        return 'Resize elements by dragging the corners.';
+      case VisionBoardTool.rotate:
+        return 'Rotate elements by dragging in a circular motion.';
+      case VisionBoardTool.delete:
+        return 'Tap elements to delete them from the board.';
     }
   }
 }

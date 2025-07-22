@@ -3,15 +3,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'screens/splash_screen.dart';
 import 'constants/colors.dart';
-import 'services/session_manager.dart';
+import 'services/unified_auth_service.dart';
+import 'services/vision_board_service.dart';
 import 'widgets/session_activity_tracker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Initialize services
-  await SessionManager.initialize();
-  // Initialize API client will be done in screens as needed
+  // Initialize unified auth service first and wait for it to complete
+  await UnifiedAuthService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  
+  // Initialize VisionBoardService (this depends on auth being ready)
+  await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  
+  print('🚀 All services initialized, starting app');
   
   runApp(ManifestationApp());
 }
