@@ -6984,6 +6984,11 @@ ModifiedByUserId = item.ModifiedByUserId,
         }
         */
 
+        public async Task<bool> UpdateVisionBoardPictureFileLocationAsync(long visionBoardPictureId, string fileLocation, string fileName, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<VisionBoardPicture>().Where(x => x.VisionBoardPictureId == visionBoardPictureId).Set(x => x.Location, fileLocation).Set(x => x.FileName, fileName).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
         public async Task<VisionBoardPicture> CreateVisionBoardPictureAsync(VisionBoardPicture visionBoardPicture, long? createdBy)
         {
             visionBoardPicture.VisionBoardPictureId = await appDBManager.InsertWithAuditAsync<VisionBoardPicture, long>(visionBoardPicture, createdBy);

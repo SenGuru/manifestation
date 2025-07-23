@@ -24789,7 +24789,7 @@ namespace Manifest.Service.App
                 {
                     foreach (var visionBoardPicture in visionBoardPictures.NewVisionBoardPictures)
                     {
-                        var cResult = await CreateVisionBoardPictureAsync(visionBoardPicture);
+                        var cResult = await CreateVisionBoardPictureAsync(visionBoardPicture,null);
                         if (!cResult.IsSuccess)
                             throw new RollbackException(cResult);
 
@@ -24807,7 +24807,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public async Task<ReturnModel<VisionBoardPictureModel>> CreateVisionBoardPictureAsync(VisionBoardPictureCreateModel visionBoardPicture)
+        public async Task<ReturnModel<VisionBoardPictureModel>> CreateVisionBoardPictureAsync(VisionBoardPictureCreateModel visionBoardPicture, FileStreamModel fsModel)
         {
             try
             {
@@ -24820,6 +24820,28 @@ namespace Manifest.Service.App
                 {
                     visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
                 }
+
+                Stream fileStream = null;
+
+                if (fsModel != null && fsModel.FileData != null && fsModel.FileData.Length > 0)
+                {
+                    if (fsModel.FileName.IsTrimmedStringNullOrEmpty())
+                    {
+                        return ReturnModel<VisionBoardPictureModel>.Error($"Uploaded file name is not available. Please provide a valid file document.");
+                    }
+
+                    fileStream = fsModel.FileData;
+                }
+
+                if (fileStream == null)
+                {
+                    return ReturnModel<VisionBoardPictureModel>.Error($"Template File should not be empty. Please upload valid Template file.");
+                }
+
+                visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
+                visionBoardPicture.Location = fsModel.FileName;
+                visionBoardPicture.FileName = fsModel.FileName;
+                visionBoardPicture.FileSize = fileStream.Length;
 
                 //var companyModel = await companyService.GetCompanyByIdForReadAsync(visionBoardPicture.UserId);
                 //if (!companyModel.IsSuccess)
@@ -24883,6 +24905,12 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<VisionBoardPictureModel>($"Unable to find the Vision Board Picture", new { item.VisionBoardPictureId });
                 }
 
+                fileStream.Position = 0;
+                var fName = fileAttachmentFileStorage.VisionBoardFilePath(item.UserId.ToString(), item.VisionBoardPictureId.ToString(), item.FileName);
+                await fileAttachmentFileStorage.WriteAsync(item.UserId, fName, fileStream);
+                await manifestRepository.UpdateVisionBoardPictureFileLocationAsync(item.VisionBoardPictureId, fName, item.FileName, await currentSessionService.GetCurrentUserIdAsync());
+                view.Location = fName;
+
                 return this.ConvertToItem(view, objectMapperService.VisionBoardPictureViewToVisionBoardPictureModel);
             }
             catch (Exception ex)
@@ -24891,7 +24919,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public async Task<ReturnModel<VisionBoardPictureModel>> UpdateVisionBoardPictureAsync(VisionBoardPictureUpdateModel visionBoardPicture)
+        public async Task<ReturnModel<VisionBoardPictureModel>> UpdateVisionBoardPictureAsync(VisionBoardPictureUpdateModel visionBoardPicture, FileStreamModel fsModel)
         {
             try
             {
@@ -24913,6 +24941,27 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<VisionBoardPictureModel>(errorStr);
                 }
 
+                Stream fileStream = null;
+
+                if (fsModel != null)
+                {
+
+                    if (fsModel != null && fsModel.FileData != null && fsModel.FileData.Length > 0)
+                    {
+                        if (fsModel.FileName.IsTrimmedStringNullOrEmpty())
+                        {
+                            return ReturnModel<VisionBoardPictureModel>.Error($"Uploaded file name is not available. Please provide a valid file document.");
+                        }
+
+                        fileStream = fsModel.FileData;
+                    }
+
+                    if (fileStream == null)
+                    {
+                        return ReturnModel<VisionBoardPictureModel>.Error($"Template File should not be empty. Please upload valid Template file.");
+                    }
+                }
+
                 if (canAssign)
                 {
                     visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
@@ -24922,10 +24971,9 @@ namespace Manifest.Service.App
                 visionBoardPicture.CreatedDate = existingVisionBoardPictureModel.Model.CreatedDate;
                 visionBoardPicture.IsDeleted = existingVisionBoardPictureModel.Model.IsDeleted;
                 visionBoardPicture.UserId = existingVisionBoardPictureModel.Model.UserId;
-                //visionBoardPicture.MovieId = existingVisionBoardPictureModel.Model.MovieId;
-                //visionBoardPicture.ProfileImageActualFileName = existingVisionBoardPictureModel.Model.ProfileImageActualFileName;
-                //visionBoardPicture.ProfileImageLocation = existingVisionBoardPictureModel.Model.ProfileImageLocation;
-
+                visionBoardPicture.FileName = existingVisionBoardPictureModel.Model.FileName;
+                visionBoardPicture.FileSize = (fsModel == null || fsModel.FileData == null) ? existingVisionBoardPictureModel.Model.FileSize : fsModel.FileData.Length;
+                visionBoardPicture.Location = existingVisionBoardPictureModel.Model.Location;
 
 
                 var errorList = await IsVisionBoardPictureModelValidForUpdateAsync(visionBoardPicture);
@@ -24946,6 +24994,12 @@ namespace Manifest.Service.App
                     }
 
                     //await CreateOrUpdateVisionBoardPictureDependentsAsync(visionBoardPicture)
+
+                    if (fileStream != null)
+                    {
+                        fileStream.Position = 0;
+                        await fileAttachmentFileStorage.WriteAsync(item.UserId, item.Location, fileStream);
+                    }
 
                     await trx.CompleteAsync();
                 }

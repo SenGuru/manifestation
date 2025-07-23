@@ -1,3 +1,8 @@
+using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
+using DocumentFormat.OpenXml.EMMA;
 using Framework.Infrastructure.Interfaces.Helpers;
 using Framework.Infrastructure.Interfaces.Services;
 using Framework.Infrastructure.Logging;
@@ -22,10 +27,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.IO;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace Manifest.Api.All.Controllers
 {
@@ -4555,9 +4556,20 @@ namespace Manifest.Api.All.Controllers
 
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
-        public Task<ReturnModel<VisionBoardPictureModel>> CreateVisionBoardPicture([FromBody] VisionBoardPictureCreateModel visionBoardPictureModel)
+        public Task<ReturnModel<VisionBoardPictureModel>> CreateVisionBoardPicture([FromForm] VisionBoardPictureCreateWithFileFormModel model)
         {
-            return manifestService.CreateVisionBoardPictureAsync(visionBoardPictureModel);
+            FileStreamModel streamModel = null;
+            if (model != null && model.UploadedFile != null)
+            {
+                streamModel = new FileStreamModel
+                {
+                    FileData = model.UploadedFile.OpenReadStream(),
+                    ContentType = model.UploadedFile.ContentType,
+                    FileName = model.UploadedFile.FileName
+                };
+            }
+
+            return manifestService.CreateVisionBoardPictureAsync(model, streamModel);
         }
 
         [HttpPost]
@@ -4569,11 +4581,22 @@ namespace Manifest.Api.All.Controllers
 
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
-        public Task<ReturnModel<VisionBoardPictureModel>> UpdateVisionBoardPicture([FromBody] VisionBoardPictureUpdateModel visionBoardPictureModel)
+        public Task<ReturnModel<VisionBoardPictureModel>> UpdateVisionBoardPicture([FromForm] VisionBoardPictureUpdateWithFileFormModel model)
         {
-            return manifestService.UpdateVisionBoardPictureAsync(visionBoardPictureModel);
-        }
+            FileStreamModel streamModel = null;
+            if (model != null && model.UploadedFile != null)
+            {
+                streamModel = new FileStreamModel
+                {
+                    FileData = model.UploadedFile.OpenReadStream(),
+                    ContentType = model.UploadedFile.ContentType,
+                    FileName = model.UploadedFile.FileName
+                };
+            }
 
+            return manifestService.UpdateVisionBoardPictureAsync(model, streamModel);
+        }
+        
         [HttpDelete]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> MarkVisionBoardPictureAsDeleted([FromQuery] long id)
