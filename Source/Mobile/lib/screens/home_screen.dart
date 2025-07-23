@@ -291,25 +291,6 @@ class _HomeScreenState extends State<HomeScreen> {
         // Fourth row - Stats & Analytics
         Row(
           children: [
-            Expanded(
-              child: FeatureCard(
-                title: 'Session Stats',
-                subtitle: 'Track Your Progress',
-                icon: Icons.analytics,
-                gradientColors: AppColors.analyticsGradient,
-                onTap: () => _navigateToFeature('stats'),
-              ),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: FeatureCard(
-                title: 'Moon Phases',
-                subtitle: 'Lunar Energy',
-                icon: Icons.brightness_3,
-                gradientColors: AppColors.moonPhaseGradient,
-                onTap: () => _navigateToFeature('moon_phases'),
-              ),
-            ),
           ],
         ),
       ],

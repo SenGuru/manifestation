@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/analytics_models.dart';
 import 'daily_affirmations_service.dart';
 import 'vision_board_service.dart';
@@ -19,12 +21,59 @@ class UsageAnalyticsService {
 
   // Active session tracking
   final Map<ActivityType, ActiveSession> _activeSessions = {};
+  
+  // Session storage keys
+  static const String _sessionHistoryKey = 'session_history';
+  static const String _dailyStatsKey = 'daily_stats';
 
   /// Initialize the analytics service
   Future<void> initialize() async {
     _affirmationService.initialize();
     await _visionBoardService.initialize();
+    
+    // Add some test session data if none exists (for testing)
+    await _addTestDataIfEmpty();
+    
     print('🎯 UsageAnalyticsService initialized');
+  }
+  
+  /// Add test session data if storage is empty (for testing purposes)
+  Future<void> _addTestDataIfEmpty() async {
+    try {
+      final existingSessions = await _getSessionHistory();
+      if (existingSessions.isEmpty) {
+        print('📊 ANALYTICS: Adding test session data...');
+        
+        // Add some test sessions
+        final now = DateTime.now();
+        final testSessions = [
+          {
+            'activityType': 'visionBoard',
+            'duration': 300, // 5 minutes
+            'timestamp': now.subtract(Duration(days: 1)).millisecondsSinceEpoch,
+            'metadata': {'boardId': 'test_board'},
+          },
+          {
+            'activityType': 'dailyAffirmations',
+            'duration': 120, // 2 minutes
+            'timestamp': now.subtract(Duration(hours: 2)).millisecondsSinceEpoch,
+            'metadata': {'category': 'Self-Love'},
+          },
+          {
+            'activityType': 'visualMeditation',
+            'duration': 600, // 10 minutes
+            'timestamp': now.subtract(Duration(hours: 1)).millisecondsSinceEpoch,
+            'metadata': {'type': 'guided'},
+          },
+        ];
+        
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString(_sessionHistoryKey, jsonEncode(testSessions));
+        print('📊 ANALYTICS: Test session data added');
+      }
+    } catch (e) {
+      print('❌ Error adding test data: $e');
+    }
   }
 
   /// Start tracking a session for a specific activity
@@ -105,6 +154,9 @@ class UsageAnalyticsService {
   /// Record affirmation session
   Future<void> _recordAffirmationSession(Duration duration, Map<String, dynamic> metadata) async {
     try {
+      // Store locally first
+      await _saveSessionToHistory(ActivityType.dailyAffirmations, duration, metadata);
+      
       final result = await _affirmationService.createAffirmationSession(
         timeSpentInSeconds: duration.inSeconds,
         addToFeed: false,
@@ -123,7 +175,9 @@ class UsageAnalyticsService {
   /// Record vision board session (placeholder - uses XML storage)
   Future<void> _recordVisionBoardSession(Duration duration, Map<String, dynamic> metadata) async {
     try {
-      // For now, just log the session since vision board API is disabled
+      // Store locally first
+      await _saveSessionToHistory(ActivityType.visionBoard, duration, metadata);
+      
       print('📊 Vision board session: ${duration.inSeconds}s (stored locally)');
       
       // In the future, this would call the vision board API:
@@ -139,8 +193,10 @@ class UsageAnalyticsService {
   /// Record meditation session (placeholder - no API yet)
   Future<void> _recordMeditationSession(Duration duration, Map<String, dynamic> metadata) async {
     try {
-      // TODO: Implement meditation session API when available
-      print('📊 Meditation session: ${duration.inSeconds}s (API pending)');
+      // Store locally first
+      await _saveSessionToHistory(ActivityType.visualMeditation, duration, metadata);
+      
+      print('📊 Meditation session: ${duration.inSeconds}s (stored locally)');
       
       // For now, store locally or use a generic session API
       // final result = await _meditationService.createMeditationSession(...)
@@ -152,8 +208,92 @@ class UsageAnalyticsService {
   /// Get comprehensive usage statistics
   Future<UsageStats> getUsageStats() async {
     try {
-      // For now, return demo data. In production, this would aggregate from APIs
-      return _getDemoUsageStats();
+      print('📊 ANALYTICS: Loading session history...');
+      final sessionHistory = await _getSessionHistory();
+      print('📊 ANALYTICS: Found ${sessionHistory.length} sessions in history');
+      
+      // If no sessions exist, return demo data as fallback
+      if (sessionHistory.isEmpty) {
+        print('📊 ANALYTICS: No sessions found, using demo data');
+        return _getDemoUsageStats();
+      }
+      
+      final now = DateTime.now();
+      
+      // Calculate overall statistics
+      int totalSessions = sessionHistory.length;
+      int totalTimeInSeconds = sessionHistory.fold(0, (sum, session) => sum + session['duration'] as int);
+      print('📊 ANALYTICS: Total sessions: $totalSessions, Total time: ${totalTimeInSeconds}s');
+      double averageSessionTime = totalSessions > 0 ? totalTimeInSeconds / totalSessions : 0;
+      
+      // Group sessions by activity type
+      Map<ActivityType, List<Map<String, dynamic>>> sessionsByActivity = {};
+      for (final session in sessionHistory) {
+        final activityTypeStr = session['activityType'] as String;
+        final activityType = ActivityType.values.firstWhere(
+          (type) => type.name == activityTypeStr,
+          orElse: () => ActivityType.dailyAffirmations,
+        );
+        sessionsByActivity.putIfAbsent(activityType, () => []).add(session);
+      }
+      
+      // Calculate activity-specific stats
+      Map<ActivityType, ActivityStats> activities = {};
+      ActivityType mostActiveActivity = ActivityType.dailyAffirmations;
+      int maxSessions = 0;
+      
+      for (final activityType in ActivityType.values) {
+        final sessions = sessionsByActivity[activityType] ?? [];
+        final activityTotalTime = sessions.fold(0, (sum, session) => sum + session['duration'] as int);
+        final activityAvgTime = sessions.isNotEmpty ? activityTotalTime / sessions.length : 0;
+        
+        // Find last session date
+        DateTime? lastSessionDate;
+        if (sessions.isNotEmpty) {
+          lastSessionDate = sessions
+              .map((s) => DateTime.fromMillisecondsSinceEpoch(s['timestamp'] as int))
+              .reduce((a, b) => a.isAfter(b) ? a : b);
+        }
+        
+        activities[activityType] = ActivityStats(
+          activityType: activityType,
+          totalSessions: sessions.length,
+          totalTimeInSeconds: activityTotalTime,
+          averageSessionTimeInSeconds: activityAvgTime.round(),
+          currentStreak: _calculateStreak(sessions, activityType),
+          lastSessionDate: lastSessionDate,
+          weeklyActivity: _generateWeeklyActivity(activityType),
+        );
+        
+        if (sessions.length > maxSessions) {
+          maxSessions = sessions.length;
+          mostActiveActivity = activityType;
+        }
+      }
+      
+      // Calculate streaks and weekly/monthly data
+      final thisWeekSessions = sessionHistory.where((session) {
+        final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
+        final weekStart = now.subtract(Duration(days: now.weekday - 1));
+        return sessionDate.isAfter(weekStart);
+      }).length;
+      
+      final thisMonthSessions = sessionHistory.where((session) {
+        final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
+        return sessionDate.month == now.month && sessionDate.year == now.year;
+      }).length;
+      
+      return UsageStats(
+        totalSessions: totalSessions,
+        totalTimeInSeconds: totalTimeInSeconds,
+        averageSessionTimeInSeconds: averageSessionTime.round(),
+        mostActiveActivity: mostActiveActivity,
+        currentStreak: _calculateOverallStreak(sessionHistory),
+        longestStreak: _calculateLongestStreak(sessionHistory),
+        thisWeekSessions: thisWeekSessions,
+        thisMonthSessions: thisMonthSessions,
+        activities: activities,
+      );
     } catch (e) {
       print('❌ Error fetching usage stats: $e');
       return _getEmptyUsageStats();
@@ -264,6 +404,160 @@ class UsageAnalyticsService {
         return [300, 600, 300, 900, 450, 300, 750][DateTime.now().weekday % 7];
     }
   }
+
+  // ======================== SESSION PERSISTENCE ========================
+  
+  /// Save session to local history
+  Future<void> _saveSessionToHistory(ActivityType activityType, Duration duration, Map<String, dynamic> metadata) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final sessionHistory = await _getSessionHistory();
+      
+      final sessionData = {
+        'activityType': activityType.name,
+        'duration': duration.inSeconds,
+        'timestamp': DateTime.now().millisecondsSinceEpoch,
+        'metadata': metadata,
+      };
+      
+      sessionHistory.add(sessionData);
+      
+      // Keep only last 1000 sessions to prevent unlimited growth
+      if (sessionHistory.length > 1000) {
+        sessionHistory.removeRange(0, sessionHistory.length - 1000);
+      }
+      
+      await prefs.setString(_sessionHistoryKey, jsonEncode(sessionHistory));
+      print('📊 Session saved to history: ${activityType.name} - ${duration.inSeconds}s');
+    } catch (e) {
+      print('❌ Error saving session to history: $e');
+    }
+  }
+  
+  /// Get session history from local storage
+  Future<List<Map<String, dynamic>>> _getSessionHistory() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final historyJson = prefs.getString(_sessionHistoryKey);
+      
+      print('📊 STORAGE: Raw history JSON: ${historyJson?.substring(0, historyJson.length > 100 ? 100 : historyJson.length)}...');
+      
+      if (historyJson == null) {
+        print('📊 STORAGE: No session history found in SharedPreferences');
+        return [];
+      }
+      
+      final historyList = jsonDecode(historyJson) as List;
+      print('📊 STORAGE: Loaded ${historyList.length} sessions from storage');
+      return historyList.cast<Map<String, dynamic>>();
+    } catch (e) {
+      print('❌ Error loading session history: $e');
+      return [];
+    }
+  }
+  
+  /// Calculate streak for a specific activity
+  int _calculateStreak(List<Map<String, dynamic>> sessions, ActivityType activityType) {
+    if (sessions.isEmpty) return 0;
+    
+    final now = DateTime.now();
+    final sortedSessions = sessions
+        .map((s) => DateTime.fromMillisecondsSinceEpoch(s['timestamp'] as int))
+        .toList()
+      ..sort((a, b) => b.compareTo(a)); // Most recent first
+    
+    int streak = 0;
+    DateTime? lastSessionDate;
+    
+    for (final sessionDate in sortedSessions) {
+      if (lastSessionDate == null) {
+        // First session - check if it's today or yesterday
+        final daysDiff = now.difference(sessionDate).inDays;
+        if (daysDiff <= 1) {
+          streak = 1;
+          lastSessionDate = sessionDate;
+        } else {
+          break;
+        }
+      } else {
+        // Check if this session is consecutive
+        final daysDiff = lastSessionDate.difference(sessionDate).inDays;
+        if (daysDiff == 1) {
+          streak++;
+          lastSessionDate = sessionDate;
+        } else {
+          break;
+        }
+      }
+    }
+    
+    return streak;
+  }
+  
+  /// Calculate overall streak across all activities
+  int _calculateOverallStreak(List<Map<String, dynamic>> sessions) {
+    if (sessions.isEmpty) return 0;
+    
+    final now = DateTime.now();
+    final sessionDates = sessions
+        .map((s) => DateTime.fromMillisecondsSinceEpoch(s['timestamp'] as int))
+        .toSet()
+        .toList()
+      ..sort((a, b) => b.compareTo(a)); // Most recent first
+    
+    int streak = 0;
+    DateTime? lastDate;
+    
+    for (final date in sessionDates) {
+      if (lastDate == null) {
+        final daysDiff = now.difference(date).inDays;
+        if (daysDiff <= 1) {
+          streak = 1;
+          lastDate = date;
+        } else {
+          break;
+        }
+      } else {
+        final daysDiff = lastDate.difference(date).inDays;
+        if (daysDiff == 1) {
+          streak++;
+          lastDate = date;
+        } else {
+          break;
+        }
+      }
+    }
+    
+    return streak;
+  }
+  
+  /// Calculate longest streak
+  int _calculateLongestStreak(List<Map<String, dynamic>> sessions) {
+    if (sessions.isEmpty) return 0;
+    
+    final sessionDates = sessions
+        .map((s) => DateTime.fromMillisecondsSinceEpoch(s['timestamp'] as int))
+        .toSet()
+        .toList()
+      ..sort();
+    
+    int longestStreak = 0;
+    int currentStreak = 1;
+    
+    for (int i = 1; i < sessionDates.length; i++) {
+      final daysDiff = sessionDates[i].difference(sessionDates[i - 1]).inDays;
+      if (daysDiff == 1) {
+        currentStreak++;
+      } else {
+        longestStreak = currentStreak > longestStreak ? currentStreak : longestStreak;
+        currentStreak = 1;
+      }
+    }
+    
+    return currentStreak > longestStreak ? currentStreak : longestStreak;
+  }
+
+  // ======================== DEMO DATA (FOR FALLBACK) ========================
 
   /// Get demo usage statistics
   UsageStats _getDemoUsageStats() {

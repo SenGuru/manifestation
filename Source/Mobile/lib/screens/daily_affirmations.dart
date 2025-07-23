@@ -8,6 +8,8 @@ import '../constants/colors.dart';
 import '../constants/category_icons.dart';
 import '../utils/color_utils.dart';
 import '../services/daily_affirmations_service.dart';
+import '../services/usage_analytics_service.dart';
+import '../models/analytics_models.dart';
 
 class DailyAffirmationsScreen extends StatefulWidget {
   @override
@@ -25,11 +27,13 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   
   // Services
   final DailyAffirmationsService _affirmationService = DailyAffirmationsService();
+  final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
   final FlutterTts _flutterTts = FlutterTts();
   
   // Session tracking
   String? _sessionTracker;
   DateTime? _sessionStartTime;
+  bool _sessionStarted = false;
 
   @override
   void initState() {
@@ -38,6 +42,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     _loadCategories();
     _initializeTTS();
     _startSessionTracking();
+    _startAnalyticsSession();
   }
   
   void _initializeService() {
@@ -331,6 +336,8 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   void dispose() {
     // Record session data before disposing
     _recordSessionData();
+    // End analytics session
+    _endAnalyticsSession();
     // Stop and dispose TTS
     _flutterTts.stop();
     super.dispose();
@@ -1010,6 +1017,44 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       ),
     );
+  }
+
+  /// Start analytics session tracking
+  Future<void> _startAnalyticsSession() async {
+    try {
+      await _analyticsService.initialize();
+      _analyticsService.startSession(
+        ActivityType.dailyAffirmations,
+        metadata: {
+          'totalCategories': categories.length,
+          'selectedCategory': selectedCategoryIndex,
+        },
+      );
+      _sessionStarted = true;
+      print('📊 Daily affirmations analytics session started');
+    } catch (e) {
+      print('❌ Error starting affirmations analytics session: $e');
+    }
+  }
+
+  /// End analytics session tracking
+  Future<void> _endAnalyticsSession() async {
+    if (_sessionStarted) {
+      try {
+        await _analyticsService.endSession(
+          ActivityType.dailyAffirmations,
+          additionalMetadata: {
+            'categoriesViewed': 1,
+            'finalCategory': categories.isNotEmpty ? categories[selectedCategoryIndex].name : 'unknown',
+            'affirmationsViewed': currentAffirmationIndex + 1,
+          },
+        );
+        _sessionStarted = false;
+        print('📊 Daily affirmations analytics session ended');
+      } catch (e) {
+        print('❌ Error ending affirmations analytics session: $e');
+      }
+    }
   }
 
   void _showCategoryOptions(AffirmationCategory category, int categoryIndex) {
