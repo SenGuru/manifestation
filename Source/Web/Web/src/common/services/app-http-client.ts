@@ -1586,6 +1586,12 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public getGoalTrackersByCategoryId(categoryId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackersbycategoryid', {categoryId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getGoalTrackers(search: models.GoalTrackerSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.GoalTrackerModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getgoaltrackers', search, headers);
@@ -1649,6 +1655,12 @@ export class HttpService {
     public getUserByGoalTrackerIdSearch(search: models.UserByGoalTrackerIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getuserbygoaltrackeridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getAllDistinctCategorysForAllGoalTrackerForCurrentUser(headers ?: HttpHeaders): Observable<ReturnListModel<models.CategoryModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getList('manifest/getalldistinctcategorysforallgoaltrackerforcurrentuser', headers);
     }
 
     // tslint:disable-next-line:max-line-length

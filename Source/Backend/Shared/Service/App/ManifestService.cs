@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Framework.Infrastructure.Exceptions;
 using Framework.Infrastructure.Interfaces.DbAccess;
 using Framework.Infrastructure.Logging;
@@ -6,6 +11,7 @@ using Framework.Infrastructure.Utils;
 using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Service.App;
 using Manifest.Common.Models.DB;
+using Manifest.Common.Models.DBView;
 using Manifest.Common.Models.SearchCriteria;
 using Manifest.Common.Models.ViewModels;
 using Manifest.Repository.Common;
@@ -13,11 +19,7 @@ using Manifest.Service.Manager;
 using Manifest.Service.ObjectMapping;
 using Manifest.Service.Storage;
 using Manifest.Service.Utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Stowage;
 
 namespace Manifest.Service.App
 {
@@ -17953,6 +17955,36 @@ namespace Manifest.Service.App
 
         #region GoalTracker
 
+        public async Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackersByCategoryIdAsync(long? categoryId)
+        {
+            try
+            {
+                List<GoalTrackerView> items;
+                if(categoryId != null)
+                {
+                    var view = await GetCategoryByIdForReadAsync(categoryId?? 0);
+                    if (!view.IsSuccess)
+                    {
+                        return log.ErrorAndReturnListModel<GoalTrackerModel>($"Unable to find the Category", new { categoryId });
+                    }
+
+                    items = await manifestRepository.GetGoalTrackersByCatalogIdAsync(categoryId ?? 0);
+                }
+                else
+                {
+                    items = await manifestRepository.GetGoalTrackersByUserIdAsync(await currentSessionService.GetCurrentUserIdAsync() ?? 0);
+                }
+
+                return this.ConvertToList(items, objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
+
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<GoalTrackerModel>($"Unexpected error when getting Goal Trackers by Category", new { categoryId }, ex);
+            }
+        }
+
+
         public async Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackersAsync(GoalTrackerSearchCriteria search)
         {
             try
@@ -19164,6 +19196,18 @@ namespace Manifest.Service.App
 
         #region GoalTrackerCategory
 
+        public async Task<ReturnListModel<CategoryModel>> GetAllDistinctCategorysForAllGoalTrackerForCurrentUserAsync()
+        {
+            try
+            {
+                return this.ConvertToList(await manifestRepository.GetAllDistinctCategorysForAllGoalTrackerAsync(await currentSessionService.GetCurrentUserIdAsync() ?? 0), objectMapperService.CategoryListToCategoryModelList);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<CategoryModel>($"Unexpected error when getting Goal Tracker Categorys", ex);
+            }
+        }
+
         public async Task<ReturnListModel<GoalTrackerCategoryModel>> GetGoalTrackerCategorysAsync(GoalTrackerCategorySearchCriteria search)
         {
             try
@@ -19765,7 +19809,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<CategoryModel>> GetCategoryByGoalTrackerCategoryIdAsync(CategoryByGoalTrackerCategoryIdSearchCriteria search)
         {
             try
@@ -19904,7 +19947,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<GoalTrackerCategory>($"Unexpected error when getting Goal Tracker Category by GoalTrackerId", new { search.GoalTrackerId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<GoalTrackerModel>> GetGoalTrackerByGoalTrackerCategoryIdAsync(long goalTrackerCategoryId)
         {
@@ -24748,7 +24790,7 @@ namespace Manifest.Service.App
                 {
                     foreach (var visionBoardPicture in visionBoardPictures.NewVisionBoardPictures)
                     {
-                        var cResult = await CreateVisionBoardPictureAsync(visionBoardPicture);
+                        var cResult = await CreateVisionBoardPictureAsync(visionBoardPicture,null);
                         if (!cResult.IsSuccess)
                             throw new RollbackException(cResult);
 
@@ -24766,7 +24808,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public async Task<ReturnModel<VisionBoardPictureModel>> CreateVisionBoardPictureAsync(VisionBoardPictureCreateModel visionBoardPicture)
+        public async Task<ReturnModel<VisionBoardPictureModel>> CreateVisionBoardPictureAsync(VisionBoardPictureCreateModel visionBoardPicture, FileStreamModel fsModel)
         {
             try
             {
@@ -24779,6 +24821,28 @@ namespace Manifest.Service.App
                 {
                     visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
                 }
+
+                Stream fileStream = null;
+
+                if (fsModel != null && fsModel.FileData != null && fsModel.FileData.Length > 0)
+                {
+                    if (fsModel.FileName.IsTrimmedStringNullOrEmpty())
+                    {
+                        return ReturnModel<VisionBoardPictureModel>.Error($"Uploaded file name is not available. Please provide a valid file document.");
+                    }
+
+                    fileStream = fsModel.FileData;
+                }
+
+                if (fileStream == null)
+                {
+                    return ReturnModel<VisionBoardPictureModel>.Error($"Template File should not be empty. Please upload valid Template file.");
+                }
+
+                visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
+                visionBoardPicture.Location = fsModel.FileName;
+                visionBoardPicture.FileName = fsModel.FileName;
+                visionBoardPicture.FileSize = fileStream.Length;
 
                 //var companyModel = await companyService.GetCompanyByIdForReadAsync(visionBoardPicture.UserId);
                 //if (!companyModel.IsSuccess)
@@ -24842,6 +24906,12 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<VisionBoardPictureModel>($"Unable to find the Vision Board Picture", new { item.VisionBoardPictureId });
                 }
 
+                fileStream.Position = 0;
+                var fName = fileAttachmentFileStorage.VisionBoardFilePath(item.UserId.ToString(), item.VisionBoardPictureId.ToString(), item.FileName);
+                await fileAttachmentFileStorage.WriteAsync(item.UserId, fName, fileStream);
+                await manifestRepository.UpdateVisionBoardPictureFileLocationAsync(item.VisionBoardPictureId, fName, item.FileName, await currentSessionService.GetCurrentUserIdAsync());
+                view.Location = fName;
+
                 return this.ConvertToItem(view, objectMapperService.VisionBoardPictureViewToVisionBoardPictureModel);
             }
             catch (Exception ex)
@@ -24850,7 +24920,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public async Task<ReturnModel<VisionBoardPictureModel>> UpdateVisionBoardPictureAsync(VisionBoardPictureUpdateModel visionBoardPicture)
+        public async Task<ReturnModel<VisionBoardPictureModel>> UpdateVisionBoardPictureAsync(VisionBoardPictureUpdateModel visionBoardPicture, FileStreamModel fsModel)
         {
             try
             {
@@ -24872,6 +24942,27 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<VisionBoardPictureModel>(errorStr);
                 }
 
+                Stream fileStream = null;
+
+                if (fsModel != null)
+                {
+
+                    if (fsModel != null && fsModel.FileData != null && fsModel.FileData.Length > 0)
+                    {
+                        if (fsModel.FileName.IsTrimmedStringNullOrEmpty())
+                        {
+                            return ReturnModel<VisionBoardPictureModel>.Error($"Uploaded file name is not available. Please provide a valid file document.");
+                        }
+
+                        fileStream = fsModel.FileData;
+                    }
+
+                    if (fileStream == null)
+                    {
+                        return ReturnModel<VisionBoardPictureModel>.Error($"Template File should not be empty. Please upload valid Template file.");
+                    }
+                }
+
                 if (canAssign)
                 {
                     visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
@@ -24881,10 +24972,9 @@ namespace Manifest.Service.App
                 visionBoardPicture.CreatedDate = existingVisionBoardPictureModel.Model.CreatedDate;
                 visionBoardPicture.IsDeleted = existingVisionBoardPictureModel.Model.IsDeleted;
                 visionBoardPicture.UserId = existingVisionBoardPictureModel.Model.UserId;
-                //visionBoardPicture.MovieId = existingVisionBoardPictureModel.Model.MovieId;
-                //visionBoardPicture.ProfileImageActualFileName = existingVisionBoardPictureModel.Model.ProfileImageActualFileName;
-                //visionBoardPicture.ProfileImageLocation = existingVisionBoardPictureModel.Model.ProfileImageLocation;
-
+                visionBoardPicture.FileName = existingVisionBoardPictureModel.Model.FileName;
+                visionBoardPicture.FileSize = (fsModel == null || fsModel.FileData == null) ? existingVisionBoardPictureModel.Model.FileSize : fsModel.FileData.Length;
+                visionBoardPicture.Location = existingVisionBoardPictureModel.Model.Location;
 
 
                 var errorList = await IsVisionBoardPictureModelValidForUpdateAsync(visionBoardPicture);
@@ -24905,6 +24995,12 @@ namespace Manifest.Service.App
                     }
 
                     //await CreateOrUpdateVisionBoardPictureDependentsAsync(visionBoardPicture)
+
+                    if (fileStream != null)
+                    {
+                        fileStream.Position = 0;
+                        await fileAttachmentFileStorage.WriteAsync(item.UserId, item.Location, fileStream);
+                    }
 
                     await trx.CompleteAsync();
                 }
@@ -25282,6 +25378,64 @@ namespace Manifest.Service.App
             }
         }
 
+        public async Task<ReturnModel<bool>> IsVisionBoardPictureFileValidAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var fileModel = await GetVisionBoardPictureFileAsync(visionBoardPictureId);
+                if (!fileModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Vision Board Picture file", fileModel.ErrorHolder);
+                }
+
+                FileUtils.CloseSafely(fileModel.Model.FileData);
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Vision Board Picture file", ex);
+            }
+        }
+
+        public async Task<ReturnModel<FileStreamModel>> GetVisionBoardPictureFileAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var view = await GetVisionBoardPictureByIdForReadAsync(visionBoardPictureId);
+
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"Unable to find the Vision Board Picture", new { visionBoardPictureId });
+                }
+
+                var fileName = view.Model.Location;
+
+                if (fileName.IsTrimmedStringNullOrEmpty())
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: file is not available.");
+                }
+
+                if (!await fileAttachmentFileStorage.ExistsAsync(view.Model.UserId, fileName))
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: file is not available.");
+                }
+
+                var actualFileName = view.Model.FileName.IsTrimmedStringNullOrEmpty() ? $"VisionBoardPictureFile" : view.Model.FileName;
+
+                var result = new FileStreamModel
+                {
+                    FileName = actualFileName,
+                    ContentType = FileUtils.GetMimeTypeFromFileName(actualFileName),
+                    FileData = await fileAttachmentFileStorage.OpenReadAsync(view.Model.UserId, fileName)
+                };
+
+                return ReturnModel<FileStreamModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<FileStreamModel>($"Unexpected error when getting File for Vision Board Picture ", new { visionBoardPictureId }, ex);
+            }
+        }
 
 
         /*

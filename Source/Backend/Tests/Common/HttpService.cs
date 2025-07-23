@@ -1343,6 +1343,11 @@ namespace Manifest.Tests.Common
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerMileStoneModel>,GoalTrackerMileStoneByFeedIdSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackermilestonebyfeedidsearch"),search,appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackersByCategoryId(Int64 categoryId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,Object>(token,Url("/api/v1/manifest/getgoaltrackersbycategoryid"),new { categoryId },appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerModel> result)> GetGoalTrackers(GoalTrackerSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<GoalTrackerModel>,GoalTrackerSearchCriteria>(token,Url("/api/v1/manifest/getgoaltrackers"),search,appHeader);
@@ -1396,6 +1401,11 @@ namespace Manifest.Tests.Common
         public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByGoalTrackerIdSearch(UserByGoalTrackerIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByGoalTrackerIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbygoaltrackeridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<CategoryModel> result)> GetAllDistinctCategorysForAllGoalTrackerForCurrentUser(string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<CategoryModel>,Object>(token,Url("/api/v1/manifest/getalldistinctcategorysforallgoaltrackerforcurrentuser"),null,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<GoalTrackerCategoryModel> result)> GetGoalTrackerCategorys(GoalTrackerCategorySearchCriteria search, string token = null, AppHeaderModel appHeader = null)

@@ -1616,6 +1616,15 @@ public void GetGoalTrackerMileStoneByFeedIdSearch_WithValidInvalidToken_ReturnsU
 {
     
 }
+public void GetGoalTrackersByCategoryId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetGoalTrackersByCategoryId();
+}
+public void GetGoalTrackersByCategoryId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
 public void GetGoalTrackers_WithValidData_ReturnsValidData()
 {
     var model = new GoalTrackerSearchCriteria();
@@ -1712,6 +1721,14 @@ public void GetUserByGoalTrackerIdSearch_WithValidData_ReturnsValidData()
     var r = GetUserByGoalTrackerIdSearch();
 }
 public void GetUserByGoalTrackerIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAllDistinctCategorysForAllGoalTrackerForCurrentUser_WithValidData_ReturnsValidData()
+{
+    var r = GetAllDistinctCategorysForAllGoalTrackerForCurrentUser();
+}
+public void GetAllDistinctCategorysForAllGoalTrackerForCurrentUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
 {
     
 }
