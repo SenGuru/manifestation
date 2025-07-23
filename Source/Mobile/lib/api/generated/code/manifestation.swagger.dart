@@ -8859,6 +8859,39 @@ abstract class Manifestation extends ChopperService {
           {@Body() required UserByVisionBoardPictureIdSearchCriteria? body});
 
   ///
+  ///@param visionBoardPictureId
+  Future<chopper.Response<BooleanReturnModel>>
+      apiV1ManifestIsvisionboardpicturefilevalidGet(
+          {int? visionBoardPictureId}) {
+    generatedMapping.putIfAbsent(
+        BooleanReturnModel, () => BooleanReturnModel.fromJsonFactory);
+
+    return _apiV1ManifestIsvisionboardpicturefilevalidGet(
+        visionBoardPictureId: visionBoardPictureId);
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @Get(path: '/api/v1/manifest/isvisionboardpicturefilevalid')
+  Future<chopper.Response<BooleanReturnModel>>
+      _apiV1ManifestIsvisionboardpicturefilevalidGet(
+          {@Query('visionBoardPictureId') int? visionBoardPictureId});
+
+  ///
+  ///@param visionBoardPictureId
+  Future<chopper.Response> apiV1ManifestDownloadvisionboardpicturefileGet(
+      {int? visionBoardPictureId}) {
+    return _apiV1ManifestDownloadvisionboardpicturefileGet(
+        visionBoardPictureId: visionBoardPictureId);
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @Get(path: '/api/v1/manifest/downloadvisionboardpicturefile')
+  Future<chopper.Response> _apiV1ManifestDownloadvisionboardpicturefileGet(
+      {@Query('visionBoardPictureId') int? visionBoardPictureId});
+
+  ///
   ///@param ShowDeleted
   ///@param UserId
   ///@param CreatedByUserId
@@ -9115,6 +9148,265 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<UserModelReturnListModel>>
       _apiV1ManifestGetuserbyvisionboardsessionidsearchGet(
           {@Body() required UserByVisionBoardSessionIdSearchCriteria? body});
+
+  ///
+  ///@param ShowDeleted
+  ///@param UserId
+  ///@param PredefinedMoodTypeIds
+  ///@param CreatedByUserId
+  ///@param ModifiedByUserId
+  ///@param SelectedId
+  ///@param Page
+  ///@param PageSize
+  ///@param Keyword
+  ///@param SortBy
+  ///@param SortAscending
+  ///@param CurrentRows
+  ///@param TotalRowCount
+  ///@param NumericPageCount
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      apiV1ManifestGetdailyjournalsGet({
+    bool? showDeleted,
+    int? userId,
+    List<int>? predefinedMoodTypeIds,
+    int? createdByUserId,
+    int? modifiedByUserId,
+    int? selectedId,
+    int? page,
+    int? pageSize,
+    String? keyword,
+    String? sortBy,
+    bool? sortAscending,
+    int? currentRows,
+    int? totalRowCount,
+    int? numericPageCount,
+  }) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnListModel,
+        () => DailyJournalModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetdailyjournalsGet(
+        showDeleted: showDeleted,
+        userId: userId,
+        predefinedMoodTypeIds: predefinedMoodTypeIds,
+        createdByUserId: createdByUserId,
+        modifiedByUserId: modifiedByUserId,
+        selectedId: selectedId,
+        page: page,
+        pageSize: pageSize,
+        keyword: keyword,
+        sortBy: sortBy,
+        sortAscending: sortAscending,
+        currentRows: currentRows,
+        totalRowCount: totalRowCount,
+        numericPageCount: numericPageCount);
+  }
+
+  ///
+  ///@param ShowDeleted
+  ///@param UserId
+  ///@param PredefinedMoodTypeIds
+  ///@param CreatedByUserId
+  ///@param ModifiedByUserId
+  ///@param SelectedId
+  ///@param Page
+  ///@param PageSize
+  ///@param Keyword
+  ///@param SortBy
+  ///@param SortAscending
+  ///@param CurrentRows
+  ///@param TotalRowCount
+  ///@param NumericPageCount
+  @Get(path: '/api/v1/manifest/getdailyjournals')
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestGetdailyjournalsGet({
+    @Query('ShowDeleted') bool? showDeleted,
+    @Query('UserId') int? userId,
+    @Query('PredefinedMoodTypeIds') List<int>? predefinedMoodTypeIds,
+    @Query('CreatedByUserId') int? createdByUserId,
+    @Query('ModifiedByUserId') int? modifiedByUserId,
+    @Query('SelectedId') int? selectedId,
+    @Query('Page') int? page,
+    @Query('PageSize') int? pageSize,
+    @Query('Keyword') String? keyword,
+    @Query('SortBy') String? sortBy,
+    @Query('SortAscending') bool? sortAscending,
+    @Query('CurrentRows') int? currentRows,
+    @Query('TotalRowCount') int? totalRowCount,
+    @Query('NumericPageCount') int? numericPageCount,
+  });
+
+  ///
+  ///@param id
+  Future<chopper.Response<DailyJournalModelReturnModel>>
+      apiV1ManifestGetdailyjournalGet({int? id}) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnModel,
+        () => DailyJournalModelReturnModel.fromJsonFactory);
+
+    return _apiV1ManifestGetdailyjournalGet(id: id);
+  }
+
+  ///
+  ///@param id
+  @Get(path: '/api/v1/manifest/getdailyjournal')
+  Future<chopper.Response<DailyJournalModelReturnModel>>
+      _apiV1ManifestGetdailyjournalGet({@Query('id') int? id});
+
+  ///
+  Future<chopper.Response<DailyJournalModelReturnModel>>
+      apiV1ManifestCreatedailyjournalPost(
+          {required DailyJournalCreateModel? body}) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnModel,
+        () => DailyJournalModelReturnModel.fromJsonFactory);
+
+    return _apiV1ManifestCreatedailyjournalPost(body: body);
+  }
+
+  ///
+  @Post(
+    path: '/api/v1/manifest/createdailyjournal',
+    optionalBody: true,
+  )
+  Future<chopper.Response<DailyJournalModelReturnModel>>
+      _apiV1ManifestCreatedailyjournalPost(
+          {@Body() required DailyJournalCreateModel? body});
+
+  ///
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      apiV1ManifestCreatemultipledailyjournalPost(
+          {required MultipleDailyJournalCreateModel? body}) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnListModel,
+        () => DailyJournalModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestCreatemultipledailyjournalPost(body: body);
+  }
+
+  ///
+  @Post(
+    path: '/api/v1/manifest/createmultipledailyjournal',
+    optionalBody: true,
+  )
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestCreatemultipledailyjournalPost(
+          {@Body() required MultipleDailyJournalCreateModel? body});
+
+  ///
+  Future<chopper.Response<DailyJournalModelReturnModel>>
+      apiV1ManifestUpdatedailyjournalPost(
+          {required DailyJournalUpdateModel? body}) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnModel,
+        () => DailyJournalModelReturnModel.fromJsonFactory);
+
+    return _apiV1ManifestUpdatedailyjournalPost(body: body);
+  }
+
+  ///
+  @Post(
+    path: '/api/v1/manifest/updatedailyjournal',
+    optionalBody: true,
+  )
+  Future<chopper.Response<DailyJournalModelReturnModel>>
+      _apiV1ManifestUpdatedailyjournalPost(
+          {@Body() required DailyJournalUpdateModel? body});
+
+  ///
+  ///@param id
+  Future<chopper.Response<BooleanReturnModel>>
+      apiV1ManifestMarkdailyjournalasdeletedDelete({int? id}) {
+    generatedMapping.putIfAbsent(
+        BooleanReturnModel, () => BooleanReturnModel.fromJsonFactory);
+
+    return _apiV1ManifestMarkdailyjournalasdeletedDelete(id: id);
+  }
+
+  ///
+  ///@param id
+  @Delete(path: '/api/v1/manifest/markdailyjournalasdeleted')
+  Future<chopper.Response<BooleanReturnModel>>
+      _apiV1ManifestMarkdailyjournalasdeletedDelete({@Query('id') int? id});
+
+  ///
+  Future<chopper.Response<BooleanReturnModel>>
+      apiV1ManifestMarkdailyjournalasnotdeletedPost({required int? body}) {
+    generatedMapping.putIfAbsent(
+        BooleanReturnModel, () => BooleanReturnModel.fromJsonFactory);
+
+    return _apiV1ManifestMarkdailyjournalasnotdeletedPost(body: body);
+  }
+
+  ///
+  @Post(
+    path: '/api/v1/manifest/markdailyjournalasnotdeleted',
+    optionalBody: true,
+  )
+  Future<chopper.Response<BooleanReturnModel>>
+      _apiV1ManifestMarkdailyjournalasnotdeletedPost(
+          {@Body() required int? body});
+
+  ///
+  ///@param userId
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      apiV1ManifestGetdailyjournalbyuseridGet({int? userId}) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnListModel,
+        () => DailyJournalModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetdailyjournalbyuseridGet(userId: userId);
+  }
+
+  ///
+  ///@param userId
+  @Get(path: '/api/v1/manifest/getdailyjournalbyuserid')
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestGetdailyjournalbyuseridGet({@Query('userId') int? userId});
+
+  ///
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      apiV1ManifestGetdailyjournalbyuseridsearchGet(
+          {required DailyJournalByUserIdSearchCriteria? body}) {
+    generatedMapping.putIfAbsent(DailyJournalModelReturnListModel,
+        () => DailyJournalModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetdailyjournalbyuseridsearchGet(body: body);
+  }
+
+  ///
+  @Get(path: '/api/v1/manifest/getdailyjournalbyuseridsearch')
+  Future<chopper.Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestGetdailyjournalbyuseridsearchGet(
+          {@Body() required DailyJournalByUserIdSearchCriteria? body});
+
+  ///
+  ///@param dailyJournalId
+  Future<chopper.Response<UserModelReturnListModel>>
+      apiV1ManifestGetuserbydailyjournalidGet({int? dailyJournalId}) {
+    generatedMapping.putIfAbsent(UserModelReturnListModel,
+        () => UserModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetuserbydailyjournalidGet(
+        dailyJournalId: dailyJournalId);
+  }
+
+  ///
+  ///@param dailyJournalId
+  @Get(path: '/api/v1/manifest/getuserbydailyjournalid')
+  Future<chopper.Response<UserModelReturnListModel>>
+      _apiV1ManifestGetuserbydailyjournalidGet(
+          {@Query('dailyJournalId') int? dailyJournalId});
+
+  ///
+  Future<chopper.Response<UserModelReturnListModel>>
+      apiV1ManifestGetuserbydailyjournalidsearchGet(
+          {required UserByDailyJournalIdSearchCriteria? body}) {
+    generatedMapping.putIfAbsent(UserModelReturnListModel,
+        () => UserModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetuserbydailyjournalidsearchGet(body: body);
+  }
+
+  ///
+  @Get(path: '/api/v1/manifest/getuserbydailyjournalidsearch')
+  Future<chopper.Response<UserModelReturnListModel>>
+      _apiV1ManifestGetuserbydailyjournalidsearchGet(
+          {@Body() required UserByDailyJournalIdSearchCriteria? body});
 
   ///
   Future<chopper.Response<CountryModelReturnListModel>>
@@ -28224,6 +28516,1071 @@ extension $DailyAffirmationTextUpdateModelExtension
             : this.dailyAffirmationTextValue),
         categoryId: (categoryId != null ? categoryId.value : this.categoryId),
         userId: (userId != null ? userId.value : this.userId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DailyJournalByUserIdSearchCriteria {
+  const DailyJournalByUserIdSearchCriteria({
+    this.selectedId,
+    this.page,
+    this.pageSize,
+    this.keyword,
+    this.sortBy,
+    this.sortAscending,
+    this.userId,
+  });
+
+  factory DailyJournalByUserIdSearchCriteria.fromJson(
+          Map<String, dynamic> json) =>
+      _$DailyJournalByUserIdSearchCriteriaFromJson(json);
+
+  static const toJsonFactory = _$DailyJournalByUserIdSearchCriteriaToJson;
+  Map<String, dynamic> toJson() =>
+      _$DailyJournalByUserIdSearchCriteriaToJson(this);
+
+  @JsonKey(name: 'selectedId')
+  final int? selectedId;
+  @JsonKey(name: 'page')
+  final int? page;
+  @JsonKey(name: 'pageSize')
+  final int? pageSize;
+  @JsonKey(name: 'keyword')
+  final String? keyword;
+  @JsonKey(name: 'sortBy')
+  final String? sortBy;
+  @JsonKey(name: 'sortAscending')
+  final bool? sortAscending;
+  @JsonKey(name: 'userId')
+  final int? userId;
+  static const fromJsonFactory = _$DailyJournalByUserIdSearchCriteriaFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DailyJournalByUserIdSearchCriteria &&
+            (identical(other.selectedId, selectedId) ||
+                const DeepCollectionEquality()
+                    .equals(other.selectedId, selectedId)) &&
+            (identical(other.page, page) ||
+                const DeepCollectionEquality().equals(other.page, page)) &&
+            (identical(other.pageSize, pageSize) ||
+                const DeepCollectionEquality()
+                    .equals(other.pageSize, pageSize)) &&
+            (identical(other.keyword, keyword) ||
+                const DeepCollectionEquality()
+                    .equals(other.keyword, keyword)) &&
+            (identical(other.sortBy, sortBy) ||
+                const DeepCollectionEquality().equals(other.sortBy, sortBy)) &&
+            (identical(other.sortAscending, sortAscending) ||
+                const DeepCollectionEquality()
+                    .equals(other.sortAscending, sortAscending)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(selectedId) ^
+      const DeepCollectionEquality().hash(page) ^
+      const DeepCollectionEquality().hash(pageSize) ^
+      const DeepCollectionEquality().hash(keyword) ^
+      const DeepCollectionEquality().hash(sortBy) ^
+      const DeepCollectionEquality().hash(sortAscending) ^
+      const DeepCollectionEquality().hash(userId) ^
+      runtimeType.hashCode;
+}
+
+extension $DailyJournalByUserIdSearchCriteriaExtension
+    on DailyJournalByUserIdSearchCriteria {
+  DailyJournalByUserIdSearchCriteria copyWith(
+      {int? selectedId,
+      int? page,
+      int? pageSize,
+      String? keyword,
+      String? sortBy,
+      bool? sortAscending,
+      int? userId}) {
+    return DailyJournalByUserIdSearchCriteria(
+        selectedId: selectedId ?? this.selectedId,
+        page: page ?? this.page,
+        pageSize: pageSize ?? this.pageSize,
+        keyword: keyword ?? this.keyword,
+        sortBy: sortBy ?? this.sortBy,
+        sortAscending: sortAscending ?? this.sortAscending,
+        userId: userId ?? this.userId);
+  }
+
+  DailyJournalByUserIdSearchCriteria copyWithWrapped(
+      {Wrapped<int?>? selectedId,
+      Wrapped<int?>? page,
+      Wrapped<int?>? pageSize,
+      Wrapped<String?>? keyword,
+      Wrapped<String?>? sortBy,
+      Wrapped<bool?>? sortAscending,
+      Wrapped<int?>? userId}) {
+    return DailyJournalByUserIdSearchCriteria(
+        selectedId: (selectedId != null ? selectedId.value : this.selectedId),
+        page: (page != null ? page.value : this.page),
+        pageSize: (pageSize != null ? pageSize.value : this.pageSize),
+        keyword: (keyword != null ? keyword.value : this.keyword),
+        sortBy: (sortBy != null ? sortBy.value : this.sortBy),
+        sortAscending:
+            (sortAscending != null ? sortAscending.value : this.sortAscending),
+        userId: (userId != null ? userId.value : this.userId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DailyJournalCreateModel {
+  const DailyJournalCreateModel({
+    this.dailyJournalDate,
+    this.userId,
+    this.predefinedMoodTypeId,
+    this.gratitude1,
+    this.gratitude2,
+    this.gratitude3,
+    this.gratitude4,
+    this.gratitude5,
+    this.yourReflection,
+    this.tommorowsIntentions,
+  });
+
+  factory DailyJournalCreateModel.fromJson(Map<String, dynamic> json) =>
+      _$DailyJournalCreateModelFromJson(json);
+
+  static const toJsonFactory = _$DailyJournalCreateModelToJson;
+  Map<String, dynamic> toJson() => _$DailyJournalCreateModelToJson(this);
+
+  @JsonKey(name: 'dailyJournalDate')
+  final DateTime? dailyJournalDate;
+  @JsonKey(name: 'userId')
+  final int? userId;
+  @JsonKey(name: 'predefinedMoodTypeId')
+  final int? predefinedMoodTypeId;
+  @JsonKey(name: 'gratitude1')
+  final String? gratitude1;
+  @JsonKey(name: 'gratitude2')
+  final String? gratitude2;
+  @JsonKey(name: 'gratitude3')
+  final String? gratitude3;
+  @JsonKey(name: 'gratitude4')
+  final String? gratitude4;
+  @JsonKey(name: 'gratitude5')
+  final String? gratitude5;
+  @JsonKey(name: 'yourReflection')
+  final String? yourReflection;
+  @JsonKey(name: 'tommorowsIntentions')
+  final String? tommorowsIntentions;
+  static const fromJsonFactory = _$DailyJournalCreateModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DailyJournalCreateModel &&
+            (identical(other.dailyJournalDate, dailyJournalDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.dailyJournalDate, dailyJournalDate)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.predefinedMoodTypeId, predefinedMoodTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedMoodTypeId, predefinedMoodTypeId)) &&
+            (identical(other.gratitude1, gratitude1) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude1, gratitude1)) &&
+            (identical(other.gratitude2, gratitude2) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude2, gratitude2)) &&
+            (identical(other.gratitude3, gratitude3) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude3, gratitude3)) &&
+            (identical(other.gratitude4, gratitude4) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude4, gratitude4)) &&
+            (identical(other.gratitude5, gratitude5) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude5, gratitude5)) &&
+            (identical(other.yourReflection, yourReflection) ||
+                const DeepCollectionEquality()
+                    .equals(other.yourReflection, yourReflection)) &&
+            (identical(other.tommorowsIntentions, tommorowsIntentions) ||
+                const DeepCollectionEquality()
+                    .equals(other.tommorowsIntentions, tommorowsIntentions)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(dailyJournalDate) ^
+      const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(predefinedMoodTypeId) ^
+      const DeepCollectionEquality().hash(gratitude1) ^
+      const DeepCollectionEquality().hash(gratitude2) ^
+      const DeepCollectionEquality().hash(gratitude3) ^
+      const DeepCollectionEquality().hash(gratitude4) ^
+      const DeepCollectionEquality().hash(gratitude5) ^
+      const DeepCollectionEquality().hash(yourReflection) ^
+      const DeepCollectionEquality().hash(tommorowsIntentions) ^
+      runtimeType.hashCode;
+}
+
+extension $DailyJournalCreateModelExtension on DailyJournalCreateModel {
+  DailyJournalCreateModel copyWith(
+      {DateTime? dailyJournalDate,
+      int? userId,
+      int? predefinedMoodTypeId,
+      String? gratitude1,
+      String? gratitude2,
+      String? gratitude3,
+      String? gratitude4,
+      String? gratitude5,
+      String? yourReflection,
+      String? tommorowsIntentions}) {
+    return DailyJournalCreateModel(
+        dailyJournalDate: dailyJournalDate ?? this.dailyJournalDate,
+        userId: userId ?? this.userId,
+        predefinedMoodTypeId: predefinedMoodTypeId ?? this.predefinedMoodTypeId,
+        gratitude1: gratitude1 ?? this.gratitude1,
+        gratitude2: gratitude2 ?? this.gratitude2,
+        gratitude3: gratitude3 ?? this.gratitude3,
+        gratitude4: gratitude4 ?? this.gratitude4,
+        gratitude5: gratitude5 ?? this.gratitude5,
+        yourReflection: yourReflection ?? this.yourReflection,
+        tommorowsIntentions: tommorowsIntentions ?? this.tommorowsIntentions);
+  }
+
+  DailyJournalCreateModel copyWithWrapped(
+      {Wrapped<DateTime?>? dailyJournalDate,
+      Wrapped<int?>? userId,
+      Wrapped<int?>? predefinedMoodTypeId,
+      Wrapped<String?>? gratitude1,
+      Wrapped<String?>? gratitude2,
+      Wrapped<String?>? gratitude3,
+      Wrapped<String?>? gratitude4,
+      Wrapped<String?>? gratitude5,
+      Wrapped<String?>? yourReflection,
+      Wrapped<String?>? tommorowsIntentions}) {
+    return DailyJournalCreateModel(
+        dailyJournalDate: (dailyJournalDate != null
+            ? dailyJournalDate.value
+            : this.dailyJournalDate),
+        userId: (userId != null ? userId.value : this.userId),
+        predefinedMoodTypeId: (predefinedMoodTypeId != null
+            ? predefinedMoodTypeId.value
+            : this.predefinedMoodTypeId),
+        gratitude1: (gratitude1 != null ? gratitude1.value : this.gratitude1),
+        gratitude2: (gratitude2 != null ? gratitude2.value : this.gratitude2),
+        gratitude3: (gratitude3 != null ? gratitude3.value : this.gratitude3),
+        gratitude4: (gratitude4 != null ? gratitude4.value : this.gratitude4),
+        gratitude5: (gratitude5 != null ? gratitude5.value : this.gratitude5),
+        yourReflection: (yourReflection != null
+            ? yourReflection.value
+            : this.yourReflection),
+        tommorowsIntentions: (tommorowsIntentions != null
+            ? tommorowsIntentions.value
+            : this.tommorowsIntentions));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DailyJournalModel {
+  const DailyJournalModel({
+    this.dailyJournalId,
+    this.dailyJournalDate,
+    this.userId,
+    this.predefinedMoodTypeId,
+    this.gratitude1,
+    this.gratitude2,
+    this.gratitude3,
+    this.gratitude4,
+    this.gratitude5,
+    this.yourReflection,
+    this.tommorowsIntentions,
+    this.isDeleted,
+    this.createdDate,
+    this.createdByUserId,
+    this.modifiedDate,
+    this.modifiedByUserId,
+    this.userName,
+    this.predefinedMoodTypeName,
+    this.createdByUserFirstName,
+    this.createdByUserLastName,
+    this.createdByUserEmail,
+    this.modifiedByUserFirstName,
+    this.modifiedByUserLastName,
+    this.modifiedByUserEmail,
+    this.createdBy,
+    this.modifiedBy,
+  });
+
+  factory DailyJournalModel.fromJson(Map<String, dynamic> json) =>
+      _$DailyJournalModelFromJson(json);
+
+  static const toJsonFactory = _$DailyJournalModelToJson;
+  Map<String, dynamic> toJson() => _$DailyJournalModelToJson(this);
+
+  @JsonKey(name: 'dailyJournalId')
+  final int? dailyJournalId;
+  @JsonKey(name: 'dailyJournalDate')
+  final DateTime? dailyJournalDate;
+  @JsonKey(name: 'userId')
+  final int? userId;
+  @JsonKey(name: 'predefinedMoodTypeId')
+  final int? predefinedMoodTypeId;
+  @JsonKey(name: 'gratitude1')
+  final String? gratitude1;
+  @JsonKey(name: 'gratitude2')
+  final String? gratitude2;
+  @JsonKey(name: 'gratitude3')
+  final String? gratitude3;
+  @JsonKey(name: 'gratitude4')
+  final String? gratitude4;
+  @JsonKey(name: 'gratitude5')
+  final String? gratitude5;
+  @JsonKey(name: 'yourReflection')
+  final String? yourReflection;
+  @JsonKey(name: 'tommorowsIntentions')
+  final String? tommorowsIntentions;
+  @JsonKey(name: 'isDeleted')
+  final bool? isDeleted;
+  @JsonKey(name: 'createdDate')
+  final DateTime? createdDate;
+  @JsonKey(name: 'createdByUserId')
+  final int? createdByUserId;
+  @JsonKey(name: 'modifiedDate')
+  final DateTime? modifiedDate;
+  @JsonKey(name: 'modifiedByUserId')
+  final int? modifiedByUserId;
+  @JsonKey(name: 'userName')
+  final String? userName;
+  @JsonKey(name: 'predefinedMoodTypeName')
+  final String? predefinedMoodTypeName;
+  @JsonKey(name: 'createdByUserFirstName')
+  final String? createdByUserFirstName;
+  @JsonKey(name: 'createdByUserLastName')
+  final String? createdByUserLastName;
+  @JsonKey(name: 'createdByUserEmail')
+  final String? createdByUserEmail;
+  @JsonKey(name: 'modifiedByUserFirstName')
+  final String? modifiedByUserFirstName;
+  @JsonKey(name: 'modifiedByUserLastName')
+  final String? modifiedByUserLastName;
+  @JsonKey(name: 'modifiedByUserEmail')
+  final String? modifiedByUserEmail;
+  @JsonKey(name: 'createdBy')
+  final String? createdBy;
+  @JsonKey(name: 'modifiedBy')
+  final String? modifiedBy;
+  static const fromJsonFactory = _$DailyJournalModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DailyJournalModel &&
+            (identical(other.dailyJournalId, dailyJournalId) ||
+                const DeepCollectionEquality()
+                    .equals(other.dailyJournalId, dailyJournalId)) &&
+            (identical(other.dailyJournalDate, dailyJournalDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.dailyJournalDate, dailyJournalDate)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.predefinedMoodTypeId, predefinedMoodTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedMoodTypeId, predefinedMoodTypeId)) &&
+            (identical(other.gratitude1, gratitude1) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude1, gratitude1)) &&
+            (identical(other.gratitude2, gratitude2) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude2, gratitude2)) &&
+            (identical(other.gratitude3, gratitude3) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude3, gratitude3)) &&
+            (identical(other.gratitude4, gratitude4) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude4, gratitude4)) &&
+            (identical(other.gratitude5, gratitude5) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude5, gratitude5)) &&
+            (identical(other.yourReflection, yourReflection) ||
+                const DeepCollectionEquality()
+                    .equals(other.yourReflection, yourReflection)) &&
+            (identical(other.tommorowsIntentions, tommorowsIntentions) ||
+                const DeepCollectionEquality()
+                    .equals(other.tommorowsIntentions, tommorowsIntentions)) &&
+            (identical(other.isDeleted, isDeleted) ||
+                const DeepCollectionEquality()
+                    .equals(other.isDeleted, isDeleted)) &&
+            (identical(other.createdDate, createdDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdDate, createdDate)) &&
+            (identical(other.createdByUserId, createdByUserId) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdByUserId, createdByUserId)) &&
+            (identical(other.modifiedDate, modifiedDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.modifiedDate, modifiedDate)) &&
+            (identical(other.modifiedByUserId, modifiedByUserId) ||
+                const DeepCollectionEquality()
+                    .equals(other.modifiedByUserId, modifiedByUserId)) &&
+            (identical(other.userName, userName) ||
+                const DeepCollectionEquality()
+                    .equals(other.userName, userName)) &&
+            (identical(other.predefinedMoodTypeName, predefinedMoodTypeName) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedMoodTypeName, predefinedMoodTypeName)) &&
+            (identical(other.createdByUserFirstName, createdByUserFirstName) ||
+                const DeepCollectionEquality().equals(
+                    other.createdByUserFirstName, createdByUserFirstName)) &&
+            (identical(other.createdByUserLastName, createdByUserLastName) ||
+                const DeepCollectionEquality().equals(
+                    other.createdByUserLastName, createdByUserLastName)) &&
+            (identical(other.createdByUserEmail, createdByUserEmail) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdByUserEmail, createdByUserEmail)) &&
+            (identical(other.modifiedByUserFirstName, modifiedByUserFirstName) || const DeepCollectionEquality().equals(other.modifiedByUserFirstName, modifiedByUserFirstName)) &&
+            (identical(other.modifiedByUserLastName, modifiedByUserLastName) || const DeepCollectionEquality().equals(other.modifiedByUserLastName, modifiedByUserLastName)) &&
+            (identical(other.modifiedByUserEmail, modifiedByUserEmail) || const DeepCollectionEquality().equals(other.modifiedByUserEmail, modifiedByUserEmail)) &&
+            (identical(other.createdBy, createdBy) || const DeepCollectionEquality().equals(other.createdBy, createdBy)) &&
+            (identical(other.modifiedBy, modifiedBy) || const DeepCollectionEquality().equals(other.modifiedBy, modifiedBy)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(dailyJournalId) ^
+      const DeepCollectionEquality().hash(dailyJournalDate) ^
+      const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(predefinedMoodTypeId) ^
+      const DeepCollectionEquality().hash(gratitude1) ^
+      const DeepCollectionEquality().hash(gratitude2) ^
+      const DeepCollectionEquality().hash(gratitude3) ^
+      const DeepCollectionEquality().hash(gratitude4) ^
+      const DeepCollectionEquality().hash(gratitude5) ^
+      const DeepCollectionEquality().hash(yourReflection) ^
+      const DeepCollectionEquality().hash(tommorowsIntentions) ^
+      const DeepCollectionEquality().hash(isDeleted) ^
+      const DeepCollectionEquality().hash(createdDate) ^
+      const DeepCollectionEquality().hash(createdByUserId) ^
+      const DeepCollectionEquality().hash(modifiedDate) ^
+      const DeepCollectionEquality().hash(modifiedByUserId) ^
+      const DeepCollectionEquality().hash(userName) ^
+      const DeepCollectionEquality().hash(predefinedMoodTypeName) ^
+      const DeepCollectionEquality().hash(createdByUserFirstName) ^
+      const DeepCollectionEquality().hash(createdByUserLastName) ^
+      const DeepCollectionEquality().hash(createdByUserEmail) ^
+      const DeepCollectionEquality().hash(modifiedByUserFirstName) ^
+      const DeepCollectionEquality().hash(modifiedByUserLastName) ^
+      const DeepCollectionEquality().hash(modifiedByUserEmail) ^
+      const DeepCollectionEquality().hash(createdBy) ^
+      const DeepCollectionEquality().hash(modifiedBy) ^
+      runtimeType.hashCode;
+}
+
+extension $DailyJournalModelExtension on DailyJournalModel {
+  DailyJournalModel copyWith(
+      {int? dailyJournalId,
+      DateTime? dailyJournalDate,
+      int? userId,
+      int? predefinedMoodTypeId,
+      String? gratitude1,
+      String? gratitude2,
+      String? gratitude3,
+      String? gratitude4,
+      String? gratitude5,
+      String? yourReflection,
+      String? tommorowsIntentions,
+      bool? isDeleted,
+      DateTime? createdDate,
+      int? createdByUserId,
+      DateTime? modifiedDate,
+      int? modifiedByUserId,
+      String? userName,
+      String? predefinedMoodTypeName,
+      String? createdByUserFirstName,
+      String? createdByUserLastName,
+      String? createdByUserEmail,
+      String? modifiedByUserFirstName,
+      String? modifiedByUserLastName,
+      String? modifiedByUserEmail,
+      String? createdBy,
+      String? modifiedBy}) {
+    return DailyJournalModel(
+        dailyJournalId: dailyJournalId ?? this.dailyJournalId,
+        dailyJournalDate: dailyJournalDate ?? this.dailyJournalDate,
+        userId: userId ?? this.userId,
+        predefinedMoodTypeId: predefinedMoodTypeId ?? this.predefinedMoodTypeId,
+        gratitude1: gratitude1 ?? this.gratitude1,
+        gratitude2: gratitude2 ?? this.gratitude2,
+        gratitude3: gratitude3 ?? this.gratitude3,
+        gratitude4: gratitude4 ?? this.gratitude4,
+        gratitude5: gratitude5 ?? this.gratitude5,
+        yourReflection: yourReflection ?? this.yourReflection,
+        tommorowsIntentions: tommorowsIntentions ?? this.tommorowsIntentions,
+        isDeleted: isDeleted ?? this.isDeleted,
+        createdDate: createdDate ?? this.createdDate,
+        createdByUserId: createdByUserId ?? this.createdByUserId,
+        modifiedDate: modifiedDate ?? this.modifiedDate,
+        modifiedByUserId: modifiedByUserId ?? this.modifiedByUserId,
+        userName: userName ?? this.userName,
+        predefinedMoodTypeName:
+            predefinedMoodTypeName ?? this.predefinedMoodTypeName,
+        createdByUserFirstName:
+            createdByUserFirstName ?? this.createdByUserFirstName,
+        createdByUserLastName:
+            createdByUserLastName ?? this.createdByUserLastName,
+        createdByUserEmail: createdByUserEmail ?? this.createdByUserEmail,
+        modifiedByUserFirstName:
+            modifiedByUserFirstName ?? this.modifiedByUserFirstName,
+        modifiedByUserLastName:
+            modifiedByUserLastName ?? this.modifiedByUserLastName,
+        modifiedByUserEmail: modifiedByUserEmail ?? this.modifiedByUserEmail,
+        createdBy: createdBy ?? this.createdBy,
+        modifiedBy: modifiedBy ?? this.modifiedBy);
+  }
+
+  DailyJournalModel copyWithWrapped(
+      {Wrapped<int?>? dailyJournalId,
+      Wrapped<DateTime?>? dailyJournalDate,
+      Wrapped<int?>? userId,
+      Wrapped<int?>? predefinedMoodTypeId,
+      Wrapped<String?>? gratitude1,
+      Wrapped<String?>? gratitude2,
+      Wrapped<String?>? gratitude3,
+      Wrapped<String?>? gratitude4,
+      Wrapped<String?>? gratitude5,
+      Wrapped<String?>? yourReflection,
+      Wrapped<String?>? tommorowsIntentions,
+      Wrapped<bool?>? isDeleted,
+      Wrapped<DateTime?>? createdDate,
+      Wrapped<int?>? createdByUserId,
+      Wrapped<DateTime?>? modifiedDate,
+      Wrapped<int?>? modifiedByUserId,
+      Wrapped<String?>? userName,
+      Wrapped<String?>? predefinedMoodTypeName,
+      Wrapped<String?>? createdByUserFirstName,
+      Wrapped<String?>? createdByUserLastName,
+      Wrapped<String?>? createdByUserEmail,
+      Wrapped<String?>? modifiedByUserFirstName,
+      Wrapped<String?>? modifiedByUserLastName,
+      Wrapped<String?>? modifiedByUserEmail,
+      Wrapped<String?>? createdBy,
+      Wrapped<String?>? modifiedBy}) {
+    return DailyJournalModel(
+        dailyJournalId: (dailyJournalId != null
+            ? dailyJournalId.value
+            : this.dailyJournalId),
+        dailyJournalDate: (dailyJournalDate != null
+            ? dailyJournalDate.value
+            : this.dailyJournalDate),
+        userId: (userId != null ? userId.value : this.userId),
+        predefinedMoodTypeId: (predefinedMoodTypeId != null
+            ? predefinedMoodTypeId.value
+            : this.predefinedMoodTypeId),
+        gratitude1: (gratitude1 != null ? gratitude1.value : this.gratitude1),
+        gratitude2: (gratitude2 != null ? gratitude2.value : this.gratitude2),
+        gratitude3: (gratitude3 != null ? gratitude3.value : this.gratitude3),
+        gratitude4: (gratitude4 != null ? gratitude4.value : this.gratitude4),
+        gratitude5: (gratitude5 != null ? gratitude5.value : this.gratitude5),
+        yourReflection: (yourReflection != null
+            ? yourReflection.value
+            : this.yourReflection),
+        tommorowsIntentions: (tommorowsIntentions != null
+            ? tommorowsIntentions.value
+            : this.tommorowsIntentions),
+        isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
+        createdDate:
+            (createdDate != null ? createdDate.value : this.createdDate),
+        createdByUserId: (createdByUserId != null
+            ? createdByUserId.value
+            : this.createdByUserId),
+        modifiedDate:
+            (modifiedDate != null ? modifiedDate.value : this.modifiedDate),
+        modifiedByUserId: (modifiedByUserId != null
+            ? modifiedByUserId.value
+            : this.modifiedByUserId),
+        userName: (userName != null ? userName.value : this.userName),
+        predefinedMoodTypeName: (predefinedMoodTypeName != null
+            ? predefinedMoodTypeName.value
+            : this.predefinedMoodTypeName),
+        createdByUserFirstName: (createdByUserFirstName != null
+            ? createdByUserFirstName.value
+            : this.createdByUserFirstName),
+        createdByUserLastName: (createdByUserLastName != null
+            ? createdByUserLastName.value
+            : this.createdByUserLastName),
+        createdByUserEmail: (createdByUserEmail != null
+            ? createdByUserEmail.value
+            : this.createdByUserEmail),
+        modifiedByUserFirstName: (modifiedByUserFirstName != null
+            ? modifiedByUserFirstName.value
+            : this.modifiedByUserFirstName),
+        modifiedByUserLastName: (modifiedByUserLastName != null
+            ? modifiedByUserLastName.value
+            : this.modifiedByUserLastName),
+        modifiedByUserEmail: (modifiedByUserEmail != null
+            ? modifiedByUserEmail.value
+            : this.modifiedByUserEmail),
+        createdBy: (createdBy != null ? createdBy.value : this.createdBy),
+        modifiedBy: (modifiedBy != null ? modifiedBy.value : this.modifiedBy));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DailyJournalModelReturnListModel {
+  const DailyJournalModelReturnListModel({
+    this.model,
+    this.search,
+    this.totalRecords,
+    this.isSuccess,
+    this.successMessage,
+    this.errorHolder,
+    this.activityId,
+    this.activityDateTime,
+    this.server,
+    this.processId,
+  });
+
+  factory DailyJournalModelReturnListModel.fromJson(
+          Map<String, dynamic> json) =>
+      _$DailyJournalModelReturnListModelFromJson(json);
+
+  static const toJsonFactory = _$DailyJournalModelReturnListModelToJson;
+  Map<String, dynamic> toJson() =>
+      _$DailyJournalModelReturnListModelToJson(this);
+
+  @JsonKey(name: 'model', defaultValue: <DailyJournalModel>[])
+  final List<DailyJournalModel>? model;
+  @JsonKey(name: 'search')
+  final BaseSearchCriteria? search;
+  @JsonKey(name: 'totalRecords')
+  final int? totalRecords;
+  @JsonKey(name: 'isSuccess')
+  final bool? isSuccess;
+  @JsonKey(name: 'successMessage')
+  final String? successMessage;
+  @JsonKey(name: 'errorHolder')
+  final ReturnError? errorHolder;
+  @JsonKey(name: 'activityId')
+  final String? activityId;
+  @JsonKey(name: 'activityDateTime')
+  final DateTime? activityDateTime;
+  @JsonKey(name: 'server')
+  final String? server;
+  @JsonKey(name: 'processId')
+  final int? processId;
+  static const fromJsonFactory = _$DailyJournalModelReturnListModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DailyJournalModelReturnListModel &&
+            (identical(other.model, model) ||
+                const DeepCollectionEquality().equals(other.model, model)) &&
+            (identical(other.search, search) ||
+                const DeepCollectionEquality().equals(other.search, search)) &&
+            (identical(other.totalRecords, totalRecords) ||
+                const DeepCollectionEquality()
+                    .equals(other.totalRecords, totalRecords)) &&
+            (identical(other.isSuccess, isSuccess) ||
+                const DeepCollectionEquality()
+                    .equals(other.isSuccess, isSuccess)) &&
+            (identical(other.successMessage, successMessage) ||
+                const DeepCollectionEquality()
+                    .equals(other.successMessage, successMessage)) &&
+            (identical(other.errorHolder, errorHolder) ||
+                const DeepCollectionEquality()
+                    .equals(other.errorHolder, errorHolder)) &&
+            (identical(other.activityId, activityId) ||
+                const DeepCollectionEquality()
+                    .equals(other.activityId, activityId)) &&
+            (identical(other.activityDateTime, activityDateTime) ||
+                const DeepCollectionEquality()
+                    .equals(other.activityDateTime, activityDateTime)) &&
+            (identical(other.server, server) ||
+                const DeepCollectionEquality().equals(other.server, server)) &&
+            (identical(other.processId, processId) ||
+                const DeepCollectionEquality()
+                    .equals(other.processId, processId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(model) ^
+      const DeepCollectionEquality().hash(search) ^
+      const DeepCollectionEquality().hash(totalRecords) ^
+      const DeepCollectionEquality().hash(isSuccess) ^
+      const DeepCollectionEquality().hash(successMessage) ^
+      const DeepCollectionEquality().hash(errorHolder) ^
+      const DeepCollectionEquality().hash(activityId) ^
+      const DeepCollectionEquality().hash(activityDateTime) ^
+      const DeepCollectionEquality().hash(server) ^
+      const DeepCollectionEquality().hash(processId) ^
+      runtimeType.hashCode;
+}
+
+extension $DailyJournalModelReturnListModelExtension
+    on DailyJournalModelReturnListModel {
+  DailyJournalModelReturnListModel copyWith(
+      {List<DailyJournalModel>? model,
+      BaseSearchCriteria? search,
+      int? totalRecords,
+      bool? isSuccess,
+      String? successMessage,
+      ReturnError? errorHolder,
+      String? activityId,
+      DateTime? activityDateTime,
+      String? server,
+      int? processId}) {
+    return DailyJournalModelReturnListModel(
+        model: model ?? this.model,
+        search: search ?? this.search,
+        totalRecords: totalRecords ?? this.totalRecords,
+        isSuccess: isSuccess ?? this.isSuccess,
+        successMessage: successMessage ?? this.successMessage,
+        errorHolder: errorHolder ?? this.errorHolder,
+        activityId: activityId ?? this.activityId,
+        activityDateTime: activityDateTime ?? this.activityDateTime,
+        server: server ?? this.server,
+        processId: processId ?? this.processId);
+  }
+
+  DailyJournalModelReturnListModel copyWithWrapped(
+      {Wrapped<List<DailyJournalModel>?>? model,
+      Wrapped<BaseSearchCriteria?>? search,
+      Wrapped<int?>? totalRecords,
+      Wrapped<bool?>? isSuccess,
+      Wrapped<String?>? successMessage,
+      Wrapped<ReturnError?>? errorHolder,
+      Wrapped<String?>? activityId,
+      Wrapped<DateTime?>? activityDateTime,
+      Wrapped<String?>? server,
+      Wrapped<int?>? processId}) {
+    return DailyJournalModelReturnListModel(
+        model: (model != null ? model.value : this.model),
+        search: (search != null ? search.value : this.search),
+        totalRecords:
+            (totalRecords != null ? totalRecords.value : this.totalRecords),
+        isSuccess: (isSuccess != null ? isSuccess.value : this.isSuccess),
+        successMessage: (successMessage != null
+            ? successMessage.value
+            : this.successMessage),
+        errorHolder:
+            (errorHolder != null ? errorHolder.value : this.errorHolder),
+        activityId: (activityId != null ? activityId.value : this.activityId),
+        activityDateTime: (activityDateTime != null
+            ? activityDateTime.value
+            : this.activityDateTime),
+        server: (server != null ? server.value : this.server),
+        processId: (processId != null ? processId.value : this.processId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DailyJournalModelReturnModel {
+  const DailyJournalModelReturnModel({
+    this.model,
+    this.isSuccess,
+    this.successMessage,
+    this.errorHolder,
+    this.activityId,
+    this.activityDateTime,
+    this.server,
+    this.processId,
+  });
+
+  factory DailyJournalModelReturnModel.fromJson(Map<String, dynamic> json) =>
+      _$DailyJournalModelReturnModelFromJson(json);
+
+  static const toJsonFactory = _$DailyJournalModelReturnModelToJson;
+  Map<String, dynamic> toJson() => _$DailyJournalModelReturnModelToJson(this);
+
+  @JsonKey(name: 'model')
+  final DailyJournalModel? model;
+  @JsonKey(name: 'isSuccess')
+  final bool? isSuccess;
+  @JsonKey(name: 'successMessage')
+  final String? successMessage;
+  @JsonKey(name: 'errorHolder')
+  final ReturnError? errorHolder;
+  @JsonKey(name: 'activityId')
+  final String? activityId;
+  @JsonKey(name: 'activityDateTime')
+  final DateTime? activityDateTime;
+  @JsonKey(name: 'server')
+  final String? server;
+  @JsonKey(name: 'processId')
+  final int? processId;
+  static const fromJsonFactory = _$DailyJournalModelReturnModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DailyJournalModelReturnModel &&
+            (identical(other.model, model) ||
+                const DeepCollectionEquality().equals(other.model, model)) &&
+            (identical(other.isSuccess, isSuccess) ||
+                const DeepCollectionEquality()
+                    .equals(other.isSuccess, isSuccess)) &&
+            (identical(other.successMessage, successMessage) ||
+                const DeepCollectionEquality()
+                    .equals(other.successMessage, successMessage)) &&
+            (identical(other.errorHolder, errorHolder) ||
+                const DeepCollectionEquality()
+                    .equals(other.errorHolder, errorHolder)) &&
+            (identical(other.activityId, activityId) ||
+                const DeepCollectionEquality()
+                    .equals(other.activityId, activityId)) &&
+            (identical(other.activityDateTime, activityDateTime) ||
+                const DeepCollectionEquality()
+                    .equals(other.activityDateTime, activityDateTime)) &&
+            (identical(other.server, server) ||
+                const DeepCollectionEquality().equals(other.server, server)) &&
+            (identical(other.processId, processId) ||
+                const DeepCollectionEquality()
+                    .equals(other.processId, processId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(model) ^
+      const DeepCollectionEquality().hash(isSuccess) ^
+      const DeepCollectionEquality().hash(successMessage) ^
+      const DeepCollectionEquality().hash(errorHolder) ^
+      const DeepCollectionEquality().hash(activityId) ^
+      const DeepCollectionEquality().hash(activityDateTime) ^
+      const DeepCollectionEquality().hash(server) ^
+      const DeepCollectionEquality().hash(processId) ^
+      runtimeType.hashCode;
+}
+
+extension $DailyJournalModelReturnModelExtension
+    on DailyJournalModelReturnModel {
+  DailyJournalModelReturnModel copyWith(
+      {DailyJournalModel? model,
+      bool? isSuccess,
+      String? successMessage,
+      ReturnError? errorHolder,
+      String? activityId,
+      DateTime? activityDateTime,
+      String? server,
+      int? processId}) {
+    return DailyJournalModelReturnModel(
+        model: model ?? this.model,
+        isSuccess: isSuccess ?? this.isSuccess,
+        successMessage: successMessage ?? this.successMessage,
+        errorHolder: errorHolder ?? this.errorHolder,
+        activityId: activityId ?? this.activityId,
+        activityDateTime: activityDateTime ?? this.activityDateTime,
+        server: server ?? this.server,
+        processId: processId ?? this.processId);
+  }
+
+  DailyJournalModelReturnModel copyWithWrapped(
+      {Wrapped<DailyJournalModel?>? model,
+      Wrapped<bool?>? isSuccess,
+      Wrapped<String?>? successMessage,
+      Wrapped<ReturnError?>? errorHolder,
+      Wrapped<String?>? activityId,
+      Wrapped<DateTime?>? activityDateTime,
+      Wrapped<String?>? server,
+      Wrapped<int?>? processId}) {
+    return DailyJournalModelReturnModel(
+        model: (model != null ? model.value : this.model),
+        isSuccess: (isSuccess != null ? isSuccess.value : this.isSuccess),
+        successMessage: (successMessage != null
+            ? successMessage.value
+            : this.successMessage),
+        errorHolder:
+            (errorHolder != null ? errorHolder.value : this.errorHolder),
+        activityId: (activityId != null ? activityId.value : this.activityId),
+        activityDateTime: (activityDateTime != null
+            ? activityDateTime.value
+            : this.activityDateTime),
+        server: (server != null ? server.value : this.server),
+        processId: (processId != null ? processId.value : this.processId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DailyJournalUpdateModel {
+  const DailyJournalUpdateModel({
+    this.dailyJournalId,
+    this.dailyJournalDate,
+    this.userId,
+    this.predefinedMoodTypeId,
+    this.gratitude1,
+    this.gratitude2,
+    this.gratitude3,
+    this.gratitude4,
+    this.gratitude5,
+    this.yourReflection,
+    this.tommorowsIntentions,
+  });
+
+  factory DailyJournalUpdateModel.fromJson(Map<String, dynamic> json) =>
+      _$DailyJournalUpdateModelFromJson(json);
+
+  static const toJsonFactory = _$DailyJournalUpdateModelToJson;
+  Map<String, dynamic> toJson() => _$DailyJournalUpdateModelToJson(this);
+
+  @JsonKey(name: 'dailyJournalId')
+  final int? dailyJournalId;
+  @JsonKey(name: 'dailyJournalDate')
+  final DateTime? dailyJournalDate;
+  @JsonKey(name: 'userId')
+  final int? userId;
+  @JsonKey(name: 'predefinedMoodTypeId')
+  final int? predefinedMoodTypeId;
+  @JsonKey(name: 'gratitude1')
+  final String? gratitude1;
+  @JsonKey(name: 'gratitude2')
+  final String? gratitude2;
+  @JsonKey(name: 'gratitude3')
+  final String? gratitude3;
+  @JsonKey(name: 'gratitude4')
+  final String? gratitude4;
+  @JsonKey(name: 'gratitude5')
+  final String? gratitude5;
+  @JsonKey(name: 'yourReflection')
+  final String? yourReflection;
+  @JsonKey(name: 'tommorowsIntentions')
+  final String? tommorowsIntentions;
+  static const fromJsonFactory = _$DailyJournalUpdateModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is DailyJournalUpdateModel &&
+            (identical(other.dailyJournalId, dailyJournalId) ||
+                const DeepCollectionEquality()
+                    .equals(other.dailyJournalId, dailyJournalId)) &&
+            (identical(other.dailyJournalDate, dailyJournalDate) ||
+                const DeepCollectionEquality()
+                    .equals(other.dailyJournalDate, dailyJournalDate)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.predefinedMoodTypeId, predefinedMoodTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedMoodTypeId, predefinedMoodTypeId)) &&
+            (identical(other.gratitude1, gratitude1) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude1, gratitude1)) &&
+            (identical(other.gratitude2, gratitude2) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude2, gratitude2)) &&
+            (identical(other.gratitude3, gratitude3) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude3, gratitude3)) &&
+            (identical(other.gratitude4, gratitude4) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude4, gratitude4)) &&
+            (identical(other.gratitude5, gratitude5) ||
+                const DeepCollectionEquality()
+                    .equals(other.gratitude5, gratitude5)) &&
+            (identical(other.yourReflection, yourReflection) ||
+                const DeepCollectionEquality()
+                    .equals(other.yourReflection, yourReflection)) &&
+            (identical(other.tommorowsIntentions, tommorowsIntentions) ||
+                const DeepCollectionEquality()
+                    .equals(other.tommorowsIntentions, tommorowsIntentions)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(dailyJournalId) ^
+      const DeepCollectionEquality().hash(dailyJournalDate) ^
+      const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(predefinedMoodTypeId) ^
+      const DeepCollectionEquality().hash(gratitude1) ^
+      const DeepCollectionEquality().hash(gratitude2) ^
+      const DeepCollectionEquality().hash(gratitude3) ^
+      const DeepCollectionEquality().hash(gratitude4) ^
+      const DeepCollectionEquality().hash(gratitude5) ^
+      const DeepCollectionEquality().hash(yourReflection) ^
+      const DeepCollectionEquality().hash(tommorowsIntentions) ^
+      runtimeType.hashCode;
+}
+
+extension $DailyJournalUpdateModelExtension on DailyJournalUpdateModel {
+  DailyJournalUpdateModel copyWith(
+      {int? dailyJournalId,
+      DateTime? dailyJournalDate,
+      int? userId,
+      int? predefinedMoodTypeId,
+      String? gratitude1,
+      String? gratitude2,
+      String? gratitude3,
+      String? gratitude4,
+      String? gratitude5,
+      String? yourReflection,
+      String? tommorowsIntentions}) {
+    return DailyJournalUpdateModel(
+        dailyJournalId: dailyJournalId ?? this.dailyJournalId,
+        dailyJournalDate: dailyJournalDate ?? this.dailyJournalDate,
+        userId: userId ?? this.userId,
+        predefinedMoodTypeId: predefinedMoodTypeId ?? this.predefinedMoodTypeId,
+        gratitude1: gratitude1 ?? this.gratitude1,
+        gratitude2: gratitude2 ?? this.gratitude2,
+        gratitude3: gratitude3 ?? this.gratitude3,
+        gratitude4: gratitude4 ?? this.gratitude4,
+        gratitude5: gratitude5 ?? this.gratitude5,
+        yourReflection: yourReflection ?? this.yourReflection,
+        tommorowsIntentions: tommorowsIntentions ?? this.tommorowsIntentions);
+  }
+
+  DailyJournalUpdateModel copyWithWrapped(
+      {Wrapped<int?>? dailyJournalId,
+      Wrapped<DateTime?>? dailyJournalDate,
+      Wrapped<int?>? userId,
+      Wrapped<int?>? predefinedMoodTypeId,
+      Wrapped<String?>? gratitude1,
+      Wrapped<String?>? gratitude2,
+      Wrapped<String?>? gratitude3,
+      Wrapped<String?>? gratitude4,
+      Wrapped<String?>? gratitude5,
+      Wrapped<String?>? yourReflection,
+      Wrapped<String?>? tommorowsIntentions}) {
+    return DailyJournalUpdateModel(
+        dailyJournalId: (dailyJournalId != null
+            ? dailyJournalId.value
+            : this.dailyJournalId),
+        dailyJournalDate: (dailyJournalDate != null
+            ? dailyJournalDate.value
+            : this.dailyJournalDate),
+        userId: (userId != null ? userId.value : this.userId),
+        predefinedMoodTypeId: (predefinedMoodTypeId != null
+            ? predefinedMoodTypeId.value
+            : this.predefinedMoodTypeId),
+        gratitude1: (gratitude1 != null ? gratitude1.value : this.gratitude1),
+        gratitude2: (gratitude2 != null ? gratitude2.value : this.gratitude2),
+        gratitude3: (gratitude3 != null ? gratitude3.value : this.gratitude3),
+        gratitude4: (gratitude4 != null ? gratitude4.value : this.gratitude4),
+        gratitude5: (gratitude5 != null ? gratitude5.value : this.gratitude5),
+        yourReflection: (yourReflection != null
+            ? yourReflection.value
+            : this.yourReflection),
+        tommorowsIntentions: (tommorowsIntentions != null
+            ? tommorowsIntentions.value
+            : this.tommorowsIntentions));
   }
 }
 
@@ -56650,6 +58007,58 @@ extension $MultipleDailyAffirmationTextCreateModelExtension
 }
 
 @JsonSerializable(explicitToJson: true)
+class MultipleDailyJournalCreateModel {
+  const MultipleDailyJournalCreateModel({
+    this.newDailyJournals,
+  });
+
+  factory MultipleDailyJournalCreateModel.fromJson(Map<String, dynamic> json) =>
+      _$MultipleDailyJournalCreateModelFromJson(json);
+
+  static const toJsonFactory = _$MultipleDailyJournalCreateModelToJson;
+  Map<String, dynamic> toJson() =>
+      _$MultipleDailyJournalCreateModelToJson(this);
+
+  @JsonKey(name: 'newDailyJournals', defaultValue: <DailyJournalCreateModel>[])
+  final List<DailyJournalCreateModel>? newDailyJournals;
+  static const fromJsonFactory = _$MultipleDailyJournalCreateModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is MultipleDailyJournalCreateModel &&
+            (identical(other.newDailyJournals, newDailyJournals) ||
+                const DeepCollectionEquality()
+                    .equals(other.newDailyJournals, newDailyJournals)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(newDailyJournals) ^
+      runtimeType.hashCode;
+}
+
+extension $MultipleDailyJournalCreateModelExtension
+    on MultipleDailyJournalCreateModel {
+  MultipleDailyJournalCreateModel copyWith(
+      {List<DailyJournalCreateModel>? newDailyJournals}) {
+    return MultipleDailyJournalCreateModel(
+        newDailyJournals: newDailyJournals ?? this.newDailyJournals);
+  }
+
+  MultipleDailyJournalCreateModel copyWithWrapped(
+      {Wrapped<List<DailyJournalCreateModel>?>? newDailyJournals}) {
+    return MultipleDailyJournalCreateModel(
+        newDailyJournals: (newDailyJournals != null
+            ? newDailyJournals.value
+            : this.newDailyJournals));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class MultipleDefaultCategoryCreateModel {
   const MultipleDefaultCategoryCreateModel({
     this.newDefaultCategorys,
@@ -70085,6 +71494,124 @@ extension $UserByDailyAffirmationTextIdSearchCriteriaExtension
         dailyAffirmationTextId: (dailyAffirmationTextId != null
             ? dailyAffirmationTextId.value
             : this.dailyAffirmationTextId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserByDailyJournalIdSearchCriteria {
+  const UserByDailyJournalIdSearchCriteria({
+    this.selectedId,
+    this.page,
+    this.pageSize,
+    this.keyword,
+    this.sortBy,
+    this.sortAscending,
+    this.dailyJournalId,
+  });
+
+  factory UserByDailyJournalIdSearchCriteria.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserByDailyJournalIdSearchCriteriaFromJson(json);
+
+  static const toJsonFactory = _$UserByDailyJournalIdSearchCriteriaToJson;
+  Map<String, dynamic> toJson() =>
+      _$UserByDailyJournalIdSearchCriteriaToJson(this);
+
+  @JsonKey(name: 'selectedId')
+  final int? selectedId;
+  @JsonKey(name: 'page')
+  final int? page;
+  @JsonKey(name: 'pageSize')
+  final int? pageSize;
+  @JsonKey(name: 'keyword')
+  final String? keyword;
+  @JsonKey(name: 'sortBy')
+  final String? sortBy;
+  @JsonKey(name: 'sortAscending')
+  final bool? sortAscending;
+  @JsonKey(name: 'dailyJournalId')
+  final int? dailyJournalId;
+  static const fromJsonFactory = _$UserByDailyJournalIdSearchCriteriaFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is UserByDailyJournalIdSearchCriteria &&
+            (identical(other.selectedId, selectedId) ||
+                const DeepCollectionEquality()
+                    .equals(other.selectedId, selectedId)) &&
+            (identical(other.page, page) ||
+                const DeepCollectionEquality().equals(other.page, page)) &&
+            (identical(other.pageSize, pageSize) ||
+                const DeepCollectionEquality()
+                    .equals(other.pageSize, pageSize)) &&
+            (identical(other.keyword, keyword) ||
+                const DeepCollectionEquality()
+                    .equals(other.keyword, keyword)) &&
+            (identical(other.sortBy, sortBy) ||
+                const DeepCollectionEquality().equals(other.sortBy, sortBy)) &&
+            (identical(other.sortAscending, sortAscending) ||
+                const DeepCollectionEquality()
+                    .equals(other.sortAscending, sortAscending)) &&
+            (identical(other.dailyJournalId, dailyJournalId) ||
+                const DeepCollectionEquality()
+                    .equals(other.dailyJournalId, dailyJournalId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(selectedId) ^
+      const DeepCollectionEquality().hash(page) ^
+      const DeepCollectionEquality().hash(pageSize) ^
+      const DeepCollectionEquality().hash(keyword) ^
+      const DeepCollectionEquality().hash(sortBy) ^
+      const DeepCollectionEquality().hash(sortAscending) ^
+      const DeepCollectionEquality().hash(dailyJournalId) ^
+      runtimeType.hashCode;
+}
+
+extension $UserByDailyJournalIdSearchCriteriaExtension
+    on UserByDailyJournalIdSearchCriteria {
+  UserByDailyJournalIdSearchCriteria copyWith(
+      {int? selectedId,
+      int? page,
+      int? pageSize,
+      String? keyword,
+      String? sortBy,
+      bool? sortAscending,
+      int? dailyJournalId}) {
+    return UserByDailyJournalIdSearchCriteria(
+        selectedId: selectedId ?? this.selectedId,
+        page: page ?? this.page,
+        pageSize: pageSize ?? this.pageSize,
+        keyword: keyword ?? this.keyword,
+        sortBy: sortBy ?? this.sortBy,
+        sortAscending: sortAscending ?? this.sortAscending,
+        dailyJournalId: dailyJournalId ?? this.dailyJournalId);
+  }
+
+  UserByDailyJournalIdSearchCriteria copyWithWrapped(
+      {Wrapped<int?>? selectedId,
+      Wrapped<int?>? page,
+      Wrapped<int?>? pageSize,
+      Wrapped<String?>? keyword,
+      Wrapped<String?>? sortBy,
+      Wrapped<bool?>? sortAscending,
+      Wrapped<int?>? dailyJournalId}) {
+    return UserByDailyJournalIdSearchCriteria(
+        selectedId: (selectedId != null ? selectedId.value : this.selectedId),
+        page: (page != null ? page.value : this.page),
+        pageSize: (pageSize != null ? pageSize.value : this.pageSize),
+        keyword: (keyword != null ? keyword.value : this.keyword),
+        sortBy: (sortBy != null ? sortBy.value : this.sortBy),
+        sortAscending:
+            (sortAscending != null ? sortAscending.value : this.sortAscending),
+        dailyJournalId: (dailyJournalId != null
+            ? dailyJournalId.value
+            : this.dailyJournalId));
   }
 }
 

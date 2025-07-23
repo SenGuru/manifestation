@@ -305,17 +305,16 @@ class GoalTrackerService {
         );
       }
       
-      if (userId < 0) {
+      if (userId <= 0) {
         return GoalTrackerResult.failure(
-          message: 'Invalid user ID: $userId',
+          message: 'User ID must be positive (got: $userId)',
         );
       }
       
-      // Allow 0 and positive values for status type ID since the API uses int?
-      // The database might accept 0 as a valid status
-      if (goalStatusTypeId < 0) {
+      // Status type ID is required and cannot be 0 or negative (API validation)
+      if (goalStatusTypeId <= 0) {
         return GoalTrackerResult.failure(
-          message: 'Invalid goal status type ID: $goalStatusTypeId',
+          message: 'Goal status type ID must be positive (got: $goalStatusTypeId)',
         );
       }
       
@@ -339,20 +338,51 @@ class GoalTrackerService {
       
       print('🔍 Creating goal with validated parameters:');
       print('   Name: "$sanitizedGoalName" (${sanitizedGoalName.length} chars)');
-      print('   User ID: $userId');
-      print('   Status Type ID: $goalStatusTypeId');
+      print('   User ID: $userId (type: ${userId.runtimeType})');
+      print('   Status Type ID: $goalStatusTypeId (type: ${goalStatusTypeId.runtimeType})');
       print('   Start Date: $validStartDate');
       print('   End Date: $endDate');
       
+      // Check for duplicate goals to prevent constraint violations
+      print('🔍 Checking for existing goals with same name for user $userId...');
+      try {
+        final existingGoalsResult = await getUserGoalTrackers();
+        if (existingGoalsResult.isSuccess && existingGoalsResult.data != null) {
+          final duplicateGoal = existingGoalsResult.data!.firstWhere(
+            (goal) => goal.goalTrackerName?.toLowerCase().trim() == sanitizedGoalName.toLowerCase(),
+            orElse: () => GoalTrackerModel(),
+          );
+          
+          if (duplicateGoal.goalTrackerId != null) {
+            print('⚠️  DUPLICATE GOAL DETECTED!');
+            print('   Existing goal ID: ${duplicateGoal.goalTrackerId}');
+            print('   Existing goal name: "${duplicateGoal.goalTrackerName}"');
+            print('   This would cause a PostgreSQL constraint violation!');
+            return GoalTrackerResult.failure(
+              message: 'A goal with this name already exists. Please choose a different name.',
+            );
+          } else {
+            print('✅ No duplicate goals found - safe to create');
+          }
+        }
+      } catch (e) {
+        print('⚠️  Could not check for duplicates: $e (proceeding anyway)');
+      }
+      
+      // Ensure we explicitly set the status type ID as a non-null integer
+      final validStatusTypeId = goalStatusTypeId;
+      
       final createModel = GoalTrackerCreateModel(
         goalTrackerName: sanitizedGoalName,
-        predefinedGoalStatusTypeId: goalStatusTypeId,
+        predefinedGoalStatusTypeId: validStatusTypeId,
         goalTrackerStartDate: validStartDate,
         goalTrackerEndDate: endDate,
         userId: userId,
       );
 
-      print('🔍 Goal creation model JSON: ${createModel.toJson()}');
+      final modelJson = createModel.toJson();
+      print('🔍 Goal creation model JSON: $modelJson');
+      print('🔍 Status Type ID in JSON: ${modelJson['predefinedGoalStatusTypeId']} (type: ${modelJson['predefinedGoalStatusTypeId'].runtimeType})');
       
       final response = await _apiClient.apiV1ManifestCreategoaltrackerPost(body: createModel);
 
@@ -376,8 +406,41 @@ class GoalTrackerService {
             message: 'Goal tracker created successfully',
           );
         } else {
+          // Extract detailed error information for PostgreSQL constraint debugging
+          String detailedError = 'Failed to create goal tracker';
+          if (returnModel.errorHolder != null) {
+            final errorHolder = returnModel.errorHolder!;
+            print('🔍 Detailed PostgreSQL Error Analysis:');
+            print('   Error Type: ${errorHolder.runtimeType}');
+            
+            if (errorHolder.friendlyMessage != null) {
+              print('   Friendly Message: ${errorHolder.friendlyMessage}');
+              detailedError = errorHolder.friendlyMessage!;
+            }
+            
+            if (errorHolder.exception != null) {
+              print('   Exception: ${errorHolder.exception}');
+              final exceptionStr = errorHolder.exception.toString();
+              
+              // Check for specific PostgreSQL constraint violations
+              if (exceptionStr.contains('duplicate key value violates unique constraint')) {
+                detailedError = 'A goal with this name already exists for this user. Please choose a different name.';
+                print('   🚨 POSTGRESQL CONSTRAINT: Duplicate key violation detected');
+              } else if (exceptionStr.contains('violates foreign key constraint')) {
+                detailedError = 'Invalid reference data (user ID or status type). Please try again.';
+                print('   🚨 POSTGRESQL CONSTRAINT: Foreign key violation detected');
+              } else if (exceptionStr.contains('violates not-null constraint')) {
+                detailedError = 'Missing required information. Please fill in all required fields.';
+                print('   🚨 POSTGRESQL CONSTRAINT: Not-null violation detected');
+              } else if (exceptionStr.contains('Npgsql') || exceptionStr.contains('PostgreSQL')) {
+                detailedError = 'Database constraint violation. Please check your input data.';
+                print('   🚨 POSTGRESQL ERROR: General database constraint violation');
+              }
+            }
+          }
+          
           return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.toString() ?? 'Failed to create goal tracker',
+            message: detailedError,
           );
         }
       } else {
@@ -572,7 +635,7 @@ class GoalTrackerService {
         goalTrackerMileStoneName: milestoneName,
         goalTrackerMileStoneStartDate: startDate ?? DateTime.now(),
         goalTrackerMileStoneEndDate: endDate,
-        predefinedGoalStatusTypeId: statusTypeId ?? 1, // Default to "Active" status
+        predefinedGoalStatusTypeId: statusTypeId ?? 1, // Default to "Active" status (ID 1)
         userId: _authService.currentUser?.userId,
       );
 

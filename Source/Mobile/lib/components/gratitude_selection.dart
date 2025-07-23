@@ -53,7 +53,7 @@ class GratitudeSection extends StatelessWidget {
         // Gratitude items
         Expanded(
           child: ListView.builder(
-            itemCount: 3,
+            itemCount: 5, // Expanded to support 5 gratitudes
             itemBuilder: (context, index) {
               return Container(
                 margin: EdgeInsets.only(bottom: 20.h),

@@ -3148,6 +3148,234 @@ Map<String, dynamic> _$DailyAffirmationTextUpdateModelToJson(
       'userId': instance.userId,
     };
 
+DailyJournalByUserIdSearchCriteria _$DailyJournalByUserIdSearchCriteriaFromJson(
+        Map<String, dynamic> json) =>
+    DailyJournalByUserIdSearchCriteria(
+      selectedId: (json['selectedId'] as num?)?.toInt(),
+      page: (json['page'] as num?)?.toInt(),
+      pageSize: (json['pageSize'] as num?)?.toInt(),
+      keyword: json['keyword'] as String?,
+      sortBy: json['sortBy'] as String?,
+      sortAscending: json['sortAscending'] as bool?,
+      userId: (json['userId'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$DailyJournalByUserIdSearchCriteriaToJson(
+        DailyJournalByUserIdSearchCriteria instance) =>
+    <String, dynamic>{
+      'selectedId': instance.selectedId,
+      'page': instance.page,
+      'pageSize': instance.pageSize,
+      'keyword': instance.keyword,
+      'sortBy': instance.sortBy,
+      'sortAscending': instance.sortAscending,
+      'userId': instance.userId,
+    };
+
+DailyJournalCreateModel _$DailyJournalCreateModelFromJson(
+        Map<String, dynamic> json) =>
+    DailyJournalCreateModel(
+      dailyJournalDate: json['dailyJournalDate'] == null
+          ? null
+          : DateTime.parse(json['dailyJournalDate'] as String),
+      userId: (json['userId'] as num?)?.toInt(),
+      predefinedMoodTypeId: (json['predefinedMoodTypeId'] as num?)?.toInt(),
+      gratitude1: json['gratitude1'] as String?,
+      gratitude2: json['gratitude2'] as String?,
+      gratitude3: json['gratitude3'] as String?,
+      gratitude4: json['gratitude4'] as String?,
+      gratitude5: json['gratitude5'] as String?,
+      yourReflection: json['yourReflection'] as String?,
+      tommorowsIntentions: json['tommorowsIntentions'] as String?,
+    );
+
+Map<String, dynamic> _$DailyJournalCreateModelToJson(
+        DailyJournalCreateModel instance) =>
+    <String, dynamic>{
+      'dailyJournalDate': instance.dailyJournalDate?.toIso8601String(),
+      'userId': instance.userId,
+      'predefinedMoodTypeId': instance.predefinedMoodTypeId,
+      'gratitude1': instance.gratitude1,
+      'gratitude2': instance.gratitude2,
+      'gratitude3': instance.gratitude3,
+      'gratitude4': instance.gratitude4,
+      'gratitude5': instance.gratitude5,
+      'yourReflection': instance.yourReflection,
+      'tommorowsIntentions': instance.tommorowsIntentions,
+    };
+
+DailyJournalModel _$DailyJournalModelFromJson(Map<String, dynamic> json) =>
+    DailyJournalModel(
+      dailyJournalId: (json['dailyJournalId'] as num?)?.toInt(),
+      dailyJournalDate: json['dailyJournalDate'] == null
+          ? null
+          : DateTime.parse(json['dailyJournalDate'] as String),
+      userId: (json['userId'] as num?)?.toInt(),
+      predefinedMoodTypeId: (json['predefinedMoodTypeId'] as num?)?.toInt(),
+      gratitude1: json['gratitude1'] as String?,
+      gratitude2: json['gratitude2'] as String?,
+      gratitude3: json['gratitude3'] as String?,
+      gratitude4: json['gratitude4'] as String?,
+      gratitude5: json['gratitude5'] as String?,
+      yourReflection: json['yourReflection'] as String?,
+      tommorowsIntentions: json['tommorowsIntentions'] as String?,
+      isDeleted: json['isDeleted'] as bool?,
+      createdDate: json['createdDate'] == null
+          ? null
+          : DateTime.parse(json['createdDate'] as String),
+      createdByUserId: (json['createdByUserId'] as num?)?.toInt(),
+      modifiedDate: json['modifiedDate'] == null
+          ? null
+          : DateTime.parse(json['modifiedDate'] as String),
+      modifiedByUserId: (json['modifiedByUserId'] as num?)?.toInt(),
+      userName: json['userName'] as String?,
+      predefinedMoodTypeName: json['predefinedMoodTypeName'] as String?,
+      createdByUserFirstName: json['createdByUserFirstName'] as String?,
+      createdByUserLastName: json['createdByUserLastName'] as String?,
+      createdByUserEmail: json['createdByUserEmail'] as String?,
+      modifiedByUserFirstName: json['modifiedByUserFirstName'] as String?,
+      modifiedByUserLastName: json['modifiedByUserLastName'] as String?,
+      modifiedByUserEmail: json['modifiedByUserEmail'] as String?,
+      createdBy: json['createdBy'] as String?,
+      modifiedBy: json['modifiedBy'] as String?,
+    );
+
+Map<String, dynamic> _$DailyJournalModelToJson(DailyJournalModel instance) =>
+    <String, dynamic>{
+      'dailyJournalId': instance.dailyJournalId,
+      'dailyJournalDate': instance.dailyJournalDate?.toIso8601String(),
+      'userId': instance.userId,
+      'predefinedMoodTypeId': instance.predefinedMoodTypeId,
+      'gratitude1': instance.gratitude1,
+      'gratitude2': instance.gratitude2,
+      'gratitude3': instance.gratitude3,
+      'gratitude4': instance.gratitude4,
+      'gratitude5': instance.gratitude5,
+      'yourReflection': instance.yourReflection,
+      'tommorowsIntentions': instance.tommorowsIntentions,
+      'isDeleted': instance.isDeleted,
+      'createdDate': instance.createdDate?.toIso8601String(),
+      'createdByUserId': instance.createdByUserId,
+      'modifiedDate': instance.modifiedDate?.toIso8601String(),
+      'modifiedByUserId': instance.modifiedByUserId,
+      'userName': instance.userName,
+      'predefinedMoodTypeName': instance.predefinedMoodTypeName,
+      'createdByUserFirstName': instance.createdByUserFirstName,
+      'createdByUserLastName': instance.createdByUserLastName,
+      'createdByUserEmail': instance.createdByUserEmail,
+      'modifiedByUserFirstName': instance.modifiedByUserFirstName,
+      'modifiedByUserLastName': instance.modifiedByUserLastName,
+      'modifiedByUserEmail': instance.modifiedByUserEmail,
+      'createdBy': instance.createdBy,
+      'modifiedBy': instance.modifiedBy,
+    };
+
+DailyJournalModelReturnListModel _$DailyJournalModelReturnListModelFromJson(
+        Map<String, dynamic> json) =>
+    DailyJournalModelReturnListModel(
+      model: (json['model'] as List<dynamic>?)
+              ?.map(
+                  (e) => DailyJournalModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      search: json['search'] == null
+          ? null
+          : BaseSearchCriteria.fromJson(json['search'] as Map<String, dynamic>),
+      totalRecords: (json['totalRecords'] as num?)?.toInt(),
+      isSuccess: json['isSuccess'] as bool?,
+      successMessage: json['successMessage'] as String?,
+      errorHolder: json['errorHolder'] == null
+          ? null
+          : ReturnError.fromJson(json['errorHolder'] as Map<String, dynamic>),
+      activityId: json['activityId'] as String?,
+      activityDateTime: json['activityDateTime'] == null
+          ? null
+          : DateTime.parse(json['activityDateTime'] as String),
+      server: json['server'] as String?,
+      processId: (json['processId'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$DailyJournalModelReturnListModelToJson(
+        DailyJournalModelReturnListModel instance) =>
+    <String, dynamic>{
+      'model': instance.model?.map((e) => e.toJson()).toList(),
+      'search': instance.search?.toJson(),
+      'totalRecords': instance.totalRecords,
+      'isSuccess': instance.isSuccess,
+      'successMessage': instance.successMessage,
+      'errorHolder': instance.errorHolder?.toJson(),
+      'activityId': instance.activityId,
+      'activityDateTime': instance.activityDateTime?.toIso8601String(),
+      'server': instance.server,
+      'processId': instance.processId,
+    };
+
+DailyJournalModelReturnModel _$DailyJournalModelReturnModelFromJson(
+        Map<String, dynamic> json) =>
+    DailyJournalModelReturnModel(
+      model: json['model'] == null
+          ? null
+          : DailyJournalModel.fromJson(json['model'] as Map<String, dynamic>),
+      isSuccess: json['isSuccess'] as bool?,
+      successMessage: json['successMessage'] as String?,
+      errorHolder: json['errorHolder'] == null
+          ? null
+          : ReturnError.fromJson(json['errorHolder'] as Map<String, dynamic>),
+      activityId: json['activityId'] as String?,
+      activityDateTime: json['activityDateTime'] == null
+          ? null
+          : DateTime.parse(json['activityDateTime'] as String),
+      server: json['server'] as String?,
+      processId: (json['processId'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$DailyJournalModelReturnModelToJson(
+        DailyJournalModelReturnModel instance) =>
+    <String, dynamic>{
+      'model': instance.model?.toJson(),
+      'isSuccess': instance.isSuccess,
+      'successMessage': instance.successMessage,
+      'errorHolder': instance.errorHolder?.toJson(),
+      'activityId': instance.activityId,
+      'activityDateTime': instance.activityDateTime?.toIso8601String(),
+      'server': instance.server,
+      'processId': instance.processId,
+    };
+
+DailyJournalUpdateModel _$DailyJournalUpdateModelFromJson(
+        Map<String, dynamic> json) =>
+    DailyJournalUpdateModel(
+      dailyJournalId: (json['dailyJournalId'] as num?)?.toInt(),
+      dailyJournalDate: json['dailyJournalDate'] == null
+          ? null
+          : DateTime.parse(json['dailyJournalDate'] as String),
+      userId: (json['userId'] as num?)?.toInt(),
+      predefinedMoodTypeId: (json['predefinedMoodTypeId'] as num?)?.toInt(),
+      gratitude1: json['gratitude1'] as String?,
+      gratitude2: json['gratitude2'] as String?,
+      gratitude3: json['gratitude3'] as String?,
+      gratitude4: json['gratitude4'] as String?,
+      gratitude5: json['gratitude5'] as String?,
+      yourReflection: json['yourReflection'] as String?,
+      tommorowsIntentions: json['tommorowsIntentions'] as String?,
+    );
+
+Map<String, dynamic> _$DailyJournalUpdateModelToJson(
+        DailyJournalUpdateModel instance) =>
+    <String, dynamic>{
+      'dailyJournalId': instance.dailyJournalId,
+      'dailyJournalDate': instance.dailyJournalDate?.toIso8601String(),
+      'userId': instance.userId,
+      'predefinedMoodTypeId': instance.predefinedMoodTypeId,
+      'gratitude1': instance.gratitude1,
+      'gratitude2': instance.gratitude2,
+      'gratitude3': instance.gratitude3,
+      'gratitude4': instance.gratitude4,
+      'gratitude5': instance.gratitude5,
+      'yourReflection': instance.yourReflection,
+      'tommorowsIntentions': instance.tommorowsIntentions,
+    };
+
 DefaultCategoryByCategoryIdSearchCriteria
     _$DefaultCategoryByCategoryIdSearchCriteriaFromJson(
             Map<String, dynamic> json) =>
@@ -9606,6 +9834,23 @@ Map<String, dynamic> _$MultipleDailyAffirmationTextCreateModelToJson(
           instance.newDailyAffirmationTexts?.map((e) => e.toJson()).toList(),
     };
 
+MultipleDailyJournalCreateModel _$MultipleDailyJournalCreateModelFromJson(
+        Map<String, dynamic> json) =>
+    MultipleDailyJournalCreateModel(
+      newDailyJournals: (json['newDailyJournals'] as List<dynamic>?)
+              ?.map((e) =>
+                  DailyJournalCreateModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+
+Map<String, dynamic> _$MultipleDailyJournalCreateModelToJson(
+        MultipleDailyJournalCreateModel instance) =>
+    <String, dynamic>{
+      'newDailyJournals':
+          instance.newDailyJournals?.map((e) => e.toJson()).toList(),
+    };
+
 MultipleDefaultCategoryCreateModel _$MultipleDefaultCategoryCreateModelFromJson(
         Map<String, dynamic> json) =>
     MultipleDefaultCategoryCreateModel(
@@ -12742,6 +12987,30 @@ Map<String, dynamic> _$UserByDailyAffirmationTextIdSearchCriteriaToJson(
       'sortBy': instance.sortBy,
       'sortAscending': instance.sortAscending,
       'dailyAffirmationTextId': instance.dailyAffirmationTextId,
+    };
+
+UserByDailyJournalIdSearchCriteria _$UserByDailyJournalIdSearchCriteriaFromJson(
+        Map<String, dynamic> json) =>
+    UserByDailyJournalIdSearchCriteria(
+      selectedId: (json['selectedId'] as num?)?.toInt(),
+      page: (json['page'] as num?)?.toInt(),
+      pageSize: (json['pageSize'] as num?)?.toInt(),
+      keyword: json['keyword'] as String?,
+      sortBy: json['sortBy'] as String?,
+      sortAscending: json['sortAscending'] as bool?,
+      dailyJournalId: (json['dailyJournalId'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$UserByDailyJournalIdSearchCriteriaToJson(
+        UserByDailyJournalIdSearchCriteria instance) =>
+    <String, dynamic>{
+      'selectedId': instance.selectedId,
+      'page': instance.page,
+      'pageSize': instance.pageSize,
+      'keyword': instance.keyword,
+      'sortBy': instance.sortBy,
+      'sortAscending': instance.sortAscending,
+      'dailyJournalId': instance.dailyJournalId,
     };
 
 UserByFeedIdSearchCriteria _$UserByFeedIdSearchCriteriaFromJson(
