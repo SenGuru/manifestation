@@ -5405,6 +5405,23 @@ final class _$Manifestation extends Manifestation {
 
   @override
   Future<Response<GoalTrackerModelReturnListModel>>
+      _apiV1ManifestGetgoaltrackersbycategoryidGet({int? categoryId}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/getgoaltrackersbycategoryid');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'categoryId': categoryId
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<GoalTrackerModelReturnListModel,
+        GoalTrackerModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<GoalTrackerModelReturnListModel>>
       _apiV1ManifestGetgoaltrackersGet({
     bool? showDeleted,
     List<int>? predefinedGoalStatusTypeIds,
@@ -5601,6 +5618,20 @@ final class _$Manifestation extends Manifestation {
     );
     return client
         .send<UserModelReturnListModel, UserModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<CategoryModelReturnListModel>>
+      _apiV1ManifestGetalldistinctcategorysforallgoaltrackerforcurrentuserGet() {
+    final Uri $url = Uri.parse(
+        '/api/v1/manifest/getalldistinctcategorysforallgoaltrackerforcurrentuser');
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+    );
+    return client.send<CategoryModelReturnListModel,
+        CategoryModelReturnListModel>($request);
   }
 
   @override

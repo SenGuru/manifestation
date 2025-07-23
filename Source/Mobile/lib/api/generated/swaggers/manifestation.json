@@ -15336,6 +15336,45 @@
         }
       }
     },
+    "/api/v1/manifest/getgoaltrackersbycategoryid": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoalTrackerModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoalTrackerModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GoalTrackerModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/manifest/getgoaltrackers": {
       "get": {
         "tags": [
@@ -15949,6 +15988,35 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getalldistinctcategorysforallgoaltrackerforcurrentuser": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CategoryModelReturnListModel"
                 }
               }
             }
@@ -32845,6 +32913,14 @@
           "userId": {
             "type": "integer",
             "format": "int64"
+          },
+          "colorAsInteger": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedIconTypeId": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -32872,6 +32948,14 @@
             "nullable": true
           },
           "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "colorAsInteger": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedIconTypeId": {
             "type": "integer",
             "format": "int64"
           },
@@ -33049,6 +33133,14 @@
             "nullable": true
           },
           "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "colorAsInteger": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedIconTypeId": {
             "type": "integer",
             "format": "int64"
           }
@@ -39749,11 +39841,13 @@
           },
           "goalTrackerMileStoneStartDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "goalTrackerMileStoneEndDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "predefinedGoalStatusTypeId": {
             "type": "integer",
@@ -39761,7 +39855,8 @@
           },
           "goalTrackerMileStoneCompletedDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "userId": {
             "type": "integer",
@@ -39789,11 +39884,13 @@
           },
           "goalTrackerMileStoneStartDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "goalTrackerMileStoneEndDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "predefinedGoalStatusTypeId": {
             "type": "integer",
@@ -39801,7 +39898,8 @@
           },
           "goalTrackerMileStoneCompletedDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "userId": {
             "type": "integer",
@@ -39977,11 +40075,13 @@
           },
           "goalTrackerMileStoneStartDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "goalTrackerMileStoneEndDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "predefinedGoalStatusTypeId": {
             "type": "integer",
@@ -39989,7 +40089,8 @@
           },
           "goalTrackerMileStoneCompletedDate": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "userId": {
             "type": "integer",
@@ -40105,6 +40206,20 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          },
+          "existingGoalTrackerMileStones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoalTrackerMileStoneModel"
+            },
+            "nullable": true
+          },
+          "existingCategorys": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CategoryModel"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

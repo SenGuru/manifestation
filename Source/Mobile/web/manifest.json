@@ -1,6 +1,6 @@
 {
-    "name": "manifestation_app",
-    "short_name": "manifestation_app",
+    "name": "fun",
+    "short_name": "fun",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

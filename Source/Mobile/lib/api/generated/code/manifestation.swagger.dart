@@ -6919,6 +6919,23 @@ abstract class Manifestation extends ChopperService {
           {@Body() required GoalTrackerMileStoneByFeedIdSearchCriteria? body});
 
   ///
+  ///@param categoryId
+  Future<chopper.Response<GoalTrackerModelReturnListModel>>
+      apiV1ManifestGetgoaltrackersbycategoryidGet({int? categoryId}) {
+    generatedMapping.putIfAbsent(GoalTrackerModelReturnListModel,
+        () => GoalTrackerModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetgoaltrackersbycategoryidGet(categoryId: categoryId);
+  }
+
+  ///
+  ///@param categoryId
+  @Get(path: '/api/v1/manifest/getgoaltrackersbycategoryid')
+  Future<chopper.Response<GoalTrackerModelReturnListModel>>
+      _apiV1ManifestGetgoaltrackersbycategoryidGet(
+          {@Query('categoryId') int? categoryId});
+
+  ///
   ///@param ShowDeleted
   ///@param PredefinedGoalStatusTypeIds
   ///@param UserId
@@ -7177,6 +7194,22 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<UserModelReturnListModel>>
       _apiV1ManifestGetuserbygoaltrackeridsearchGet(
           {@Body() required UserByGoalTrackerIdSearchCriteria? body});
+
+  ///
+  Future<chopper.Response<CategoryModelReturnListModel>>
+      apiV1ManifestGetalldistinctcategorysforallgoaltrackerforcurrentuserGet() {
+    generatedMapping.putIfAbsent(CategoryModelReturnListModel,
+        () => CategoryModelReturnListModel.fromJsonFactory);
+
+    return _apiV1ManifestGetalldistinctcategorysforallgoaltrackerforcurrentuserGet();
+  }
+
+  ///
+  @Get(
+      path:
+          '/api/v1/manifest/getalldistinctcategorysforallgoaltrackerforcurrentuser')
+  Future<chopper.Response<CategoryModelReturnListModel>>
+      _apiV1ManifestGetalldistinctcategorysforallgoaltrackerforcurrentuserGet();
 
   ///
   ///@param ShowDeleted
@@ -17966,6 +17999,8 @@ class CategoryCreateModel {
     this.categoryName,
     this.predefinedCategoryTypeId,
     this.userId,
+    this.colorAsInteger,
+    this.predefinedIconTypeId,
   });
 
   factory CategoryCreateModel.fromJson(Map<String, dynamic> json) =>
@@ -17982,6 +18017,10 @@ class CategoryCreateModel {
   final int? predefinedCategoryTypeId;
   @JsonKey(name: 'userId')
   final int? userId;
+  @JsonKey(name: 'colorAsInteger')
+  final int? colorAsInteger;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   static const fromJsonFactory = _$CategoryCreateModelFromJson;
 
   @override
@@ -18000,7 +18039,13 @@ class CategoryCreateModel {
                     other.predefinedCategoryTypeId,
                     predefinedCategoryTypeId)) &&
             (identical(other.userId, userId) ||
-                const DeepCollectionEquality().equals(other.userId, userId)));
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.colorAsInteger, colorAsInteger) ||
+                const DeepCollectionEquality()
+                    .equals(other.colorAsInteger, colorAsInteger)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality()
+                    .equals(other.predefinedIconTypeId, predefinedIconTypeId)));
   }
 
   @override
@@ -18012,6 +18057,8 @@ class CategoryCreateModel {
       const DeepCollectionEquality().hash(categoryName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
       const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(colorAsInteger) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       runtimeType.hashCode;
 }
 
@@ -18020,20 +18067,27 @@ extension $CategoryCreateModelExtension on CategoryCreateModel {
       {int? defaultCategoryId,
       String? categoryName,
       int? predefinedCategoryTypeId,
-      int? userId}) {
+      int? userId,
+      int? colorAsInteger,
+      int? predefinedIconTypeId}) {
     return CategoryCreateModel(
         defaultCategoryId: defaultCategoryId ?? this.defaultCategoryId,
         categoryName: categoryName ?? this.categoryName,
         predefinedCategoryTypeId:
             predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
-        userId: userId ?? this.userId);
+        userId: userId ?? this.userId,
+        colorAsInteger: colorAsInteger ?? this.colorAsInteger,
+        predefinedIconTypeId:
+            predefinedIconTypeId ?? this.predefinedIconTypeId);
   }
 
   CategoryCreateModel copyWithWrapped(
       {Wrapped<int?>? defaultCategoryId,
       Wrapped<String?>? categoryName,
       Wrapped<int?>? predefinedCategoryTypeId,
-      Wrapped<int?>? userId}) {
+      Wrapped<int?>? userId,
+      Wrapped<int?>? colorAsInteger,
+      Wrapped<int?>? predefinedIconTypeId}) {
     return CategoryCreateModel(
         defaultCategoryId: (defaultCategoryId != null
             ? defaultCategoryId.value
@@ -18043,7 +18097,13 @@ extension $CategoryCreateModelExtension on CategoryCreateModel {
         predefinedCategoryTypeId: (predefinedCategoryTypeId != null
             ? predefinedCategoryTypeId.value
             : this.predefinedCategoryTypeId),
-        userId: (userId != null ? userId.value : this.userId));
+        userId: (userId != null ? userId.value : this.userId),
+        colorAsInteger: (colorAsInteger != null
+            ? colorAsInteger.value
+            : this.colorAsInteger),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId));
   }
 }
 
@@ -18055,6 +18115,8 @@ class CategoryModel {
     this.categoryName,
     this.predefinedCategoryTypeId,
     this.userId,
+    this.colorAsInteger,
+    this.predefinedIconTypeId,
     this.isDeleted,
     this.createdDate,
     this.createdByUserId,
@@ -18089,6 +18151,10 @@ class CategoryModel {
   final int? predefinedCategoryTypeId;
   @JsonKey(name: 'userId')
   final int? userId;
+  @JsonKey(name: 'colorAsInteger')
+  final int? colorAsInteger;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   @JsonKey(name: 'isDeleted')
   final bool? isDeleted;
   @JsonKey(name: 'createdDate')
@@ -18142,6 +18208,12 @@ class CategoryModel {
                     predefinedCategoryTypeId)) &&
             (identical(other.userId, userId) ||
                 const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.colorAsInteger, colorAsInteger) ||
+                const DeepCollectionEquality()
+                    .equals(other.colorAsInteger, colorAsInteger)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedIconTypeId, predefinedIconTypeId)) &&
             (identical(other.isDeleted, isDeleted) ||
                 const DeepCollectionEquality()
                     .equals(other.isDeleted, isDeleted)) &&
@@ -18170,11 +18242,8 @@ class CategoryModel {
             (identical(other.createdByUserFirstName, createdByUserFirstName) ||
                 const DeepCollectionEquality().equals(
                     other.createdByUserFirstName, createdByUserFirstName)) &&
-            (identical(other.createdByUserLastName, createdByUserLastName) ||
-                const DeepCollectionEquality().equals(
-                    other.createdByUserLastName, createdByUserLastName)) &&
-            (identical(other.createdByUserEmail, createdByUserEmail) ||
-                const DeepCollectionEquality().equals(other.createdByUserEmail, createdByUserEmail)) &&
+            (identical(other.createdByUserLastName, createdByUserLastName) || const DeepCollectionEquality().equals(other.createdByUserLastName, createdByUserLastName)) &&
+            (identical(other.createdByUserEmail, createdByUserEmail) || const DeepCollectionEquality().equals(other.createdByUserEmail, createdByUserEmail)) &&
             (identical(other.modifiedByUserFirstName, modifiedByUserFirstName) || const DeepCollectionEquality().equals(other.modifiedByUserFirstName, modifiedByUserFirstName)) &&
             (identical(other.modifiedByUserLastName, modifiedByUserLastName) || const DeepCollectionEquality().equals(other.modifiedByUserLastName, modifiedByUserLastName)) &&
             (identical(other.modifiedByUserEmail, modifiedByUserEmail) || const DeepCollectionEquality().equals(other.modifiedByUserEmail, modifiedByUserEmail)) &&
@@ -18192,6 +18261,8 @@ class CategoryModel {
       const DeepCollectionEquality().hash(categoryName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
       const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(colorAsInteger) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       const DeepCollectionEquality().hash(createdDate) ^
       const DeepCollectionEquality().hash(createdByUserId) ^
@@ -18218,6 +18289,8 @@ extension $CategoryModelExtension on CategoryModel {
       String? categoryName,
       int? predefinedCategoryTypeId,
       int? userId,
+      int? colorAsInteger,
+      int? predefinedIconTypeId,
       bool? isDeleted,
       DateTime? createdDate,
       int? createdByUserId,
@@ -18241,6 +18314,8 @@ extension $CategoryModelExtension on CategoryModel {
         predefinedCategoryTypeId:
             predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
         userId: userId ?? this.userId,
+        colorAsInteger: colorAsInteger ?? this.colorAsInteger,
+        predefinedIconTypeId: predefinedIconTypeId ?? this.predefinedIconTypeId,
         isDeleted: isDeleted ?? this.isDeleted,
         createdDate: createdDate ?? this.createdDate,
         createdByUserId: createdByUserId ?? this.createdByUserId,
@@ -18270,6 +18345,8 @@ extension $CategoryModelExtension on CategoryModel {
       Wrapped<String?>? categoryName,
       Wrapped<int?>? predefinedCategoryTypeId,
       Wrapped<int?>? userId,
+      Wrapped<int?>? colorAsInteger,
+      Wrapped<int?>? predefinedIconTypeId,
       Wrapped<bool?>? isDeleted,
       Wrapped<DateTime?>? createdDate,
       Wrapped<int?>? createdByUserId,
@@ -18297,6 +18374,12 @@ extension $CategoryModelExtension on CategoryModel {
             ? predefinedCategoryTypeId.value
             : this.predefinedCategoryTypeId),
         userId: (userId != null ? userId.value : this.userId),
+        colorAsInteger: (colorAsInteger != null
+            ? colorAsInteger.value
+            : this.colorAsInteger),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId),
         isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
         createdDate:
             (createdDate != null ? createdDate.value : this.createdDate),
@@ -18625,6 +18708,8 @@ class CategoryUpdateModel {
     this.categoryName,
     this.predefinedCategoryTypeId,
     this.userId,
+    this.colorAsInteger,
+    this.predefinedIconTypeId,
   });
 
   factory CategoryUpdateModel.fromJson(Map<String, dynamic> json) =>
@@ -18643,6 +18728,10 @@ class CategoryUpdateModel {
   final int? predefinedCategoryTypeId;
   @JsonKey(name: 'userId')
   final int? userId;
+  @JsonKey(name: 'colorAsInteger')
+  final int? colorAsInteger;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   static const fromJsonFactory = _$CategoryUpdateModelFromJson;
 
   @override
@@ -18664,7 +18753,13 @@ class CategoryUpdateModel {
                     other.predefinedCategoryTypeId,
                     predefinedCategoryTypeId)) &&
             (identical(other.userId, userId) ||
-                const DeepCollectionEquality().equals(other.userId, userId)));
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.colorAsInteger, colorAsInteger) ||
+                const DeepCollectionEquality()
+                    .equals(other.colorAsInteger, colorAsInteger)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality()
+                    .equals(other.predefinedIconTypeId, predefinedIconTypeId)));
   }
 
   @override
@@ -18677,6 +18772,8 @@ class CategoryUpdateModel {
       const DeepCollectionEquality().hash(categoryName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
       const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(colorAsInteger) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       runtimeType.hashCode;
 }
 
@@ -18686,14 +18783,19 @@ extension $CategoryUpdateModelExtension on CategoryUpdateModel {
       int? defaultCategoryId,
       String? categoryName,
       int? predefinedCategoryTypeId,
-      int? userId}) {
+      int? userId,
+      int? colorAsInteger,
+      int? predefinedIconTypeId}) {
     return CategoryUpdateModel(
         categoryId: categoryId ?? this.categoryId,
         defaultCategoryId: defaultCategoryId ?? this.defaultCategoryId,
         categoryName: categoryName ?? this.categoryName,
         predefinedCategoryTypeId:
             predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
-        userId: userId ?? this.userId);
+        userId: userId ?? this.userId,
+        colorAsInteger: colorAsInteger ?? this.colorAsInteger,
+        predefinedIconTypeId:
+            predefinedIconTypeId ?? this.predefinedIconTypeId);
   }
 
   CategoryUpdateModel copyWithWrapped(
@@ -18701,7 +18803,9 @@ extension $CategoryUpdateModelExtension on CategoryUpdateModel {
       Wrapped<int?>? defaultCategoryId,
       Wrapped<String?>? categoryName,
       Wrapped<int?>? predefinedCategoryTypeId,
-      Wrapped<int?>? userId}) {
+      Wrapped<int?>? userId,
+      Wrapped<int?>? colorAsInteger,
+      Wrapped<int?>? predefinedIconTypeId}) {
     return CategoryUpdateModel(
         categoryId: (categoryId != null ? categoryId.value : this.categoryId),
         defaultCategoryId: (defaultCategoryId != null
@@ -18712,7 +18816,13 @@ extension $CategoryUpdateModelExtension on CategoryUpdateModel {
         predefinedCategoryTypeId: (predefinedCategoryTypeId != null
             ? predefinedCategoryTypeId.value
             : this.predefinedCategoryTypeId),
-        userId: (userId != null ? userId.value : this.userId));
+        userId: (userId != null ? userId.value : this.userId),
+        colorAsInteger: (colorAsInteger != null
+            ? colorAsInteger.value
+            : this.colorAsInteger),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId));
   }
 }
 
@@ -42053,6 +42163,8 @@ class GoalTrackerModel {
     this.modifiedByUserEmail,
     this.createdBy,
     this.modifiedBy,
+    this.existingGoalTrackerMileStones,
+    this.existingCategorys,
   });
 
   factory GoalTrackerModel.fromJson(Map<String, dynamic> json) =>
@@ -42109,6 +42221,12 @@ class GoalTrackerModel {
   final String? createdBy;
   @JsonKey(name: 'modifiedBy')
   final String? modifiedBy;
+  @JsonKey(
+      name: 'existingGoalTrackerMileStones',
+      defaultValue: <GoalTrackerMileStoneModel>[])
+  final List<GoalTrackerMileStoneModel>? existingGoalTrackerMileStones;
+  @JsonKey(name: 'existingCategorys', defaultValue: <CategoryModel>[])
+  final List<CategoryModel>? existingCategorys;
   static const fromJsonFactory = _$GoalTrackerModelFromJson;
 
   @override
@@ -42168,7 +42286,9 @@ class GoalTrackerModel {
             (identical(other.modifiedByUserLastName, modifiedByUserLastName) || const DeepCollectionEquality().equals(other.modifiedByUserLastName, modifiedByUserLastName)) &&
             (identical(other.modifiedByUserEmail, modifiedByUserEmail) || const DeepCollectionEquality().equals(other.modifiedByUserEmail, modifiedByUserEmail)) &&
             (identical(other.createdBy, createdBy) || const DeepCollectionEquality().equals(other.createdBy, createdBy)) &&
-            (identical(other.modifiedBy, modifiedBy) || const DeepCollectionEquality().equals(other.modifiedBy, modifiedBy)));
+            (identical(other.modifiedBy, modifiedBy) || const DeepCollectionEquality().equals(other.modifiedBy, modifiedBy)) &&
+            (identical(other.existingGoalTrackerMileStones, existingGoalTrackerMileStones) || const DeepCollectionEquality().equals(other.existingGoalTrackerMileStones, existingGoalTrackerMileStones)) &&
+            (identical(other.existingCategorys, existingCategorys) || const DeepCollectionEquality().equals(other.existingCategorys, existingCategorys)));
   }
 
   @override
@@ -42200,6 +42320,8 @@ class GoalTrackerModel {
       const DeepCollectionEquality().hash(modifiedByUserEmail) ^
       const DeepCollectionEquality().hash(createdBy) ^
       const DeepCollectionEquality().hash(modifiedBy) ^
+      const DeepCollectionEquality().hash(existingGoalTrackerMileStones) ^
+      const DeepCollectionEquality().hash(existingCategorys) ^
       runtimeType.hashCode;
 }
 
@@ -42228,7 +42350,9 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
       String? modifiedByUserLastName,
       String? modifiedByUserEmail,
       String? createdBy,
-      String? modifiedBy}) {
+      String? modifiedBy,
+      List<GoalTrackerMileStoneModel>? existingGoalTrackerMileStones,
+      List<CategoryModel>? existingCategorys}) {
     return GoalTrackerModel(
         goalTrackerId: goalTrackerId ?? this.goalTrackerId,
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
@@ -42260,7 +42384,10 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
             modifiedByUserLastName ?? this.modifiedByUserLastName,
         modifiedByUserEmail: modifiedByUserEmail ?? this.modifiedByUserEmail,
         createdBy: createdBy ?? this.createdBy,
-        modifiedBy: modifiedBy ?? this.modifiedBy);
+        modifiedBy: modifiedBy ?? this.modifiedBy,
+        existingGoalTrackerMileStones:
+            existingGoalTrackerMileStones ?? this.existingGoalTrackerMileStones,
+        existingCategorys: existingCategorys ?? this.existingCategorys);
   }
 
   GoalTrackerModel copyWithWrapped(
@@ -42287,7 +42414,9 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
       Wrapped<String?>? modifiedByUserLastName,
       Wrapped<String?>? modifiedByUserEmail,
       Wrapped<String?>? createdBy,
-      Wrapped<String?>? modifiedBy}) {
+      Wrapped<String?>? modifiedBy,
+      Wrapped<List<GoalTrackerMileStoneModel>?>? existingGoalTrackerMileStones,
+      Wrapped<List<CategoryModel>?>? existingCategorys}) {
     return GoalTrackerModel(
         goalTrackerId:
             (goalTrackerId != null ? goalTrackerId.value : this.goalTrackerId),
@@ -42346,7 +42475,13 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
             ? modifiedByUserEmail.value
             : this.modifiedByUserEmail),
         createdBy: (createdBy != null ? createdBy.value : this.createdBy),
-        modifiedBy: (modifiedBy != null ? modifiedBy.value : this.modifiedBy));
+        modifiedBy: (modifiedBy != null ? modifiedBy.value : this.modifiedBy),
+        existingGoalTrackerMileStones: (existingGoalTrackerMileStones != null
+            ? existingGoalTrackerMileStones.value
+            : this.existingGoalTrackerMileStones),
+        existingCategorys: (existingCategorys != null
+            ? existingCategorys.value
+            : this.existingCategorys));
   }
 }
 

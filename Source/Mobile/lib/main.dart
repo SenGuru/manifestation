@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:manifestation_app/onboarding_screen.dart';
-import 'colors.dart';
+import 'screens/splash_screen.dart';
+import 'constants/colors.dart';
+import 'services/unified_auth_service.dart';
+import 'services/vision_board_service.dart';
+import 'widgets/session_activity_tracker.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize unified auth service first and wait for it to complete
+  await UnifiedAuthService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  
+  // Initialize VisionBoardService (this depends on auth being ready)
+  await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  
+  print('🚀 All services initialized, starting app');
+  
   runApp(ManifestationApp());
 }
 
@@ -26,7 +39,8 @@ class ManifestationApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return MaterialApp(
+        return SessionActivityTracker(
+          child: MaterialApp(
           title: 'Manifestation App',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
@@ -177,7 +191,8 @@ class ManifestationApp extends StatelessWidget {
             ),
           ),
           // Start with the welcome screen
-          home: WelcomeScreen(),
+          home: SplashScreen(),
+          ),
         );
       },
     );

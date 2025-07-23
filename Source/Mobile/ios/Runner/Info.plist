@@ -4,21 +4,16 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>This app uses text-to-speech to read affirmations aloud.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>This app uses text-to-speech to read affirmations aloud.</string>
 	<key>CFBundleDisplayName</key>
-	<string>Manifestation App</string>
+	<string>Fun</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
-
 	<key>CFBundleName</key>
-	<string>manifestation_app</string>
+	<string>fun</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

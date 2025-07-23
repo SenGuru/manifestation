@@ -829,6 +829,8 @@ CategoryCreateModel _$CategoryCreateModelFromJson(Map<String, dynamic> json) =>
       predefinedCategoryTypeId:
           (json['predefinedCategoryTypeId'] as num?)?.toInt(),
       userId: (json['userId'] as num?)?.toInt(),
+      colorAsInteger: (json['colorAsInteger'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$CategoryCreateModelToJson(
@@ -838,6 +840,8 @@ Map<String, dynamic> _$CategoryCreateModelToJson(
       'categoryName': instance.categoryName,
       'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
       'userId': instance.userId,
+      'colorAsInteger': instance.colorAsInteger,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
     };
 
 CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
@@ -848,6 +852,8 @@ CategoryModel _$CategoryModelFromJson(Map<String, dynamic> json) =>
       predefinedCategoryTypeId:
           (json['predefinedCategoryTypeId'] as num?)?.toInt(),
       userId: (json['userId'] as num?)?.toInt(),
+      colorAsInteger: (json['colorAsInteger'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
       isDeleted: json['isDeleted'] as bool?,
       createdDate: json['createdDate'] == null
           ? null
@@ -877,6 +883,8 @@ Map<String, dynamic> _$CategoryModelToJson(CategoryModel instance) =>
       'categoryName': instance.categoryName,
       'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
       'userId': instance.userId,
+      'colorAsInteger': instance.colorAsInteger,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
       'isDeleted': instance.isDeleted,
       'createdDate': instance.createdDate?.toIso8601String(),
       'createdByUserId': instance.createdByUserId,
@@ -974,6 +982,8 @@ CategoryUpdateModel _$CategoryUpdateModelFromJson(Map<String, dynamic> json) =>
       predefinedCategoryTypeId:
           (json['predefinedCategoryTypeId'] as num?)?.toInt(),
       userId: (json['userId'] as num?)?.toInt(),
+      colorAsInteger: (json['colorAsInteger'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$CategoryUpdateModelToJson(
@@ -984,6 +994,8 @@ Map<String, dynamic> _$CategoryUpdateModelToJson(
       'categoryName': instance.categoryName,
       'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
       'userId': instance.userId,
+      'colorAsInteger': instance.colorAsInteger,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
     };
 
 ChangeForgotPasswordModel _$ChangeForgotPasswordModelFromJson(
@@ -6403,6 +6415,16 @@ GoalTrackerModel _$GoalTrackerModelFromJson(Map<String, dynamic> json) =>
       modifiedByUserEmail: json['modifiedByUserEmail'] as String?,
       createdBy: json['createdBy'] as String?,
       modifiedBy: json['modifiedBy'] as String?,
+      existingGoalTrackerMileStones: (json['existingGoalTrackerMileStones']
+                  as List<dynamic>?)
+              ?.map((e) =>
+                  GoalTrackerMileStoneModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      existingCategorys: (json['existingCategorys'] as List<dynamic>?)
+              ?.map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
     );
 
 Map<String, dynamic> _$GoalTrackerModelToJson(GoalTrackerModel instance) =>
@@ -6432,6 +6454,11 @@ Map<String, dynamic> _$GoalTrackerModelToJson(GoalTrackerModel instance) =>
       'modifiedByUserEmail': instance.modifiedByUserEmail,
       'createdBy': instance.createdBy,
       'modifiedBy': instance.modifiedBy,
+      'existingGoalTrackerMileStones': instance.existingGoalTrackerMileStones
+          ?.map((e) => e.toJson())
+          .toList(),
+      'existingCategorys':
+          instance.existingCategorys?.map((e) => e.toJson()).toList(),
     };
 
 GoalTrackerModelReturnListModel _$GoalTrackerModelReturnListModelFromJson(

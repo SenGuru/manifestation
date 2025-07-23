@@ -498,47 +498,47 @@ export class SelectService {
  public GetAllPredefinedIconTypes(): Status[] {
     return [
       { id: null, type: 'All' },
-      { id: 3600001, type: 'Icon1' },
-      { id: 3600002, type: 'Icon2' },
-      { id: 3600003, type: 'Icon3' },
-      { id: 3600004, type: 'Icon4' },
-      { id: 3600005, type: 'Icon5' },
-      { id: 3600006, type: 'Icon6' },
-      { id: 3600007, type: 'Icon7' },
-      { id: 3600008, type: 'Icon8' },
-      { id: 3600009, type: 'Icon9' },
-      { id: 3600010, type: 'Icon10' },
+      { id: 3600001, type: 'Flower' },
+      { id: 3600002, type: 'Heart' },
+      { id: 3600003, type: 'Brain' },
+      { id: 3600004, type: 'Leaf' },
+      { id: 3600005, type: 'Star' },
+      { id: 3600006, type: 'Diamond' },
+      { id: 3600007, type: 'Target' },
+      { id: 3600008, type: 'Trophy' },
+      { id: 3600009, type: 'Sun' },
+      { id: 3600010, type: 'Moon' },
     ];
   }
 
  public GetWithBlankPredefinedIconTypes(): Status[] {
     return [
       { id: null, type: '' },
-      { id: 3600001, type: 'Icon1' },
-      { id: 3600002, type: 'Icon2' },
-      { id: 3600003, type: 'Icon3' },
-      { id: 3600004, type: 'Icon4' },
-      { id: 3600005, type: 'Icon5' },
-      { id: 3600006, type: 'Icon6' },
-      { id: 3600007, type: 'Icon7' },
-      { id: 3600008, type: 'Icon8' },
-      { id: 3600009, type: 'Icon9' },
-      { id: 3600010, type: 'Icon10' },
+      { id: 3600001, type: 'Flower' },
+      { id: 3600002, type: 'Heart' },
+      { id: 3600003, type: 'Brain' },
+      { id: 3600004, type: 'Leaf' },
+      { id: 3600005, type: 'Star' },
+      { id: 3600006, type: 'Diamond' },
+      { id: 3600007, type: 'Target' },
+      { id: 3600008, type: 'Trophy' },
+      { id: 3600009, type: 'Sun' },
+      { id: 3600010, type: 'Moon' },
     ];
   }
 
  public GetPredefinedIconTypes(): Status[] {
     return [
-      { id: 3600001, type: 'Icon1' },
-      { id: 3600002, type: 'Icon2' },
-      { id: 3600003, type: 'Icon3' },
-      { id: 3600004, type: 'Icon4' },
-      { id: 3600005, type: 'Icon5' },
-      { id: 3600006, type: 'Icon6' },
-      { id: 3600007, type: 'Icon7' },
-      { id: 3600008, type: 'Icon8' },
-      { id: 3600009, type: 'Icon9' },
-      { id: 3600010, type: 'Icon10' },
+      { id: 3600001, type: 'Flower' },
+      { id: 3600002, type: 'Heart' },
+      { id: 3600003, type: 'Brain' },
+      { id: 3600004, type: 'Leaf' },
+      { id: 3600005, type: 'Star' },
+      { id: 3600006, type: 'Diamond' },
+      { id: 3600007, type: 'Target' },
+      { id: 3600008, type: 'Trophy' },
+      { id: 3600009, type: 'Sun' },
+      { id: 3600010, type: 'Moon' },
     ];
   }
 

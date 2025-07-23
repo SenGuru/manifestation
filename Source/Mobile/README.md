@@ -1,4 +1,4 @@
-# manifestation_app
+# fun
 
 A new Flutter project.
 
