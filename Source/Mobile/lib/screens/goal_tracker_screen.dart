@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fun/services/unified_auth_service.dart';
 import '../components/add_goal_sheet.dart';
 import '../components/edit_goal_sheet.dart';
 import '../components/goal_card.dart';
@@ -513,19 +514,39 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   }
 
   List<Goal> _filterGoals() {
-    print('🔍 Filtering goals: selectedCategory=${selectedCategory.displayName}, showCompleted=$showCompletedGoals');
+    print('\n🔍 === FILTERING GOALS ===');
+    print('🔍 Selected category: ${selectedCategory.displayName}');
+    print('🔍 Show completed: $showCompletedGoals');
     print('📊 Total goals before filtering: ${goals.length}');
+    
+    // Debug: Show all goals and their categories
+    for (int i = 0; i < goals.length; i++) {
+      final goal = goals[i];
+      print('   Goal ${i + 1}: "${goal.title}" → Category: ${goal.category.displayName} (${goal.category.name})');
+    }
     
     var filtered = goals;
     
     if (selectedCategory != GoalCategory.all) {
+      final beforeCount = filtered.length;
       filtered = filtered.where((goal) => goal.category == selectedCategory).toList();
-      print('📊 After category filter: ${filtered.length} goals');
+      print('📊 Category filter "${selectedCategory.displayName}": ${beforeCount} → ${filtered.length} goals');
+      
+      // Debug: Show which goals passed the category filter
+      if (filtered.isNotEmpty) {
+        print('📊 Goals in category "${selectedCategory.displayName}":');
+        for (int i = 0; i < filtered.length; i++) {
+          print('   ✓ ${filtered[i].title}');
+        }
+      } else {
+        print('📊 No goals found in category "${selectedCategory.displayName}"');
+      }
     }
     
     if (!showCompletedGoals) {
+      final beforeCount = filtered.length;
       filtered = filtered.where((goal) => !goal.isCompleted).toList();
-      print('📊 After completed filter: ${filtered.length} goals');
+      print('📊 Completion filter: ${beforeCount} → ${filtered.length} goals');
     }
     
     // Sort by priority and creation date
@@ -539,7 +560,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       return b.createdAt.compareTo(a.createdAt); // Newest first
     });
     
-    print('📊 Final filtered & sorted goals: ${filtered.length}');
+    print('📊 FINAL: ${filtered.length} goals after filtering and sorting');
+    print('🔍 === END FILTERING ===\n');
     return filtered;
   }
 
@@ -589,7 +611,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           // Calculate progress based on completed milestones
           final progress = _calculateGoalProgress(milestones);
           
-          print('🏷️  Goal "${apiGoal.goalTrackerName}" categorized as: ${goalCategory.displayName}');
+          print('🏷️  Goal "${apiGoal.goalTrackerName}" FINAL categorized as: ${goalCategory.displayName}');
           print('📊 Goal progress calculated: ${progress.toStringAsFixed(1)}%');
           
           convertedGoals.add(Goal(
@@ -618,6 +640,11 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             print('   ${category.displayName}: $count goals');
           }
         }
+        
+        // Auto-associate existing goals that have no categories
+        // Temporarily disabled due to server-side API issues
+        // await _autoAssociateExistingGoalsWithCategories(apiGoals, convertedGoals);
+        print('⚠️  Auto-association disabled due to server-side API issues with category validation');
       } else {
         print('❌ Failed to load goals from API: ${result.message}');
         print('🔄 Falling back to hardcoded goals...');
@@ -661,7 +688,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     }
   }
 
-  /// Map API category to GoalCategory enum using actual category data
+  /// Map API category to GoalCategory enum using category ID matching
   GoalCategory _mapApiCategoryToGoalCategory(List<CategoryModel>? apiCategories, String goalName) {
     print('🏷️  Mapping categories for goal: "$goalName"');
     print('🏷️  API categories count: ${apiCategories?.length ?? 0}');
@@ -669,54 +696,77 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     if (apiCategories != null && apiCategories.isNotEmpty) {
       // Use the first category associated with this goal
       final firstCategory = apiCategories.first;
-      final categoryName = (firstCategory.categoryName ?? firstCategory.defaultCategoryName ?? '').toLowerCase();
+      final categoryId = firstCategory.categoryId?.toString() ?? '';
+      final categoryName = (firstCategory.categoryName ?? firstCategory.defaultCategoryName ?? '').toLowerCase().trim();
       
-      print('🏷️  API category name: "$categoryName"');
+      print('🏷️  API category: ID="$categoryId", Name="$categoryName"');
       
-      // Map API category names to GoalCategory enum
-      if (categoryName.contains('career') || categoryName.contains('work')) {
-        print('🏷️  Mapped to: Career');
-        return GoalCategory.career;
-      } else if (categoryName.contains('health') || categoryName.contains('fitness')) {
-        print('🏷️  Mapped to: Health');
-        return GoalCategory.health;
-      } else if (categoryName.contains('love') || categoryName.contains('relationship')) {
-        print('🏷️  Mapped to: Relationships');
-        return GoalCategory.relationships;
-      } else if (categoryName.contains('money') || categoryName.contains('financial')) {
-        print('🏷️  Mapped to: Financial');
-        return GoalCategory.financial;
-      } else if (categoryName.contains('spiritual') || categoryName.contains('meditation')) {
-        print('🏷️  Mapped to: Spiritual');
-        return GoalCategory.spiritual;
-      } else if (categoryName.contains('personal')) {
-        print('🏷️  Mapped to: Personal');
-        return GoalCategory.personal;
-      } else {
-        print('🏷️  No specific match for "$categoryName", using fallback logic');
-        return _fallbackCategoryFromGoalName(goalName);
+      // First, try to match by category ID with our loaded categories
+      if (categoryId.isNotEmpty) {
+        final matchingLoadedCategory = categories.firstWhere(
+          (cat) => cat.id == categoryId,
+          orElse: () => GoalTrackerCategory(id: '', name: '', description: '', color: Color(0xFF4CAF50), isDefault: false),
+        );
+        
+        if (matchingLoadedCategory.id.isNotEmpty) {
+          print('🏷️  Found matching loaded category: ${matchingLoadedCategory.name}');
+          return _mapCategoryNameToGoalCategory(matchingLoadedCategory.name);
+        }
       }
+      
+      // Fallback to name-based mapping if ID matching fails
+      print('🏷️  Using name-based mapping for: "$categoryName"');
+      return _mapCategoryNameToGoalCategory(categoryName);
     } else {
       print('🏷️  No API categories found, using fallback logic');
       return _fallbackCategoryFromGoalName(goalName);
     }
   }
+  
+  /// Map category name to GoalCategory enum
+  GoalCategory _mapCategoryNameToGoalCategory(String categoryName) {
+    final name = categoryName.toLowerCase().trim();
+    
+    // Map API category names to GoalCategory enum with exact and fuzzy matching
+    if (name == 'career' || name.contains('work') || name.contains('job') || name.contains('business')) {
+      print('🏷️  Mapped to: Career');
+      return GoalCategory.career;
+    } else if (name == 'health' || name.contains('fitness') || name.contains('wellness') || name.contains('exercise')) {
+      print('🏷️  Mapped to: Health');
+      return GoalCategory.health;
+    } else if (name == 'love' || name.contains('relationship') || name.contains('romance') || name.contains('dating') || name.contains('marriage')) {
+      print('🏷️  Mapped to: Relationships (Love)');
+      return GoalCategory.relationships;
+    } else if (name == 'money' || name.contains('financial') || name.contains('finance') || name.contains('wealth') || name.contains('income') || name.contains('saving')) {
+      print('🏷️  Mapped to: Financial (Money)');
+      return GoalCategory.financial;
+    } else if (name == 'spiritual' || name.contains('meditation') || name.contains('mindful') || name.contains('zen') || name.contains('soul')) {
+      print('🏷️  Mapped to: Spiritual');
+      return GoalCategory.spiritual;
+    } else if (name == 'personal' || name.contains('self') || name.contains('growth') || name.contains('development')) {
+      print('🏷️  Mapped to: Personal');
+      return GoalCategory.personal;
+    } else {
+      print('🏷️  No specific match for "$name", defaulting to Personal');
+      return GoalCategory.personal;
+    }
+  }
 
   /// Fallback method: determine category from goal name if no API category data
   GoalCategory _fallbackCategoryFromGoalName(String goalName) {
-    final lowerName = goalName.toLowerCase();
+    final lowerName = goalName.toLowerCase().trim();
     print('🏷️  Fallback categorization for goal: "$goalName"');
     
     GoalCategory category;
-    if (lowerName.contains('work') || lowerName.contains('career') || lowerName.contains('job')) {
+    if (lowerName.contains('work') || lowerName.contains('career') || lowerName.contains('job') || lowerName.contains('business') || lowerName.contains('professional')) {
       category = GoalCategory.career;
-    } else if (lowerName.contains('health') || lowerName.contains('fitness') || lowerName.contains('exercise')) {
+    } else if (lowerName.contains('health') || lowerName.contains('fitness') || lowerName.contains('exercise') || lowerName.contains('wellness') || lowerName.contains('weight')) {
       category = GoalCategory.health;
-    } else if (lowerName.contains('love') || lowerName.contains('relationship') || lowerName.contains('marriage')) {
+    } else if (lowerName.contains('love') || lowerName.contains('relationship') || lowerName.contains('marriage') || lowerName.contains('dating') || lowerName.contains('romance') || lowerName.contains('partner')) {
       category = GoalCategory.relationships;
-    } else if (lowerName.contains('money') || lowerName.contains('financial') || lowerName.contains('save')) {
+    } else if (lowerName.contains('money') || lowerName.contains('financial') || lowerName.contains('save') || lowerName.contains('income') || lowerName.contains('wealth') || lowerName.contains('invest')) {
       category = GoalCategory.financial;
-    } else if (lowerName.contains('spiritual') || lowerName.contains('meditation') || lowerName.contains('mindful')) {
+    } else if (lowerName.contains('spiritual') || lowerName.contains('meditation') || lowerName.contains('mindful') || lowerName.contains('zen') || lowerName.contains('soul') || lowerName.contains('enlighten')) {
       category = GoalCategory.spiritual;
     } else {
       category = GoalCategory.personal;
@@ -968,18 +1018,22 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       print('   goalStatusTypeId: 1');
       print('   startDate: ${DateTime.now().toIso8601String()}');
       print('   endDate: ${targetDate.toIso8601String()}');
-      print('   userId: 1 (hardcoded - TODO: get from auth)');
       
-      // Try to get a valid user ID or status type ID first
-      print('🔍 Attempting to validate API parameters...');
+      // Get the actual authenticated user ID
+      final currentUser = UnifiedAuthService().currentUser;
+      final userId = currentUser?.userId ?? 1;
+      
+      print('🔍 Using authenticated user ID: $userId');
+      print('🔍 User info: ${currentUser?.firstName} ${currentUser?.lastName} (${currentUser?.userName})');
       
       // Create goal tracker via API
+      // Try status type 0 first, as many databases use 0-based indexing
       final result = await _goalTrackerService.createGoalTracker(
         goalName: title,
-        goalStatusTypeId: 1, // Active status
+        goalStatusTypeId: 0, // Try 0-based status (commonly used for "Active")
         startDate: DateTime.now(),
         endDate: targetDate,
-        userId: 1, // Replace with actual user ID from auth service
+        userId: userId,
       );
 
       print('📡 Create goal API response:');
@@ -998,11 +1052,19 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       }
 
       if (result.isSuccess && result.data != null) {
-        // Reload goals to get the updated list
-        print('🔄 Reloading goals after creation...');
-        await _loadGoals();
-        
         print('✅ Goal created successfully: ${result.message}');
+        
+        // Now associate the goal with the appropriate category
+        final createdGoal = result.data!;
+        final goalId = createdGoal.goalTrackerId;
+        
+        if (goalId != null) {
+          await _associateGoalWithCategory(goalId, category);
+        }
+        
+        // Reload goals to get the updated list
+        print('🔄 Reloading goals after creation and category association...');
+        await _loadGoals();
       } else {
         print('❌ Failed to create goal via API: ${result.message}');
         print('🔄 Falling back to local goal creation...');
@@ -1096,10 +1158,40 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         // Reload goals to get the updated list
         print('🔄 Reloading goals after deletion...');
         await _loadGoals();
-        print('✅ Goal deleted successfully: ${result.message}');
+        print('✅ Goal marked as deleted successfully: ${result.message}');
+        
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Goal deleted successfully'),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
       } else {
-        print('❌ Failed to delete goal: ${result.message}');
-        _showErrorSnackBar('Failed to delete goal: ${result.message}');
+        print('❌ Failed to mark goal as deleted: ${result.message}');
+        
+        // If it's a timeout, still try to reload goals in case it worked
+        if (result.message.contains('timed out')) {
+          print('🔄 Timeout occurred, reloading goals to check if deletion worked...');
+          await _loadGoals();
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Delete request timed out - please check if goal was removed'),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+          );
+        } else {
+          _showErrorSnackBar('Failed to delete goal: ${result.message}');
+        }
       }
     } catch (e, stackTrace) {
       print('❌ Exception deleting goal: $e');
@@ -1301,20 +1393,10 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           TextButton(
             onPressed: () async {
               Navigator.pop(context);
-              // Delete goal locally
-              setState(() {
-                goals.remove(goal);
-              });
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Goal deleted successfully'),
-                  backgroundColor: Colors.green,
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                ),
-              );
+              print('🗑️  Deleting goal: ${goal.title} (ID: ${goal.id})');
+              
+              // Delete goal using the service (mark as deleted)
+              await _deleteGoalWithService(goal.id);
             },
             child: Text(
               'Delete',
@@ -1423,6 +1505,91 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     });
     
     print('✅ Goal created locally: ${newGoal.title}');
+  }
+
+  /// Associate a goal with the appropriate default category
+  Future<void> _associateGoalWithCategory(int goalId, GoalCategory category) async {
+    print('🏷️  Associating goal $goalId with category: ${category.displayName}');
+    
+    try {
+      // Get the API category name for this UI category
+      final apiCategoryName = _getApiCategoryNameFromGoalCategory(category);
+      print('🏷️  Looking up category ID for: "$apiCategoryName"');
+      
+      // Get the category ID from the service
+      final categoryId = await _goalTrackerService.getDefaultCategoryIdByName(apiCategoryName);
+      
+      if (categoryId != null) {
+        print('🏷️  Found category ID: $categoryId for "$apiCategoryName"');
+        
+        // Associate the goal with the category
+        final associationResult = await _goalTrackerService.associateGoalWithCategory(
+          goalTrackerId: goalId,
+          categoryId: categoryId,
+        );
+        
+        if (associationResult.isSuccess) {
+          print('✅ Successfully associated goal $goalId with category $categoryId');
+        } else {
+          print('❌ Failed to associate goal with category: ${associationResult.message}');
+        }
+      } else {
+        print('❌ Could not find category ID for: "$apiCategoryName"');
+      }
+    } catch (e) {
+      print('❌ Exception associating goal with category: $e');
+    }
+  }
+
+  /// Get API category name from GoalCategory enum
+  String _getApiCategoryNameFromGoalCategory(GoalCategory category) {
+    switch (category) {
+      case GoalCategory.career:
+        return 'career';
+      case GoalCategory.health:
+        return 'health';
+      case GoalCategory.relationships:
+        return 'love';
+      case GoalCategory.financial:
+        return 'money';
+      case GoalCategory.personal:
+        return 'personal';
+      case GoalCategory.spiritual:
+        return 'spiritual';
+      case GoalCategory.all:
+        return 'all';
+    }
+  }
+
+  /// Auto-associate existing goals that have no categories with default categories
+  Future<void> _autoAssociateExistingGoalsWithCategories(
+    List<GoalTrackerModel> apiGoals,
+    List<Goal> convertedGoals,
+  ) async {
+    print('\n🔄 Checking for goals that need category association...');
+    
+    int associationsAttempted = 0;
+    for (int i = 0; i < apiGoals.length; i++) {
+      final apiGoal = apiGoals[i];
+      final convertedGoal = convertedGoals[i];
+      
+      // Check if this goal has no API categories
+      if (apiGoal.existingCategorys == null || apiGoal.existingCategorys!.isEmpty) {
+        associationsAttempted++;
+        print('🏷️  Goal "${apiGoal.goalTrackerName}" has no categories, attempting to associate...');
+        
+        if (apiGoal.goalTrackerId != null) {
+          await _associateGoalWithCategory(apiGoal.goalTrackerId!, convertedGoal.category);
+        }
+      }
+    }
+    
+    if (associationsAttempted > 0) {
+      print('🔄 Attempted to associate $associationsAttempted goals with categories');
+      print('⚠️  Note: You may need to refresh/reload to see category changes');
+    } else {
+      print('✅ All goals already have category associations');
+    }
   }
 
   /// Test method to try different API parameters to identify the issue

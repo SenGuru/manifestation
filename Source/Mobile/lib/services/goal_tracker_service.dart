@@ -298,18 +298,77 @@ class GoalTrackerService {
     required int userId,
   }) async {
     try {
+      // Validate required parameters to prevent database constraint violations
+      if (goalName.trim().isEmpty) {
+        return GoalTrackerResult.failure(
+          message: 'Goal name cannot be empty',
+        );
+      }
+      
+      if (userId < 0) {
+        return GoalTrackerResult.failure(
+          message: 'Invalid user ID: $userId',
+        );
+      }
+      
+      // Allow 0 and positive values for status type ID since the API uses int?
+      // The database might accept 0 as a valid status
+      if (goalStatusTypeId < 0) {
+        return GoalTrackerResult.failure(
+          message: 'Invalid goal status type ID: $goalStatusTypeId',
+        );
+      }
+      
+      // Ensure goal name is not too long (database field limit)
+      final sanitizedGoalName = goalName.trim();
+      if (sanitizedGoalName.length > 255) {
+        return GoalTrackerResult.failure(
+          message: 'Goal name is too long (max 255 characters)',
+        );
+      }
+      
+      final now = DateTime.now();
+      final validStartDate = startDate ?? now;
+      
+      // Validate date logic
+      if (endDate != null && endDate.isBefore(validStartDate)) {
+        return GoalTrackerResult.failure(
+          message: 'End date cannot be before start date',
+        );
+      }
+      
+      print('🔍 Creating goal with validated parameters:');
+      print('   Name: "$sanitizedGoalName" (${sanitizedGoalName.length} chars)');
+      print('   User ID: $userId');
+      print('   Status Type ID: $goalStatusTypeId');
+      print('   Start Date: $validStartDate');
+      print('   End Date: $endDate');
+      
       final createModel = GoalTrackerCreateModel(
-        goalTrackerName: goalName,
+        goalTrackerName: sanitizedGoalName,
         predefinedGoalStatusTypeId: goalStatusTypeId,
-        goalTrackerStartDate: startDate ?? DateTime.now(),
+        goalTrackerStartDate: validStartDate,
         goalTrackerEndDate: endDate,
         userId: userId,
       );
 
+      print('🔍 Goal creation model JSON: ${createModel.toJson()}');
+      
       final response = await _apiClient.apiV1ManifestCreategoaltrackerPost(body: createModel);
+
+      print('🔍 Goal creation API response:');
+      print('   Status Code: ${response.statusCode}');
+      print('   Is Successful: ${response.isSuccessful}');
+      print('   Response Body: ${response.body?.toString()}');
 
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
+        
+        print('🔍 API Response details:');
+        print('   IsSuccess: ${returnModel.isSuccess}');
+        print('   Model: ${returnModel.model?.toString()}');
+        print('   Success Message: ${returnModel.successMessage}');
+        print('   Error Holder: ${returnModel.errorHolder?.toString()}');
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
           return GoalTrackerResult.success(
@@ -323,10 +382,11 @@ class GoalTrackerService {
         }
       } else {
         return GoalTrackerResult.failure(
-          message: 'Network error: ${response.statusCode}',
+          message: 'Network error: ${response.statusCode} - ${response.error?.toString()}',
         );
       }
     } catch (e) {
+      print('🔍 Goal creation exception: $e');
       return GoalTrackerResult.failure(
         message: 'Error creating goal tracker: ${e.toString()}',
       );
@@ -380,22 +440,36 @@ class GoalTrackerService {
     }
   }
 
-  /// Delete a goal tracker
+  /// Delete a goal tracker (mark as deleted)
   Future<GoalTrackerResult<bool>> deleteGoalTracker(int goalTrackerId) async {
     try {
-      final response = await _apiClient.apiV1ManifestMarkgoaltrackerasdeletedDelete(id: goalTrackerId);
+      print('🗑️  API: Marking goal tracker as deleted - ID: $goalTrackerId');
+      
+      // Add timeout to prevent hanging
+      final response = await _apiClient.apiV1ManifestMarkgoaltrackerasdeletedDelete(id: goalTrackerId)
+          .timeout(Duration(seconds: 30));
+
+      print('🗑️  API Response received!');
+      print('🗑️  API Response - Status Code: ${response.statusCode}');
+      print('🗑️  API Response - Is Successful: ${response.isSuccessful}');
+      print('🗑️  API Response - Body: ${response.body?.toString()}');
 
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
         
+        print('🗑️  API Response - IsSuccess: ${returnModel.isSuccess}');
+        print('🗑️  API Response - Model: ${returnModel.model}');
+        print('🗑️  API Response - Message: ${returnModel.successMessage}');
+        print('🗑️  API Response - Error: ${returnModel.errorHolder}');
+        
         if (returnModel.isSuccess == true) {
           return GoalTrackerResult.success(
             data: true,
-            message: 'Goal tracker deleted successfully',
+            message: 'Goal tracker marked as deleted successfully',
           );
         } else {
           return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.toString() ?? 'Failed to delete goal tracker',
+            message: returnModel.errorHolder?.toString() ?? 'Failed to mark goal tracker as deleted',
           );
         }
       } else {
@@ -404,8 +478,16 @@ class GoalTrackerService {
         );
       }
     } catch (e) {
+      print('🗑️  API Exception: $e');
+      
+      if (e.toString().contains('TimeoutException')) {
+        return GoalTrackerResult.failure(
+          message: 'Delete request timed out - the goal may have been deleted successfully',
+        );
+      }
+      
       return GoalTrackerResult.failure(
-        message: 'Error deleting goal tracker: ${e.toString()}',
+        message: 'Error marking goal tracker as deleted: ${e.toString()}',
       );
     }
   }
@@ -570,10 +652,15 @@ class GoalTrackerService {
     }
   }
 
-  /// Delete a milestone
+  /// Delete a milestone (mark as deleted)
   Future<GoalTrackerResult<bool>> deleteMilestone(int milestoneId) async {
     try {
+      print('🗑️  API: Marking milestone as deleted - ID: $milestoneId');
+      
       final response = await _apiClient.apiV1ManifestMarkgoaltrackermilestoneasdeletedDelete(id: milestoneId);
+
+      print('🗑️  Milestone API Response - Status Code: ${response.statusCode}');
+      print('🗑️  Milestone API Response - Is Successful: ${response.isSuccessful}');
 
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
@@ -581,11 +668,58 @@ class GoalTrackerService {
         if (returnModel.isSuccess == true) {
           return GoalTrackerResult.success(
             data: true,
-            message: 'Milestone deleted successfully',
+            message: 'Milestone marked as deleted successfully',
           );
         } else {
           return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.toString() ?? 'Failed to delete milestone',
+            message: returnModel.errorHolder?.toString() ?? 'Failed to mark milestone as deleted',
+          );
+        }
+      } else {
+        return GoalTrackerResult.failure(
+          message: 'Network error: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('🗑️  Milestone API Exception: $e');
+      return GoalTrackerResult.failure(
+        message: 'Error marking milestone as deleted: ${e.toString()}',
+      );
+    }
+  }
+
+  // ========================= GOAL-CATEGORY ASSOCIATION =========================
+
+  /// Associate a goal with a category
+  Future<GoalTrackerResult<bool>> associateGoalWithCategory({
+    required int goalTrackerId,
+    required int categoryId,
+  }) async {
+    try {
+      print('🏷️  Creating association: Goal $goalTrackerId → Category $categoryId');
+      print('🏷️  User ID: ${_authService.currentUser?.userId}');
+      
+      final associationModel = GoalTrackerCategoryCreateModel(
+        categoryId: categoryId,
+        goalTrackerId: goalTrackerId,
+        userId: _authService.currentUser?.userId,
+      );
+
+      print('🏷️  Association model: ${associationModel.toJson()}');
+      
+      final response = await _apiClient.apiV1ManifestCreategoaltrackercategoryPost(body: associationModel);
+
+      if (response.isSuccessful && response.body != null) {
+        final returnModel = response.body!;
+        
+        if (returnModel.isSuccess == true) {
+          return GoalTrackerResult.success(
+            data: true,
+            message: 'Goal associated with category successfully',
+          );
+        } else {
+          return GoalTrackerResult.failure(
+            message: returnModel.errorHolder?.toString() ?? 'Failed to associate goal with category',
           );
         }
       } else {
@@ -595,8 +729,29 @@ class GoalTrackerService {
       }
     } catch (e) {
       return GoalTrackerResult.failure(
-        message: 'Error deleting milestone: ${e.toString()}',
+        message: 'Error associating goal with category: ${e.toString()}',
       );
+    }
+  }
+
+  /// Get the default category ID by name
+  Future<int?> getDefaultCategoryIdByName(String categoryName) async {
+    try {
+      final result = await getDefaultCategories();
+      if (result.isSuccess && result.data != null) {
+        final matchingCategory = result.data!.firstWhere(
+          (cat) => cat.name.toLowerCase() == categoryName.toLowerCase(),
+          orElse: () => GoalTrackerCategory(id: '', name: '', description: '', color: Color(0xFF4CAF50), isDefault: false),
+        );
+        
+        if (matchingCategory.id.isNotEmpty) {
+          return int.tryParse(matchingCategory.id);
+        }
+      }
+      return null;
+    } catch (e) {
+      print('Error getting default category ID: $e');
+      return null;
     }
   }
 
