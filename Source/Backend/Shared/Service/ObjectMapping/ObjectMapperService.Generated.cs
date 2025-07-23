@@ -621,8 +621,17 @@ public partial VisionBoardSessionModel VisionBoardSessionToVisionBoardSessionMod
 public partial VisionBoardSession VisionBoardSessionCreateModelToVisionBoardSession(VisionBoardSessionCreateModel model);
 public partial VisionBoardSession VisionBoardSessionUpdateModelToVisionBoardSession(VisionBoardSessionUpdateModel model);
 
-//public partial List<VisionBoardSessionExportModel> VisionBoardSessionModelListToVisionBoardSessionExportModelList(List<VisionBoardSessionModel> lst);
+        //public partial List<VisionBoardSessionExportModel> VisionBoardSessionModelListToVisionBoardSessionExportModelList(List<VisionBoardSessionModel> lst);
 
+        public partial List<DailyJournalModel> DailyJournalViewListToDailyJournalModelList(List<DailyJournalView> lst);
+        public partial List<DailyJournalModel> DailyJournalListToDailyJournalModelList(List<DailyJournal> lst);
+        public partial DailyJournalModel DailyJournalViewToDailyJournalModel(DailyJournalView vw);
+        [MapperRequiredMapping(RequiredMappingStrategy.None)]
+        public partial DailyJournalModel DailyJournalToDailyJournalModel(DailyJournal model);
+        public partial DailyJournal DailyJournalCreateModelToDailyJournal(DailyJournalCreateModel model);
+        public partial DailyJournal DailyJournalUpdateModelToDailyJournal(DailyJournalUpdateModel model);
+
+        //public partial List<DailyJournalExportModel> DailyJournalModelListToDailyJournalExportModelList(List<DailyJournalModel> lst);
 
     }
 }

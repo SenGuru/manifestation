@@ -2036,9 +2036,9 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
-    public createVisionBoardPicture(visionBoardPictureModel: models.VisionBoardPictureCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
+    public createVisionBoardPicture(model: models.VisionBoardPictureCreateWithFileFormModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('manifest/createvisionboardpicture', visionBoardPictureModel, headers);
+        return this.frameworkHttpClientService.postWithUploadWithModel('manifest/createvisionboardpicture', model, headers);
     }
 
     // tslint:disable-next-line:max-line-length
@@ -2048,9 +2048,9 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
-    public updateVisionBoardPicture(visionBoardPictureModel: models.VisionBoardPictureUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
+    public updateVisionBoardPicture(model: models.VisionBoardPictureUpdateWithFileFormModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardPictureModel>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('manifest/updatevisionboardpicture', visionBoardPictureModel, headers);
+        return this.frameworkHttpClientService.postWithUploadWithModel('manifest/updatevisionboardpicture', model, headers);
     }
 
     // tslint:disable-next-line:max-line-length
@@ -2087,6 +2087,18 @@ export class HttpService {
     public getUserByVisionBoardPictureIdSearch(search: models.UserByVisionBoardPictureIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardpictureidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public isVisionBoardPictureFileValid(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/isvisionboardpicturefilevalid', {visionBoardPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public downloadVisionBoardPictureFileUrl(visionBoardPictureId: number, accessToken ?: string): string {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getUrlWithParams('manifest/downloadvisionboardpicturefile', {visionBoardPictureId},accessToken);
     }
 
     // tslint:disable-next-line:max-line-length
@@ -2153,6 +2165,72 @@ export class HttpService {
     public getUserByVisionBoardSessionIdSearch(search: models.UserByVisionBoardSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionidsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyJournals(search: models.DailyJournalSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyjournals', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyJournal(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/getdailyjournal', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createDailyJournal(dailyJournalModel: models.DailyJournalCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/createdailyjournal', dailyJournalModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public createMultipleDailyJournal(dailyJournalModels: models.MultipleDailyJournalCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postListWithModel('manifest/createmultipledailyjournal', dailyJournalModels, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public updateDailyJournal(dailyJournalModel: models.DailyJournalUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/updatedailyjournal', dailyJournalModel, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyJournalAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/markdailyjournalasdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public markDailyJournalAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('manifest/markdailyjournalasnotdeleted', {id}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyJournalByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyjournalbyuserid', {userId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getDailyJournalByUserIdSearch(search: models.DailyJournalByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.DailyJournalModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getdailyjournalbyuseridsearch', search, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyJournalId(dailyJournalId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyjournalid', {dailyJournalId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public getUserByDailyJournalIdSearch(search: models.UserByDailyJournalIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbydailyjournalidsearch', search, headers);
     }
 
     // tslint:disable-next-line:max-line-length

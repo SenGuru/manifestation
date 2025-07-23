@@ -27174,6 +27174,1190 @@ namespace Manifest.Service.App
 
         */
         #endregion
+
+        #region DailyJournal
+
+        public async Task<ReturnListModel<DailyJournalModel>> GetDailyJournalsAsync(DailyJournalSearchCriteria search)
+        {
+            try
+            {
+                if (!await permissionService.IsUserSuperAdmin())
+                {
+                    search.UserId = await currentSessionService.GetCurrentUserIdAsync();
+                }
+
+                return this.ConvertToList(await manifestRepository.GetDailyJournalsAsync(search), objectMapperService.DailyJournalViewListToDailyJournalModelList);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournalModel>($"Unexpected error when getting Daily Journals", ex);
+            }
+        }
+
+        public Task<ReturnModel<DailyJournalModel>> GetDailyJournalByIdForReadAsync(long dailyJournalId)
+        {
+            return GetDailyJournalByIdInternalAsync(forWrite: false, dailyJournalId);
+        }
+
+        public Task<ReturnModel<DailyJournalModel>> GetDailyJournalByIdForWriteAsync(long dailyJournalId)
+        {
+            return GetDailyJournalByIdInternalAsync(forWrite: true, dailyJournalId);
+        }
+
+        public async Task<ReturnModel<DailyJournalModel>> GetDailyJournalByIdInternalAsync(bool forWrite, long dailyJournalId)
+        {
+            try
+            {
+                var item = await manifestRepository.GetDailyJournalViewByIdAsync(dailyJournalId);
+                if (item == null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to find the Daily Journal", new { dailyJournalId });
+                }
+
+                //var existingMovieModel = forWrite ? await GetMovieByIdForWriteAsync(item.MovieId) : await GetMovieByIdForReadAsync(item.MovieId);
+                //if (!existingMovieModel.IsSuccess)
+                //{
+                //    return log.ErrorAndReturnModel<CompanyModel>(existingMovieModel);
+                //}
+
+                var (resultValue, _, errorStr) = await permissionService.CanModifyResource(item.UserId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>(errorStr);
+                }
+
+                //var result = this.ConvertToItem(item,objectMapperService.DailyJournalViewToDailyJournalModel);
+                //var childItems = await GetDailyJournalXYZZYXsAsync(new DailyJournalXYZZYXSearchCriteria { DailyJournalId = item.DailyJournalId, Page = 1, PageSize = int.MaxValue });
+                //result.Model.ExistingDailyJournalXYZZYXs = childItems.Model.Where(x => x.DailyJournalId == item.DailyJournalId).ToList();
+                //return result;
+
+                return this.ConvertToItem(item, objectMapperService.DailyJournalViewToDailyJournalModel);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<DailyJournalModel>($"Unexpected error when getting Daily Journal", new { dailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnListModel<DailyJournalModel>> CreateMultipleDailyJournalAsync(MultipleDailyJournalCreateModel dailyJournals)
+        {
+            try
+            {
+                if (dailyJournals == null)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournalModel>($"Unable to Create Daily Journals", new ReturnErrorItem("", "Daily Journals information is not valid"));
+                }
+
+                if (dailyJournals.NewDailyJournals.IsNullOrEmpty())
+                {
+                    return log.ErrorAndReturnListModel<DailyJournalModel>($"Unable to Create Daily Journals", new ReturnErrorItem("", "Daily Journals information is not provided"));
+                }
+
+                var lst = new List<DailyJournalModel>();
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    foreach (var dailyJournal in dailyJournals.NewDailyJournals)
+                    {
+                        var cResult = await CreateDailyJournalAsync(dailyJournal);
+                        if (!cResult.IsSuccess)
+                            throw new RollbackException(cResult);
+
+                        lst.Add(cResult.Model);
+                    }
+
+                    await trx.CompleteAsync();
+                }
+
+                return ReturnListModel<DailyJournalModel>.Success(lst);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModelWithRollbackExceptionHandler<DailyJournalModel>($"Unexpected error when creating Daily Journals", new { dailyJournals }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<DailyJournalModel>> CreateDailyJournalAsync(DailyJournalCreateModel dailyJournal)
+        {
+            try
+            {
+                if (dailyJournal == null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to create Daily Journal", new ReturnErrorItem("", "Daily Journal information is not valid"));
+                }
+
+                if (!await permissionService.IsUserSuperAdmin())
+                {
+                    dailyJournal.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
+                }
+
+                //var companyModel = await companyService.GetCompanyByIdForReadAsync(dailyJournal.CompanyId);
+                //if (!companyModel.IsSuccess)
+                //{
+                //    return log.ErrorAndReturnModel<DailyJournalModel>(companyModel);
+                //}
+                //
+                //var movieModel = await GetMovieByIdForReadAsync(dailyJournal.MovieId);
+                //if (!movieModel.IsSuccess)
+                //{
+                //    return log.ErrorAndReturnModel<DailyJournalModel>(movieModel);
+                //}
+                //
+
+
+                /*var ignoreCode = false;
+                if (dailyJournal.DailyJournalCode.IsNullOrEmpty())
+                {
+                    ignoreCode = true;
+                    dailyJournal.DailyJournalCode = StringConstants.PrefixForCode.DailyJournal + Guid.NewGuid().ToString();
+                }
+                */
+
+                var errorList = await IsDailyJournalModelValidForCreateAsync(dailyJournal);
+                if (errorList != null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to create Daily Journal", errorList);
+                }
+
+                dailyJournal.IsDeleted = false;
+
+                var item = objectMapperService.DailyJournalCreateModelToDailyJournal(dailyJournal);
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    item = await manifestRepository.CreateDailyJournalAsync(item, await currentSessionService.GetCurrentUserIdAsync());
+                    if (item == null)
+                    {
+                        throw new Exception($"Unable to create Daily Journal");
+                    }
+
+                    //await CreateOrUpdateDailyJournalDependentsAsync(dailyJournal)
+
+                    /*if (ignoreCode)
+                    {
+                        if (!await manifestRepository.UpdateDailyJournalCodeAsync(item.CompanyId, item.DailyJournalId, StringConstants.PrefixForCode.DailyJournal + item.DailyJournalId, await currentSessionService.GetCurrentUserIdAsync()))
+                        {
+                            throw new RollbackException($"Unable update the Daily Journal Code", item);
+                        }
+                    }*/
+
+                    await trx.CompleteAsync();
+                }
+
+                await auditService.DailyJournalCreatedAsync(item.DailyJournalId);
+
+                var view = await manifestRepository.GetDailyJournalViewByIdAsync(item.DailyJournalId);
+
+                if (view == null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to find the Daily Journal", new { item.DailyJournalId });
+                }
+
+                return this.ConvertToItem(view, objectMapperService.DailyJournalViewToDailyJournalModel);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModelWithRollbackExceptionHandler<DailyJournalModel>($"Unexpected error when creating Daily Journal", new { dailyJournal?.DailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<DailyJournalModel>> UpdateDailyJournalAsync(DailyJournalUpdateModel dailyJournal)
+        {
+            try
+            {
+                if (dailyJournal == null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to update Daily Journal", new ReturnErrorItem("", "Daily Journal information is not valid"));
+                }
+
+                var existingDailyJournalModel = await GetDailyJournalByIdForWriteAsync(dailyJournal.DailyJournalId);
+                if (!existingDailyJournalModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>(existingDailyJournalModel);
+                }
+
+                var (resultValue, _, errorStr) = await permissionService.CanModifyResource(existingDailyJournalModel.Model.UserId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>(errorStr);
+                }
+
+                dailyJournal.CreatedByUserId = existingDailyJournalModel.Model.CreatedByUserId;
+                dailyJournal.CreatedDate = existingDailyJournalModel.Model.CreatedDate;
+                dailyJournal.IsDeleted = existingDailyJournalModel.Model.IsDeleted;
+                dailyJournal.UserId = existingDailyJournalModel.Model.UserId;
+                //dailyJournal.MovieId = existingDailyJournalModel.Model.MovieId;
+                //dailyJournal.ProfileImageActualFileName = existingDailyJournalModel.Model.ProfileImageActualFileName;
+                //dailyJournal.ProfileImageLocation = existingDailyJournalModel.Model.ProfileImageLocation;
+
+
+
+                var errorList = await IsDailyJournalModelValidForUpdateAsync(dailyJournal);
+                if (errorList != null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to update Daily Journal", errorList);
+                }
+
+                var item = objectMapperService.DailyJournalUpdateModelToDailyJournal(dailyJournal);
+
+                bool result;
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await manifestRepository.UpdateDailyJournalAsync(item, await currentSessionService.GetCurrentUserIdAsync());
+                    if (result == false)
+                    {
+                        throw new RollbackException($"Unable to update Daily Journal");
+                    }
+
+                    //await CreateOrUpdateDailyJournalDependentsAsync(dailyJournal)
+
+                    await trx.CompleteAsync();
+                }
+
+                await auditService.DailyJournalUpdatedAsync(dailyJournal.DailyJournalId);
+
+                var view = await manifestRepository.GetDailyJournalViewByIdAsync(dailyJournal.DailyJournalId);
+
+                if (view == null)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>($"Unable to find the Daily Journal", new { dailyJournal.DailyJournalId });
+                }
+
+                return this.ConvertToItem(view, objectMapperService.DailyJournalViewToDailyJournalModel);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<DailyJournalModel>($"Unexpected error when updating Daily Journal", new { dailyJournal?.DailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> MarkDailyJournalAsNotDeletedByIdAsync(long dailyJournalId)
+        {
+            try
+            {
+                var existingDailyJournalModel = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!existingDailyJournalModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(existingDailyJournalModel);
+                }
+
+                var (resultValue, _, errorStr) = await permissionService.CanModifyResource(existingDailyJournalModel.Model.UserId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                bool result;
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await manifestRepository.MarkDailyJournalAsNotDeletedByIdAsync(dailyJournalId, await currentSessionService.GetCurrentUserIdAsync());
+                    await trx.CompleteAsync();
+                }
+
+                await auditService.DailyJournalDeletedAsync(dailyJournalId);
+
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when marking Daily Journal as not deleted", new { dailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> MarkDailyJournalAsDeletedByIdAsync(long dailyJournalId)
+        {
+            try
+            {
+                var existingDailyJournalModel = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!existingDailyJournalModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(existingDailyJournalModel);
+                }
+
+                var (resultValue, _, errorStr) = await permissionService.CanModifyResource(existingDailyJournalModel.Model.UserId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                bool result;
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await manifestRepository.MarkDailyJournalAsDeletedByIdAsync(dailyJournalId, await currentSessionService.GetCurrentUserIdAsync());
+                    await trx.CompleteAsync();
+                }
+
+                await auditService.DailyJournalDeletedAsync(dailyJournalId);
+
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when marking Daily Journal as deleted", new { dailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> HardDeleteDailyJournalByAsync(long dailyJournalId)
+        {
+            try
+            {
+                var existingDailyJournalModel = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!existingDailyJournalModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(existingDailyJournalModel);
+                }
+
+                var (resultValue, _, errorStr) = await permissionService.CanModifyResource(existingDailyJournalModel.Model.UserId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                bool result;
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await manifestRepository.HardDeleteDailyJournalByIdAsync(dailyJournalId);
+                    await trx.CompleteAsync();
+                }
+
+
+                await auditService.HardDeleteDailyJournalAsync(dailyJournalId);
+
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when deleting Daily Journal", new { dailyJournalId }, ex);
+            }
+        }
+
+        public Task<List<ReturnErrorItem>> IsDailyJournalModelValidForCreateAsync(DailyJournalUpdateModel dailyJournalModel)
+        {
+            return IsDailyJournalModelValidForAllAsync(true, dailyJournalModel);
+        }
+
+        public Task<List<ReturnErrorItem>> IsDailyJournalModelValidForUpdateAsync(DailyJournalUpdateModel dailyJournalModel)
+        {
+            return IsDailyJournalModelValidForAllAsync(false, dailyJournalModel);
+        }
+
+        public async Task<List<ReturnErrorItem>> IsDailyJournalModelValidForAllAsync(bool isCreate, DailyJournalUpdateModel dailyJournalModel)
+        {
+            var result = new List<ReturnErrorItem>();
+
+            if (isCreate)
+            {
+                if (dailyJournalModel.DailyJournalId > 0)
+                {
+                    result.Add(new ReturnErrorItem("", "Daily Journal Identifier is not valid"));
+                }
+            }
+            else
+            {
+                if (dailyJournalModel.DailyJournalId <= 0)
+                {
+                    result.Add(new ReturnErrorItem("", "Daily Journal Unique Identifier is not valid"));
+                }
+            }
+
+            var userItem = await companyRepository.GetUserByIdAsync(dailyJournalModel.UserId);
+            if (userItem == null)
+            {
+                result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
+                return result;
+            }
+
+            if (userItem.UserId != dailyJournalModel.UserId)
+            {
+                result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
+                return result;
+            }
+
+
+            if (!DateUtils.IsValidDate(dailyJournalModel.DailyJournalDate))
+            {
+                result.Add(new ReturnErrorItem("DailyJournalDate", $"DailyJournalDate is not a valid date"));
+            }
+
+            if (!ValidationUtils.IsLongValid(dailyJournalModel.UserId))
+            {
+                result.Add(new ReturnErrorItem("UserId", "User cannot be empty"));
+            }
+
+            if (dailyJournalModel.PredefinedMoodTypeId == 0)
+            {
+                result.Add(new ReturnErrorItem("PredefinedMoodTypeId", "PredefinedMoodTypeId cannot be empty"));
+            }
+            if (dailyJournalModel.Gratitude1 != null && dailyJournalModel.Gratitude1.Length > DailyJournalModel.COLUMN_SIZE_Gratitude1)
+            {
+                result.Add(new ReturnErrorItem("Gratitude1", $"Gratitude1 size should not exceed {DailyJournalModel.COLUMN_SIZE_Gratitude1}"));
+            }
+            if (dailyJournalModel.Gratitude1 == null)
+            {
+                result.Add(new ReturnErrorItem("Gratitude1", "Gratitude1 is required "));
+            }
+            if (dailyJournalModel.Gratitude2 != null && dailyJournalModel.Gratitude2.Length > DailyJournalModel.COLUMN_SIZE_Gratitude2)
+            {
+                result.Add(new ReturnErrorItem("Gratitude2", $"Gratitude2 size should not exceed {DailyJournalModel.COLUMN_SIZE_Gratitude2}"));
+            }
+            if (dailyJournalModel.Gratitude3 != null && dailyJournalModel.Gratitude3.Length > DailyJournalModel.COLUMN_SIZE_Gratitude3)
+            {
+                result.Add(new ReturnErrorItem("Gratitude3", $"Gratitude3 size should not exceed {DailyJournalModel.COLUMN_SIZE_Gratitude3}"));
+            }
+            if (dailyJournalModel.Gratitude4 != null && dailyJournalModel.Gratitude4.Length > DailyJournalModel.COLUMN_SIZE_Gratitude4)
+            {
+                result.Add(new ReturnErrorItem("Gratitude4", $"Gratitude4 size should not exceed {DailyJournalModel.COLUMN_SIZE_Gratitude4}"));
+            }
+            if (dailyJournalModel.Gratitude5 != null && dailyJournalModel.Gratitude5.Length > DailyJournalModel.COLUMN_SIZE_Gratitude5)
+            {
+                result.Add(new ReturnErrorItem("Gratitude5", $"Gratitude5 size should not exceed {DailyJournalModel.COLUMN_SIZE_Gratitude5}"));
+            }
+            if (dailyJournalModel.YourReflection != null && dailyJournalModel.YourReflection.Length > DailyJournalModel.COLUMN_SIZE_YourReflection)
+            {
+                result.Add(new ReturnErrorItem("YourReflection", $"YourReflection size should not exceed {DailyJournalModel.COLUMN_SIZE_YourReflection}"));
+            }
+            if (dailyJournalModel.TommorowsIntentions != null && dailyJournalModel.TommorowsIntentions.Length > DailyJournalModel.COLUMN_SIZE_TommorowsIntentions)
+            {
+                result.Add(new ReturnErrorItem("TommorowsIntentions", $"TommorowsIntentions size should not exceed {DailyJournalModel.COLUMN_SIZE_TommorowsIntentions}"));
+            }
+
+
+            return result.Count > 0 ? result : null;
+        }
+
+
+
+        public async Task<ReturnListModel<DailyJournalModel>> GetDailyJournalByUserIdAsync(long userId)
+        {
+            try
+            {
+                var view = await companyService.GetUserByIdAsync(userId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournalModel>($"Unable to find the User", new { userId });
+                }
+
+                var items = await manifestRepository.GetDailyJournalViewByUserIdAsync(userId);
+                return ReturnListModel<DailyJournalModel>.Success(objectMapperService.DailyJournalViewListToDailyJournalModelList(items));
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournalModel>($"Unexpected error when getting Daily Journal by UserId", new { userId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<DailyJournalModel>> GetDailyJournalByUserIdAsync(DailyJournalByUserIdSearchCriteria search)
+        {
+            try
+            {
+                var view = await companyService.GetUserByIdAsync(search.UserId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournalModel>($"Unable to find the User", new { search.UserId });
+                }
+
+                var items = await manifestRepository.GetDailyJournalViewByUserIdAsync(search);
+                return ReturnListModel<DailyJournalModel>.Success(objectMapperService.DailyJournalViewListToDailyJournalModelList(items.Result));
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournalModel>($"Unexpected error when getting Daily Journal by UserId", new { search.UserId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<DailyJournal>> GetBareDailyJournalByUserIdAsync(long userId)
+        {
+            try
+            {
+                var view = await companyService.GetUserByIdAsync(userId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournal>($"Unable to find the User", new { userId });
+                }
+
+                var items = await manifestRepository.GetBareDailyJournalByUserIdAsync(userId);
+                return ReturnListModel<DailyJournal>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournal>($"Unexpected error when getting Daily Journal by UserId", new { userId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<DailyJournal>> GetBareDailyJournalByUserIdAsync(DailyJournalByUserIdSearchCriteria search)
+        {
+            try
+            {
+                var view = await companyService.GetUserByIdAsync(search.UserId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournal>($"Unable to find the User", new { search.UserId });
+                }
+
+                var items = await manifestRepository.GetBareDailyJournalByUserIdAsync(search);
+                return ReturnListModel<DailyJournal>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournal>($"Unexpected error when getting Daily Journal by UserId", new { search.UserId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<UserModel>> GetUserByDailyJournalIdAsync(long dailyJournalId)
+        {
+            try
+            {
+                var view = await GetDailyJournalByIdForReadAsync(dailyJournalId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<UserModel>($"Unable to find the DailyJournal", new { dailyJournalId });
+                }
+
+                var items = await manifestRepository.GetUserViewByDailyJournalIdAsync(dailyJournalId);
+                return ReturnListModel<UserModel>.Success(objectMapperService.UserViewListToUserModelList(items));
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<UserModel>($"Unexpected error when getting Daily Journal by DailyJournal", new { dailyJournalId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<UserModel>> GetUserByDailyJournalIdAsync(UserByDailyJournalIdSearchCriteria search)
+        {
+            try
+            {
+                var view = await GetDailyJournalByIdForReadAsync(search.DailyJournalId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<UserModel>($"Unable to find the DailyJournal", new { search.DailyJournalId });
+                }
+
+                var items = await manifestRepository.GetUserViewByDailyJournalIdAsync(search);
+                return ReturnListModel<UserModel>.Success(objectMapperService.UserViewListToUserModelList(items.Result));
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<UserModel>($"Unexpected error when getting Daily Journal by DailyJournal", new { search.DailyJournalId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<User>> GetBareUserByDailyJournalIdAsync(long dailyJournalId)
+        {
+            try
+            {
+                var view = await GetDailyJournalByIdForReadAsync(dailyJournalId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<User>($"Unable to find the DailyJournal", new { dailyJournalId });
+                }
+
+                var items = await manifestRepository.GetBareUserByDailyJournalIdAsync(dailyJournalId);
+                return ReturnListModel<User>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<User>($"Unexpected error when getting Daily Journal by DailyJournal", new { dailyJournalId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<User>> GetBareUserByDailyJournalIdAsync(UserByDailyJournalIdSearchCriteria search)
+        {
+            try
+            {
+                var view = await GetDailyJournalByIdForReadAsync(search.DailyJournalId);
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnListModel<User>($"Unable to find the DailyJournal", new { search.DailyJournalId });
+                }
+
+                var items = await manifestRepository.GetBareUserByDailyJournalIdAsync(search);
+                return ReturnListModel<User>.Success(items);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<User>($"Unexpected error when getting Daily Journal by DailyJournal", new { search.DailyJournalId }, ex);
+            }
+        }
+
+
+
+        /*
+        public async Task<ReturnModel<bool>> IsDailyJournalWordOrPdfFileValidAsync(long dailyJournalId, bool isPdf)
+        {
+            var tName = isPdf ? "preview" : "source";
+
+            try
+            {
+                var fileModel = await GetDailyJournalWordOrPdfFileAsync(dailyJournalId,isPdf);
+                if (!fileModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the {tName} file", fileModel.ErrorHolder);
+                }
+
+                FileUtils.CloseSafely(fileModel.Model.FileData);
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the {tName} file", ex);
+            }
+        }
+
+        public async Task<ReturnModel<FileStreamModel>> GetDailyJournalWordOrdPdfFileAsync(long dailyJournalId, bool isPdf)
+        {
+            try
+            {
+                var view = await GetDailyJournalByIdForReadAsync(dailyJournalId);
+
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"Unable to find the Daily Journal", new { dailyJournalId });
+                }
+
+                var fileName = view.Model.SourceStoredFilePath;
+                var docType = "Word";
+                var docExt = ".docx";
+
+                if (isPdf)
+                {
+                    fileName = view.Model.PreviewStoredFilePath;
+                    docType = "Pdf";
+                    docExt = ".pdf";
+                }
+
+                if (fileName.IsTrimmedStringNullOrEmpty())
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: {docType} file is not available.");
+                }
+
+                if (!await contractFileStorage.ExistsAsync(view.Model.CompanyId, fileName))
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: {docType} file is not available.");
+                }
+
+                var result = new FileStreamModel
+                {
+                    FileName = view.Model.ActualFileName.IsTrimmedStringNullOrEmpty() ? $"DailyJournalFile.{docType}" : view.Model.ActualFileName,
+                    ContentType = FileUtils.GetMimeTypeFromFileName(view.Model.ActualFileName),
+                    FileData = await wipFileStorage.OpenReadAsync(view.Model.CompanyId, fileName)
+                };
+
+                return ReturnModel<FileStreamModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<FileStreamModel>($"Unexpected error when getting File for Daily Journal ", new { dailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> IsDailyJournalFileValidAsync(long dailyJournalId)
+        {
+            try
+            {
+                var fileModel = await GetDailyJournalFileAsync(dailyJournalId);
+                if (!fileModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Daily Journal file", fileModel.ErrorHolder);
+                }
+
+                FileUtils.CloseSafely(fileModel.Model.FileData);
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Daily Journal file", ex);
+            }
+        }
+
+        public async Task<ReturnModel<FileStreamModel>> GetDailyJournalFileAsync(long dailyJournalId)
+        {
+            try
+            {
+                var view = await GetDailyJournalByIdForReadAsync(dailyJournalId);
+
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"Unable to find the Daily Journal", new { dailyJournalId });
+                }
+
+                var fileName = view.Model.SourceStoredFilePath;
+
+                if (fileName.IsTrimmedStringNullOrEmpty())
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: file is not available.");
+                }
+
+                if (!await wipFileStorage.ExistsAsync(view.Model.CompanyId, fileName))
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: file is not available.");
+                }
+
+                var actualFileName = view.Model.ActualFileName.IsTrimmedStringNullOrEmpty() ? $"DailyJournalFile" : view.Model.ActualFileName;
+
+                var result = new FileStreamModel
+                {
+                    FileName = actualFileName,
+                    ContentType = FileUtils.GetMimeTypeFromFileName(actualFileName),
+                    FileData = await wipFileStorage.OpenReadAsync(view.Model.CompanyId, fileName)
+                };
+
+                return ReturnModel<FileStreamModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<FileStreamModel>($"Unexpected error when getting File for Daily Journal ", new { dailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> UploadDailyJournalFileAsync(long dailyJournalId, FileStreamModel streamModel)
+        {
+            try
+            {
+                var dailyJournal = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!dailyJournal.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(dailyJournal);
+                }
+
+                if (streamModel == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("File Content is not provided");
+                }
+
+                var company = await companyRepository.GetCompanyByIdAsync(dailyJournal.Model.CompanyId);
+                if (company == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("Unable to find the Company Information");
+                }
+
+                try
+                {
+                    using (var trx = await transactionManager.BeginTransactionAsync())
+                    {
+                        var path = profileFileFileStorage.ProfileFilePathForHostBrand(dailyJournal.Model.CompanyId, dailyJournal.Model.DailyJournalId, streamModel.FileName);
+                        if (company.PredefinedCompanyTypeId == (int)PredefinedCompanyTypes.MarketPlace)
+                            path = profileFileFileStorage.ProfileFilePathForMarketplaceBrand(dailyJournal.Model.CompanyId, dailyJournal.Model.DailyJournalId, streamModel.FileName);
+                        await productRepository.UpdateDailyJournalFilePathAsync(dailyJournal.Model.DailyJournalId, path, streamModel.FileName, await currentSessionService.GetCurrentUserIdAsync());
+                        await profileFileFileStorage.WriteAsync(dailyJournal.Model.CompanyId, path, streamModel.FileData);
+                        await trx.CompleteAsync();
+                    }
+                }
+                finally
+                {
+                    FileUtils.CloseSafely(streamModel.FileData);
+                }
+
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when Uploading Daily Journal File", ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> ClearDailyJournalFileAsync(long dailyJournalId)
+        {
+            try
+            {
+                var dailyJournal = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!dailyJournal.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(dailyJournal);
+                }
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    await productRepository.ClearDailyJournalFilePathAsync(dailyJournal.Model.DailyJournalId, await currentSessionService.GetCurrentUserIdAsync());
+                    await profileFileFileStorage.DeleteAsync(dailyJournal.Model.CompanyId, dailyJournal.Model.ProfileImageLocation);
+                }
+
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when clearing Daily Journal File", ex);
+            }
+        }
+
+        public async Task CreateOrUpdateDailyJournalDependentsAsync(DailyJournalUpdateModel model)
+        {
+            if (model.NewDailyJournalXYZZYXModels == null)
+                model.NewDailyJournalXYZZYXModels = new List<DailyJournalXYZZYXCreateModel>();
+
+            if (model.ExistingDailyJournalXYZZYXModels == null)
+                model.ExistingDailyJournalXYZZYXModels = new List<DailyJournalXYZZYXUpdateModel>();
+
+            var dbExistingDailyJournals = await manifestRepository.GetDailyJournalXYZZYXsByDailyJournalIdAsync(model.DailyJournalId);
+            if (!dbExistingDailyJournals.IsNullOrEmpty())
+            {
+                var dbExistingDailyJournalIds = dbExistingDailyJournals.SelectToList(x => x.DailyJournalXYZZYXId);
+                var modelExistingDailyJournalIds = model.ExistingDailyJournalXYZZYXModels.SelectToList(x => x.DailyJournalXYZZYXId);
+
+                var xYZZYXItemsToDelete = dbExistingDailyJournals.Where(x => !modelExistingDailyJournalIds.Contains(x.DailyJournalXYZZYXId));
+                foreach (var x in xYZZYXItemsToDelete)
+                {
+                    var result = await MarkDailyJournalXYZZYXAsDeletedByIdAsync(x.DailyJournalXYZZYXId);
+                    if (!result.IsSuccess)
+                    {
+                        throw new RollbackException(result);
+                    }
+                }
+
+                var xYZZYXItemsToUpdate = model.ExistingDailyJournalXYZZYXModels.Where(x => dbExistingDailyJournalIds.Contains(x.DailyJournalXYZZYXId));
+                foreach (var x in xYZZYXItemsToUpdate)
+                {
+                    x.DailyJournalId = model.DailyJournalId;
+                    var result = await UpdateDailyJournalXYZZYXAsync(x);
+                    if (!result.IsSuccess)
+                    {   
+                        throw new RollbackException(result);
+                    }
+                }
+            }
+
+            foreach (var x in model.NewDailyJournalXYZZYXModels)
+            {
+                x.DailyJournalId = model.DailyJournalId;
+                var result = await CreateDailyJournalXYZZYXAsync(x);
+                if (!result.IsSuccess)
+                {
+                    throw new RollbackException(result);
+                }
+            }
+        }
+
+        public async Task<ReturnModel<bool>> EnableDailyJournalByIdAsync(long dailyJournalId)
+        {
+            try
+            {
+                var existingDailyJournalModel = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!existingDailyJournalModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>(existingDailyJournalModel);
+                }
+
+                var (resultValue, canAssign, errorStr) = await permissionService.CanConfigureCompany(existingDailyJournalModel.Model.CompanyId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                bool result;
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await manifestRepository.EnableDailyJournalByIdAsync(existingDailyJournalModel.Model.DailyJournalId, await currentSessionService.GetCurrentUserIdAsync());
+                    await trx.CompleteAsync();
+                }
+
+                await auditService.DailyJournalEnabledAsync(dailyJournalId);
+
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when enabling Daily Journal", new { dailyJournalId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> DisableDailyJournalByIdAsync(long dailyJournalId)
+        {
+            try
+            {
+                var existingDailyJournalModel = await GetDailyJournalByIdForWriteAsync(dailyJournalId);
+                if (!existingDailyJournalModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<DailyJournalModel>(existingDailyJournalModel);
+                }
+
+                var (resultValue, canAssign, errorStr) = await permissionService.CanConfigureCompany(existingDailyJournalModel.Model.CompanyId);
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                bool result;
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    result = await manifestRepository.DisableDailyJournalByIdAsync(existingDailyJournalModel.Model.DailyJournalId, await currentSessionService.GetCurrentUserIdAsync());
+                    await trx.CompleteAsync();
+                }
+
+                await auditService.DailyJournalDisabledAsync(existingDailyJournalModel.Model.DailyJournalId);
+
+                return new ReturnModel<bool>(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when disabling Daily Journal",new { dailyJournalId }, ex);
+            }
+        }
+
+
+        public async Task<ReturnListModel<XYZZYXModel>> GetXYZZYXsByDailyJournalAsync(long dailyJournalId)
+        {
+            try
+            {
+                var contract = await manifestRepository.GetDailyJournalByIdAsync(dailyJournalId);
+                if (contract == null)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournalModel>($"Unable to find Daily Journal", new { dailyJournalId });
+                }
+                return this.ConvertToList(await manifestRepository.GetXYZZYXsByDailyJournalsAsync(contract.DailyJournalId), objectMapperService.DailyJournalViewListToDailyJournalModelList);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournalModel>($"Unexpected error when getting Related Daily Journals of the Daily Journal");
+            }
+        }
+
+        public async Task<ReturnModel<bool>> AssociateXYZZYXWithDailyJournalAsync(DailyJournalXYZZYXAssociationModel model)
+        {
+            try
+            {
+                var (resultValue, canAssign, errorStr) = await permissionService.CanConfigureCompany(await currentSessionService.GetCurrentCompanyIdAsync());
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                var errorLst = await IsDailyJournalWithDailyJournalAssociationValidAsync(model);
+                if (errorLst != null)
+                {
+                    return ReturnModel<bool>.Error("Daily Journal association is invalid", errorLst);
+                }
+
+                if (await manifestRepository.DoesDailyJournalWithXYZZYXAssociationExistsAsync(model.DailyJournalId, model.XYZZYXId))
+                {
+                    return log.ErrorAndReturnModel<bool>("Related Daily Journal is already associated with the Daily Journal", new { model.DailyJournalId, model.XYZZYXId});
+                }
+
+                var rValue = await manifestRepository.AssociateDailyJournalWithXYZZYXAsync(model.DailyJournalId, model.XYZZYXId, await currentSessionService.GetCurrentUserIdAsync());
+                if (rValue)
+                {
+                    return ReturnModel<bool>.Success(rValue);
+                }
+                return log.ErrorAndReturnModel<bool>("Unable to associate Daily Journal with XYZZYX", new { model.DailyJournalId, model.XYZZYXId});
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when associating Daily Journal with XYZZYX", new { model.DailyJournalId, model.XYZZYXId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> UnAssociateXYZZYXWithDailyJournalAsync(DailyJournalXYZZYXAssociationModel model)
+        {
+            try
+            {
+                var (resultValue, canAssign, errorStr) = await permissionService.CanConfigureCompany(await currentSessionService.GetCurrentCompanyIdAsync());
+
+                if (resultValue == false)
+                {
+                    return log.ErrorAndReturnModel<bool>(errorStr);
+                }
+
+                var errorLst = await IsDailyJournalWithXYZZYXAssociationValidAsync(model);
+                if (errorLst != null)
+                {
+                    return ReturnModel<bool>.Error("Daily Journal association is not valid", errorLst);
+                }
+
+                if (!await manifestRepository.DoesDailyJournalWithXYZZYXAssociationExistsAsync(model.DailyJournalId, model.XYZZYXId))
+                {
+                    return log.ErrorAndReturnModel<bool>("Related Daily Journal is not associated with the Daily Journal", new { model.DailyJournalId, model.XYZZYXId });
+                }
+
+                var rValue = await manifestRepository.UnAssociateDailyJournalWithDailyJournalAsync(model.DailyJournalId, model.XYZZYXId);
+                if (rValue)
+                {
+                    return ReturnModel<bool>.Success(rValue);
+                }
+
+                return log.ErrorAndReturnModel<bool>("Unable to unassociate Related Daily Journal with the Daily Journal", new { model.DailyJournalId, model.XYZZYXId });
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when unassociating Related Daily Journal with the Daily Journal", new { model.DailyJournalId, model.XYZZYXId }, ex);
+            }
+        }
+
+        public async Task<List<ReturnErrorItem>> IsDailyJournalWithXYZZYXAssociationValidAsync(DailyJournalXYZZYXAssociationModel model)
+        {
+            var result = new List<ReturnErrorItem>();
+            if (model == null)
+            {
+                result.Add(new ReturnErrorItem("", "Association is not valid"));
+                return result;
+            }
+
+            if (model.DailyJournalId == 0)
+            {
+                result.Add(new ReturnErrorItem("", "Daily Journal is not valid"));
+                return result;
+            }
+
+            if (model.XYZZYXId == 0)
+            {
+                result.Add(new ReturnErrorItem("", "Related Daily Journal  is not valid"));
+                return result;
+            }
+
+            var entity = await GetDailyJournalForWriteByIdAsync(model.DailyJournalId);
+            if(!entity.IsSuccess)
+            {
+                result.Add(new ReturnErrorItem("", "Daily Journal information is not available"));
+                return result;
+            }
+
+            var xYZZYX = await GetXYZZYXForWriteByIdAsync(model.XYZZYXId);
+            if (!xYZZYX.IsSuccess)
+            {
+                result.Add(new ReturnErrorItem("", "Related XYZZYX information is not available"));
+                return result;
+            }
+
+            if (entity.CompanyId != xYZZYX.CompanyId)
+            {
+                result.Add(new ReturnErrorItem("", "Daily Journals does not belong to the same company"));
+            }
+
+            if (result.Count > 0)
+            {
+                return result;
+            }
+
+            return null;
+        }
+
+        public async Task<ReturnListModel<ImportStatusModel>> ImportDailyJournalAsync(DailyJournalImportModel model, bool isTest)
+        {
+            try
+            {
+                if (model == null)
+                {
+                    return log.ErrorAndReturnListModel<ImportStatusModel>("Daily Journal Import Info is not provided");
+                }
+
+                if (model.DailyJournals == null || model.DailyJournals.Count == 0)
+                {
+                    return log.ErrorAndReturnListModel<ImportStatusModel>("Daily Journals Info is not available to import");
+                }
+
+                var resultLst = new List<ImportStatusModel>();
+
+                foreach (var item in model.DailyJournals)
+                {
+                    var prod = await wipService.GetDailyJournalByExternalIdentifierAsync(item.DailyJournalIdentifier);
+                    if (prod.Model == null)
+                    {
+                        //var newProd = new ProductCreateModel();
+                        DailyJournalCreateModel dailyJournalCreateModel = new DailyJournalCreateModel
+                        {
+                            IsEnabled = item.IsProductEnabled
+                        };
+
+                        var newlyCreatedDailyJournal = await CreateDailyJournalAsync(dailyJournalCreateModel);
+                        if (!newlyCreatedDailyJournal.IsSuccess)
+                        {
+                            var errorStr = string.Empty;
+                            if (newlyCreatedDailyJournal.ErrorHolder.ErrorItemList != null && newlyCreatedProd.ErrorHolder.ErrorItemList.Count > 0)
+                            {
+                                var errorValueList = newlyCreatedDailyJournal.ErrorHolder.ErrorItemList.SelectToList(x => x.Value);
+                                errorStr = string.Join(",", errorValueList);
+                            }
+
+                            resultLst.Add(new ImportStatusModel() { IsSucess = false, Message = errorStr.IsNotNullOrEmpty() ? errorStr : newlyCreatedProd.ErrorHolder.FriendlyMessage });
+                            continue;
+                        }
+                        else
+                        {
+                            resultLst.Add(new ImportStatusModel() { IsSucess = true });
+                        }
+                    }
+                    else
+                    {
+                        DailyJournalUpdateModel dailyJournalUpdateModel = new DailyJournalUpdateModel
+                        {
+                        };
+
+                        //update product
+                        var updatedDailyJournalModel = await wipService.UpdateDailyJournalAsync(dailyJournalUpdateModel);
+                        if (!updatedDailyJournalModel.IsSuccess)
+                        {
+                            var errorStr = string.Empty;
+                            if (updateProdModel.ErrorHolder.ErrorItemList != null && updateProdModel.ErrorHolder.ErrorItemList.Count > 0)
+                            {
+                                var errorValueList = updateProdModel.ErrorHolder.ErrorItemList.SelectToList(x => x.Value);
+                                errorStr = string.Join(",", errorValueList);
+                            }
+
+                            resultLst.Add(new ImportStatusModel() { IsSucess = false, Message = errorStr.IsNotNullOrEmpty() ? errorStr : updateProdModel.ErrorHolder.FriendlyMessage });
+                            continue;
+                        }
+                        else
+                        {
+                            resultLst.Add(new ImportStatusModel() { IsSucess = true });
+                        }
+                    }
+                }
+
+                return ReturnListModel<ImportStatusModel>.Success(resultLst);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<ImportStatusModel>("Unexpected error occurred when importing Daily Journal Info", ex);
+            }
+        }
+
+        public async Task<ReturnListModel<DailyJournalExportModel>> ExportDailyJournalAsync(DailyJournalExportParameter filter, bool isTest)
+        {
+            try
+            {
+                var dailyJournalCount = await manifestRepository.GetDailyJournalCountAsync(filter);
+                if (dailyJournalCount == 0)
+                {
+                    return log.ErrorAndReturnListModel<DailyJournalExportModel>("No Daily Journal available for export.");
+                }
+
+                var itemsToReturn = new List<DailyJournalExportModel>();
+                var numberOfLoops = (dailyJournalCount / pageSize) + 1;
+                for (var i = 0; i < numberOfLoops; ++i)
+                {
+                    var dataResult = await wipService.GetUserViewListAsync(new DailyJournalSearchCriteria { Page = i, PageSize = pageSize, Keyword = filter.Keyword });
+                    if (dataResult.IsSuccess)
+                    {
+                        return log.ErrorAndReturnListModel<DailyJournalExportModel>(dataResult);
+                    }
+
+                    itemsToReturn.AddRange(objectMapperService.DailyJournalModelListToDailyJournalExportModelList(dataResult.Model));
+                }
+
+                return ReturnListModel<DailyJournalExportModel>.Success(itemsToReturn);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnListModel<DailyJournalExportModel>("Unexpected error occurred when exporting Daily Journal", ex);
+            }
+        }
+
+        */
+        #endregion
     }
 
 }

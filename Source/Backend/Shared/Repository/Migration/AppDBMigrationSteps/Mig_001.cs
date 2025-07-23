@@ -213,6 +213,25 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "DailyAffirmationText", "DailyAffirmationTextId", 1000);
+            Create.Table("DailyJournal")
+                .WithColumn("DailyJournalId").AsInt64().PrimaryKey("PK_DailyJournal").Identity().NotNullable()
+                .WithColumn("DailyJournalDate").AsDateTime().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("PredefinedMoodTypeId").AsInt64().NotNullable()
+                .WithColumn("Gratitude1").AsString(500).NotNullable()
+                .WithColumn("Gratitude2").AsString(500).Nullable()
+                .WithColumn("Gratitude3").AsString(500).Nullable()
+                .WithColumn("Gratitude4").AsString(500).Nullable()
+                .WithColumn("Gratitude5").AsString(500).Nullable()
+                .WithColumn("YourReflection").AsString(500).Nullable()
+                .WithColumn("TommorowsIntentions").AsString(500).Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "DailyJournal", "DailyJournalId", 1000);
             Create.Table("DefaultCategory")
                 .WithColumn("DefaultCategoryId").AsInt64().PrimaryKey("PK_DefaultCategory").Identity().NotNullable()
                 .WithColumn("DefaultCategoryName").AsString(255).NotNullable()
@@ -1096,6 +1115,22 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("UserId")
             
             ;
+            Create.Index("IX_DailyJournal_CreatedByUserId").OnTable("DailyJournal")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DailyJournal_ModifiedByUserId").OnTable("DailyJournal")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DailyJournal_PredefinedMoodTypeId").OnTable("DailyJournal")
+                .OnColumn("PredefinedMoodTypeId")
+            
+            ;
+            Create.Index("IX_DailyJournal_UserId").OnTable("DailyJournal")
+                .OnColumn("UserId")
+            
+            ;
             Create.Index("IX_DefaultCategory_CreatedByUserId").OnTable("DefaultCategory")
                 .OnColumn("CreatedByUserId")
             
@@ -1377,6 +1412,14 @@ namespace Manifest.Repository.Migration.Application
             Create.ForeignKey("FK_DailyAffirmationText_ModifiedByUserId").FromTable("DailyAffirmationText").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DailyAffirmationText_UserId").FromTable("DailyAffirmationText").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyJournal_CreatedByUserId").FromTable("DailyJournal").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyJournal_ModifiedByUserId").FromTable("DailyJournal").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DailyJournal_PredefinedMoodTypeId").FromTable("DailyJournal").ForeignColumns("PredefinedMoodTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DailyJournal_UserId").FromTable("DailyJournal").ForeignColumns("UserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DefaultCategory_CreatedByUserId").FromTable("DefaultCategory").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");

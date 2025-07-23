@@ -7162,7 +7162,7 @@ ModifiedByUserId = item.ModifiedByUserId,
         */
         #endregion
 
-#region VisionBoardSession
+        #region VisionBoardSession
 
         public IQueryable<VisionBoardSessionView> GetVisionBoardSessionsViewAsIQueryable()
         {
@@ -7471,6 +7471,334 @@ ModifiedByUserId = item.ModifiedByUserId,
         */
         #endregion
 
+        #region DailyJournal
+
+        public IQueryable<DailyJournalView> GetDailyJournalsViewAsIQueryable()
+        {
+            return from item in appDBManager.GetTable<DailyJournal>()
+                   join a in appDBManager.GetTable<User>() on item.UserId equals a.UserId
+                   join b in appDBManager.GetTable<EnumType>() on item.PredefinedMoodTypeId equals b.EnumTypeId
+
+                   join ocu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.CreatedByUserId equals ocu.UserId into cuTemp
+                   from cu in cuTemp.DefaultIfEmpty()
+                   join omu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.ModifiedByUserId equals omu.UserId into muTemp
+                   from mu in muTemp.DefaultIfEmpty()
+                   select new DailyJournalView
+                   {
+                       CreatedByUserFirstName = cu.FirstName,
+                       CreatedByUserLastName = cu.LastName,
+                       CreatedByUserEmail = cu.Email,
+                       ModifiedByUserFirstName = mu.FirstName,
+                       ModifiedByUserLastName = mu.LastName,
+                       ModifiedByUserEmail = mu.Email,
+
+                       UserName = a.UserName,
+                       PredefinedMoodTypeName = b.EnumTypeName,
+
+                       DailyJournalId = item.DailyJournalId,
+                       DailyJournalDate = item.DailyJournalDate,
+                       UserId = item.UserId,
+                       PredefinedMoodTypeId = item.PredefinedMoodTypeId,
+                       Gratitude1 = item.Gratitude1,
+                       Gratitude2 = item.Gratitude2,
+                       Gratitude3 = item.Gratitude3,
+                       Gratitude4 = item.Gratitude4,
+                       Gratitude5 = item.Gratitude5,
+                       YourReflection = item.YourReflection,
+                       TommorowsIntentions = item.TommorowsIntentions,
+                       IsDeleted = item.IsDeleted,
+                       CreatedDate = item.CreatedDate,
+                       CreatedByUserId = item.CreatedByUserId,
+                       ModifiedDate = item.ModifiedDate,
+                       ModifiedByUserId = item.ModifiedByUserId,
+
+                   };
+        }
+
+        public IQueryable<DailyJournalView> GetDailyJournalsInternalWithSearchCriteriaAsync(DailyJournalSearchCriteria search)
+        {
+            var sql1 = GetDailyJournalsViewAsIQueryable();
+
+            if (!search.Keyword.IsTrimmedStringNullOrEmpty())
+            {
+                sql1 = sql1.Where(x =>
+                                x.DailyJournalId.ToString().Trim().ToUpper() == search.Keyword.Trim().ToUpper()
+                                || x.Gratitude1.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+                                || x.Gratitude2.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+                                || x.Gratitude3.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+                                || x.Gratitude4.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+                                || x.Gratitude5.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+                                || x.YourReflection.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+                                || x.TommorowsIntentions.Trim().ToUpper().Contains(search.Keyword.Trim().ToUpper())
+);
+            }
+
+            if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
+            {
+                if (search.StartDate.Value <= search.EndDate.Value)
+                {
+                    sql1 = sql1.Where(x => x.DailyJournalDate >= search.StartDate.Value.StartOfDay() && x.DailyJournalDate <= search.EndDate.Value.EndOfDay());
+                }
+            }
+            else if (search.StartDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.DailyJournalDate >= search.StartDate.Value.StartOfDay());
+            }
+            else if (search.EndDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.DailyJournalDate <= search.EndDate.Value.EndOfDay());
+            }
+
+            if (search.UserId != null && search.UserId > 0)
+                sql1 = sql1.Where(x => search.UserId == x.UserId);
+
+            if (search.PredefinedMoodTypeIds != null && search.PredefinedMoodTypeIds.Count > 0)
+                sql1 = sql1.Where(x => search.PredefinedMoodTypeIds.Contains(x.PredefinedMoodTypeId));
+
+            if (search.CreatedByUserId != null && search.CreatedByUserId > 0)
+                sql1 = sql1.Where(x => search.CreatedByUserId == x.CreatedByUserId);
+
+            if (search.ModifiedByUserId != null && search.ModifiedByUserId > 0)
+                sql1 = sql1.Where(x => search.ModifiedByUserId == x.ModifiedByUserId);
+
+            if (search.ShowDeleted == false)
+                sql1 = sql1.Where(x => x.IsDeleted == false);
+
+            return sql1;
+        }
+
+        public async Task<DbReturnListModel<DailyJournalView>> GetDailyJournalsInternalAsync(DailyJournalSearchCriteria search)
+        {
+            var sql1 = GetDailyJournalsInternalWithSearchCriteriaAsync(search);
+            var result = await sql1.ReturnListModelResultAsync(search);
+
+            if (search.SelectedId != null && !result.Result.Exists(x => x.DailyJournalId == (search.SelectedId ?? 0)))
+            {
+                var selectedItem = await GetDailyJournalsViewAsIQueryable().FirstOrDefaultAsync(x => x.DailyJournalId == (search.SelectedId ?? 0));
+                if (selectedItem != null)
+                {
+                    result.AppendItem(selectedItem);
+                }
+            }
+
+            return result;
+        }
+
+        public Task<DbReturnListModel<DailyJournalView>> GetDailyJournalsAsync(DailyJournalSearchCriteria search)
+        {
+            return GetDailyJournalsInternalAsync(search);
+        }
+
+        public Task<DailyJournal> GetDailyJournalFromAnyByIdAsync(long dailyJournalId)
+        {
+            return appDBManager.FirstOrDefaultAsync<DailyJournal>(x => x.DailyJournalId == dailyJournalId);
+        }
+
+        public Task<DailyJournalView> GetDailyJournalViewFromAnyByIdAsync(long dailyJournalId)
+        {
+            return GetDailyJournalsViewAsIQueryable().FirstOrDefaultAsync(x => x.DailyJournalId == dailyJournalId);
+        }
+
+        public Task<DailyJournal> GetDailyJournalByUniqueIdentifierAsync(string dailyJournalId)
+        {
+            return appDBManager.FirstOrDefaultAsync<DailyJournal>(x => x.DailyJournalId == SafeUtils.Int(dailyJournalId) && x.IsDeleted == false);
+        }
+
+        public Task<DailyJournal> GetDailyJournalByIdAsync(long dailyJournalId)
+        {
+            return appDBManager.FirstOrDefaultAsync<DailyJournal>(x => x.DailyJournalId == dailyJournalId && x.IsDeleted == false);
+        }
+
+        public Task<List<DailyJournal>> GetDailyJournalByIdsAsync(List<long> dailyJournalIds)
+        {
+            return appDBManager.GetTable<DailyJournal>().Where(x => dailyJournalIds.Contains(x.DailyJournalId) && x.IsDeleted == false).ToListAsync();
+        }
+
+        public Task<DailyJournalView> GetDailyJournalViewByIdAsync(long dailyJournalId)
+        {
+            var sql1 = GetDailyJournalsViewAsIQueryable();
+
+            sql1 = sql1.Where(x => x.DailyJournalId == dailyJournalId && x.IsDeleted == false);
+
+            return sql1.FirstOrDefaultAsync();
+        }
+
+        public Task<List<DailyJournal>> GetAllDailyJournals()
+        {
+            return appDBManager.SelectAllAsync<DailyJournal>();
+        }
+
+        /*
+        public Task<DailyJournal> GetDailyJournalByDailyJournalCodeAsync(long companyId, string dailyJournalCode)
+        {
+            return appDBManager.FirstOrDefaultAsync<DailyJournal>(x => x.CompanyId == companyId && x.DailyJournalCode == dailyJournalCode && x.IsDeleted == false);
+        }
+
+        public async Task<bool> UpdateDailyJournalCodeAsync(long companyId, long dailyJournalId, string dailyJournalCode, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.CompanyId == companyId && x.DailyJournalId == dailyJournalId && x.IsDeleted == false).Set(x => x.DailyJournalCode, dailyJournalCode).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+        */
+
+        public async Task<DailyJournal> CreateDailyJournalAsync(DailyJournal dailyJournal, long? createdBy)
+        {
+            dailyJournal.DailyJournalId = await appDBManager.InsertWithAuditAsync<DailyJournal, long>(dailyJournal, createdBy);
+            return dailyJournal;
+        }
+
+        public async Task<List<DailyJournal>> CreateDailyJournalsAsync(List<DailyJournal> dailyJournals, long? createdBy)
+        {
+            var lst = await appDBManager.InsertWithAuditAsync<DailyJournal, long>(dailyJournals, createdBy);
+            for (int i = 0; i < lst.Count; ++i)
+                dailyJournals[i].DailyJournalId = lst[i];
+            return dailyJournals;
+        }
+
+        public Task<bool> UpdateDailyJournalAsync(DailyJournal dailyJournal, long? modifiedBy)
+        {
+            return appDBManager.UpdateWithAuditAsync<DailyJournal>(dailyJournal, modifiedBy);
+        }
+
+        public async Task<bool> MarkDailyJournalAsNotDeletedByIdAsync(long dailyJournalId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId).Set(x => x.IsDeleted, false).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> MarkDailyJournalAsDeletedByIdAsync(long dailyJournalId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId).Set(x => x.IsDeleted, true).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> HardDeleteDailyJournalByIdAsync(long dailyJournalId)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId).DeleteAsync() > 0;
+        }
+
+        public Task<DbReturnListModel<ActivityView>> GetDailyJournalActivitiesAsync(long userId, ActivitySearchCriteria search)
+        {
+            var srch = LinqUtils.True<ActivityView>();
+            srch = srch.And(x => x.UserId == userId && x.PredefinedResourceTypeId == (int)PredefinedResourceTypes.DailyJournal);
+
+            return GetActivitiesByExpressionAsync(srch, search);
+        }
+
+
+        public Task<List<DailyJournalView>> GetDailyJournalViewByUserIdAsync(long userId)
+        {
+            return GetDailyJournalsViewAsIQueryable().Where(x => x.IsDeleted == false && x.UserId == userId).ToListAsync();
+        }
+
+        public Task<DbReturnListModel<DailyJournalView>> GetDailyJournalViewByUserIdAsync(DailyJournalByUserIdSearchCriteria search)
+        {
+            return GetDailyJournalsViewAsIQueryable().Where(x => x.IsDeleted == false && x.UserId == search.UserId).ReturnListModelResultAsync(search);
+        }
+
+        public Task<List<DailyJournal>> GetBareDailyJournalByUserIdAsync(long userId)
+        {
+            return appDBManager.GetTable<DailyJournal>().Where(x => x.IsDeleted == false && x.UserId == userId).ToListAsync();
+        }
+
+        public Task<DbReturnListModel<DailyJournal>> GetBareDailyJournalByUserIdAsync(DailyJournalByUserIdSearchCriteria search)
+        {
+            return appDBManager.GetTable<DailyJournal>().Where(x => x.IsDeleted == false && x.UserId == search.UserId).ReturnListModelResultAsync(search);
+        }
+
+
+        public Task<List<UserView>> GetUserViewByDailyJournalIdAsync(long dailyJournalId)
+        {
+            var idsSql = appDBManager.GetTable<DailyJournal>().Where(x => x.IsDeleted == false && x.DailyJournalId == dailyJournalId).Select(x => x.UserId);
+            return companyRepository.GetUsersViewAsIQueryable().Where(x => x.IsDeleted == false && idsSql.Contains(x.UserId)).ToListAsync();
+        }
+
+        public Task<DbReturnListModel<UserView>> GetUserViewByDailyJournalIdAsync(UserByDailyJournalIdSearchCriteria search)
+        {
+            var idsSql = appDBManager.GetTable<DailyJournal>().Where(x => x.IsDeleted == false && x.DailyJournalId == search.DailyJournalId).Select(x => x.UserId);
+            return companyRepository.GetUsersViewAsIQueryable().Where(x => x.IsDeleted == false && idsSql.Contains(x.UserId)).ReturnListModelResultAsync(search);
+        }
+
+        public Task<List<User>> GetBareUserByDailyJournalIdAsync(long dailyJournalId)
+        {
+            var idsSql = appDBManager.GetTable<DailyJournal>().Where(x => x.IsDeleted == false && x.DailyJournalId == dailyJournalId).Select(x => x.UserId);
+            return appDBManager.GetTable<User>().Where(x => x.IsDeleted == false && idsSql.Contains(x.UserId)).ToListAsync();
+        }
+
+        public Task<DbReturnListModel<User>> GetBareUserByDailyJournalIdAsync(UserByDailyJournalIdSearchCriteria search)
+        {
+            var idsSql = appDBManager.GetTable<DailyJournal>().Where(x => x.IsDeleted == false && x.DailyJournalId == search.DailyJournalId).Select(x => x.UserId);
+            return appDBManager.GetTable<User>().Where(x => x.IsDeleted == false && idsSql.Contains(x.UserId)).ReturnListModelResultAsync(search);
+        }
+
+
+
+        /*
+
+        public async Task<bool> UpdateDailyJournalPicturePathAsync(long dailyJournalId, string path, string actualFileName, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId && x.IsDeleted == false).Set(x => x.ProfileImageLocation, path).Set(x => x.ProfileImageActualFileName, actualFileName).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> ClearDailyJournalProfilePathAsync(long dailyJournalId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId && x.IsDeleted == false).Set(x => x.ProfileImageLocation, (string)null).Set(x => x.ProfileImageActualFileName, (string)null).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> EnableDailyJournalByIdAsync(long dailyJournalId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId).Set(x => x.IsEnabled, true).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> DisableDailyJournalByIdAsync(long dailyJournalId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<DailyJournal>().Where(x => x.DailyJournalId == dailyJournalId).Set(x => x.IsEnabled, false).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> AssociateDailyJournalWithXYZZYXAsync(long dailyJournalId, long xYZZYXId, long? createdBy)
+        {
+            var item = new DailyJournalXYZZYXAssociationModel();
+            item.DailyJournalId = dailyJournalId;
+            item.XYZZYXId = xYZZYXId;
+
+            return (await appDBManager.InsertWithAuditAsync<DailyJournalXYZZYX, long>(item, createdBy)) > 0;
+        }
+
+        public async Task<bool> UnAssociateDailyJournalWithXYZZYXAsync(long dailyJournalId, long xYZZYXId)
+        {
+            return await appDBManager.DeleteAsync<DailyJournalXYZZYX>(x => x.DailyJournalId == dailyJournalId && x.XYZZYXId == xYZZYXId) > 0;
+        }
+
+        public Task<bool> DoesDailyJournalWithXYZZYXAssociationExistsAsync(long dailyJournalId, long xYZZYXId)
+        {
+            return appDBManager.ExistsAsync<DailyJournalXYZZYX>(x => x.DailyJournalId == dailyJournalId && x.XYZZYXId == xYZZYXId);
+        }
+
+        public Task<List<DailyJournalView>> GetDailyJournalsByXYZZYXAsync(long xYZZYXId)
+        {
+            var dailyJournalIds = GetDailyJournalXYZZYXsViewAsIQueryable().Where(x => x.XYZZYXId == xYZZYXId).Select(x => x.DailyJournalId);
+            var dailyJournalSql = GetDailyJournalsViewAsIQueryable().Where(x => dailyJournalIds.Contains(x.DailyJournalId));
+            return dailyJournalSql.ToListAsync();
+        }
+
+        public Task<List<XYZZYXView>> GetXYZZYXsByDailyJournalsAsync(long dailyJournalId)
+        {
+            var xYZZYXIds = GetDailyJournalXYZZYXsViewAsIQueryable().Where(x => x.DailyJournalId == dailyJournal).Select(x => x.XYZZYXId);
+            var xYZZYXSql = GetXYZZYXsViewAsIQueryable().Where(x => xYZZYXIds.Contains(x.XYZZYXId));
+            return xYZZYXSql.ToListAsync();
+        }
+
+        public IQueryable<DailyJournalXYZZYX> GetDailyJournalXYZZYXsViewAsIQueryable()
+        {
+            return from item in appDBManager.GetTable<DailyJournalXYZZYX>()
+                    select item;
+        }
+
+        public Task<DbReturnListModel<ActivityView>> GetDailyJournalXYZZYXActivitiesAsync(long companyId, ActivitySearchCriteria search)
+        {
+            var srch = LinqUtils.True<ActivityView>();
+            srch = srch.And(x => x.CompanyId == companyId && x.ResourceTypeId == (int)ResourceTypes.DailyJournalXYZZYX);
+            return GetActivitiesByExpressionAsync(srch, search);
+        }
+        */
+        #endregion
 
     }
 }

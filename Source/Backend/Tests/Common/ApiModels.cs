@@ -5010,9 +5010,9 @@ namespace Manifest.Tests.Common
         }
 
 
-        public VisionBoardPictureUpdateModel GetAsUpdateModel()
+        public VisionBoardPictureUpdateWithFileFormModel GetAsUpdateModel()
         {
-            var obj = new VisionBoardPictureUpdateModel();
+            var obj = new VisionBoardPictureUpdateWithFileFormModel();
             obj.VisionBoardPictureId = VisionBoardPictureId;
             obj.Location = Location;
             obj.FileName = FileName;
@@ -5021,7 +5021,7 @@ namespace Manifest.Tests.Common
             return obj;
         }
 
-        public bool IsSameAsUpdateModel(VisionBoardPictureUpdateModel obj)
+        public bool IsSameAsUpdateModel(VisionBoardPictureUpdateWithFileFormModel obj)
         {
             var result = true;
             result = result && (obj.VisionBoardPictureId == VisionBoardPictureId);
@@ -13293,20 +13293,23 @@ namespace Manifest.Tests.Common
         public const string NumericPageCount__Name = "NumericPageCount";
     }
 
-    public class VisionBoardPictureCreateModel
+    public class VisionBoardPictureCreateWithFileFormModel
     {
 
-        public VisionBoardPictureCreateModel()
+        public VisionBoardPictureCreateWithFileFormModel()
         {
         }
 
-        public VisionBoardPictureCreateModel(String fileName,Int64 fileSize,Int64 userId)
+        public VisionBoardPictureCreateWithFileFormModel(FileStreamModel uploadedFile,String fileName,Int64 fileSize,Int64 userId)
         {
+            UploadedFile = uploadedFile;
             FileName = fileName;
             FileSize = fileSize;
             UserId = userId;
         }
 
+        [Required][JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -13316,9 +13319,10 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 
-        public VisionBoardPictureCreateModel GetCopy()
+        public VisionBoardPictureCreateWithFileFormModel GetCopy()
         {
-            var obj = new VisionBoardPictureCreateModel();
+            var obj = new VisionBoardPictureCreateWithFileFormModel();
+            obj.UploadedFile = UploadedFile;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -13327,6 +13331,7 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string UploadedFile__Name = "UploadedFile";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
@@ -13356,21 +13361,24 @@ namespace Manifest.Tests.Common
         public const string NewVisionBoardPictures__Name = "NewVisionBoardPictures";
     }
 
-    public class VisionBoardPictureUpdateModel
+    public class VisionBoardPictureUpdateWithFileFormModel
     {
 
-        public VisionBoardPictureUpdateModel()
+        public VisionBoardPictureUpdateWithFileFormModel()
         {
         }
 
-        public VisionBoardPictureUpdateModel(Int64 visionBoardPictureId,String fileName,Int64 fileSize,Int64 userId)
+        public VisionBoardPictureUpdateWithFileFormModel(FileStreamModel uploadedFile,Int64 visionBoardPictureId,String fileName,Int64 fileSize,Int64 userId)
         {
+            UploadedFile = uploadedFile;
             VisionBoardPictureId = visionBoardPictureId;
             FileName = fileName;
             FileSize = fileSize;
             UserId = userId;
         }
 
+        [Required][JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
         [JsonPropertyName("visionBoardPictureId")]
         public Int64 VisionBoardPictureId {set; get;}
         [JsonPropertyName("location")]
@@ -13382,9 +13390,10 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 
-        public VisionBoardPictureUpdateModel GetCopy()
+        public VisionBoardPictureUpdateWithFileFormModel GetCopy()
         {
-            var obj = new VisionBoardPictureUpdateModel();
+            var obj = new VisionBoardPictureUpdateWithFileFormModel();
+            obj.UploadedFile = UploadedFile;
             obj.VisionBoardPictureId = VisionBoardPictureId;
             obj.Location = Location;
             obj.FileName = FileName;
@@ -13394,6 +13403,7 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string UploadedFile__Name = "UploadedFile";
         public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
@@ -13751,6 +13761,551 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyJournalModel
+    {
+
+        public DailyJournalModel()
+        {
+        }
+
+        public DailyJournalModel(Int64 dailyJournalId,DateTime dailyJournalDate,Int64 userId,Int64 predefinedMoodTypeId,String gratitude1,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        {
+            DailyJournalId = dailyJournalId;
+            DailyJournalDate = dailyJournalDate;
+            UserId = userId;
+            PredefinedMoodTypeId = predefinedMoodTypeId;
+            Gratitude1 = gratitude1;
+            IsDeleted = isDeleted;
+            CreatedDate = createdDate;
+            ModifiedDate = modifiedDate;
+        }
+
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("predefinedMoodTypeName")]
+        public String PredefinedMoodTypeName {set; get;}
+        [JsonPropertyName("createdByUserFirstName")]
+        public String CreatedByUserFirstName {set; get;}
+        [JsonPropertyName("createdByUserLastName")]
+        public String CreatedByUserLastName {set; get;}
+        [JsonPropertyName("createdByUserEmail")]
+        public String CreatedByUserEmail {set; get;}
+        [JsonPropertyName("modifiedByUserFirstName")]
+        public String ModifiedByUserFirstName {set; get;}
+        [JsonPropertyName("modifiedByUserLastName")]
+        public String ModifiedByUserLastName {set; get;}
+        [JsonPropertyName("modifiedByUserEmail")]
+        public String ModifiedByUserEmail {set; get;}
+        [JsonPropertyName("createdBy")]
+        public String CreatedBy {set; get;}
+        [JsonPropertyName("modifiedBy")]
+        public String ModifiedBy {set; get;}
+        [JsonPropertyName("dailyJournalId")]
+        public Int64 DailyJournalId {set; get;}
+        [JsonPropertyName("dailyJournalDate")]
+        public DateTime DailyJournalDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedMoodTypeId")]
+        public Int64 PredefinedMoodTypeId {set; get;}
+        [JsonPropertyName("gratitude1")]
+        public String Gratitude1 {set; get;}
+        [JsonPropertyName("gratitude2")]
+        public String Gratitude2 {set; get;}
+        [JsonPropertyName("gratitude3")]
+        public String Gratitude3 {set; get;}
+        [JsonPropertyName("gratitude4")]
+        public String Gratitude4 {set; get;}
+        [JsonPropertyName("gratitude5")]
+        public String Gratitude5 {set; get;}
+        [JsonPropertyName("yourReflection")]
+        public String YourReflection {set; get;}
+        [JsonPropertyName("tommorowsIntentions")]
+        public String TommorowsIntentions {set; get;}
+        [JsonPropertyName("isDeleted")]
+        public Boolean IsDeleted {set; get;}
+        [JsonPropertyName("createdDate")]
+        public DateTime CreatedDate {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedDate")]
+        public DateTime ModifiedDate {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+
+        public DailyJournalCreateModel GetAsCreateModel()
+        {
+            var obj = new DailyJournalCreateModel();
+            obj.DailyJournalDate = DailyJournalDate;
+            obj.UserId = UserId;
+            obj.PredefinedMoodTypeId = PredefinedMoodTypeId;
+            obj.Gratitude1 = Gratitude1;
+            obj.Gratitude2 = Gratitude2;
+            obj.Gratitude3 = Gratitude3;
+            obj.Gratitude4 = Gratitude4;
+            obj.Gratitude5 = Gratitude5;
+            obj.YourReflection = YourReflection;
+            obj.TommorowsIntentions = TommorowsIntentions;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(DailyJournalCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyJournalDate == DailyJournalDate);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.PredefinedMoodTypeId == PredefinedMoodTypeId);
+            result = result && (obj.Gratitude1 == Gratitude1);
+            result = result && (obj.Gratitude2 == Gratitude2);
+            result = result && (obj.Gratitude3 == Gratitude3);
+            result = result && (obj.Gratitude4 == Gratitude4);
+            result = result && (obj.Gratitude5 == Gratitude5);
+            result = result && (obj.YourReflection == YourReflection);
+            result = result && (obj.TommorowsIntentions == TommorowsIntentions);
+            return result;
+        }
+
+
+        public DailyJournalUpdateModel GetAsUpdateModel()
+        {
+            var obj = new DailyJournalUpdateModel();
+            obj.DailyJournalId = DailyJournalId;
+            obj.DailyJournalDate = DailyJournalDate;
+            obj.UserId = UserId;
+            obj.PredefinedMoodTypeId = PredefinedMoodTypeId;
+            obj.Gratitude1 = Gratitude1;
+            obj.Gratitude2 = Gratitude2;
+            obj.Gratitude3 = Gratitude3;
+            obj.Gratitude4 = Gratitude4;
+            obj.Gratitude5 = Gratitude5;
+            obj.YourReflection = YourReflection;
+            obj.TommorowsIntentions = TommorowsIntentions;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(DailyJournalUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.DailyJournalId == DailyJournalId);
+            result = result && (obj.DailyJournalDate == DailyJournalDate);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.PredefinedMoodTypeId == PredefinedMoodTypeId);
+            result = result && (obj.Gratitude1 == Gratitude1);
+            result = result && (obj.Gratitude2 == Gratitude2);
+            result = result && (obj.Gratitude3 == Gratitude3);
+            result = result && (obj.Gratitude4 == Gratitude4);
+            result = result && (obj.Gratitude5 == Gratitude5);
+            result = result && (obj.YourReflection == YourReflection);
+            result = result && (obj.TommorowsIntentions == TommorowsIntentions);
+            return result;
+        }
+
+
+        public DailyJournalModel GetCopy()
+        {
+            var obj = new DailyJournalModel();
+            obj.UserName = UserName;
+            obj.PredefinedMoodTypeName = PredefinedMoodTypeName;
+            obj.CreatedByUserFirstName = CreatedByUserFirstName;
+            obj.CreatedByUserLastName = CreatedByUserLastName;
+            obj.CreatedByUserEmail = CreatedByUserEmail;
+            obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
+            obj.ModifiedByUserLastName = ModifiedByUserLastName;
+            obj.ModifiedByUserEmail = ModifiedByUserEmail;
+            obj.CreatedBy = CreatedBy;
+            obj.ModifiedBy = ModifiedBy;
+            obj.DailyJournalId = DailyJournalId;
+            obj.DailyJournalDate = DailyJournalDate;
+            obj.UserId = UserId;
+            obj.PredefinedMoodTypeId = PredefinedMoodTypeId;
+            obj.Gratitude1 = Gratitude1;
+            obj.Gratitude2 = Gratitude2;
+            obj.Gratitude3 = Gratitude3;
+            obj.Gratitude4 = Gratitude4;
+            obj.Gratitude5 = Gratitude5;
+            obj.YourReflection = YourReflection;
+            obj.TommorowsIntentions = TommorowsIntentions;
+            obj.IsDeleted = IsDeleted;
+            obj.CreatedDate = CreatedDate;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedDate = ModifiedDate;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserName__Name = "UserName";
+        public const string PredefinedMoodTypeName__Name = "PredefinedMoodTypeName";
+        public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
+        public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
+        public const string CreatedByUserEmail__Name = "CreatedByUserEmail";
+        public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
+        public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
+        public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
+        public const string CreatedBy__Name = "CreatedBy";
+        public const string ModifiedBy__Name = "ModifiedBy";
+        public const string DailyJournalId__Name = "DailyJournalId";
+        public const string DailyJournalDate__Name = "DailyJournalDate";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedMoodTypeId__Name = "PredefinedMoodTypeId";
+        public const string Gratitude1__Name = "Gratitude1";
+        public const string Gratitude2__Name = "Gratitude2";
+        public const string Gratitude3__Name = "Gratitude3";
+        public const string Gratitude4__Name = "Gratitude4";
+        public const string Gratitude5__Name = "Gratitude5";
+        public const string YourReflection__Name = "YourReflection";
+        public const string TommorowsIntentions__Name = "TommorowsIntentions";
+        public const string IsDeleted__Name = "IsDeleted";
+        public const string CreatedDate__Name = "CreatedDate";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedDate__Name = "ModifiedDate";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        // String Column Sizes
+        public const int Gratitude1__Size = 500;
+        public const int Gratitude2__Size = 500;
+        public const int Gratitude3__Size = 500;
+        public const int Gratitude4__Size = 500;
+        public const int Gratitude5__Size = 500;
+        public const int YourReflection__Size = 500;
+        public const int TommorowsIntentions__Size = 500;
+    }
+
+    public class DailyJournalSearchCriteria
+    {
+
+        public DailyJournalSearchCriteria()
+        {
+        }
+        [JsonPropertyName("startDate")]
+        public DateTime? StartDate {set; get;}
+        [JsonPropertyName("endDate")]
+        public DateTime? EndDate {set; get;}
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("predefinedMoodTypeIds")]
+        public List<Int64> PredefinedMoodTypeIds {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyJournalSearchCriteria GetCopy()
+        {
+            var obj = new DailyJournalSearchCriteria();
+            obj.StartDate = StartDate;
+            obj.EndDate = EndDate;
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.PredefinedMoodTypeIds = PredefinedMoodTypeIds;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string StartDate__Name = "StartDate";
+        public const string EndDate__Name = "EndDate";
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedMoodTypeIds__Name = "PredefinedMoodTypeIds";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class DailyJournalCreateModel
+    {
+
+        public DailyJournalCreateModel()
+        {
+        }
+
+        public DailyJournalCreateModel(DateTime dailyJournalDate,Int64 userId,Int64 predefinedMoodTypeId,String gratitude1)
+        {
+            DailyJournalDate = dailyJournalDate;
+            UserId = userId;
+            PredefinedMoodTypeId = predefinedMoodTypeId;
+            Gratitude1 = gratitude1;
+        }
+
+        [JsonPropertyName("dailyJournalDate")]
+        public DateTime DailyJournalDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedMoodTypeId")]
+        public Int64 PredefinedMoodTypeId {set; get;}
+        [JsonPropertyName("gratitude1")]
+        public String Gratitude1 {set; get;}
+        [JsonPropertyName("gratitude2")]
+        public String Gratitude2 {set; get;}
+        [JsonPropertyName("gratitude3")]
+        public String Gratitude3 {set; get;}
+        [JsonPropertyName("gratitude4")]
+        public String Gratitude4 {set; get;}
+        [JsonPropertyName("gratitude5")]
+        public String Gratitude5 {set; get;}
+        [JsonPropertyName("yourReflection")]
+        public String YourReflection {set; get;}
+        [JsonPropertyName("tommorowsIntentions")]
+        public String TommorowsIntentions {set; get;}
+
+        public DailyJournalCreateModel GetCopy()
+        {
+            var obj = new DailyJournalCreateModel();
+            obj.DailyJournalDate = DailyJournalDate;
+            obj.UserId = UserId;
+            obj.PredefinedMoodTypeId = PredefinedMoodTypeId;
+            obj.Gratitude1 = Gratitude1;
+            obj.Gratitude2 = Gratitude2;
+            obj.Gratitude3 = Gratitude3;
+            obj.Gratitude4 = Gratitude4;
+            obj.Gratitude5 = Gratitude5;
+            obj.YourReflection = YourReflection;
+            obj.TommorowsIntentions = TommorowsIntentions;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyJournalDate__Name = "DailyJournalDate";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedMoodTypeId__Name = "PredefinedMoodTypeId";
+        public const string Gratitude1__Name = "Gratitude1";
+        public const string Gratitude2__Name = "Gratitude2";
+        public const string Gratitude3__Name = "Gratitude3";
+        public const string Gratitude4__Name = "Gratitude4";
+        public const string Gratitude5__Name = "Gratitude5";
+        public const string YourReflection__Name = "YourReflection";
+        public const string TommorowsIntentions__Name = "TommorowsIntentions";
+        // String Column Sizes
+        public const int Gratitude1__Size = 500;
+        public const int Gratitude2__Size = 500;
+        public const int Gratitude3__Size = 500;
+        public const int Gratitude4__Size = 500;
+        public const int Gratitude5__Size = 500;
+        public const int YourReflection__Size = 500;
+        public const int TommorowsIntentions__Size = 500;
+    }
+
+    public class MultipleDailyJournalCreateModel
+    {
+
+        public MultipleDailyJournalCreateModel()
+        {
+        }
+        [JsonPropertyName("newDailyJournals")]
+        public List<DailyJournalCreateModel> NewDailyJournals {set; get;}
+
+        public MultipleDailyJournalCreateModel GetCopy()
+        {
+            var obj = new MultipleDailyJournalCreateModel();
+            obj.NewDailyJournals = NewDailyJournals;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewDailyJournals__Name = "NewDailyJournals";
+    }
+
+    public class DailyJournalUpdateModel
+    {
+
+        public DailyJournalUpdateModel()
+        {
+        }
+
+        public DailyJournalUpdateModel(Int64 dailyJournalId,DateTime dailyJournalDate,Int64 userId,Int64 predefinedMoodTypeId,String gratitude1)
+        {
+            DailyJournalId = dailyJournalId;
+            DailyJournalDate = dailyJournalDate;
+            UserId = userId;
+            PredefinedMoodTypeId = predefinedMoodTypeId;
+            Gratitude1 = gratitude1;
+        }
+
+        [JsonPropertyName("dailyJournalId")]
+        public Int64 DailyJournalId {set; get;}
+        [JsonPropertyName("dailyJournalDate")]
+        public DateTime DailyJournalDate {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("predefinedMoodTypeId")]
+        public Int64 PredefinedMoodTypeId {set; get;}
+        [JsonPropertyName("gratitude1")]
+        public String Gratitude1 {set; get;}
+        [JsonPropertyName("gratitude2")]
+        public String Gratitude2 {set; get;}
+        [JsonPropertyName("gratitude3")]
+        public String Gratitude3 {set; get;}
+        [JsonPropertyName("gratitude4")]
+        public String Gratitude4 {set; get;}
+        [JsonPropertyName("gratitude5")]
+        public String Gratitude5 {set; get;}
+        [JsonPropertyName("yourReflection")]
+        public String YourReflection {set; get;}
+        [JsonPropertyName("tommorowsIntentions")]
+        public String TommorowsIntentions {set; get;}
+
+        public DailyJournalUpdateModel GetCopy()
+        {
+            var obj = new DailyJournalUpdateModel();
+            obj.DailyJournalId = DailyJournalId;
+            obj.DailyJournalDate = DailyJournalDate;
+            obj.UserId = UserId;
+            obj.PredefinedMoodTypeId = PredefinedMoodTypeId;
+            obj.Gratitude1 = Gratitude1;
+            obj.Gratitude2 = Gratitude2;
+            obj.Gratitude3 = Gratitude3;
+            obj.Gratitude4 = Gratitude4;
+            obj.Gratitude5 = Gratitude5;
+            obj.YourReflection = YourReflection;
+            obj.TommorowsIntentions = TommorowsIntentions;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyJournalId__Name = "DailyJournalId";
+        public const string DailyJournalDate__Name = "DailyJournalDate";
+        public const string UserId__Name = "UserId";
+        public const string PredefinedMoodTypeId__Name = "PredefinedMoodTypeId";
+        public const string Gratitude1__Name = "Gratitude1";
+        public const string Gratitude2__Name = "Gratitude2";
+        public const string Gratitude3__Name = "Gratitude3";
+        public const string Gratitude4__Name = "Gratitude4";
+        public const string Gratitude5__Name = "Gratitude5";
+        public const string YourReflection__Name = "YourReflection";
+        public const string TommorowsIntentions__Name = "TommorowsIntentions";
+        // String Column Sizes
+        public const int Gratitude1__Size = 500;
+        public const int Gratitude2__Size = 500;
+        public const int Gratitude3__Size = 500;
+        public const int Gratitude4__Size = 500;
+        public const int Gratitude5__Size = 500;
+        public const int YourReflection__Size = 500;
+        public const int TommorowsIntentions__Size = 500;
+    }
+
+    public class DailyJournalByUserIdSearchCriteria
+    {
+
+        public DailyJournalByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public DailyJournalByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new DailyJournalByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByDailyJournalIdSearchCriteria
+    {
+
+        public UserByDailyJournalIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("dailyJournalId")]
+        public Int64 DailyJournalId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByDailyJournalIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByDailyJournalIdSearchCriteria();
+            obj.DailyJournalId = DailyJournalId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string DailyJournalId__Name = "DailyJournalId";
         public const string SelectedId__Name = "SelectedId";
         public const string Page__Name = "Page";
         public const string PageSize__Name = "PageSize";
@@ -26662,6 +27217,49 @@ namespace Manifest.Tests.Common
         public const string Length__Name = "Length";
         public const string Name__Name = "Name";
         public const string FileName__Name = "FileName";
+    }
+
+    public class VisionBoardPictureCreateModel
+    {
+
+        public VisionBoardPictureCreateModel()
+        {
+        }
+
+        public VisionBoardPictureCreateModel(String fileName,Int64 fileSize,Int64 userId)
+        {
+            FileName = fileName;
+            FileSize = fileSize;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("location")]
+        public String Location {set; get;}
+        [JsonPropertyName("fileName")]
+        public String FileName {set; get;}
+        [JsonPropertyName("fileSize")]
+        public Int64 FileSize {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+
+        public VisionBoardPictureCreateModel GetCopy()
+        {
+            var obj = new VisionBoardPictureCreateModel();
+            obj.Location = Location;
+            obj.FileName = FileName;
+            obj.FileSize = FileSize;
+            obj.UserId = UserId;
+            return obj;
+        }
+
+        // Property Names
+        public const string Location__Name = "Location";
+        public const string FileName__Name = "FileName";
+        public const string FileSize__Name = "FileSize";
+        public const string UserId__Name = "UserId";
+        // String Column Sizes
+        public const int Location__Size = 255;
+        public const int FileName__Size = 255;
     }
 
     public class LogSettings
