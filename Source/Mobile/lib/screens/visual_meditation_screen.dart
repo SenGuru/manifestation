@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../models/meditation_models.dart';
+import '../services/usage_analytics_service.dart';
+import '../models/analytics_models.dart';
 import '../components/visual_selector.dart';
 import '../components/animated_candle.dart';
 import '../components/animated_moon.dart';
@@ -40,8 +42,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   late AnimationController _backgroundController;
   late Animation<double> _backgroundFade;
   
-  // Session tracking (simplified - removed API dependency)
-  // SessionTracker? _sessionTracker;
+  // Session tracking with UsageAnalyticsService
+  final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
+  bool _sessionStarted = false;
+  DateTime? _sessionStartTime;
   
   final List<int> durations = [5, 10, 15, 20, 30];
 
@@ -50,7 +54,17 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     super.initState();
     _initializeControllers();
     _loadSettings();
+    _initializeAnalytics();
     remainingSeconds = selectedDuration * 60;
+  }
+  
+  Future<void> _initializeAnalytics() async {
+    try {
+      await _analyticsService.initialize();
+      print('📊 Visual meditation analytics initialized');
+    } catch (e) {
+      print('❌ Error initializing visual meditation analytics: $e');
+    }
   }
 
   void _initializeControllers() {
@@ -77,7 +91,12 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   void dispose() {
     _sessionController.dispose();
     _backgroundController.dispose();
-    // Removed session tracking
+    
+    // End session tracking if active
+    if (_sessionStarted) {
+      _endSessionTracking();
+    }
+    
     super.dispose();
   }
 
@@ -150,30 +169,57 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
 
   void _startSession() async {
     try {
-      // Simplified session start (removed API calls)
-      print('Starting meditation session (hardcoded)');
+      print('📊 Starting visual meditation session');
+      
+      // Start analytics tracking
+      await _startSessionTracking();
       
       setState(() {
         isSessionActive = true;
         isPlaying = true;
         remainingSeconds = selectedDuration * 60;
+        _sessionStartTime = DateTime.now();
       });
       
       _backgroundController.forward();
       _startTimer();
       
-      print('Meditation session started');
+      print('📊 Visual meditation session started');
     } catch (e) {
-      print('Error starting meditation session: $e');
+      print('❌ Error starting meditation session: $e');
       // Continue without tracking if there's an error
       setState(() {
         isSessionActive = true;
         isPlaying = true;
         remainingSeconds = selectedDuration * 60;
+        _sessionStartTime = DateTime.now();
       });
       
       _backgroundController.forward();
       _startTimer();
+    }
+  }
+  
+  /// Start session tracking for visual meditation
+  Future<void> _startSessionTracking() async {
+    try {
+      _analyticsService.startSession(
+        ActivityType.visualMeditation,
+        metadata: {
+          'visualType': selectedVisualType.name,
+          'duration': selectedDuration,
+          'intensity': visualIntensity,
+          'size': visualSize,
+          'candleColor': selectedCandleColor.name,
+          'moonPhase': selectedMoonPhase.name,
+          'naturePattern': selectedNaturePattern.name,
+          'geometricPattern': selectedGeometricPattern.name,
+        },
+      );
+      _sessionStarted = true;
+      print('📊 Visual meditation session tracking started');
+    } catch (e) {
+      print('❌ Error starting visual meditation session tracking: $e');
     }
   }
 
@@ -198,7 +244,17 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     });
     _sessionController.stop();
     
-    // Session tracking removed
+    // Update session metadata
+    if (_sessionStarted) {
+      _analyticsService.updateSessionMetadata(
+        ActivityType.visualMeditation,
+        {
+          'paused': true,
+          'pauseTime': DateTime.now().toIso8601String(),
+          'remainingSeconds': remainingSeconds,
+        },
+      );
+    }
   }
 
   void _resumeSession() {
@@ -207,7 +263,17 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     });
     _startTimer();
     
-    // Session tracking removed
+    // Update session metadata
+    if (_sessionStarted) {
+      _analyticsService.updateSessionMetadata(
+        ActivityType.visualMeditation,
+        {
+          'paused': false,
+          'resumeTime': DateTime.now().toIso8601String(),
+          'remainingSeconds': remainingSeconds,
+        },
+      );
+    }
   }
 
   void _endSession() async {
@@ -219,11 +285,38 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     _sessionController.stop();
     _backgroundController.reverse();
     
-    // Session tracking removed
-    print('Meditation session completed');
+    // End session tracking
+    await _endSessionTracking();
+    
+    print('📊 Visual meditation session completed');
     
     // Show completion dialog
     _showCompletionDialog();
+  }
+  
+  /// End session tracking for visual meditation
+  Future<void> _endSessionTracking() async {
+    if (_sessionStarted) {
+      try {
+        final actualDuration = _sessionStartTime != null 
+            ? DateTime.now().difference(_sessionStartTime!).inSeconds
+            : selectedDuration * 60;
+            
+        await _analyticsService.endSession(
+          ActivityType.visualMeditation,
+          additionalMetadata: {
+            'completed': remainingSeconds <= 0,
+            'actualDuration': actualDuration,
+            'plannedDuration': selectedDuration * 60,
+            'completionPercentage': ((selectedDuration * 60 - remainingSeconds) / (selectedDuration * 60) * 100).round(),
+          },
+        );
+        _sessionStarted = false;
+        print('📊 Visual meditation session tracking ended');
+      } catch (e) {
+        print('❌ Error ending visual meditation session tracking: $e');
+      }
+    }
   }
 
   void _showCompletionDialog() {

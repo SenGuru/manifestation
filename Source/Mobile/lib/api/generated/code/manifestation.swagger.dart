@@ -8664,12 +8664,22 @@ abstract class Manifestation extends ChopperService {
 
   ///
   Future<chopper.Response<VisionBoardPictureModelReturnModel>>
-      apiV1ManifestCreatevisionboardpicturePost(
-          {required VisionBoardPictureCreateModel? body}) {
+      apiV1ManifestCreatevisionboardpicturePost({
+    required List<int> UploadedFile,
+    String? location,
+    String? fileName,
+    int? fileSize,
+    int? userId,
+  }) {
     generatedMapping.putIfAbsent(VisionBoardPictureModelReturnModel,
         () => VisionBoardPictureModelReturnModel.fromJsonFactory);
 
-    return _apiV1ManifestCreatevisionboardpicturePost(body: body);
+    return _apiV1ManifestCreatevisionboardpicturePost(
+        UploadedFile: UploadedFile,
+        location: location,
+        fileName: fileName,
+        fileSize: fileSize,
+        userId: userId);
   }
 
   ///
@@ -8677,9 +8687,15 @@ abstract class Manifestation extends ChopperService {
     path: '/api/v1/manifest/createvisionboardpicture',
     optionalBody: true,
   )
+  @Multipart()
   Future<chopper.Response<VisionBoardPictureModelReturnModel>>
-      _apiV1ManifestCreatevisionboardpicturePost(
-          {@Body() required VisionBoardPictureCreateModel? body});
+      _apiV1ManifestCreatevisionboardpicturePost({
+    @PartFile() required List<int> UploadedFile,
+    @Part('Location') String? location,
+    @Part('FileName') String? fileName,
+    @Part('FileSize') int? fileSize,
+    @Part('UserId') int? userId,
+  });
 
   ///
   Future<chopper.Response<VisionBoardPictureModelReturnListModel>>
@@ -8702,12 +8718,24 @@ abstract class Manifestation extends ChopperService {
 
   ///
   Future<chopper.Response<VisionBoardPictureModelReturnModel>>
-      apiV1ManifestUpdatevisionboardpicturePost(
-          {required VisionBoardPictureUpdateModel? body}) {
+      apiV1ManifestUpdatevisionboardpicturePost({
+    required List<int> UploadedFile,
+    int? visionBoardPictureId,
+    String? location,
+    String? fileName,
+    int? fileSize,
+    int? userId,
+  }) {
     generatedMapping.putIfAbsent(VisionBoardPictureModelReturnModel,
         () => VisionBoardPictureModelReturnModel.fromJsonFactory);
 
-    return _apiV1ManifestUpdatevisionboardpicturePost(body: body);
+    return _apiV1ManifestUpdatevisionboardpicturePost(
+        UploadedFile: UploadedFile,
+        visionBoardPictureId: visionBoardPictureId,
+        location: location,
+        fileName: fileName,
+        fileSize: fileSize,
+        userId: userId);
   }
 
   ///
@@ -8715,9 +8743,16 @@ abstract class Manifestation extends ChopperService {
     path: '/api/v1/manifest/updatevisionboardpicture',
     optionalBody: true,
   )
+  @Multipart()
   Future<chopper.Response<VisionBoardPictureModelReturnModel>>
-      _apiV1ManifestUpdatevisionboardpicturePost(
-          {@Body() required VisionBoardPictureUpdateModel? body});
+      _apiV1ManifestUpdatevisionboardpicturePost({
+    @PartFile() required List<int> UploadedFile,
+    @Part('VisionBoardPictureId') int? visionBoardPictureId,
+    @Part('Location') String? location,
+    @Part('FileName') String? fileName,
+    @Part('FileSize') int? fileSize,
+    @Part('UserId') int? userId,
+  });
 
   ///
   ///@param id
@@ -73974,100 +74009,6 @@ extension $VisionBoardPictureModelReturnModelExtension
 }
 
 @JsonSerializable(explicitToJson: true)
-class VisionBoardPictureUpdateModel {
-  const VisionBoardPictureUpdateModel({
-    this.visionBoardPictureId,
-    this.location,
-    this.fileName,
-    this.fileSize,
-    this.userId,
-  });
-
-  factory VisionBoardPictureUpdateModel.fromJson(Map<String, dynamic> json) =>
-      _$VisionBoardPictureUpdateModelFromJson(json);
-
-  static const toJsonFactory = _$VisionBoardPictureUpdateModelToJson;
-  Map<String, dynamic> toJson() => _$VisionBoardPictureUpdateModelToJson(this);
-
-  @JsonKey(name: 'visionBoardPictureId')
-  final int? visionBoardPictureId;
-  @JsonKey(name: 'location')
-  final String? location;
-  @JsonKey(name: 'fileName')
-  final String? fileName;
-  @JsonKey(name: 'fileSize')
-  final int? fileSize;
-  @JsonKey(name: 'userId')
-  final int? userId;
-  static const fromJsonFactory = _$VisionBoardPictureUpdateModelFromJson;
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other is VisionBoardPictureUpdateModel &&
-            (identical(other.visionBoardPictureId, visionBoardPictureId) ||
-                const DeepCollectionEquality().equals(
-                    other.visionBoardPictureId, visionBoardPictureId)) &&
-            (identical(other.location, location) ||
-                const DeepCollectionEquality()
-                    .equals(other.location, location)) &&
-            (identical(other.fileName, fileName) ||
-                const DeepCollectionEquality()
-                    .equals(other.fileName, fileName)) &&
-            (identical(other.fileSize, fileSize) ||
-                const DeepCollectionEquality()
-                    .equals(other.fileSize, fileSize)) &&
-            (identical(other.userId, userId) ||
-                const DeepCollectionEquality().equals(other.userId, userId)));
-  }
-
-  @override
-  String toString() => jsonEncode(this);
-
-  @override
-  int get hashCode =>
-      const DeepCollectionEquality().hash(visionBoardPictureId) ^
-      const DeepCollectionEquality().hash(location) ^
-      const DeepCollectionEquality().hash(fileName) ^
-      const DeepCollectionEquality().hash(fileSize) ^
-      const DeepCollectionEquality().hash(userId) ^
-      runtimeType.hashCode;
-}
-
-extension $VisionBoardPictureUpdateModelExtension
-    on VisionBoardPictureUpdateModel {
-  VisionBoardPictureUpdateModel copyWith(
-      {int? visionBoardPictureId,
-      String? location,
-      String? fileName,
-      int? fileSize,
-      int? userId}) {
-    return VisionBoardPictureUpdateModel(
-        visionBoardPictureId: visionBoardPictureId ?? this.visionBoardPictureId,
-        location: location ?? this.location,
-        fileName: fileName ?? this.fileName,
-        fileSize: fileSize ?? this.fileSize,
-        userId: userId ?? this.userId);
-  }
-
-  VisionBoardPictureUpdateModel copyWithWrapped(
-      {Wrapped<int?>? visionBoardPictureId,
-      Wrapped<String?>? location,
-      Wrapped<String?>? fileName,
-      Wrapped<int?>? fileSize,
-      Wrapped<int?>? userId}) {
-    return VisionBoardPictureUpdateModel(
-        visionBoardPictureId: (visionBoardPictureId != null
-            ? visionBoardPictureId.value
-            : this.visionBoardPictureId),
-        location: (location != null ? location.value : this.location),
-        fileName: (fileName != null ? fileName.value : this.fileName),
-        fileSize: (fileSize != null ? fileSize.value : this.fileSize),
-        userId: (userId != null ? userId.value : this.userId));
-  }
-}
-
-@JsonSerializable(explicitToJson: true)
 class VisionBoardSessionByFeedIdSearchCriteria {
   const VisionBoardSessionByFeedIdSearchCriteria({
     this.selectedId,
@@ -79344,6 +79285,213 @@ extension $ApiV1ManifestCreatefileattachmentPost$RequestBodyExtension
             : this.fileAttachmentFileSizeInBytes),
         description:
             (description != null ? description.value : this.description),
+        userId: (userId != null ? userId.value : this.userId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1ManifestCreatevisionboardpicturePost$RequestBody {
+  const ApiV1ManifestCreatevisionboardpicturePost$RequestBody({
+    required this.uploadedFile,
+    this.location,
+    this.fileName,
+    this.fileSize,
+    this.userId,
+  });
+
+  factory ApiV1ManifestCreatevisionboardpicturePost$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyFromJson(json);
+
+  static const toJsonFactory =
+      _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyToJson(this);
+
+  @JsonKey(name: 'UploadedFile')
+  final String uploadedFile;
+  @JsonKey(name: 'Location')
+  final String? location;
+  @JsonKey(name: 'FileName')
+  final String? fileName;
+  @JsonKey(name: 'FileSize')
+  final int? fileSize;
+  @JsonKey(name: 'UserId')
+  final int? userId;
+  static const fromJsonFactory =
+      _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1ManifestCreatevisionboardpicturePost$RequestBody &&
+            (identical(other.uploadedFile, uploadedFile) ||
+                const DeepCollectionEquality()
+                    .equals(other.uploadedFile, uploadedFile)) &&
+            (identical(other.location, location) ||
+                const DeepCollectionEquality()
+                    .equals(other.location, location)) &&
+            (identical(other.fileName, fileName) ||
+                const DeepCollectionEquality()
+                    .equals(other.fileName, fileName)) &&
+            (identical(other.fileSize, fileSize) ||
+                const DeepCollectionEquality()
+                    .equals(other.fileSize, fileSize)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(uploadedFile) ^
+      const DeepCollectionEquality().hash(location) ^
+      const DeepCollectionEquality().hash(fileName) ^
+      const DeepCollectionEquality().hash(fileSize) ^
+      const DeepCollectionEquality().hash(userId) ^
+      runtimeType.hashCode;
+}
+
+extension $ApiV1ManifestCreatevisionboardpicturePost$RequestBodyExtension
+    on ApiV1ManifestCreatevisionboardpicturePost$RequestBody {
+  ApiV1ManifestCreatevisionboardpicturePost$RequestBody copyWith(
+      {String? uploadedFile,
+      String? location,
+      String? fileName,
+      int? fileSize,
+      int? userId}) {
+    return ApiV1ManifestCreatevisionboardpicturePost$RequestBody(
+        uploadedFile: uploadedFile ?? this.uploadedFile,
+        location: location ?? this.location,
+        fileName: fileName ?? this.fileName,
+        fileSize: fileSize ?? this.fileSize,
+        userId: userId ?? this.userId);
+  }
+
+  ApiV1ManifestCreatevisionboardpicturePost$RequestBody copyWithWrapped(
+      {Wrapped<String>? uploadedFile,
+      Wrapped<String?>? location,
+      Wrapped<String?>? fileName,
+      Wrapped<int?>? fileSize,
+      Wrapped<int?>? userId}) {
+    return ApiV1ManifestCreatevisionboardpicturePost$RequestBody(
+        uploadedFile:
+            (uploadedFile != null ? uploadedFile.value : this.uploadedFile),
+        location: (location != null ? location.value : this.location),
+        fileName: (fileName != null ? fileName.value : this.fileName),
+        fileSize: (fileSize != null ? fileSize.value : this.fileSize),
+        userId: (userId != null ? userId.value : this.userId));
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1ManifestUpdatevisionboardpicturePost$RequestBody {
+  const ApiV1ManifestUpdatevisionboardpicturePost$RequestBody({
+    required this.uploadedFile,
+    this.visionBoardPictureId,
+    this.location,
+    this.fileName,
+    this.fileSize,
+    this.userId,
+  });
+
+  factory ApiV1ManifestUpdatevisionboardpicturePost$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyFromJson(json);
+
+  static const toJsonFactory =
+      _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyToJson(this);
+
+  @JsonKey(name: 'UploadedFile')
+  final String uploadedFile;
+  @JsonKey(name: 'VisionBoardPictureId')
+  final int? visionBoardPictureId;
+  @JsonKey(name: 'Location')
+  final String? location;
+  @JsonKey(name: 'FileName')
+  final String? fileName;
+  @JsonKey(name: 'FileSize')
+  final int? fileSize;
+  @JsonKey(name: 'UserId')
+  final int? userId;
+  static const fromJsonFactory =
+      _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is ApiV1ManifestUpdatevisionboardpicturePost$RequestBody &&
+            (identical(other.uploadedFile, uploadedFile) ||
+                const DeepCollectionEquality()
+                    .equals(other.uploadedFile, uploadedFile)) &&
+            (identical(other.visionBoardPictureId, visionBoardPictureId) ||
+                const DeepCollectionEquality().equals(
+                    other.visionBoardPictureId, visionBoardPictureId)) &&
+            (identical(other.location, location) ||
+                const DeepCollectionEquality()
+                    .equals(other.location, location)) &&
+            (identical(other.fileName, fileName) ||
+                const DeepCollectionEquality()
+                    .equals(other.fileName, fileName)) &&
+            (identical(other.fileSize, fileSize) ||
+                const DeepCollectionEquality()
+                    .equals(other.fileSize, fileSize)) &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(uploadedFile) ^
+      const DeepCollectionEquality().hash(visionBoardPictureId) ^
+      const DeepCollectionEquality().hash(location) ^
+      const DeepCollectionEquality().hash(fileName) ^
+      const DeepCollectionEquality().hash(fileSize) ^
+      const DeepCollectionEquality().hash(userId) ^
+      runtimeType.hashCode;
+}
+
+extension $ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyExtension
+    on ApiV1ManifestUpdatevisionboardpicturePost$RequestBody {
+  ApiV1ManifestUpdatevisionboardpicturePost$RequestBody copyWith(
+      {String? uploadedFile,
+      int? visionBoardPictureId,
+      String? location,
+      String? fileName,
+      int? fileSize,
+      int? userId}) {
+    return ApiV1ManifestUpdatevisionboardpicturePost$RequestBody(
+        uploadedFile: uploadedFile ?? this.uploadedFile,
+        visionBoardPictureId: visionBoardPictureId ?? this.visionBoardPictureId,
+        location: location ?? this.location,
+        fileName: fileName ?? this.fileName,
+        fileSize: fileSize ?? this.fileSize,
+        userId: userId ?? this.userId);
+  }
+
+  ApiV1ManifestUpdatevisionboardpicturePost$RequestBody copyWithWrapped(
+      {Wrapped<String>? uploadedFile,
+      Wrapped<int?>? visionBoardPictureId,
+      Wrapped<String?>? location,
+      Wrapped<String?>? fileName,
+      Wrapped<int?>? fileSize,
+      Wrapped<int?>? userId}) {
+    return ApiV1ManifestUpdatevisionboardpicturePost$RequestBody(
+        uploadedFile:
+            (uploadedFile != null ? uploadedFile.value : this.uploadedFile),
+        visionBoardPictureId: (visionBoardPictureId != null
+            ? visionBoardPictureId.value
+            : this.visionBoardPictureId),
+        location: (location != null ? location.value : this.location),
+        fileName: (fileName != null ? fileName.value : this.fileName),
+        fileSize: (fileSize != null ? fileSize.value : this.fileSize),
         userId: (userId != null ? userId.value : this.userId));
   }
 }

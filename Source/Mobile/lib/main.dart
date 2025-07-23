@@ -5,6 +5,7 @@ import 'screens/splash_screen.dart';
 import 'constants/colors.dart';
 import 'services/unified_auth_service.dart';
 import 'services/vision_board_service.dart';
+import 'utils/vision_board_xml_manager.dart';
 import 'widgets/session_activity_tracker.dart';
 
 void main() async {
@@ -15,6 +16,9 @@ void main() async {
   
   // Initialize VisionBoardService (this depends on auth being ready)
   await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  
+  // Start periodic background sync for vision boards
+  VisionBoardXMLManager.startPeriodicSync();
   
   print('🚀 All services initialized, starting app');
   

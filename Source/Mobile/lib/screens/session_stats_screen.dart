@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
+import '../services/usage_analytics_service.dart';
+import '../models/analytics_models.dart';
 
 class SessionStatsScreen extends StatefulWidget {
   @override
@@ -8,14 +10,21 @@ class SessionStatsScreen extends StatefulWidget {
 }
 
 class _SessionStatsScreenState extends State<SessionStatsScreen> {
-  Map<String, dynamic>? _stats;
+  UsageStats? _stats;
   bool _isLoading = true;
   String _errorMessage = '';
+  
+  final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
 
   @override
   void initState() {
     super.initState();
-    _loadStats();
+    _initializeAndLoadStats();
+  }
+  
+  Future<void> _initializeAndLoadStats() async {
+    await _analyticsService.initialize();
+    await _loadStats();
   }
 
   Future<void> _loadStats() async {
@@ -28,25 +37,17 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         });
       }
 
-      final stats = await _getUserStats();
-      
-      if (stats == null) {
-        throw Exception('Stats data is null');
-      }
+      final stats = await _analyticsService.getUsageStats();
       
       print('📊 SESSION STATS SCREEN: Stats loaded successfully');
-      print('   Total sessions: ${stats['totalSessions']}');
-      print('   Total time: ${stats['totalTimeInSeconds']}s');
+      print('   Total sessions: ${stats.totalSessions}');
+      print('   Total time: ${stats.totalTimeInSeconds}s');
+      print('   Most active: ${stats.mostActiveActivity.name}');
       
-      // Safe access to nested data
-      final activities = stats['activities'] as Map<String, dynamic>? ?? {};
-      final meditation = activities['meditation'] as Map<String, dynamic>? ?? {};
-      final visionBoard = activities['visionBoard'] as Map<String, dynamic>? ?? {};
-      final dailyAffirmations = activities['dailyAffirmations'] as Map<String, dynamic>? ?? {};
-      
-      print('   Meditation: ${meditation['totalSessions'] ?? 0} sessions, ${meditation['totalTimeInSeconds'] ?? 0}s');
-      print('   Vision Board: ${visionBoard['totalSessions'] ?? 0} sessions, ${visionBoard['totalTimeInSeconds'] ?? 0}s');
-      print('   Affirmations: ${dailyAffirmations['totalSessions'] ?? 0} sessions, ${dailyAffirmations['totalTimeInSeconds'] ?? 0}s');
+      for (final activity in stats.activities.keys) {
+        final activityStats = stats.activities[activity]!;
+        print('   ${activity.name}: ${activityStats.totalSessions} sessions, ${activityStats.totalTimeInSeconds}s');
+      }
       
       if (mounted) {
         setState(() {
@@ -65,184 +66,8 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
     }
   }
 
-  Future<Map<String, dynamic>> _getUserStats() async {
-    // Simulate API delay
-    await Future.delayed(Duration(seconds: 1));
-    
-    // Hardcoded statistics data
-    return {
-      'totalSessions': 42,
-      'totalTimeInSeconds': 7200, // 2 hours
-      'totalTimeFormatted': '2h 0m',
-      'averageSessionTime': '5m 43s',
-      'mostActiveActivity': 'Meditation',
-      'currentStreak': 7,
-      'longestStreak': 14,
-      'thisWeekSessions': 5,
-      'thisMonthSessions': 18,
-      'favoriteTime': 'Morning',
-      'totalDays': 30,
-      'activeDays': 21,
-      'consistencyRate': 70,
-      'activities': {
-        'meditation': {
-          'totalSessions': 20,
-          'totalTimeInSeconds': 3600,
-          'totalTimeFormatted': '1h 0m',
-          'averageSessionTime': '3m 0s',
-          'percentage': 47.6,
-        },
-        'visionBoard': {
-          'totalSessions': 12,
-          'totalTimeInSeconds': 2400,
-          'totalTimeFormatted': '40m 0s',
-          'averageSessionTime': '3m 20s',
-          'percentage': 28.6,
-        },
-        'affirmation': {
-          'totalSessions': 10,
-          'totalTimeInSeconds': 1200,
-          'totalTimeFormatted': '20m 0s',
-          'averageSessionTime': '2m 0s',
-          'percentage': 23.8,
-        },
-      },
-      'weeklyData': [
-        {'day': 'Mon', 'sessions': 2, 'timeInMinutes': 15},
-        {'day': 'Tue', 'sessions': 1, 'timeInMinutes': 8},
-        {'day': 'Wed', 'sessions': 3, 'timeInMinutes': 22},
-        {'day': 'Thu', 'sessions': 0, 'timeInMinutes': 0},
-        {'day': 'Fri', 'sessions': 2, 'timeInMinutes': 12},
-        {'day': 'Sat', 'sessions': 1, 'timeInMinutes': 5},
-        {'day': 'Sun', 'sessions': 2, 'timeInMinutes': 18},
-      ],
-    };
-  }
 
-  Map<String, dynamic> _calculateActivityStats(List<dynamic> sessions) {
-    if (sessions.isEmpty) {
-      return {
-        'totalSessions': 0,
-        'totalTimeInSeconds': 0,
-        'formattedTotalTime': '0m',
-        'formattedAverageLength': '0m',
-        'currentStreak': 0,
-        'lastSessionDate': null,
-        'weeklyActivity': _getEmptyWeeklyActivity(),
-      };
-    }
 
-    int totalSessions = sessions.length;
-    int totalTimeInSeconds = 0;
-    DateTime? lastSessionDate;
-    List<DateTime> sessionDates = [];
-
-    for (final session in sessions) {
-      // Calculate duration based on start/end times or duration field
-      if (session['startTime'] != null && session['endTime'] != null) {
-        final startTime = DateTime.parse(session['startTime']);
-        final endTime = DateTime.parse(session['endTime']);
-        totalTimeInSeconds += endTime.difference(startTime).inSeconds;
-      } else if (session['durationInSeconds'] != null) {
-        totalTimeInSeconds += session['durationInSeconds'] as int;
-      }
-
-      // Track session dates
-      if (session['createdAt'] != null) {
-        final sessionDate = DateTime.parse(session['createdAt']);
-        sessionDates.add(sessionDate);
-        if (lastSessionDate == null || sessionDate.isAfter(lastSessionDate)) {
-          lastSessionDate = sessionDate;
-        }
-      }
-    }
-
-    // Calculate current streak
-    int currentStreak = _calculateCurrentStreak(sessionDates);
-
-    // Calculate average length
-    int averageLength = totalSessions > 0 ? (totalTimeInSeconds / totalSessions).round() : 0;
-
-    // Generate weekly activity
-    List<Map<String, dynamic>> weeklyActivity = _generateWeeklyActivity(sessionDates);
-
-    return {
-      'totalSessions': totalSessions,
-      'totalTimeInSeconds': totalTimeInSeconds,
-      'formattedTotalTime': _formatDuration(totalTimeInSeconds),
-      'formattedAverageLength': _formatDuration(averageLength),
-      'currentStreak': currentStreak,
-      'lastSessionDate': lastSessionDate,
-      'weeklyActivity': weeklyActivity,
-    };
-  }
-
-  int _calculateCurrentStreak(List<DateTime> sessionDates) {
-    if (sessionDates.isEmpty) return 0;
-
-    sessionDates.sort((a, b) => b.compareTo(a)); // Sort descending
-    final today = DateTime.now();
-    int streak = 0;
-
-    for (int i = 0; i < sessionDates.length; i++) {
-      final sessionDate = sessionDates[i];
-      final daysDifference = today.difference(sessionDate).inDays;
-
-      if (daysDifference == streak) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-
-    return streak;
-  }
-
-  List<Map<String, dynamic>> _generateWeeklyActivity(List<DateTime> sessionDates) {
-    final today = DateTime.now();
-    final weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    List<Map<String, dynamic>> weeklyActivity = [];
-
-    for (int i = 6; i >= 0; i--) {
-      final date = today.subtract(Duration(days: i));
-      final dayName = weekDays[date.weekday - 1];
-      final sessionCount = sessionDates.where((sessionDate) =>
-          sessionDate.year == date.year &&
-          sessionDate.month == date.month &&
-          sessionDate.day == date.day
-      ).length;
-
-      weeklyActivity.add({
-        'dayName': dayName,
-        'sessionCount': sessionCount,
-        'date': date,
-      });
-    }
-
-    return weeklyActivity;
-  }
-
-  List<Map<String, dynamic>> _getEmptyWeeklyActivity() {
-    final weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    return weekDays.map((day) => {
-      'dayName': day,
-      'sessionCount': 0,
-      'date': DateTime.now(),
-    }).toList();
-  }
-
-  String _formatDuration(int seconds) {
-    if (seconds == 0) return '0m';
-    
-    final hours = seconds ~/ 3600;
-    final minutes = (seconds % 3600) ~/ 60;
-    
-    if (hours > 0) {
-      return '${hours}h ${minutes}m';
-    } else {
-      return '${minutes}m';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -399,7 +224,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
               Expanded(
                 child: _buildOverviewCard(
                   'Total Time',
-                  _formatDuration(_stats!['totalTimeInSeconds']),
+                  _stats!.formattedTotalTime,
                   Icons.timer,
                 ),
               ),
@@ -407,7 +232,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
               Expanded(
                 child: _buildOverviewCard(
                   'Sessions',
-                  _stats!['totalSessions'].toString(),
+                  _stats!.totalSessions.toString(),
                   Icons.play_circle_outline,
                 ),
               ),
@@ -416,7 +241,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           SizedBox(height: 12.h),
           _buildOverviewCard(
             'Most Active',
-            _stats!['mostActiveActivity'],
+            _stats!.mostActiveActivity.shortName,
             Icons.trending_up,
             fullWidth: true,
           ),
@@ -477,31 +302,24 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           ),
         ),
         SizedBox(height: 16.h),
-        _buildActivityCard(
-          'Meditation',
-          _stats!['meditation'],
-          AppColors.visualMeditationGradient,
-          Icons.self_improvement,
-        ),
-        SizedBox(height: 12.h),
-        _buildActivityCard(
-          'Vision Board',
-          _stats!['visionBoard'],
-          AppColors.visionBoardGradient,
-          Icons.dashboard,
-        ),
-        SizedBox(height: 12.h),
-        _buildActivityCard(
-          'Daily Affirmations',
-          _stats!['dailyAffirmations'],
-          AppColors.affirmationGradient,
-          Icons.record_voice_over,
-        ),
+        ..._stats!.activities.entries.map((entry) {
+          final activityType = entry.key;
+          final activityStats = entry.value;
+          return Padding(
+            padding: EdgeInsets.only(bottom: 12.h),
+            child: _buildActivityCard(
+              activityType.shortName,
+              activityStats,
+              activityType.gradientColors,
+              activityType.icon,
+            ),
+          );
+        }),
       ],
     );
   }
 
-  Widget _buildActivityCard(String title, Map<String, dynamic> stats, List<Color> gradient, IconData icon) {
+  Widget _buildActivityCard(String title, ActivityStats stats, List<Color> gradient, IconData icon) {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
@@ -542,7 +360,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                       ),
                     ),
                     Text(
-                      '${stats['totalSessions']} sessions',
+                      '${stats.totalSessions} sessions',
                       style: TextStyle(
                         color: AppColors.textMedium,
                         fontSize: 12.sp,
@@ -555,7 +373,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    stats['formattedTotalTime'],
+                    stats.formattedTotalTime,
                     style: TextStyle(
                       color: gradient[0],
                       fontSize: 16.sp,
@@ -563,7 +381,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                     ),
                   ),
                   Text(
-                    'avg: ${stats['formattedAverageLength']}',
+                    'avg: ${stats.formattedAverageTime}',
                     style: TextStyle(
                       color: AppColors.textMedium,
                       fontSize: 12.sp,
@@ -577,8 +395,8 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildStatItem('Streak', '${stats['currentStreak']} days'),
-              _buildStatItem('Last Session', _formatLastSession(stats['lastSessionDate'])),
+              _buildStatItem('Streak', '${stats.currentStreak} days'),
+              _buildStatItem('Last Session', stats.formatLastSession()),
             ],
           ),
         ],
@@ -610,22 +428,6 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
     );
   }
 
-  String _formatLastSession(DateTime? date) {
-    if (date == null) return 'Never';
-    
-    final now = DateTime.now();
-    final difference = now.difference(date);
-    
-    if (difference.inDays == 0) {
-      return 'Today';
-    } else if (difference.inDays == 1) {
-      return 'Yesterday';
-    } else if (difference.inDays < 7) {
-      return '${difference.inDays} days ago';
-    } else {
-      return '${date.day}/${date.month}/${date.year}';
-    }
-  }
 
   Widget _buildWeeklyActivity() {
     return Column(
@@ -647,22 +449,27 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Column(
-            children: [
-              _buildWeeklyChart(_stats!['meditation'], 'Meditation', AppColors.visualMeditationGradient[0]),
-              SizedBox(height: 16.h),
-              _buildWeeklyChart(_stats!['visionBoard'], 'Vision Board', AppColors.visionBoardGradient[0]),
-              SizedBox(height: 16.h),
-              _buildWeeklyChart(_stats!['dailyAffirmations'], 'Affirmations', AppColors.affirmationGradient[0]),
-            ],
+            children: _stats!.activities.entries.map((entry) {
+              final activityType = entry.key;
+              final activityStats = entry.value;
+              return Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
+                child: _buildWeeklyChart(
+                  activityStats,
+                  activityType.shortName,
+                  activityType.primaryColor,
+                ),
+              );
+            }).toList(),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildWeeklyChart(Map<String, dynamic> stats, String title, Color color) {
-    final weeklyData = stats['weeklyActivity'] as List<Map<String, dynamic>>;
-    final maxSessions = weeklyData.map((d) => d['sessionCount'] as int).reduce((a, b) => a > b ? a : b);
+  Widget _buildWeeklyChart(ActivityStats stats, String title, Color color) {
+    final weeklyData = stats.weeklyActivity;
+    final maxSessions = weeklyData.isEmpty ? 1 : weeklyData.map((d) => d.sessionCount).reduce((a, b) => a > b ? a : b);
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -679,7 +486,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: weeklyData.map((data) {
-            final heightRatio = maxSessions > 0 ? data['sessionCount'] / maxSessions : 0;
+            final heightRatio = maxSessions > 0 ? data.sessionCount / maxSessions : 0;
             return Column(
               children: [
                 Container(
@@ -697,7 +504,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  data['dayName'],
+                  data.dayName,
                   style: TextStyle(
                     color: AppColors.textMedium,
                     fontSize: 10.sp,

@@ -13612,26 +13612,6 @@ Map<String, dynamic> _$VisionBoardPictureModelReturnModelToJson(
       'processId': instance.processId,
     };
 
-VisionBoardPictureUpdateModel _$VisionBoardPictureUpdateModelFromJson(
-        Map<String, dynamic> json) =>
-    VisionBoardPictureUpdateModel(
-      visionBoardPictureId: (json['visionBoardPictureId'] as num?)?.toInt(),
-      location: json['location'] as String?,
-      fileName: json['fileName'] as String?,
-      fileSize: (json['fileSize'] as num?)?.toInt(),
-      userId: (json['userId'] as num?)?.toInt(),
-    );
-
-Map<String, dynamic> _$VisionBoardPictureUpdateModelToJson(
-        VisionBoardPictureUpdateModel instance) =>
-    <String, dynamic>{
-      'visionBoardPictureId': instance.visionBoardPictureId,
-      'location': instance.location,
-      'fileName': instance.fileName,
-      'fileSize': instance.fileSize,
-      'userId': instance.userId,
-    };
-
 VisionBoardSessionByFeedIdSearchCriteria
     _$VisionBoardSessionByFeedIdSearchCriteriaFromJson(
             Map<String, dynamic> json) =>
@@ -14840,6 +14820,52 @@ Map<String, dynamic> _$ApiV1ManifestCreatefileattachmentPost$RequestBodyToJson(
       'Description': instance.description,
       'UserId': instance.userId,
     };
+
+ApiV1ManifestCreatevisionboardpicturePost$RequestBody
+    _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyFromJson(
+            Map<String, dynamic> json) =>
+        ApiV1ManifestCreatevisionboardpicturePost$RequestBody(
+          uploadedFile: json['UploadedFile'] as String,
+          location: json['Location'] as String?,
+          fileName: json['FileName'] as String?,
+          fileSize: (json['FileSize'] as num?)?.toInt(),
+          userId: (json['UserId'] as num?)?.toInt(),
+        );
+
+Map<String, dynamic>
+    _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyToJson(
+            ApiV1ManifestCreatevisionboardpicturePost$RequestBody instance) =>
+        <String, dynamic>{
+          'UploadedFile': instance.uploadedFile,
+          'Location': instance.location,
+          'FileName': instance.fileName,
+          'FileSize': instance.fileSize,
+          'UserId': instance.userId,
+        };
+
+ApiV1ManifestUpdatevisionboardpicturePost$RequestBody
+    _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyFromJson(
+            Map<String, dynamic> json) =>
+        ApiV1ManifestUpdatevisionboardpicturePost$RequestBody(
+          uploadedFile: json['UploadedFile'] as String,
+          visionBoardPictureId: (json['VisionBoardPictureId'] as num?)?.toInt(),
+          location: json['Location'] as String?,
+          fileName: json['FileName'] as String?,
+          fileSize: (json['FileSize'] as num?)?.toInt(),
+          userId: (json['UserId'] as num?)?.toInt(),
+        );
+
+Map<String, dynamic>
+    _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyToJson(
+            ApiV1ManifestUpdatevisionboardpicturePost$RequestBody instance) =>
+        <String, dynamic>{
+          'UploadedFile': instance.uploadedFile,
+          'VisionBoardPictureId': instance.visionBoardPictureId,
+          'Location': instance.location,
+          'FileName': instance.fileName,
+          'FileSize': instance.fileSize,
+          'UserId': instance.userId,
+        };
 
 ApiV1TwilioHandlegatherPost$RequestBody
     _$ApiV1TwilioHandlegatherPost$RequestBodyFromJson(

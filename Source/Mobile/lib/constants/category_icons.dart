@@ -68,16 +68,35 @@ class CategoryIconUtils {
     final name = categoryName.toLowerCase();
     
     switch (name) {
+      // Goal Tracker specific categories (the 6 supported ones)
+      case 'career':
+      case 'work':
+        return PredefinedIconTypes.target;
+      case 'health':
+      case 'wellness':
+      case 'fitness':
+        return PredefinedIconTypes.leaf;
       case 'love':
       case 'relationships':
         return PredefinedIconTypes.heart;
-      case 'abundance':
-      case 'prosperity':
+      case 'money':
+      case 'financial':
       case 'wealth':
         return PredefinedIconTypes.diamond;
-      case 'health':
-      case 'wellness':
-        return PredefinedIconTypes.leaf;
+      case 'personal':
+      case 'personal development':
+      case 'self-improvement':
+        return PredefinedIconTypes.star;
+      case 'spiritual':
+      case 'spirituality':
+      case 'mindfulness':
+      case 'meditation':
+        return PredefinedIconTypes.flower;
+      
+      // Affirmations categories (existing ones)
+      case 'abundance':
+      case 'prosperity':
+        return PredefinedIconTypes.diamond;
       case 'success':
       case 'achievement':
         return PredefinedIconTypes.trophy;
@@ -88,9 +107,6 @@ class CategoryIconUtils {
       case 'harmony':
       case 'peace':
         return PredefinedIconTypes.moon;
-      case 'mindfulness':
-      case 'meditation':
-        return PredefinedIconTypes.flower;
       case 'goals':
       case 'focus':
         return PredefinedIconTypes.target;

@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../components/vision_board_canvas.dart';
-import '../services/vision_board_service.dart';
+import '../services/usage_analytics_service.dart';
+import '../models/analytics_models.dart';
+import '../utils/vision_board_xml_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:async';
 import '../constants/colors.dart';
 
 class VisionBoardScreen extends StatefulWidget {
@@ -43,15 +46,22 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   Color _selectedTextColor = Colors.black;
   double _selectedFontSize = 16.0;
   
-  // Session tracking
-  String? _sessionTrackerId;
-  VisionBoardService? _visionBoardService;
-  Map<String, dynamic>? _currentSession;
+  // Session tracking with UsageAnalyticsService
+  final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
+  bool _sessionStarted = false;
 
   @override
   void initState() {
     super.initState();
     currentBoard = widget.existingBoard ?? VisionBoard.empty();
+    
+    // Ensure new boards get a stable ID immediately
+    if (currentBoard.id.isEmpty) {
+      currentBoard = currentBoard.copyWith(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
+    }
+    
     _saveToUndoStack();
     _startSessionTracking();
     
@@ -86,53 +96,63 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     _toolbarController.dispose();
     _zoomController.dispose();
     _textController.dispose();
+    _autoSaveTimer?.cancel(); // Cancel auto-save timer
     
-    // Update session with time spent before disposing
-    _updateSessionTimeSpent();
+    // Final sync when user finishes using vision board
+    _triggerFinalSync();
+    
+    // End session tracking
+    _endSessionTracking();
     
     super.dispose();
   }
   
-  void _updateSessionTimeSpent() async {
-    if (_currentSession != null && _visionBoardService != null) {
-      try {
-        // Calculate time spent (you could track this more precisely)
-        final sessionDateStr = _currentSession!['visionBoardSessionDate'] as String?;
-        if (sessionDateStr != null) {
-          final sessionDate = DateTime.tryParse(sessionDateStr);
-          if (sessionDate != null) {
-            final timeSpent = DateTime.now().difference(sessionDate).inSeconds;
-            
-            final sessionId = _currentSession!['visionBoardSessionId'] as int?;
-            if (sessionId != null) {
-              final result = await _visionBoardService!.updateSession(
-                sessionId: sessionId,
-                timeSpentInSeconds: timeSpent,
-              );
-              
-              if (result.isSuccess) {
-                print('✅ Session time updated: ${timeSpent}s');
-              } else {
-                print('❌ Failed to update session time: ${result.message}');
-              }
-            }
-          }
-        }
-      } catch (e) {
-        print('❌ Error updating session time: $e');
+  /// Trigger final sync when user finishes using vision board
+  void _triggerFinalSync() {
+    // Force immediate sync when user exits vision board
+    VisionBoardXMLManager.uploadXMLToDatabase().then((success) {
+      if (success) {
+        print('✅ Final sync completed - vision board data uploaded');
+      } else {
+        print('⚠️ Final sync failed - data will sync later');
       }
+    }).catchError((error) {
+      print('❌ Final sync error: $error');
+    });
+  }
+  
+  /// End session tracking for vision board
+  Future<void> _endSessionTracking() async {
+    if (_sessionStarted) {
+      await _analyticsService.endSession(
+        ActivityType.visionBoard,
+        additionalMetadata: {
+          'boardId': currentBoard.id,
+          'boardTitle': currentBoard.title,
+          'elementCount': currentBoard.elements.length,
+        },
+      );
+      _sessionStarted = false;
+      print('📊 Vision board session ended');
     }
   }
 
-  /// Start session tracking for vision board using API
-  void _startSessionTracking() async {
+  /// Start session tracking for vision board using UsageAnalyticsService
+  Future<void> _startSessionTracking() async {
     try {
-      // Initialize the vision board service
-      _visionBoardService = VisionBoardService();
-      await _visionBoardService!.initialize();
-      print('✅ Vision board service initialized');
+      await _analyticsService.initialize();
+      _analyticsService.startSession(
+        ActivityType.visionBoard,
+        metadata: {
+          'boardId': currentBoard.id,
+          'boardTitle': currentBoard.title,
+          'isNewBoard': widget.existingBoard == null,
+        },
+      );
+      _sessionStarted = true;
+      print('📊 Vision board session started');
     } catch (e) {
-      print('❌ Error initializing vision board service: $e');
+      print('❌ Error starting vision board session: $e');
     }
   }
 
@@ -658,6 +678,44 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       hasUnsavedChanges = _hasChangesFromLastSave();
     });
     _saveToUndoStack();
+    
+    // Auto-save to local XML after each change (debounced)
+    _autoSaveToXML();
+  }
+  
+  Timer? _autoSaveTimer;
+  
+  void _autoSaveToXML() {
+    // Cancel previous timer if it exists
+    _autoSaveTimer?.cancel();
+    
+    // Set a new timer to save after 2 seconds of no changes
+    _autoSaveTimer = Timer(Duration(seconds: 2), () async {
+      try {
+        // Ensure the board has a proper ID for auto-save
+        if (currentBoard.id.isEmpty) {
+          currentBoard = currentBoard.copyWith(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+          );
+        }
+        
+        await VisionBoardXMLManager.saveVisionBoardToXML(currentBoard, 1);
+        print('🔄 Auto-saved to XML: ${currentBoard.title} (ID: ${currentBoard.id})');
+        
+        // Update session metadata if session is active
+        if (_sessionStarted) {
+          _analyticsService.updateSessionMetadata(
+            ActivityType.visionBoard,
+            {
+              'elementCount': currentBoard.elements.length,
+              'lastAutoSave': DateTime.now().toIso8601String(),
+            },
+          );
+        }
+      } catch (e) {
+        print('❌ Auto-save to XML failed: $e');
+      }
+    });
   }
   
   bool _hasChangesFromLastSave() {
@@ -829,7 +887,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
 
   Widget _buildTextEditorSheet() {
-    return Container(
+    return StatefulBuilder(
+      builder: (context, setModalState) => Container(
       height: MediaQuery.of(context).size.height * 0.7,
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -902,7 +961,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     child: TextField(
                       controller: _textController,
                       style: TextStyle(
-                        fontSize: _selectedFontSize.sp,
+                        fontSize: 16.sp,
                         color: _selectedTextColor,
                         fontWeight: FontWeight.w500,
                       ),
@@ -945,7 +1004,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       divisions: 18,
                       label: _selectedFontSize.round().toString(),
                       onChanged: (value) {
-                        setState(() {
+                        setModalState(() {
                           _selectedFontSize = value;
                         });
                       },
@@ -981,7 +1040,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                         Colors.blue,
                         Colors.green,
                         Colors.orange,
-                      ].map((color) => _buildColorOption(color)).toList(),
+                      ].map((color) => _buildColorOption(color, setModalState)).toList(),
                     ),
                   ),
                 ],
@@ -1030,14 +1089,15 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           ),
         ],
       ),
+    ),
     );
   }
 
-  Widget _buildColorOption(Color color) {
+  Widget _buildColorOption(Color color, StateSetter setModalState) {
     final isSelected = _selectedTextColor == color;
     return GestureDetector(
       onTap: () {
-        setState(() {
+        setModalState(() {
           _selectedTextColor = color;
         });
       },
@@ -1213,36 +1273,42 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Future<void> _saveBoard() async {
     try {
-      if (_visionBoardService == null) {
-        _showErrorSnackBar('Vision board service not initialized');
-        return;
-      }
+      print('🎯 Saving vision board locally...');
       
-      print('🎯 Saving vision board via API...');
-      
-      // Save to API using the session-based approach
-      final result = await _visionBoardService!.saveVisionBoard(currentBoard);
-      
-      if (result.isSuccess && result.data != null) {
-        // Update current board with API response
-        currentBoard = result.data!;
-        lastSavedState = currentBoard.copyWith();
-        hasUnsavedChanges = false;
-        
-        print('✅ Vision board saved via API: ${currentBoard.title}');
-        
-        // Show success feedback
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Vision board saved to cloud!'),
-            backgroundColor: AppColors.accentMint,
-            duration: Duration(seconds: 2),
-          ),
+      // Ensure the board has a proper ID if it's empty
+      if (currentBoard.id.isEmpty) {
+        currentBoard = currentBoard.copyWith(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
         );
-      } else {
-        print('❌ API save failed: ${result.message}');
-        _showErrorSnackBar('Failed to save to cloud: ${result.message}');
       }
+      
+      // Always save to local XML first (immediate save)
+      await VisionBoardXMLManager.saveVisionBoardToXML(currentBoard, 1); // Use user ID 1
+      lastSavedState = currentBoard.copyWith();
+      hasUnsavedChanges = false;
+      
+      print('✅ Vision board saved to local XML: ${currentBoard.title}');
+      
+      // Trigger immediate sync after manual save
+      VisionBoardXMLManager.uploadXMLToDatabase().then((success) {
+        if (success) {
+          print('✅ Immediate sync after save completed');
+        }
+      }).catchError((error) {
+        print('⚠️ Immediate sync after save failed: $error');
+      });
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vision board saved successfully!'),
+          backgroundColor: AppColors.accentMint,
+          duration: Duration(seconds: 1),
+        ),
+      );
+      
+      // Navigate back after successful save
+      Navigator.pop(context, currentBoard);
       
     } catch (e) {
       print('❌ Save board error: $e');
@@ -1251,81 +1317,28 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
   
   Future<void> _loadBoardElements() async {
+    // NOTE: API loading disabled - using XML storage only
     if (widget.existingBoard != null && widget.existingBoard!.id.isNotEmpty) {
-      await _loadBoardFromAPI(widget.existingBoard!.id);
+      print('📝 Loading board elements from XML storage for: ${widget.existingBoard!.id}');
+      // Board data already loaded via widget.existingBoard
     }
   }
   
-  Future<void> _loadBoardFromAPI(String sessionId) async {
-    try {
-      if (_visionBoardService == null) {
-        print('Vision board service not initialized');
-        return;
-      }
-      
-      print('🎯 Loading vision board from API: $sessionId');
-      
-      final result = await _visionBoardService!.loadVisionBoard(sessionId);
-      
-      if (result.isSuccess && result.data != null) {
-        if (mounted) {
-          setState(() {
-            currentBoard = result.data!;
-            lastSavedState = currentBoard.copyWith();
-            hasUnsavedChanges = false;
-          });
-          _saveToUndoStack();
-        }
-        
-        print('✅ Vision board loaded from API: ${currentBoard.elements.length} elements');
-      } else {
-        print('❌ Failed to load from API: ${result.message}');
-        _showErrorSnackBar('Failed to load vision board: ${result.message}');
-      }
-      
-    } catch (e) {
-      print('❌ Error loading board from API: $e');
-      _showErrorSnackBar('Error loading vision board: $e');
-    }
-  }
+  // NOTE: API loading disabled - using XML storage only
+  /* Future<void> _loadBoardFromAPI(String sessionId) async {
+    // Implementation commented out for XML-only mode
+  } */
 
-  Future<List<VisionBoard>> _loadSavedBoards() async {
-    try {
-      if (_visionBoardService == null) {
-        return [];
-      }
-      
-      final result = await _visionBoardService!.getUserVisionBoards();
-      
-      if (result.isSuccess && result.data != null) {
-        return result.data!;
-      } else {
-        print('Error loading user vision boards: ${result.message}');
-        return [];
-      }
-    } catch (e) {
-      print('Error loading saved boards: $e');
-      return [];
-    }
-  }
+  // NOTE: API loading disabled - using XML storage only
+  /* Future<List<VisionBoard>> _loadSavedBoards() async {
+    // Implementation commented out for XML-only mode
+    return [];
+  } */
 
-  Future<void> _deleteSavedBoard(String boardId) async {
-    try {
-      if (_visionBoardService == null) {
-        return;
-      }
-      
-      final result = await _visionBoardService!.deleteVisionBoard(boardId);
-      
-      if (result.isSuccess) {
-        print('✅ Vision board deleted via API');
-      } else {
-        print('❌ Failed to delete vision board: ${result.message}');
-      }
-    } catch (e) {
-      print('Error deleting board: $e');
-    }
-  }
+  // NOTE: API deletion disabled - using XML storage only
+  /* Future<void> _deleteSavedBoard(String boardId) async {
+    // Implementation commented out for XML-only mode
+  } */
 
   void _showTemplates() {
     showModalBottomSheet(
@@ -1745,21 +1758,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
 
   void _addImageFromSearch() async {
-    // Load default/stock images from API
-    if (_visionBoardService != null) {
-      try {
-        final result = await _visionBoardService!.getDefaultPictures();
-        if (result.isSuccess && result.data != null) {
-          _showDefaultImagesDialog(result.data!);
-        } else {
-          _showErrorSnackBar('Failed to load stock images: ${result.message}');
-        }
-      } catch (e) {
-        _showErrorSnackBar('Error loading stock images: $e');
-      }
-    } else {
-      _addPlaceholderImage('Search');
-    }
+    // Stock images disabled - API integration pending
+    _showErrorSnackBar('Stock images coming soon - use camera or gallery for now');
   }
   
   void _showDefaultImagesDialog(List<Map<String, dynamic>> defaultImages) {
@@ -1904,14 +1904,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     
     _onBoardChanged(updatedBoard);
     
-    // Track usage of this default image in the current session
-    final sessionId = _currentSession?['visionBoardSessionId'] as int?;
-    final pictureId = defaultImage['defaultVisionBoardPictureId'] as int?;
-    
-    if (sessionId != null && pictureId != null) {
-      _visionBoardService?.trackPictureView(
-        sessionId: sessionId,
-        pictureId: pictureId,
+    // NOTE: Picture tracking now handled by analytics service
+    if (_sessionStarted) {
+      _analyticsService.updateSessionMetadata(
+        ActivityType.visionBoard,
+        {
+          'lastDefaultImageUsed': defaultImage['defaultVisionBoardPictureName'],
+          'defaultImageCount': (currentBoard.elements.length + 1),
+        },
       );
     }
     
@@ -1939,40 +1939,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       // Copy the image to local storage for immediate use
       await File(image.path).copy(localPath);
       
-      // Try to upload to API if service is available
+      // API upload disabled - using local storage only
       String? apiImageUrl;
-      if (_visionBoardService != null) {
-        try {
-          final file = File(localPath);
-          final fileSize = await file.length();
-          
-          final result = await _visionBoardService!.createPicture(
-            location: localPath, // This would typically be a URL in a real implementation
-            fileName: fileName,
-            fileSize: fileSize,
-          );
-          
-          if (result.isSuccess && result.data != null) {
-            apiImageUrl = result.data!['location']?.toString();
-            print('✅ Image uploaded to API: $apiImageUrl');
-            
-            // Track picture view in current session
-            final sessionId = _currentSession?['visionBoardSessionId'] as int?;
-            final pictureId = result.data!['visionBoardPictureId'] as int?;
-            
-            if (sessionId != null && pictureId != null) {
-              await _visionBoardService!.trackPictureView(
-                sessionId: sessionId,
-                pictureId: pictureId,
-              );
-            }
-          } else {
-            print('❌ Failed to upload image to API: ${result.message}');
-          }
-        } catch (e) {
-          print('❌ Error uploading image to API: $e');
-        }
-      }
       
       // Create image element with both local and API paths
       final imageElement = VisionBoardImageElement(
@@ -1991,9 +1959,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(apiImageUrl != null 
-              ? 'Image added and synced to cloud' 
-              : 'Image added locally'),
+          content: Text('Image added locally'),
           backgroundColor: AppColors.accentMint,
           duration: Duration(seconds: 2),
         ),

@@ -6813,15 +6813,42 @@ final class _$Manifestation extends Manifestation {
 
   @override
   Future<Response<VisionBoardPictureModelReturnModel>>
-      _apiV1ManifestCreatevisionboardpicturePost(
-          {required VisionBoardPictureCreateModel? body}) {
+      _apiV1ManifestCreatevisionboardpicturePost({
+    required List<int> UploadedFile,
+    String? location,
+    String? fileName,
+    int? fileSize,
+    int? userId,
+  }) {
     final Uri $url = Uri.parse('/api/v1/manifest/createvisionboardpicture');
-    final $body = body;
+    final List<PartValue> $parts = <PartValue>[
+      PartValue<String?>(
+        'Location',
+        location,
+      ),
+      PartValue<String?>(
+        'FileName',
+        fileName,
+      ),
+      PartValue<int?>(
+        'FileSize',
+        fileSize,
+      ),
+      PartValue<int?>(
+        'UserId',
+        userId,
+      ),
+      PartValueFile<List<int>>(
+        'UploadedFile',
+        UploadedFile,
+      ),
+    ];
     final Request $request = Request(
       'POST',
       $url,
       client.baseUrl,
-      body: $body,
+      parts: $parts,
+      multipart: true,
     );
     return client.send<VisionBoardPictureModelReturnModel,
         VisionBoardPictureModelReturnModel>($request);
@@ -6846,15 +6873,47 @@ final class _$Manifestation extends Manifestation {
 
   @override
   Future<Response<VisionBoardPictureModelReturnModel>>
-      _apiV1ManifestUpdatevisionboardpicturePost(
-          {required VisionBoardPictureUpdateModel? body}) {
+      _apiV1ManifestUpdatevisionboardpicturePost({
+    required List<int> UploadedFile,
+    int? visionBoardPictureId,
+    String? location,
+    String? fileName,
+    int? fileSize,
+    int? userId,
+  }) {
     final Uri $url = Uri.parse('/api/v1/manifest/updatevisionboardpicture');
-    final $body = body;
+    final List<PartValue> $parts = <PartValue>[
+      PartValue<int?>(
+        'VisionBoardPictureId',
+        visionBoardPictureId,
+      ),
+      PartValue<String?>(
+        'Location',
+        location,
+      ),
+      PartValue<String?>(
+        'FileName',
+        fileName,
+      ),
+      PartValue<int?>(
+        'FileSize',
+        fileSize,
+      ),
+      PartValue<int?>(
+        'UserId',
+        userId,
+      ),
+      PartValueFile<List<int>>(
+        'UploadedFile',
+        UploadedFile,
+      ),
+    ];
     final Request $request = Request(
       'POST',
       $url,
       client.baseUrl,
-      body: $body,
+      parts: $parts,
+      multipart: true,
     );
     return client.send<VisionBoardPictureModelReturnModel,
         VisionBoardPictureModelReturnModel>($request);

@@ -19427,24 +19427,53 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureCreateModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureCreateModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureCreateModel"
-              }
-            },
-            "text/plain": {
-              "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureCreateModel"
+                "required": [
+                  "UploadedFile"
+                ],
+                "type": "object",
+                "properties": {
+                  "UploadedFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "Location": {
+                    "maxLength": 255,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "FileName": {
+                    "maxLength": 255,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "FileSize": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "UserId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              },
+              "encoding": {
+                "UploadedFile": {
+                  "style": "form"
+                },
+                "Location": {
+                  "style": "form"
+                },
+                "FileName": {
+                  "style": "form"
+                },
+                "FileSize": {
+                  "style": "form"
+                },
+                "UserId": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -19533,24 +19562,60 @@
         ],
         "requestBody": {
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureUpdateModel"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureUpdateModel"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureUpdateModel"
-              }
-            },
-            "text/plain": {
-              "schema": {
-                "$ref": "#/components/schemas/VisionBoardPictureUpdateModel"
+                "required": [
+                  "UploadedFile"
+                ],
+                "type": "object",
+                "properties": {
+                  "UploadedFile": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "VisionBoardPictureId": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "Location": {
+                    "maxLength": 255,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "FileName": {
+                    "maxLength": 255,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "FileSize": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "UserId": {
+                    "type": "integer",
+                    "format": "int64"
+                  }
+                }
+              },
+              "encoding": {
+                "UploadedFile": {
+                  "style": "form"
+                },
+                "VisionBoardPictureId": {
+                  "style": "form"
+                },
+                "Location": {
+                  "style": "form"
+                },
+                "FileName": {
+                  "style": "form"
+                },
+                "FileSize": {
+                  "style": "form"
+                },
+                "UserId": {
+                  "style": "form"
+                }
               }
             }
           }
@@ -50233,36 +50298,6 @@
           "processId": {
             "type": "integer",
             "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
-      "VisionBoardPictureUpdateModel": {
-        "type": "object",
-        "properties": {
-          "visionBoardPictureId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "location": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "fileName": {
-            "maxLength": 255,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "fileSize": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "userId": {
-            "type": "integer",
-            "format": "int64"
           }
         },
         "additionalProperties": false

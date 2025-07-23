@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
+import '../utils/vision_board_xml_manager.dart';
 import 'vision_board_screen.dart';
 import '../constants/colors.dart';
 
@@ -29,22 +31,16 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     });
     
     try {
-      // Load from API
-      final visionBoardService = VisionBoardService();
-      visionBoardService.initialize();
-      final result = await visionBoardService.getUserVisionBoards();
+      // Initialize XML file if needed
+      await VisionBoardXMLManager.initializeXMLFile(1); // Use user ID 1 for now
       
-      if (result.isSuccess && result.data != null) {
-        visionBoards = result.data!;
-        print('✅ Loaded ${visionBoards.length} vision boards from API');
-      } else {
-        // Create sample boards if API fails or no boards exist
-        visionBoards = _createSampleBoards();
-        print('📝 Created sample vision boards (API failed or no boards)');
-      }
+      // Load from local XML storage
+      final localBoards = await VisionBoardXMLManager.loadVisionBoardsFromXML();
+      
+      visionBoards = localBoards;
     } catch (e) {
-      print('❌ Error loading vision boards: $e');
-      visionBoards = _createSampleBoards();
+      // Don't create sample boards on error - just use empty list
+      visionBoards = [];
     }
     
     setState(() {
@@ -53,34 +49,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
   
   
-  List<VisionBoard> _createSampleBoards() {
-    return [
-      VisionBoard(
-        id: '1',
-        title: 'Dream Home',
-        elements: [],
-        createdAt: DateTime.now().subtract(Duration(days: 5)),
-        updatedAt: DateTime.now().subtract(Duration(days: 2)),
-        backgroundColor: AppColors.white,
-      ),
-      VisionBoard(
-        id: '2',
-        title: 'Career Goals',
-        elements: [],
-        createdAt: DateTime.now().subtract(Duration(days: 10)),
-        updatedAt: DateTime.now().subtract(Duration(days: 1)),
-        backgroundColor: AppColors.white,
-      ),
-      VisionBoard(
-        id: '3',
-        title: 'Travel Dreams',
-        elements: [],
-        createdAt: DateTime.now().subtract(Duration(days: 15)),
-        updatedAt: DateTime.now().subtract(Duration(days: 3)),
-        backgroundColor: AppColors.white,
-      ),
-    ];
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -444,34 +412,15 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            board.title,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.bold,
-                              color: AppColors.textLight,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Container(
-                          width: 24.w,
-                          height: 24.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.visionBoardGradient[0].withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(6.r),
-                          ),
-                          child: Icon(
-                            Icons.more_vert,
-                            color: AppColors.visionBoardGradient[0],
-                            size: 14.sp,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      board.title,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textLight,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 2.h),
                     Text(
@@ -747,17 +696,9 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           builder: (context) => VisionBoardScreen(existingBoard: newBoard),
         ),
       ).then((editedBoard) {
-        if (editedBoard != null) {
-          setState(() {
-            // Add to list if it's new, or update if it exists
-            final existingIndex = visionBoards.indexWhere((b) => b.id == editedBoard.id);
-            if (existingIndex >= 0) {
-              visionBoards[existingIndex] = editedBoard;
-            } else {
-              visionBoards.add(editedBoard);
-            }
-          });
-        }
+        // Reload from XML instead of manually managing the list
+        // This prevents duplicates and ensures consistency
+        _loadVisionBoards();
       });
     } catch (e) {
       print('❌ Error creating new board: $e');
@@ -937,10 +878,19 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     Navigator.pop(context);
                     _showSortOptions();
                   }),
-                  _buildOptionItem(Icons.cloud_sync, 'Sync Boards', () {
-                    Navigator.pop(context);
-                    _syncBoards();
-                  }),
+                  // Cloud sync options disabled - API endpoints pending
+                  // _buildOptionItem(Icons.cloud_sync, 'Sync Boards', () {
+                  //   Navigator.pop(context);
+                  //   _syncBoards();
+                  // }),
+                  // _buildOptionItem(Icons.upload, 'Upload to Cloud', () {
+                  //   Navigator.pop(context);
+                  //   _uploadToCloud();
+                  // }),
+                  // _buildOptionItem(Icons.download, 'Download from Cloud', () {
+                  //   Navigator.pop(context);
+                  //   _downloadFromCloud();
+                  // }),
                   _buildOptionItem(Icons.settings, 'Settings', () {
                     Navigator.pop(context);
                     _showSettings();
@@ -1012,6 +962,9 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   
   Future<void> _performDelete(VisionBoard board) async {
     try {
+      // Delete from local XML first
+      await VisionBoardXMLManager.deleteVisionBoardFromXML(board.id);
+      
       // Delete from API if it has a valid session ID
       if (board.id.isNotEmpty) {
         final visionBoardService = VisionBoardService();
@@ -1021,7 +974,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         if (result.isSuccess) {
           print('✅ Board deleted from API: ${board.title}');
         } else {
-          print('⚠️ API delete failed, removing locally: ${result.message}');
+          print('⚠️ API delete failed, removed from local XML: ${result.message}');
         }
       }
       
@@ -1052,9 +1005,116 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     print('Show sort options');
   }
 
-  void _syncBoards() {
-    // TODO: Implement sync
-    print('Sync boards');
+  void _syncBoards() async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Syncing vision boards...'),
+          backgroundColor: AppColors.secondaryTeal,
+        ),
+      );
+      
+      // Upload local XML to database
+      final uploadSuccess = await VisionBoardXMLManager.uploadXMLToDatabase();
+      
+      if (uploadSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Vision boards synced successfully!'),
+            backgroundColor: AppColors.accentMint,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Sync failed - check network connection'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Sync error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _uploadToCloud() async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Uploading to cloud...'),
+          backgroundColor: AppColors.secondaryTeal,
+        ),
+      );
+      
+      final success = await VisionBoardXMLManager.uploadXMLToDatabase();
+      
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Successfully uploaded to cloud!'),
+            backgroundColor: AppColors.accentMint,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Upload failed'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Upload error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  void _downloadFromCloud() async {
+    try {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Downloading from cloud...'),
+          backgroundColor: AppColors.secondaryTeal,
+        ),
+      );
+      
+      final success = await VisionBoardXMLManager.downloadXMLFromDatabase(1); // Use user ID 1
+      
+      if (success) {
+        // Reload vision boards from the new XML file
+        await _loadVisionBoards();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Successfully downloaded from cloud!'),
+            backgroundColor: AppColors.accentMint,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Download failed - no data found or network error'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Download error: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _showSettings() {

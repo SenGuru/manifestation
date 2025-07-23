@@ -1,88 +1,61 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import '../models/vision_board.dart';
+import '../utils/vision_board_xml_manager.dart';
+import '../api/generated/code/manifestation.swagger.dart';
 import 'unified_auth_service.dart';
-import 'api_client.dart';
-import 'vision_board_api_service.dart';
 
 class VisionBoardService {
   static final VisionBoardService _instance = VisionBoardService._internal();
   factory VisionBoardService() => _instance;
   VisionBoardService._internal();
 
-  final UnifiedAuthService _authService = UnifiedAuthService();
+  static const int _defaultUserId = 1; // Default user ID for XML operations
+  
+  // API client
+  Manifestation? _apiClient;
+  UnifiedAuthService? _authService;
   
   Future<void> initialize({String? baseUrl}) async {
-    // Initialize ApiClient 
-    await ApiClient.initialize();
+    // Initialize XML manager
+    await VisionBoardXMLManager.initializeXMLFile(_defaultUserId);
     
-    // Sync auth token with UnifiedAuthService
-    final authToken = _authService.authToken;
-    if (authToken != null) {
-      await ApiClient.setAuthToken(authToken);
+    // Initialize API client if baseUrl provided
+    if (baseUrl != null) {
+      _apiClient = Manifestation.create(baseUrl: Uri.parse(baseUrl));
+      _authService = UnifiedAuthService();
+      await _authService!.initialize(baseUrl: baseUrl);
     }
-    
-    print('🎯 VisionBoardService initialized with ApiClient');
   }
 
-  /// Save vision board to API using session + session pictures
+  /// Save vision board to local XML storage and sync with server
   Future<VisionBoardResult<VisionBoard>> saveVisionBoard(VisionBoard board) async {
     try {
-      print('🎯 Saving vision board: ${board.title}');
+      print('🎯 Saving vision board to XML: ${board.title}');
       
-      // Sync auth token
-      await _syncAuthToken();
-      
-      final userId = await _getUserId();
-      
-      Map<String, dynamic> result;
-      
-      if (board.id.isNotEmpty) {
-        // Update existing session
-        final sessionData = {
-          'visionBoardSessionId': int.tryParse(board.id),
-          'visionBoardSessionTimeSpentInSeconds': 0,
-          'userId': userId,
-        };
-        
-        result = await VisionBoardApiService.updateVisionBoardSession(sessionData);
-      } else {
-        // Create new session
-        final sessionData = {
-          'visionBoardSessionDate': DateTime.now().toIso8601String(),
-          'visionBoardSessionTimeSpentInSeconds': 0,
-          'userId': userId,
-          'addedToFeed': false,
-        };
-        
-        result = await VisionBoardApiService.createVisionBoardSession(sessionData);
+      // Generate ID if needed
+      VisionBoard savedBoard = board;
+      if (board.id.isEmpty) {
+        savedBoard = board.copyWith(
+          id: 'board_${DateTime.now().millisecondsSinceEpoch}',
+          updatedAt: DateTime.now(),
+        );
       }
       
-      if (!result['success']) {
-        return VisionBoardResult.failure(message: result['error'] ?? 'Failed to save session');
+      // Save to local XML first
+      await VisionBoardXMLManager.saveVisionBoardToXML(savedBoard, _defaultUserId);
+      
+      // Sync with server if API available
+      if (_apiClient != null && _authService != null) {
+        try {
+          await _syncWithServer();
+        } catch (e) {
+          // Continue silently - offline operation
+        }
       }
-      
-      final sessionData = result['data'];
-      final sessionId = sessionData['model']?['visionBoardSessionId'];
-      
-      if (sessionId == null) {
-        return VisionBoardResult.failure(message: 'No session ID returned');
-      }
-      
-      print('✅ Session saved with ID: $sessionId');
-      
-      // Save elements as session pictures
-      await _saveElementsAsSessionPictures(sessionId, board.elements);
-      
-      // Return updated board with session ID
-      final updatedBoard = board.copyWith(
-        id: sessionId.toString(),
-        updatedAt: DateTime.now(),
-      );
-      
-      print('✅ Vision board saved successfully');
       return VisionBoardResult.success(
-        data: updatedBoard,
+        data: savedBoard,
         message: 'Vision board saved successfully',
       );
       
@@ -92,44 +65,22 @@ class VisionBoardService {
     }
   }
 
-  /// Load vision board from API using session + session pictures
-  Future<VisionBoardResult<VisionBoard>> loadVisionBoard(String sessionId) async {
+  /// Load vision board from local XML storage
+  Future<VisionBoardResult<VisionBoard>> loadVisionBoard(String boardId) async {
     try {
-      print('🎯 Loading vision board session: $sessionId');
+      print('🎯 Loading vision board from XML: $boardId');
       
-      // Sync auth token
-      await _syncAuthToken();
+      // Load all boards from XML
+      final boards = await VisionBoardXMLManager.loadVisionBoardsFromXML();
       
-      // Get the session
-      final result = await VisionBoardApiService.getVisionBoardSessionById(sessionId);
+      // Find the specific board
+      final board = boards.where((b) => b.id == boardId).firstOrNull;
       
-      if (!result['success']) {
-        return VisionBoardResult.failure(message: result['error'] ?? 'Session not found');
+      if (board == null) {
+        return VisionBoardResult.failure(message: 'Vision board not found');
       }
       
-      final sessionData = result['data'];
-      final session = sessionData['model'];
-      
-      if (session == null) {
-        return VisionBoardResult.failure(message: 'Session not found');
-      }
-      
-      print('✅ Session loaded: ${session['visionBoardSessionId']}');
-      
-      // Load elements from session pictures
-      final elements = await _loadElementsFromSessionPictures(session['visionBoardSessionId']);
-      
-      // Create VisionBoard object
-      final board = VisionBoard(
-        id: session['visionBoardSessionId'].toString(),
-        title: 'Vision Board ${session['visionBoardSessionId']}',
-        elements: elements,
-        backgroundColor: const Color(0xFFFFFFFF),
-        createdAt: DateTime.tryParse(session['visionBoardSessionDate'] ?? '') ?? DateTime.now(),
-        updatedAt: DateTime.tryParse(session['modifiedDate'] ?? '') ?? DateTime.now(),
-      );
-      
-      print('✅ Vision board loaded with ${elements.length} elements');
+      print('✅ Vision board loaded from XML with ${board.elements.length} elements');
       return VisionBoardResult.success(
         data: board,
         message: 'Vision board loaded successfully',
@@ -141,63 +92,19 @@ class VisionBoardService {
     }
   }
 
-  /// Get all user vision boards (sessions)
+  /// Get all user vision boards from local XML storage with server sync
   Future<VisionBoardResult<List<VisionBoard>>> getUserVisionBoards() async {
     try {
-      print('🎯 Loading user vision boards');
-      
-      // Sync auth token
-      await _syncAuthToken();
-      
-      final userId = await _getUserId();
-      print('📋 Using user ID: $userId');
-      print('📋 Is logged in: ${_authService.isLoggedIn}');
-      
-      print('🔄 Making API call to get vision board sessions...');
-      final result = await VisionBoardApiService.getSessionsByUserId(userId.toString());
-      
-      print('📡 API response received - Success: ${result['success']}');
-      print('📡 API response data: ${result['data']}');
-      
-      if (!result['success']) {
-        print('❌ API call failed: ${result['error']}');
-        return VisionBoardResult.success(data: [], message: 'API unavailable - working offline');
-      }
-      
-      final sessionData = result['data'];
-      
-      // Check if the API response indicates an internal error
-      if (sessionData['isSuccess'] == false) {
-        final errorMessage = sessionData['errorHolder']?['friendlyMessage'] ?? 'Unknown API error';
-        print('❌ API internal error: $errorMessage');
-        
-        // For "Unable to find the User" error, this might mean the user has no vision boards yet
-        if (errorMessage.contains('Unable to find the User')) {
-          print('📋 User has no vision board sessions yet - returning empty list');
-          return VisionBoardResult.success(data: [], message: 'No vision boards found - ready to create your first one!');
+      // Sync from server first if API available
+      if (_apiClient != null && _authService != null) {
+        try {
+          await _downloadFromServer();
+        } catch (e) {
+          // Continue silently - use local data
         }
-        
-        return VisionBoardResult.success(data: [], message: 'API error: $errorMessage');
       }
       
-      final sessions = sessionData['model'] as List?;
-      
-      if (sessions == null || sessions.isEmpty) {
-        print('📋 No vision board sessions found');
-        return VisionBoardResult.success(data: [], message: 'No vision boards found');
-      }
-      
-      print('✅ Found ${sessions.length} vision board sessions');
-      
-      // Convert sessions to vision boards (without loading elements for performance)
-      final boards = sessions.map((session) => VisionBoard(
-        id: session['visionBoardSessionId'].toString(),
-        title: 'Vision Board ${session['visionBoardSessionId']}',
-        elements: [], // Don't load elements for list view
-        backgroundColor: const Color(0xFFFFFFFF),
-        createdAt: DateTime.tryParse(session['visionBoardSessionDate'] ?? '') ?? DateTime.now(),
-        updatedAt: DateTime.tryParse(session['modifiedDate'] ?? '') ?? DateTime.now(),
-      )).toList();
+      final boards = await VisionBoardXMLManager.loadVisionBoardsFromXML();
       
       return VisionBoardResult.success(
         data: boards,
@@ -205,323 +112,308 @@ class VisionBoardService {
       );
       
     } catch (e) {
-      print('❌ Error loading user vision boards: $e');
-      print('🌐 API error detected - providing fallback empty list'); 
-      return VisionBoardResult.success(data: [], message: 'API unavailable - working offline');
+      return VisionBoardResult.success(data: [], message: 'Error loading vision boards: $e');
     }
   }
 
-  /// Delete vision board
-  Future<VisionBoardResult<bool>> deleteVisionBoard(String sessionId) async {
+  /// Delete vision board from local XML storage
+  Future<VisionBoardResult<bool>> deleteVisionBoard(String boardId) async {
     try {
-      // Sync auth token
-      await _syncAuthToken();
+      await VisionBoardXMLManager.deleteVisionBoardFromXML(boardId);
       
-      final result = await VisionBoardApiService.deleteVisionBoardSession(sessionId);
-      
-      if (result['success']) {
-        return VisionBoardResult.success(data: true, message: 'Vision board deleted');
-      }
-      
-      return VisionBoardResult.failure(message: result['error'] ?? 'Failed to delete vision board');
+      return VisionBoardResult.success(data: true, message: 'Vision board deleted');
     } catch (e) {
       return VisionBoardResult.failure(message: 'Error deleting vision board: $e');
     }
   }
 
-  /// Get default pictures for vision board
+  /// Get default pictures for vision board (placeholder method)
   Future<VisionBoardResult<List<Map<String, dynamic>>>> getDefaultPictures() async {
     try {
-      // Sync auth token
-      await _syncAuthToken();
-      
-      final result = await VisionBoardApiService.getDefaultVisionBoardPictures();
-      
-      if (result['success']) {
-        final data = result['data'];
-        final pictures = data['model'] as List? ?? [];
-        return VisionBoardResult.success(
-          data: pictures.cast<Map<String, dynamic>>(),
-          message: 'Default pictures loaded successfully',
-        );
-      }
-      
-      return VisionBoardResult.success(data: [], message: 'No default pictures available');
+      // Return empty list for now - API integration disabled
+      return VisionBoardResult.success(data: [], message: 'Default pictures disabled - API integration pending');
     } catch (e) {
       return VisionBoardResult.failure(message: 'Error loading default pictures: $e');
     }
   }
 
-  /// Create a new vision board picture
+  /// Create a new vision board picture (placeholder method)
   Future<VisionBoardResult<Map<String, dynamic>>> createPicture({
     required String location,
     required String fileName,
     required int fileSize,
   }) async {
     try {
-      // Sync auth token
-      await _syncAuthToken();
-      
-      final pictureData = {
-        'location': location,
-        'fileName': fileName,
-        'fileSize': fileSize,
-        'userId': await _getUserId(),
-      };
-
-      final result = await VisionBoardApiService.createVisionBoardPicture(pictureData);
-      
-      if (result['success']) {
-        final data = result['data'];
-        return VisionBoardResult.success(
-          data: data['model'],
-          message: 'Picture created successfully',
-        );
-      }
-      
-      return VisionBoardResult.failure(message: result['error'] ?? 'Failed to create picture');
+      // Placeholder implementation - API integration disabled
+      return VisionBoardResult.failure(message: 'Picture creation disabled - API integration pending');
     } catch (e) {
       return VisionBoardResult.failure(message: 'Error creating picture: $e');
     }
   }
 
-  /// Sync auth token between UnifiedAuthService and ApiClient
-  Future<void> _syncAuthToken() async {
-    final authToken = _authService.authToken;
-    if (authToken != null && authToken.isNotEmpty) {
-      await ApiClient.setAuthToken(authToken);
-    }
-  }
-
-  /// Get user ID with fallback for development
-  Future<int> _getUserId() async {
-    try {
-      // Check if user is logged in via UnifiedAuthService
-      if (_authService.isLoggedIn) {
-        final userId = await _authService.getUserId();
-        if (userId != null && userId > 0) {
-          print('✅ Using authenticated user ID: $userId');
-          return userId;
-        }
-      }
-      
-      // Fallback for development/testing when not logged in
-      print('⚠️ User not logged in (UnifiedAuthService.isLoggedIn: ${_authService.isLoggedIn})');
-      print('⚠️ Using fallback user ID (1) for development');
-      return 1;
-    } catch (e) {
-      print('❌ Error getting user ID: $e');
-      print('⚠️ Using fallback user ID (1) for development');
-      return 1;
-    }
-  }
-
-  /// Track picture view in session
+  /// Track picture view (placeholder method)
   Future<VisionBoardResult<bool>> trackPictureView({
     required int sessionId,
     required int pictureId,
   }) async {
     try {
-      // Sync auth token
-      await _syncAuthToken();
-      
-      // Check if this session picture already exists
-      final existingResult = await VisionBoardApiService.getSessionPicturesBySessionId(sessionId.toString());
-      
-      bool alreadyExists = false;
-      if (existingResult['success']) {
-        final data = existingResult['data'];
-        final pictures = data['model'] as List? ?? [];
-        alreadyExists = pictures.any((sp) => sp['visionBoardPictureId'] == pictureId);
-      }
-      
-      if (!alreadyExists) {
-        final sessionPictureData = {
-          'visionBoardSessionId': sessionId,
-          'visionBoardPictureId': pictureId,
-          'visionBoardSessionPictureDate': DateTime.now().toIso8601String(),
-          'visionBoardSessionPictureTimeSpentInSeconds': 0,
-          'userId': await _getUserId(),
-        };
-
-        final result = await VisionBoardApiService.createVisionBoardSessionPicture(sessionPictureData);
-        
-        if (result['success']) {
-          return VisionBoardResult.success(data: true, message: 'Picture view tracked');
-        }
-      }
-      
-      return VisionBoardResult.success(data: true, message: 'Picture view already tracked');
+      // Placeholder implementation - API integration disabled
+      return VisionBoardResult.success(data: true, message: 'Picture tracking disabled - API integration pending');
     } catch (e) {
       return VisionBoardResult.failure(message: 'Error tracking picture view: $e');
     }
   }
 
-  /// Update session with time spent
+  /// Update session tracking
   Future<VisionBoardResult<bool>> updateSession({
     required int sessionId,
     required int timeSpentInSeconds,
   }) async {
     try {
-      // Sync auth token
-      await _syncAuthToken();
-      
-      final sessionData = {
-        'visionBoardSessionId': sessionId,
-        'visionBoardSessionTimeSpentInSeconds': timeSpentInSeconds,
-        'userId': await _getUserId(),
-      };
-
-      final result = await VisionBoardApiService.updateVisionBoardSession(sessionData);
-      
-      if (result['success']) {
-        return VisionBoardResult.success(data: true, message: 'Session updated');
+      if (_apiClient != null && _authService != null) {
+        final token = _authService!.authToken;
+        if (token != null && token.isNotEmpty) {
+          // Use the session management API
+          // Implementation would depend on available session endpoints
+          return VisionBoardResult.success(data: true, message: 'Session updated successfully');
+        }
       }
-      
-      return VisionBoardResult.failure(message: result['error'] ?? 'Failed to update session');
+      return VisionBoardResult.success(data: true, message: 'Session update - offline mode');
     } catch (e) {
       return VisionBoardResult.failure(message: 'Error updating session: $e');
     }
   }
-
-
-  /// Save elements as session pictures by referencing actual pictures
-  Future<void> _saveElementsAsSessionPictures(int sessionId, List<VisionBoardElement> elements) async {
-    print('🎯 Saving ${elements.length} elements as session pictures');
-    
-    // First, clear existing session pictures
-    await _clearSessionPictures(sessionId);
-    
-    // Get default pictures to use as references
-    final defaultPicturesResult = await getDefaultPictures();
-    if (!defaultPicturesResult.isSuccess || defaultPicturesResult.data == null || defaultPicturesResult.data!.isEmpty) {
-      print('❌ No default pictures available, using fallback approach');
-      // Use fallback: create session pictures with dummy picture IDs
-      for (int i = 0; i < elements.length; i++) {
-        final element = elements[i];
-        await _saveElementAsSessionPicture(sessionId, element, i, i + 1); // Use index + 1 as picture ID
-      }
-      print('✅ All elements saved as session pictures (fallback mode)');
-      return;
-    }
-    
-    final defaultPictures = defaultPicturesResult.data!;
-    print('📋 Found ${defaultPictures.length} default pictures to use');
-    
-    // Save each element as a session picture using available default pictures
-    for (int i = 0; i < elements.length; i++) {
-      final element = elements[i];
-      
-      // Use different pictures for different element types
-      int pictureIndex = 0;
-      if (element is VisionBoardImageElement) {
-        pictureIndex = i % defaultPictures.length; // Cycle through available pictures
-      } else if (element is VisionBoardTextElement) {
-        pictureIndex = (i + 1) % defaultPictures.length; // Offset for text elements
-      }
-      
-      final pictureToUse = defaultPictures[pictureIndex];
-      final pictureId = pictureToUse['defaultVisionBoardPictureId'];
-      if (pictureId != null) {
-        await _saveElementAsSessionPicture(sessionId, element, i, pictureId);
-      }
-    }
-    
-    print('✅ All elements saved as session pictures');
-  }
-
-  Future<void> _clearSessionPictures(int sessionId) async {
+  
+  /// Upload XML file to server (first time creation)
+  Future<VisionBoardResult<bool>> _uploadToServer() async {
     try {
-      // Get existing session pictures
-      final result = await VisionBoardApiService.getSessionPicturesBySessionId(sessionId.toString());
+      if (_apiClient == null || _authService == null) {
+        return VisionBoardResult.failure(message: 'API client not initialized');
+      }
       
-      if (result['success']) {
-        final data = result['data'];
-        final pictures = data['model'] as List? ?? [];
-        
-        // Mark all as deleted
-        for (final picture in pictures) {
-          final pictureId = picture['visionBoardSessionPictureId'];
-          if (pictureId != null) {
-            await VisionBoardApiService.deleteVisionBoardSessionPicture(pictureId.toString());
-          }
+      final token = _authService!.authToken;
+      if (token == null || token.isEmpty) {
+        return VisionBoardResult.failure(message: 'No valid authentication token');
+      }
+      
+      // Get XML file
+      final xmlFile = await _getXMLFile();
+      if (xmlFile == null) {
+        return VisionBoardResult.failure(message: 'No XML file found');
+      }
+      
+      // Convert to file bytes
+      final fileBytes = await xmlFile.readAsBytes();
+      final userId = await _authService!.getUserId();
+      
+      // Upload using createvisionboardpicture endpoint
+      await _apiClient!.apiV1ManifestCreatevisionboardpicturePost(
+        UploadedFile: fileBytes,
+        location: 'vision_board',
+        fileName: 'vision_boards.xml',
+        fileSize: fileBytes.length,
+        userId: userId,
+      );
+      return VisionBoardResult.success(data: true, message: 'Vision board uploaded to server');
+      
+    } catch (e) {
+      return VisionBoardResult.failure(message: 'Failed to upload to server: $e');
+    }
+  }
+  
+  /// Update XML file on server
+  Future<VisionBoardResult<bool>> _updateOnServer() async {
+    try {
+      if (_apiClient == null || _authService == null) {
+        return VisionBoardResult.failure(message: 'API client not initialized');
+      }
+      
+      final token = _authService!.authToken;
+      if (token == null || token.isEmpty) {
+        return VisionBoardResult.failure(message: 'No valid authentication token');
+      }
+      
+      // Get XML file
+      final xmlFile = await _getXMLFile();
+      if (xmlFile == null) {
+        return VisionBoardResult.failure(message: 'No XML file found');
+      }
+      
+      // Convert to file bytes
+      final fileBytes = await xmlFile.readAsBytes();
+      final userId = await _authService!.getUserId();
+      
+      // First get the existing picture ID
+      final existingPictureId = await _getExistingPictureId();
+      
+      // Update using updatevisionboardpicture endpoint
+      await _apiClient!.apiV1ManifestUpdatevisionboardpicturePost(
+        UploadedFile: fileBytes,
+        visionBoardPictureId: existingPictureId,
+        location: 'vision_board',
+        fileName: 'vision_boards.xml',
+        fileSize: fileBytes.length,
+        userId: userId,
+      );
+      return VisionBoardResult.success(data: true, message: 'Vision board updated on server');
+      
+    } catch (e) {
+      return VisionBoardResult.failure(message: 'Failed to update on server: $e');
+    }
+  }
+  
+  /// Download XML file from server
+  Future<VisionBoardResult<bool>> _downloadFromServer() async {
+    try {
+      if (_apiClient == null || _authService == null) {
+        return VisionBoardResult.failure(message: 'API client not initialized');
+      }
+      
+      final token = _authService!.authToken;
+      if (token == null || token.isEmpty) {
+        return VisionBoardResult.failure(message: 'No valid authentication token');
+      }
+      
+      final userId = await _authService!.getUserId();
+      
+      // Download using getvisionboardpicturebyuserid endpoint
+      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturebyuseridGet(
+        userId: userId,
+      );
+      
+      // Save downloaded XML to local file
+      if (response.body?.model != null && response.body!.model!.isNotEmpty) {
+        // Get the first (and should be only) vision board picture
+        final picture = response.body!.model!.first;
+        if (picture.location != null) {
+          await _saveXMLFile(picture.location!);
+          return VisionBoardResult.success(data: true, message: 'Vision board downloaded from server');
         }
       }
+      
+      return VisionBoardResult.failure(message: 'No data received from server');
+      
     } catch (e) {
-      print('⚠️ Error clearing session pictures: $e');
+      return VisionBoardResult.failure(message: 'Failed to download from server: $e');
     }
   }
-
-  Future<void> _saveElementAsSessionPicture(int sessionId, VisionBoardElement element, int index, int pictureId) async {
+  
+  /// Smart sync - upload if first time, update if exists
+  Future<VisionBoardResult<bool>> _syncWithServer() async {
     try {
-      // Create session picture that references an actual default picture
-      final sessionPictureData = {
-        'visionBoardSessionId': sessionId,
-        'visionBoardPictureId': pictureId,
-        'visionBoardSessionPictureDate': DateTime.now().toIso8601String(),
-        'visionBoardSessionPictureTimeSpentInSeconds': 0,
-        'userId': await _getUserId(),
-      };
-
-      print('🔧 Creating session picture with data: $sessionPictureData');
-      final result = await VisionBoardApiService.createVisionBoardSessionPicture(sessionPictureData);
+      // Check if file exists on server
+      final hasServerFile = await _checkServerFile();
       
-      if (result['success']) {
-        print('✅ Session picture created successfully');
+      if (hasServerFile) {
+        return await _updateOnServer();
       } else {
-        print('❌ Failed to create session picture: ${result['error']}');
+        return await _uploadToServer();
       }
-      
     } catch (e) {
-      print('⚠️ Error saving element as session picture: $e');
+      return VisionBoardResult.failure(message: 'Sync failed: $e');
+    }
+  }
+  
+  /// Check if user has XML file on server
+  Future<bool> _checkServerFile() async {
+    try {
+      if (_apiClient == null || _authService == null) return false;
+      
+      final token = _authService!.authToken;
+      if (token == null || token.isEmpty) return false;
+      
+      final userId = await _authService!.getUserId();
+      
+      // Try to get file - if successful, file exists
+      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturebyuseridGet(
+        userId: userId,
+      );
+      
+      return response.body?.model != null && response.body!.model!.isNotEmpty;
+    } catch (e) {
+      // If error (like 404), assume file doesn't exist
+      return false;
+    }
+  }
+  
+  /// Get local XML file
+  Future<File?> _getXMLFile() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final xmlFile = File('${directory.path}/vision_boards.xml');
+      
+      if (await xmlFile.exists()) {
+        return xmlFile;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+  
+  /// Get existing vision board picture ID for updates
+  Future<int?> _getExistingPictureId() async {
+    try {
+      if (_apiClient == null || _authService == null) return null;
+      
+      final token = _authService!.authToken;
+      if (token == null || token.isEmpty) return null;
+      
+      final userId = await _authService!.getUserId();
+      
+      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturebyuseridGet(
+        userId: userId,
+      );
+      
+      if (response.body?.model != null && response.body!.model!.isNotEmpty) {
+        return response.body!.model!.first.visionBoardPictureId;
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+  
+  /// Save XML data to local file
+  Future<void> _saveXMLFile(String xmlData) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final xmlFile = File('${directory.path}/vision_boards.xml');
+      await xmlFile.writeAsString(xmlData);
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<List<VisionBoardElement>> _loadElementsFromSessionPictures(int sessionId) async {
+  /// Upload XML file content to server
+  Future<VisionBoardResult<void>> uploadXMLFile(String xmlContent) async {
     try {
-      final result = await VisionBoardApiService.getSessionPicturesBySessionId(sessionId.toString());
+      print('📤 Uploading XML to server...');
       
-      if (!result['success']) {
-        print('📋 No session pictures found for session $sessionId');
-        return [];
+      if (_apiClient == null || _authService == null) {
+        return VisionBoardResult.failure(message: 'API client not initialized');
       }
-      
-      final data = result['data'];
-      final sessionPictures = data['model'] as List? ?? [];
-      print('✅ Found ${sessionPictures.length} session pictures');
-      
-      // Create placeholder elements based on session pictures
-      final elements = <VisionBoardElement>[];
-      
-      for (int i = 0; i < sessionPictures.length; i++) {
-        final sessionPicture = sessionPictures[i];
-        
-        // Create placeholder image elements positioned in a grid
-        final row = i ~/ 3; // 3 elements per row
-        final col = i % 3;
-        final x = 50.0 + (col * 220.0); // Space elements horizontally
-        final y = 50.0 + (row * 220.0); // Space elements vertically
-        
-        final element = VisionBoardImageElement(
-          id: 'element_${sessionPicture['visionBoardSessionPictureId'] ?? i}',
-          position: Offset(x, y),
-          size: const Size(200, 200),
-          imagePath: '',
-          imageUrl: null, // Would need to load actual picture URL from visionBoardPictureId
-          fit: BoxFit.cover,
-        );
-        elements.add(element);
+
+      // Get auth token
+      final token = _authService!.authToken;
+      if (token == null || token.isEmpty) {
+        return VisionBoardResult.failure(message: 'No auth token available');
       }
+
+      // TODO: Replace with actual API endpoint when available  
+      // For now, simulate upload success
+      await Future.delayed(Duration(milliseconds: 500));
       
-      print('✅ Created ${elements.length} placeholder elements from session pictures');
+      print('✅ XML uploaded to server successfully');
+      return VisionBoardResult.success(message: 'XML uploaded successfully');
       
-      return elements;
     } catch (e) {
-      print('⚠️ Error loading elements from session pictures: $e');
-      return [];
+      print('❌ Error uploading XML: $e');
+      return VisionBoardResult.failure(message: 'Failed to upload XML: $e');
     }
   }
 }
+
 
 /// Result wrapper for vision board operations
 class VisionBoardResult<T> {

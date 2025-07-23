@@ -8,6 +8,7 @@ import '../models/goals.dart';
 import '../models/goal_tracker_category.dart';
 import '../constants/colors.dart';
 import '../services/goal_tracker_service.dart';
+import '../api/generated/code/manifestation.swagger.dart';
 import 'goal_detail_screen.dart';
 
 class GoalTrackerScreen extends StatefulWidget {
@@ -571,23 +572,25 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         
         print('🔄 Converting ${apiGoals.length} API goals to UI goals...');
         
+        // Load all user milestones once (much faster than per-goal API calls)
+        print('📋 Loading all user milestones in one API call...');
+        final allUserMilestones = await _loadAllUserMilestones();
+        
         for (int i = 0; i < apiGoals.length; i++) {
           final apiGoal = apiGoals[i];
           print('🎯 Processing goal ${i + 1}: ${apiGoal.goalTrackerName} (ID: ${apiGoal.goalTrackerId})');
           
-          // Skip milestone loading for now to avoid hanging
-          // TODO: Re-enable milestone loading once API performance is optimized
-          print('⏭️  Skipping milestone loading for now (performance optimization)...');
-          final milestones = <Milestone>[]; // Empty milestones list
+          // Get milestones for this specific goal from the loaded data
+          final milestones = _getMilestonesForGoal(apiGoal, allUserMilestones);
           
-          // Determine category based on goal name/context
-          final goalCategory = _determineGoalCategory(apiGoal.goalTrackerName ?? '');
+          // Determine category based on API category data (preferred) or goal name (fallback)
+          final goalCategory = _mapApiCategoryToGoalCategory(apiGoal.existingCategorys, apiGoal.goalTrackerName ?? '');
           
-          // Set a default progress since we're not loading milestones yet
-          final progress = 0.0; // Default to 0% progress
+          // Calculate progress based on completed milestones
+          final progress = _calculateGoalProgress(milestones);
           
           print('🏷️  Goal "${apiGoal.goalTrackerName}" categorized as: ${goalCategory.displayName}');
-          print('📊 Goal progress set to default: ${progress.toStringAsFixed(1)}%');
+          print('📊 Goal progress calculated: ${progress.toStringAsFixed(1)}%');
           
           convertedGoals.add(Goal(
             id: apiGoal.goalTrackerId?.toString() ?? '',
@@ -658,9 +661,51 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     }
   }
 
-  GoalCategory _determineGoalCategory(String goalName) {
+  /// Map API category to GoalCategory enum using actual category data
+  GoalCategory _mapApiCategoryToGoalCategory(List<CategoryModel>? apiCategories, String goalName) {
+    print('🏷️  Mapping categories for goal: "$goalName"');
+    print('🏷️  API categories count: ${apiCategories?.length ?? 0}');
+    
+    if (apiCategories != null && apiCategories.isNotEmpty) {
+      // Use the first category associated with this goal
+      final firstCategory = apiCategories.first;
+      final categoryName = (firstCategory.categoryName ?? firstCategory.defaultCategoryName ?? '').toLowerCase();
+      
+      print('🏷️  API category name: "$categoryName"');
+      
+      // Map API category names to GoalCategory enum
+      if (categoryName.contains('career') || categoryName.contains('work')) {
+        print('🏷️  Mapped to: Career');
+        return GoalCategory.career;
+      } else if (categoryName.contains('health') || categoryName.contains('fitness')) {
+        print('🏷️  Mapped to: Health');
+        return GoalCategory.health;
+      } else if (categoryName.contains('love') || categoryName.contains('relationship')) {
+        print('🏷️  Mapped to: Relationships');
+        return GoalCategory.relationships;
+      } else if (categoryName.contains('money') || categoryName.contains('financial')) {
+        print('🏷️  Mapped to: Financial');
+        return GoalCategory.financial;
+      } else if (categoryName.contains('spiritual') || categoryName.contains('meditation')) {
+        print('🏷️  Mapped to: Spiritual');
+        return GoalCategory.spiritual;
+      } else if (categoryName.contains('personal')) {
+        print('🏷️  Mapped to: Personal');
+        return GoalCategory.personal;
+      } else {
+        print('🏷️  No specific match for "$categoryName", using fallback logic');
+        return _fallbackCategoryFromGoalName(goalName);
+      }
+    } else {
+      print('🏷️  No API categories found, using fallback logic');
+      return _fallbackCategoryFromGoalName(goalName);
+    }
+  }
+
+  /// Fallback method: determine category from goal name if no API category data
+  GoalCategory _fallbackCategoryFromGoalName(String goalName) {
     final lowerName = goalName.toLowerCase();
-    print('🏷️  Determining category for goal: "$goalName"');
+    print('🏷️  Fallback categorization for goal: "$goalName"');
     
     GoalCategory category;
     if (lowerName.contains('work') || lowerName.contains('career') || lowerName.contains('job')) {
@@ -677,8 +722,114 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       category = GoalCategory.personal;
     }
     
-    print('🏷️  Categorized as: ${category.displayName}');
+    print('🏷️  Fallback categorized as: ${category.displayName}');
     return category;
+  }
+
+  /// Load all user milestones in one API call (much more efficient)
+  Future<List<GoalTrackerMileStoneModel>> _loadAllUserMilestones() async {
+    try {
+      print('🌐 Making single API call to get all user milestones...');
+      final result = await _goalTrackerService.getUserMilestones();
+      
+      if (result.isSuccess && result.data != null) {
+        print('✅ Loaded ${result.data!.length} total milestones for user');
+        return result.data!;
+      } else {
+        print('❌ Failed to load user milestones: ${result.message}');
+        return <GoalTrackerMileStoneModel>[];
+      }
+    } catch (e) {
+      print('❌ Exception loading user milestones: $e');
+      return <GoalTrackerMileStoneModel>[];
+    }
+  }
+
+  /// Get milestones for a specific goal from the pre-loaded user milestones
+  List<Milestone> _getMilestonesForGoal(GoalTrackerModel apiGoal, List<GoalTrackerMileStoneModel> allUserMilestones) {
+    print('🎯 Finding milestones for goal ${apiGoal.goalTrackerName}...');
+    
+    // First, check if the goal has embedded milestones
+    if (apiGoal.existingGoalTrackerMileStones != null && apiGoal.existingGoalTrackerMileStones!.isNotEmpty) {
+      print('📋 Found ${apiGoal.existingGoalTrackerMileStones!.length} embedded milestones');
+      return _convertApiMilestonesToUiMilestones(apiGoal.existingGoalTrackerMileStones!);
+    }
+    
+    // If no embedded milestones, filter from the all-user-milestones data
+    if (apiGoal.goalTrackerId != null) {
+      final goalMilestones = allUserMilestones.where((milestone) {
+        return milestone.goalTrackerId == apiGoal.goalTrackerId;
+      }).toList();
+      
+      if (goalMilestones.isNotEmpty) {
+        print('📋 Found ${goalMilestones.length} milestones from user milestone data');
+        return _convertApiMilestonesToUiMilestones(goalMilestones);
+      }
+    }
+    
+    print('📋 No milestones found for this goal');
+    return <Milestone>[];
+  }
+
+  /// Load milestones for a goal from embedded data or API call
+  Future<List<Milestone>> _loadMilestonesForGoal(GoalTrackerModel apiGoal) async {
+    print('🎯 Loading milestones for goal ${apiGoal.goalTrackerName}...');
+    
+    // First, try to use embedded milestones
+    if (apiGoal.existingGoalTrackerMileStones != null && apiGoal.existingGoalTrackerMileStones!.isNotEmpty) {
+      print('📋 Found ${apiGoal.existingGoalTrackerMileStones!.length} embedded milestones');
+      return _convertApiMilestonesToUiMilestones(apiGoal.existingGoalTrackerMileStones!);
+    }
+    
+    // If no embedded milestones, make API call to get them
+    if (apiGoal.goalTrackerId != null) {
+      print('🔍 No embedded milestones, fetching from API...');
+      try {
+        final result = await _goalTrackerService.getMilestonesByGoalTracker(apiGoal.goalTrackerId!);
+        if (result.isSuccess && result.data != null) {
+          print('📋 Fetched ${result.data!.length} milestones from API');
+          return _convertApiMilestonesToUiMilestones(result.data!);
+        } else {
+          print('❌ Failed to fetch milestones: ${result.message}');
+        }
+      } catch (e) {
+        print('❌ Exception fetching milestones: $e');
+      }
+    }
+    
+    print('📋 No milestones found for goal');
+    return <Milestone>[];
+  }
+
+  /// Convert API GoalTrackerMileStoneModel to UI Milestone model
+  List<Milestone> _convertApiMilestonesToUiMilestones(List<GoalTrackerMileStoneModel> apiMilestones) {
+    return apiMilestones.map((apiMilestone) {
+      final isCompleted = apiMilestone.goalTrackerMileStoneCompletedDate != null;
+      
+      return Milestone(
+        id: apiMilestone.goalTrackerMileStoneId?.toString() ?? '',
+        title: apiMilestone.goalTrackerMileStoneName ?? '',
+        description: '', // API doesn't provide description
+        isCompleted: isCompleted,
+        completedAt: apiMilestone.goalTrackerMileStoneCompletedDate,
+        targetDate: apiMilestone.goalTrackerMileStoneEndDate,
+      );
+    }).toList();
+  }
+
+  /// Calculate goal progress based on milestone completion
+  double _calculateGoalProgress(List<Milestone> milestones) {
+    if (milestones.isEmpty) {
+      print('📊 No milestones found, progress = 0%');
+      return 0.0;
+    }
+    
+    final completedCount = milestones.where((m) => m.isCompleted).length;
+    final totalCount = milestones.length;
+    final progressPercentage = (completedCount / totalCount) * 100;
+    
+    print('📊 Progress: $completedCount/$totalCount milestones completed = ${progressPercentage.toStringAsFixed(1)}%');
+    return progressPercentage;
   }
 
   Future<void> _loadHardcodedGoals() async {

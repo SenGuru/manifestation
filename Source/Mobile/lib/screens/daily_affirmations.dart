@@ -694,6 +694,41 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             ),
           ],
         ),
+        SizedBox(height: 16.h),
+        // Add new affirmation button
+        GestureDetector(
+          onTap: () => _showAddAffirmationDialog(currentCategory),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            decoration: BoxDecoration(
+              color: currentCategory.color.withAlpha((0.1 * 255).round()),
+              borderRadius: BorderRadius.circular(24.r),
+              border: Border.all(
+                color: currentCategory.color.withAlpha((0.3 * 255).round()),
+                width: 1.5,
+              ),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.add,
+                  size: 18.sp,
+                  color: currentCategory.color,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  'Add New Affirmation',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: currentCategory.color,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

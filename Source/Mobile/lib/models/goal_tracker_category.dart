@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import '../constants/colors.dart';
+import '../utils/color_utils.dart';
+import '../constants/category_icons.dart';
 
 class GoalTrackerCategory {
   final String id;
   final String name;
   final String description;
-  final String? color;
-  final String? icon;
+  final Color color; // Direct Color object like AffirmationCategory
+  final int? iconValue; // Icon stored as integer value
   final bool isDefault;
   final int? userId;
   final DateTime? createdAt;
@@ -16,8 +18,8 @@ class GoalTrackerCategory {
     required this.id,
     required this.name,
     required this.description,
-    this.color,
-    this.icon,
+    required this.color,
+    this.iconValue,
     this.isDefault = false,
     this.userId,
     this.createdAt,
@@ -29,8 +31,12 @@ class GoalTrackerCategory {
       id: json['id']?.toString() ?? json['categoryId']?.toString() ?? '',
       name: json['name'] ?? json['categoryName'] ?? json['defaultCategoryName'] ?? '',
       description: json['description'] ?? '',
-      color: json['color'],
-      icon: json['icon'],
+      color: json['color'] is int 
+          ? Color(json['color']) 
+          : (json['color'] is String 
+              ? ColorUtils.hexToColor(json['color']) 
+              : AppColors.goalTrackerGradient[0]),
+      iconValue: json['iconValue'] as int? ?? json['predefinedIconTypeId'] as int?,
       isDefault: json['isDefault'] == true,
       userId: json['userId'] as int?,
       createdAt: json['createdAt'] != null 
@@ -42,13 +48,38 @@ class GoalTrackerCategory {
     );
   }
 
+  /// Create a category with a hex color string
+  factory GoalTrackerCategory.withHexColor({
+    required String id,
+    required String name,
+    required String description,
+    required String colorHex,
+    int? iconValue,
+    bool isDefault = false,
+    int? userId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return GoalTrackerCategory(
+      id: id,
+      name: name,
+      description: description,
+      color: ColorUtils.hexToColor(colorHex),
+      iconValue: iconValue,
+      isDefault: isDefault,
+      userId: userId,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
       'name': name,
       'description': description,
-      if (color != null) 'color': color,
-      if (icon != null) 'icon': icon,
+      'color': color.value,
+      if (iconValue != null) 'iconValue': iconValue,
       'isDefault': isDefault,
       if (userId != null) 'userId': userId,
       if (createdAt != null) 'createdAt': createdAt!.toIso8601String(),
@@ -60,8 +91,8 @@ class GoalTrackerCategory {
     String? id,
     String? name,
     String? description,
-    String? color,
-    String? icon,
+    Color? color,
+    int? iconValue,
     bool? isDefault,
     int? userId,
     DateTime? createdAt,
@@ -72,7 +103,7 @@ class GoalTrackerCategory {
       name: name ?? this.name,
       description: description ?? this.description,
       color: color ?? this.color,
-      icon: icon ?? this.icon,
+      iconValue: iconValue ?? this.iconValue,
       isDefault: isDefault ?? this.isDefault,
       userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
@@ -80,95 +111,25 @@ class GoalTrackerCategory {
     );
   }
 
-  // UI Helper methods
-  Color get displayColor {
-    if (color != null && color!.isNotEmpty) {
-      try {
-        // Handle hex colors
-        String colorString = color!;
-        if (colorString.startsWith('#')) {
-          colorString = colorString.substring(1);
-        }
-        if (colorString.length == 6) {
-          colorString = 'FF$colorString';
-        }
-        return Color(int.parse(colorString, radix: 16));
-      } catch (e) {
-        // Fallback to category-based colors
-      }
-    }
-    
-    // Fallback colors based on category name
-    final lowerName = name.toLowerCase();
-    if (lowerName.contains('career') || lowerName.contains('work')) {
-      return AppColors.secondaryTeal;
-    } else if (lowerName.contains('health') || lowerName.contains('fitness')) {
-      return AppColors.accentMint;
-    } else if (lowerName.contains('financial') || lowerName.contains('money')) {
-      return AppColors.accentGold;
-    } else if (lowerName.contains('relationship') || lowerName.contains('love')) {
-      return AppColors.gradientPink;
-    } else if (lowerName.contains('spiritual') || lowerName.contains('mindful')) {
-      return AppColors.gradientPurple;
-    } else {
-      return AppColors.goalTrackerGradient[0];
-    }
-  }
+  /// Get the color as a hex string
+  String get colorHex => ColorUtils.colorToHex(color);
 
-  IconData get displayIcon {
-    if (icon != null && icon!.isNotEmpty) {
-      // Map icon names to IconData if needed
-      switch (icon!.toLowerCase()) {
-        case 'work':
-        case 'career':
-          return Icons.work;
-        case 'health':
-        case 'fitness':
-          return Icons.fitness_center;
-        case 'money':
-        case 'financial':
-          return Icons.attach_money;
-        case 'love':
-        case 'relationship':
-          return Icons.favorite;
-        case 'spiritual':
-        case 'mindfulness':
-          return Icons.self_improvement;
-        case 'travel':
-          return Icons.flight;
-        case 'education':
-        case 'learning':
-          return Icons.school;
-        case 'creative':
-        case 'art':
-          return Icons.palette;
-        default:
-          return Icons.flag;
-      }
-    }
-    
-    // Fallback icons based on category name
-    final lowerName = name.toLowerCase();
-    if (lowerName.contains('career') || lowerName.contains('work')) {
-      return Icons.work;
-    } else if (lowerName.contains('health') || lowerName.contains('fitness')) {
-      return Icons.fitness_center;
-    } else if (lowerName.contains('financial') || lowerName.contains('money')) {
-      return Icons.attach_money;
-    } else if (lowerName.contains('relationship') || lowerName.contains('love')) {
-      return Icons.favorite;
-    } else if (lowerName.contains('spiritual') || lowerName.contains('mindful')) {
-      return Icons.self_improvement;
-    } else if (lowerName.contains('travel')) {
-      return Icons.flight;
-    } else if (lowerName.contains('education') || lowerName.contains('learning')) {
-      return Icons.school;
-    } else if (lowerName.contains('creative') || lowerName.contains('art')) {
-      return Icons.palette;
-    } else {
-      return Icons.flag;
-    }
-  }
+  /// Get readable text color for this category's background
+  Color get textColor => ColorUtils.getTextColor(color);
+
+  /// Get the icon data for this category
+  IconData get iconData => CategoryIconUtils.getIconFromValue(iconValue);
+
+  /// Get the icon type for this category
+  PredefinedIconTypes get iconType => 
+      PredefinedIconTypes.fromValue(iconValue ?? 0) ?? 
+      CategoryIconUtils.getDefaultIconForCategory(name);
+
+  /// Get color as Flutter Color object (kept for backward compatibility)
+  Color get displayColor => color;
+
+  /// Get icon as IconData (kept for backward compatibility)
+  IconData get displayIcon => iconData;
 
   String get displayName => name.isNotEmpty ? name : 'Untitled Category';
 
@@ -190,15 +151,15 @@ class GoalTrackerCategory {
 class CreateGoalTrackerCategoryRequest {
   final String name;
   final String description;
-  final String? color;
-  final String? icon;
+  final Color color;
+  final int? iconValue;
   final int? userId;
 
   const CreateGoalTrackerCategoryRequest({
     required this.name,
     required this.description,
-    this.color,
-    this.icon,
+    required this.color,
+    this.iconValue,
     this.userId,
   });
 
@@ -206,10 +167,27 @@ class CreateGoalTrackerCategoryRequest {
     return {
       'name': name,
       'description': description,
-      if (color != null) 'color': color,
-      if (icon != null) 'icon': icon,
+      'color': color.value,
+      if (iconValue != null) 'iconValue': iconValue,
       if (userId != null) 'userId': userId,
       'isDefault': false,
     };
+  }
+
+  /// Create request with hex color
+  factory CreateGoalTrackerCategoryRequest.withHexColor({
+    required String name,
+    required String description,
+    required String colorHex,
+    int? iconValue,
+    int? userId,
+  }) {
+    return CreateGoalTrackerCategoryRequest(
+      name: name,
+      description: description,
+      color: ColorUtils.hexToColor(colorHex),
+      iconValue: iconValue,
+      userId: userId,
+    );
   }
 }

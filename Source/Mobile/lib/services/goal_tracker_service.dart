@@ -1,4 +1,5 @@
 import 'package:chopper/chopper.dart';
+import 'package:flutter/material.dart';
 import 'package:fun/services/auth_service.dart';
 import 'dart:async';
 import '../api/generated/code/manifestation.swagger.dart';
@@ -22,8 +23,38 @@ class GoalTrackerService {
 
   // ========================= CATEGORIES =========================
 
+  // The 6 supported default categories with hardcoded colors and icons
+  static const List<String> _supportedDefaultCategories = [
+    'career',
+    'health', 
+    'love',
+    'money',
+    'personal',
+    'spiritual'
+  ];
+
+  // Hardcoded colors for the 6 default categories (following affirmations pattern)
+  static final Map<String, Color> _defaultCategoryColors = {
+    'career': Color(0xFF2196F3),      // Blue
+    'health': Color(0xFF4CAF50),      // Green 
+    'love': Color(0xFFE91E63),        // Pink
+    'money': Color(0xFFFF9800),       // Orange
+    'personal': Color(0xFF9C27B0),    // Purple
+    'spiritual': Color(0xFF673AB7),   // Deep Purple
+  };
+
+  // Hardcoded icons for the 6 default categories (using PredefinedIconTypes values)
+  static final Map<String, int> _defaultCategoryIcons = {
+    'career': 3600007,      // target
+    'health': 3600004,      // leaf
+    'love': 3600002,        // heart
+    'money': 3600006,       // diamond
+    'personal': 3600005,    // star
+    'spiritual': 3600001,   // flower
+  };
+
   /// Get default categories (system categories like career, health, love, money, personal, spiritual)
-  /// These are filtered to only return the main categories we support
+  /// These are filtered to only return the main categories we support with hardcoded colors and icons
   Future<GoalTrackerResult<List<GoalTrackerCategory>>> getDefaultCategories() async {
     try {
       final response = await _apiClient.apiV1ManifestGetdefaultcategorysGet();
@@ -33,41 +64,90 @@ class GoalTrackerService {
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
           // Filter to only include the main categories we support
-          final supportedCategoryNames = ['career', 'health', 'love', 'money', 'personal', 'spiritual'];
+          final filteredCategories = <GoalTrackerCategory>[];
           
-          final filteredCategories = returnModel.model!.where((category) {
-            final categoryName = category.defaultCategoryName?.toLowerCase() ?? '';
-            return supportedCategoryNames.any((supported) => categoryName.contains(supported));
-          }).map((category) {
-            return GoalTrackerCategory(
-              id: category.defaultCategoryId?.toString() ?? '',
-              name: category.defaultCategoryName ?? '',
-              description: '', // DefaultCategoryModel doesn't have description
-              color: null, // DefaultCategoryModel doesn't have color field
-              icon: null, // DefaultCategoryModel doesn't have icon field  
-              isDefault: true,
+          for (final apiCategory in returnModel.model!) {
+            final categoryName = apiCategory.defaultCategoryName?.toLowerCase() ?? '';
+            
+            // Find matching supported category
+            final supportedCategory = _supportedDefaultCategories.firstWhere(
+              (supported) => categoryName.contains(supported) || supported.contains(categoryName),
+              orElse: () => '',
             );
-          }).toList();
+            
+            if (supportedCategory.isNotEmpty) {
+              final goalCategory = GoalTrackerCategory(
+                id: apiCategory.defaultCategoryId?.toString() ?? supportedCategory,
+                name: _capitalizeFirst(supportedCategory),
+                description: 'Default ${_capitalizeFirst(supportedCategory)} category',
+                color: _defaultCategoryColors[supportedCategory] ?? Color(0xFF4CAF50),
+                iconValue: _defaultCategoryIcons[supportedCategory],
+                isDefault: true,
+              );
+              filteredCategories.add(goalCategory);
+            }
+          }
+
+          // If API doesn't return all 6 categories, create the missing ones manually
+          for (final supportedCategory in _supportedDefaultCategories) {
+            final exists = filteredCategories.any((cat) => 
+              cat.name.toLowerCase() == supportedCategory);
+            
+            if (!exists) {
+              final goalCategory = GoalTrackerCategory(
+                id: supportedCategory,
+                name: _capitalizeFirst(supportedCategory),
+                description: 'Default ${_capitalizeFirst(supportedCategory)} category',
+                color: _defaultCategoryColors[supportedCategory] ?? Color(0xFF4CAF50),
+                iconValue: _defaultCategoryIcons[supportedCategory],
+                isDefault: true,
+              );
+              filteredCategories.add(goalCategory);
+            }
+          }
 
           return GoalTrackerResult.success(
             data: filteredCategories,
             message: 'Default categories loaded successfully',
           );
         } else {
-          return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.toString() ?? 'Failed to load default categories',
-          );
+          // Fallback: create all 6 categories manually if API fails
+          return _createFallbackDefaultCategories();
         }
       } else {
-        return GoalTrackerResult.failure(
-          message: 'Network error: ${response.statusCode}',
-        );
+        // Fallback: create all 6 categories manually if API fails
+        return _createFallbackDefaultCategories();
       }
     } catch (e) {
-      return GoalTrackerResult.failure(
-        message: 'Error loading default categories: ${e.toString()}',
-      );
+      print('Error loading default categories from API: $e');
+      // Fallback: create all 6 categories manually if API fails
+      return _createFallbackDefaultCategories();
     }
+  }
+
+  /// Create fallback default categories if API fails
+  GoalTrackerResult<List<GoalTrackerCategory>> _createFallbackDefaultCategories() {
+    final categories = _supportedDefaultCategories.map((categoryName) {
+      return GoalTrackerCategory(
+        id: categoryName,
+        name: _capitalizeFirst(categoryName),
+        description: 'Default ${_capitalizeFirst(categoryName)} category',
+        color: _defaultCategoryColors[categoryName] ?? Color(0xFF4CAF50),
+        iconValue: _defaultCategoryIcons[categoryName],
+        isDefault: true,
+      );
+    }).toList();
+
+    return GoalTrackerResult.success(
+      data: categories,
+      message: 'Default categories created (fallback)',
+    );
+  }
+
+  /// Helper method to capitalize first letter
+  String _capitalizeFirst(String text) {
+    if (text.isEmpty) return text;
+    return text[0].toUpperCase() + text.substring(1);
   }
 
   /// Get user's custom categories
@@ -86,8 +166,8 @@ class GoalTrackerService {
               id: category.categoryId?.toString() ?? '',
               name: category.categoryName ?? '',
               description: '', // CategoryModel doesn't have description field
-              color: _convertIntToHexColor(category.colorAsInteger),
-              icon: _mapCategoryIcon(category.predefinedIconTypeId),
+              color: _convertIntToColor(category.colorAsInteger),
+              iconValue: category.predefinedIconTypeId,
               isDefault: false,
               userId: category.userId,
               createdAt: category.createdDate,
@@ -522,34 +602,10 @@ class GoalTrackerService {
 
   // ========================= HELPER METHODS =========================
 
-  /// Convert integer color value to hex string
-  String? _convertIntToHexColor(int? colorValue) {
-    if (colorValue == null) return null;
-    return '#${colorValue.toRadixString(16).padLeft(8, '0').substring(2)}';
-  }
-
-  /// Map icon enum value to icon name string
-  String? _mapCategoryIcon(int? iconValue) {
-    if (iconValue == null) return null;
-    
-    // Map icon enum values to icon names
-    // You'll need to update this mapping based on your actual icon enum values
-    switch (iconValue) {
-      case 1:
-        return 'career';
-      case 2:
-        return 'health';
-      case 3:
-        return 'love';
-      case 4:
-        return 'money';
-      case 5:
-        return 'personal';
-      case 6:
-        return 'spiritual';
-      default:
-        return 'flag';
-    }
+  /// Convert integer color value to Flutter Color object
+  Color _convertIntToColor(int? colorValue) {
+    if (colorValue == null) return Color(0xFF4CAF50); // Default green
+    return Color(colorValue);
   }
 }
 
@@ -593,16 +649,21 @@ class _AuthInterceptor implements Interceptor {
   @override
   FutureOr<Response<BodyType>> intercept<BodyType>(Chain<BodyType> chain) async {
     final request = chain.request;
-    final authService = AuthService();
+    final authService = UnifiedAuthService();
     
-    if (authService.authToken != null) {
+    final token = authService.authToken;
+    print('🔐 Auth Interceptor - Token available: ${token != null}');
+    if (token != null) {
+      print('🔐 Auth Interceptor - Adding Bearer token to request');
       final updatedRequest = request.copyWith(
         headers: {
           ...request.headers,
-          'Authorization': 'Bearer ${authService.authToken}',
+          'Authorization': 'Bearer $token',
         },
       );
       return chain.proceed(updatedRequest);
+    } else {
+      print('⚠️  Auth Interceptor - No token available, proceeding without auth');
     }
     
     return chain.proceed(request);
