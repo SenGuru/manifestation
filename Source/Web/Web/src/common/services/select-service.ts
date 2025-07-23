@@ -43,6 +43,7 @@ export class SelectService {
       { id: 34, type: 'Predefined Category Type' },
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
+      { id: 37, type: 'Predefined Mood Type' },
     ];
   }
 
@@ -79,6 +80,7 @@ export class SelectService {
       { id: 34, type: 'Predefined Category Type' },
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
+      { id: 37, type: 'Predefined Mood Type' },
     ];
   }
 
@@ -114,6 +116,7 @@ export class SelectService {
       { id: 34, type: 'Predefined Category Type' },
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
+      { id: 37, type: 'Predefined Mood Type' },
     ];
   }
 
@@ -857,6 +860,38 @@ export class SelectService {
     ];
   }
 
+ public GetAllPredefinedMoodTypes(): Status[] {
+    return [
+      { id: null, type: 'All' },
+      { id: 3700001, type: 'Terrible' },
+      { id: 3700002, type: 'Bad' },
+      { id: 3700003, type: 'Neutral' },
+      { id: 3700004, type: 'Good' },
+      { id: 3700005, type: 'Amazing' },
+    ];
+  }
+
+ public GetWithBlankPredefinedMoodTypes(): Status[] {
+    return [
+      { id: null, type: '' },
+      { id: 3700001, type: 'Terrible' },
+      { id: 3700002, type: 'Bad' },
+      { id: 3700003, type: 'Neutral' },
+      { id: 3700004, type: 'Good' },
+      { id: 3700005, type: 'Amazing' },
+    ];
+  }
+
+ public GetPredefinedMoodTypes(): Status[] {
+    return [
+      { id: 3700001, type: 'Terrible' },
+      { id: 3700002, type: 'Bad' },
+      { id: 3700003, type: 'Neutral' },
+      { id: 3700004, type: 'Good' },
+      { id: 3700005, type: 'Amazing' },
+    ];
+  }
+
  public GetAllPredefinedNotificationMessageTypes(): Status[] {
     return [
       { id: null, type: 'All' },
@@ -1120,6 +1155,7 @@ export class SelectService {
       { id: 2200060, type: 'Meditation Session' },
       { id: 2200061, type: 'Vision Board Picture' },
       { id: 2200062, type: 'Default Meditation File' },
+      { id: 2200063, type: 'Daily Journal' },
     ];
   }
 
@@ -1188,6 +1224,7 @@ export class SelectService {
       { id: 2200060, type: 'Meditation Session' },
       { id: 2200061, type: 'Vision Board Picture' },
       { id: 2200062, type: 'Default Meditation File' },
+      { id: 2200063, type: 'Daily Journal' },
     ];
   }
 
@@ -1255,6 +1292,7 @@ export class SelectService {
       { id: 2200060, type: 'Meditation Session' },
       { id: 2200061, type: 'Vision Board Picture' },
       { id: 2200062, type: 'Default Meditation File' },
+      { id: 2200063, type: 'Daily Journal' },
     ];
   }
 

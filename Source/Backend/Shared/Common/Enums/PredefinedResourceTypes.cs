@@ -64,5 +64,6 @@ namespace Manifest.Common.Enums
         MeditationSession = 2200060,
         VisionBoardPicture = 2200061,
         DefaultMeditationFile = 2200062,
+        DailyJournal = 2200063,
     }
 }

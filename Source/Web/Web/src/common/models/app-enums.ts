@@ -33,6 +33,7 @@ export enum EnumGroupTypes{
   PredefinedCategoryType = 34,
   PredefinedMeditationType = 35,
   PredefinedIconType = 36,
+  PredefinedMoodType = 37,
 }
 
 export enum PredefinedAuditOperationTypes{
@@ -231,6 +232,14 @@ export enum PredefinedMessageToSendTypes{
   RealtimeMessage = 1500003,
 }
 
+export enum PredefinedMoodTypes{
+  Terrible = 3700001,
+  Bad = 3700002,
+  Neutral = 3700003,
+  Good = 3700004,
+  Amazing = 3700005,
+}
+
 export enum PredefinedNotificationMessageTypes{
   TaskAssigned = 1700001,
 }
@@ -344,6 +353,7 @@ export enum PredefinedResourceTypes{
   MeditationSession = 2200060,
   VisionBoardPicture = 2200061,
   DefaultMeditationFile = 2200062,
+  DailyJournal = 2200063,
 }
 
 export enum PredefinedSingleSignOnServerTypes{

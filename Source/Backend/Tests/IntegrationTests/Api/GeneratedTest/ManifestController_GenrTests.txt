@@ -2292,7 +2292,7 @@ public void GetVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatu
 }
 public void CreateVisionBoardPicture_WithValidData_ReturnsValidData()
 {
-    var model = new VisionBoardPictureCreateModel();
+    var model = new VisionBoardPictureCreateWithFileFormModel();
     var r = CreateVisionBoardPicture();
 }
 public void CreateVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
@@ -2310,7 +2310,7 @@ public void CreateMultipleVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuth
 }
 public void UpdateVisionBoardPicture_WithValidData_ReturnsValidData()
 {
-    var model = new VisionBoardPictureUpdateModel();
+    var model = new VisionBoardPictureUpdateWithFileFormModel();
     var r = UpdateVisionBoardPicture();
 }
 public void UpdateVisionBoardPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
@@ -2368,6 +2368,15 @@ public void GetUserByVisionBoardPictureIdSearch_WithValidData_ReturnsValidData()
     var r = GetUserByVisionBoardPictureIdSearch();
 }
 public void GetUserByVisionBoardPictureIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsVisionBoardPictureFileValid_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = IsVisionBoardPictureFileValid();
+}
+public void IsVisionBoardPictureFileValid_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
 {
     
 }
@@ -2467,6 +2476,105 @@ public void GetUserByVisionBoardSessionIdSearch_WithValidData_ReturnsValidData()
     var r = GetUserByVisionBoardSessionIdSearch();
 }
 public void GetUserByVisionBoardSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyJournals_WithValidData_ReturnsValidData()
+{
+    var model = new DailyJournalSearchCriteria();
+    var r = GetDailyJournals();
+}
+public void GetDailyJournals_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyJournal_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyJournal();
+}
+public void GetDailyJournal_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateDailyJournal_WithValidData_ReturnsValidData()
+{
+    var model = new DailyJournalCreateModel();
+    var r = CreateDailyJournal();
+}
+public void CreateDailyJournal_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleDailyJournal_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleDailyJournalCreateModel();
+    var r = CreateMultipleDailyJournal();
+}
+public void CreateMultipleDailyJournal_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateDailyJournal_WithValidData_ReturnsValidData()
+{
+    var model = new DailyJournalUpdateModel();
+    var r = UpdateDailyJournal();
+}
+public void UpdateDailyJournal_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyJournalAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyJournalAsDeleted();
+}
+public void MarkDailyJournalAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkDailyJournalAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkDailyJournalAsNotDeleted();
+}
+public void MarkDailyJournalAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyJournalByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetDailyJournalByUserId();
+}
+public void GetDailyJournalByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetDailyJournalByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new DailyJournalByUserIdSearchCriteria();
+    var r = GetDailyJournalByUserIdSearch();
+}
+public void GetDailyJournalByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyJournalId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByDailyJournalId();
+}
+public void GetUserByDailyJournalId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByDailyJournalIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByDailyJournalIdSearchCriteria();
+    var r = GetUserByDailyJournalIdSearch();
+}
+public void GetUserByDailyJournalIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
 {
     
 }

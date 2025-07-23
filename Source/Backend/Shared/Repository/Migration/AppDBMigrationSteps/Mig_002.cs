@@ -45,6 +45,7 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedCategoryType,  EnumGroupName = "PredefinedCategoryType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedMeditationType,  EnumGroupName = "PredefinedMeditationType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedIconType,  EnumGroupName = "PredefinedIconType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType,  EnumGroupName = "PredefinedMoodType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
             };
                 InsertData("EnumGroup", enumGroupParams);
 
@@ -237,6 +238,7 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumTypeId = (int)PredefinedResourceTypes.MeditationSession,  EnumGroupId = (int)EnumGroupTypes.PredefinedResourceType, EnumTypeName = "Meditation Session", InternalValue = 2200060 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedResourceTypes.VisionBoardPicture,  EnumGroupId = (int)EnumGroupTypes.PredefinedResourceType, EnumTypeName = "Vision Board Picture", InternalValue = 2200061 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedResourceTypes.DefaultMeditationFile,  EnumGroupId = (int)EnumGroupTypes.PredefinedResourceType, EnumTypeName = "Default Meditation File", InternalValue = 2200062 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedResourceTypes.DailyJournal,  EnumGroupId = (int)EnumGroupTypes.PredefinedResourceType, EnumTypeName = "Daily Journal", InternalValue = 2200063 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedSingleSignOnServerTypes.Google,  EnumGroupId = (int)EnumGroupTypes.PredefinedSingleSignOnServerType, EnumTypeName = "Google", InternalValue = 2300001 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedSingleSignOnServerTypes.Microsoft,  EnumGroupId = (int)EnumGroupTypes.PredefinedSingleSignOnServerType, EnumTypeName = "Microsoft", InternalValue = 2300002 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedSingleSignOnServerTypes.Office360ActiveDirectory,  EnumGroupId = (int)EnumGroupTypes.PredefinedSingleSignOnServerType, EnumTypeName = "Office360Active Directory", InternalValue = 2300003 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
@@ -304,6 +306,11 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumTypeId = (int)PredefinedIconTypes.Trophy,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Trophy", InternalValue = 3600008 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedIconTypes.Sun,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Sun", InternalValue = 3600009 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedIconTypes.Moon,  EnumGroupId = (int)EnumGroupTypes.PredefinedIconType, EnumTypeName = "Moon", InternalValue = 3600010 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedMoodTypes.Terrible,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Terrible", InternalValue = 3700001 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedMoodTypes.Bad,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Bad", InternalValue = 3700002 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedMoodTypes.Neutral,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Neutral", InternalValue = 3700003 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedMoodTypes.Good,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Good", InternalValue = 3700004 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedMoodTypes.Amazing,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Amazing", InternalValue = 3700005 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
             };
                 InsertData("EnumType", enumTypeParams);
         }

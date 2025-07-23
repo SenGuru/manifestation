@@ -2409,5 +2409,45 @@ namespace Manifest.Service.App
             await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.VisionBoardSession,  resourceName: "VisionBoardSession", resourceId: visionBoardSessionId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
         }
         #endregion
+
+        #region DailyJournal
+        public async Task DailyJournalCreatedAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceCreated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyJournalUpdatedAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUpdated, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyJournalDeletedAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyJournalUnDeletedAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceUndeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        /*
+        public async Task DailyJournalEnabledAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceEnable, resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+
+        public async Task DailyJournalDisabledAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceDisable, resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        */
+
+        public async Task HardDeleteDailyJournalAsync(long dailyJournalId)
+        {
+            await auditRepository.InsertAuditAsync(PredefinedAuditOperationTypes.ResourceHardDeleted, objectBeforeUpdate: "", objectAfterUpdate: "", resourceType: PredefinedResourceTypes.DailyJournal, resourceName: "DailyJournal", resourceId: dailyJournalId, userId: await currentSessionService.GetCurrentUserIdAsync(), userName: currentUserName, ipAddress: currentUserAddress);
+        }
+        #endregion
+
     }
 }

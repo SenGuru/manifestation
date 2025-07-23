@@ -1810,6 +1810,181 @@ namespace Manifest.Common.Models.DB
         }
     }
     
+    [Table("DailyJournal")]
+    [Serializable]
+    public partial class DailyJournal : IAuditableModel, INewObject<DailyJournal>
+    {
+        public const string TABLE_NAME = "DailyJournal";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_DailyJournalId = "DailyJournalId";
+        public const string COLUMN_DailyJournalDate = "DailyJournalDate";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_PredefinedMoodTypeId = "PredefinedMoodTypeId";
+        public const string COLUMN_Gratitude1 = "Gratitude1";
+        public const string COLUMN_Gratitude2 = "Gratitude2";
+        public const string COLUMN_Gratitude3 = "Gratitude3";
+        public const string COLUMN_Gratitude4 = "Gratitude4";
+        public const string COLUMN_Gratitude5 = "Gratitude5";
+        public const string COLUMN_YourReflection = "YourReflection";
+        public const string COLUMN_TommorowsIntentions = "TommorowsIntentions";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        public const int COLUMN_SIZE_Gratitude1 = 500;
+        public const int COLUMN_SIZE_Gratitude2 = 500;
+        public const int COLUMN_SIZE_Gratitude3 = 500;
+        public const int COLUMN_SIZE_Gratitude4 = 500;
+        public const int COLUMN_SIZE_Gratitude5 = 500;
+        public const int COLUMN_SIZE_YourReflection = 500;
+        public const int COLUMN_SIZE_TommorowsIntentions = 500;
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_DailyJournalId = false;
+        public const bool COLUMN_NULLABLE_DailyJournalDate = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_PredefinedMoodTypeId = false;
+        public const bool COLUMN_NULLABLE_Gratitude1 = false;
+        public const bool COLUMN_NULLABLE_Gratitude2 = true;
+        public const bool COLUMN_NULLABLE_Gratitude3 = true;
+        public const bool COLUMN_NULLABLE_Gratitude4 = true;
+        public const bool COLUMN_NULLABLE_Gratitude5 = true;
+        public const bool COLUMN_NULLABLE_YourReflection = true;
+        public const bool COLUMN_NULLABLE_TommorowsIntentions = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("DailyJournalId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long DailyJournalId { get; set; }
+        
+        [Column("DailyJournalDate")]
+        [NotNull]
+        public DateTime DailyJournalDate { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("PredefinedMoodTypeId")]
+        [NotNull]
+        public long PredefinedMoodTypeId { get; set; }
+        
+        [Column("Gratitude1")]
+        [NotNull]
+        [StringLength(500)]
+        public string Gratitude1 { get; set; }
+        
+        [Column("Gratitude2")]
+        [StringLength(500)]
+        public string Gratitude2 { get; set; }
+        
+        [Column("Gratitude3")]
+        [StringLength(500)]
+        public string Gratitude3 { get; set; }
+        
+        [Column("Gratitude4")]
+        [StringLength(500)]
+        public string Gratitude4 { get; set; }
+        
+        [Column("Gratitude5")]
+        [StringLength(500)]
+        public string Gratitude5 { get; set; }
+        
+        [Column("YourReflection")]
+        [StringLength(500)]
+        public string YourReflection { get; set; }
+        
+        [Column("TommorowsIntentions")]
+        [StringLength(500)]
+        public string TommorowsIntentions { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"DailyJournalId = {DailyJournalId} , ");
+            sb.AppendLine($"DailyJournalDate = {DailyJournalDate} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"PredefinedMoodTypeId = {PredefinedMoodTypeId} , ");
+            sb.AppendLine($"Gratitude1 = {Gratitude1} , ");
+            sb.AppendLine($"Gratitude2 = {Gratitude2} , ");
+            sb.AppendLine($"Gratitude3 = {Gratitude3} , ");
+            sb.AppendLine($"Gratitude4 = {Gratitude4} , ");
+            sb.AppendLine($"Gratitude5 = {Gratitude5} , ");
+            sb.AppendLine($"YourReflection = {YourReflection} , ");
+            sb.AppendLine($"TommorowsIntentions = {TommorowsIntentions} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public DailyJournal New(DailyJournal item)
+        {
+            if (item == null)
+                return null;
+
+            return new DailyJournal
+            {
+            DailyJournalId = item.DailyJournalId,
+            DailyJournalDate = item.DailyJournalDate,
+            UserId = item.UserId,
+            PredefinedMoodTypeId = item.PredefinedMoodTypeId,
+            Gratitude1 = item.Gratitude1,
+            Gratitude2 = item.Gratitude2,
+            Gratitude3 = item.Gratitude3,
+            Gratitude4 = item.Gratitude4,
+            Gratitude5 = item.Gratitude5,
+            YourReflection = item.YourReflection,
+            TommorowsIntentions = item.TommorowsIntentions,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public DailyJournal NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
     [Table("DefaultCategory")]
     [Serializable]
     public partial class DefaultCategory : IAuditableModel, INewObject<DefaultCategory>

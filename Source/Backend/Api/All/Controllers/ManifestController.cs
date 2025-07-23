@@ -5002,5 +5002,227 @@ namespace Manifest.Api.All.Controllers
         }
         */
         #endregion
+
+        #region DailyJournal
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<DailyJournalModel>> GetDailyJournals([FromQuery] DailyJournalSearchCriteria search)
+        {
+            return manifestService.GetDailyJournalsAsync(search);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<DailyJournalModel>> GetDailyJournal([FromQuery] long id)
+        {
+            return manifestService.GetDailyJournalByIdForReadAsync(id);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<DailyJournalModel>> CreateDailyJournal([FromBody] DailyJournalCreateModel dailyJournalModel)
+        {
+            return manifestService.CreateDailyJournalAsync(dailyJournalModel);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<DailyJournalModel>> CreateMultipleDailyJournal([FromBody] MultipleDailyJournalCreateModel dailyJournalModels)
+        {
+            return manifestService.CreateMultipleDailyJournalAsync(dailyJournalModels);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<DailyJournalModel>> UpdateDailyJournal([FromBody] DailyJournalUpdateModel dailyJournalModel)
+        {
+            return manifestService.UpdateDailyJournalAsync(dailyJournalModel);
+        }
+
+        [HttpDelete]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> MarkDailyJournalAsDeleted([FromQuery] long id)
+        {
+            return manifestService.MarkDailyJournalAsDeletedByIdAsync(id);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> MarkDailyJournalAsNotDeleted([FromBody] long id)
+        {
+            return manifestService.MarkDailyJournalAsNotDeletedByIdAsync(id);
+        }
+
+
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<DailyJournalModel>> GetDailyJournalByUserId([FromQuery] long userId)
+        {
+            return manifestService.GetDailyJournalByUserIdAsync(userId);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<DailyJournalModel>> GetDailyJournalByUserIdSearch(DailyJournalByUserIdSearchCriteria search)
+        {
+            return manifestService.GetDailyJournalByUserIdAsync(search);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<UserModel>> GetUserByDailyJournalId(long dailyJournalId)
+        {
+            return manifestService.GetUserByDailyJournalIdAsync(dailyJournalId);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<UserModel>> GetUserByDailyJournalIdSearch(UserByDailyJournalIdSearchCriteria search)
+        {
+            return manifestService.GetUserByDailyJournalIdAsync(search);
+        }
+
+
+
+        /*
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> IsDailyJournalFileValid([FromQuery] long dailyJournalId)
+        {
+            return manifestService.IsDailyJournalFileValidAsync(dailyJournalId);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public async Task<IActionResult> DownloadDailyJournalFile([FromQuery] long dailyJournalId)
+        {
+            var result = await manifestService.GetDailyJournalFileAsync(dailyJournalId);
+            if (!result.IsSuccess)
+                return new NotFoundResult();
+            return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> UploadDailyJournalFile([FromForm] DailyJournalFileWithFileFormModel model)
+        {
+            FileStreamModel streamModel = null;
+            if (model.UploadedFile != null)
+            {
+                streamModel = new FileStreamModel
+                {
+                    FileData = model.UploadedFile.OpenReadStream(),
+                    ContentType = model.UploadedFile.ContentType,
+                    FileName = model.UploadedFile.FileName
+                };
+            }
+
+            return productService.UploadDailyJournalFileAsync(model.DailyJournalId, streamModel);
+        }
+
+        [HttpDelete]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> ClearDailyJournalFile([FromQuery] long movieId)
+        {
+            return productService.ClearDailyJournalFileAsync(movieId);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> IsDailyJournalSourceWordFileValid([FromQuery] long dailyJournalId)
+        {
+            return manifestService.IsDailyJournalWordOrPdfFileValidAsync(dailyJournalId,isPdf: false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public async Task<IActionResult> DownloadDailyJournalSourceWordFile([FromQuery] long dailyJournalId)
+        {
+            var result = await manifestService.GetDailyJournalWordOrdPdfFileAsync(dailyJournalId, isPdf: false);
+            if (!result.IsSuccess)
+                return new NotFoundResult();
+            return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> EnableDailyJournal([FromBody] long id)
+        {
+            return manifestService.EnableDailyJournalByIdAsync(id);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> DisableDailyJournal([FromBody] long id)
+        {
+            return manifestService.DisableDailyJournalByIdAsync(id);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnListModel<XYZZYXModel>> GetXYZZYXsByDailyJournal(long id)
+        {
+            return manifestService.GetXYZZYXsByDailyJournalAsync(id);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> AssociateXYZZYXWithDailyJournal(DailyJournalXYZZYXAssociationModel model)
+        {
+            return manifestService.AssociateXYZZYXWithDailyJournalAsync(model);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> UnAssociateXYZZYXWithDailyJournal(DailyJournalXYZZYXAssociationModel model)
+        {
+            return manifestService.UnAssociateXYZZYXWithDailyJournalAsync(model);
+        }
+
+        [HttpPost]
+        public Task<ReturnListModel<ImportStatusModel>> ImportDailyJournal([FromBody] ImportDailyJournalModel model)
+        {
+            return manifestService.ImportDailyJournalAsync(model, isTest:false);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadSampleImportDailyJournal()
+        {
+            var lst = new List<ImportDailyJournalModel>();
+            for (int i = 1; i <= 11; i++)
+            {
+                lst.Add(new ImportDailyJournalModel { });
+            }
+
+            return new FileStreamResult(await CsvUtils.GetCsvFileContentAsync(lst), FileUtils.GetMimeTypeFromFileName("File.csv"))
+            {
+                FileDownloadName = "SampleDailyJournalImportFile.csv"
+            };
+        }
+
+        [HttpGet]
+        public Task<ReturnListModel<DailyJournalExportModel>> DailyJournalReport([FromQuery] DailyJournalExportParameter parameter)
+        {
+            return reportService.ExportDailyJournalAsync(parameter, isTest);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DailyJournalAsReportCsv([FromQuery] DailyJournalExportParameter parameter)
+        {
+            var result = await reportService.ExportDailyJournalAsync(parameter, isTest);
+            if (result.IsSuccess)
+            {
+                return new FileStreamResult(await CsvUtils.GetCsvFileContentAsync(result.Model), FileUtils.GetMimeTypeFromFileName("DailyJournalAsCsv.csv"))
+                {
+                    FileDownloadName = "DailyJournalExport.csv"
+                };
+            }
+
+            return Json(result);
+        }
+        */
+        #endregion
+
     }
 }

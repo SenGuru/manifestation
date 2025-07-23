@@ -2918,16 +2918,6 @@ export class VisionBoardPictureModel {
       obj.userId = self.userId;
       return obj;
     }
-
-    static getAsUpdateModel(self : VisionBoardPictureModel):VisionBoardPictureUpdateModel {
-      let obj = new VisionBoardPictureUpdateModel();
-      obj.visionBoardPictureId = self.visionBoardPictureId;
-      obj.location = self.location;
-      obj.fileName = self.fileName;
-      obj.fileSize = self.fileSize;
-      obj.userId = self.userId;
-      return obj;
-    }
 }
 
 export class VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria extends BaseSearchCriteria{
@@ -7350,16 +7340,20 @@ export class VisionBoardPictureSearchCriteria extends BaseSearchCriteria{
     }
 }
 
-export class VisionBoardPictureCreateModel {
+export class VisionBoardPictureCreateWithFileFormModel {
+    uploadedFile : File | null = null;
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
     userId : number = 0;
     static location__size : number = 255;
     static fileName__size : number = 255;
+    static uploadedFile__required  = true;
 
-    static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
-      let obj = new VisionBoardPictureCreateModel();
+    static getCopy(self : VisionBoardPictureCreateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateWithFileFormModel {
+      let obj = new VisionBoardPictureCreateWithFileFormModel();
+      if (self.hasOwnProperty('uploadedFile'))
+        obj.uploadedFile = self.uploadedFile;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -7383,7 +7377,8 @@ export class MultipleVisionBoardPictureCreateModel {
     }
 }
 
-export class VisionBoardPictureUpdateModel {
+export class VisionBoardPictureUpdateWithFileFormModel {
+    uploadedFile : File | null = null;
     visionBoardPictureId : number = 0;
     location : string = '';
     fileName : string = '';
@@ -7391,9 +7386,12 @@ export class VisionBoardPictureUpdateModel {
     userId : number = 0;
     static location__size : number = 255;
     static fileName__size : number = 255;
+    static uploadedFile__required  = true;
 
-    static getCopy(self : VisionBoardPictureUpdateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateModel {
-      let obj = new VisionBoardPictureUpdateModel();
+    static getCopy(self : VisionBoardPictureUpdateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateWithFileFormModel {
+      let obj = new VisionBoardPictureUpdateWithFileFormModel();
+      if (self.hasOwnProperty('uploadedFile'))
+        obj.uploadedFile = self.uploadedFile;
       if (self.hasOwnProperty('visionBoardPictureId'))
         obj.visionBoardPictureId = self.visionBoardPictureId;
       if (self.hasOwnProperty('location'))
@@ -7576,6 +7574,321 @@ export class UserByVisionBoardSessionIdSearchCriteria extends BaseSearchCriteria
       let obj = new UserByVisionBoardSessionIdSearchCriteria();
       if (self.hasOwnProperty('visionBoardSessionId'))
         obj.visionBoardSessionId = self.visionBoardSessionId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyJournalModel {
+    userName : string = '';
+    predefinedMoodTypeName : string = '';
+    createdByUserFirstName : string = '';
+    createdByUserLastName : string = '';
+    createdByUserEmail : string = '';
+    modifiedByUserFirstName : string = '';
+    modifiedByUserLastName : string = '';
+    modifiedByUserEmail : string = '';
+    createdBy : string = '';
+    modifiedBy : string = '';
+    dailyJournalId : number = 0;
+    dailyJournalDate : Date = new Date();
+    userId : number = 0;
+    predefinedMoodTypeId : number = 0;
+    gratitude1 : string = '';
+    gratitude2 : string = '';
+    gratitude3 : string = '';
+    gratitude4 : string = '';
+    gratitude5 : string = '';
+    yourReflection : string = '';
+    tommorowsIntentions : string = '';
+    isDeleted : boolean = false;
+    createdDate : Date = new Date();
+    createdByUserId : number | null = null;
+    modifiedDate : Date = new Date();
+    modifiedByUserId : number | null = null;
+    static gratitude1__size : number = 500;
+    static gratitude2__size : number = 500;
+    static gratitude3__size : number = 500;
+    static gratitude4__size : number = 500;
+    static gratitude5__size : number = 500;
+    static yourReflection__size : number = 500;
+    static tommorowsIntentions__size : number = 500;
+
+    static getCopy(self : DailyJournalModel,adjustDateToUTC : boolean = false) : DailyJournalModel {
+      let obj = new DailyJournalModel();
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('predefinedMoodTypeName'))
+        obj.predefinedMoodTypeName = self.predefinedMoodTypeName;
+      if (self.hasOwnProperty('createdByUserFirstName'))
+        obj.createdByUserFirstName = self.createdByUserFirstName;
+      if (self.hasOwnProperty('createdByUserLastName'))
+        obj.createdByUserLastName = self.createdByUserLastName;
+      if (self.hasOwnProperty('createdByUserEmail'))
+        obj.createdByUserEmail = self.createdByUserEmail;
+      if (self.hasOwnProperty('modifiedByUserFirstName'))
+        obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
+      if (self.hasOwnProperty('modifiedByUserLastName'))
+        obj.modifiedByUserLastName = self.modifiedByUserLastName;
+      if (self.hasOwnProperty('modifiedByUserEmail'))
+        obj.modifiedByUserEmail = self.modifiedByUserEmail;
+      if (self.hasOwnProperty('createdBy'))
+        obj.createdBy = self.createdBy;
+      if (self.hasOwnProperty('modifiedBy'))
+        obj.modifiedBy = self.modifiedBy;
+      if (self.hasOwnProperty('dailyJournalId'))
+        obj.dailyJournalId = self.dailyJournalId;
+      if (self.hasOwnProperty('dailyJournalDate'))
+        obj.dailyJournalDate = self.dailyJournalDate ?? (!adjustDateToUTC ? self.dailyJournalDate : DateUtils.parseAsUTC(self.dailyJournalDate));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('predefinedMoodTypeId'))
+        obj.predefinedMoodTypeId = self.predefinedMoodTypeId;
+      if (self.hasOwnProperty('gratitude1'))
+        obj.gratitude1 = self.gratitude1;
+      if (self.hasOwnProperty('gratitude2'))
+        obj.gratitude2 = self.gratitude2;
+      if (self.hasOwnProperty('gratitude3'))
+        obj.gratitude3 = self.gratitude3;
+      if (self.hasOwnProperty('gratitude4'))
+        obj.gratitude4 = self.gratitude4;
+      if (self.hasOwnProperty('gratitude5'))
+        obj.gratitude5 = self.gratitude5;
+      if (self.hasOwnProperty('yourReflection'))
+        obj.yourReflection = self.yourReflection;
+      if (self.hasOwnProperty('tommorowsIntentions'))
+        obj.tommorowsIntentions = self.tommorowsIntentions;
+      if (self.hasOwnProperty('isDeleted'))
+        obj.isDeleted = self.isDeleted;
+      if (self.hasOwnProperty('createdDate'))
+        obj.createdDate = self.createdDate ?? (!adjustDateToUTC ? self.createdDate : DateUtils.parseAsUTC(self.createdDate));
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedDate'))
+        obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+
+    static getAsCreateModel(self : DailyJournalModel) : DailyJournalCreateModel {
+      let obj = new DailyJournalCreateModel();
+      obj.dailyJournalDate = self.dailyJournalDate;
+      obj.userId = self.userId;
+      obj.predefinedMoodTypeId = self.predefinedMoodTypeId;
+      obj.gratitude1 = self.gratitude1;
+      obj.gratitude2 = self.gratitude2;
+      obj.gratitude3 = self.gratitude3;
+      obj.gratitude4 = self.gratitude4;
+      obj.gratitude5 = self.gratitude5;
+      obj.yourReflection = self.yourReflection;
+      obj.tommorowsIntentions = self.tommorowsIntentions;
+      return obj;
+    }
+
+    static getAsUpdateModel(self : DailyJournalModel):DailyJournalUpdateModel {
+      let obj = new DailyJournalUpdateModel();
+      obj.dailyJournalId = self.dailyJournalId;
+      obj.dailyJournalDate = self.dailyJournalDate;
+      obj.userId = self.userId;
+      obj.predefinedMoodTypeId = self.predefinedMoodTypeId;
+      obj.gratitude1 = self.gratitude1;
+      obj.gratitude2 = self.gratitude2;
+      obj.gratitude3 = self.gratitude3;
+      obj.gratitude4 = self.gratitude4;
+      obj.gratitude5 = self.gratitude5;
+      obj.yourReflection = self.yourReflection;
+      obj.tommorowsIntentions = self.tommorowsIntentions;
+      return obj;
+    }
+}
+
+export class DailyJournalSearchCriteria extends BaseSearchCriteria{
+    startDate : Date | null = null;
+    endDate : Date | null = null;
+    showDeleted : boolean = false;
+    userId : number | null = null;
+    predefinedMoodTypeIds : number[] | null = null;
+    createdByUserId : number | null = null;
+    modifiedByUserId : number | null = null;
+
+    static getCopy(self : DailyJournalSearchCriteria,adjustDateToUTC : boolean = false) : DailyJournalSearchCriteria {
+      let obj = new DailyJournalSearchCriteria();
+      if (self.hasOwnProperty('startDate'))
+        obj.startDate = self.startDate ?? (!adjustDateToUTC ? self.startDate : (self.startDate !== null ? DateUtils.parseAsUTC(self.startDate) : self.startDate ));
+      if (self.hasOwnProperty('endDate'))
+        obj.endDate = self.endDate ?? (!adjustDateToUTC ? self.endDate : (self.endDate !== null ? DateUtils.parseAsUTC(self.endDate) : self.endDate ));
+      if (self.hasOwnProperty('showDeleted'))
+        obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('predefinedMoodTypeIds'))
+        obj.predefinedMoodTypeIds = self.predefinedMoodTypeIds;
+      if (self.hasOwnProperty('createdByUserId'))
+        obj.createdByUserId = self.createdByUserId;
+      if (self.hasOwnProperty('modifiedByUserId'))
+        obj.modifiedByUserId = self.modifiedByUserId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class DailyJournalCreateModel {
+    dailyJournalDate : Date = new Date();
+    userId : number = 0;
+    predefinedMoodTypeId : number = 0;
+    gratitude1 : string = '';
+    gratitude2 : string = '';
+    gratitude3 : string = '';
+    gratitude4 : string = '';
+    gratitude5 : string = '';
+    yourReflection : string = '';
+    tommorowsIntentions : string = '';
+    static gratitude1__size : number = 500;
+    static gratitude2__size : number = 500;
+    static gratitude3__size : number = 500;
+    static gratitude4__size : number = 500;
+    static gratitude5__size : number = 500;
+    static yourReflection__size : number = 500;
+    static tommorowsIntentions__size : number = 500;
+
+    static getCopy(self : DailyJournalCreateModel,adjustDateToUTC : boolean = false) : DailyJournalCreateModel {
+      let obj = new DailyJournalCreateModel();
+      if (self.hasOwnProperty('dailyJournalDate'))
+        obj.dailyJournalDate = self.dailyJournalDate ?? (!adjustDateToUTC ? self.dailyJournalDate : DateUtils.parseAsUTC(self.dailyJournalDate));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('predefinedMoodTypeId'))
+        obj.predefinedMoodTypeId = self.predefinedMoodTypeId;
+      if (self.hasOwnProperty('gratitude1'))
+        obj.gratitude1 = self.gratitude1;
+      if (self.hasOwnProperty('gratitude2'))
+        obj.gratitude2 = self.gratitude2;
+      if (self.hasOwnProperty('gratitude3'))
+        obj.gratitude3 = self.gratitude3;
+      if (self.hasOwnProperty('gratitude4'))
+        obj.gratitude4 = self.gratitude4;
+      if (self.hasOwnProperty('gratitude5'))
+        obj.gratitude5 = self.gratitude5;
+      if (self.hasOwnProperty('yourReflection'))
+        obj.yourReflection = self.yourReflection;
+      if (self.hasOwnProperty('tommorowsIntentions'))
+        obj.tommorowsIntentions = self.tommorowsIntentions;
+      return obj;
+    }
+}
+
+export class MultipleDailyJournalCreateModel {
+    newDailyJournals : DailyJournalCreateModel[] | null = null;
+
+    static getCopy(self : MultipleDailyJournalCreateModel,adjustDateToUTC : boolean = false) : MultipleDailyJournalCreateModel {
+      let obj = new MultipleDailyJournalCreateModel();
+      if (self.hasOwnProperty('newDailyJournals'))
+        obj.newDailyJournals = self.newDailyJournals;
+      return obj;
+    }
+}
+
+export class DailyJournalUpdateModel {
+    dailyJournalId : number = 0;
+    dailyJournalDate : Date = new Date();
+    userId : number = 0;
+    predefinedMoodTypeId : number = 0;
+    gratitude1 : string = '';
+    gratitude2 : string = '';
+    gratitude3 : string = '';
+    gratitude4 : string = '';
+    gratitude5 : string = '';
+    yourReflection : string = '';
+    tommorowsIntentions : string = '';
+    static gratitude1__size : number = 500;
+    static gratitude2__size : number = 500;
+    static gratitude3__size : number = 500;
+    static gratitude4__size : number = 500;
+    static gratitude5__size : number = 500;
+    static yourReflection__size : number = 500;
+    static tommorowsIntentions__size : number = 500;
+
+    static getCopy(self : DailyJournalUpdateModel,adjustDateToUTC : boolean = false) : DailyJournalUpdateModel {
+      let obj = new DailyJournalUpdateModel();
+      if (self.hasOwnProperty('dailyJournalId'))
+        obj.dailyJournalId = self.dailyJournalId;
+      if (self.hasOwnProperty('dailyJournalDate'))
+        obj.dailyJournalDate = self.dailyJournalDate ?? (!adjustDateToUTC ? self.dailyJournalDate : DateUtils.parseAsUTC(self.dailyJournalDate));
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('predefinedMoodTypeId'))
+        obj.predefinedMoodTypeId = self.predefinedMoodTypeId;
+      if (self.hasOwnProperty('gratitude1'))
+        obj.gratitude1 = self.gratitude1;
+      if (self.hasOwnProperty('gratitude2'))
+        obj.gratitude2 = self.gratitude2;
+      if (self.hasOwnProperty('gratitude3'))
+        obj.gratitude3 = self.gratitude3;
+      if (self.hasOwnProperty('gratitude4'))
+        obj.gratitude4 = self.gratitude4;
+      if (self.hasOwnProperty('gratitude5'))
+        obj.gratitude5 = self.gratitude5;
+      if (self.hasOwnProperty('yourReflection'))
+        obj.yourReflection = self.yourReflection;
+      if (self.hasOwnProperty('tommorowsIntentions'))
+        obj.tommorowsIntentions = self.tommorowsIntentions;
+      return obj;
+    }
+}
+
+export class DailyJournalByUserIdSearchCriteria extends BaseSearchCriteria{
+    userId : number = 0;
+
+    static getCopy(self : DailyJournalByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : DailyJournalByUserIdSearchCriteria {
+      let obj = new DailyJournalByUserIdSearchCriteria();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('selectedId'))
+        obj.selectedId = self.selectedId;
+      if (self.hasOwnProperty('page'))
+        obj.page = self.page;
+      if (self.hasOwnProperty('pageSize'))
+        obj.pageSize = self.pageSize;
+      if (self.hasOwnProperty('keyword'))
+        obj.keyword = self.keyword;
+      if (self.hasOwnProperty('sortBy'))
+        obj.sortBy = self.sortBy;
+      if (self.hasOwnProperty('sortAscending'))
+        obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class UserByDailyJournalIdSearchCriteria extends BaseSearchCriteria{
+    dailyJournalId : number = 0;
+
+    static getCopy(self : UserByDailyJournalIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByDailyJournalIdSearchCriteria {
+      let obj = new UserByDailyJournalIdSearchCriteria();
+      if (self.hasOwnProperty('dailyJournalId'))
+        obj.dailyJournalId = self.dailyJournalId;
       if (self.hasOwnProperty('selectedId'))
         obj.selectedId = self.selectedId;
       if (self.hasOwnProperty('page'))
@@ -15442,6 +15755,28 @@ export class IFormFile {
         obj.name = self.name;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureCreateModel {
+    location : string = '';
+    fileName : string = '';
+    fileSize : number = 0;
+    userId : number = 0;
+    static location__size : number = 255;
+    static fileName__size : number = 255;
+
+    static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
+      let obj = new VisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('location'))
+        obj.location = self.location;
+      if (self.hasOwnProperty('fileName'))
+        obj.fileName = self.fileName;
+      if (self.hasOwnProperty('fileSize'))
+        obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
       return obj;
     }
 }

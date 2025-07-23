@@ -1718,9 +1718,9 @@ namespace Manifest.Tests.Common
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,Object>(token,Url("/api/v1/manifest/getvisionboardpicture"),new { id },appHeader);
         }
 
-        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> CreateVisionBoardPicture(VisionBoardPictureCreateModel visionBoardPictureModel, string token = null, AppHeaderModel appHeader = null)
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> CreateVisionBoardPicture(VisionBoardPictureCreateWithFileFormModel model, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,VisionBoardPictureCreateModel>(token,Url("/api/v1/manifest/createvisionboardpicture"),visionBoardPictureModel,appHeader);
+           return env.PostAsFormAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,VisionBoardPictureCreateWithFileFormModel>(token,Url("/api/v1/manifest/createvisionboardpicture"),model,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardPictureModel> result)> CreateMultipleVisionBoardPicture(MultipleVisionBoardPictureCreateModel visionBoardPictureModels, string token = null, AppHeaderModel appHeader = null)
@@ -1728,9 +1728,9 @@ namespace Manifest.Tests.Common
            return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardPictureModel>,MultipleVisionBoardPictureCreateModel>(token,Url("/api/v1/manifest/createmultiplevisionboardpicture"),visionBoardPictureModels,appHeader);
         }
 
-        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> UpdateVisionBoardPicture(VisionBoardPictureUpdateModel visionBoardPictureModel, string token = null, AppHeaderModel appHeader = null)
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardPictureModel> result)> UpdateVisionBoardPicture(VisionBoardPictureUpdateWithFileFormModel model, string token = null, AppHeaderModel appHeader = null)
         {
-           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,VisionBoardPictureUpdateModel>(token,Url("/api/v1/manifest/updatevisionboardpicture"),visionBoardPictureModel,appHeader);
+           return env.PostAsFormAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardPictureModel>,VisionBoardPictureUpdateWithFileFormModel>(token,Url("/api/v1/manifest/updatevisionboardpicture"),model,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardPictureAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
@@ -1761,6 +1761,16 @@ namespace Manifest.Tests.Common
         public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardPictureIdSearch(UserByVisionBoardPictureIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByVisionBoardPictureIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyvisionboardpictureidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> IsVisionBoardPictureFileValid(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Object>(token,Url("/api/v1/manifest/isvisionboardpicturefilevalid"),new { visionBoardPictureId },appHeader);
+        }
+
+        public virtual Task<HttpResponseMessage> DownloadVisionBoardPictureFile(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/manifest/downloadvisionboardpicturefile"),new { visionBoardPictureId },appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessions(VisionBoardSessionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
@@ -1816,6 +1826,61 @@ namespace Manifest.Tests.Common
         public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionIdSearch(UserByVisionBoardSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByVisionBoardSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionidsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyJournalModel> result)> GetDailyJournals(DailyJournalSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyJournalModel>,DailyJournalSearchCriteria>(token,Url("/api/v1/manifest/getdailyjournals"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyJournalModel> result)> GetDailyJournal(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyJournalModel>,Object>(token,Url("/api/v1/manifest/getdailyjournal"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyJournalModel> result)> CreateDailyJournal(DailyJournalCreateModel dailyJournalModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyJournalModel>,DailyJournalCreateModel>(token,Url("/api/v1/manifest/createdailyjournal"),dailyJournalModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyJournalModel> result)> CreateMultipleDailyJournal(MultipleDailyJournalCreateModel dailyJournalModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyJournalModel>,MultipleDailyJournalCreateModel>(token,Url("/api/v1/manifest/createmultipledailyjournal"),dailyJournalModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<DailyJournalModel> result)> UpdateDailyJournal(DailyJournalUpdateModel dailyJournalModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<DailyJournalModel>,DailyJournalUpdateModel>(token,Url("/api/v1/manifest/updatedailyjournal"),dailyJournalModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyJournalAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markdailyjournalasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkDailyJournalAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markdailyjournalasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyJournalModel> result)> GetDailyJournalByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyJournalModel>,Object>(token,Url("/api/v1/manifest/getdailyjournalbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyJournalModel> result)> GetDailyJournalByUserIdSearch(DailyJournalByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyJournalModel>,DailyJournalByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getdailyjournalbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyJournalId(Int64 dailyJournalId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbydailyjournalid"),new { dailyJournalId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByDailyJournalIdSearch(UserByDailyJournalIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByDailyJournalIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbydailyjournalidsearch"),search,appHeader);
         }
 
         public virtual Task<(HttpResponseMessage response, ReturnListModel<CountryModel> result)> GetSupportedCountries(string token = null, AppHeaderModel appHeader = null)
