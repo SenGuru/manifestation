@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Framework.Infrastructure.Exceptions;
 using Framework.Infrastructure.Interfaces.DbAccess;
 using Framework.Infrastructure.Logging;
@@ -14,11 +19,7 @@ using Manifest.Service.Manager;
 using Manifest.Service.ObjectMapping;
 using Manifest.Service.Storage;
 using Manifest.Service.Utils;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Stowage;
 
 namespace Manifest.Service.App
 {
@@ -25377,6 +25378,64 @@ namespace Manifest.Service.App
             }
         }
 
+        public async Task<ReturnModel<bool>> IsVisionBoardPictureFileValidAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var fileModel = await GetVisionBoardPictureFileAsync(visionBoardPictureId);
+                if (!fileModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Vision Board Picture file", fileModel.ErrorHolder);
+                }
+
+                FileUtils.CloseSafely(fileModel.Model.FileData);
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Vision Board Picture file", ex);
+            }
+        }
+
+        public async Task<ReturnModel<FileStreamModel>> GetVisionBoardPictureFileAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var view = await GetVisionBoardPictureByIdForReadAsync(visionBoardPictureId);
+
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"Unable to find the Vision Board Picture", new { visionBoardPictureId });
+                }
+
+                var fileName = view.Model.Location;
+
+                if (fileName.IsTrimmedStringNullOrEmpty())
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: file is not available.");
+                }
+
+                if (!await fileAttachmentFileStorage.ExistsAsync(view.Model.UserId, fileName))
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: file is not available.");
+                }
+
+                var actualFileName = view.Model.FileName.IsTrimmedStringNullOrEmpty() ? $"VisionBoardPictureFile" : view.Model.FileName;
+
+                var result = new FileStreamModel
+                {
+                    FileName = actualFileName,
+                    ContentType = FileUtils.GetMimeTypeFromFileName(actualFileName),
+                    FileData = await fileAttachmentFileStorage.OpenReadAsync(view.Model.UserId, fileName)
+                };
+
+                return ReturnModel<FileStreamModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<FileStreamModel>($"Unexpected error when getting File for Vision Board Picture ", new { visionBoardPictureId }, ex);
+            }
+        }
 
 
         /*

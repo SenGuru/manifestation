@@ -4641,9 +4641,6 @@ namespace Manifest.Api.All.Controllers
             return manifestService.GetUserByVisionBoardPictureIdAsync(search);
         }
 
-
-
-        /*
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> IsVisionBoardPictureFileValid([FromQuery] long visionBoardPictureId)
@@ -4660,6 +4657,9 @@ namespace Manifest.Api.All.Controllers
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
+
+
+        /*
 
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
