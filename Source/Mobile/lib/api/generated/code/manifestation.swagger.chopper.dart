@@ -7020,6 +7020,41 @@ final class _$Manifestation extends Manifestation {
   }
 
   @override
+  Future<Response<BooleanReturnModel>>
+      _apiV1ManifestIsvisionboardpicturefilevalidGet(
+          {int? visionBoardPictureId}) {
+    final Uri $url =
+        Uri.parse('/api/v1/manifest/isvisionboardpicturefilevalid');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> _apiV1ManifestDownloadvisionboardpicturefileGet(
+      {int? visionBoardPictureId}) {
+    final Uri $url =
+        Uri.parse('/api/v1/manifest/downloadvisionboardpicturefile');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<VisionBoardSessionModelReturnListModel>>
       _apiV1ManifestGetvisionboardsessionsGet({
     bool? showDeleted,
@@ -7215,6 +7250,208 @@ final class _$Manifestation extends Manifestation {
           {required UserByVisionBoardSessionIdSearchCriteria? body}) {
     final Uri $url =
         Uri.parse('/api/v1/manifest/getuserbyvisionboardsessionidsearch');
+    final $body = body;
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client
+        .send<UserModelReturnListModel, UserModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestGetdailyjournalsGet({
+    bool? showDeleted,
+    int? userId,
+    List<int>? predefinedMoodTypeIds,
+    int? createdByUserId,
+    int? modifiedByUserId,
+    int? selectedId,
+    int? page,
+    int? pageSize,
+    String? keyword,
+    String? sortBy,
+    bool? sortAscending,
+    int? currentRows,
+    int? totalRowCount,
+    int? numericPageCount,
+  }) {
+    final Uri $url = Uri.parse('/api/v1/manifest/getdailyjournals');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'ShowDeleted': showDeleted,
+      'UserId': userId,
+      'PredefinedMoodTypeIds': predefinedMoodTypeIds,
+      'CreatedByUserId': createdByUserId,
+      'ModifiedByUserId': modifiedByUserId,
+      'SelectedId': selectedId,
+      'Page': page,
+      'PageSize': pageSize,
+      'Keyword': keyword,
+      'SortBy': sortBy,
+      'SortAscending': sortAscending,
+      'CurrentRows': currentRows,
+      'TotalRowCount': totalRowCount,
+      'NumericPageCount': numericPageCount,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<DailyJournalModelReturnListModel,
+        DailyJournalModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnModel>>
+      _apiV1ManifestGetdailyjournalGet({int? id}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/getdailyjournal');
+    final Map<String, dynamic> $params = <String, dynamic>{'id': id};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<DailyJournalModelReturnModel,
+        DailyJournalModelReturnModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnModel>>
+      _apiV1ManifestCreatedailyjournalPost(
+          {required DailyJournalCreateModel? body}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/createdailyjournal');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<DailyJournalModelReturnModel,
+        DailyJournalModelReturnModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestCreatemultipledailyjournalPost(
+          {required MultipleDailyJournalCreateModel? body}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/createmultipledailyjournal');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<DailyJournalModelReturnListModel,
+        DailyJournalModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnModel>>
+      _apiV1ManifestUpdatedailyjournalPost(
+          {required DailyJournalUpdateModel? body}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/updatedailyjournal');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<DailyJournalModelReturnModel,
+        DailyJournalModelReturnModel>($request);
+  }
+
+  @override
+  Future<Response<BooleanReturnModel>>
+      _apiV1ManifestMarkdailyjournalasdeletedDelete({int? id}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/markdailyjournalasdeleted');
+    final Map<String, dynamic> $params = <String, dynamic>{'id': id};
+    final Request $request = Request(
+      'DELETE',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
+  }
+
+  @override
+  Future<Response<BooleanReturnModel>>
+      _apiV1ManifestMarkdailyjournalasnotdeletedPost({required int? body}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/markdailyjournalasnotdeleted');
+    final $body = body;
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestGetdailyjournalbyuseridGet({int? userId}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/getdailyjournalbyuserid');
+    final Map<String, dynamic> $params = <String, dynamic>{'userId': userId};
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<DailyJournalModelReturnListModel,
+        DailyJournalModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<DailyJournalModelReturnListModel>>
+      _apiV1ManifestGetdailyjournalbyuseridsearchGet(
+          {required DailyJournalByUserIdSearchCriteria? body}) {
+    final Uri $url =
+        Uri.parse('/api/v1/manifest/getdailyjournalbyuseridsearch');
+    final $body = body;
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      body: $body,
+    );
+    return client.send<DailyJournalModelReturnListModel,
+        DailyJournalModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<UserModelReturnListModel>>
+      _apiV1ManifestGetuserbydailyjournalidGet({int? dailyJournalId}) {
+    final Uri $url = Uri.parse('/api/v1/manifest/getuserbydailyjournalid');
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'dailyJournalId': dailyJournalId
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client
+        .send<UserModelReturnListModel, UserModelReturnListModel>($request);
+  }
+
+  @override
+  Future<Response<UserModelReturnListModel>>
+      _apiV1ManifestGetuserbydailyjournalidsearchGet(
+          {required UserByDailyJournalIdSearchCriteria? body}) {
+    final Uri $url =
+        Uri.parse('/api/v1/manifest/getuserbydailyjournalidsearch');
     final $body = body;
     final Request $request = Request(
       'GET',

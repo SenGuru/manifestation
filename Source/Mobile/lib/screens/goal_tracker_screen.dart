@@ -1022,15 +1022,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       // Get the actual authenticated user ID
       final currentUser = UnifiedAuthService().currentUser;
       final userId = currentUser?.userId ?? 1;
-      
       print('🔍 Using authenticated user ID: $userId');
       print('🔍 User info: ${currentUser?.firstName} ${currentUser?.lastName} (${currentUser?.userName})');
       
       // Create goal tracker via API
-      // Try status type 0 first, as many databases use 0-based indexing
+      // Use status type 1 for "Active" status (required field, cannot be 0 or null)
       final result = await _goalTrackerService.createGoalTracker(
         goalName: title,
-        goalStatusTypeId: 0, // Try 0-based status (commonly used for "Active")
+        goalStatusTypeId: 1, // Active status (required, cannot be empty)
         startDate: DateTime.now(),
         endDate: targetDate,
         userId: userId,

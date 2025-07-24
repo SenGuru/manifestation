@@ -6,6 +6,7 @@ import 'package:fun/models/journey_entry.dart';
 import 'package:fun/constants/colors.dart';
 import 'package:fun/models/mood_selector.dart';
 import 'package:fun/screens/calendar_view_screen.dart';
+import 'package:fun/services/daily_journal_service.dart';
 import 'package:uuid/uuid.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
@@ -16,10 +17,11 @@ class ManifestationJournalScreen extends StatefulWidget {
 class _ManifestationJournalScreenState extends State<ManifestationJournalScreen> {
   final PageController _pageController = PageController();
   final TextEditingController _reflectionController = TextEditingController();
+  final DailyJournalService _journalService = DailyJournalService();
   
   int currentPage = 0;
   Mood selectedMood = Mood.neutral;
-  List<String> gratitudeItems = ['', '', ''];
+  List<String> gratitudeItems = ['', '', '', '', '']; // Expanded to 5 gratitudes
   String reflection = '';
   String intention = '';
   bool isEditingExistingEntry = false;
@@ -40,6 +42,15 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   @override
   void initState() {
     super.initState();
+    print('📖 ManifestationJournalScreen: Initializing...');
+    
+    // Initialize the service
+    _journalService.initialize();
+    
+    // For debugging purposes - uncomment this line to run constraint debugging
+    // _journalService.runConstraintDebugging();
+    
+    // Check for existing entry for today
     _checkForExistingEntry();
   }
 
@@ -657,51 +668,115 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     });
 
     try {
-      final entry = JournalEntry(
-        id: isEditingExistingEntry 
-            ? existingEntry?.id ?? const Uuid().v4()
-            : const Uuid().v4(),
-        date: DateTime.now(),
-        mood: selectedMood,
-        gratitudes: gratitudeItems.where((item) => item.isNotEmpty).toList(),
-        reflection: reflection,
-        intention: intention,
-      );
+      print('📖 Saving journal entry...');
+      print('   Is Editing Existing: $isEditingExistingEntry');
+      print('   Mood: ${selectedMood.displayName}');
+      print('   Gratitudes: ${gratitudeItems.where((item) => item.isNotEmpty).length}');
+      print('   Has Reflection: ${reflection.isNotEmpty}');
+      print('   Has Intention: ${intention.isNotEmpty}');
+
+      // Clean gratitudes and ensure we have at least some content
+      final cleanGratitudes = gratitudeItems.map((g) => g.trim()).where((g) => g.isNotEmpty).toList();
       
-      print('Saving journal entry: ${entry.toJson()}');
-      
-      // TODO: Implement journal saving with generated API
-      // This is a placeholder implementation as journal endpoints are not yet available
-      // in the generated API
-      
-      try {
-        // Show success message for now
+      // If no gratitudes provided, show a helpful error
+      if (cleanGratitudes.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Journal API not yet implemented. Entry saved locally for now.'),
+            content: Text('Please add at least one thing you\'re grateful for'),
             backgroundColor: Colors.orange,
-            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
           ),
         );
-        
-        // TODO: Save to local storage as fallback
-        Navigator.pop(context);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to save journal entry: ${e.toString()}'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 3),
-          ),
+        return;
+      }
+
+      if (isEditingExistingEntry && existingEntry != null) {
+        // Update existing journal entry
+        final existingId = int.tryParse(existingEntry!.id);
+        if (existingId == null) {
+          throw Exception('Invalid existing journal ID');
+        }
+
+        final result = await _journalService.updateDailyJournal(
+          journalId: existingId,
+          journalDate: DateTime.now(),
+          moodTypeId: _journalService.mapMoodToApiMoodTypeId(selectedMood.index), // Use correct backend enum mapping
+          gratitude1: gratitudeItems.isNotEmpty ? gratitudeItems[0].trim() : null,
+          gratitude2: gratitudeItems.length > 1 ? gratitudeItems[1].trim() : null,
+          gratitude3: gratitudeItems.length > 2 ? gratitudeItems[2].trim() : null,
+          gratitude4: gratitudeItems.length > 3 ? gratitudeItems[3].trim() : null,
+          gratitude5: gratitudeItems.length > 4 ? gratitudeItems[4].trim() : null,
+          reflection: reflection.trim().isEmpty ? null : reflection.trim(),
+          tomorrowsIntentions: intention.trim().isEmpty ? null : intention.trim(),
         );
+
+        if (result.isSuccess) {
+          print('📖 Journal entry updated successfully!');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Journal entry updated successfully! 📖'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          Navigator.pop(context);
+        } else {
+          throw Exception(result.message);
+        }
+      } else {
+        // Create new journal entry
+        final result = await _journalService.createDailyJournal(
+          journalDate: DateTime.now(),
+          moodTypeId: _journalService.mapMoodToApiMoodTypeId(selectedMood.index), // Use correct backend enum mapping
+          gratitude1: gratitudeItems.isNotEmpty ? gratitudeItems[0].trim() : null,
+          gratitude2: gratitudeItems.length > 1 ? gratitudeItems[1].trim() : null,
+          gratitude3: gratitudeItems.length > 2 ? gratitudeItems[2].trim() : null,
+          gratitude4: gratitudeItems.length > 3 ? gratitudeItems[3].trim() : null,
+          gratitude5: gratitudeItems.length > 4 ? gratitudeItems[4].trim() : null,
+          reflection: reflection.trim().isEmpty ? null : reflection.trim(),
+          tomorrowsIntentions: intention.trim().isEmpty ? null : intention.trim(),
+        );
+
+        if (result.isSuccess) {
+          print('📖 Journal entry created successfully!');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Journal entry saved successfully! 📖'),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+          Navigator.pop(context);
+        } else {
+          print('📖 Journal creation failed: ${result.message}');
+          print('📖 Running parameter tests to identify constraint issue...');
+          // Run test to identify the specific constraint issue
+          await _journalService.testJournalCreationParameters();
+          throw Exception(result.message);
+        }
       }
     } catch (e) {
-      print('Error saving journal entry: $e');
+      print('📖 Error saving journal entry: $e');
+      
+      // Show user-friendly error message
+      String errorMessage = 'Failed to save journal entry';
+      if (e.toString().contains('network') || e.toString().contains('connection')) {
+        errorMessage = 'Network error - please check your connection';
+      } else if (e.toString().contains('timeout')) {
+        errorMessage = 'Request timed out - please try again';
+      } else if (e.toString().contains('authentication') || e.toString().contains('auth')) {
+        errorMessage = 'Authentication error - please log in again';
+      } else if (e.toString().contains('Unexpected error when creating Daily Journal') || 
+                 e.toString().contains('Npgsql')) {
+        errorMessage = 'Journal feature is temporarily unavailable. The server team has been notified.';
+      }
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error saving journal entry: $e'),
+          content: Text(errorMessage),
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 4),
         ),
       );
     } finally {
@@ -718,20 +793,59 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
     try {
       final today = DateTime.now();
-      // TODO: Implement journal loading with generated API
-      // This is a placeholder implementation as journal endpoints are not yet available
-      // in the generated API
+      print('📖 Checking for existing journal entry for today: ${today.toString()}');
       
-      try {
-        print('Journal API not yet available - starting with new entry');
-        // Continue with new entry creation
-      } catch (e) {
-        print('Error checking for existing entry: $e');
-        // Continue with new entry creation
+      // Check for existing journal entry for today
+      final result = await _journalService.getDailyJournalForDate(today);
+      
+      if (result.isSuccess && result.data != null) {
+        // Found existing entry - load it for editing
+        print('📖 Found existing journal entry for today');
+        
+        final apiEntry = result.data!;
+        final journalEntry = JournalEntry.fromApiModel(apiEntry);
+        
+        setState(() {
+          existingEntry = journalEntry;
+          isEditingExistingEntry = true;
+          selectedMood = journalEntry.mood;
+          
+          // Load gratitudes (expand to 5 entries)
+          gratitudeItems = List<String>.filled(5, '');
+          for (int i = 0; i < journalEntry.gratitudes.length && i < 5; i++) {
+            gratitudeItems[i] = journalEntry.gratitudes[i];
+          }
+          
+          reflection = journalEntry.reflection;
+          intention = journalEntry.intention;
+          _reflectionController.text = reflection;
+        });
+        
+        print('📖 Loaded existing entry: ${journalEntry.gratitudes.length} gratitudes, mood: ${journalEntry.mood.displayName}');
+      } else {
+        // No existing entry found - start with new entry
+        print('📖 No existing journal entry found for today - starting new entry');
+        setState(() {
+          isEditingExistingEntry = false;
+          existingEntry = null;
+        });
       }
     } catch (e) {
-      print('Error checking for existing entry: $e');
-      // Continue with new entry creation
+      print('📖 Error checking for existing entry: $e');
+      // Continue with new entry creation on error
+      setState(() {
+        isEditingExistingEntry = false;
+        existingEntry = null;
+      });
+      
+      // Show error to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Unable to load existing journal entry'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
     } finally {
       setState(() {
         isLoading = false;

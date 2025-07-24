@@ -5,6 +5,7 @@ import 'journal_stats_screen.dart';
 import '../models/journey_entry.dart';
 import '../models/mood_selector.dart';
 import '../constants/colors.dart';
+import '../services/daily_journal_service.dart';
 
 class CalendarViewScreen extends StatefulWidget {
   @override
@@ -14,11 +15,20 @@ class CalendarViewScreen extends StatefulWidget {
 class _CalendarViewScreenState extends State<CalendarViewScreen> {
   DateTime selectedDate = DateTime.now();
   DateTime currentMonth = DateTime.now();
-  Map<String, JournalEntry> journalEntries = {}; // Key: YYYY-MM-DD format
+  Map<String, JournalEntry> journalEntries = {}; // Key: YYYY-MM-DD format (displayed)
+  Map<String, JournalEntry> allJournalEntries = {}; // Key: YYYY-MM-DD format (all data)
+  final DailyJournalService _journalService = DailyJournalService();
+  bool isLoadingEntries = false;
+  
+  // Daterange filtering
+  DateTime? filterStartDate;
+  DateTime? filterEndDate;
+  bool showingFilteredView = false;
   
   @override
   void initState() {
     super.initState();
+    _journalService.initialize();
     _loadJournalEntries();
   }
 
@@ -27,13 +37,18 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            _buildMonthSelector(),
-            _buildCalendarGrid(),
-            _buildSelectedDateDetails(),
-          ],
+        child: RefreshIndicator(
+          onRefresh: _loadJournalEntries,
+          color: AppColors.gradientPurple,
+          child: Column(
+            children: [
+              _buildHeader(),
+              _buildDateRangeFilter(),
+              _buildMonthSelector(),
+              _buildCalendarGrid(),
+              _buildSelectedDateDetails(),
+            ],
+          ),
         ),
       ),
     );
@@ -106,6 +121,107 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
           Icons.analytics_outlined,
           color: AppColors.accentGold,
           size: 20.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateRangeFilter() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      child: Row(
+        children: [
+          // Date range filter button
+          Expanded(
+            child: GestureDetector(
+              onTap: _showDateRangePicker,
+              child: Container(
+                height: 40.h,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                decoration: BoxDecoration(
+                  color: showingFilteredView 
+                      ? AppColors.secondaryTeal.withOpacity(0.1)
+                      : AppColors.cardBackground,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: showingFilteredView 
+                        ? AppColors.secondaryTeal.withOpacity(0.3)
+                        : AppColors.textMedium.withOpacity(0.2),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.date_range,
+                      color: showingFilteredView 
+                          ? AppColors.secondaryTeal 
+                          : AppColors.textMedium,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        showingFilteredView 
+                            ? '${_formatFilterDate(filterStartDate!)} - ${_formatFilterDate(filterEndDate!)}'
+                            : 'Filter by date range',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: showingFilteredView 
+                              ? AppColors.secondaryTeal 
+                              : AppColors.textMedium,
+                          fontWeight: showingFilteredView ? FontWeight.w500 : FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (showingFilteredView)
+                      GestureDetector(
+                        onTap: _clearDateRangeFilter,
+                        child: Container(
+                          padding: EdgeInsets.all(4.w),
+                          child: Icon(
+                            Icons.close,
+                            color: AppColors.secondaryTeal,
+                            size: 16.sp,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          
+          SizedBox(width: 12.w),
+          
+          // Quick filter buttons
+          _buildQuickFilterButton('This Week', () => _setQuickFilter(7)),
+          SizedBox(width: 8.w),
+          _buildQuickFilterButton('This Month', () => _setQuickFilter(30)),
+        ],
+      ),  
+    );
+  }
+
+  Widget _buildQuickFilterButton(String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: AppColors.gradientPurple.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+            color: AppColors.gradientPurple.withOpacity(0.3),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppColors.gradientPurple,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -190,72 +306,91 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             
             // Calendar days
             Expanded(
-              child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 7,
-                  childAspectRatio: 1,
-                  mainAxisSpacing: 8.h,
-                  crossAxisSpacing: 8.w,
-                ),
-                itemCount: _getDaysInMonth(),
-                itemBuilder: (context, index) {
-                  final date = _getDateForIndex(index);
-                  final hasEntry = _hasEntryForDate(date);
-                  final isSelected = _isSameDay(date, selectedDate);
-                  final isToday = _isSameDay(date, DateTime.now());
-                  final isCurrentMonth = date.month == currentMonth.month;
-                  
-                  return GestureDetector(
-                    onTap: () => _selectDate(date),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected 
-                            ? AppColors.gradientPurple 
-                            : hasEntry 
-                                ? AppColors.gradientPink.withOpacity(0.1)
-                                : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8.r),
-                        border: isToday 
-                            ? Border.all(color: AppColors.accentGold, width: 2)
-                            : hasEntry
-                                ? Border.all(color: AppColors.gradientPink.withOpacity(0.3))
-                                : null,
-                      ),
-                      child: Stack(
+              child: isLoadingEntries
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Center(
-                            child: Text(
-                              '${date.day}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                                color: !isCurrentMonth
-                                    ? AppColors.textMedium.withOpacity(0.3)
-                                    : isSelected
-                                        ? AppColors.white
-                                        : AppColors.textLight,
-                              ),
+                          CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.gradientPurple),
+                          ),
+                          SizedBox(height: 16.h),
+                          Text(
+                            'Loading journal entries...',
+                            style: TextStyle(
+                              color: AppColors.textMedium,
+                              fontSize: 14.sp,
                             ),
                           ),
-                          if (hasEntry && !isSelected)
-                            Positioned(
-                              top: 4.h,
-                              right: 4.w,
-                              child: Container(
-                                width: 6.w,
-                                height: 6.h,
-                                decoration: BoxDecoration(
-                                  color: _getMoodColorForDate(date),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ),
                         ],
                       ),
+                    )
+                  : GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 7,
+                        childAspectRatio: 1,
+                        mainAxisSpacing: 8.h,
+                        crossAxisSpacing: 8.w,
+                      ),
+                      itemCount: _getDaysInMonth(),
+                      itemBuilder: (context, index) {
+                        final date = _getDateForIndex(index);
+                        final hasEntry = _hasEntryForDate(date);
+                        final isSelected = _isSameDay(date, selectedDate);
+                        final isToday = _isSameDay(date, DateTime.now());
+                        final isCurrentMonth = date.month == currentMonth.month;
+                        
+                        return GestureDetector(
+                          onTap: () => _selectDate(date),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: isSelected 
+                                  ? AppColors.gradientPurple 
+                                  : hasEntry 
+                                      ? AppColors.gradientPink.withOpacity(0.1)
+                                      : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8.r),
+                              border: isToday 
+                                  ? Border.all(color: AppColors.accentGold, width: 2)
+                                  : hasEntry
+                                      ? Border.all(color: AppColors.gradientPink.withOpacity(0.3))
+                                      : null,
+                            ),
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '${date.day}',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                      color: !isCurrentMonth
+                                          ? AppColors.textMedium.withOpacity(0.3)
+                                          : isSelected
+                                              ? AppColors.white
+                                              : AppColors.textLight,
+                                    ),
+                                  ),
+                                ),
+                                if (hasEntry && !isSelected)
+                                  Positioned(
+                                    top: 4.h,
+                                    right: 4.w,
+                                    child: Container(
+                                      width: 6.w,
+                                      height: 6.h,
+                                      decoration: BoxDecoration(
+                                        color: _getMoodColorForDate(date),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),
@@ -537,12 +672,16 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
     setState(() {
       currentMonth = DateTime(currentMonth.year, currentMonth.month - 1);
     });
+    // Optionally reload entries when month changes
+    // _loadJournalEntries();
   }
 
   void _nextMonth() {
     setState(() {
       currentMonth = DateTime(currentMonth.year, currentMonth.month + 1);
     });
+    // Optionally reload entries when month changes
+    // _loadJournalEntries();
   }
 
   void _selectDate(DateTime date) {
@@ -604,27 +743,71 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 
-  void _loadJournalEntries() {
-    // TODO: Load from local storage
-    // Temporary mock data for demonstration
-    journalEntries = {
-      '2025-07-01': JournalEntry(
-        id: '1',
-        date: DateTime(2025, 7, 1),
-        mood: Mood.amazing,
-        gratitudes: ['Morning coffee', 'Good weather', 'Time with family'],
-        reflection: 'Today was a wonderful day filled with small joys...',
-        intention: 'Tomorrow I will focus on being present',
-      ),
-      '2025-07-03': JournalEntry(
-        id: '2',
-        date: DateTime(2025, 7, 3),
-        mood: Mood.good,
-        gratitudes: ['Peaceful morning', 'Good book'],
-        reflection: 'Felt very centered today...',
-        intention: 'Continue this peaceful energy',
-      ),
-    };
+  Future<void> _loadJournalEntries() async {
+    if (isLoadingEntries) return;
+    
+    setState(() {
+      isLoadingEntries = true;
+    });
+
+    try {
+      print('📅 Loading journal entries from API...');
+      
+      // Get all user journal entries from the API
+      final result = await _journalService.getUserDailyJournals();
+      
+      if (result.isSuccess && result.data != null) {
+        final apiEntries = result.data!;
+        final Map<String, JournalEntry> loadedEntries = {};
+        
+        print('📅 Processing ${apiEntries.length} journal entries from API');
+        
+        // Convert API entries to local journal entries
+        for (final apiEntry in apiEntries) {
+          if (apiEntry.dailyJournalDate != null) {
+            final journalEntry = JournalEntry.fromApiModel(apiEntry);
+            final dateKey = _formatDateKey(journalEntry.date);
+            loadedEntries[dateKey] = journalEntry;
+            
+            print('📅 Loaded entry for $dateKey: ${journalEntry.mood.displayName}');
+          }
+        }
+        
+        setState(() {
+          allJournalEntries = loadedEntries;
+          journalEntries = loadedEntries; // Initially show all
+        });
+        
+        print('📅 Successfully loaded ${loadedEntries.length} journal entries');
+      } else {
+        print('📅 Failed to load journal entries: ${result.message}');
+        // Keep empty map - no entries found or error occurred
+        setState(() {
+          allJournalEntries = {};
+          journalEntries = {};
+        });
+      }
+    } catch (e) {
+      print('📅 Exception loading journal entries: $e');
+      // Keep empty map on error
+      setState(() {
+        allJournalEntries = {};
+        journalEntries = {};
+      });
+      
+      // Show error message to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to load journal entries'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoadingEntries = false;
+      });
+    }
   }
 
   void _createTodayEntry() {
@@ -652,5 +835,91 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
         builder: (context) => JournalStatsScreen(entries: journalEntries),
       ),
     );
+  }
+
+  // Date range filtering methods
+  Future<void> _showDateRangePicker() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      initialDateRange: filterStartDate != null && filterEndDate != null
+          ? DateTimeRange(start: filterStartDate!, end: filterEndDate!)
+          : null,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppColors.secondaryTeal,
+              onPrimary: AppColors.white,
+              surface: AppColors.cardBackground,
+              onSurface: AppColors.textLight,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        filterStartDate = picked.start;
+        filterEndDate = picked.end;
+        showingFilteredView = true;
+      });
+      _applyDateRangeFilter();
+    }
+  }
+
+  void _setQuickFilter(int days) {
+    final now = DateTime.now();
+    setState(() {
+      filterEndDate = now;
+      filterStartDate = now.subtract(Duration(days: days - 1));
+      showingFilteredView = true;
+    });
+    _applyDateRangeFilter();
+  }
+
+  void _clearDateRangeFilter() {
+    setState(() {
+      filterStartDate = null;
+      filterEndDate = null;
+      showingFilteredView = false;
+      journalEntries = allJournalEntries; // Restore all entries
+    });
+  }
+
+  void _applyDateRangeFilter() {
+    if (filterStartDate == null || filterEndDate == null) return;
+
+    // Filter from all journal entries by date range
+    final Map<String, JournalEntry> filteredEntries = {};
+    
+    allJournalEntries.forEach((dateKey, entry) {
+      if (_isDateInRange(entry.date, filterStartDate!, filterEndDate!)) {
+        filteredEntries[dateKey] = entry;
+      }
+    });
+
+    setState(() {
+      journalEntries = filteredEntries;
+    });
+
+    print('📅 Applied date range filter: ${filteredEntries.length} entries found from ${allJournalEntries.length} total');
+  }
+
+  bool _isDateInRange(DateTime date, DateTime start, DateTime end) {
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    final startOnly = DateTime(start.year, start.month, start.day);
+    final endOnly = DateTime(end.year, end.month, end.day);
+    
+    return dateOnly.isAtSameMomentAs(startOnly) ||
+           dateOnly.isAtSameMomentAs(endOnly) ||
+           (dateOnly.isAfter(startOnly) && dateOnly.isBefore(endOnly));
+  }
+
+  String _formatFilterDate(DateTime date) {
+    return '${date.month}/${date.day}';
   }
 }

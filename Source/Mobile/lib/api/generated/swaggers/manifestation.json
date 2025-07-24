@@ -19924,6 +19924,67 @@
         }
       }
     },
+    "/api/v1/manifest/isvisionboardpicturefilevalid": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/downloadvisionboardpicturefile": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/v1/manifest/getvisionboardsessions": {
       "get": {
         "tags": [
@@ -20505,6 +20566,626 @@
             "text/plain": {
               "schema": {
                 "$ref": "#/components/schemas/UserByVisionBoardSessionIdSearchCriteria"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getdailyjournals": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "ShowDeleted",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "UserId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "PredefinedMoodTypeIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
+            "name": "CreatedByUserId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "ModifiedByUserId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "SelectedId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "Keyword",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "SortAscending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "CurrentRows",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "TotalRowCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "NumericPageCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getdailyjournal": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/createdailyjournal": {
+      "post": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalCreateModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalCreateModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalCreateModel"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalCreateModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/createmultipledailyjournal": {
+      "post": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipleDailyJournalCreateModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipleDailyJournalCreateModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipleDailyJournalCreateModel"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipleDailyJournalCreateModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/updatedailyjournal": {
+      "post": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalUpdateModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalUpdateModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalUpdateModel"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalUpdateModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/markdailyjournalasdeleted": {
+      "delete": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/markdailyjournalasnotdeleted": {
+      "post": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getdailyjournalbyuserid": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getdailyjournalbyuseridsearch": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalByUserIdSearchCriteria"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalByUserIdSearchCriteria"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalByUserIdSearchCriteria"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/DailyJournalByUserIdSearchCriteria"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DailyJournalModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getuserbydailyjournalid": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "dailyJournalId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelReturnListModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/getuserbydailyjournalidsearch": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserByDailyJournalIdSearchCriteria"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserByDailyJournalIdSearchCriteria"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserByDailyJournalIdSearchCriteria"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/UserByDailyJournalIdSearchCriteria"
               }
             }
           }
@@ -35963,6 +36644,372 @@
         },
         "additionalProperties": false
       },
+      "DailyJournalByUserIdSearchCriteria": {
+        "type": "object",
+        "properties": {
+          "selectedId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "keyword": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortAscending": {
+            "type": "boolean"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DailyJournalCreateModel": {
+        "type": "object",
+        "properties": {
+          "dailyJournalDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedMoodTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "gratitude1": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude2": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude3": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude4": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude5": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "yourReflection": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tommorowsIntentions": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DailyJournalModel": {
+        "type": "object",
+        "properties": {
+          "dailyJournalId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dailyJournalDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedMoodTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "gratitude1": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude2": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude3": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude4": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude5": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "yourReflection": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tommorowsIntentions": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdByUserId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "modifiedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedByUserId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "predefinedMoodTypeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdByUserFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdByUserLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdByUserEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedByUserFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedByUserLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "modifiedByUserEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "modifiedBy": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DailyJournalModelReturnListModel": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyJournalModel"
+            },
+            "nullable": true
+          },
+          "search": {
+            "$ref": "#/components/schemas/BaseSearchCriteria"
+          },
+          "totalRecords": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorHolder": {
+            "$ref": "#/components/schemas/ReturnError"
+          },
+          "activityId": {
+            "type": "string",
+            "nullable": true
+          },
+          "activityDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "server": {
+            "type": "string",
+            "nullable": true
+          },
+          "processId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DailyJournalModelReturnModel": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/DailyJournalModel"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorHolder": {
+            "$ref": "#/components/schemas/ReturnError"
+          },
+          "activityId": {
+            "type": "string",
+            "nullable": true
+          },
+          "activityDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "server": {
+            "type": "string",
+            "nullable": true
+          },
+          "processId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DailyJournalUpdateModel": {
+        "type": "object",
+        "properties": {
+          "dailyJournalId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "dailyJournalDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedMoodTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "gratitude1": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude2": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude3": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude4": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "gratitude5": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "yourReflection": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "tommorowsIntentions": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DefaultCategoryByCategoryIdSearchCriteria": {
         "type": "object",
         "properties": {
@@ -44842,6 +45889,19 @@
         },
         "additionalProperties": false
       },
+      "MultipleDailyJournalCreateModel": {
+        "type": "object",
+        "properties": {
+          "newDailyJournals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyJournalCreateModel"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MultipleDefaultCategoryCreateModel": {
         "type": "object",
         "properties": {
@@ -49119,6 +50179,40 @@
             "type": "boolean"
           },
           "dailyAffirmationTextId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserByDailyJournalIdSearchCriteria": {
+        "type": "object",
+        "properties": {
+          "selectedId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "keyword": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortAscending": {
+            "type": "boolean"
+          },
+          "dailyJournalId": {
             "type": "integer",
             "format": "int64"
           }

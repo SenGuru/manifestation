@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fun/constants/colors.dart';
+import '../api/generated/code/manifestation.swagger.dart';
 
 class JournalEntry {
   final String id;
   final DateTime date;
   final Mood mood;
-  final List<String> gratitudes;
+  final List<String> gratitudes; // Now supports up to 5 gratitudes
   final String reflection;
   final String intention;
   final DateTime createdAt;
@@ -87,6 +88,85 @@ class JournalEntry {
 
     return filledSections / totalSections;
   }
+
+  // ========================= API CONVERSION METHODS =========================
+
+  /// Create JournalEntry from API DailyJournalModel
+  factory JournalEntry.fromApiModel(DailyJournalModel apiModel) {
+    // Convert API mood type ID to local mood enum
+    final moodIndex = _mapApiMoodTypeIdToMood(apiModel.predefinedMoodTypeId ?? 3);
+    
+    // Collect gratitudes from API's separate fields
+    final gratitudes = <String>[
+      apiModel.gratitude1 ?? '',
+      apiModel.gratitude2 ?? '',
+      apiModel.gratitude3 ?? '',
+      apiModel.gratitude4 ?? '',
+      apiModel.gratitude5 ?? '',
+    ].where((g) => g.isNotEmpty).toList(); // Remove empty gratitudes
+
+    return JournalEntry(
+      id: apiModel.dailyJournalId?.toString() ?? '',
+      date: apiModel.dailyJournalDate ?? DateTime.now(),
+      mood: Mood.values[moodIndex],
+      gratitudes: gratitudes,
+      reflection: apiModel.yourReflection ?? '',
+      intention: apiModel.tommorowsIntentions ?? '',
+      createdAt: apiModel.createdDate ?? DateTime.now(),
+      updatedAt: apiModel.modifiedDate,
+    );
+  }
+
+  /// Convert local mood enum to API mood type ID using backend PredefinedMoodTypes enum
+  int get apiMoodTypeId {
+    // Mood enum: terrible=0, bad=1, neutral=2, good=3, amazing=4
+    // Backend PredefinedMoodTypes enum values
+    const moodTypeIds = [
+      3700001, // Terrible
+      3700002, // Bad  
+      3700003, // Neutral
+      3700004, // Good
+      3700005, // Amazing
+    ];
+    return moodTypeIds[mood.index.clamp(0, 4)];
+  }
+
+  /// Get gratitude by index (safe access up to 5 gratitudes)
+  String getGratitude(int index) {
+    if (index < 0 || index >= gratitudes.length) return '';
+    return gratitudes[index];
+  }
+
+  /// Helper method to map API mood type ID to local mood enum index
+  /// Backend enum: Terrible=3700001, Bad=3700002, Neutral=3700003, Good=3700004, Amazing=3700005
+  static int _mapApiMoodTypeIdToMood(int apiMoodTypeId) {
+    // Backend PredefinedMoodTypes enum: 3700001-3700005
+    // Map back to mood enum: terrible=0, bad=1, neutral=2, good=3, amazing=4
+    switch (apiMoodTypeId) {
+      case 3700001: return 0; // Terrible
+      case 3700002: return 1; // Bad
+      case 3700003: return 2; // Neutral  
+      case 3700004: return 3; // Good
+      case 3700005: return 4; // Amazing
+      default: return 2; // Default to Neutral if unknown ID
+    }
+  }
+
+  /// Create a list of gratitudes with exactly 5 entries (for API compatibility)
+  List<String> get gratitudesForApi {
+    final result = List<String>.filled(5, '');
+    for (int i = 0; i < gratitudes.length && i < 5; i++) {
+      result[i] = gratitudes[i];
+    }
+    return result;
+  }
+
+  /// Get individual gratitude strings for API calls
+  String? get gratitude1 => gratitudes.isNotEmpty ? gratitudes[0] : null;
+  String? get gratitude2 => gratitudes.length > 1 ? gratitudes[1] : null;
+  String? get gratitude3 => gratitudes.length > 2 ? gratitudes[2] : null;
+  String? get gratitude4 => gratitudes.length > 3 ? gratitudes[3] : null;
+  String? get gratitude5 => gratitudes.length > 4 ? gratitudes[4] : null;
 }
 
 enum Mood {
