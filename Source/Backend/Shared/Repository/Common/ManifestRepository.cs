@@ -4894,6 +4894,11 @@ ModifiedByUserId = item.ModifiedByUserId,
                 return appDBManager.GetTable<Feed>().Where(x => x.IsDeleted == false && x.GoalTrackerMileStoneId == goalTrackerMileStoneId).ToListAsync();
         }
 
+        public Task<List<GoalTrackerCategory>> GetGoalTrackerCategorysByGoalTrackerIdAsync(long goalTrackerId)
+        {
+            return appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.IsDeleted == false && x.GoalTrackerId == goalTrackerId).ToListAsync();
+        }
+
         public Task<DbReturnListModel<Feed>> GetBareFeedByGoalTrackerMileStoneIdAsync(FeedByGoalTrackerMileStoneIdSearchCriteria search)
         {
                 return appDBManager.GetTable<Feed>().Where(x => x.IsDeleted == false && x.GoalTrackerMileStoneId == search.GoalTrackerMileStoneId).ReturnListModelResultAsync(search);

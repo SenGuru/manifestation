@@ -14,24 +14,24 @@ namespace Manifest.Api.IntegrationTests
             //Tests for VisionBoardPicture
             //Create Item Test
 
-            var aVisionBoardPictureModel = new VisionBoardPictureCreateModel();
+            var aVisionBoardPictureModel = new VisionBoardPictureCreateWithFileFormModel();
             var rVisionBoardPictureModel = await http.CreateVisionBoardPicture(aVisionBoardPictureModel, userAdmin_Company_1);
             Assert.IsTrue(rVisionBoardPictureModel.result.IsSuccess);
 
-            aVisionBoardPictureModel = new VisionBoardPictureCreateModel();
+            aVisionBoardPictureModel = new VisionBoardPictureCreateWithFileFormModel();
             var r0VisionBoardPictureModel = await http.CreateVisionBoardPicture(aVisionBoardPictureModel, userAdmin_Company_1);
             Assert.IsTrue(!r0VisionBoardPictureModel.result.IsSuccess);
 
-            aVisionBoardPictureModel = new VisionBoardPictureCreateModel();// rXYZZYXModel.result.Model.XYZZYXId, "Item 1.1");
+            aVisionBoardPictureModel = new VisionBoardPictureCreateWithFileFormModel();// rXYZZYXModel.result.Model.XYZZYXId, "Item 1.1");
             var r00VisionBoardPictureModel = await http.CreateVisionBoardPicture(aVisionBoardPictureModel, userAdmin_Company_1);
             Assert.IsTrue(r00VisionBoardPictureModel.result.IsSuccess);
 
-            aVisionBoardPictureModel = new VisionBoardPictureCreateModel();// rXYZZYXModel.result.Model.XYZZYXId, "Item 1");
+            aVisionBoardPictureModel = new VisionBoardPictureCreateWithFileFormModel();// rXYZZYXModel.result.Model.XYZZYXId, "Item 1");
             var r01VisionBoardPictureModel = await http.CreateVisionBoardPicture(aVisionBoardPictureModel, userAdmin_Company_2);
             Assert.IsTrue(!r01VisionBoardPictureModel.result.IsSuccess);
 
 
-            aVisionBoardPictureModel = new VisionBoardPictureCreateModel();// r01XYZZYXModel.result.Model.XYZZYXId, "Item 1");
+            aVisionBoardPictureModel = new VisionBoardPictureCreateWithFileFormModel();// r01XYZZYXModel.result.Model.XYZZYXId, "Item 1");
             r01VisionBoardPictureModel = await http.CreateVisionBoardPicture(aVisionBoardPictureModel, userAdmin_Company_2);
             Assert.IsTrue(r01VisionBoardPictureModel.result.IsSuccess);
 
