@@ -9150,6 +9150,8 @@ abstract class Manifestation extends ChopperService {
           {@Body() required UserByVisionBoardSessionIdSearchCriteria? body});
 
   ///
+  ///@param StartDate
+  ///@param EndDate
   ///@param ShowDeleted
   ///@param UserId
   ///@param PredefinedMoodTypeIds
@@ -9166,6 +9168,8 @@ abstract class Manifestation extends ChopperService {
   ///@param NumericPageCount
   Future<chopper.Response<DailyJournalModelReturnListModel>>
       apiV1ManifestGetdailyjournalsGet({
+    DateTime? startDate,
+    DateTime? endDate,
     bool? showDeleted,
     int? userId,
     List<int>? predefinedMoodTypeIds,
@@ -9185,6 +9189,8 @@ abstract class Manifestation extends ChopperService {
         () => DailyJournalModelReturnListModel.fromJsonFactory);
 
     return _apiV1ManifestGetdailyjournalsGet(
+        startDate: startDate,
+        endDate: endDate,
         showDeleted: showDeleted,
         userId: userId,
         predefinedMoodTypeIds: predefinedMoodTypeIds,
@@ -9202,6 +9208,8 @@ abstract class Manifestation extends ChopperService {
   }
 
   ///
+  ///@param StartDate
+  ///@param EndDate
   ///@param ShowDeleted
   ///@param UserId
   ///@param PredefinedMoodTypeIds
@@ -9219,6 +9227,8 @@ abstract class Manifestation extends ChopperService {
   @Get(path: '/api/v1/manifest/getdailyjournals')
   Future<chopper.Response<DailyJournalModelReturnListModel>>
       _apiV1ManifestGetdailyjournalsGet({
+    @Query('StartDate') DateTime? startDate,
+    @Query('EndDate') DateTime? endDate,
     @Query('ShowDeleted') bool? showDeleted,
     @Query('UserId') int? userId,
     @Query('PredefinedMoodTypeIds') List<int>? predefinedMoodTypeIds,
@@ -42142,6 +42152,8 @@ class GoalTrackerCreateModel {
     this.userId,
     this.addedToFeed,
     this.addedToFeedDate,
+    this.newGoalTrackerCategoryModels,
+    this.existingGoalTrackerCategoryModels,
   });
 
   factory GoalTrackerCreateModel.fromJson(Map<String, dynamic> json) =>
@@ -42166,6 +42178,14 @@ class GoalTrackerCreateModel {
   final bool? addedToFeed;
   @JsonKey(name: 'addedToFeedDate')
   final DateTime? addedToFeedDate;
+  @JsonKey(
+      name: 'newGoalTrackerCategoryModels',
+      defaultValue: <GoalTrackerCategoryCreateModel>[])
+  final List<GoalTrackerCategoryCreateModel>? newGoalTrackerCategoryModels;
+  @JsonKey(
+      name: 'existingGoalTrackerCategoryModels',
+      defaultValue: <GoalTrackerCategoryUpdateModel>[])
+  final List<GoalTrackerCategoryUpdateModel>? existingGoalTrackerCategoryModels;
   static const fromJsonFactory = _$GoalTrackerCreateModelFromJson;
 
   @override
@@ -42175,8 +42195,7 @@ class GoalTrackerCreateModel {
             (identical(other.goalTrackerName, goalTrackerName) ||
                 const DeepCollectionEquality()
                     .equals(other.goalTrackerName, goalTrackerName)) &&
-            (identical(other.predefinedGoalStatusTypeId,
-                    predefinedGoalStatusTypeId) ||
+            (identical(other.predefinedGoalStatusTypeId, predefinedGoalStatusTypeId) ||
                 const DeepCollectionEquality().equals(
                     other.predefinedGoalStatusTypeId,
                     predefinedGoalStatusTypeId)) &&
@@ -42186,8 +42205,7 @@ class GoalTrackerCreateModel {
             (identical(other.goalTrackerEndDate, goalTrackerEndDate) ||
                 const DeepCollectionEquality()
                     .equals(other.goalTrackerEndDate, goalTrackerEndDate)) &&
-            (identical(
-                    other.goalTrackerCompletedDate, goalTrackerCompletedDate) ||
+            (identical(other.goalTrackerCompletedDate, goalTrackerCompletedDate) ||
                 const DeepCollectionEquality().equals(
                     other.goalTrackerCompletedDate,
                     goalTrackerCompletedDate)) &&
@@ -42198,7 +42216,17 @@ class GoalTrackerCreateModel {
                     .equals(other.addedToFeed, addedToFeed)) &&
             (identical(other.addedToFeedDate, addedToFeedDate) ||
                 const DeepCollectionEquality()
-                    .equals(other.addedToFeedDate, addedToFeedDate)));
+                    .equals(other.addedToFeedDate, addedToFeedDate)) &&
+            (identical(other.newGoalTrackerCategoryModels,
+                    newGoalTrackerCategoryModels) ||
+                const DeepCollectionEquality().equals(
+                    other.newGoalTrackerCategoryModels,
+                    newGoalTrackerCategoryModels)) &&
+            (identical(other.existingGoalTrackerCategoryModels,
+                    existingGoalTrackerCategoryModels) ||
+                const DeepCollectionEquality().equals(
+                    other.existingGoalTrackerCategoryModels,
+                    existingGoalTrackerCategoryModels)));
   }
 
   @override
@@ -42214,6 +42242,8 @@ class GoalTrackerCreateModel {
       const DeepCollectionEquality().hash(userId) ^
       const DeepCollectionEquality().hash(addedToFeed) ^
       const DeepCollectionEquality().hash(addedToFeedDate) ^
+      const DeepCollectionEquality().hash(newGoalTrackerCategoryModels) ^
+      const DeepCollectionEquality().hash(existingGoalTrackerCategoryModels) ^
       runtimeType.hashCode;
 }
 
@@ -42226,7 +42256,10 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
       DateTime? goalTrackerCompletedDate,
       int? userId,
       bool? addedToFeed,
-      DateTime? addedToFeedDate}) {
+      DateTime? addedToFeedDate,
+      List<GoalTrackerCategoryCreateModel>? newGoalTrackerCategoryModels,
+      List<GoalTrackerCategoryUpdateModel>?
+          existingGoalTrackerCategoryModels}) {
     return GoalTrackerCreateModel(
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
         predefinedGoalStatusTypeId:
@@ -42237,7 +42270,11 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
             goalTrackerCompletedDate ?? this.goalTrackerCompletedDate,
         userId: userId ?? this.userId,
         addedToFeed: addedToFeed ?? this.addedToFeed,
-        addedToFeedDate: addedToFeedDate ?? this.addedToFeedDate);
+        addedToFeedDate: addedToFeedDate ?? this.addedToFeedDate,
+        newGoalTrackerCategoryModels:
+            newGoalTrackerCategoryModels ?? this.newGoalTrackerCategoryModels,
+        existingGoalTrackerCategoryModels: existingGoalTrackerCategoryModels ??
+            this.existingGoalTrackerCategoryModels);
   }
 
   GoalTrackerCreateModel copyWithWrapped(
@@ -42248,7 +42285,11 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
       Wrapped<DateTime?>? goalTrackerCompletedDate,
       Wrapped<int?>? userId,
       Wrapped<bool?>? addedToFeed,
-      Wrapped<DateTime?>? addedToFeedDate}) {
+      Wrapped<DateTime?>? addedToFeedDate,
+      Wrapped<List<GoalTrackerCategoryCreateModel>?>?
+          newGoalTrackerCategoryModels,
+      Wrapped<List<GoalTrackerCategoryUpdateModel>?>?
+          existingGoalTrackerCategoryModels}) {
     return GoalTrackerCreateModel(
         goalTrackerName: (goalTrackerName != null
             ? goalTrackerName.value
@@ -42270,7 +42311,14 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
             (addedToFeed != null ? addedToFeed.value : this.addedToFeed),
         addedToFeedDate: (addedToFeedDate != null
             ? addedToFeedDate.value
-            : this.addedToFeedDate));
+            : this.addedToFeedDate),
+        newGoalTrackerCategoryModels: (newGoalTrackerCategoryModels != null
+            ? newGoalTrackerCategoryModels.value
+            : this.newGoalTrackerCategoryModels),
+        existingGoalTrackerCategoryModels:
+            (existingGoalTrackerCategoryModels != null
+                ? existingGoalTrackerCategoryModels.value
+                : this.existingGoalTrackerCategoryModels));
   }
 }
 
@@ -44169,6 +44217,8 @@ class GoalTrackerUpdateModel {
     this.userId,
     this.addedToFeed,
     this.addedToFeedDate,
+    this.newGoalTrackerCategoryModels,
+    this.existingGoalTrackerCategoryModels,
   });
 
   factory GoalTrackerUpdateModel.fromJson(Map<String, dynamic> json) =>
@@ -44195,6 +44245,14 @@ class GoalTrackerUpdateModel {
   final bool? addedToFeed;
   @JsonKey(name: 'addedToFeedDate')
   final DateTime? addedToFeedDate;
+  @JsonKey(
+      name: 'newGoalTrackerCategoryModels',
+      defaultValue: <GoalTrackerCategoryCreateModel>[])
+  final List<GoalTrackerCategoryCreateModel>? newGoalTrackerCategoryModels;
+  @JsonKey(
+      name: 'existingGoalTrackerCategoryModels',
+      defaultValue: <GoalTrackerCategoryUpdateModel>[])
+  final List<GoalTrackerCategoryUpdateModel>? existingGoalTrackerCategoryModels;
   static const fromJsonFactory = _$GoalTrackerUpdateModelFromJson;
 
   @override
@@ -44207,8 +44265,7 @@ class GoalTrackerUpdateModel {
             (identical(other.goalTrackerName, goalTrackerName) ||
                 const DeepCollectionEquality()
                     .equals(other.goalTrackerName, goalTrackerName)) &&
-            (identical(other.predefinedGoalStatusTypeId,
-                    predefinedGoalStatusTypeId) ||
+            (identical(other.predefinedGoalStatusTypeId, predefinedGoalStatusTypeId) ||
                 const DeepCollectionEquality().equals(
                     other.predefinedGoalStatusTypeId,
                     predefinedGoalStatusTypeId)) &&
@@ -44230,7 +44287,16 @@ class GoalTrackerUpdateModel {
                     .equals(other.addedToFeed, addedToFeed)) &&
             (identical(other.addedToFeedDate, addedToFeedDate) ||
                 const DeepCollectionEquality()
-                    .equals(other.addedToFeedDate, addedToFeedDate)));
+                    .equals(other.addedToFeedDate, addedToFeedDate)) &&
+            (identical(other.newGoalTrackerCategoryModels, newGoalTrackerCategoryModels) ||
+                const DeepCollectionEquality().equals(
+                    other.newGoalTrackerCategoryModels,
+                    newGoalTrackerCategoryModels)) &&
+            (identical(other.existingGoalTrackerCategoryModels,
+                    existingGoalTrackerCategoryModels) ||
+                const DeepCollectionEquality().equals(
+                    other.existingGoalTrackerCategoryModels,
+                    existingGoalTrackerCategoryModels)));
   }
 
   @override
@@ -44247,6 +44313,8 @@ class GoalTrackerUpdateModel {
       const DeepCollectionEquality().hash(userId) ^
       const DeepCollectionEquality().hash(addedToFeed) ^
       const DeepCollectionEquality().hash(addedToFeedDate) ^
+      const DeepCollectionEquality().hash(newGoalTrackerCategoryModels) ^
+      const DeepCollectionEquality().hash(existingGoalTrackerCategoryModels) ^
       runtimeType.hashCode;
 }
 
@@ -44260,7 +44328,10 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
       DateTime? goalTrackerCompletedDate,
       int? userId,
       bool? addedToFeed,
-      DateTime? addedToFeedDate}) {
+      DateTime? addedToFeedDate,
+      List<GoalTrackerCategoryCreateModel>? newGoalTrackerCategoryModels,
+      List<GoalTrackerCategoryUpdateModel>?
+          existingGoalTrackerCategoryModels}) {
     return GoalTrackerUpdateModel(
         goalTrackerId: goalTrackerId ?? this.goalTrackerId,
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
@@ -44272,7 +44343,11 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
             goalTrackerCompletedDate ?? this.goalTrackerCompletedDate,
         userId: userId ?? this.userId,
         addedToFeed: addedToFeed ?? this.addedToFeed,
-        addedToFeedDate: addedToFeedDate ?? this.addedToFeedDate);
+        addedToFeedDate: addedToFeedDate ?? this.addedToFeedDate,
+        newGoalTrackerCategoryModels:
+            newGoalTrackerCategoryModels ?? this.newGoalTrackerCategoryModels,
+        existingGoalTrackerCategoryModels: existingGoalTrackerCategoryModels ??
+            this.existingGoalTrackerCategoryModels);
   }
 
   GoalTrackerUpdateModel copyWithWrapped(
@@ -44284,7 +44359,11 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
       Wrapped<DateTime?>? goalTrackerCompletedDate,
       Wrapped<int?>? userId,
       Wrapped<bool?>? addedToFeed,
-      Wrapped<DateTime?>? addedToFeedDate}) {
+      Wrapped<DateTime?>? addedToFeedDate,
+      Wrapped<List<GoalTrackerCategoryCreateModel>?>?
+          newGoalTrackerCategoryModels,
+      Wrapped<List<GoalTrackerCategoryUpdateModel>?>?
+          existingGoalTrackerCategoryModels}) {
     return GoalTrackerUpdateModel(
         goalTrackerId:
             (goalTrackerId != null ? goalTrackerId.value : this.goalTrackerId),
@@ -44308,7 +44387,14 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
             (addedToFeed != null ? addedToFeed.value : this.addedToFeed),
         addedToFeedDate: (addedToFeedDate != null
             ? addedToFeedDate.value
-            : this.addedToFeedDate));
+            : this.addedToFeedDate),
+        newGoalTrackerCategoryModels: (newGoalTrackerCategoryModels != null
+            ? newGoalTrackerCategoryModels.value
+            : this.newGoalTrackerCategoryModels),
+        existingGoalTrackerCategoryModels:
+            (existingGoalTrackerCategoryModels != null
+                ? existingGoalTrackerCategoryModels.value
+                : this.existingGoalTrackerCategoryModels));
   }
 }
 

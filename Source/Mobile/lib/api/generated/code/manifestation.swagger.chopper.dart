@@ -7264,6 +7264,8 @@ final class _$Manifestation extends Manifestation {
   @override
   Future<Response<DailyJournalModelReturnListModel>>
       _apiV1ManifestGetdailyjournalsGet({
+    DateTime? startDate,
+    DateTime? endDate,
     bool? showDeleted,
     int? userId,
     List<int>? predefinedMoodTypeIds,
@@ -7281,6 +7283,8 @@ final class _$Manifestation extends Manifestation {
   }) {
     final Uri $url = Uri.parse('/api/v1/manifest/getdailyjournals');
     final Map<String, dynamic> $params = <String, dynamic>{
+      'StartDate': startDate,
+      'EndDate': endDate,
       'ShowDeleted': showDeleted,
       'UserId': userId,
       'PredefinedMoodTypeIds': predefinedMoodTypeIds,

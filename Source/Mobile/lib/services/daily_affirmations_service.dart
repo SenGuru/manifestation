@@ -2,7 +2,10 @@ import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../api/generated/code/manifestation.swagger.dart';
+import '../models/affirmation_category.dart';
+import '../models/affirmation_item.dart';
 import 'unified_auth_service.dart';
+import 'affirmation_cache_service.dart';
 
 class DailyAffirmationsService {
   static final DailyAffirmationsService _instance = DailyAffirmationsService._internal();
@@ -11,6 +14,7 @@ class DailyAffirmationsService {
 
   late Manifestation _apiClient;
   final UnifiedAuthService _authService = UnifiedAuthService();
+  final AffirmationCacheService _cacheService = AffirmationCacheService();
 
   // The 5 supported default categories
   static const List<String> _supportedDefaultCategories = [
@@ -170,7 +174,20 @@ class DailyAffirmationsService {
     required String text,
     required int categoryId,
   }) async {
+    // 1. Optimistically update cache first (immediate UI update)
+    final tempAffirmation = AffirmationItem(
+      id: 'temp_${DateTime.now().millisecondsSinceEpoch}',
+      text: text,
+      isDefault: false,
+      categoryName: 'Loading...',
+    );
+    
     try {
+      await _cacheService.initialize();
+      await _addAffirmationToCache(categoryId.toString(), tempAffirmation);
+      print('🔄 Optimistic update: Added affirmation to cache');
+      
+      // 2. Do API call in background
       final createModel = DailyAffirmationTextCreateModel(
         dailyAffirmationTextValue: text,
         categoryId: categoryId,
@@ -183,33 +200,58 @@ class DailyAffirmationsService {
         final returnModel = response.body!;
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
+          // 3. Success: Replace temp affirmation with real one
+          await _replaceAffirmationInCache(tempAffirmation.id, returnModel.model!);
+          print('✅ API success: Replaced temp affirmation with real one');
+          
           return AffirmationResult.success(
             data: returnModel.model!,
             message: 'Affirmation text created successfully',
           );
         } else {
+          // 4. API failed: Remove optimistic update
+          await _removeAffirmationFromCache(tempAffirmation.id);
+          print('❌ API failed: Removed optimistic update');
+          
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to create affirmation text',
           );
         }
       } else {
+        // 5. Network error: Remove optimistic update
+        await _removeAffirmationFromCache(tempAffirmation.id);
+        print('❌ Network error: Removed optimistic update');
+        
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      // 6. Exception: Remove optimistic update
+      await _removeAffirmationFromCache(tempAffirmation.id);
+      print('❌ Exception: Removed optimistic update');
+      
       return AffirmationResult.failure(
         message: 'Error creating affirmation text: ${e.toString()}',
       );
     }
   }
 
-  /// Update an existing affirmation text
+  /// Update an existing affirmation text with optimistic updates
   Future<AffirmationResult<DailyAffirmationTextModel>> updateAffirmationText({
     required int affirmationTextId,
     required String text,
   }) async {
+    final affirmationIdStr = affirmationTextId.toString();
+    String? originalText;
+    
     try {
+      // 1. Optimistically update cache first (immediate UI update)
+      await _cacheService.initialize();
+      originalText = await _updateAffirmationInCache(affirmationIdStr, text);
+      print('🔄 Optimistic update: Updated affirmation text in cache');
+      
+      // 2. Do API call in background
       final updateModel = DailyAffirmationTextUpdateModel(
         dailyAffirmationTextId: affirmationTextId,
         dailyAffirmationTextValue: text,
@@ -222,21 +264,42 @@ class DailyAffirmationsService {
         final returnModel = response.body!;
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
+          // 3. Success: Keep the optimistic update
+          print('✅ API success: Affirmation text permanently updated');
+          
           return AffirmationResult.success(
             data: returnModel.model!,
             message: 'Affirmation text updated successfully',
           );
         } else {
+          // 4. API failed: Revert optimistic update
+          if (originalText != null) {
+            await _updateAffirmationInCache(affirmationIdStr, originalText);
+            print('❌ API failed: Reverted optimistic update');
+          }
+          
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to update affirmation text',
           );
         }
       } else {
+        // 5. Network error: Revert optimistic update
+        if (originalText != null) {
+          await _updateAffirmationInCache(affirmationIdStr, originalText);
+          print('❌ Network error: Reverted optimistic update');
+        }
+        
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      // 6. Exception: Revert optimistic update
+      if (originalText != null) {
+        await _updateAffirmationInCache(affirmationIdStr, originalText);
+        print('❌ Exception: Reverted optimistic update');
+      }
+      
       return AffirmationResult.failure(
         message: 'Error updating affirmation text: ${e.toString()}',
       );
@@ -245,7 +308,15 @@ class DailyAffirmationsService {
 
   /// Delete an existing affirmation text
   Future<AffirmationResult<String>> deleteAffirmationText(int affirmationTextId) async {
+    final affirmationIdStr = affirmationTextId.toString();
+    
     try {
+      // 1. Optimistically remove from cache (immediate UI update)
+      await _cacheService.initialize();
+      await _removeAffirmationFromCache(affirmationIdStr);
+      print('🔄 Optimistic delete: Removed affirmation from cache');
+      
+      // 2. Do API call in background
       final response = await _apiClient.apiV1ManifestMarkdailyaffirmationtextasdeletedDelete(
         id: affirmationTextId,
       );
@@ -254,21 +325,36 @@ class DailyAffirmationsService {
         final returnModel = response.body!;
         
         if (returnModel.isSuccess == true) {
+          // 3. Success: Keep the optimistic delete
+          print('✅ API success: Affirmation permanently deleted');
+          
           return AffirmationResult.success(
             data: 'Deleted successfully',
             message: 'Affirmation text deleted successfully',
           );
         } else {
+          // 4. API failed: Invalidate cache to refresh and restore correct state
+          await _cacheService.invalidateCache();
+          print('❌ API failed: Invalidated cache to restore correct state');
+          
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to delete affirmation text',
           );
         }
       } else {
+        // 5. Network error: Invalidate cache to restore
+        await _cacheService.invalidateCache();
+        print('❌ Network error: Invalidated cache to restore correct state');
+        
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      // 6. Exception: Invalidate cache to restore
+      await _cacheService.invalidateCache();
+      print('❌ Exception: Invalidated cache to restore correct state');
+      
       return AffirmationResult.failure(
         message: 'Error deleting affirmation text: ${e.toString()}',
       );
@@ -321,8 +407,62 @@ class DailyAffirmationsService {
 
   // ========================= COMBINED DATA METHODS =========================
 
-  /// Get all affirmations properly structured: default categories + user categories
-  Future<AffirmationResult<List<AffirmationCategoryData>>> getAllAffirmationCategories() async {
+  /// Get all affirmations with smart caching - checks cache first, then API if needed
+  Future<AffirmationResult<List<AffirmationCategoryData>>> getAllAffirmationCategories({
+    bool forceRefresh = false,
+  }) async {
+    try {
+      await _cacheService.initialize();
+      
+      // Check cache first (unless force refresh is requested)
+      if (!forceRefresh && _cacheService.isCacheValid) {
+        final cachedData = _cacheService.cachedCategories;
+        if (cachedData != null) {
+          print('💾 Using cached affirmation data (${_cacheService.cacheAgeMinutes}min old)');
+          return AffirmationResult.success(
+            data: _convertToAffirmationCategoryData(cachedData),
+            message: 'Categories loaded from cache',
+          );
+        }
+      }
+      
+      // Show cached data immediately while loading fresh data
+      if (!forceRefresh && _cacheService.hasCachedData) {
+        final cachedData = _cacheService.cachedCategories!;
+        print('📱 Showing stale cache while refreshing...');
+        
+        // Start background refresh but return cached data immediately
+        _refreshCategoriesInBackground();
+        
+        return AffirmationResult.success(
+          data: _convertToAffirmationCategoryData(cachedData),
+          message: 'Categories loaded from cache (refreshing...)',
+        );
+      }
+      
+      // No cache or force refresh - load from API
+      print('🌐 Loading fresh affirmation data from API...');
+      return await _loadFreshCategories();
+      
+    } catch (e) {
+      // If there's an error and we have cached data, use it as fallback
+      if (_cacheService.hasCachedData) {
+        final cachedData = _cacheService.cachedCategories!;
+        print('⚠️ API error, falling back to cached data: $e');
+        return AffirmationResult.success(
+          data: _convertToAffirmationCategoryData(cachedData),
+          message: 'Using cached data (API error)',
+        );
+      }
+      
+      return AffirmationResult.failure(
+        message: 'Error loading categories: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Get all affirmations properly structured: default categories + user categories (original method for fresh data)
+  Future<AffirmationResult<List<AffirmationCategoryData>>> _loadFreshCategories() async {
     try {
       List<AffirmationCategoryData> allCategories = [];
 
@@ -406,6 +546,10 @@ class DailyAffirmationsService {
         }
       }
 
+      // Save to cache after successful load
+      final categoryModels = _convertToAffirmationCategory(allCategories);
+      await _cacheService.saveCategories(categoryModels);
+
       return AffirmationResult.success(
         data: allCategories,
         message: 'All affirmation categories loaded successfully',
@@ -416,6 +560,100 @@ class DailyAffirmationsService {
         message: 'Error loading affirmation categories: ${e.toString()}',
       );
     }
+  }
+
+  /// Background refresh - updates cache without blocking UI
+  void _refreshCategoriesInBackground() async {
+    try {
+      print('🔄 Background refresh started...');
+      final freshData = await _loadFreshCategories();
+      if (freshData.isSuccess) {
+        print('✅ Background refresh completed');
+      }
+    } catch (e) {
+      print('⚠️ Background refresh failed: $e');
+    }
+  }
+
+  /// Convert AffirmationCategoryData to AffirmationCategory for cache
+  List<AffirmationCategory> _convertToAffirmationCategory(List<AffirmationCategoryData> data) {
+    return data.map((categoryData) => AffirmationCategory(
+      id: categoryData.id,
+      name: categoryData.name,
+      isDefault: categoryData.isDefault,
+      affirmations: categoryData.affirmations,
+      color: categoryData.color,
+      iconId: categoryData.iconId,
+    )).toList();
+  }
+
+  /// Convert AffirmationCategory to AffirmationCategoryData for UI
+  List<AffirmationCategoryData> _convertToAffirmationCategoryData(List<AffirmationCategory> categories) {
+    return categories.map((category) => AffirmationCategoryData(
+      id: category.id,
+      name: category.name,
+      isDefault: category.isDefault,
+      affirmations: category.affirmations,
+      color: category.color,
+      iconId: category.iconId,
+    )).toList();
+  }
+
+  // ========================= OPTIMISTIC UPDATE HELPERS =========================
+
+  /// Add affirmation to cache for optimistic updates
+  Future<void> _addAffirmationToCache(String categoryId, AffirmationItem affirmation) async {
+    await _cacheService.addAffirmationToCategory(categoryId, affirmation);
+  }
+
+  /// Remove affirmation from cache (revert optimistic update)
+  Future<void> _removeAffirmationFromCache(String affirmationId) async {
+    await _cacheService.removeAffirmationFromCache(affirmationId);
+  }
+
+  /// Replace temporary affirmation with real API result
+  Future<void> _replaceAffirmationInCache(String tempId, dynamic realApiModel) async {
+    // Convert API model to AffirmationItem
+    final realAffirmation = AffirmationItem(
+      id: realApiModel.dailyAffirmationTextId?.toString() ?? tempId,
+      text: realApiModel.dailyAffirmationTextValue ?? '',
+      isDefault: false,
+      categoryName: 'Custom',
+    );
+    
+    await _cacheService.replaceAffirmationInCache(tempId, realAffirmation);
+  }
+
+  /// Update affirmation text in cache for optimistic updates
+  /// Returns the original text for reverting if needed
+  Future<String?> _updateAffirmationInCache(String affirmationId, String newText) async {
+    return await _cacheService.updateAffirmationText(affirmationId, newText);
+  }
+
+  /// Replace temporary category with real API result
+  Future<void> _replaceCategoryInCache(String tempId, dynamic realApiModel) async {
+    // Convert API model to AffirmationCategory
+    final realCategory = AffirmationCategory(
+      id: realApiModel.categoryId?.toString() ?? tempId,
+      name: realApiModel.categoryName ?? 'Custom',
+      isDefault: false,
+      affirmations: [],
+      color: realApiModel.colorAsInteger != null ? Color(realApiModel.colorAsInteger!) : Colors.purple,
+      iconId: realApiModel.predefinedIconTypeId,
+    );
+    
+    await _cacheService.replaceCategoryInCache(tempId, realCategory);
+  }
+
+  /// Update category in cache for optimistic updates
+  /// Returns the original category for reverting if needed
+  Future<AffirmationCategory?> _updateCategoryInCache(
+    String categoryId, 
+    String newName, 
+    int newColor, 
+    int newIconId
+  ) async {
+    return await _cacheService.updateCategory(categoryId, newName, newColor, newIconId);
   }
 
   // ========================= HELPER METHODS =========================
@@ -473,14 +711,28 @@ class DailyAffirmationsService {
 
   // ========================= CATEGORY MANAGEMENT =========================
 
-  /// Create a new custom category
+  /// Create a new custom category with optimistic updates
   Future<AffirmationResult<CategoryModel>> createCategory({
     required String categoryName,
     required int colorAsInteger,
     required int predefinedIconTypeId,
   }) async {
+    // 1. Optimistically add to cache first (immediate UI update)
+    final tempCategory = AffirmationCategory(
+      id: 'temp_${DateTime.now().millisecondsSinceEpoch}',
+      name: categoryName,
+      isDefault: false,
+      affirmations: [],
+      color: Color(colorAsInteger),
+      iconId: predefinedIconTypeId,
+    );
+
     try {
-      // First, get a default category to associate with this custom category
+      await _cacheService.initialize();
+      await _cacheService.addCategoryToCache(tempCategory);
+      print('🔄 Optimistic update: Added category to cache');
+
+      // 2. Get default category info for API call
       int? defaultCategoryId;
       int? predefinedCategoryTypeId;
       try {
@@ -488,23 +740,22 @@ class DailyAffirmationsService {
         if (defaultCategoriesResult.isSuccess && 
             defaultCategoriesResult.data != null && 
             defaultCategoriesResult.data!.isNotEmpty) {
-          // Use the first available default category as a base
           final firstDefaultCategory = defaultCategoriesResult.data!.first;
           defaultCategoryId = firstDefaultCategory.defaultCategoryId;
           predefinedCategoryTypeId = firstDefaultCategory.predefinedCategoryTypeId;
-          print('Using defaultCategoryId: $defaultCategoryId, predefinedCategoryTypeId: $predefinedCategoryTypeId');
         }
       } catch (e) {
         print('Warning: Could not get default category info: $e');
       }
 
+      // 3. Do API call in background
       final createModel = CategoryCreateModel(
         categoryName: categoryName,
         userId: _authService.currentUser?.userId,
         colorAsInteger: colorAsInteger,
         predefinedIconTypeId: predefinedIconTypeId,
-        defaultCategoryId: defaultCategoryId, // Provide a default category ID
-        predefinedCategoryTypeId: predefinedCategoryTypeId, // Use the same type as default categories
+        defaultCategoryId: defaultCategoryId,
+        predefinedCategoryTypeId: predefinedCategoryTypeId,
       );
 
       final response = await _apiClient.apiV1ManifestCreatecategoryPost(body: createModel);
@@ -513,43 +764,71 @@ class DailyAffirmationsService {
         final returnModel = response.body!;
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
+          // 4. Success: Replace temp category with real one
+          await _replaceCategoryInCache(tempCategory.id, returnModel.model!);
+          print('✅ API success: Replaced temp category with real one');
+          
           return AffirmationResult.success(
             data: returnModel.model!,
             message: 'Category created successfully',
           );
         } else {
+          // 5. API failed: Remove optimistic update
+          await _cacheService.removeCategoryFromCache(tempCategory.id);
+          print('❌ API failed: Removed optimistic update');
+          
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to create category',
           );
         }
       } else {
+        // 6. Network error: Remove optimistic update
+        await _cacheService.removeCategoryFromCache(tempCategory.id);
+        print('❌ Network error: Removed optimistic update');
+        
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      // 7. Exception: Remove optimistic update
+      await _cacheService.removeCategoryFromCache(tempCategory.id);
+      print('❌ Exception: Removed optimistic update');
+      
       return AffirmationResult.failure(
         message: 'Error creating category: ${e.toString()}',
       );
     }
   }
 
-  /// Update an existing category
+  /// Update an existing category with optimistic updates
   Future<AffirmationResult<CategoryModel>> updateCategory({
     required int categoryId,
     required String categoryName,
     required int colorAsInteger,
     required int predefinedIconTypeId,
   }) async {
+    final categoryIdStr = categoryId.toString();
+    AffirmationCategory? originalCategory;
+    
     try {
+      // 1. Optimistically update cache first (immediate UI update)
+      await _cacheService.initialize();
+      originalCategory = await _updateCategoryInCache(
+        categoryIdStr, 
+        categoryName, 
+        colorAsInteger, 
+        predefinedIconTypeId
+      );
+      print('🔄 Optimistic update: Updated category in cache');
+      
+      // 2. Do API call in background
       final updateModel = CategoryUpdateModel(
         categoryId: categoryId,
         categoryName: categoryName,
         userId: _authService.currentUser?.userId,
         colorAsInteger: colorAsInteger,
         predefinedIconTypeId: predefinedIconTypeId,
-        // predefinedCategoryTypeId: null, // Leave as null
-        // defaultCategoryId: null, // null for custom categories
       );
 
       final response = await _apiClient.apiV1ManifestUpdatecategoryPost(body: updateModel);
@@ -558,30 +837,59 @@ class DailyAffirmationsService {
         final returnModel = response.body!;
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
+          // 3. Success: Keep the optimistic update
+          print('✅ API success: Category permanently updated');
+          
           return AffirmationResult.success(
             data: returnModel.model!,
             message: 'Category updated successfully',
           );
         } else {
+          // 4. API failed: Revert optimistic update
+          if (originalCategory != null) {
+            await _cacheService.updateCategoryInCache(originalCategory);
+            print('❌ API failed: Reverted optimistic update');
+          }
+          
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to update category',
           );
         }
       } else {
+        // 5. Network error: Revert optimistic update
+        if (originalCategory != null) {
+          await _cacheService.updateCategoryInCache(originalCategory);
+          print('❌ Network error: Reverted optimistic update');
+        }
+        
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      // 6. Exception: Revert optimistic update
+      if (originalCategory != null) {
+        await _cacheService.updateCategoryInCache(originalCategory);
+        print('❌ Exception: Reverted optimistic update');
+      }
+      
       return AffirmationResult.failure(
         message: 'Error updating category: ${e.toString()}',
       );
     }
   }
 
-  /// Delete an existing category
+  /// Delete an existing category with optimistic updates
   Future<AffirmationResult<String>> deleteCategory(int categoryId) async {
+    final categoryIdStr = categoryId.toString();
+    
     try {
+      // 1. Optimistically remove from cache (immediate UI update)
+      await _cacheService.initialize();
+      await _cacheService.removeCategoryFromCache(categoryIdStr);
+      print('🔄 Optimistic delete: Removed category from cache');
+      
+      // 2. Do API call in background
       final response = await _apiClient.apiV1ManifestMarkcategoryasdeletedDelete(
         id: categoryId,
       );
@@ -590,21 +898,36 @@ class DailyAffirmationsService {
         final returnModel = response.body!;
         
         if (returnModel.isSuccess == true) {
+          // 3. Success: Keep the optimistic delete
+          print('✅ API success: Category permanently deleted');
+          
           return AffirmationResult.success(
             data: 'Deleted successfully',
             message: 'Category deleted successfully',
           );
         } else {
+          // 4. API failed: Invalidate cache to refresh and restore correct state
+          await _cacheService.invalidateCache();
+          print('❌ API failed: Invalidated cache to restore correct state');
+          
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to delete category',
           );
         }
       } else {
+        // 5. Network error: Invalidate cache to restore
+        await _cacheService.invalidateCache();
+        print('❌ Network error: Invalidated cache to restore correct state');
+        
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      // 6. Exception: Invalidate cache to restore
+      await _cacheService.invalidateCache();
+      print('❌ Exception: Invalidated cache to restore correct state');
+      
       return AffirmationResult.failure(
         message: 'Error deleting category: ${e.toString()}',
       );
@@ -646,22 +969,6 @@ class AffirmationResult<T> {
   }
 }
 
-/// Unified affirmation item for UI display
-class AffirmationItem {
-  final String id;
-  final String text;
-  final bool isDefault;
-  final String categoryName;
-  final bool isFavorite;
-
-  AffirmationItem({
-    required this.id,
-    required this.text,
-    required this.isDefault,
-    required this.categoryName,
-    this.isFavorite = false,
-  });
-}
 
 /// Category data structure for affirmations
 class AffirmationCategoryData {

@@ -5,6 +5,7 @@ import 'screens/splash_screen.dart';
 import 'constants/colors.dart';
 import 'services/unified_auth_service.dart';
 import 'services/vision_board_service.dart';
+import 'services/app_lifecycle_manager.dart';
 import 'utils/vision_board_xml_manager.dart';
 import 'widgets/session_activity_tracker.dart';
 
@@ -20,12 +21,27 @@ void main() async {
   // Start periodic background sync for vision boards
   VisionBoardXMLManager.startPeriodicSync();
   
-  print('🚀 All services initialized, starting app');
+  // Initialize universal sync service for all app data
+  AppLifecycleManager.instance.initialize();
+  
+  print('🚀 All services initialized, starting app with universal sync');
   
   runApp(ManifestationApp());
 }
 
-class ManifestationApp extends StatelessWidget {
+class ManifestationApp extends StatefulWidget {
+  @override
+  _ManifestationAppState createState() => _ManifestationAppState();
+}
+
+class _ManifestationAppState extends State<ManifestationApp> {
+  @override
+  void dispose() {
+    // Clean up the lifecycle manager when app is disposed
+    AppLifecycleManager.instance.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Set system UI overlay style

@@ -20601,6 +20601,22 @@
         ],
         "parameters": [
           {
+            "name": "StartDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "EndDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
             "name": "ShowDeleted",
             "in": "query",
             "schema": {
@@ -40832,6 +40848,20 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "newGoalTrackerCategoryModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoalTrackerCategoryCreateModel"
+            },
+            "nullable": true
+          },
+          "existingGoalTrackerCategoryModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoalTrackerCategoryUpdateModel"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -41460,6 +41490,20 @@
           "addedToFeedDate": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "newGoalTrackerCategoryModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoalTrackerCategoryCreateModel"
+            },
+            "nullable": true
+          },
+          "existingGoalTrackerCategoryModels": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GoalTrackerCategoryUpdateModel"
+            },
             "nullable": true
           }
         },

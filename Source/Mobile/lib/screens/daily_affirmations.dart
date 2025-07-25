@@ -9,6 +9,10 @@ import '../constants/category_icons.dart';
 import '../utils/color_utils.dart';
 import '../services/daily_affirmations_service.dart';
 import '../services/usage_analytics_service.dart';
+import '../services/app_lifecycle_manager.dart';
+import '../services/app_event_bus.dart';
+import '../widgets/sync_status_widget.dart';
+import '../widgets/sync_refresh_wrapper.dart';
 import '../models/analytics_models.dart';
 
 class DailyAffirmationsScreen extends StatefulWidget {

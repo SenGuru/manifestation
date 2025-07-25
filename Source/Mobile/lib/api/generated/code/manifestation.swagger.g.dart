@@ -6283,6 +6283,18 @@ GoalTrackerCreateModel _$GoalTrackerCreateModelFromJson(
       addedToFeedDate: json['addedToFeedDate'] == null
           ? null
           : DateTime.parse(json['addedToFeedDate'] as String),
+      newGoalTrackerCategoryModels:
+          (json['newGoalTrackerCategoryModels'] as List<dynamic>?)
+                  ?.map((e) => GoalTrackerCategoryCreateModel.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList() ??
+              [],
+      existingGoalTrackerCategoryModels:
+          (json['existingGoalTrackerCategoryModels'] as List<dynamic>?)
+                  ?.map((e) => GoalTrackerCategoryUpdateModel.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList() ??
+              [],
     );
 
 Map<String, dynamic> _$GoalTrackerCreateModelToJson(
@@ -6297,6 +6309,13 @@ Map<String, dynamic> _$GoalTrackerCreateModelToJson(
       'userId': instance.userId,
       'addedToFeed': instance.addedToFeed,
       'addedToFeedDate': instance.addedToFeedDate?.toIso8601String(),
+      'newGoalTrackerCategoryModels': instance.newGoalTrackerCategoryModels
+          ?.map((e) => e.toJson())
+          .toList(),
+      'existingGoalTrackerCategoryModels': instance
+          .existingGoalTrackerCategoryModels
+          ?.map((e) => e.toJson())
+          .toList(),
     };
 
 GoalTrackerMileStoneByFeedIdSearchCriteria
@@ -6781,6 +6800,18 @@ GoalTrackerUpdateModel _$GoalTrackerUpdateModelFromJson(
       addedToFeedDate: json['addedToFeedDate'] == null
           ? null
           : DateTime.parse(json['addedToFeedDate'] as String),
+      newGoalTrackerCategoryModels:
+          (json['newGoalTrackerCategoryModels'] as List<dynamic>?)
+                  ?.map((e) => GoalTrackerCategoryCreateModel.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList() ??
+              [],
+      existingGoalTrackerCategoryModels:
+          (json['existingGoalTrackerCategoryModels'] as List<dynamic>?)
+                  ?.map((e) => GoalTrackerCategoryUpdateModel.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList() ??
+              [],
     );
 
 Map<String, dynamic> _$GoalTrackerUpdateModelToJson(
@@ -6796,6 +6827,13 @@ Map<String, dynamic> _$GoalTrackerUpdateModelToJson(
       'userId': instance.userId,
       'addedToFeed': instance.addedToFeed,
       'addedToFeedDate': instance.addedToFeedDate?.toIso8601String(),
+      'newGoalTrackerCategoryModels': instance.newGoalTrackerCategoryModels
+          ?.map((e) => e.toJson())
+          .toList(),
+      'existingGoalTrackerCategoryModels': instance
+          .existingGoalTrackerCategoryModels
+          ?.map((e) => e.toJson())
+          .toList(),
     };
 
 JobAttachmentCreateModel _$JobAttachmentCreateModelFromJson(

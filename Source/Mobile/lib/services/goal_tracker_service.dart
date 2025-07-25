@@ -1,8 +1,8 @@
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
-import 'package:fun/services/auth_service.dart';
 import 'dart:async';
 import '../api/generated/code/manifestation.swagger.dart';
+import '../constants/goal_constants.dart';
 import '../models/goal_tracker_category.dart';
 import 'unified_auth_service.dart';
 
@@ -21,207 +21,130 @@ class GoalTrackerService {
     );
   }
 
-  // ========================= CATEGORIES =========================
+  // ========================= LOCAL CATEGORIES =========================
 
-  // The 6 supported default categories with hardcoded colors and icons
-  static const List<String> _supportedDefaultCategories = [
-    'career',
-    'health', 
-    'love',
-    'money',
-    'personal',
-    'spiritual'
-  ];
-
-  // Hardcoded colors for the 6 default categories (following affirmations pattern)
-  static final Map<String, Color> _defaultCategoryColors = {
-    'career': Color(0xFF2196F3),      // Blue
-    'health': Color(0xFF4CAF50),      // Green 
-    'love': Color(0xFFE91E63),        // Pink
-    'money': Color(0xFFFF9800),       // Orange
-    'personal': Color(0xFF9C27B0),    // Purple
-    'spiritual': Color(0xFF673AB7),   // Deep Purple
+  // Simple local category mapping - no API calls needed
+  static final Map<int, GoalTrackerCategory> _localCategories = {
+    1: GoalTrackerCategory(
+      id: '1',
+      name: 'Career',
+      description: 'Career and work-related goals',
+      color: Color(0xFF2196F3), // Blue
+      iconValue: 3600007, // target
+      isDefault: true,
+    ),
+    2: GoalTrackerCategory(
+      id: '2',
+      name: 'Health',
+      description: 'Health and fitness goals',
+      color: Color(0xFF4CAF50), // Green
+      iconValue: 3600004, // leaf
+      isDefault: true,
+    ),
+    3: GoalTrackerCategory(
+      id: '3',
+      name: 'Love',
+      description: 'Relationship and love goals',
+      color: Color(0xFFE91E63), // Pink
+      iconValue: 3600002, // heart
+      isDefault: true,
+    ),
+    4: GoalTrackerCategory(
+      id: '4',
+      name: 'Money',
+      description: 'Financial and money goals',
+      color: Color(0xFFFF9800), // Orange
+      iconValue: 3600006, // diamond
+      isDefault: true,
+    ),
+    5: GoalTrackerCategory(
+      id: '5',
+      name: 'Personal',
+      description: 'Personal development goals',
+      color: Color(0xFF9C27B0), // Purple
+      iconValue: 3600005, // star
+      isDefault: true,
+    ),
+    6: GoalTrackerCategory(
+      id: '6',
+      name: 'Spiritual',
+      description: 'Spiritual and mindfulness goals',
+      color: Color(0xFF673AB7), // Deep Purple
+      iconValue: 3600001, // flower
+      isDefault: true,
+    ),
   };
 
-  // Hardcoded icons for the 6 default categories (using PredefinedIconTypes values)
-  static final Map<String, int> _defaultCategoryIcons = {
-    'career': 3600007,      // target
-    'health': 3600004,      // leaf
-    'love': 3600002,        // heart
-    'money': 3600006,       // diamond
-    'personal': 3600005,    // star
-    'spiritual': 3600001,   // flower
+  // Map category names to actual database IDs from your system
+  static final Map<String, int> _categoryNameToId = {
+    'career': 100,    // Use actual DB ID
+    'health': 101,    // Use actual DB ID  
+    'love': 102,      // Use actual DB ID
+    'money': 103,     // Use actual DB ID
+    'personal': 104,  // Use actual DB ID
+    'spiritual': 105, // Use actual DB ID
   };
 
-  /// Get default categories (system categories like career, health, love, money, personal, spiritual)
-  /// These are filtered to only return the main categories we support with hardcoded colors and icons
+  // Map database IDs back to local categories for display
+  static final Map<int, int> _dbIdToLocalId = {
+    100: 1, // career
+    101: 2, // health
+    102: 3, // love
+    103: 4, // money
+    104: 5, // personal
+    105: 6, // spiritual
+    // Handle user custom categories that might exist
+    1045: 3, // Love -> love
+    1046: 5, // Success -> personal
+    1047: 2, // Health -> health
+    1048: 4, // Abundance -> money
+    1049: 5, // Confidence -> personal
+    1051: 2, // Health -> health
+    1052: 3, // Love -> love
+    1089: 5, // test category -> personal
+  };
+
+  /// Get default categories - simple local categories, no API calls
   Future<GoalTrackerResult<List<GoalTrackerCategory>>> getDefaultCategories() async {
-    try {
-      final response = await _apiClient.apiV1ManifestGetdefaultcategorysGet();
-
-      if (response.isSuccessful && response.body != null) {
-        final returnModel = response.body!;
-        
-        if (returnModel.isSuccess == true && returnModel.model != null) {
-          // Filter to only include the main categories we support
-          final filteredCategories = <GoalTrackerCategory>[];
-          
-          for (final apiCategory in returnModel.model!) {
-            final categoryName = apiCategory.defaultCategoryName?.toLowerCase() ?? '';
-            
-            // Find matching supported category
-            final supportedCategory = _supportedDefaultCategories.firstWhere(
-              (supported) => categoryName.contains(supported) || supported.contains(categoryName),
-              orElse: () => '',
-            );
-            
-            if (supportedCategory.isNotEmpty) {
-              final goalCategory = GoalTrackerCategory(
-                id: apiCategory.defaultCategoryId?.toString() ?? supportedCategory,
-                name: _capitalizeFirst(supportedCategory),
-                description: 'Default ${_capitalizeFirst(supportedCategory)} category',
-                color: _defaultCategoryColors[supportedCategory] ?? Color(0xFF4CAF50),
-                iconValue: _defaultCategoryIcons[supportedCategory],
-                isDefault: true,
-              );
-              filteredCategories.add(goalCategory);
-            }
-          }
-
-          // If API doesn't return all 6 categories, create the missing ones manually
-          for (final supportedCategory in _supportedDefaultCategories) {
-            final exists = filteredCategories.any((cat) => 
-              cat.name.toLowerCase() == supportedCategory);
-            
-            if (!exists) {
-              final goalCategory = GoalTrackerCategory(
-                id: supportedCategory,
-                name: _capitalizeFirst(supportedCategory),
-                description: 'Default ${_capitalizeFirst(supportedCategory)} category',
-                color: _defaultCategoryColors[supportedCategory] ?? Color(0xFF4CAF50),
-                iconValue: _defaultCategoryIcons[supportedCategory],
-                isDefault: true,
-              );
-              filteredCategories.add(goalCategory);
-            }
-          }
-
-          return GoalTrackerResult.success(
-            data: filteredCategories,
-            message: 'Default categories loaded successfully',
-          );
-        } else {
-          // Fallback: create all 6 categories manually if API fails
-          return _createFallbackDefaultCategories();
-        }
-      } else {
-        // Fallback: create all 6 categories manually if API fails
-        return _createFallbackDefaultCategories();
-      }
-    } catch (e) {
-      print('Error loading default categories from API: $e');
-      // Fallback: create all 6 categories manually if API fails
-      return _createFallbackDefaultCategories();
-    }
-  }
-
-  /// Create fallback default categories if API fails
-  GoalTrackerResult<List<GoalTrackerCategory>> _createFallbackDefaultCategories() {
-    final categories = _supportedDefaultCategories.map((categoryName) {
-      return GoalTrackerCategory(
-        id: categoryName,
-        name: _capitalizeFirst(categoryName),
-        description: 'Default ${_capitalizeFirst(categoryName)} category',
-        color: _defaultCategoryColors[categoryName] ?? Color(0xFF4CAF50),
-        iconValue: _defaultCategoryIcons[categoryName],
-        isDefault: true,
-      );
-    }).toList();
-
     return GoalTrackerResult.success(
-      data: categories,
-      message: 'Default categories created (fallback)',
+      data: _localCategories.values.toList(),
+      message: 'Local categories loaded successfully',
     );
   }
 
-  /// Helper method to capitalize first letter
-  String _capitalizeFirst(String text) {
-    if (text.isEmpty) return text;
-    return text[0].toUpperCase() + text.substring(1);
+  /// Get category by ID
+  GoalTrackerCategory? getCategoryById(int categoryId) {
+    return _localCategories[categoryId];
   }
 
-  /// Get user's custom categories
+  /// Get category ID by name
+  int? getCategoryIdByName(String categoryName) {
+    return _categoryNameToId[categoryName.toLowerCase()];
+  }
+
+  /// Get local category from database category ID
+  GoalTrackerCategory? getLocalCategoryFromDbId(int dbCategoryId) {
+    final localId = _dbIdToLocalId[dbCategoryId];
+    if (localId != null) {
+      return _localCategories[localId];
+    }
+    return null; // Return null for unknown categories
+  }
+
+  /// Get user's custom categories (still keep this for custom categories)
   Future<GoalTrackerResult<List<GoalTrackerCategory>>> getUserCategories() async {
-    try {
-      final response = await _apiClient.apiV1ManifestGetcategorysGet(
-        userId: _authService.currentUser?.userId,
-      );
-
-      if (response.isSuccessful && response.body != null) {
-        final returnModel = response.body!;
-        
-        if (returnModel.isSuccess == true && returnModel.model != null) {
-          final categories = returnModel.model!.map((category) {
-            return GoalTrackerCategory(
-              id: category.categoryId?.toString() ?? '',
-              name: category.categoryName ?? '',
-              description: '', // CategoryModel doesn't have description field
-              color: _convertIntToColor(category.colorAsInteger),
-              iconValue: category.predefinedIconTypeId,
-              isDefault: false,
-              userId: category.userId,
-              createdAt: category.createdDate,
-            );
-          }).toList();
-
-          return GoalTrackerResult.success(
-            data: categories,
-            message: 'User categories loaded successfully',
-          );
-        } else {
-          return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.toString() ?? 'Failed to load user categories',
-          );
-        }
-      } else {
-        return GoalTrackerResult.failure(
-          message: 'Network error: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      return GoalTrackerResult.failure(
-        message: 'Error loading user categories: ${e.toString()}',
-      );
-    }
+    // For now, return empty list - users can only use the 6 default categories
+    return GoalTrackerResult.success(
+      data: <GoalTrackerCategory>[],
+      message: 'No custom categories (using local defaults only)',
+    );
   }
 
-  /// Get all categories (both default and user categories combined)
+  /// Get all categories (just return local default categories)
   Future<GoalTrackerResult<List<GoalTrackerCategory>>> getAllCategories() async {
-    try {
-      final defaultResult = await getDefaultCategories();
-      final userResult = await getUserCategories();
-
-      if (defaultResult.isSuccess && userResult.isSuccess) {
-        final allCategories = [
-          ...defaultResult.data!,
-          ...userResult.data!,
-        ];
-
-        return GoalTrackerResult.success(
-          data: allCategories,
-          message: 'All categories loaded successfully',
-        );
-      } else {
-        return GoalTrackerResult.failure(
-          message: 'Failed to load categories: ${defaultResult.message} | ${userResult.message}',
-        );
-      }
-    } catch (e) {
-      return GoalTrackerResult.failure(
-        message: 'Error loading all categories: ${e.toString()}',
-      );
-    }
+    return getDefaultCategories(); // Just return the 6 local categories
   }
+
 
   // ========================= GOAL TRACKERS =========================
 
@@ -289,174 +212,72 @@ class GoalTrackerService {
     }
   }
 
-  /// Create a new goal tracker
+  /// Create a new goal tracker - simple version with local category ID
   Future<GoalTrackerResult<GoalTrackerModel>> createGoalTracker({
     required String goalName,
     required int goalStatusTypeId,
     DateTime? startDate,
     DateTime? endDate,
     required int userId,
+    int? categoryId, // Simple single category ID (1-6 for local categories)
   }) async {
     try {
-      // Validate required parameters to prevent database constraint violations
+      // Simple validation
       if (goalName.trim().isEmpty) {
-        return GoalTrackerResult.failure(
-          message: 'Goal name cannot be empty',
-        );
+        return GoalTrackerResult.failure(message: 'Goal name cannot be empty');
       }
       
-      if (userId <= 0) {
-        return GoalTrackerResult.failure(
-          message: 'User ID must be positive (got: $userId)',
-        );
+      // Create goal model with category association if provided
+      List<GoalTrackerCategoryCreateModel>? categoryModels;
+      if (categoryId != null) {
+        categoryModels = [
+          GoalTrackerCategoryCreateModel(
+            categoryId: categoryId, // Use real database ID
+            userId: userId,
+          )
+        ];
+        print('📝 Creating goal with database category ID: $categoryId');
       }
-      
-      // Status type ID is required and cannot be 0 or negative (API validation)
-      if (goalStatusTypeId <= 0) {
-        return GoalTrackerResult.failure(
-          message: 'Goal status type ID must be positive (got: $goalStatusTypeId)',
-        );
-      }
-      
-      // Ensure goal name is not too long (database field limit)
-      final sanitizedGoalName = goalName.trim();
-      if (sanitizedGoalName.length > 255) {
-        return GoalTrackerResult.failure(
-          message: 'Goal name is too long (max 255 characters)',
-        );
-      }
-      
-      final now = DateTime.now();
-      final validStartDate = startDate ?? now;
-      
-      // Validate date logic
-      if (endDate != null && endDate.isBefore(validStartDate)) {
-        return GoalTrackerResult.failure(
-          message: 'End date cannot be before start date',
-        );
-      }
-      
-      print('🔍 Creating goal with validated parameters:');
-      print('   Name: "$sanitizedGoalName" (${sanitizedGoalName.length} chars)');
-      print('   User ID: $userId (type: ${userId.runtimeType})');
-      print('   Status Type ID: $goalStatusTypeId (type: ${goalStatusTypeId.runtimeType})');
-      print('   Start Date: $validStartDate');
-      print('   End Date: $endDate');
-      
-      // Check for duplicate goals to prevent constraint violations
-      print('🔍 Checking for existing goals with same name for user $userId...');
-      try {
-        final existingGoalsResult = await getUserGoalTrackers();
-        if (existingGoalsResult.isSuccess && existingGoalsResult.data != null) {
-          final duplicateGoal = existingGoalsResult.data!.firstWhere(
-            (goal) => goal.goalTrackerName?.toLowerCase().trim() == sanitizedGoalName.toLowerCase(),
-            orElse: () => GoalTrackerModel(),
-          );
-          
-          if (duplicateGoal.goalTrackerId != null) {
-            print('⚠️  DUPLICATE GOAL DETECTED!');
-            print('   Existing goal ID: ${duplicateGoal.goalTrackerId}');
-            print('   Existing goal name: "${duplicateGoal.goalTrackerName}"');
-            print('   This would cause a PostgreSQL constraint violation!');
-            return GoalTrackerResult.failure(
-              message: 'A goal with this name already exists. Please choose a different name.',
-            );
-          } else {
-            print('✅ No duplicate goals found - safe to create');
-          }
-        }
-      } catch (e) {
-        print('⚠️  Could not check for duplicates: $e (proceeding anyway)');
-      }
-      
-      // Ensure we explicitly set the status type ID as a non-null integer
-      final validStatusTypeId = goalStatusTypeId;
-      
+
       final createModel = GoalTrackerCreateModel(
-        goalTrackerName: sanitizedGoalName,
-        predefinedGoalStatusTypeId: validStatusTypeId,
-        goalTrackerStartDate: validStartDate,
+        goalTrackerName: goalName.trim(),
+        predefinedGoalStatusTypeId: goalStatusTypeId,
+        goalTrackerStartDate: startDate ?? DateTime.now(),
         goalTrackerEndDate: endDate,
         userId: userId,
+        newGoalTrackerCategoryModels: categoryModels,
       );
 
-      final modelJson = createModel.toJson();
-      print('🔍 Goal creation model JSON: $modelJson');
-      print('🔍 Status Type ID in JSON: ${modelJson['predefinedGoalStatusTypeId']} (type: ${modelJson['predefinedGoalStatusTypeId'].runtimeType})');
-      
       final response = await _apiClient.apiV1ManifestCreategoaltrackerPost(body: createModel);
-
-      print('🔍 Goal creation API response:');
-      print('   Status Code: ${response.statusCode}');
-      print('   Is Successful: ${response.isSuccessful}');
-      print('   Response Body: ${response.body?.toString()}');
 
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
         
-        print('🔍 API Response details:');
-        print('   IsSuccess: ${returnModel.isSuccess}');
-        print('   Model: ${returnModel.model?.toString()}');
-        print('   Success Message: ${returnModel.successMessage}');
-        print('   Error Holder: ${returnModel.errorHolder?.toString()}');
-        
         if (returnModel.isSuccess == true && returnModel.model != null) {
+          // If we have a categoryId, we'll handle it on the client side during loading
+          print('✅ Goal created successfully, categoryId $categoryId will be handled locally');
           return GoalTrackerResult.success(
             data: returnModel.model!,
             message: 'Goal tracker created successfully',
           );
         } else {
-          // Extract detailed error information for PostgreSQL constraint debugging
-          String detailedError = 'Failed to create goal tracker';
-          if (returnModel.errorHolder != null) {
-            final errorHolder = returnModel.errorHolder!;
-            print('🔍 Detailed PostgreSQL Error Analysis:');
-            print('   Error Type: ${errorHolder.runtimeType}');
-            
-            if (errorHolder.friendlyMessage != null) {
-              print('   Friendly Message: ${errorHolder.friendlyMessage}');
-              detailedError = errorHolder.friendlyMessage!;
-            }
-            
-            if (errorHolder.exception != null) {
-              print('   Exception: ${errorHolder.exception}');
-              final exceptionStr = errorHolder.exception.toString();
-              
-              // Check for specific PostgreSQL constraint violations
-              if (exceptionStr.contains('duplicate key value violates unique constraint')) {
-                detailedError = 'A goal with this name already exists for this user. Please choose a different name.';
-                print('   🚨 POSTGRESQL CONSTRAINT: Duplicate key violation detected');
-              } else if (exceptionStr.contains('violates foreign key constraint')) {
-                detailedError = 'Invalid reference data (user ID or status type). Please try again.';
-                print('   🚨 POSTGRESQL CONSTRAINT: Foreign key violation detected');
-              } else if (exceptionStr.contains('violates not-null constraint')) {
-                detailedError = 'Missing required information. Please fill in all required fields.';
-                print('   🚨 POSTGRESQL CONSTRAINT: Not-null violation detected');
-              } else if (exceptionStr.contains('Npgsql') || exceptionStr.contains('PostgreSQL')) {
-                detailedError = 'Database constraint violation. Please check your input data.';
-                print('   🚨 POSTGRESQL ERROR: General database constraint violation');
-              }
-            }
-          }
-          
           return GoalTrackerResult.failure(
-            message: detailedError,
+            message: returnModel.errorHolder?.friendlyMessage ?? 'Failed to create goal tracker',
           );
         }
       } else {
         return GoalTrackerResult.failure(
-          message: 'Network error: ${response.statusCode} - ${response.error?.toString()}',
+          message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
-      print('🔍 Goal creation exception: $e');
       return GoalTrackerResult.failure(
         message: 'Error creating goal tracker: ${e.toString()}',
       );
     }
   }
 
-  /// Update a goal tracker
+  /// Update a goal tracker with category associations
   Future<GoalTrackerResult<GoalTrackerModel>> updateGoalTracker({
     required int goalTrackerId,
     String? goalName,
@@ -464,8 +285,23 @@ class GoalTrackerService {
     DateTime? startDate,
     DateTime? endDate,
     DateTime? completedDate,
+    List<int>? categoryIds, // NEW: Category IDs to associate with the goal
   }) async {
     try {
+      // Create category associations if provided
+      List<GoalTrackerCategoryCreateModel>? categoryModels;
+      if (categoryIds != null && categoryIds.isNotEmpty) {
+        print('🏷️  Updating category associations for IDs: $categoryIds');
+        categoryModels = categoryIds.map((categoryId) {
+          return GoalTrackerCategoryCreateModel(
+            categoryId: categoryId,
+            goalTrackerId: goalTrackerId,
+            userId: _authService.currentUser?.userId,
+          );
+        }).toList();
+        print('🏷️  Created ${categoryModels.length} category association models for update');
+      }
+      
       final updateModel = GoalTrackerUpdateModel(
         goalTrackerId: goalTrackerId,
         goalTrackerName: goalName,
@@ -474,6 +310,7 @@ class GoalTrackerService {
         goalTrackerEndDate: endDate,
         goalTrackerCompletedDate: completedDate,
         userId: _authService.currentUser?.userId,
+        newGoalTrackerCategoryModels: categoryModels, // NEW: Category associations
       );
 
       final response = await _apiClient.apiV1ManifestUpdategoaltrackerPost(body: updateModel);
@@ -752,70 +589,24 @@ class GoalTrackerService {
   }
 
   // ========================= GOAL-CATEGORY ASSOCIATION =========================
+  // Note: Category associations are now handled during goal creation/update
+  // via the newGoalTrackerCategoryModels property in GoalTrackerCreateModel/UpdateModel
 
-  /// Associate a goal with a category
-  Future<GoalTrackerResult<bool>> associateGoalWithCategory({
-    required int goalTrackerId,
-    required int categoryId,
-  }) async {
-    try {
-      print('🏷️  Creating association: Goal $goalTrackerId → Category $categoryId');
-      print('🏷️  User ID: ${_authService.currentUser?.userId}');
-      
-      final associationModel = GoalTrackerCategoryCreateModel(
-        categoryId: categoryId,
-        goalTrackerId: goalTrackerId,
-        userId: _authService.currentUser?.userId,
-      );
-
-      print('🏷️  Association model: ${associationModel.toJson()}');
-      
-      final response = await _apiClient.apiV1ManifestCreategoaltrackercategoryPost(body: associationModel);
-
-      if (response.isSuccessful && response.body != null) {
-        final returnModel = response.body!;
-        
-        if (returnModel.isSuccess == true) {
-          return GoalTrackerResult.success(
-            data: true,
-            message: 'Goal associated with category successfully',
-          );
-        } else {
-          return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.toString() ?? 'Failed to associate goal with category',
-          );
-        }
-      } else {
-        return GoalTrackerResult.failure(
-          message: 'Network error: ${response.statusCode}',
-        );
-      }
-    } catch (e) {
-      return GoalTrackerResult.failure(
-        message: 'Error associating goal with category: ${e.toString()}',
-      );
-    }
+  /// Simple method to get category ID from name (for UI mapping)
+  int? getCategoryIdFromName(String categoryName) {
+    return _categoryNameToId[categoryName.toLowerCase()];
   }
 
-  /// Get the default category ID by name
-  Future<int?> getDefaultCategoryIdByName(String categoryName) async {
-    try {
-      final result = await getDefaultCategories();
-      if (result.isSuccess && result.data != null) {
-        final matchingCategory = result.data!.firstWhere(
-          (cat) => cat.name.toLowerCase() == categoryName.toLowerCase(),
-          orElse: () => GoalTrackerCategory(id: '', name: '', description: '', color: Color(0xFF4CAF50), isDefault: false),
-        );
-        
-        if (matchingCategory.id.isNotEmpty) {
-          return int.tryParse(matchingCategory.id);
-        }
-      }
-      return null;
-    } catch (e) {
-      print('Error getting default category ID: $e');
-      return null;
-    }
+  /// Simple method for backward compatibility with existing code
+  Future<int?> getCategoryIdFromLocalEnum(String localCategoryName) async {
+    // Map some old names to new names for compatibility
+    final nameMapping = {
+      'relationships': 'love',
+      'financial': 'money',
+    };
+    
+    final mappedName = nameMapping[localCategoryName.toLowerCase()] ?? localCategoryName.toLowerCase();
+    return getCategoryIdFromName(mappedName);
   }
 
   // ========================= HELPER METHODS =========================

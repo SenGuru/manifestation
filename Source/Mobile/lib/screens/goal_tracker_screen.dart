@@ -8,6 +8,7 @@ import '../components/progress_update_dialog.dart';
 import '../models/goals.dart';
 import '../models/goal_tracker_category.dart';
 import '../constants/colors.dart';
+import '../constants/goal_constants.dart';
 import '../services/goal_tracker_service.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import 'goal_detail_screen.dart';
@@ -605,8 +606,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           // Get milestones for this specific goal from the loaded data
           final milestones = _getMilestonesForGoal(apiGoal, allUserMilestones);
           
-          // Determine category based on API category data (preferred) or goal name (fallback)
-          final goalCategory = _mapApiCategoryToGoalCategory(apiGoal.existingCategorys, apiGoal.goalTrackerName ?? '');
+          // Determine category from existingCategorys using only our supported default categories
+          final goalCategory = _getGoalCategoryFromExistingCategories(apiGoal.existingCategorys, apiGoal.goalTrackerName ?? '');
           
           // Calculate progress based on completed milestones
           final progress = _calculateGoalProgress(milestones);
@@ -621,7 +622,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             category: goalCategory,
             priority: GoalPriority.medium, // Default priority
             targetDate: apiGoal.goalTrackerEndDate ?? DateTime.now().add(Duration(days: 30)),
-            createdAt: DateTime.now(), // API doesn't expose created date directly
+            createdAt: apiGoal.goalTrackerStartDate ?? DateTime.now(), // Use start date as creation date
             milestones: milestones,
             currentProgress: progress,
             tags: [goalCategory.displayName.toLowerCase()],
@@ -688,67 +689,54 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     }
   }
 
-  /// Map API category to GoalCategory enum using category ID matching
-  GoalCategory _mapApiCategoryToGoalCategory(List<CategoryModel>? apiCategories, String goalName) {
-    print('🏷️  Mapping categories for goal: "$goalName"');
-    print('🏷️  API categories count: ${apiCategories?.length ?? 0}');
+  /// Get goal category from existingCategorys using database ID mapping
+  GoalCategory _getGoalCategoryFromExistingCategories(List<CategoryModel>? existingCategorys, String goalName) {
+    print('🏷️  Processing existingCategorys for goal: "$goalName"');
+    print('🏷️  ExistingCategorys count: ${existingCategorys?.length ?? 0}');
     
-    if (apiCategories != null && apiCategories.isNotEmpty) {
-      // Use the first category associated with this goal
-      final firstCategory = apiCategories.first;
-      final categoryId = firstCategory.categoryId?.toString() ?? '';
-      final categoryName = (firstCategory.categoryName ?? firstCategory.defaultCategoryName ?? '').toLowerCase().trim();
+    if (existingCategorys != null && existingCategorys.isNotEmpty) {
+      // Get the first category and use its database ID for mapping
+      final category = existingCategorys.first;
+      final dbCategoryId = category.defaultCategoryId;
       
-      print('🏷️  API category: ID="$categoryId", Name="$categoryName"');
-      
-      // First, try to match by category ID with our loaded categories
-      if (categoryId.isNotEmpty) {
-        final matchingLoadedCategory = categories.firstWhere(
-          (cat) => cat.id == categoryId,
-          orElse: () => GoalTrackerCategory(id: '', name: '', description: '', color: Color(0xFF4CAF50), isDefault: false),
-        );
+      if (dbCategoryId != null) {
+        print('🏷️  Found database category ID: $dbCategoryId');
         
-        if (matchingLoadedCategory.id.isNotEmpty) {
-          print('🏷️  Found matching loaded category: ${matchingLoadedCategory.name}');
-          return _mapCategoryNameToGoalCategory(matchingLoadedCategory.name);
+        // Use the service to map database ID to local category
+        final localCategory = _goalTrackerService.getLocalCategoryFromDbId(dbCategoryId);
+        if (localCategory != null) {
+          final goalCategory = _mapLocalCategoryToGoalCategory(localCategory);
+          print('🏷️  ✅ Mapped DB ID $dbCategoryId to: ${goalCategory.displayName}');
+          return goalCategory;
+        } else {
+          print('🏷️  ⚠️  Unknown database category ID: $dbCategoryId');
         }
       }
-      
-      // Fallback to name-based mapping if ID matching fails
-      print('🏷️  Using name-based mapping for: "$categoryName"');
-      return _mapCategoryNameToGoalCategory(categoryName);
     } else {
-      print('🏷️  No API categories found, using fallback logic');
-      return _fallbackCategoryFromGoalName(goalName);
+      print('🏷️  No existingCategorys found, using fallback logic');
     }
-  }
-  
-  /// Map category name to GoalCategory enum
-  GoalCategory _mapCategoryNameToGoalCategory(String categoryName) {
-    final name = categoryName.toLowerCase().trim();
     
-    // Map API category names to GoalCategory enum with exact and fuzzy matching
-    if (name == 'career' || name.contains('work') || name.contains('job') || name.contains('business')) {
-      print('🏷️  Mapped to: Career');
-      return GoalCategory.career;
-    } else if (name == 'health' || name.contains('fitness') || name.contains('wellness') || name.contains('exercise')) {
-      print('🏷️  Mapped to: Health');
-      return GoalCategory.health;
-    } else if (name == 'love' || name.contains('relationship') || name.contains('romance') || name.contains('dating') || name.contains('marriage')) {
-      print('🏷️  Mapped to: Relationships (Love)');
-      return GoalCategory.relationships;
-    } else if (name == 'money' || name.contains('financial') || name.contains('finance') || name.contains('wealth') || name.contains('income') || name.contains('saving')) {
-      print('🏷️  Mapped to: Financial (Money)');
-      return GoalCategory.financial;
-    } else if (name == 'spiritual' || name.contains('meditation') || name.contains('mindful') || name.contains('zen') || name.contains('soul')) {
-      print('🏷️  Mapped to: Spiritual');
-      return GoalCategory.spiritual;
-    } else if (name == 'personal' || name.contains('self') || name.contains('growth') || name.contains('development')) {
-      print('🏷️  Mapped to: Personal');
-      return GoalCategory.personal;
-    } else {
-      print('🏷️  No specific match for "$name", defaulting to Personal');
-      return GoalCategory.personal;
+    // Fallback to goal name analysis if no categories found
+    return _fallbackCategoryFromGoalName(goalName);
+  }
+
+  /// Map local category to GoalCategory enum
+  GoalCategory _mapLocalCategoryToGoalCategory(GoalTrackerCategory localCategory) {
+    switch (localCategory.name.toLowerCase()) {
+      case 'career':
+        return GoalCategory.career;
+      case 'health':
+        return GoalCategory.health;
+      case 'love':
+        return GoalCategory.relationships; // Note: relationships maps to love
+      case 'money':
+        return GoalCategory.financial; // Note: financial maps to money
+      case 'personal':
+        return GoalCategory.personal;
+      case 'spiritual':
+        return GoalCategory.spiritual;
+      default:
+        return GoalCategory.personal; // Default fallback
     }
   }
 
@@ -1015,7 +1003,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       
       print('📋 API Call Parameters:');
       print('   goalName: "$title"');
-      print('   goalStatusTypeId: 1');
+      print('   goalStatusTypeId: ${GoalStatusTypes.open} (${GoalStatusTypes.open.goalStatusDisplayName})');
       print('   startDate: ${DateTime.now().toIso8601String()}');
       print('   endDate: ${targetDate.toIso8601String()}');
       
@@ -1025,14 +1013,22 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       print('🔍 Using authenticated user ID: $userId');
       print('🔍 User info: ${currentUser?.firstName} ${currentUser?.lastName} (${currentUser?.userName})');
       
-      // Create goal tracker via API
-      // Use status type 1 for "Active" status (required field, cannot be 0 or null)
+      // Get category ID for the selected category (simple local mapping) 
+      int? categoryId;
+      if (category != GoalCategory.all) {
+        print('🏷️  Getting category ID for: ${category.displayName}');
+        categoryId = await _goalTrackerService.getCategoryIdFromLocalEnum(category.name);
+        print('🏷️  Found category ID: $categoryId for ${category.displayName}');
+      }
+      
+      // Create goal tracker via API (simple, no complex associations)
       final result = await _goalTrackerService.createGoalTracker(
         goalName: title,
-        goalStatusTypeId: 1, // Active status (required, cannot be empty)
+        goalStatusTypeId: GoalStatusTypes.open,
         startDate: DateTime.now(),
         endDate: targetDate,
         userId: userId,
+        categoryId: categoryId, // Simple single category ID for local handling
       );
 
       print('📡 Create goal API response:');
@@ -1051,18 +1047,10 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       }
 
       if (result.isSuccess && result.data != null) {
-        print('✅ Goal created successfully: ${result.message}');
-        
-        // Now associate the goal with the appropriate category
-        final createdGoal = result.data!;
-        final goalId = createdGoal.goalTrackerId;
-        
-        if (goalId != null) {
-          await _associateGoalWithCategory(goalId, category);
-        }
+        print('✅ Goal created successfully (category $categoryId handled locally): ${result.message}');
         
         // Reload goals to get the updated list
-        print('🔄 Reloading goals after creation and category association...');
+        print('🔄 Reloading goals after creation...');
         await _loadGoals();
       } else {
         print('❌ Failed to create goal via API: ${result.message}');
@@ -1506,39 +1494,6 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('✅ Goal created locally: ${newGoal.title}');
   }
 
-  /// Associate a goal with the appropriate default category
-  Future<void> _associateGoalWithCategory(int goalId, GoalCategory category) async {
-    print('🏷️  Associating goal $goalId with category: ${category.displayName}');
-    
-    try {
-      // Get the API category name for this UI category
-      final apiCategoryName = _getApiCategoryNameFromGoalCategory(category);
-      print('🏷️  Looking up category ID for: "$apiCategoryName"');
-      
-      // Get the category ID from the service
-      final categoryId = await _goalTrackerService.getDefaultCategoryIdByName(apiCategoryName);
-      
-      if (categoryId != null) {
-        print('🏷️  Found category ID: $categoryId for "$apiCategoryName"');
-        
-        // Associate the goal with the category
-        final associationResult = await _goalTrackerService.associateGoalWithCategory(
-          goalTrackerId: goalId,
-          categoryId: categoryId,
-        );
-        
-        if (associationResult.isSuccess) {
-          print('✅ Successfully associated goal $goalId with category $categoryId');
-        } else {
-          print('❌ Failed to associate goal with category: ${associationResult.message}');
-        }
-      } else {
-        print('❌ Could not find category ID for: "$apiCategoryName"');
-      }
-    } catch (e) {
-      print('❌ Exception associating goal with category: $e');
-    }
-  }
 
   /// Get API category name from GoalCategory enum
   String _getApiCategoryNameFromGoalCategory(GoalCategory category) {
@@ -1575,11 +1530,11 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       // Check if this goal has no API categories
       if (apiGoal.existingCategorys == null || apiGoal.existingCategorys!.isEmpty) {
         associationsAttempted++;
-        print('🏷️  Goal "${apiGoal.goalTrackerName}" has no categories, attempting to associate...');
+        print('🏷️  Goal "${apiGoal.goalTrackerName}" has no categories');
+        print('⚠️  Note: Goals should now be created with categories via newGoalTrackerCategoryModels');
         
-        if (apiGoal.goalTrackerId != null) {
-          await _associateGoalWithCategory(apiGoal.goalTrackerId!, convertedGoal.category);
-        }
+        // TODO: Consider updating existing goals without categories
+        // This would require a separate update API call with categoryIds
       }
     }
     
@@ -1596,29 +1551,29 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('\n🧪 Testing goal creation with different parameters...');
     
     try {
-      // Test with minimal parameters
-      print('Test 1: Minimal parameters');
+      // Test with correct Open status
+      print('Test 1: Using GoalStatusTypes.open');
       final testResult1 = await _goalTrackerService.createGoalTracker(
-        goalName: 'Test Goal - Minimal',
-        goalStatusTypeId: 1,
+        goalName: 'Test Goal - Open Status',
+        goalStatusTypeId: GoalStatusTypes.open,
         userId: 1,
       );
       print('   Result: ${testResult1.isSuccess} - ${testResult1.message}');
       
-      // Test with different user ID
-      print('Test 2: Different user ID');
+      // Test with Completed status
+      print('Test 2: Using GoalStatusTypes.completed');
       final testResult2 = await _goalTrackerService.createGoalTracker(
-        goalName: 'Test Goal - User 0',
-        goalStatusTypeId: 1,
-        userId: 0, // Try user ID 0
+        goalName: 'Test Goal - Completed Status',
+        goalStatusTypeId: GoalStatusTypes.completed,
+        userId: 1,
       );
       print('   Result: ${testResult2.isSuccess} - ${testResult2.message}');
       
-      // Test with different status type
-      print('Test 3: Different status type');
+      // Test with Abandoned status
+      print('Test 3: Using GoalStatusTypes.abandoned');
       final testResult3 = await _goalTrackerService.createGoalTracker(
-        goalName: 'Test Goal - Status 0',
-        goalStatusTypeId: 0, // Try status type 0
+        goalName: 'Test Goal - Abandoned Status',
+        goalStatusTypeId: GoalStatusTypes.abandoned,
         userId: 1,
       );
       print('   Result: ${testResult3.isSuccess} - ${testResult3.message}');
