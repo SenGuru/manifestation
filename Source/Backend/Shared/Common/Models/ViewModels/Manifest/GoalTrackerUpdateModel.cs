@@ -1,14 +1,15 @@
 #pragma warning disable CS0108,SA1502,S4015, SA1025
 using System;
+using System.Collections.Generic;
 using Manifest.Common.Models.DB;
 
 namespace Manifest.Common.Models.ViewModels
 {
     public class GoalTrackerUpdateModel : GoalTracker
     {
-        //public List<GoalTrackerXYZZYXCreateModel> NewGoalTrackerXYZZYXModels { get; set; }
-        //public List<GoalTrackerXYZZYXUpdateModel> ExistingGoalTrackerXYZZYXModels { get; set; }
-        //protected long CompanyId { get { return base.CompanyId; } set { base.CompanyId = value; } }
+        public List<GoalTrackerCategoryCreateModel> NewGoalTrackerCategoryModels { get; set; }
+
+        public List<GoalTrackerCategoryUpdateModel> ExistingGoalTrackerCategoryModels { get; set; }
 
         protected bool IsDeleted { get { return base.IsDeleted; } set { base.IsDeleted = value; } }
 

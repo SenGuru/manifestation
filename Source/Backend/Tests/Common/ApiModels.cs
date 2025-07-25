@@ -11193,6 +11193,10 @@ namespace Manifest.Tests.Common
             UserId = userId;
         }
 
+        [JsonPropertyName("newGoalTrackerCategoryModels")]
+        public List<GoalTrackerCategoryCreateModel> NewGoalTrackerCategoryModels {set; get;}
+        [JsonPropertyName("existingGoalTrackerCategoryModels")]
+        public List<GoalTrackerCategoryUpdateModel> ExistingGoalTrackerCategoryModels {set; get;}
         [JsonPropertyName("goalTrackerName")]
         public String GoalTrackerName {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
@@ -11213,6 +11217,8 @@ namespace Manifest.Tests.Common
         public GoalTrackerCreateModel GetCopy()
         {
             var obj = new GoalTrackerCreateModel();
+            obj.NewGoalTrackerCategoryModels = NewGoalTrackerCategoryModels;
+            obj.ExistingGoalTrackerCategoryModels = ExistingGoalTrackerCategoryModels;
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
             obj.GoalTrackerStartDate = GoalTrackerStartDate;
@@ -11225,6 +11231,8 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string NewGoalTrackerCategoryModels__Name = "NewGoalTrackerCategoryModels";
+        public const string ExistingGoalTrackerCategoryModels__Name = "ExistingGoalTrackerCategoryModels";
         public const string GoalTrackerName__Name = "GoalTrackerName";
         public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
         public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
@@ -11272,6 +11280,10 @@ namespace Manifest.Tests.Common
             UserId = userId;
         }
 
+        [JsonPropertyName("newGoalTrackerCategoryModels")]
+        public List<GoalTrackerCategoryCreateModel> NewGoalTrackerCategoryModels {set; get;}
+        [JsonPropertyName("existingGoalTrackerCategoryModels")]
+        public List<GoalTrackerCategoryUpdateModel> ExistingGoalTrackerCategoryModels {set; get;}
         [JsonPropertyName("goalTrackerId")]
         public Int64 GoalTrackerId {set; get;}
         [JsonPropertyName("goalTrackerName")]
@@ -11294,6 +11306,8 @@ namespace Manifest.Tests.Common
         public GoalTrackerUpdateModel GetCopy()
         {
             var obj = new GoalTrackerUpdateModel();
+            obj.NewGoalTrackerCategoryModels = NewGoalTrackerCategoryModels;
+            obj.ExistingGoalTrackerCategoryModels = ExistingGoalTrackerCategoryModels;
             obj.GoalTrackerId = GoalTrackerId;
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
@@ -11307,6 +11321,8 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string NewGoalTrackerCategoryModels__Name = "NewGoalTrackerCategoryModels";
+        public const string ExistingGoalTrackerCategoryModels__Name = "ExistingGoalTrackerCategoryModels";
         public const string GoalTrackerId__Name = "GoalTrackerId";
         public const string GoalTrackerName__Name = "GoalTrackerName";
         public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";

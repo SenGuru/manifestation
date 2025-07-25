@@ -18149,7 +18149,7 @@ namespace Manifest.Service.App
                         throw new Exception($"Unable to create Goal Tracker");
                     }
 
-                    //await CreateOrUpdateGoalTrackerDependentsAsync(goalTracker)
+                    await CreateOrUpdateGoalTrackerDependentsAsync(goalTracker);
 
                     /*if (ignoreCode)
                     {
@@ -18233,7 +18233,7 @@ namespace Manifest.Service.App
                         throw new RollbackException($"Unable to update Goal Tracker");
                     }
 
-                    //await CreateOrUpdateGoalTrackerDependentsAsync(goalTracker)
+                    await CreateOrUpdateGoalTrackerDependentsAsync(goalTracker);
 
                     await trx.CompleteAsync();
                 }
@@ -18627,7 +18627,52 @@ namespace Manifest.Service.App
             }
         }
 
+        public async Task CreateOrUpdateGoalTrackerDependentsAsync(GoalTrackerUpdateModel model)
+        {
+            if (model.NewGoalTrackerCategoryModels == null)
+                model.NewGoalTrackerCategoryModels = new List<GoalTrackerCategoryCreateModel>();
 
+            if (model.ExistingGoalTrackerCategoryModels == null)
+                model.ExistingGoalTrackerCategoryModels = new List<GoalTrackerCategoryUpdateModel>();
+
+            var dbExistingGoalTrackers = await manifestRepository.GetGoalTrackerCategorysByGoalTrackerIdAsync(model.GoalTrackerId);
+            if (!dbExistingGoalTrackers.IsNullOrEmpty())
+            {
+                var dbExistingGoalTrackerIds = dbExistingGoalTrackers.SelectToList(x => x.GoalTrackerCategoryId);
+                var modelExistingGoalTrackerIds = model.ExistingGoalTrackerCategoryModels.SelectToList(x => x.GoalTrackerCategoryId);
+
+                var CategoryItemsToDelete = dbExistingGoalTrackers.Where(x => !modelExistingGoalTrackerIds.Contains(x.GoalTrackerCategoryId));
+                foreach (var x in CategoryItemsToDelete)
+                {
+                    var result = await MarkGoalTrackerCategoryAsDeletedByIdAsync(x.GoalTrackerCategoryId);
+                    if (!result.IsSuccess)
+                    {
+                        throw new RollbackException(result);
+                    }
+                }
+
+                var CategoryItemsToUpdate = model.ExistingGoalTrackerCategoryModels.Where(x => dbExistingGoalTrackerIds.Contains(x.GoalTrackerCategoryId));
+                foreach (var x in CategoryItemsToUpdate)
+                {
+                    x.GoalTrackerId = model.GoalTrackerId;
+                    var result = await UpdateGoalTrackerCategoryAsync(x);
+                    if (!result.IsSuccess)
+                    {
+                        throw new RollbackException(result);
+                    }
+                }
+            }
+
+            foreach (var x in model.NewGoalTrackerCategoryModels)
+            {
+                x.GoalTrackerId = model.GoalTrackerId;
+                var result = await CreateGoalTrackerCategoryAsync(x);
+                if (!result.IsSuccess)
+                {
+                    throw new RollbackException(result);
+                }
+            }
+        }
 
         /*
         public async Task<ReturnModel<bool>> IsGoalTrackerWordOrPdfFileValidAsync(long goalTrackerId, bool isPdf)
@@ -18824,53 +18869,6 @@ namespace Manifest.Service.App
             catch (Exception ex)
             {
                 return log.ErrorAndReturnModel<bool>($"Unexpected error when clearing Goal Tracker File", ex);
-            }
-        }
-
-        public async Task CreateOrUpdateGoalTrackerDependentsAsync(GoalTrackerUpdateModel model)
-        {
-            if (model.NewGoalTrackerXYZZYXModels == null)
-                model.NewGoalTrackerXYZZYXModels = new List<GoalTrackerXYZZYXCreateModel>();
-
-            if (model.ExistingGoalTrackerXYZZYXModels == null)
-                model.ExistingGoalTrackerXYZZYXModels = new List<GoalTrackerXYZZYXUpdateModel>();
-
-            var dbExistingGoalTrackers = await manifestRepository.GetGoalTrackerXYZZYXsByGoalTrackerIdAsync(model.GoalTrackerId);
-            if (!dbExistingGoalTrackers.IsNullOrEmpty())
-            {
-                var dbExistingGoalTrackerIds = dbExistingGoalTrackers.SelectToList(x => x.GoalTrackerXYZZYXId);
-                var modelExistingGoalTrackerIds = model.ExistingGoalTrackerXYZZYXModels.SelectToList(x => x.GoalTrackerXYZZYXId);
-
-                var xYZZYXItemsToDelete = dbExistingGoalTrackers.Where(x => !modelExistingGoalTrackerIds.Contains(x.GoalTrackerXYZZYXId));
-                foreach (var x in xYZZYXItemsToDelete)
-                {
-                    var result = await MarkGoalTrackerXYZZYXAsDeletedByIdAsync(x.GoalTrackerXYZZYXId);
-                    if (!result.IsSuccess)
-                    {
-                        throw new RollbackException(result);
-                    }
-                }
-
-                var xYZZYXItemsToUpdate = model.ExistingGoalTrackerXYZZYXModels.Where(x => dbExistingGoalTrackerIds.Contains(x.GoalTrackerXYZZYXId));
-                foreach (var x in xYZZYXItemsToUpdate)
-                {
-                    x.GoalTrackerId = model.GoalTrackerId;
-                    var result = await UpdateGoalTrackerXYZZYXAsync(x);
-                    if (!result.IsSuccess)
-                    {   
-                        throw new RollbackException(result);
-                    }
-                }
-            }
-
-            foreach (var x in model.NewGoalTrackerXYZZYXModels)
-            {
-                x.GoalTrackerId = model.GoalTrackerId;
-                var result = await CreateGoalTrackerXYZZYXAsync(x);
-                if (!result.IsSuccess)
-                {
-                    throw new RollbackException(result);
-                }
             }
         }
 
