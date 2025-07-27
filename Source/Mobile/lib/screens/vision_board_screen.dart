@@ -110,7 +110,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   /// Trigger final sync when user finishes using vision board
   void _triggerFinalSync() {
     // Force immediate sync when user exits vision board
-    VisionBoardXMLManager.uploadXMLToDatabase().then((success) {
+    VisionBoardXMLManager.uploadVisionBoardXMLToDatabase(currentBoard.id, userId: 1).then((success) {
       if (success) {
         print('✅ Final sync completed - vision board data uploaded');
       } else {
@@ -120,7 +120,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       print('❌ Final sync error: $error');
     });
   }
-  
+
   /// End session tracking for vision board
   Future<void> _endSessionTracking() async {
     if (_sessionStarted) {
@@ -1290,7 +1290,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       print('✅ Vision board saved to local XML: ${currentBoard.title}');
       
       // Trigger immediate sync after manual save
-      VisionBoardXMLManager.uploadXMLToDatabase().then((success) {
+      VisionBoardXMLManager.uploadVisionBoardXMLToDatabase(currentBoard.id, userId: 1).then((success) {
         if (success) {
           print('✅ Immediate sync after save completed');
         }

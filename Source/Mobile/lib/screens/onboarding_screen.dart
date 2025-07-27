@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import 'login_screen.dart';
 import 'signup_page.dart';
@@ -324,12 +325,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   Widget _buildActionButtons() {
     return Column(
       children: [
-        // Continue button
+        // Get Started button (Sign Up)
         Container(
           width: double.infinity,
           height: 56.h,
           child: ElevatedButton(
-            onPressed: _navigateToPhoneAuth,
+            onPressed: _navigateToSignUp,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -346,13 +347,20 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   colors: AppColors.affirmationGradient,
                 ),
                 borderRadius: BorderRadius.circular(16.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                    blurRadius: 20.r,
+                    offset: Offset(0, 10.h),
+                  ),
+                ],
               ),
               child: Container(
                 width: double.infinity,
                 height: 56.h,
                 alignment: Alignment.center,
                 child: Text(
-                  'Continue',
+                  'Get Started',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
@@ -364,28 +372,30 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           ),
         ),
         
-        SizedBox(height: 24.h),
+        SizedBox(height: 16.h),
         
-        // Sign in link
-        Center(
-          child: GestureDetector(
-            onTap: _navigateToLogin,
-            child: RichText(
-              text: TextSpan(
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppColors.textMedium,
-                ),
-                children: [
-                  TextSpan(text: "Already have an account? "),
-                  TextSpan(
-                    text: 'Sign In',
-                    style: TextStyle(
-                      color: AppColors.affirmationGradient[0],
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
+        // Sign In button
+        Container(
+          width: double.infinity,
+          height: 56.h,
+          child: ElevatedButton(
+            onPressed: _navigateToLogin,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.cardBackground,
+              shadowColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              side: BorderSide(
+                color: AppColors.textMedium.withOpacity(0.3),
+              ),
+            ),
+            child: Text(
+              'Sign In',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textLight,
               ),
             ),
           ),
@@ -429,8 +439,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
   }
 
-  void _navigateToPhoneAuth() {
-    // For now, we'll navigate to sign up, but you can change this to phone auth
+
+  Future<void> _navigateToSignUp() async {
+    // Mark initial onboarding as seen
+    await _markInitialOnboardingCompleted();
+    
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -449,26 +462,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
     );
   }
 
-  void _navigateToSignUp() {
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => SignUpScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideTransition(
-            position: animation.drive(
-              Tween(begin: Offset(1.0, 0.0), end: Offset.zero)
-                  .chain(CurveTween(curve: Curves.easeInOut)),
-            ),
-            child: child,
-          );
-        },
-        transitionDuration: Duration(milliseconds: 300),
-      ),
-    );
-  }
-
-  void _navigateToLogin() {
+  Future<void> _navigateToLogin() async {
+    // Mark initial onboarding as seen
+    await _markInitialOnboardingCompleted();
+    
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -485,5 +482,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         transitionDuration: Duration(milliseconds: 300),
       ),
     );
+  }
+
+  Future<void> _markInitialOnboardingCompleted() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('initial_onboarding_completed', true);
+    } catch (e) {
+      print('Error marking initial onboarding as completed: $e');
+    }
   }
 }

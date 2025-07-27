@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
 import '../services/unified_auth_service.dart';
+import '../widgets/stylish_loading.dart';
 import 'onboarding_screen.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
+import 'post_signup_onboarding.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -86,8 +89,9 @@ class _SplashScreenState extends State<SplashScreen>
       
       await Future.delayed(Duration(milliseconds: 800)); // Minimum splash time
       
-      // Check if user has seen onboarding
+      // Check if user has seen initial onboarding and post-signup onboarding
       final hasSeenOnboarding = await _hasSeenOnboarding();
+      final hasCompletedPostSignupOnboarding = await _hasCompletedPostSignupOnboarding();
       
       setState(() {
         _statusMessage = hasSeenOnboarding ? 'Ready to go!' : 'Welcome!';
@@ -96,8 +100,12 @@ class _SplashScreenState extends State<SplashScreen>
       await Future.delayed(Duration(milliseconds: 500));
       
       if (isLoggedIn) {
-        // User is already logged in, go directly to home
-        _navigateToHome();
+        // User is logged in, check if they need post-signup onboarding
+        if (!hasCompletedPostSignupOnboarding) {
+          _navigateToPostSignupOnboarding();
+        } else {
+          _navigateToHome();
+        }
       } else if (hasSeenOnboarding) {
         _navigateToLogin();
       } else {
@@ -119,9 +127,21 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<bool> _hasSeenOnboarding() async {
-    // TODO: Check SharedPreferences for onboarding completion
-    // For now, always show onboarding for new installs
-    return false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool('initial_onboarding_completed') ?? false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<bool> _hasCompletedPostSignupOnboarding() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool('post_signup_onboarding_completed') ?? false;
+    } catch (e) {
+      return false;
+    }
   }
 
   void _navigateToOnboarding() {
@@ -169,6 +189,18 @@ class _SplashScreenState extends State<SplashScreen>
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => HomeScreen(),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeTransition(opacity: animation, child: child);
+        },
+        transitionDuration: Duration(milliseconds: 500),
+      ),
+    );
+  }
+
+  void _navigateToPostSignupOnboarding() {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => PostSignupOnboardingScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
@@ -259,17 +291,8 @@ class _SplashScreenState extends State<SplashScreen>
               child: Column(
                 children: [
                   if (_isInitializing) ...[
-                    // Loading indicator
-                    SizedBox(
-                      width: 24.w,
-                      height: 24.h,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                          AppColors.affirmationGradient[0],
-                        ),
-                      ),
-                    ),
+                    // Stylish loading indicator
+                    CompactStylishLoading(size: 40.w),
                     
                     SizedBox(height: 16.h),
                     

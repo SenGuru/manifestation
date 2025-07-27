@@ -62,6 +62,12 @@ class AffirmationCacheService {
     return DateTime.now().difference(_lastUpdated!).inMinutes;
   }
 
+  /// Check if we should fetch fresh data
+  /// Returns true if cache is empty OR expired
+  bool get shouldFetchFresh {
+    return !hasCachedData || !isCacheValid;
+  }
+
   /// Save categories to cache
   Future<void> saveCategories(List<AffirmationCategory> categories) async {
     await initialize();

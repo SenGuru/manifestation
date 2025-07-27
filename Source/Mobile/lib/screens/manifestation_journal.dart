@@ -7,6 +7,7 @@ import 'package:fun/constants/colors.dart';
 import 'package:fun/models/mood_selector.dart';
 import 'package:fun/screens/calendar_view_screen.dart';
 import 'package:fun/services/daily_journal_service.dart';
+import 'package:fun/services/guided_tour_service.dart';
 import 'package:uuid/uuid.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
@@ -52,6 +53,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     
     // Check for existing entry for today
     _checkForExistingEntry();
+    
+    // Show guided tour after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showGuidedTourIfNeeded();
+    });
+  }
+
+  Future<void> _showGuidedTourIfNeeded() async {
+    final tourService = GuidedTourService();
+    await tourService.showTourIfNeeded(
+      context,
+      GuidedTourService.journalTourKey,
+      tourService.getJournalTourSteps(),
+    );
   }
 
   @override

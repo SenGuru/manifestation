@@ -1,8 +1,8 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
+import '../services/guided_tour_service.dart';
 import '../utils/vision_board_xml_manager.dart';
 import 'vision_board_screen.dart';
 import '../constants/colors.dart';
@@ -17,11 +17,30 @@ class VisionBoardHome extends StatefulWidget {
 class _VisionBoardHomeState extends State<VisionBoardHome> {
   List<VisionBoard> visionBoards = [];
   bool isLoading = false;
+  final GlobalKey _addButtonKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _loadVisionBoards();
+    
+    // Show guided tour after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showGuidedTourIfNeeded();
+    });
+  }
+
+  Future<void> _showGuidedTourIfNeeded() async {
+    print('🎯 🚀 Vision Board: _showGuidedTourIfNeeded called');
+    print('🎯 🚀 Vision Board context: $context');
+    final tourService = GuidedTourService();
+    print('🎯 🚀 Vision Board: About to call showTourIfNeeded');
+    await tourService.showTourIfNeeded(
+      context,
+      GuidedTourService.visionBoardTourKey,
+      tourService.getVisionBoardTourSteps(),
+    );
+    print('🎯 🚀 Vision Board: showTourIfNeeded completed');
   }
 
 
@@ -1014,8 +1033,8 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         ),
       );
       
-      // Upload local XML to database
-      final uploadSuccess = await VisionBoardXMLManager.uploadXMLToDatabase();
+      // Upload all local XML files to database
+      final uploadSuccess = await VisionBoardXMLManager.uploadAllXMLToDatabase(userId: 1);
       
       if (uploadSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1051,7 +1070,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         ),
       );
       
-      final success = await VisionBoardXMLManager.uploadXMLToDatabase();
+      final success = await VisionBoardXMLManager.uploadAllXMLToDatabase(userId: 1);
       
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1087,7 +1106,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         ),
       );
       
-      final success = await VisionBoardXMLManager.downloadXMLFromDatabase(1); // Use user ID 1
+      final success = await VisionBoardXMLManager.downloadAllXMLFromDatabase(1); // Use user ID 1
       
       if (success) {
         // Reload vision boards from the new XML file

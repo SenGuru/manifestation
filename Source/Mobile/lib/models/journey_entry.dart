@@ -6,7 +6,7 @@ class JournalEntry {
   final String id;
   final DateTime date;
   final Mood mood;
-  final List<String> gratitudes; // Now supports up to 5 gratitudes
+  final List<String> gratitudes;
   final String reflection;
   final String intention;
   final DateTime createdAt;

@@ -9,10 +9,7 @@ import '../constants/category_icons.dart';
 import '../utils/color_utils.dart';
 import '../services/daily_affirmations_service.dart';
 import '../services/usage_analytics_service.dart';
-import '../services/app_lifecycle_manager.dart';
-import '../services/app_event_bus.dart';
-import '../widgets/sync_status_widget.dart';
-import '../widgets/sync_refresh_wrapper.dart';
+import '../services/guided_tour_service.dart';
 import '../models/analytics_models.dart';
 
 class DailyAffirmationsScreen extends StatefulWidget {
@@ -47,6 +44,20 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     _initializeTTS();
     _startSessionTracking();
     _startAnalyticsSession();
+    
+    // Show guided tour after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showGuidedTourIfNeeded();
+    });
+  }
+
+  Future<void> _showGuidedTourIfNeeded() async {
+    final tourService = GuidedTourService();
+    await tourService.showTourIfNeeded(
+      context,
+      GuidedTourService.affirmationsTourKey,
+      tourService.getAffirmationsTourSteps(),
+    );
   }
   
   void _initializeService() {

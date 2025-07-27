@@ -54,11 +54,26 @@ class DailyAffirmationsService {
     ]
   };
 
+  bool _isInitialized = false;
+
+  void _ensureInitialized() {
+    if (!_isInitialized) {
+      _apiClient = Manifestation.create(
+        baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+        interceptors: [_AuthInterceptor()],
+      );
+      _isInitialized = true;
+    }
+  }
+
   void initialize({String? baseUrl}) {
-    _apiClient = Manifestation.create(
-      baseUrl: Uri.parse(baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'),
-      interceptors: [_AuthInterceptor()],
-    );
+    if (!_isInitialized) {
+      _apiClient = Manifestation.create(
+        baseUrl: Uri.parse(baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'),
+        interceptors: [_AuthInterceptor()],
+      );
+      _isInitialized = true;
+    }
   }
 
   // ========================= DEFAULT CATEGORIES =========================
@@ -411,14 +426,21 @@ class DailyAffirmationsService {
   Future<AffirmationResult<List<AffirmationCategoryData>>> getAllAffirmationCategories({
     bool forceRefresh = false,
   }) async {
+    _ensureInitialized();
     try {
       await _cacheService.initialize();
+      
+      // Check if cache is completely empty (user just logged in)
+      if (!_cacheService.hasCachedData) {
+        print('📭 No cached data found - fresh login detected, loading from API...');
+        return await _loadFreshCategories();
+      }
       
       // Check cache first (unless force refresh is requested)
       if (!forceRefresh && _cacheService.isCacheValid) {
         final cachedData = _cacheService.cachedCategories;
         if (cachedData != null) {
-          print('💾 Using cached affirmation data (${_cacheService.cacheAgeMinutes}min old)');
+          print('💾 Using valid cached affirmation data (${_cacheService.cacheAgeMinutes}min old)');
           return AffirmationResult.success(
             data: _convertToAffirmationCategoryData(cachedData),
             message: 'Categories loaded from cache',

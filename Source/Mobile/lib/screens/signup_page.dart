@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
-import '../services/auth_service.dart';
+import '../services/unified_auth_service.dart';
 import 'home_screen.dart';
+import 'post_signup_onboarding.dart';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -98,41 +100,33 @@ class _SignUpScreenState extends State<SignUpScreen>
           opacity: _fadeAnimation,
           child: SlideTransition(
             position: _slideAnimation,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20.h),
-                    
-                    // Back button
-                    _buildBackButton(),
-                    
-                    SizedBox(height: 20.h),
-                    
-                    // Header
-                    _buildHeader(),
-                    
-                    SizedBox(height: 40.h),
-                    
-                    // Sign up form
-                    _buildSignUpForm(),
-                    
-                    SizedBox(height: 24.h),
-                    
-                    // Social sign up options
-                    _buildSocialSignUp(),
-                    
-                    SizedBox(height: 24.h),
-                    
-                    // Login link
-                    _buildLoginLink(),
-                    
-                    SizedBox(height: 40.h),
-                  ],
-                ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 20.h),
+                  
+                  // Back button
+                  _buildBackButton(),
+                  
+                  SizedBox(height: 16.h),
+                  
+                  // Header
+                  _buildHeader(),
+                  
+                  SizedBox(height: 24.h),
+                  
+                  // Sign up form
+                  Expanded(
+                    child: _buildSignUpForm(),
+                  ),
+                  
+                  // Login link
+                  _buildLoginLink(),
+                  
+                  SizedBox(height: 20.h),
+                ],
               ),
             ),
           ),
@@ -188,80 +182,82 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   Widget _buildSignUpForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        children: [
-          // Name field
-          _buildTextField(
-            controller: _nameController,
-            label: 'Full Name',
-            hint: 'Enter your full name',
-            icon: Icons.person_outline,
-            validator: AuthValidation.validateDisplayName,
-          ),
-          
-          SizedBox(height: 20.h),
-          
-          // Email field
-          _buildTextField(
-            controller: _emailController,
-            label: 'Email',
-            hint: 'Enter your email',
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-            validator: AuthValidation.validateEmail,
-          ),
-          
-          SizedBox(height: 20.h),
-          
-          // Password field
-          _buildTextField(
-            controller: _passwordController,
-            label: 'Password',
-            hint: 'Create a strong password',
-            icon: Icons.lock_outline,
-            isPassword: true,
-            validator: AuthValidation.validatePassword,
-          ),
-          
-          // Password strength indicator
-          if (_passwordController.text.isNotEmpty) ...[
-            SizedBox(height: 12.h),
-            _buildPasswordStrengthIndicator(),
-          ],
-          
-          SizedBox(height: 20.h),
-          
-          // Confirm password field
-          _buildTextField(
-            controller: _confirmPasswordController,
-            label: 'Confirm Password',
-            hint: 'Confirm your password',
-            icon: Icons.lock_outline,
-            isPassword: true,
-            isConfirmPassword: true,
-            validator: (value) => AuthValidation.validateConfirmPassword(
-              _passwordController.text,
-              value,
+    return SingleChildScrollView(
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            // Name field
+            _buildTextField(
+              controller: _nameController,
+              label: 'Full Name',
+              hint: 'Enter your full name',
+              icon: Icons.person_outline,
+              validator: AuthValidation.validateDisplayName,
             ),
-          ),
-          
-          SizedBox(height: 24.h),
-          
-          // Terms and conditions
-          _buildTermsCheckbox(),
-          
-          SizedBox(height: 16.h),
-          
-          // Newsletter subscription
-          _buildNewsletterCheckbox(),
-          
-          SizedBox(height: 32.h),
-          
-          // Sign up button
-          _buildSignUpButton(),
-        ],
+            
+            SizedBox(height: 16.h),
+            
+            // Email field
+            _buildTextField(
+              controller: _emailController,
+              label: 'Email',
+              hint: 'Enter your email',
+              icon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              validator: AuthValidation.validateEmail,
+            ),
+            
+            SizedBox(height: 16.h),
+            
+            // Password field
+            _buildTextField(
+              controller: _passwordController,
+              label: 'Password',
+              hint: 'Create a strong password',
+              icon: Icons.lock_outline,
+              isPassword: true,
+              validator: AuthValidation.validatePassword,
+            ),
+            
+            // Password strength indicator
+            if (_passwordController.text.isNotEmpty) ...[
+              SizedBox(height: 8.h),
+              _buildPasswordStrengthIndicator(),
+            ],
+            
+            SizedBox(height: 16.h),
+            
+            // Confirm password field
+            _buildTextField(
+              controller: _confirmPasswordController,
+              label: 'Confirm Password',
+              hint: 'Confirm your password',
+              icon: Icons.lock_outline,
+              isPassword: true,
+              isConfirmPassword: true,
+              validator: (value) => AuthValidation.validateConfirmPassword(
+                _passwordController.text,
+                value,
+              ),
+            ),
+            
+            SizedBox(height: 20.h),
+            
+            // Terms and conditions
+            _buildTermsCheckbox(),
+            
+            SizedBox(height: 12.h),
+            
+            // Newsletter subscription
+            _buildNewsletterCheckbox(),
+            
+            SizedBox(height: 24.h),
+            
+            // Sign up button
+            _buildSignUpButton(),
+          ],
+        ),
       ),
     );
   }
@@ -544,14 +540,7 @@ class _SignUpScreenState extends State<SignUpScreen>
           child: Container(
             alignment: Alignment.center,
             child: _isLoading
-                ? SizedBox(
-                    width: 24.w,
-                    height: 24.h,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                    ),
-                  )
+                ? CompactStylishLoading(size: 24.w)
                 : Text(
                     'Create Account',
                     style: TextStyle(
@@ -566,114 +555,6 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-  Widget _buildSocialSignUp() {
-    return Column(
-      children: [
-        // Divider
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                height: 1,
-                color: AppColors.textMedium.withOpacity(0.3),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                'Or sign up with',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.textMedium,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: 1,
-                color: AppColors.textMedium.withOpacity(0.3),
-              ),
-            ),
-          ],
-        ),
-        
-        SizedBox(height: 24.h),
-        
-        // Social buttons
-        Row(
-          children: [
-            Expanded(
-              child: _buildSocialButton(
-                'Google',
-                Icons.g_mobiledata,
-                Colors.white,
-                Colors.black87,
-                () => _handleSocialSignUp(AuthProvider.google),
-              ),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: _buildSocialButton(
-                'Apple',
-                Icons.apple,
-                Colors.black,
-                Colors.white,
-                () => _handleSocialSignUp(AuthProvider.apple),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialButton(
-    String label,
-    IconData icon,
-    Color backgroundColor,
-    Color textColor,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 56.h,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.2),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
-              blurRadius: 8.r,
-              offset: Offset(0, 4.h),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: textColor,
-              size: 24.sp,
-            ),
-            SizedBox(width: 12.w),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildLoginLink() {
     return Center(
@@ -718,13 +599,15 @@ class _SignUpScreenState extends State<SignUpScreen>
       final firstName = nameParts.isNotEmpty ? nameParts.first : '';
       final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
-      final authService = AuthService();
+      final authService = UnifiedAuthService();
       
       final result = await authService.createAccount(
         email: _emailController.text.trim(),
         firstName: firstName,
         lastName: lastName,
         password: _passwordController.text.trim(),
+        captchaCode: 'dummy_captcha', // TODO: Add real captcha
+        rememberMe: true, // Remember new users by default
       );
 
       if (result.isSuccess) {
@@ -740,10 +623,10 @@ class _SignUpScreenState extends State<SignUpScreen>
           ),
         );
 
-        // Navigate directly to home screen
+        // Navigate to onboarding flow for new users
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
         );
       } else {
         _showErrorSnackBar(result.message);
@@ -876,10 +759,10 @@ class _SignUpScreenState extends State<SignUpScreen>
                       ),
                     );
 
-                    // Navigate to home screen
+                    // Navigate to onboarding flow
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                      MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
                     );
                   } catch (e) {
                     ScaffoldMessenger.of(context).showSnackBar(
@@ -909,14 +792,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                 ),
               ),
               child: isVerifying
-                  ? SizedBox(
-                      width: 20.w,
-                      height: 20.h,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                      ),
-                    )
+                  ? CompactStylishLoading(size: 20.w)
                   : Text(
                       'Verify',
                       style: TextStyle(
@@ -932,30 +808,6 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-  void _handleSocialSignUp(AuthProvider provider) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // TODO: Implement social sign up logic
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
-      
-      print('Signing up with ${provider.displayName}');
-      
-      // Navigate to home screen on success
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
-    } catch (e) {
-      _showErrorSnackBar('${provider.displayName} sign-up failed. Please try again.');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(

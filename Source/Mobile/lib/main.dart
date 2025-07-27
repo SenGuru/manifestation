@@ -5,8 +5,6 @@ import 'screens/splash_screen.dart';
 import 'constants/colors.dart';
 import 'services/unified_auth_service.dart';
 import 'services/vision_board_service.dart';
-import 'services/app_lifecycle_manager.dart';
-import 'utils/vision_board_xml_manager.dart';
 import 'widgets/session_activity_tracker.dart';
 
 void main() async {
@@ -18,13 +16,7 @@ void main() async {
   // Initialize VisionBoardService (this depends on auth being ready)
   await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
   
-  // Start periodic background sync for vision boards
-  VisionBoardXMLManager.startPeriodicSync();
-  
-  // Initialize universal sync service for all app data
-  AppLifecycleManager.instance.initialize();
-  
-  print('🚀 All services initialized, starting app with universal sync');
+  print('🚀 All services initialized, starting app with cache-only mode');
   
   runApp(ManifestationApp());
 }
@@ -37,8 +29,6 @@ class ManifestationApp extends StatefulWidget {
 class _ManifestationAppState extends State<ManifestationApp> {
   @override
   void dispose() {
-    // Clean up the lifecycle manager when app is disposed
-    AppLifecycleManager.instance.dispose();
     super.dispose();
   }
 

@@ -1,30 +1,26 @@
 import 'dart:io';
-import 'dart:convert';
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:xml/xml.dart';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
 
-/// XML Manager for Vision Board local storage and database sync
+/// XML Manager for Vision Board local storage
 /// 
 /// This handles:
 /// 1. Local XML file creation and updates
 /// 2. Converting VisionBoard models to/from XML
-/// 3. Database sync (upload/download XML files)
-/// 4. Incremental modifications (add/edit/delete elements)
+/// 3. Incremental modifications (add/edit/delete elements)
 class VisionBoardXMLManager {
   static bool _isWriting = false;
-  static Timer? _syncTimer;
-  static const String _xmlFileName = 'vision_boards.xml';
   static const String _imagesDirectory = 'vision_board_images';
   
-  /// Get the local XML file path
-  static Future<String> get _xmlFilePath async {
+  /// Get the local XML file path for a specific vision board
+  static Future<String> _getVisionBoardXmlFilePath(String visionBoardId) async {
     final directory = await getApplicationDocumentsDirectory();
-    return '${directory.path}/$_xmlFileName';
+    return '${directory.path}/visionboard_$visionBoardId.xml';
   }
+  
   
   /// Get the images directory path
   static Future<String> get _imagesDirectoryPath async {
@@ -57,34 +53,85 @@ class VisionBoardXMLManager {
   
   // ========================= LOCAL XML OPERATIONS =========================
   
-  /// Initialize XML file if it doesn't exist
+  /// Initialize vision boards directory (no need for single XML file)
   static Future<void> initializeXMLFile(int userId) async {
-    final filePath = await _xmlFilePath;
-    final file = File(filePath);
-    
-    if (!await file.exists()) {
-      print('📄 Creating new vision board XML file...');
-      final xmlDoc = _createEmptyXMLDocument(userId);
-      await file.writeAsString(xmlDoc.toXmlString(pretty: true));
-      print('✅ XML file created at: $filePath');
-    } else {
-      print('📄 XML file already exists at: $filePath');
+    try {
+      // Just ensure the directory exists for individual XML files
+      final directory = await getApplicationDocumentsDirectory();
+      final directoryPath = directory.path;
+      
+      // Create the main directory if it doesn't exist
+      final dir = Directory(directoryPath);
+      if (!await dir.exists()) {
+        await dir.create(recursive: true);
+      }
+      
+      print('📁 Vision board XML storage initialized at: $directoryPath');
+      print('📄 Individual XML files will be created as: visionboard_[ID].xml');
+      
+    } catch (e) {
+      print('❌ Error initializing XML storage: $e');
     }
   }
   
-  /// Create empty XML document structure
-  static XmlDocument _createEmptyXMLDocument(int userId) {
+  /// Create XML document for a single vision board
+  static XmlDocument _createVisionBoardXMLDocument(VisionBoard visionBoard, int userId) {
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0" encoding="UTF-8"');
     builder.element('VisionBoards', nest: () {
       builder.attribute('version', '1.0');
       builder.attribute('lastModified', DateTime.now().toUtc().toIso8601String());
       builder.attribute('userId', userId.toString());
+      
+      // We need to manually add the vision board content since we can't add XmlElement directly
+      builder.element('VisionBoard', nest: () {
+        builder.attribute('id', visionBoard.id);
+        builder.attribute('title', visionBoard.title);
+        builder.attribute('backgroundColor', '#${visionBoard.backgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2)}');
+        builder.attribute('createdAt', visionBoard.createdAt.toUtc().toIso8601String());
+        builder.attribute('updatedAt', visionBoard.updatedAt.toUtc().toIso8601String());
+        
+        builder.element('Elements', nest: () {
+          for (final element in visionBoard.elements) {
+            if (element is VisionBoardImageElement) {
+              builder.element('ImageElement', nest: () {
+                builder.attribute('id', element.id);
+                builder.attribute('x', element.position.dx.toString());
+                builder.attribute('y', element.position.dy.toString());
+                builder.attribute('width', element.size.width.toString());
+                builder.attribute('height', element.size.height.toString());
+                builder.attribute('rotation', element.rotation.toString());
+                builder.attribute('zIndex', element.zIndex.toString());
+                builder.attribute('imagePath', element.imagePath);
+                if (element.imageUrl != null) {
+                  builder.attribute('imageUrl', element.imageUrl!);
+                }
+                builder.attribute('fit', element.fit.name);
+              });
+            } else if (element is VisionBoardTextElement) {
+              builder.element('TextElement', nest: () {
+                builder.attribute('id', element.id);
+                builder.attribute('x', element.position.dx.toString());
+                builder.attribute('y', element.position.dy.toString());
+                builder.attribute('width', element.size.width.toString());
+                builder.attribute('height', element.size.height.toString());
+                builder.attribute('rotation', element.rotation.toString());
+                builder.attribute('zIndex', element.zIndex.toString());
+                builder.attribute('text', element.text);
+                builder.attribute('fontSize', (element.style.fontSize ?? 16.0).toString());
+                builder.attribute('fontWeight', (element.style.fontWeight?.index ?? 3).toString());
+                builder.attribute('color', '#${(element.style.color?.value ?? 0xFF000000).toRadixString(16).padLeft(8, '0').substring(2)}');
+                builder.attribute('textAlign', element.alignment.name);
+              });
+            }
+          }
+        });
+      });
     });
     return builder.buildDocument();
   }
   
-  /// Save a vision board to local XML file
+  /// Save a vision board to its own individual XML file
   static Future<void> saveVisionBoardToXML(VisionBoard visionBoard, int userId) async {
     // Wait if another write operation is in progress
     while (_isWriting) {
@@ -93,7 +140,7 @@ class VisionBoardXMLManager {
     
     _isWriting = true;
     try {
-      print('💾 Saving vision board "${visionBoard.title}" to XML...');
+      print('💾 Saving vision board "${visionBoard.title}" to individual XML file...');
       
       // Ensure the vision board has a valid ID
       VisionBoard boardToSave = visionBoard;
@@ -104,46 +151,16 @@ class VisionBoardXMLManager {
         print('🆔 Generated new ID for vision board: ${boardToSave.id}');
       }
       
-      final filePath = await _xmlFilePath;
+      // Get individual file path for this vision board
+      final filePath = await _getVisionBoardXmlFilePath(boardToSave.id);
       final file = File(filePath);
       
-      XmlDocument xmlDoc;
-      if (await file.exists()) {
-        final xmlString = await file.readAsString();
-        xmlDoc = XmlDocument.parse(xmlString);
-      } else {
-        xmlDoc = _createEmptyXMLDocument(userId);
-      }
+      // Create XML document for this single vision board
+      final xmlDoc = _createVisionBoardXMLDocument(boardToSave, userId);
       
-      // Update lastModified timestamp
-      final rootElement = xmlDoc.rootElement;
-      rootElement.setAttribute('lastModified', DateTime.now().toUtc().toIso8601String());
-      
-      // Remove existing vision board with same ID (if updating)
-      final existingBoard = rootElement.children
-          .whereType<XmlElement>()
-          .where((element) => 
-              element.name.local == 'VisionBoard' && 
-              element.getAttribute('id') == boardToSave.id)
-          .firstOrNull;
-      
-      if (existingBoard != null) {
-        rootElement.children.remove(existingBoard);
-        print('🔄 Updated existing vision board');
-      } else {
-        print('➕ Added new vision board');
-      }
-      
-      // Add the vision board element
-      final visionBoardElement = _visionBoardToXmlElement(boardToSave);
-      rootElement.children.add(visionBoardElement);
-      
-      // Save to file
+      // Save to individual file
       await file.writeAsString(xmlDoc.toXmlString(pretty: true));
-      print('✅ Vision board saved to XML successfully');
-      
-      // Trigger background sync to server (fire and forget)
-      _triggerBackgroundSync();
+      print('✅ Vision board saved to individual XML file: $filePath');
       
     } catch (e) {
       print('❌ Error saving vision board to XML: $e');
@@ -210,38 +227,92 @@ class VisionBoardXMLManager {
     return rootElement.copy();
   }
   
-  /// Load all vision boards from local XML file
+  /// Load all vision boards from individual XML files
   static Future<List<VisionBoard>> loadVisionBoardsFromXML() async {
     try {
-      print('📖 Loading vision boards from XML...');
+      print('📖 Loading vision boards from individual XML files...');
       
-      final filePath = await _xmlFilePath;
+      final directory = await getApplicationDocumentsDirectory();
+      final directoryPath = directory.path;
+      
+      // Find all vision board XML files
+      final dir = Directory(directoryPath);
+      final visionBoards = <VisionBoard>[];
+      
+      if (!await dir.exists()) {
+        print('📄 Directory not found, returning empty list');
+        return [];
+      }
+      
+      // Look for files that match the pattern: visionboard_*.xml
+      await for (final entity in dir.list()) {
+        if (entity is File && entity.path.contains('visionboard_') && entity.path.endsWith('.xml')) {
+          try {
+            print('📄 Found vision board XML file: ${entity.path}');
+            
+            final xmlString = await entity.readAsString();
+            final xmlDoc = XmlDocument.parse(xmlString);
+            final rootElement = xmlDoc.rootElement;
+            
+            // Each individual file should contain exactly one VisionBoard
+            for (final boardElement in rootElement.children.whereType<XmlElement>()) {
+              if (boardElement.name.local == 'VisionBoard') {
+                final visionBoard = _xmlElementToVisionBoard(boardElement);
+                visionBoards.add(visionBoard);
+                break; // Only one board per file
+              }
+            }
+          } catch (e) {
+            print('⚠️ Error reading vision board file ${entity.path}: $e');
+            // Continue with other files
+          }
+        }
+      }
+      
+      // Sort by creation date (newest first)
+      visionBoards.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      
+      print('✅ Loaded ${visionBoards.length} vision boards from individual XML files');
+      return visionBoards;
+      
+    } catch (e) {
+      print('❌ Error loading vision boards from XML files: $e');
+      return [];
+    }
+  }
+  
+  /// Load a specific vision board by ID from its individual XML file
+  static Future<VisionBoard?> loadVisionBoardFromXML(String visionBoardId) async {
+    try {
+      print('📖 Loading vision board $visionBoardId from individual XML file...');
+      
+      final filePath = await _getVisionBoardXmlFilePath(visionBoardId);
       final file = File(filePath);
       
       if (!await file.exists()) {
-        print('📄 No XML file found, returning empty list');
-        return [];
+        print('📄 Vision board XML file not found: $filePath');
+        return null;
       }
       
       final xmlString = await file.readAsString();
       final xmlDoc = XmlDocument.parse(xmlString);
       final rootElement = xmlDoc.rootElement;
       
-      final visionBoards = <VisionBoard>[];
-      
+      // Find the vision board element (should be only one)
       for (final boardElement in rootElement.children.whereType<XmlElement>()) {
         if (boardElement.name.local == 'VisionBoard') {
           final visionBoard = _xmlElementToVisionBoard(boardElement);
-          visionBoards.add(visionBoard);
+          print('✅ Loaded vision board "${visionBoard.title}" from XML file');
+          return visionBoard;
         }
       }
       
-      print('✅ Loaded ${visionBoards.length} vision boards from XML');
-      return visionBoards;
+      print('⚠️ No VisionBoard element found in XML file');
+      return null;
       
     } catch (e) {
-      print('❌ Error loading vision boards from XML: $e');
-      return [];
+      print('❌ Error loading vision board from XML: $e');
+      return null;
     }
   }
   
@@ -327,47 +398,26 @@ class VisionBoardXMLManager {
     );
   }
   
-  /// Delete a vision board from local XML file
+  /// Delete a vision board by removing its individual XML file
   static Future<void> deleteVisionBoardFromXML(String visionBoardId) async {
     try {
-      print('🗑️ Deleting vision board $visionBoardId from XML...');
+      print('🗑️ Deleting vision board $visionBoardId by removing its XML file...');
       
-      final filePath = await _xmlFilePath;
+      final filePath = await _getVisionBoardXmlFilePath(visionBoardId);
       final file = File(filePath);
       
       if (!await file.exists()) {
-        print('📄 No XML file found, nothing to delete');
+        print('📄 Vision board XML file not found, nothing to delete: $filePath');
         return;
       }
       
-      final xmlString = await file.readAsString();
-      final xmlDoc = XmlDocument.parse(xmlString);
-      final rootElement = xmlDoc.rootElement;
-      
-      // Find and remove the vision board
-      final boardToRemove = rootElement.children
-          .whereType<XmlElement>()
-          .where((element) => 
-              element.name.local == 'VisionBoard' && 
-              element.getAttribute('id') == visionBoardId)
-          .firstOrNull;
-      
-      if (boardToRemove != null) {
-        rootElement.children.remove(boardToRemove);
-        
-        // Update lastModified timestamp
-        rootElement.setAttribute('lastModified', DateTime.now().toUtc().toIso8601String());
-        
-        // Save to file
-        await file.writeAsString(xmlDoc.toXmlString(pretty: true));
-        print('✅ Vision board deleted from XML successfully');
-      } else {
-        print('⚠️ Vision board not found in XML');
-      }
+      // Simply delete the individual XML file
+      await file.delete();
+      print('✅ Vision board XML file deleted successfully: $filePath');
       
     } catch (e) {
-      print('❌ Error deleting vision board from XML: $e');
-      throw Exception('Failed to delete vision board from XML: $e');
+      print('❌ Error deleting vision board XML file: $e');
+      throw Exception('Failed to delete vision board XML file: $e');
     }
   }
   
@@ -409,62 +459,244 @@ class VisionBoardXMLManager {
   
   // ========================= DATABASE SYNC =========================
   
-  /// Upload XML file to database
-  static Future<bool> uploadXMLToDatabase() async {
+  /// Upload all individual vision board XML files to database
+  static Future<bool> uploadAllXMLToDatabase({int? userId}) async {
     try {
-      print('☁️ Uploading XML file to database...');
+      print('☁️ Uploading all individual vision board XML files to database...');
       
-      final filePath = await _xmlFilePath;
+      final directory = await getApplicationDocumentsDirectory();
+      final directoryPath = directory.path;
+      final dir = Directory(directoryPath);
+      
+      if (!await dir.exists()) {
+        print('📄 No XML files directory found');
+        return false;
+      }
+      
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      int uploadedCount = 0;
+      int totalFiles = 0;
+      
+      // Upload each individual XML file
+      await for (final entity in dir.list()) {
+        if (entity is File && entity.path.contains('visionboard_') && entity.path.endsWith('.xml')) {
+          totalFiles++;
+          try {
+            // Extract vision board ID from filename
+            final fileName = entity.path.split('/').last;
+            final visionBoardId = fileName.replaceAll('visionboard_', '').replaceAll('.xml', '');
+            
+            final xmlContent = await entity.readAsString();
+            
+            final result = await visionBoardService.uploadVisionBoardXML(
+              visionBoardId: visionBoardId,
+              xmlContent: xmlContent,
+              userId: userId ?? 1,
+            );
+            
+            if (result.isSuccess) {
+              print('✅ Uploaded vision board $visionBoardId with picture ID: ${result.data}');
+              uploadedCount++;
+            } else {
+              print('❌ Failed to upload vision board $visionBoardId: ${result.message}');
+            }
+            
+          } catch (e) {
+            print('❌ Error uploading vision board file ${entity.path}: $e');
+          }
+        }
+      }
+      
+      print('📊 Upload summary: $uploadedCount/$totalFiles files uploaded successfully');
+      return uploadedCount > 0;
+      
+    } catch (e) {
+      print('❌ Error uploading XML files to database: $e');
+      return false;
+    }
+  }
+  
+  /// Upload a specific vision board XML file to database
+  static Future<bool> uploadVisionBoardXMLToDatabase(String visionBoardId, {int? userId}) async {
+    try {
+      print('☁️ Uploading vision board $visionBoardId XML to database...');
+      
+      final filePath = await _getVisionBoardXmlFilePath(visionBoardId);
       final file = File(filePath);
       
       if (!await file.exists()) {
-        print('📄 No XML file to upload');
+        print('📄 Vision board XML file not found: $filePath');
         return false;
       }
       
       final xmlContent = await file.readAsString();
       
-      // Upload via VisionBoardService
+      // ===== XML CONTENT VALIDATION LOGGING =====
+      print('📋 XML FILE ANALYSIS:');
+      print('  - File Path: $filePath');
+      print('  - File Exists: ${await file.exists()}');
+      print('  - File Size: ${await file.length()} bytes');
+      print('  - XML Content Length: ${xmlContent.length} characters');
+      print('  - XML Content Valid: ${xmlContent.isNotEmpty && xmlContent.trim().startsWith('<?xml')}');
+      final xmlPreview = xmlContent.length > 500 ? '${xmlContent.substring(0, 500)}...' : xmlContent;
+      print('  - XML Preview (first 500 chars): $xmlPreview');
+      
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize();
-      final result = await visionBoardService.uploadXMLFile(xmlContent);
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      final result = await visionBoardService.uploadVisionBoardXML(
+        visionBoardId: visionBoardId,
+        xmlContent: xmlContent,
+        userId: userId ?? 1,
+      );
       
       if (result.isSuccess) {
-        print('✅ XML file uploaded to database successfully');
+        print('✅ Vision board XML uploaded successfully with picture ID: ${result.data}');
         return true;
       } else {
-        print('❌ XML upload failed: ${result.message}');
+        print('❌ Vision board XML upload failed: ${result.message}');
         return false;
       }
       
     } catch (e) {
-      print('❌ Error uploading XML to database: $e');
+      print('❌ Error uploading vision board XML to database: $e');
       return false;
     }
   }
   
-  /// Download XML file from database
-  static Future<bool> downloadXMLFromDatabase(int userId) async {
+  /// Download all vision board XML files from database
+  static Future<bool> downloadAllXMLFromDatabase(int userId) async {
     try {
-      print('☁️ Downloading XML file from database...');
+      print('☁️ Downloading all vision board XML files from database...');
       
-      // TODO: Implement API call to download XML content
-      // final result = await visionBoardService.downloadXMLFile(userId);
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
       
-      // if (result.isSuccess && result.data != null) {
-      //   final filePath = await _xmlFilePath;
-      //   final file = File(filePath);
-      //   await file.writeAsString(result.data!);
-      //   print('✅ XML file downloaded from database successfully');
-      //   return true;
-      // }
+      // Get list of all XML files for the user
+      final listResult = await visionBoardService.getVisionBoardXMLList(userId);
       
-      print('⚠️ No XML file found in database or download failed');
-      return false;
+      if (!listResult.isSuccess || listResult.data == null || listResult.data!.isEmpty) {
+        print('⚠️ No XML files found on server: ${listResult.message}');
+        return false;
+      }
+      
+      int downloadedCount = 0;
+      final totalFiles = listResult.data!.length;
+      
+      // Download each XML file individually
+      for (final xmlInfo in listResult.data!) {
+        try {
+          final downloadResult = await visionBoardService.downloadVisionBoardXML(xmlInfo.pictureId);
+          
+          if (downloadResult.isSuccess && downloadResult.data != null) {
+            // Save to individual XML file
+            final filePath = await _getVisionBoardXmlFilePath(xmlInfo.visionBoardId);
+            final file = File(filePath);
+            await file.writeAsString(downloadResult.data!);
+            
+            print('✅ Downloaded vision board ${xmlInfo.visionBoardId} to: $filePath');
+            downloadedCount++;
+          } else {
+            print('❌ Failed to download vision board ${xmlInfo.visionBoardId}: ${downloadResult.message}');
+          }
+          
+        } catch (e) {
+          print('❌ Error downloading vision board ${xmlInfo.visionBoardId}: $e');
+        }
+      }
+      
+      print('📊 Download summary: $downloadedCount/$totalFiles files downloaded successfully');
+      return downloadedCount > 0;
       
     } catch (e) {
-      print('❌ Error downloading XML from database: $e');
+      print('❌ Error downloading XML files from database: $e');
       return false;
+    }
+  }
+  
+  /// Download a specific vision board XML file from database
+  static Future<bool> downloadVisionBoardXMLFromDatabase(String visionBoardId, int userId) async {
+    try {
+      print('☁️ Downloading vision board $visionBoardId XML from database...');
+      
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      final result = await visionBoardService.downloadVisionBoardXMLById(
+        visionBoardId: visionBoardId,
+        userId: userId,
+      );
+      
+      if (result.isSuccess && result.data != null) {
+        final filePath = await _getVisionBoardXmlFilePath(visionBoardId);
+        final file = File(filePath);
+        await file.writeAsString(result.data!);
+        print('✅ Vision board XML downloaded successfully to: $filePath');
+        return true;
+      } else {
+        print('⚠️ ${result.message}');
+        return false;
+      }
+      
+    } catch (e) {
+      print('❌ Error downloading vision board XML from database: $e');
+      return false;
+    }
+  }
+  
+  /// Get list of all vision board XML files for a user
+  static Future<List<VisionBoardXMLInfo>> getVisionBoardXMLList(int userId) async {
+    try {
+      print('📋 Getting vision board XML list from database...');
+      
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      final result = await visionBoardService.getVisionBoardXMLList(userId);
+      
+      if (result.isSuccess && result.data != null) {
+        print('✅ Found ${result.data!.length} XML files');
+        return result.data!;
+      } else {
+        print('⚠️ ${result.message}');
+        return [];
+      }
+      
+    } catch (e) {
+      print('❌ Error getting XML list from database: $e');
+      return [];
+    }
+  }
+  
+  /// Download specific vision board XML by ID
+  static Future<String?> downloadVisionBoardXMLById({
+    required String visionBoardId,
+    required int userId,
+  }) async {
+    try {
+      print('📥 Downloading specific vision board XML: $visionBoardId');
+      
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      final result = await visionBoardService.downloadVisionBoardXMLById(
+        visionBoardId: visionBoardId,
+        userId: userId,
+      );
+      
+      if (result.isSuccess && result.data != null) {
+        print('✅ Vision board XML downloaded successfully');
+        return result.data;
+      } else {
+        print('⚠️ ${result.message}');
+        return null;
+      }
+      
+    } catch (e) {
+      print('❌ Error downloading vision board XML by ID: $e');
+      return null;
     }
   }
   
@@ -483,10 +715,10 @@ class VisionBoardXMLManager {
     }
   }
   
-  /// Get the last modified timestamp from local XML
-  static Future<DateTime?> getLocalXMLTimestamp() async {
+  /// Get the last modified timestamp from a specific vision board XML file
+  static Future<DateTime?> getVisionBoardXMLTimestamp(String visionBoardId) async {
     try {
-      final filePath = await _xmlFilePath;
+      final filePath = await _getVisionBoardXmlFilePath(visionBoardId);
       final file = File(filePath);
       
       if (!await file.exists()) {
@@ -503,50 +735,51 @@ class VisionBoardXMLManager {
       
       return null;
     } catch (e) {
-      print('❌ Error getting local XML timestamp: $e');
+      print('❌ Error getting vision board XML timestamp: $e');
+      return null;
+    }
+  }
+  
+  /// Get the most recent timestamp from all local vision board XML files
+  static Future<DateTime?> getLatestLocalXMLTimestamp() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final directoryPath = directory.path;
+      final dir = Directory(directoryPath);
+      
+      if (!await dir.exists()) {
+        return null;
+      }
+      
+      DateTime? latestTimestamp;
+      
+      // Check all vision board XML files
+      await for (final entity in dir.list()) {
+        if (entity is File && entity.path.contains('visionboard_') && entity.path.endsWith('.xml')) {
+          try {
+            final xmlString = await entity.readAsString();
+            final xmlDoc = XmlDocument.parse(xmlString);
+            final lastModified = xmlDoc.rootElement.getAttribute('lastModified');
+            
+            if (lastModified != null) {
+              final timestamp = DateTime.parse(lastModified);
+              if (latestTimestamp == null || timestamp.isAfter(latestTimestamp)) {
+                latestTimestamp = timestamp;
+              }
+            }
+          } catch (e) {
+            // Continue with other files
+          }
+        }
+      }
+      
+      return latestTimestamp;
+    } catch (e) {
+      print('❌ Error getting latest XML timestamp: $e');
       return null;
     }
   }
 
-  // ========================= BACKGROUND SYNC =========================
-  
-  /// Trigger background sync with debouncing (fire and forget) 
-  static void _triggerBackgroundSync() {
-    // Cancel any existing timer
-    _syncTimer?.cancel();
-    
-    // Set new timer to sync after 5 seconds (debounced)
-    _syncTimer = Timer(Duration(seconds: 5), () async {
-      try {
-        print('🔄 Starting background sync...');
-        final success = await uploadXMLToDatabase();
-        if (success) {
-          print('✅ Background sync completed');
-        } else {
-          print('⚠️ Background sync failed - will retry later');
-        }
-      } catch (e) {
-        print('❌ Background sync error: $e');
-      }
-    });
-  }
-  
-  /// Start periodic background sync (call once during app initialization)
-  static void startPeriodicSync({Duration interval = const Duration(minutes: 15)}) {
-    Timer.periodic(interval, (timer) async {
-      try {
-        print('⏰ Periodic sync starting...');
-        final success = await uploadXMLToDatabase();
-        if (success) {
-          print('✅ Periodic sync completed');
-        } else {
-          print('⚠️ Periodic sync failed');
-        }
-      } catch (e) {
-        print('❌ Periodic sync error: $e');
-      }
-    });
-  }
 }
 
 /// Extension to add firstOrNull method

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
 import '../models/meditation_models.dart';
 import '../services/usage_analytics_service.dart';
+import '../services/guided_tour_service.dart';
 import '../models/analytics_models.dart';
 import '../components/visual_selector.dart';
 import '../components/animated_candle.dart';
@@ -56,6 +57,11 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     _loadSettings();
     _initializeAnalytics();
     remainingSeconds = selectedDuration * 60;
+    
+    // Show guided tour after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showGuidedTourIfNeeded();
+    });
   }
   
   Future<void> _initializeAnalytics() async {
@@ -98,6 +104,15 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     }
     
     super.dispose();
+  }
+
+  Future<void> _showGuidedTourIfNeeded() async {
+    final tourService = GuidedTourService();
+    await tourService.showTourIfNeeded(
+      context,
+      GuidedTourService.meditationTourKey,
+      tourService.getMeditationTourSteps(),
+    );
   }
 
   Future<void> _loadSettings() async {

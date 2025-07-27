@@ -356,6 +356,44 @@ class VisionBoardTemplate {
   }
 }
 
+class VisionBoardXMLInfo {
+  final int pictureId;
+  final String visionBoardId;
+  final String fileName;
+  final DateTime? createdDate;
+  final int fileSize;
+
+  const VisionBoardXMLInfo({
+    required this.pictureId,
+    required this.visionBoardId,
+    required this.fileName,
+    this.createdDate,
+    required this.fileSize,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pictureId': pictureId,
+      'visionBoardId': visionBoardId,
+      'fileName': fileName,
+      'createdDate': createdDate?.toIso8601String(),
+      'fileSize': fileSize,
+    };
+  }
+
+  factory VisionBoardXMLInfo.fromJson(Map<String, dynamic> json) {
+    return VisionBoardXMLInfo(
+      pictureId: json['pictureId'],
+      visionBoardId: json['visionBoardId'],
+      fileName: json['fileName'],
+      createdDate: json['createdDate'] != null 
+          ? DateTime.parse(json['createdDate']) 
+          : null,
+      fileSize: json['fileSize'],
+    );
+  }
+}
+
 enum VisionBoardTool {
   select,
   move,

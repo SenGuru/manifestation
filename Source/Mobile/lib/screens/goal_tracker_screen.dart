@@ -10,6 +10,7 @@ import '../models/goal_tracker_category.dart';
 import '../constants/colors.dart';
 import '../constants/goal_constants.dart';
 import '../services/goal_tracker_service.dart';
+import '../services/guided_tour_service.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import 'goal_detail_screen.dart';
 
@@ -42,6 +43,11 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('🔧 Initializing GoalTrackerService...');
     _goalTrackerService.initialize();
     
+    // Show guided tour after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showGuidedTourIfNeeded();
+    });
+    
     _fabAnimationController = AnimationController(
       duration: Duration(milliseconds: 300),
       vsync: this,
@@ -62,6 +68,15 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   void dispose() {
     _fabAnimationController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showGuidedTourIfNeeded() async {
+    final tourService = GuidedTourService();
+    await tourService.showTourIfNeeded(
+      context,
+      GuidedTourService.goalTrackerTourKey,
+      tourService.getGoalTrackerTourSteps(),
+    );
   }
 
   @override

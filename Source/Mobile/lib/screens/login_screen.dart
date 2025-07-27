@@ -5,8 +5,8 @@ import '../services/unified_auth_service.dart';
 import 'signup_page.dart';
 import 'home_screen.dart';
 import 'forgot_password_screen.dart';
-import 'phone_auth_screen.dart';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -96,15 +96,6 @@ class _LoginScreenState extends State<LoginScreen>
                     
                     SizedBox(height: 40.h),
                     
-                    // Phone auth button
-                    _buildPhoneAuthButton(),
-                    
-                    SizedBox(height: 24.h),
-                    
-                    // Divider
-                    _buildDivider(),
-                    
-                    SizedBox(height: 24.h),
                     
                     // Login form
                     _buildLoginForm(),
@@ -185,84 +176,6 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildPhoneAuthButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 56.h,
-      child: ElevatedButton(
-        onPressed: _navigateToPhoneAuth,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          padding: EdgeInsets.zero,
-        ).copyWith(
-          backgroundColor: MaterialStateProperty.all(Colors.transparent),
-        ),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: AppColors.affirmationGradient,
-            ),
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.phone,
-                  color: AppColors.white,
-                  size: 20.sp,
-                ),
-                SizedBox(width: 12.w),
-                Text(
-                  'Continue with Phone',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDivider() {
-    return Row(
-      children: [
-        Expanded(
-          child: Container(
-            height: 1,
-            color: AppColors.textMedium.withOpacity(0.3),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Text(
-            'Or continue with username',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-        ),
-        Expanded(
-          child: Container(
-            height: 1,
-            color: AppColors.textMedium.withOpacity(0.3),
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildLoginForm() {
     return Form(
@@ -368,7 +281,7 @@ class _LoginScreenState extends State<LoginScreen>
           SizedBox(height: 32.h),
           
           // Login button
-          _buildLoginButton(),
+          _buildPrimaryLoginButton(),
         ],
       ),
     );
@@ -467,39 +380,50 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildPrimaryLoginButton() {
     return SizedBox(
       width: double.infinity,
       height: 56.h,
       child: ElevatedButton(
         onPressed: _isLoading ? null : _handleLogin,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
-          side: BorderSide(
-            color: AppColors.textMedium.withOpacity(0.3),
+          padding: EdgeInsets.zero,
+        ).copyWith(
+          backgroundColor: MaterialStateProperty.all(Colors.transparent),
+        ),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: AppColors.affirmationGradient,
+            ),
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                blurRadius: 20.r,
+                offset: Offset(0, 10.h),
+              ),
+            ],
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            child: _isLoading
+                ? CompactStylishLoading(size: 24.w)
+                : Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.white,
+                    ),
+                  ),
           ),
         ),
-        child: _isLoading
-            ? SizedBox(
-                width: 24.w,
-                height: 24.h,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.textLight),
-                ),
-              )
-            : Text(
-                'Sign In',
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
-                ),
-              ),
       ),
     );
   }
@@ -710,24 +634,6 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  void _navigateToPhoneAuth() {
-    Navigator.push(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => PhoneAuthScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideTransition(
-            position: animation.drive(
-              Tween(begin: Offset(1.0, 0.0), end: Offset.zero)
-                  .chain(CurveTween(curve: Curves.easeInOut)),
-            ),
-            child: child,
-          );
-        },
-        transitionDuration: Duration(milliseconds: 300),
-      ),
-    );
-  }
 
   void _navigateToSignUp() {
     Navigator.push(

@@ -4,6 +4,7 @@ import 'package:chopper/chopper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/generated/code/manifestation.swagger.dart';
+import 'cache_manager.dart';
 
 /// Unified authentication service that combines login, session management, and user data
 class UnifiedAuthService {
@@ -199,10 +200,24 @@ class UnifiedAuthService {
       // Clear stored session
       await _clearStoredSession();
       
+      // Clear all application caches on logout
+      await CacheManager().clearAllCaches();
+      
+      // Reset onboarding and tour flags for new users
+      final prefs = await SharedPreferences.getInstance();
+      print('🔥 LOGOUT: Clearing onboarding and tour flags...');
+      await prefs.remove('post_signup_onboarding_completed');
+      await prefs.remove('vision_board_tour_completed');
+      await prefs.remove('affirmations_tour_completed');
+      await prefs.remove('journal_tour_completed');
+      await prefs.remove('goal_tracker_tour_completed');
+      await prefs.remove('meditation_tour_completed');
+      print('🔥 LOGOUT: All tour flags cleared');
+      
       // Stop session monitoring
       _sessionTimeoutTimer?.cancel();
       
-      print('✅ Logout successful (was: $previousState)');
+      print('✅ Logout successful (was: $previousState) - all caches cleared');
     } catch (e) {
       print('❌ Logout error: $e');
     }

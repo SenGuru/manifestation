@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/services/auth_service.dart';
+import 'package:fun/services/unified_auth_service.dart';
 import '../constants/colors.dart';
 import 'login_screen.dart';
 
@@ -427,8 +427,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               try {
                 print('Profile screen initiating logout...');
                 
-                // Use AuthService to logout
-                final authService = AuthService();
+                // Use UnifiedAuthService to logout
+                final authService = UnifiedAuthService();
                 await authService.logout();
                 
                 print('Logout successful');
