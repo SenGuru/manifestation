@@ -11,7 +11,6 @@ class DailyAffirmationsService {
   static final DailyAffirmationsService _instance = DailyAffirmationsService._internal();
   factory DailyAffirmationsService() => _instance;
   DailyAffirmationsService._internal();
-
   late Manifestation _apiClient;
   final UnifiedAuthService _authService = UnifiedAuthService();
   final AffirmationCacheService _cacheService = AffirmationCacheService();

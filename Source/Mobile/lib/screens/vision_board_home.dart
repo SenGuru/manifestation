@@ -260,7 +260,8 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.visionBoardGradient[0]),
+            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCoral),
+            backgroundColor: AppColors.accentCoral.withOpacity(0.2),
           ),
           SizedBox(height: 16.h),
           Text(

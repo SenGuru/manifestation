@@ -413,7 +413,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: Container(
             alignment: Alignment.center,
             child: _isLoading
-                ? CompactStylishLoading(size: 24.w)
+                ? CompactStylishLoading(size: 20.w)
                 : Text(
                     'Sign In',
                     style: TextStyle(

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 import '../constants/colors.dart';
 
 class StylishLoading extends StatelessWidget {
@@ -21,28 +20,53 @@ class StylishLoading extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Lottie animation
-          Container(
-            width: size ?? 120.w,
-            height: size ?? 120.h,
-            child: Lottie.asset(
-              'assets/Loading.json',
-              width: size ?? 120.w,
-              height: size ?? 120.h,
-              fit: BoxFit.contain,
-              errorBuilder: (context, error, stackTrace) {
-                // Fallback to circular indicator if Lottie fails
-                return Container(
-                  width: size ?? 120.w,
-                  height: size ?? 120.h,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.affirmationGradient[0],
-                      strokeWidth: 3.0,
-                    ),
+          // Stylish circular loading indicator
+          SizedBox(
+            width: size ?? 80.w,
+            height: size ?? 80.h,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Background circle
+                Container(
+                  width: size ?? 80.w,
+                  height: size ?? 80.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.accentCoral.withValues(alpha: 0.1),
                   ),
-                );
-              },
+                ),
+                // Main loading indicator
+                SizedBox(
+                  width: (size ?? 80.w) * 0.8,
+                  height: (size ?? 80.h) * 0.8,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 4.0,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCoral),
+                    backgroundColor: AppColors.accentCoral.withValues(alpha: 0.2),
+                  ),
+                ),
+                // Inner accent circle
+                Container(
+                  width: (size ?? 80.w) * 0.3,
+                  height: (size ?? 80.h) * 0.3,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: AppColors.affirmationGradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.accentCoral.withValues(alpha: 0.3),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           
@@ -64,6 +88,7 @@ class StylishLoading extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class StylishLoadingOverlay extends StatelessWidget {
@@ -81,7 +106,7 @@ class StylishLoadingOverlay extends StatelessWidget {
     if (!isVisible) return SizedBox.shrink();
 
     return Container(
-      color: AppColors.backgroundDark.withOpacity(0.8),
+      color: AppColors.backgroundDark.withValues(alpha: 0.8),
       child: StylishLoading(
         message: message,
       ),
@@ -109,7 +134,7 @@ class StylishLoadingDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20.r,
               offset: Offset(0, 10.h),
             ),
@@ -155,22 +180,10 @@ class CompactStylishLoading extends StatelessWidget {
     return SizedBox(
       width: size ?? 24.w,
       height: size ?? 24.h,
-      child: Lottie.asset(
-        'assets/Loading.json',
-        width: size ?? 24.w,
-        height: size ?? 24.h,
-        fit: BoxFit.contain,
-        errorBuilder: (context, error, stackTrace) {
-          // Fallback to circular indicator if Lottie fails
-          return SizedBox(
-            width: size ?? 24.w,
-            height: size ?? 24.h,
-            child: CircularProgressIndicator(
-              color: color ?? AppColors.white,
-              strokeWidth: 2.0,
-            ),
-          );
-        },
+      child: CircularProgressIndicator(
+        strokeWidth: 2.5,
+        valueColor: AlwaysStoppedAnimation<Color>(color ?? AppColors.accentCoral),
+        backgroundColor: (color ?? AppColors.accentCoral).withValues(alpha: 0.2),
       ),
     );
   }

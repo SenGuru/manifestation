@@ -292,7 +292,7 @@ class _SplashScreenState extends State<SplashScreen>
                 children: [
                   if (_isInitializing) ...[
                     // Stylish loading indicator
-                    CompactStylishLoading(size: 40.w),
+                    CompactStylishLoading(size: 32.w),
                     
                     SizedBox(height: 16.h),
                     

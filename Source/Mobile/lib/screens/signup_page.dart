@@ -540,7 +540,7 @@ class _SignUpScreenState extends State<SignUpScreen>
           child: Container(
             alignment: Alignment.center,
             child: _isLoading
-                ? CompactStylishLoading(size: 24.w)
+                ? CompactStylishLoading(size: 20.w)
                 : Text(
                     'Create Account',
                     style: TextStyle(
@@ -792,7 +792,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                 ),
               ),
               child: isVerifying
-                  ? CompactStylishLoading(size: 20.w)
+                  ? CompactStylishLoading(size: 18.w)
                   : Text(
                       'Verify',
                       style: TextStyle(
