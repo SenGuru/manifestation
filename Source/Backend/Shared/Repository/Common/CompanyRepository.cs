@@ -608,7 +608,6 @@ namespace Manifest.Repository.Common
                        ModifiedByUserEmail = mu.Email,
                        UserGroupId = item.UserGroupId,
                        UserGroupName = item.UserGroupName,
-                       CompanyEntityId = item.CompanyEntityId,
                        IsDeleted = item.IsDeleted,
                        CreatedDate = item.CreatedDate,
                        CreatedByUserId = item.CreatedByUserId,
@@ -644,8 +643,6 @@ namespace Manifest.Repository.Common
                 sql1 = sql1.Where(x => x.OrderDate <= search.EndDate.Value.EndOfDay());
             }*/
 
-            if (search.CompanyEntityId != null && search.CompanyEntityId > 0)
-                sql1 = sql1.Where(x => search.CompanyEntityId == x.CompanyEntityId);
             if (search.CreatedByUserId != null && search.CreatedByUserId > 0)
                 sql1 = sql1.Where(x => search.CreatedByUserId == x.CreatedByUserId);
             if (search.ModifiedByUserId != null && search.ModifiedByUserId > 0)
@@ -770,26 +767,6 @@ namespace Manifest.Repository.Common
             srch = srch.And(x => x.PredefinedResourceTypeId == (int)PredefinedResourceTypes.UserGroup);
 
             return GetActivitiesByExpressionAsync(srch, search);
-        }
-
-        public Task<List<UserGroupView>> GetUserGroupViewByCompanyEntityIdAsync(long companyEntityId)
-        {
-            return GetUserGroupsViewAsIQueryable().Where(x => x.IsDeleted == false && x.CompanyEntityId == companyEntityId).ToListAsync();
-        }
-
-        public Task<DbReturnListModel<UserGroupView>> GetUserGroupViewByCompanyEntityIdAsync(UserGroupByCompanyEntityIdSearchCriteria search)
-        {
-            return GetUserGroupsViewAsIQueryable().Where(x => x.IsDeleted == false && x.CompanyEntityId == search.CompanyEntityId).ReturnListModelResultAsync(search);
-        }
-
-        public Task<List<UserGroup>> GetBareUserGroupByCompanyEntityIdAsync(long companyEntityId)
-        {
-            return appDBManager.GetTable<UserGroup>().Where(x => x.IsDeleted == false && x.CompanyEntityId == companyEntityId).ToListAsync();
-        }
-
-        public Task<DbReturnListModel<UserGroup>> GetBareUserGroupByCompanyEntityIdAsync(UserGroupByCompanyEntityIdSearchCriteria search)
-        {
-            return appDBManager.GetTable<UserGroup>().Where(x => x.IsDeleted == false && x.CompanyEntityId == search.CompanyEntityId).ReturnListModelResultAsync(search);
         }
         /*
 

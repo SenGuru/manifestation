@@ -3194,11 +3194,10 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public UserGroupModel(Int64 userGroupId,String userGroupName,Int64 companyEntityId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public UserGroupModel(Int64 userGroupId,String userGroupName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             UserGroupId = userGroupId;
             UserGroupName = userGroupName;
-            CompanyEntityId = companyEntityId;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
             ModifiedDate = modifiedDate;
@@ -3226,8 +3225,6 @@ namespace Manifest.Tests.Common
         public Int64 UserGroupId {set; get;}
         [JsonPropertyName("userGroupName")]
         public String UserGroupName {set; get;}
-        [JsonPropertyName("companyEntityId")]
-        public Int64 CompanyEntityId {set; get;}
         [JsonPropertyName("isDeleted")]
         public Boolean IsDeleted {set; get;}
         [JsonPropertyName("createdDate")]
@@ -3243,7 +3240,6 @@ namespace Manifest.Tests.Common
         {
             var obj = new UserGroupCreateModel();
             obj.UserGroupName = UserGroupName;
-            obj.CompanyEntityId = CompanyEntityId;
             return obj;
         }
 
@@ -3251,7 +3247,6 @@ namespace Manifest.Tests.Common
         {
             var result = true;
             result = result && (obj.UserGroupName == UserGroupName);
-            result = result && (obj.CompanyEntityId == CompanyEntityId);
             return result;
         }
 
@@ -3261,7 +3256,6 @@ namespace Manifest.Tests.Common
             var obj = new UserGroupUpdateModel();
             obj.UserGroupId = UserGroupId;
             obj.UserGroupName = UserGroupName;
-            obj.CompanyEntityId = CompanyEntityId;
             return obj;
         }
 
@@ -3270,7 +3264,6 @@ namespace Manifest.Tests.Common
             var result = true;
             result = result && (obj.UserGroupId == UserGroupId);
             result = result && (obj.UserGroupName == UserGroupName);
-            result = result && (obj.CompanyEntityId == CompanyEntityId);
             return result;
         }
 
@@ -3289,7 +3282,6 @@ namespace Manifest.Tests.Common
             obj.ModifiedBy = ModifiedBy;
             obj.UserGroupId = UserGroupId;
             obj.UserGroupName = UserGroupName;
-            obj.CompanyEntityId = CompanyEntityId;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
             obj.CreatedByUserId = CreatedByUserId;
@@ -3310,7 +3302,6 @@ namespace Manifest.Tests.Common
         public const string ModifiedBy__Name = "ModifiedBy";
         public const string UserGroupId__Name = "UserGroupId";
         public const string UserGroupName__Name = "UserGroupName";
-        public const string CompanyEntityId__Name = "CompanyEntityId";
         public const string IsDeleted__Name = "IsDeleted";
         public const string CreatedDate__Name = "CreatedDate";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -3328,8 +3319,6 @@ namespace Manifest.Tests.Common
         }
         [JsonPropertyName("showDeleted")]
         public Boolean ShowDeleted {set; get;}
-        [JsonPropertyName("companyEntityId")]
-        public Int64? CompanyEntityId {set; get;}
         [JsonPropertyName("createdByUserId")]
         public Int64? CreatedByUserId {set; get;}
         [JsonPropertyName("modifiedByUserId")]
@@ -3351,7 +3340,6 @@ namespace Manifest.Tests.Common
         {
             var obj = new UserGroupSearchCriteria();
             obj.ShowDeleted = ShowDeleted;
-            obj.CompanyEntityId = CompanyEntityId;
             obj.CreatedByUserId = CreatedByUserId;
             obj.ModifiedByUserId = ModifiedByUserId;
             obj.SelectedId = SelectedId;
@@ -3365,7 +3353,6 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string ShowDeleted__Name = "ShowDeleted";
-        public const string CompanyEntityId__Name = "CompanyEntityId";
         public const string CreatedByUserId__Name = "CreatedByUserId";
         public const string ModifiedByUserId__Name = "ModifiedByUserId";
         public const string SelectedId__Name = "SelectedId";
@@ -3386,28 +3373,23 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public UserGroupCreateModel(String userGroupName,Int64 companyEntityId)
+        public UserGroupCreateModel(String userGroupName)
         {
             UserGroupName = userGroupName;
-            CompanyEntityId = companyEntityId;
         }
 
         [JsonPropertyName("userGroupName")]
         public String UserGroupName {set; get;}
-        [JsonPropertyName("companyEntityId")]
-        public Int64 CompanyEntityId {set; get;}
 
         public UserGroupCreateModel GetCopy()
         {
             var obj = new UserGroupCreateModel();
             obj.UserGroupName = UserGroupName;
-            obj.CompanyEntityId = CompanyEntityId;
             return obj;
         }
 
         // Property Names
         public const string UserGroupName__Name = "UserGroupName";
-        public const string CompanyEntityId__Name = "CompanyEntityId";
         // String Column Sizes
         public const int UserGroupName__Size = 100;
     }
@@ -3439,33 +3421,28 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public UserGroupUpdateModel(Int64 userGroupId,String userGroupName,Int64 companyEntityId)
+        public UserGroupUpdateModel(Int64 userGroupId,String userGroupName)
         {
             UserGroupId = userGroupId;
             UserGroupName = userGroupName;
-            CompanyEntityId = companyEntityId;
         }
 
         [JsonPropertyName("userGroupId")]
         public Int64 UserGroupId {set; get;}
         [JsonPropertyName("userGroupName")]
         public String UserGroupName {set; get;}
-        [JsonPropertyName("companyEntityId")]
-        public Int64 CompanyEntityId {set; get;}
 
         public UserGroupUpdateModel GetCopy()
         {
             var obj = new UserGroupUpdateModel();
             obj.UserGroupId = UserGroupId;
             obj.UserGroupName = UserGroupName;
-            obj.CompanyEntityId = CompanyEntityId;
             return obj;
         }
 
         // Property Names
         public const string UserGroupId__Name = "UserGroupId";
         public const string UserGroupName__Name = "UserGroupName";
-        public const string CompanyEntityId__Name = "CompanyEntityId";
         // String Column Sizes
         public const int UserGroupName__Size = 100;
     }

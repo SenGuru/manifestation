@@ -1883,7 +1883,6 @@ export class UserGroupModel {
     modifiedBy : string = '';
     userGroupId : number = 0;
     userGroupName : string = '';
-    companyEntityId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -1915,8 +1914,6 @@ export class UserGroupModel {
         obj.userGroupId = self.userGroupId;
       if (self.hasOwnProperty('userGroupName'))
         obj.userGroupName = self.userGroupName;
-      if (self.hasOwnProperty('companyEntityId'))
-        obj.companyEntityId = self.companyEntityId;
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -1933,7 +1930,6 @@ export class UserGroupModel {
     static getAsCreateModel(self : UserGroupModel) : UserGroupCreateModel {
       let obj = new UserGroupCreateModel();
       obj.userGroupName = self.userGroupName;
-      obj.companyEntityId = self.companyEntityId;
       return obj;
     }
 
@@ -1941,14 +1937,12 @@ export class UserGroupModel {
       let obj = new UserGroupUpdateModel();
       obj.userGroupId = self.userGroupId;
       obj.userGroupName = self.userGroupName;
-      obj.companyEntityId = self.companyEntityId;
       return obj;
     }
 }
 
 export class UserGroupSearchCriteria extends BaseSearchCriteria{
     showDeleted : boolean = false;
-    companyEntityId : number | null = null;
     createdByUserId : number | null = null;
     modifiedByUserId : number | null = null;
 
@@ -1956,8 +1950,6 @@ export class UserGroupSearchCriteria extends BaseSearchCriteria{
       let obj = new UserGroupSearchCriteria();
       if (self.hasOwnProperty('showDeleted'))
         obj.showDeleted = self.showDeleted;
-      if (self.hasOwnProperty('companyEntityId'))
-        obj.companyEntityId = self.companyEntityId;
       if (self.hasOwnProperty('createdByUserId'))
         obj.createdByUserId = self.createdByUserId;
       if (self.hasOwnProperty('modifiedByUserId'))
@@ -1980,15 +1972,12 @@ export class UserGroupSearchCriteria extends BaseSearchCriteria{
 
 export class UserGroupCreateModel {
     userGroupName : string = '';
-    companyEntityId : number = 0;
     static userGroupName__size : number = 100;
 
     static getCopy(self : UserGroupCreateModel,adjustDateToUTC : boolean = false) : UserGroupCreateModel {
       let obj = new UserGroupCreateModel();
       if (self.hasOwnProperty('userGroupName'))
         obj.userGroupName = self.userGroupName;
-      if (self.hasOwnProperty('companyEntityId'))
-        obj.companyEntityId = self.companyEntityId;
       return obj;
     }
 }
@@ -2007,7 +1996,6 @@ export class MultipleUserGroupCreateModel {
 export class UserGroupUpdateModel {
     userGroupId : number = 0;
     userGroupName : string = '';
-    companyEntityId : number = 0;
     static userGroupName__size : number = 100;
 
     static getCopy(self : UserGroupUpdateModel,adjustDateToUTC : boolean = false) : UserGroupUpdateModel {
@@ -2016,8 +2004,6 @@ export class UserGroupUpdateModel {
         obj.userGroupId = self.userGroupId;
       if (self.hasOwnProperty('userGroupName'))
         obj.userGroupName = self.userGroupName;
-      if (self.hasOwnProperty('companyEntityId'))
-        obj.companyEntityId = self.companyEntityId;
       return obj;
     }
 }
