@@ -937,7 +937,6 @@ namespace Manifest.Repository.Migration.Application
             Create.Table("UserGroup")
                 .WithColumn("UserGroupId").AsInt64().PrimaryKey("PK_UserGroup").Identity().NotNullable()
                 .WithColumn("UserGroupName").AsString(100).NotNullable()
-                .WithColumn("CompanyEntityId").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedByUserId").AsInt64().Nullable()
@@ -949,7 +948,6 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("UserGroupUserId").AsInt64().PrimaryKey("PK_UserGroupUser").Identity().NotNullable()
                 .WithColumn("UserGroupId").AsInt64().NotNullable()
                 .WithColumn("UserId").AsInt64().NotNullable()
-                .WithColumn("CompanyEntityId").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedByUserId").AsInt64().Nullable()
@@ -1047,6 +1045,62 @@ namespace Manifest.Repository.Migration.Application
             UpdateSequenceStartValue("", "WhatsAppNotificationServer", "WhatsAppNotificationServerId", 1000);
 
             //Indexes definitions
+            Create.Index("IX_AppExecutionVersion_CreatedByUserId").OnTable("AppExecutionVersion")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_AppExecutionVersion_ModifiedByUserId").OnTable("AppExecutionVersion")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_AuditOperation_CreatedByUserId").OnTable("AuditOperation")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_AuditOperation_ModifiedByUserId").OnTable("AuditOperation")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_AuditOperation_PredefinedAuditOperationTypeId").OnTable("AuditOperation")
+                .OnColumn("PredefinedAuditOperationTypeId")
+            
+            ;
+            Create.Index("IX_AuditOperation_PredefinedResourceTypeId").OnTable("AuditOperation")
+                .OnColumn("PredefinedResourceTypeId")
+            
+            ;
+            Create.Index("IX_AuditOperation_ResourceId").OnTable("AuditOperation")
+                .OnColumn("ResourceId")
+            
+            ;
+            Create.Index("IX_AuditOperation_UserGroupId").OnTable("AuditOperation")
+                .OnColumn("UserGroupId")
+            
+            ;
+            Create.Index("IX_AuditOperation_UserGroupUserId").OnTable("AuditOperation")
+                .OnColumn("UserGroupUserId")
+            
+            ;
+            Create.Index("IX_AuditOperation_UserId").OnTable("AuditOperation")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_AuditOperation_UserPermissionId").OnTable("AuditOperation")
+                .OnColumn("UserPermissionId")
+            
+            ;
+            Create.Index("IX_AuditOperationDetail_AuditOperationId").OnTable("AuditOperationDetail")
+                .OnColumn("AuditOperationId")
+            
+            ;
+            Create.Index("IX_AuditOperationDetail_CreatedByUserId").OnTable("AuditOperationDetail")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_AuditOperationDetail_ModifiedByUserId").OnTable("AuditOperationDetail")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
             Create.Index("IX_Category_CreatedByUserId").OnTable("Category")
                 .OnColumn("CreatedByUserId")
             
@@ -1063,8 +1117,108 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("PredefinedCategoryTypeId")
             
             ;
+            Create.Index("IX_Category_PredefinedIconTypeId").OnTable("Category")
+                .OnColumn("PredefinedIconTypeId")
+            
+            ;
             Create.Index("IX_Category_UserId").OnTable("Category")
                 .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_Chat_CreatedByUserId").OnTable("Chat")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_Chat_ModifiedByUserId").OnTable("Chat")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_Chat_UserId").OnTable("Chat")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_ChatMessage_ChatId").OnTable("ChatMessage")
+                .OnColumn("ChatId")
+            
+            ;
+            Create.Index("IX_ChatMessage_CreatedByUserId").OnTable("ChatMessage")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ChatMessage_ModifiedByUserId").OnTable("ChatMessage")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ChatMessage_UserId").OnTable("ChatMessage")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_ChatMessageStatus_ChatMessageId").OnTable("ChatMessageStatus")
+                .OnColumn("ChatMessageId")
+            
+            ;
+            Create.Index("IX_ChatMessageStatus_CreatedByUserId").OnTable("ChatMessageStatus")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ChatMessageStatus_ModifiedByUserId").OnTable("ChatMessageStatus")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ChatMessageStatus_UserId").OnTable("ChatMessageStatus")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_ChatUser_ChatId").OnTable("ChatUser")
+                .OnColumn("ChatId")
+            
+            ;
+            Create.Index("IX_ChatUser_CreatedByUserId").OnTable("ChatUser")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ChatUser_ModifiedByUserId").OnTable("ChatUser")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ChatUser_UserId").OnTable("ChatUser")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_CompanyStorageConfiguration_CreatedByUserId").OnTable("CompanyStorageConfiguration")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_CompanyStorageConfiguration_ModifiedByUserId").OnTable("CompanyStorageConfiguration")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ConfigurationGroup_CreatedByUserId").OnTable("ConfigurationGroup")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ConfigurationGroup_ModifiedByUserId").OnTable("ConfigurationGroup")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ConfigurationItem_ConfigurationGroupId").OnTable("ConfigurationItem")
+                .OnColumn("ConfigurationGroupId")
+            
+            ;
+            Create.Index("IX_ConfigurationItem_CreatedByUserId").OnTable("ConfigurationItem")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ConfigurationItem_ModifiedByUserId").OnTable("ConfigurationItem")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_Country_CreatedByUserId").OnTable("Country")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_Country_ModifiedByUserId").OnTable("Country")
+                .OnColumn("ModifiedByUserId")
             
             ;
             Create.Index("IX_DailyAffirmationSession_CreatedByUserId").OnTable("DailyAffirmationSession")
@@ -1191,6 +1345,22 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("PredefinedMeditationTypeId")
             
             ;
+            Create.Index("IX_DefaultUserTypePermission_CreatedByUserId").OnTable("DefaultUserTypePermission")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultUserTypePermission_ModifiedByUserId").OnTable("DefaultUserTypePermission")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_DefaultUserTypePermission_PredefinedUserPermissionTypeId").OnTable("DefaultUserTypePermission")
+                .OnColumn("PredefinedUserPermissionTypeId")
+            
+            ;
+            Create.Index("IX_DefaultUserTypePermission_PredefinedUserTypeId").OnTable("DefaultUserTypePermission")
+                .OnColumn("PredefinedUserTypeId")
+            
+            ;
             Create.Index("IX_DefaultVisionBoardPicture_CreatedByUserId").OnTable("DefaultVisionBoardPicture")
                 .OnColumn("CreatedByUserId")
             
@@ -1199,16 +1369,36 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("ModifiedByUserId")
             
             ;
+            Create.Index("IX_EnumGroup_CreatedByUserId").OnTable("EnumGroup")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_EnumGroup_ModifiedByUserId").OnTable("EnumGroup")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_EnumType_CreatedByUserId").OnTable("EnumType")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_EnumType_EnumGroupId").OnTable("EnumType")
+                .OnColumn("EnumGroupId")
+            
+            ;
+            Create.Index("IX_EnumType_ModifiedByUserId").OnTable("EnumType")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_EnumType_ParentEnumTypeId").OnTable("EnumType")
+                .OnColumn("ParentEnumTypeId")
+            
+            ;
             Create.Index("IX_Feed_CreatedByUserId").OnTable("Feed")
                 .OnColumn("CreatedByUserId")
             
             ;
             Create.Index("IX_Feed_DailyAffirmationSessionId").OnTable("Feed")
                 .OnColumn("DailyAffirmationSessionId")
-            
-            ;
-            Create.Index("IX_Feed_FeedGuid").OnTable("Feed")
-                .OnColumn("FeedGuid")
             
             ;
             Create.Index("IX_Feed_GoalTrackerId").OnTable("Feed")
@@ -1241,6 +1431,38 @@ namespace Manifest.Repository.Migration.Application
             ;
             Create.Index("IX_Feed_VisionBoardSessionId").OnTable("Feed")
                 .OnColumn("VisionBoardSessionId")
+            
+            ;
+            Create.Index("IX_FileAttachment_CreatedByUserId").OnTable("FileAttachment")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_FileAttachment_FileAttachmentFolderId").OnTable("FileAttachment")
+                .OnColumn("FileAttachmentFolderId")
+            
+            ;
+            Create.Index("IX_FileAttachment_ModifiedByUserId").OnTable("FileAttachment")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_FileAttachment_UserId").OnTable("FileAttachment")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_FileAttachmentFolder_CreatedByUserId").OnTable("FileAttachmentFolder")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_FileAttachmentFolder_ModifiedByUserId").OnTable("FileAttachmentFolder")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_FileAttachmentFolder_ParentFileAttachmentFolderId").OnTable("FileAttachmentFolder")
+                .OnColumn("ParentFileAttachmentFolderId")
+            
+            ;
+            Create.Index("IX_FileAttachmentFolder_UserId").OnTable("FileAttachmentFolder")
+                .OnColumn("UserId")
             
             ;
             Create.Index("IX_GoalTracker_CreatedByUserId").OnTable("GoalTracker")
@@ -1299,6 +1521,134 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("UserId")
             
             ;
+            Create.Index("IX_Job_CreatedByUserId").OnTable("Job")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_Job_ExecutionAppId").OnTable("Job")
+                .OnColumn("ExecutionAppId")
+            
+            ;
+            Create.Index("IX_Job_ExecutionProcessId").OnTable("Job")
+                .OnColumn("ExecutionProcessId")
+            
+            ;
+            Create.Index("IX_Job_ExecutionThreadId").OnTable("Job")
+                .OnColumn("ExecutionThreadId")
+            
+            ;
+            Create.Index("IX_Job_JobTemplateId").OnTable("Job")
+                .OnColumn("JobTemplateId")
+            
+            ;
+            Create.Index("IX_Job_ModifiedByUserId").OnTable("Job")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_Job_PredefinedJobOrReportTypeId").OnTable("Job")
+                .OnColumn("PredefinedJobOrReportTypeId")
+            
+            ;
+            Create.Index("IX_Job_PredefinedJobStatusTypeId").OnTable("Job")
+                .OnColumn("PredefinedJobStatusTypeId")
+            
+            ;
+            Create.Index("IX_Job_PredefinedJobTypeId").OnTable("Job")
+                .OnColumn("PredefinedJobTypeId")
+            
+            ;
+            Create.Index("IX_Job_SubmittedByUserId").OnTable("Job")
+                .OnColumn("SubmittedByUserId")
+            
+            ;
+            Create.Index("IX_JobAttachment_CreatedByUserId").OnTable("JobAttachment")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_JobAttachment_JobId").OnTable("JobAttachment")
+                .OnColumn("JobId")
+            
+            ;
+            Create.Index("IX_JobAttachment_ModifiedByUserId").OnTable("JobAttachment")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_JobNotificationEmail_CreatedByUserId").OnTable("JobNotificationEmail")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_JobNotificationEmail_JobId").OnTable("JobNotificationEmail")
+                .OnColumn("JobId")
+            
+            ;
+            Create.Index("IX_JobNotificationEmail_ModifiedByUserId").OnTable("JobNotificationEmail")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplate_CreatedByUserId").OnTable("JobTemplate")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplate_JobTemplateCategoryId").OnTable("JobTemplate")
+                .OnColumn("JobTemplateCategoryId")
+            
+            ;
+            Create.Index("IX_JobTemplate_ModifiedByUserId").OnTable("JobTemplate")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplate_PredefinedJobOrReportTypeId").OnTable("JobTemplate")
+                .OnColumn("PredefinedJobOrReportTypeId")
+            
+            ;
+            Create.Index("IX_JobTemplate_PredefinedJobTypeId").OnTable("JobTemplate")
+                .OnColumn("PredefinedJobTypeId")
+            
+            ;
+            Create.Index("IX_JobTemplate_PredefinedJobUsageForTypeId").OnTable("JobTemplate")
+                .OnColumn("PredefinedJobUsageForTypeId")
+            
+            ;
+            Create.Index("IX_JobTemplateCategory_CreatedByUserId").OnTable("JobTemplateCategory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplateCategory_ModifiedByUserId").OnTable("JobTemplateCategory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplateParameter_CreatedByUserId").OnTable("JobTemplateParameter")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplateParameter_JobTemplateId").OnTable("JobTemplateParameter")
+                .OnColumn("JobTemplateId")
+            
+            ;
+            Create.Index("IX_JobTemplateParameter_ModifiedByUserId").OnTable("JobTemplateParameter")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_JobTemplateParameter_PredefinedFieldControlTypeId").OnTable("JobTemplateParameter")
+                .OnColumn("PredefinedFieldControlTypeId")
+            
+            ;
+            Create.Index("IX_JobTemplateParameter_PredefinedFieldPopulatorTypeId").OnTable("JobTemplateParameter")
+                .OnColumn("PredefinedFieldPopulatorTypeId")
+            
+            ;
+            Create.Index("IX_JobTemplateParameter_PredefinedFieldTypeId").OnTable("JobTemplateParameter")
+                .OnColumn("PredefinedFieldTypeId")
+            
+            ;
+            Create.Index("IX_MailServer_CreatedByUserId").OnTable("MailServer")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_MailServer_ModifiedByUserId").OnTable("MailServer")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
             Create.Index("IX_MeditationFile_CreatedByUserId").OnTable("MeditationFile")
                 .OnColumn("CreatedByUserId")
             
@@ -1328,6 +1678,278 @@ namespace Manifest.Repository.Migration.Application
             
             ;
             Create.Index("IX_MeditationSession_UserId").OnTable("MeditationSession")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_MessageTemplate_CreatedByUserId").OnTable("MessageTemplate")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_MessageTemplate_ModifiedByUserId").OnTable("MessageTemplate")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_MessageTemplate_PredefinedMessageTemplateTypeId").OnTable("MessageTemplate")
+                .OnColumn("PredefinedMessageTemplateTypeId")
+            
+            ;
+            Create.Index("IX_MessageToSend_CreatedByUserId").OnTable("MessageToSend")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_MessageToSend_ModifiedByUserId").OnTable("MessageToSend")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_MessageToSend_PredefinedMessageToSendTypeId").OnTable("MessageToSend")
+                .OnColumn("PredefinedMessageToSendTypeId")
+            
+            ;
+            Create.Index("IX_MessageToSend_RealtimeMessageId").OnTable("MessageToSend")
+                .OnColumn("RealtimeMessageId")
+            
+            ;
+            Create.Index("IX_NoteAttachment_CreatedByUserId").OnTable("NoteAttachment")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_NoteAttachment_ModifiedByUserId").OnTable("NoteAttachment")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_NoteAttachment_UserId").OnTable("NoteAttachment")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_PushNotificationServer_CreatedByUserId").OnTable("PushNotificationServer")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_PushNotificationServer_ModifiedByUserId").OnTable("PushNotificationServer")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_PushNotificationServer_PredefinedPushNotificationServerTypeId").OnTable("PushNotificationServer")
+                .OnColumn("PredefinedPushNotificationServerTypeId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_CreatedByUserId").OnTable("RealtimeMessage")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_ModifiedByUserId").OnTable("RealtimeMessage")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_PredefinedMessagePriorityTypeId").OnTable("RealtimeMessage")
+                .OnColumn("PredefinedMessagePriorityTypeId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_PredefinedNotificationMessageTypeId").OnTable("RealtimeMessage")
+                .OnColumn("PredefinedNotificationMessageTypeId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_PredefinedRealtimeMessageStatusTypeId").OnTable("RealtimeMessage")
+                .OnColumn("PredefinedRealtimeMessageStatusTypeId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_PredefinedResourceTypeId").OnTable("RealtimeMessage")
+                .OnColumn("PredefinedResourceTypeId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_ResourceId").OnTable("RealtimeMessage")
+                .OnColumn("ResourceId")
+            
+            ;
+            Create.Index("IX_RealtimeMessage_UserId").OnTable("RealtimeMessage")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_SavedJob_CreatedByUserId").OnTable("SavedJob")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_SavedJob_JobTemplateId").OnTable("SavedJob")
+                .OnColumn("JobTemplateId")
+            
+            ;
+            Create.Index("IX_SavedJob_ModifiedByUserId").OnTable("SavedJob")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_SavedJob_PredefinedJobOrReportTypeId").OnTable("SavedJob")
+                .OnColumn("PredefinedJobOrReportTypeId")
+            
+            ;
+            Create.Index("IX_SavedJob_PredefinedJobTypeId").OnTable("SavedJob")
+                .OnColumn("PredefinedJobTypeId")
+            
+            ;
+            Create.Index("IX_SavedJob_SubmittedByUserId").OnTable("SavedJob")
+                .OnColumn("SubmittedByUserId")
+            
+            ;
+            Create.Index("IX_SavedJob_UserId").OnTable("SavedJob")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_SavedJobNotificationEmail_CreatedByUserId").OnTable("SavedJobNotificationEmail")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_SavedJobNotificationEmail_ModifiedByUserId").OnTable("SavedJobNotificationEmail")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_SavedJobNotificationEmail_SavedJobId").OnTable("SavedJobNotificationEmail")
+                .OnColumn("SavedJobId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_CreatedByUserId").OnTable("ScheduledJob")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_JobTemplateId").OnTable("ScheduledJob")
+                .OnColumn("JobTemplateId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_ModifiedByUserId").OnTable("ScheduledJob")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_PredefinedJobOrReportTypeId").OnTable("ScheduledJob")
+                .OnColumn("PredefinedJobOrReportTypeId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_PredefinedJobTypeId").OnTable("ScheduledJob")
+                .OnColumn("PredefinedJobTypeId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_RunAsUserId").OnTable("ScheduledJob")
+                .OnColumn("RunAsUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJob_SubmittedByUserId").OnTable("ScheduledJob")
+                .OnColumn("SubmittedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJobHistory_CreatedByUserId").OnTable("ScheduledJobHistory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJobHistory_ModifiedByUserId").OnTable("ScheduledJobHistory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJobHistory_PickupProcessId").OnTable("ScheduledJobHistory")
+                .OnColumn("PickupProcessId")
+            
+            ;
+            Create.Index("IX_ScheduledJobHistory_ScheduledJobId").OnTable("ScheduledJobHistory")
+                .OnColumn("ScheduledJobId")
+            
+            ;
+            Create.Index("IX_ScheduledJobNotificationEmail_CreatedByUserId").OnTable("ScheduledJobNotificationEmail")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJobNotificationEmail_ModifiedByUserId").OnTable("ScheduledJobNotificationEmail")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_ScheduledJobNotificationEmail_ScheduledJobId").OnTable("ScheduledJobNotificationEmail")
+                .OnColumn("ScheduledJobId")
+            
+            ;
+            Create.Index("IX_SingleSignOnServer_CreatedByUserId").OnTable("SingleSignOnServer")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_SingleSignOnServer_ModifiedByUserId").OnTable("SingleSignOnServer")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_SingleSignOnServer_PredefinedSingleSignOnServerTypeId").OnTable("SingleSignOnServer")
+                .OnColumn("PredefinedSingleSignOnServerTypeId")
+            
+            ;
+            Create.Index("IX_SmsServer_CreatedByUserId").OnTable("SmsServer")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_SmsServer_ModifiedByUserId").OnTable("SmsServer")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_SmsServer_PredefinedSmsAndVoiceServerTypeId").OnTable("SmsServer")
+                .OnColumn("PredefinedSmsAndVoiceServerTypeId")
+            
+            ;
+            Create.Index("IX_SmsServer_TwilioAccountSid").OnTable("SmsServer")
+                .OnColumn("TwilioAccountSid")
+            
+            ;
+            Create.Index("IX_State_CountryId").OnTable("State")
+                .OnColumn("CountryId")
+            
+            ;
+            Create.Index("IX_State_CreatedByUserId").OnTable("State")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_State_ModifiedByUserId").OnTable("State")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_User_CreatedByUserId").OnTable("User")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_User_ModifiedByUserId").OnTable("User")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_User_PredefinedUserTypeId").OnTable("User")
+                .OnColumn("PredefinedUserTypeId")
+            
+            ;
+            Create.Index("IX_UserGroup_CreatedByUserId").OnTable("UserGroup")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_UserGroup_ModifiedByUserId").OnTable("UserGroup")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_UserGroupUser_CreatedByUserId").OnTable("UserGroupUser")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_UserGroupUser_ModifiedByUserId").OnTable("UserGroupUser")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_UserGroupUser_UserGroupId").OnTable("UserGroupUser")
+                .OnColumn("UserGroupId")
+            
+            ;
+            Create.Index("IX_UserGroupUser_UserId").OnTable("UserGroupUser")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_UserPermission_CreatedByUserId").OnTable("UserPermission")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_UserPermission_ModifiedByUserId").OnTable("UserPermission")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_UserPermission_PredefinedUserPermissionTypeId").OnTable("UserPermission")
+                .OnColumn("PredefinedUserPermissionTypeId")
+            
+            ;
+            Create.Index("IX_UserPermission_UserId").OnTable("UserPermission")
                 .OnColumn("UserId")
             
             ;
@@ -1375,10 +1997,60 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("VisionBoardSessionId")
             
             ;
+            Create.Index("IX_VoiceNotificationServer_CreatedByUserId").OnTable("VoiceNotificationServer")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_VoiceNotificationServer_ModifiedByUserId").OnTable("VoiceNotificationServer")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_VoiceNotificationServer_PredefinedSmsAndVoiceServerTypeId").OnTable("VoiceNotificationServer")
+                .OnColumn("PredefinedSmsAndVoiceServerTypeId")
+            
+            ;
+            Create.Index("IX_WhatsAppNotificationServer_CreatedByUserId").OnTable("WhatsAppNotificationServer")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_WhatsAppNotificationServer_ModifiedByUserId").OnTable("WhatsAppNotificationServer")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_WhatsAppNotificationServer_PredefinedSmsAndVoiceServerTypeId").OnTable("WhatsAppNotificationServer")
+                .OnColumn("PredefinedSmsAndVoiceServerTypeId")
+            
+            ;
 
             //UniqueKeys definitions
 
             //ForeignKeys definitions
+            Create.ForeignKey("FK_AppExecutionVersion_CreatedByUserId").FromTable("AppExecutionVersion").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_AppExecutionVersion_ModifiedByUserId").FromTable("AppExecutionVersion").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_AuditOperation_CreatedByUserId").FromTable("AuditOperation").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_AuditOperation_ModifiedByUserId").FromTable("AuditOperation").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_AuditOperation_PredefinedAuditOperationTypeId").FromTable("AuditOperation").ForeignColumns("PredefinedAuditOperationTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_AuditOperation_PredefinedResourceTypeId").FromTable("AuditOperation").ForeignColumns("PredefinedResourceTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_AuditOperation_UserGroupId").FromTable("AuditOperation").ForeignColumns("UserGroupId")
+                .ToTable("UserGroup").PrimaryColumns("UserGroupId");
+            Create.ForeignKey("FK_AuditOperation_UserGroupUserId").FromTable("AuditOperation").ForeignColumns("UserGroupUserId")
+                .ToTable("UserGroupUser").PrimaryColumns("UserGroupUserId");
+            Create.ForeignKey("FK_AuditOperation_UserId").FromTable("AuditOperation").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_AuditOperation_UserPermissionId").FromTable("AuditOperation").ForeignColumns("UserPermissionId")
+                .ToTable("UserPermission").PrimaryColumns("UserPermissionId");
+            Create.ForeignKey("FK_AuditOperationDetail_AuditOperationId").FromTable("AuditOperationDetail").ForeignColumns("AuditOperationId")
+                .ToTable("AuditOperation").PrimaryColumns("AuditOperationId");
+            Create.ForeignKey("FK_AuditOperationDetail_CreatedByUserId").FromTable("AuditOperationDetail").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_AuditOperationDetail_ModifiedByUserId").FromTable("AuditOperationDetail").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_Category_CreatedByUserId").FromTable("Category").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_Category_DefaultCategoryId").FromTable("Category").ForeignColumns("DefaultCategoryId")
@@ -1387,7 +2059,57 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_Category_PredefinedCategoryTypeId").FromTable("Category").ForeignColumns("PredefinedCategoryTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Category_PredefinedIconTypeId").FromTable("Category").ForeignColumns("PredefinedIconTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_Category_UserId").FromTable("Category").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Chat_CreatedByUserId").FromTable("Chat").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Chat_ModifiedByUserId").FromTable("Chat").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Chat_UserId").FromTable("Chat").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatMessage_ChatId").FromTable("ChatMessage").ForeignColumns("ChatId")
+                .ToTable("Chat").PrimaryColumns("ChatId");
+            Create.ForeignKey("FK_ChatMessage_CreatedByUserId").FromTable("ChatMessage").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatMessage_ModifiedByUserId").FromTable("ChatMessage").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatMessage_UserId").FromTable("ChatMessage").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatMessageStatus_ChatMessageId").FromTable("ChatMessageStatus").ForeignColumns("ChatMessageId")
+                .ToTable("ChatMessage").PrimaryColumns("ChatMessageId");
+            Create.ForeignKey("FK_ChatMessageStatus_CreatedByUserId").FromTable("ChatMessageStatus").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatMessageStatus_ModifiedByUserId").FromTable("ChatMessageStatus").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatMessageStatus_UserId").FromTable("ChatMessageStatus").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatUser_ChatId").FromTable("ChatUser").ForeignColumns("ChatId")
+                .ToTable("Chat").PrimaryColumns("ChatId");
+            Create.ForeignKey("FK_ChatUser_CreatedByUserId").FromTable("ChatUser").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatUser_ModifiedByUserId").FromTable("ChatUser").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ChatUser_UserId").FromTable("ChatUser").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_CompanyStorageConfiguration_CreatedByUserId").FromTable("CompanyStorageConfiguration").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_CompanyStorageConfiguration_ModifiedByUserId").FromTable("CompanyStorageConfiguration").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ConfigurationGroup_CreatedByUserId").FromTable("ConfigurationGroup").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ConfigurationGroup_ModifiedByUserId").FromTable("ConfigurationGroup").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ConfigurationItem_ConfigurationGroupId").FromTable("ConfigurationItem").ForeignColumns("ConfigurationGroupId")
+                .ToTable("ConfigurationGroup").PrimaryColumns("ConfigurationGroupId");
+            Create.ForeignKey("FK_ConfigurationItem_CreatedByUserId").FromTable("ConfigurationItem").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ConfigurationItem_ModifiedByUserId").FromTable("ConfigurationItem").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Country_CreatedByUserId").FromTable("Country").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Country_ModifiedByUserId").FromTable("Country").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DailyAffirmationSession_CreatedByUserId").FromTable("DailyAffirmationSession").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
@@ -1451,10 +2173,30 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DefaultMeditationFile_PredefinedMeditationTypeId").FromTable("DefaultMeditationFile").ForeignColumns("PredefinedMeditationTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DefaultUserTypePermission_CreatedByUserId").FromTable("DefaultUserTypePermission").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultUserTypePermission_ModifiedByUserId").FromTable("DefaultUserTypePermission").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_DefaultUserTypePermission_PredefinedUserPermissionTypeId").FromTable("DefaultUserTypePermission").ForeignColumns("PredefinedUserPermissionTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DefaultUserTypePermission_PredefinedUserTypeId").FromTable("DefaultUserTypePermission").ForeignColumns("PredefinedUserTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_DefaultVisionBoardPicture_CreatedByUserId").FromTable("DefaultVisionBoardPicture").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DefaultVisionBoardPicture_ModifiedByUserId").FromTable("DefaultVisionBoardPicture").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_EnumGroup_CreatedByUserId").FromTable("EnumGroup").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_EnumGroup_ModifiedByUserId").FromTable("EnumGroup").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_EnumType_CreatedByUserId").FromTable("EnumType").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_EnumType_EnumGroupId").FromTable("EnumType").ForeignColumns("EnumGroupId")
+                .ToTable("EnumGroup").PrimaryColumns("EnumGroupId");
+            Create.ForeignKey("FK_EnumType_ModifiedByUserId").FromTable("EnumType").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_EnumType_ParentEnumTypeId").FromTable("EnumType").ForeignColumns("ParentEnumTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_Feed_CreatedByUserId").FromTable("Feed").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_Feed_DailyAffirmationSessionId").FromTable("Feed").ForeignColumns("DailyAffirmationSessionId")
@@ -1475,6 +2217,22 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_Feed_VisionBoardSessionId").FromTable("Feed").ForeignColumns("VisionBoardSessionId")
                 .ToTable("VisionBoardSession").PrimaryColumns("VisionBoardSessionId");
+            Create.ForeignKey("FK_FileAttachment_CreatedByUserId").FromTable("FileAttachment").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_FileAttachment_FileAttachmentFolderId").FromTable("FileAttachment").ForeignColumns("FileAttachmentFolderId")
+                .ToTable("FileAttachmentFolder").PrimaryColumns("FileAttachmentFolderId");
+            Create.ForeignKey("FK_FileAttachment_ModifiedByUserId").FromTable("FileAttachment").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_FileAttachment_UserId").FromTable("FileAttachment").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_FileAttachmentFolder_CreatedByUserId").FromTable("FileAttachmentFolder").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_FileAttachmentFolder_ModifiedByUserId").FromTable("FileAttachmentFolder").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_FileAttachmentFolder_ParentFileAttachmentFolderId").FromTable("FileAttachmentFolder").ForeignColumns("ParentFileAttachmentFolderId")
+                .ToTable("FileAttachmentFolder").PrimaryColumns("FileAttachmentFolderId");
+            Create.ForeignKey("FK_FileAttachmentFolder_UserId").FromTable("FileAttachmentFolder").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_GoalTracker_CreatedByUserId").FromTable("GoalTracker").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_GoalTracker_ModifiedByUserId").FromTable("GoalTracker").ForeignColumns("ModifiedByUserId")
@@ -1503,6 +2261,64 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_GoalTrackerMileStone_UserId").FromTable("GoalTrackerMileStone").ForeignColumns("UserId")
                 .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Job_CreatedByUserId").FromTable("Job").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Job_JobTemplateId").FromTable("Job").ForeignColumns("JobTemplateId")
+                .ToTable("JobTemplate").PrimaryColumns("JobTemplateId");
+            Create.ForeignKey("FK_Job_ModifiedByUserId").FromTable("Job").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_Job_PredefinedJobOrReportTypeId").FromTable("Job").ForeignColumns("PredefinedJobOrReportTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Job_PredefinedJobStatusTypeId").FromTable("Job").ForeignColumns("PredefinedJobStatusTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Job_PredefinedJobTypeId").FromTable("Job").ForeignColumns("PredefinedJobTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_Job_SubmittedByUserId").FromTable("Job").ForeignColumns("SubmittedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobAttachment_CreatedByUserId").FromTable("JobAttachment").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobAttachment_JobId").FromTable("JobAttachment").ForeignColumns("JobId")
+                .ToTable("Job").PrimaryColumns("JobId");
+            Create.ForeignKey("FK_JobAttachment_ModifiedByUserId").FromTable("JobAttachment").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobNotificationEmail_CreatedByUserId").FromTable("JobNotificationEmail").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobNotificationEmail_JobId").FromTable("JobNotificationEmail").ForeignColumns("JobId")
+                .ToTable("Job").PrimaryColumns("JobId");
+            Create.ForeignKey("FK_JobNotificationEmail_ModifiedByUserId").FromTable("JobNotificationEmail").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplate_CreatedByUserId").FromTable("JobTemplate").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplate_JobTemplateCategoryId").FromTable("JobTemplate").ForeignColumns("JobTemplateCategoryId")
+                .ToTable("JobTemplateCategory").PrimaryColumns("JobTemplateCategoryId");
+            Create.ForeignKey("FK_JobTemplate_ModifiedByUserId").FromTable("JobTemplate").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplate_PredefinedJobOrReportTypeId").FromTable("JobTemplate").ForeignColumns("PredefinedJobOrReportTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_JobTemplate_PredefinedJobTypeId").FromTable("JobTemplate").ForeignColumns("PredefinedJobTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_JobTemplate_PredefinedJobUsageForTypeId").FromTable("JobTemplate").ForeignColumns("PredefinedJobUsageForTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_JobTemplateCategory_CreatedByUserId").FromTable("JobTemplateCategory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplateCategory_ModifiedByUserId").FromTable("JobTemplateCategory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplateParameter_CreatedByUserId").FromTable("JobTemplateParameter").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplateParameter_JobTemplateId").FromTable("JobTemplateParameter").ForeignColumns("JobTemplateId")
+                .ToTable("JobTemplate").PrimaryColumns("JobTemplateId");
+            Create.ForeignKey("FK_JobTemplateParameter_ModifiedByUserId").FromTable("JobTemplateParameter").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_JobTemplateParameter_PredefinedFieldControlTypeId").FromTable("JobTemplateParameter").ForeignColumns("PredefinedFieldControlTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_JobTemplateParameter_PredefinedFieldPopulatorTypeId").FromTable("JobTemplateParameter").ForeignColumns("PredefinedFieldPopulatorTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_JobTemplateParameter_PredefinedFieldTypeId").FromTable("JobTemplateParameter").ForeignColumns("PredefinedFieldTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_MailServer_CreatedByUserId").FromTable("MailServer").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MailServer_ModifiedByUserId").FromTable("MailServer").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_MeditationFile_CreatedByUserId").FromTable("MeditationFile").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_MeditationFile_ModifiedByUserId").FromTable("MeditationFile").ForeignColumns("ModifiedByUserId")
@@ -1518,6 +2334,136 @@ namespace Manifest.Repository.Migration.Application
             Create.ForeignKey("FK_MeditationSession_ModifiedByUserId").FromTable("MeditationSession").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_MeditationSession_UserId").FromTable("MeditationSession").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MessageTemplate_CreatedByUserId").FromTable("MessageTemplate").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MessageTemplate_ModifiedByUserId").FromTable("MessageTemplate").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MessageTemplate_PredefinedMessageTemplateTypeId").FromTable("MessageTemplate").ForeignColumns("PredefinedMessageTemplateTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_MessageToSend_CreatedByUserId").FromTable("MessageToSend").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MessageToSend_ModifiedByUserId").FromTable("MessageToSend").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_MessageToSend_PredefinedMessageToSendTypeId").FromTable("MessageToSend").ForeignColumns("PredefinedMessageToSendTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_MessageToSend_RealtimeMessageId").FromTable("MessageToSend").ForeignColumns("RealtimeMessageId")
+                .ToTable("RealtimeMessage").PrimaryColumns("RealtimeMessageId");
+            Create.ForeignKey("FK_NoteAttachment_CreatedByUserId").FromTable("NoteAttachment").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_NoteAttachment_ModifiedByUserId").FromTable("NoteAttachment").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_NoteAttachment_UserId").FromTable("NoteAttachment").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_PushNotificationServer_CreatedByUserId").FromTable("PushNotificationServer").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_PushNotificationServer_ModifiedByUserId").FromTable("PushNotificationServer").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_PushNotificationServer_PredefinedPushNotificationServerTypeId").FromTable("PushNotificationServer").ForeignColumns("PredefinedPushNotificationServerTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_RealtimeMessage_CreatedByUserId").FromTable("RealtimeMessage").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_RealtimeMessage_ModifiedByUserId").FromTable("RealtimeMessage").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_RealtimeMessage_PredefinedMessagePriorityTypeId").FromTable("RealtimeMessage").ForeignColumns("PredefinedMessagePriorityTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_RealtimeMessage_PredefinedNotificationMessageTypeId").FromTable("RealtimeMessage").ForeignColumns("PredefinedNotificationMessageTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_RealtimeMessage_PredefinedRealtimeMessageStatusTypeId").FromTable("RealtimeMessage").ForeignColumns("PredefinedRealtimeMessageStatusTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_RealtimeMessage_PredefinedResourceTypeId").FromTable("RealtimeMessage").ForeignColumns("PredefinedResourceTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_RealtimeMessage_UserId").FromTable("RealtimeMessage").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJob_CreatedByUserId").FromTable("SavedJob").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJob_JobTemplateId").FromTable("SavedJob").ForeignColumns("JobTemplateId")
+                .ToTable("JobTemplate").PrimaryColumns("JobTemplateId");
+            Create.ForeignKey("FK_SavedJob_ModifiedByUserId").FromTable("SavedJob").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJob_PredefinedJobOrReportTypeId").FromTable("SavedJob").ForeignColumns("PredefinedJobOrReportTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_SavedJob_PredefinedJobTypeId").FromTable("SavedJob").ForeignColumns("PredefinedJobTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_SavedJob_SubmittedByUserId").FromTable("SavedJob").ForeignColumns("SubmittedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJob_UserId").FromTable("SavedJob").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJobNotificationEmail_CreatedByUserId").FromTable("SavedJobNotificationEmail").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJobNotificationEmail_ModifiedByUserId").FromTable("SavedJobNotificationEmail").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SavedJobNotificationEmail_SavedJobId").FromTable("SavedJobNotificationEmail").ForeignColumns("SavedJobId")
+                .ToTable("SavedJob").PrimaryColumns("SavedJobId");
+            Create.ForeignKey("FK_ScheduledJob_CreatedByUserId").FromTable("ScheduledJob").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJob_JobTemplateId").FromTable("ScheduledJob").ForeignColumns("JobTemplateId")
+                .ToTable("JobTemplate").PrimaryColumns("JobTemplateId");
+            Create.ForeignKey("FK_ScheduledJob_ModifiedByUserId").FromTable("ScheduledJob").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJob_PredefinedJobOrReportTypeId").FromTable("ScheduledJob").ForeignColumns("PredefinedJobOrReportTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_ScheduledJob_PredefinedJobTypeId").FromTable("ScheduledJob").ForeignColumns("PredefinedJobTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_ScheduledJob_RunAsUserId").FromTable("ScheduledJob").ForeignColumns("RunAsUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJob_SubmittedByUserId").FromTable("ScheduledJob").ForeignColumns("SubmittedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJobHistory_CreatedByUserId").FromTable("ScheduledJobHistory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJobHistory_ModifiedByUserId").FromTable("ScheduledJobHistory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJobHistory_ScheduledJobId").FromTable("ScheduledJobHistory").ForeignColumns("ScheduledJobId")
+                .ToTable("ScheduledJob").PrimaryColumns("ScheduledJobId");
+            Create.ForeignKey("FK_ScheduledJobNotificationEmail_CreatedByUserId").FromTable("ScheduledJobNotificationEmail").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJobNotificationEmail_ModifiedByUserId").FromTable("ScheduledJobNotificationEmail").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_ScheduledJobNotificationEmail_ScheduledJobId").FromTable("ScheduledJobNotificationEmail").ForeignColumns("ScheduledJobId")
+                .ToTable("ScheduledJob").PrimaryColumns("ScheduledJobId");
+            Create.ForeignKey("FK_SingleSignOnServer_CreatedByUserId").FromTable("SingleSignOnServer").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SingleSignOnServer_ModifiedByUserId").FromTable("SingleSignOnServer").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SingleSignOnServer_PredefinedSingleSignOnServerTypeId").FromTable("SingleSignOnServer").ForeignColumns("PredefinedSingleSignOnServerTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_SmsServer_CreatedByUserId").FromTable("SmsServer").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SmsServer_ModifiedByUserId").FromTable("SmsServer").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_SmsServer_PredefinedSmsAndVoiceServerTypeId").FromTable("SmsServer").ForeignColumns("PredefinedSmsAndVoiceServerTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_State_CountryId").FromTable("State").ForeignColumns("CountryId")
+                .ToTable("Country").PrimaryColumns("CountryId");
+            Create.ForeignKey("FK_State_CreatedByUserId").FromTable("State").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_State_ModifiedByUserId").FromTable("State").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_User_CreatedByUserId").FromTable("User").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_User_ModifiedByUserId").FromTable("User").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_User_PredefinedUserTypeId").FromTable("User").ForeignColumns("PredefinedUserTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_UserGroup_CreatedByUserId").FromTable("UserGroup").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserGroup_ModifiedByUserId").FromTable("UserGroup").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserGroupUser_CreatedByUserId").FromTable("UserGroupUser").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserGroupUser_ModifiedByUserId").FromTable("UserGroupUser").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserGroupUser_UserGroupId").FromTable("UserGroupUser").ForeignColumns("UserGroupId")
+                .ToTable("UserGroup").PrimaryColumns("UserGroupId");
+            Create.ForeignKey("FK_UserGroupUser_UserId").FromTable("UserGroupUser").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPermission_CreatedByUserId").FromTable("UserPermission").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPermission_ModifiedByUserId").FromTable("UserPermission").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPermission_PredefinedUserPermissionTypeId").FromTable("UserPermission").ForeignColumns("PredefinedUserPermissionTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_UserPermission_UserId").FromTable("UserPermission").ForeignColumns("UserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_VisionBoardPicture_CreatedByUserId").FromTable("VisionBoardPicture").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
@@ -1541,6 +2487,18 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("VisionBoardPicture").PrimaryColumns("VisionBoardPictureId");
             Create.ForeignKey("FK_VisionBoardSessionPicture_VisionBoardSessionId").FromTable("VisionBoardSessionPicture").ForeignColumns("VisionBoardSessionId")
                 .ToTable("VisionBoardSession").PrimaryColumns("VisionBoardSessionId");
+            Create.ForeignKey("FK_VoiceNotificationServer_CreatedByUserId").FromTable("VoiceNotificationServer").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VoiceNotificationServer_ModifiedByUserId").FromTable("VoiceNotificationServer").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_VoiceNotificationServer_PredefinedSmsAndVoiceServerTypeId").FromTable("VoiceNotificationServer").ForeignColumns("PredefinedSmsAndVoiceServerTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_WhatsAppNotificationServer_CreatedByUserId").FromTable("WhatsAppNotificationServer").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_WhatsAppNotificationServer_ModifiedByUserId").FromTable("WhatsAppNotificationServer").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_WhatsAppNotificationServer_PredefinedSmsAndVoiceServerTypeId").FromTable("WhatsAppNotificationServer").ForeignColumns("PredefinedSmsAndVoiceServerTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
         }
     }
 }

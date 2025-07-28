@@ -13,7 +13,7 @@ namespace Manifest.Common.Models.SearchCriteria
         public bool ShowDeleted { get; set; } = false;
 
         
-public long? DefaultCategoryId { get; set; }
+        public long? DefaultCategoryId { get; set; }
 
         public List<long> PredefinedCategoryTypeIds { get; set; }
 

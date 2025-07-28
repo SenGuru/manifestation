@@ -2158,11 +2158,6 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("UserGroupName", "UserGroupName is required "));
             }
 
-            if (!ValidationUtils.IsLongValid(userGroupModel.CompanyEntityId))
-            {
-                result.Add(new ReturnErrorItem("CompanyEntityId", "CompanyEntity cannot be empty"));
-            }
-
             return result.Count > 0 ? result : null;
         }
         #endregion

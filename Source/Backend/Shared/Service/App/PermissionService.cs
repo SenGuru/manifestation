@@ -239,7 +239,7 @@ namespace Manifest.Service.App
 
         public async Task<(bool resultValue, bool canAssign, string errorStr)> CanModifyResource(long userId)
         {
-            if (!await currentSessionService.IsCurrentUserASuperAdminAsync())
+            if (!await currentSessionService.IsCurrentUserACompanyAdminAsync())
             {
                 if (userId != await currentSessionService.GetCurrentUserIdAsync())
                 {

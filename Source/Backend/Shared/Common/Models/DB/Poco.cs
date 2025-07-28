@@ -8324,7 +8324,6 @@ namespace Manifest.Common.Models.DB
         #region Columns
         public const string COLUMN_UserGroupId = "UserGroupId";
         public const string COLUMN_UserGroupName = "UserGroupName";
-        public const string COLUMN_CompanyEntityId = "CompanyEntityId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
         public const string COLUMN_CreatedByUserId = "CreatedByUserId";
@@ -8339,7 +8338,6 @@ namespace Manifest.Common.Models.DB
         #region ColumnNull
         public const bool COLUMN_NULLABLE_UserGroupId = false;
         public const bool COLUMN_NULLABLE_UserGroupName = false;
-        public const bool COLUMN_NULLABLE_CompanyEntityId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
         public const bool COLUMN_NULLABLE_CreatedByUserId = true;
@@ -8357,10 +8355,6 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         [StringLength(100)]
         public string UserGroupName { get; set; }
-        
-        [Column("CompanyEntityId")]
-        [NotNull]
-        public long CompanyEntityId { get; set; }
         
         [Column("IsDeleted")]
         [NotNull]
@@ -8385,7 +8379,6 @@ namespace Manifest.Common.Models.DB
             var sb = new StringBuilder();
             sb.AppendLine($"UserGroupId = {UserGroupId} , ");
             sb.AppendLine($"UserGroupName = {UserGroupName} , ");
-            sb.AppendLine($"CompanyEntityId = {CompanyEntityId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
             sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
@@ -8403,7 +8396,6 @@ namespace Manifest.Common.Models.DB
             {
             UserGroupId = item.UserGroupId,
             UserGroupName = item.UserGroupName,
-            CompanyEntityId = item.CompanyEntityId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
             CreatedByUserId = item.CreatedByUserId,
@@ -8430,7 +8422,6 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_UserGroupUserId = "UserGroupUserId";
         public const string COLUMN_UserGroupId = "UserGroupId";
         public const string COLUMN_UserId = "UserId";
-        public const string COLUMN_CompanyEntityId = "CompanyEntityId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
         public const string COLUMN_CreatedByUserId = "CreatedByUserId";
@@ -8445,7 +8436,6 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_UserGroupUserId = false;
         public const bool COLUMN_NULLABLE_UserGroupId = false;
         public const bool COLUMN_NULLABLE_UserId = false;
-        public const bool COLUMN_NULLABLE_CompanyEntityId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
         public const bool COLUMN_NULLABLE_CreatedByUserId = true;
@@ -8466,10 +8456,6 @@ namespace Manifest.Common.Models.DB
         [Column("UserId")]
         [NotNull]
         public long UserId { get; set; }
-        
-        [Column("CompanyEntityId")]
-        [NotNull]
-        public long CompanyEntityId { get; set; }
         
         [Column("IsDeleted")]
         [NotNull]
@@ -8495,7 +8481,6 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"UserGroupUserId = {UserGroupUserId} , ");
             sb.AppendLine($"UserGroupId = {UserGroupId} , ");
             sb.AppendLine($"UserId = {UserId} , ");
-            sb.AppendLine($"CompanyEntityId = {CompanyEntityId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
             sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
@@ -8514,7 +8499,6 @@ namespace Manifest.Common.Models.DB
             UserGroupUserId = item.UserGroupUserId,
             UserGroupId = item.UserGroupId,
             UserId = item.UserId,
-            CompanyEntityId = item.CompanyEntityId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
             CreatedByUserId = item.CreatedByUserId,
