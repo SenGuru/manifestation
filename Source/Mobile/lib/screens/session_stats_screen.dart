@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
 import '../services/usage_analytics_service.dart';
 import '../models/analytics_models.dart';
+import '../widgets/stylish_loading.dart';
 
 class SessionStatsScreen extends StatefulWidget {
   @override
@@ -96,33 +97,15 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         ],
       ),
       body: _isLoading
-          ? _buildLoadingState()
+          ? StylishLoading(
+              message: 'Loading your statistics...',
+            )
           : _errorMessage.isNotEmpty
               ? _buildErrorState()
               : _buildStatsContent(),
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentLavender),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Loading your statistics...',
-            style: TextStyle(
-              color: AppColors.textMedium,
-              fontSize: 16.sp,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildErrorState() {
     return Center(

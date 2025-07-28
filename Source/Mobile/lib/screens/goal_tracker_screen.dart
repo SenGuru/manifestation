@@ -12,6 +12,7 @@ import '../constants/goal_constants.dart';
 import '../services/goal_tracker_service.dart';
 import '../services/guided_tour_service.dart';
 import '../api/generated/code/manifestation.swagger.dart';
+import '../widgets/stylish_loading.dart';
 import 'goal_detail_screen.dart';
 
 class GoalTrackerScreen extends StatefulWidget {
@@ -81,6 +82,16 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Show loading screen while loading goals
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundDark,
+        body: StylishLoading(
+          message: 'Loading goals...',
+        ),
+      );
+    }
+
     final filteredGoals = _filterGoals();
     
     print('🎨 Building UI with:');
@@ -88,7 +99,6 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Filtered goals: ${filteredGoals.length}');
     print('   Selected category: ${selectedCategory.displayName}');
     print('   Show completed: $showCompletedGoals');
-    print('   Is loading: $_isLoading');
     
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
@@ -106,15 +116,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             
             // Goals list
             Expanded(
-              child: _isLoading
-                  ? _buildLoadingState()
-                  : filteredGoals.isEmpty 
-                      ? _buildEmptyState()
-                      : RefreshIndicator(
-                          onRefresh: _loadGoals,
-                          color: AppColors.goalTrackerGradient[0],
-                          child: _buildGoalsList(filteredGoals),
-                        ),
+              child: filteredGoals.isEmpty 
+                  ? _buildEmptyState()
+                  : RefreshIndicator(
+                      onRefresh: _loadGoals,
+                      color: AppColors.goalTrackerGradient[0],
+                      child: _buildGoalsList(filteredGoals),
+                    ),
             ),
           ],
         ),
@@ -428,26 +436,6 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.goalTrackerGradient[0]),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Loading your goals...',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildEmptyState() {
     return Center(
@@ -603,6 +591,24 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       print('📡 API Response - Message: ${result.message}');
       print('📡 API Response - Data Count: ${result.data?.length ?? 0}');
       
+      // Debug: Print raw API data structure
+      if (result.data != null && result.data!.isNotEmpty) {
+        final firstGoal = result.data!.first;
+        print('🔍 Raw API response for first goal:');
+        try {
+          final goalJson = firstGoal.toJson();
+          print('   - API JSON keys: ${goalJson.keys.toList()}');
+          if (goalJson.containsKey('existingCategorys')) {
+            print('   - existingCategorys in API JSON: ${goalJson['existingCategorys']}');
+            print('   - existingCategorys JSON type: ${goalJson['existingCategorys'].runtimeType}');
+          } else {
+            print('   - No existingCategorys key found in API JSON');
+          }
+        } catch (e) {
+          print('   - Error serializing API goal to JSON: $e');
+        }
+      }
+      
       if (result.isSuccess && result.data != null) {
         // Convert API GoalTrackerModel to UI Goal model
         final apiGoals = result.data!;
@@ -617,12 +623,60 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         for (int i = 0; i < apiGoals.length; i++) {
           final apiGoal = apiGoals[i];
           print('🎯 Processing goal ${i + 1}: ${apiGoal.goalTrackerName} (ID: ${apiGoal.goalTrackerId})');
+          print('🔍 Raw API Goal Data:');
+          print('   - goalTrackerId: ${apiGoal.goalTrackerId}');
+          print('   - goalTrackerName: ${apiGoal.goalTrackerName}');
+          print('   - userId: ${apiGoal.userId}');
+          print('   - existingCategorys length: ${apiGoal.existingCategorys?.length ?? 0}');
+          print('   - existingCategorys raw data: ${apiGoal.existingCategorys}');
+          print('   - existingCategorys type: ${apiGoal.existingCategorys.runtimeType}');
+          
+          // Show the exact API call structure for this goal
+          print('📡 API Call Structure for Goal ${apiGoal.goalTrackerId}:');
+          print('   📤 MAIN API CALL:');
+          print('      └─ Endpoint: GET /api/v1/manifest/getgoaltrackers');
+          print('      └─ Parameters: userId=${UnifiedAuthService().currentUser?.userId}');
+          print('      └─ Response Field: model[${i}].existingCategorys = ${apiGoal.existingCategorys}');
+          print('      └─ ISSUE: ❌ existingCategorys is always empty despite categories existing in DB');
+          print('');
+          print('   📤 WORKAROUND API CALL (DISABLED):');
+          print('      └─ Endpoint: GET /api/v1/manifest/getgoaltrackercategorybygoaltrackerid');
+          print('      └─ Parameters: goalTrackerId=${apiGoal.goalTrackerId}');
+          print('      └─ Status: 🚫 DISABLED due to performance issues (causes app hang)');
+          print('      └─ Note: ✅ This API DOES return category data when called individually');
+          print('');
+          
+          // For now, skip the separate API calls to avoid hanging
+          // TODO: Implement batch API call or background loading
+          List<dynamic>? actualCategories = apiGoal.existingCategorys;
+          
+          if (actualCategories == null || actualCategories.isEmpty) {
+            print('⚠️ existingCategorys is empty, separate API disabled for performance');
+            print('⚠️ This is the server-side bug we identified - categories exist in DB but aren\'t returned');
+          } else {
+            print('✅ Using existingCategorys from main API (${actualCategories.length} items)');
+          }
+          
+          // Debug the actual categories we'll use
+          if (actualCategories != null && actualCategories.isNotEmpty) {
+            print('🔍 Final categories to use (${actualCategories.length} items):');
+            for (int j = 0; j < actualCategories.length; j++) {
+              final cat = actualCategories[j];
+              print('   - Category $j details:');
+              print('     * categoryId: ${cat.categoryId}');
+              print('     * goalTrackerId: ${cat.goalTrackerId}');
+              print('     * userId: ${cat.userId}');
+              print('     * Full object: ${cat.toString()}');
+            }
+          } else {
+            print('🔍 No categories found via either method');
+          }
           
           // Get milestones for this specific goal from the loaded data
           final milestones = _getMilestonesForGoal(apiGoal, allUserMilestones);
           
-          // Determine category from existingCategorys using only our supported default categories
-          final goalCategory = _getGoalCategoryFromExistingCategories(apiGoal.existingCategorys, apiGoal.goalTrackerName ?? '');
+          // Determine category from actualCategories (either from existingCategorys or separate API)
+          final goalCategory = _getGoalCategoryFromActualCategories(actualCategories, apiGoal.goalTrackerName ?? '', apiGoal.goalTrackerId);
           
           // Calculate progress based on completed milestones
           final progress = _calculateGoalProgress(milestones);
@@ -704,35 +758,94 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     }
   }
 
-  /// Get goal category from existingCategorys using database ID mapping
-  GoalCategory _getGoalCategoryFromExistingCategories(List<CategoryModel>? existingCategorys, String goalName) {
-    print('🏷️  Processing existingCategorys for goal: "$goalName"');
+  /// Get goal category from actual categories (either CategoryModel or GoalTrackerCategoryModel)
+  GoalCategory _getGoalCategoryFromActualCategories(List<dynamic>? actualCategories, String goalName, int? goalTrackerId) {
+    print('🏷️  Processing actualCategories for goal: "$goalName" (GoalTracker ID: $goalTrackerId)');
+    print('🏷️  ActualCategories count: ${actualCategories?.length ?? 0}');
+    
+    if (actualCategories != null && actualCategories.isNotEmpty) {
+      // Get the first category - could be CategoryModel or GoalTrackerCategoryModel
+      final category = actualCategories.first;
+      int? actualCategoryId;
+      
+      // Handle different category model types
+      if (category is CategoryModel) {
+        // This is from existingCategorys - use categoryId
+        actualCategoryId = category.categoryId;
+        print('🏷️  Found CategoryModel - ID: ${category.categoryId}, DefaultID: ${category.defaultCategoryId}, Name: ${category.categoryName}');
+      } else {
+        // This is from GoalTrackerCategoryModel - check available fields
+        try {
+          actualCategoryId = category.categoryId;
+          print('🏷️  Found GoalTrackerCategoryModel - CategoryID: ${category.categoryId}, GoalTrackerID: ${category.goalTrackerId}');
+        } catch (e) {
+          print('🏷️  Error accessing category fields: $e');
+        }
+      }
+      
+      if (actualCategoryId != null) {
+        print('🏷️  Using actual category ID: $actualCategoryId');
+        
+        // Use the service to map the actual category ID to local category
+        final localCategory = _goalTrackerService.getLocalCategoryFromDbId(actualCategoryId);
+        if (localCategory != null) {
+          final goalCategory = _mapLocalCategoryToGoalCategory(localCategory);
+          print('🏷️  ✅ Mapped actual category ID $actualCategoryId to: ${goalCategory.displayName}');
+          return goalCategory;
+        } else {
+          print('🏷️  ⚠️  Unknown actual category ID: $actualCategoryId (not in database mapping)');
+        }
+      } else {
+        print('🏷️  ⚠️  Category has no categoryId field');
+      }
+    } else {
+      print('🏷️  No actualCategories found, using fallback logic');
+    }
+    
+    // Fallback to goal name analysis if no categories found
+    print('🏷️  Falling back to goal name analysis for goal: "$goalName" (ID: $goalTrackerId)');
+    final fallbackCategory = _fallbackCategoryFromGoalName(goalName);
+    print('🏷️  Fallback result: ${fallbackCategory.displayName}');
+    return fallbackCategory;
+  }
+
+  /// Get goal category from existingCategorys using database ID mapping (DEPRECATED - use _getGoalCategoryFromActualCategories)
+  GoalCategory _getGoalCategoryFromExistingCategories(List<CategoryModel>? existingCategorys, String goalName, int? goalTrackerId) {
+    print('🏷️  Processing existingCategorys for goal: "$goalName" (GoalTracker ID: $goalTrackerId)');
     print('🏷️  ExistingCategorys count: ${existingCategorys?.length ?? 0}');
     
     if (existingCategorys != null && existingCategorys.isNotEmpty) {
-      // Get the first category and use its database ID for mapping
+      // Get the first category and use its actual categoryId for mapping
       final category = existingCategorys.first;
-      final dbCategoryId = category.defaultCategoryId;
+      final actualCategoryId = category.categoryId; // ✅ Use categoryId, not defaultCategoryId
+      final defaultCategoryId = category.defaultCategoryId; // Keep for debugging
       
-      if (dbCategoryId != null) {
-        print('🏷️  Found database category ID: $dbCategoryId');
+      print('🏷️  Found category - ID: $actualCategoryId, DefaultID: $defaultCategoryId, Name: ${category.categoryName}');
+      
+      if (actualCategoryId != null) {
+        print('🏷️  Using actual category ID: $actualCategoryId');
         
-        // Use the service to map database ID to local category
-        final localCategory = _goalTrackerService.getLocalCategoryFromDbId(dbCategoryId);
+        // Use the service to map the actual category ID to local category
+        final localCategory = _goalTrackerService.getLocalCategoryFromDbId(actualCategoryId);
         if (localCategory != null) {
           final goalCategory = _mapLocalCategoryToGoalCategory(localCategory);
-          print('🏷️  ✅ Mapped DB ID $dbCategoryId to: ${goalCategory.displayName}');
+          print('🏷️  ✅ Mapped actual category ID $actualCategoryId to: ${goalCategory.displayName}');
           return goalCategory;
         } else {
-          print('🏷️  ⚠️  Unknown database category ID: $dbCategoryId');
+          print('🏷️  ⚠️  Unknown actual category ID: $actualCategoryId (not in database mapping)');
         }
+      } else {
+        print('🏷️  ⚠️  Category has no categoryId field');
       }
     } else {
       print('🏷️  No existingCategorys found, using fallback logic');
     }
     
     // Fallback to goal name analysis if no categories found
-    return _fallbackCategoryFromGoalName(goalName);
+    print('🏷️  Falling back to goal name analysis for goal: "$goalName" (ID: $goalTrackerId)');
+    final fallbackCategory = _fallbackCategoryFromGoalName(goalName);
+    print('🏷️  Fallback result: ${fallbackCategory.displayName}');
+    return fallbackCategory;
   }
 
   /// Map local category to GoalCategory enum
@@ -819,7 +932,6 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         return _convertApiMilestonesToUiMilestones(goalMilestones);
       }
     }
-    
     print('📋 No milestones found for this goal');
     return <Milestone>[];
   }
@@ -1074,8 +1186,10 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         // Fallback: Create goal locally if API fails
         await _createGoalLocally(title, category, priority, targetDate);
         
-        // Show warning to user
-        _showErrorSnackBar('Goal created locally (API unavailable): ${result.message}');
+        // Show warning to user (check if widget is still mounted)
+        if (mounted) {
+          _showErrorSnackBar('Goal created locally (API unavailable): ${result.message}');
+        }
       }
     } catch (e, stackTrace) {
       print('❌ Exception creating goal: $e');
@@ -1097,10 +1211,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           userFriendlyError = 'Goal created locally (connection error)';
         }
         
-        _showErrorSnackBar(userFriendlyError);
+        if (mounted) {
+          _showErrorSnackBar(userFriendlyError);
+        }
       } catch (localError) {
         print('❌ Failed to create goal locally: $localError');
-        _showErrorSnackBar('Failed to create goal: ${e.toString().split('\n').first}');
+        if (mounted) {
+          _showErrorSnackBar('Failed to create goal: ${e.toString().split('\n').first}');
+        }
       }
     }
   }
@@ -1136,12 +1254,16 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         print('✅ Goal updated successfully: ${result.message}');
       } else {
         print('❌ Failed to update goal: ${result.message}');
-        _showErrorSnackBar('Failed to update goal: ${result.message}');
+        if (mounted) {
+          _showErrorSnackBar('Failed to update goal: ${result.message}');
+        }
       }
     } catch (e, stackTrace) {
       print('❌ Exception updating goal: $e');
       print('📍 Stack trace: $stackTrace');
-      _showErrorSnackBar('Error updating goal: ${e.toString()}');
+      if (mounted) {
+        _showErrorSnackBar('Error updating goal: ${e.toString()}');
+      }
     }
   }
 
@@ -1192,13 +1314,17 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             ),
           );
         } else {
-          _showErrorSnackBar('Failed to delete goal: ${result.message}');
+          if (mounted) {
+            _showErrorSnackBar('Failed to delete goal: ${result.message}');
+          }
         }
       }
     } catch (e, stackTrace) {
       print('❌ Exception deleting goal: $e');
       print('📍 Stack trace: $stackTrace');
-      _showErrorSnackBar('Error deleting goal: ${e.toString()}');
+      if (mounted) {
+        _showErrorSnackBar('Error deleting goal: ${e.toString()}');
+      }
     }
   }
 

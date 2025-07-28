@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/constants/colors.dart';
 import 'package:fun/services/daily_quote_service.dart';
+import 'package:fun/widgets/stylish_loading.dart';
 
 class DailyInspiration extends StatefulWidget {
   final bool refreshOnEveryOpen;
@@ -98,11 +99,9 @@ class _DailyInspirationState extends State<DailyInspiration>
           ),
           borderRadius: BorderRadius.circular(16.r),
         ),
-        child: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentGold),
-            strokeWidth: 2,
-          ),
+        child: StylishLoading(
+          showMessage: false,
+          size: 60.w,
         ),
       );
     }

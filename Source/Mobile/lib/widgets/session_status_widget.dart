@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../services/session_manager.dart';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 /// Widget that displays session status information
 class SessionStatusWidget extends StatefulWidget {
@@ -83,13 +84,9 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              width: 12.w,
-              height: 12.h,
-              child: CircularProgressIndicator(
-                strokeWidth: 1,
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.textMedium),
-              ),
+            CompactStylishLoading(
+              color: AppColors.textMedium,
+              size: 12.w,
             ),
             SizedBox(width: 8.w),
             Text(

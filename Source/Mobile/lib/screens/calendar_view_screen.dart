@@ -6,6 +6,7 @@ import '../models/journey_entry.dart';
 import '../models/mood_selector.dart';
 import '../constants/colors.dart';
 import '../services/daily_journal_service.dart';
+import '../widgets/stylish_loading.dart';
 
 class CalendarViewScreen extends StatefulWidget {
   @override
@@ -308,21 +309,9 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             Expanded(
               child: isLoadingEntries
                   ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(
-                            valueColor: AlwaysStoppedAnimation<Color>(AppColors.gradientPurple),
-                          ),
-                          SizedBox(height: 16.h),
-                          Text(
-                            'Loading journal entries...',
-                            style: TextStyle(
-                              color: AppColors.textMedium,
-                              fontSize: 14.sp,
-                            ),
-                          ),
-                        ],
+                      child: StylishLoading(
+                        message: 'Loading journal entries...',
+                        size: 60.w,
                       ),
                     )
                   : GridView.builder(

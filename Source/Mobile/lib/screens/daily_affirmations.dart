@@ -11,6 +11,7 @@ import '../services/daily_affirmations_service.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/guided_tour_service.dart';
 import '../models/analytics_models.dart';
+import '../widgets/stylish_loading.dart';
 
 class DailyAffirmationsScreen extends StatefulWidget {
   @override
@@ -385,6 +386,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Show loading screen while loading affirmations
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundDark,
+        body: StylishLoading(
+          message: 'Loading affirmations...',
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
@@ -392,7 +403,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           children: [
             _buildHeader(),
             _buildCategoryChips(),
-            if (isLoading) _buildLoadingState() else _buildAffirmationContent(),
+            _buildAffirmationContent(),
           ],
         ),
       ),
@@ -525,28 +536,6 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     );
   }
 
-  Widget _buildLoadingState() {
-    return Expanded(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.affirmationGradient[0]),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'Loading affirmations...',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: AppColors.textMedium,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildAffirmationContent() {
     if (categories.isEmpty) {
@@ -1687,13 +1676,9 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             ),
           ),
           child: _isCreating
-              ? SizedBox(
-                  width: 16.w,
-                  height: 16.h,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                  ),
+              ? CompactStylishLoading(
+                  color: AppColors.white,
+                  size: 16.w,
                 )
               : Text(
                   'Create',

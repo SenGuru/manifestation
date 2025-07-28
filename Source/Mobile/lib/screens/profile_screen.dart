@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/services/unified_auth_service.dart';
 import '../constants/colors.dart';
 import 'login_screen.dart';
+import '../widgets/stylish_loading.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -408,8 +409,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.affirmationGradient[0]),
+                      CompactStylishLoading(
+                        color: AppColors.affirmationGradient[0],
+                        size: 40.w,
                       ),
                       SizedBox(height: 16.h),
                       Text(

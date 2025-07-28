@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/affirmations.dart';
 import '../services/voice/human_tts_service.dart';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class FavoritesScreen extends StatefulWidget {
   @override
@@ -93,6 +94,16 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Show loading screen while loading favorites
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundDark,
+        body: StylishLoading(
+          message: 'Loading favorites...',
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
@@ -100,15 +111,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           children: [
             _buildHeader(),
             Expanded(
-              child: isLoading
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentGold),
-                      ),
-                    )
-                  : favoriteAffirmations.isEmpty
-                      ? _buildEmptyState()
-                      : _buildFavoritesList(),
+              child: favoriteAffirmations.isEmpty
+                  ? _buildEmptyState()
+                  : _buildFavoritesList(),
             ),
           ],
         ),

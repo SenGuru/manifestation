@@ -6,6 +6,7 @@ import 'package:fun/utils/color_utils.dart';
 import 'package:fun/services/session_manager.dart';
 import 'package:fun/services/user_service.dart';
 import 'package:fun/constants/category_icons.dart';
+import 'package:fun/widgets/stylish_loading.dart';
 import 'package:uuid/uuid.dart';
 
 class AddCategoryDialog extends StatefulWidget {
@@ -355,15 +356,9 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                       ),
                       child: Center(
                         child: _isLoading
-                            ? SizedBox(
-                                width: 20.w,
-                                height: 20.h,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.white,
-                                  ),
-                                ),
+                            ? CompactStylishLoading(
+                                color: AppColors.white,
+                                size: 20.w,
                               )
                             : Text(
                                 isEditing ? 'Update' : 'Create Category',

@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/api_milestone.dart';
 import '../constants/colors.dart';
 import '../utils/milestone_converter.dart';
+import '../widgets/stylish_loading.dart';
 
 class MilestoneDialog extends StatefulWidget {
   final String goalTrackerId;
@@ -331,13 +332,9 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                         elevation: 0,
                       ),
                       child: _isSaving
-                          ? SizedBox(
-                              width: 20.w,
-                              height: 20.h,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation(AppColors.white),
-                              ),
+                          ? CompactStylishLoading(
+                              color: AppColors.white,
+                              size: 20.w,
                             )
                           : Text(
                               isEditing ? 'Update' : 'Create',

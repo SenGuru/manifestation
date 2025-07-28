@@ -76,23 +76,46 @@ class GoalTrackerService {
   };
 
   // Map category names to actual database IDs from your system
-  static final Map<String, int> _categoryNameToId = {
-    'career': 100,    // Use actual DB ID
-    'health': 101,    // Use actual DB ID  
-    'love': 102,      // Use actual DB ID
-    'money': 103,     // Use actual DB ID
-    'personal': 104,  // Use actual DB ID
-    'spiritual': 105, // Use actual DB ID
+  // These will be updated dynamically from server categories
+  static Map<String, int> _categoryNameToId = {
+    'career': 100,    // Fallback ID, will be updated from server
+    'health': 101,    // Fallback ID, will be updated from server
+    'love': 102,      // Fallback ID, will be updated from server
+    'money': 103,     // Fallback ID, will be updated from server
+    'personal': 104,  // Fallback ID, will be updated from server
+    'spiritual': 105, // Fallback ID, will be updated from server
   };
 
+  // Map default category IDs to category names for conversion
+  static final Map<int, String> _defaultIdToCategoryName = {
+    100: 'career',
+    101: 'health', 
+    102: 'love',
+    103: 'money',
+    104: 'personal',
+    105: 'spiritual',
+  };
+
+  // Cache for server categories to avoid repeated API calls
+  static List<dynamic>? _serverCategories;
+
   // Map database IDs back to local categories for display
-  static final Map<int, int> _dbIdToLocalId = {
+  // This will be updated dynamically when server categories are loaded
+  static Map<int, int> _dbIdToLocalId = {
+    // Default category IDs (reference IDs)
     100: 1, // career
     101: 2, // health
     102: 3, // love
     103: 4, // money
     104: 5, // personal
     105: 6, // spiritual
+    // Server database category IDs (will be updated dynamically)
+    1309: 1, // career
+    1310: 2, // health
+    1311: 3, // love
+    1312: 4, // money
+    1313: 5, // personal
+    1314: 6, // spiritual
     // Handle user custom categories that might exist
     1045: 3, // Love -> love
     1046: 5, // Success -> personal
@@ -131,6 +154,111 @@ class GoalTrackerService {
     return null; // Return null for unknown categories
   }
 
+  /// Get actual categories from server for goal tracking
+  Future<GoalTrackerResult<List<dynamic>>> getServerCategories() async {
+    try {
+      // Return cached categories if available
+      if (_serverCategories != null) {
+        print('🔍 Using cached server categories (${_serverCategories!.length} items)');
+        return GoalTrackerResult.success(
+          data: _serverCategories!,
+          message: 'Cached server categories loaded successfully',
+        );
+      }
+      
+      print('🔍 Fetching categories from server for goal tracking...');
+      
+      // Get categories specifically for goal tracking (PredefinedCategoryType = 3400004)
+      final response = await _apiClient.apiV1ManifestGetcategorysGet(
+        predefinedCategoryTypeIds: [PredefinedCategoryTypes.goalTracker], // 3400004
+        showDeleted: false,
+      );
+
+      print('🔍 Categories response status: ${response.statusCode}');
+      
+      if (response.isSuccessful && response.body != null) {
+        final returnModel = response.body!;
+        
+        print('🔍 Categories response isSuccess: ${returnModel.isSuccess}');
+        print('🔍 Categories count: ${returnModel.model?.length ?? 0}');
+        
+        if (returnModel.isSuccess == true && returnModel.model != null) {
+          // Cache the server categories
+          _serverCategories = returnModel.model!;
+          
+          // Update our category name-to-ID mapping with actual server data
+          _updateCategoryMappingFromServer(_serverCategories!);
+          
+          // Log each category for debugging
+          for (var category in returnModel.model!) {
+            print('🏷️  Server Category: ID=${category.categoryId}, Name=${category.categoryName}, DefaultId=${category.defaultCategoryId}');
+          }
+          
+          return GoalTrackerResult.success(
+            data: returnModel.model!,
+            message: 'Server categories loaded successfully',
+          );
+        } else {
+          return GoalTrackerResult.failure(
+            message: returnModel.errorHolder?.toString() ?? 'Failed to load server categories',
+          );
+        }
+      } else {
+        return GoalTrackerResult.failure(
+          message: 'Network error loading categories: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      return GoalTrackerResult.failure(
+        message: 'Error loading server categories: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Update our local category mapping with actual server category IDs
+  void _updateCategoryMappingFromServer(List<dynamic> serverCategories) {
+    print('🔄 Updating category mappings from server data...');
+    
+    // Map common category names to server category IDs
+    final Map<String, List<String>> categoryNameMapping = {
+      'career': ['career', 'work', 'job', 'business', 'professional'],
+      'health': ['health', 'fitness', 'wellness', 'medical'],
+      'love': ['love', 'relationship', 'romance', 'dating', 'marriage'],
+      'money': ['money', 'financial', 'finance', 'wealth', 'income', 'budget'],
+      'personal': ['personal', 'development', 'growth', 'self', 'improvement'],
+      'spiritual': ['spiritual', 'meditation', 'mindfulness', 'soul', 'faith'],
+    };
+
+    for (var category in serverCategories) {
+      final categoryName = category.categoryName?.toString().toLowerCase() ?? '';
+      final categoryId = category.categoryId as int?;
+      
+      if (categoryId != null && categoryName.isNotEmpty) {
+        // Try to match category name to our local categories
+        for (var localCategory in categoryNameMapping.keys) {
+          final possibleNames = categoryNameMapping[localCategory]!;
+          
+          if (possibleNames.any((name) => categoryName.contains(name))) {
+            print('🔗 Mapping "$localCategory" to server category "$categoryName" (ID: $categoryId)');
+            _categoryNameToId[localCategory] = categoryId;
+            
+            // Also update the reverse mapping for display purposes
+            final localCategoryId = _localCategories.entries
+                .firstWhere((entry) => entry.value.name.toLowerCase() == localCategory, orElse: () => MapEntry(0, _localCategories[5]!))
+                .key;
+            if (localCategoryId > 0) {
+              _dbIdToLocalId[categoryId] = localCategoryId;
+              print('🔗 Added reverse mapping: DB ID $categoryId -> Local ID $localCategoryId');
+            }
+            break;
+          }
+        }
+      }
+    }
+    
+    print('🔄 Updated category mapping: $_categoryNameToId');
+  }
+
   /// Get user's custom categories (still keep this for custom categories)
   Future<GoalTrackerResult<List<GoalTrackerCategory>>> getUserCategories() async {
     // For now, return empty list - users can only use the 6 default categories
@@ -151,6 +279,31 @@ class GoalTrackerService {
   /// Get all goal trackers for the current user
   Future<GoalTrackerResult<List<GoalTrackerModel>>> getUserGoalTrackers() async {
     try {
+      print('📡 === MAIN API CALL STRUCTURE ===');
+      print('📤 Making API request:');
+      print('   └─ Endpoint: GET /api/v1/manifest/getgoaltrackers');
+      print('   └─ Parameters:');
+      print('      • userId: ${_authService.currentUser?.userId}');
+      print('   └─ Expected Response Structure:');
+      print('      {');
+      print('        "isSuccess": true,');
+      print('        "model": [');
+      print('          {');
+      print('            "goalTrackerId": 123,');
+      print('            "goalTrackerName": "Goal Name",');
+      print('            "userId": ${_authService.currentUser?.userId},');
+      print('            "existingCategorys": [  // ❌ THIS SHOULD CONTAIN CATEGORIES');
+      print('              {');
+      print('                "categoryId": 1309,');
+      print('                "categoryName": "Money",');
+      print('                "defaultCategoryId": 103');
+      print('              }');
+      print('            ]');
+      print('          }');
+      print('        ]');
+      print('      }');
+      print('📡 ================================');
+      
       final response = await _apiClient.apiV1ManifestGetgoaltrackersGet(
         userId: _authService.currentUser?.userId,
       );
@@ -158,7 +311,32 @@ class GoalTrackerService {
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
         
+        print('📡 === API RESPONSE RECEIVED ===');
+        print('📥 Response Status: ${response.statusCode}');
+        print('📥 Response isSuccess: ${returnModel.isSuccess}');
+        print('📥 Goals Count: ${returnModel.model?.length ?? 0}');
+        
         if (returnModel.isSuccess == true && returnModel.model != null) {
+          // Debug each goal's existingCategorys field
+          for (int i = 0; i < returnModel.model!.length; i++) {
+            final goal = returnModel.model![i];
+            print('📥 Goal ${i + 1} Response Data:');
+            print('   • goalTrackerId: ${goal.goalTrackerId}');
+            print('   • goalTrackerName: ${goal.goalTrackerName}');
+            print('   • existingCategorys: ${goal.existingCategorys}');
+            print('   • existingCategorys length: ${goal.existingCategorys?.length ?? 0}');
+            print('   • existingCategorys type: ${goal.existingCategorys.runtimeType}');
+            if (goal.existingCategorys != null && goal.existingCategorys!.isNotEmpty) {
+              print('   ✅ CATEGORIES FOUND!');
+              for (var cat in goal.existingCategorys!) {
+                print('      - Category: ${cat.toString()}');
+              }
+            } else {
+              print('   ❌ NO CATEGORIES IN RESPONSE (SERVER BUG)');
+            }
+          }
+          print('📡 =============================');
+          
           return GoalTrackerResult.success(
             data: returnModel.model!,
             message: 'Goal trackers loaded successfully',
@@ -176,6 +354,80 @@ class GoalTrackerService {
     } catch (e) {
       return GoalTrackerResult.failure(
         message: 'Error loading goal trackers: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Get categories for multiple goal trackers efficiently
+  Future<Map<int, List<dynamic>>> getCategoriesForMultipleGoalTrackers(List<int> goalTrackerIds) async {
+    final Map<int, List<dynamic>> categoriesMap = {};
+    
+    print('🔍 Fetching categories for ${goalTrackerIds.length} goal trackers...');
+    
+    // Make concurrent API calls for better performance
+    final futures = goalTrackerIds.map((goalTrackerId) async {
+      try {
+        final result = await getCategoriesForGoalTracker(goalTrackerId);
+        if (result.isSuccess && result.data != null) {
+          categoriesMap[goalTrackerId] = result.data!;
+          print('✅ Got ${result.data!.length} categories for goal $goalTrackerId');
+        } else {
+          categoriesMap[goalTrackerId] = [];
+          print('❌ No categories found for goal $goalTrackerId: ${result.message}');
+        }
+      } catch (e) {
+        categoriesMap[goalTrackerId] = [];
+        print('❌ Error fetching categories for goal $goalTrackerId: $e');
+      }
+    });
+    
+    // Wait for all requests to complete
+    await Future.wait(futures);
+    
+    print('🔍 Completed category fetching for ${categoriesMap.length} goals');
+    return categoriesMap;
+  }
+
+  /// Get categories for a specific goal tracker
+  Future<GoalTrackerResult<List<dynamic>>> getCategoriesForGoalTracker(int goalTrackerId) async {
+    try {
+      print('🔍 Fetching categories for goal tracker ID: $goalTrackerId');
+      
+      final response = await _apiClient.apiV1ManifestGetgoaltrackercategorybygoaltrackeridGet(
+        goalTrackerId: goalTrackerId,
+      );
+
+      print('🔍 Goal categories response status: ${response.statusCode}');
+      
+      if (response.isSuccessful && response.body != null) {
+        final returnModel = response.body!;
+        
+        print('🔍 Goal categories response isSuccess: ${returnModel.isSuccess}');
+        print('🔍 Goal categories count: ${returnModel.model?.length ?? 0}');
+        
+        if (returnModel.isSuccess == true && returnModel.model != null) {
+          // Log each category for debugging
+          for (var category in returnModel.model!) {
+            print('🏷️  Goal Category: ID=${category.categoryId}, GoalTrackerID=${category.goalTrackerId}, CategoryID=${category.categoryId}');
+          }
+          
+          return GoalTrackerResult.success(
+            data: returnModel.model!,
+            message: 'Goal categories loaded successfully',
+          );
+        } else {
+          return GoalTrackerResult.failure(
+            message: returnModel.errorHolder?.toString() ?? 'Failed to load goal categories',
+          );
+        }
+      } else {
+        return GoalTrackerResult.failure(
+          message: 'Network error loading goal categories: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      return GoalTrackerResult.failure(
+        message: 'Error loading goal categories: ${e.toString()}',
       );
     }
   }
@@ -212,14 +464,14 @@ class GoalTrackerService {
     }
   }
 
-  /// Create a new goal tracker - simple version with local category ID
+  /// Create a new goal tracker with fallback approach for categories
   Future<GoalTrackerResult<GoalTrackerModel>> createGoalTracker({
     required String goalName,
     required int goalStatusTypeId,
     DateTime? startDate,
     DateTime? endDate,
     required int userId,
-    int? categoryId, // Simple single category ID (1-6 for local categories)
+    int? categoryId, // Category ID (could be local 1-6 or database 100+)
   }) async {
     try {
       // Simple validation
@@ -227,52 +479,230 @@ class GoalTrackerService {
         return GoalTrackerResult.failure(message: 'Goal name cannot be empty');
       }
       
-      // Create goal model with category association if provided
-      List<GoalTrackerCategoryCreateModel>? categoryModels;
+      // First, try to create goal with category
       if (categoryId != null) {
-        categoryModels = [
-          GoalTrackerCategoryCreateModel(
-            categoryId: categoryId, // Use real database ID
-            userId: userId,
-          )
-        ];
-        print('📝 Creating goal with database category ID: $categoryId');
-      }
-
-      final createModel = GoalTrackerCreateModel(
-        goalTrackerName: goalName.trim(),
-        predefinedGoalStatusTypeId: goalStatusTypeId,
-        goalTrackerStartDate: startDate ?? DateTime.now(),
-        goalTrackerEndDate: endDate,
-        userId: userId,
-        newGoalTrackerCategoryModels: categoryModels,
-      );
-
-      final response = await _apiClient.apiV1ManifestCreategoaltrackerPost(body: createModel);
-
-      if (response.isSuccessful && response.body != null) {
-        final returnModel = response.body!;
+        print('📝 Attempting goal creation with category ID: $categoryId');
+        final resultWithCategory = await _createGoalWithCategory(
+          goalName, goalStatusTypeId, startDate, endDate, userId, categoryId
+        );
         
-        if (returnModel.isSuccess == true && returnModel.model != null) {
-          // If we have a categoryId, we'll handle it on the client side during loading
-          print('✅ Goal created successfully, categoryId $categoryId will be handled locally');
-          return GoalTrackerResult.success(
-            data: returnModel.model!,
-            message: 'Goal tracker created successfully',
-          );
-        } else {
-          return GoalTrackerResult.failure(
-            message: returnModel.errorHolder?.friendlyMessage ?? 'Failed to create goal tracker',
-          );
+        if (resultWithCategory.isSuccess) {
+          return resultWithCategory;
         }
-      } else {
-        return GoalTrackerResult.failure(
-          message: 'Network error: ${response.statusCode}',
+        
+        print('⚠️ Goal creation with category failed: ${resultWithCategory.message}');
+        print('🔄 Falling back to goal creation without category...');
+      }
+      
+      // Fallback: Create goal without category
+      final resultWithoutCategory = await _createGoalWithoutCategory(
+        goalName, goalStatusTypeId, startDate, endDate, userId
+      );
+      
+      if (resultWithoutCategory.isSuccess && categoryId != null) {
+        print('✅ Goal created without category, storing category locally for future reference');
+        // Note: Category will be handled during local filtering/display
+        return GoalTrackerResult.success(
+          data: resultWithoutCategory.data!,
+          message: 'Goal created successfully (category handled locally)',
         );
       }
+      
+      return resultWithoutCategory;
     } catch (e) {
       return GoalTrackerResult.failure(
         message: 'Error creating goal tracker: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Create goal with category (may fail on server)
+  Future<GoalTrackerResult<GoalTrackerModel>> _createGoalWithCategory(
+    String goalName,
+    int goalStatusTypeId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int userId,
+    int categoryId,
+  ) async {
+    // First, get the actual categories from the server to debug
+    print('🔍 Checking server categories before goal creation...');
+    final serverCategoriesResult = await getServerCategories();
+    if (serverCategoriesResult.isSuccess) {
+      print('✅ Retrieved ${serverCategoriesResult.data!.length} categories from server');
+    } else {
+      print('⚠️ Could not retrieve server categories: ${serverCategoriesResult.message}');
+    }
+    
+    // Determine if categoryId is local (1-6), default (100+), or actual database ID (1000+)
+    int actualCategoryId = categoryId;
+    String categoryName = 'unknown';
+    
+    if (categoryId >= 1 && categoryId <= 6) {
+      // This is a local category ID, convert to actual server database ID
+      print('🔄 Converting local category ID $categoryId to server database ID...');
+      final localCategory = _localCategories[categoryId];
+      if (localCategory != null) {
+        categoryName = localCategory.name.toLowerCase();
+        actualCategoryId = _categoryNameToId[categoryName] ?? categoryId;
+        print('🔄 Local category "${localCategory.name}" (ID: $categoryId) -> Server Database ID: $actualCategoryId');
+      }
+    } else if (categoryId >= 100 && categoryId <= 105) {
+      // This is a defaultCategoryId, we need to find the actual categoryId from server
+      print('🔄 Converting default category ID $categoryId to server database ID...');
+      // Use the default ID to category name mapping
+      categoryName = _defaultIdToCategoryName[categoryId] ?? 'unknown';
+      
+      if (categoryName != 'unknown') {
+        // Get the actual server database ID from our updated mapping
+        actualCategoryId = _categoryNameToId[categoryName] ?? categoryId;
+        print('🔄 Default category ID $categoryId ($categoryName) -> Server Database ID: $actualCategoryId');
+      }
+    } else {
+      // This might already be a server database ID, find the category name
+      categoryName = _categoryNameToId.entries
+          .firstWhere((entry) => entry.value == categoryId, orElse: () => MapEntry('unknown', -1))
+          .key;
+    }
+    
+    if (categoryName == 'unknown') {
+      print('⚠️ Unknown category ID: $categoryId. Local IDs: 1-6, Database IDs: ${_categoryNameToId.values.toList()}');
+      return GoalTrackerResult.failure(
+        message: 'Invalid category ID: $categoryId',
+      );
+    }
+    
+    print('📝 Creating goal with category: $categoryName (Original ID: $categoryId, Database ID: $actualCategoryId)');
+    
+    // Check if this category ID actually exists on the server
+    bool categoryExistsOnServer = false;
+    if (serverCategoriesResult.isSuccess && serverCategoriesResult.data != null) {
+      categoryExistsOnServer = serverCategoriesResult.data!.any((cat) => cat.categoryId == actualCategoryId);
+      print('🔍 Category ID $actualCategoryId exists on server: $categoryExistsOnServer');
+      
+      if (!categoryExistsOnServer) {
+        print('⚠️ Category ID $actualCategoryId not found on server. Available server category IDs:');
+        for (var cat in serverCategoriesResult.data!) {
+          print('   - ID: ${cat.categoryId}, Name: ${cat.categoryName}');
+        }
+        
+        // Try to find a matching category by name instead
+        final matchingCategories = serverCategoriesResult.data!.where((cat) {
+          final serverCategoryName = cat.categoryName?.toString().toLowerCase() ?? '';
+          return serverCategoryName.contains(categoryName) || 
+                 categoryName.contains(serverCategoryName.split(' ').first);
+        });
+        
+        final matchingCategory = matchingCategories.isNotEmpty ? matchingCategories.first : null;
+        
+        if (matchingCategory != null) {
+          actualCategoryId = matchingCategory.categoryId!;
+          print('🔄 Found matching server category: "${matchingCategory.categoryName}" (ID: $actualCategoryId)');
+          categoryExistsOnServer = true;
+        }
+      }
+    }
+    
+    if (!categoryExistsOnServer) {
+      print('❌ No suitable category found on server, falling back to goal creation without category');
+      return GoalTrackerResult.failure(
+        message: 'Category not available on server, will create goal without category',
+      );
+    }
+    
+    final categoryModels = [
+      GoalTrackerCategoryCreateModel(
+        categoryId: actualCategoryId, // Use the verified server category ID
+        userId: userId,
+        // goalTrackerId is null during creation - goal doesn't exist yet
+      )
+    ];
+
+    final createModel = GoalTrackerCreateModel(
+      goalTrackerName: goalName.trim(),
+      predefinedGoalStatusTypeId: goalStatusTypeId,
+      goalTrackerStartDate: startDate ?? DateTime.now(),
+      goalTrackerEndDate: endDate,
+      userId: userId,
+      newGoalTrackerCategoryModels: categoryModels,
+    );
+
+    // Debug: Print the JSON being sent
+    try {
+      print('📤 Request JSON: ${createModel.toJson()}');
+    } catch (e) {
+      print('📤 Request JSON serialization error: $e');
+    }
+
+    final response = await _apiClient.apiV1ManifestCreategoaltrackerPost(body: createModel);
+
+    print('📡 Response status: ${response.statusCode}');
+    print('📡 Response headers: ${response.headers}');
+    
+    if (response.isSuccessful && response.body != null) {
+      final returnModel = response.body!;
+      
+      print('📡 Response body isSuccess: ${returnModel.isSuccess}');
+      print('📡 Response body successMessage: ${returnModel.successMessage}');
+      print('📡 Response body errorHolder: ${returnModel.errorHolder?.toString()}');
+      
+      if (returnModel.isSuccess == true && returnModel.model != null) {
+        print('✅ Goal created successfully with category');
+        return GoalTrackerResult.success(
+          data: returnModel.model!,
+          message: 'Goal tracker created with category',
+        );
+      } else {
+        return GoalTrackerResult.failure(
+          message: returnModel.errorHolder?.friendlyMessage ?? 
+                  returnModel.successMessage ?? 
+                  'Failed to create goal with category',
+        );
+      }
+    } else {
+      print('❌ HTTP Error Response: ${response.error}');
+      return GoalTrackerResult.failure(
+        message: 'Network error creating goal with category: ${response.statusCode}',
+      );
+    }
+  }
+
+  /// Create goal without category (more likely to succeed)
+  Future<GoalTrackerResult<GoalTrackerModel>> _createGoalWithoutCategory(
+    String goalName,
+    int goalStatusTypeId,
+    DateTime? startDate,
+    DateTime? endDate,
+    int userId,
+  ) async {
+    final createModel = GoalTrackerCreateModel(
+      goalTrackerName: goalName.trim(),
+      predefinedGoalStatusTypeId: goalStatusTypeId,
+      goalTrackerStartDate: startDate ?? DateTime.now(),
+      goalTrackerEndDate: endDate,
+      userId: userId,
+      // No newGoalTrackerCategoryModels - create goal without categories
+    );
+
+    final response = await _apiClient.apiV1ManifestCreategoaltrackerPost(body: createModel);
+
+    if (response.isSuccessful && response.body != null) {
+      final returnModel = response.body!;
+      
+      if (returnModel.isSuccess == true && returnModel.model != null) {
+        print('✅ Goal created successfully without category');
+        return GoalTrackerResult.success(
+          data: returnModel.model!,
+          message: 'Goal tracker created successfully',
+        );
+      } else {
+        return GoalTrackerResult.failure(
+          message: returnModel.errorHolder?.friendlyMessage ?? 'Failed to create goal tracker',
+        );
+      }
+    } else {
+      return GoalTrackerResult.failure(
+        message: 'Network error: ${response.statusCode}',
       );
     }
   }

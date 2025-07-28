@@ -1,10 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:chopper/chopper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/generated/code/manifestation.swagger.dart';
-import 'cache_manager.dart';
 
 /// Unified authentication service that combines login, session management, and user data
 class UnifiedAuthService {
@@ -200,8 +198,7 @@ class UnifiedAuthService {
       // Clear stored session
       await _clearStoredSession();
       
-      // Clear all application caches on logout
-      await CacheManager().clearAllCaches();
+      // Cache clearing removed - now using direct API calls
       
       // Reset onboarding and tour flags for new users
       final prefs = await SharedPreferences.getInstance();

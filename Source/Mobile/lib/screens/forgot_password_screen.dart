@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -285,13 +286,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen>
                     child: Container(
                       alignment: Alignment.center,
                       child: _isLoading
-                          ? SizedBox(
-                              width: 24.w,
-                              height: 24.h,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                              ),
+                          ? CompactStylishLoading(
+                              color: AppColors.white,
+                              size: 24.w,
                             )
                           : Text(
                               'Send Reset Link',

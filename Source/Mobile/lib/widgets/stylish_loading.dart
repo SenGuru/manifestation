@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
 
-class StylishLoading extends StatelessWidget {
+class StylishLoading extends StatefulWidget {
   final String? message;
   final double? size;
   final bool showMessage;
@@ -15,80 +15,247 @@ class StylishLoading extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _StylishLoadingState createState() => _StylishLoadingState();
+}
+
+class _StylishLoadingState extends State<StylishLoading>
+    with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late AnimationController _glowController;
+  late AnimationController _shimmerController;
+  late Animation<double> _pulseAnimation;
+  late Animation<double> _glowAnimation;
+  late Animation<double> _shimmerAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    
+    // Gentle pulsing animation
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 1500),
+      vsync: this,
+    );
+    
+    // Subtle glow animation
+    _glowController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    
+    // Hue rotation animation for text
+    _shimmerController = AnimationController(
+      duration: const Duration(milliseconds: 3000),
+      vsync: this,
+    );
+
+    _pulseAnimation = Tween<double>(
+      begin: 0.85,
+      end: 1.15,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+
+    _glowAnimation = Tween<double>(
+      begin: 0.4,
+      end: 0.8,
+    ).animate(CurvedAnimation(
+      parent: _glowController,
+      curve: Curves.easeInOut,
+    ));
+
+    _shimmerAnimation = Tween<double>(
+      begin: 0.0,
+      end: 360.0, // Full hue rotation (0-360 degrees)
+    ).animate(CurvedAnimation(
+      parent: _shimmerController,
+      curve: Curves.linear,
+    ));
+
+    _pulseController.repeat(reverse: true);
+    _glowController.repeat(reverse: true);
+    _shimmerController.repeat();
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    _glowController.dispose();
+    _shimmerController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final loadingSize = widget.size ?? 80.w;
+    
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Stylish circular loading indicator
-          SizedBox(
-            width: size ?? 80.w,
-            height: size ?? 80.h,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                // Background circle
-                Container(
-                  width: size ?? 80.w,
-                  height: size ?? 80.h,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.accentCoral.withValues(alpha: 0.1),
-                  ),
-                ),
-                // Main loading indicator
-                SizedBox(
-                  width: (size ?? 80.w) * 0.8,
-                  height: (size ?? 80.h) * 0.8,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 4.0,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCoral),
-                    backgroundColor: AppColors.accentCoral.withValues(alpha: 0.2),
-                  ),
-                ),
-                // Inner accent circle
-                Container(
-                  width: (size ?? 80.w) * 0.3,
-                  height: (size ?? 80.h) * 0.3,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      colors: AppColors.affirmationGradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.accentCoral.withValues(alpha: 0.3),
-                        blurRadius: 8.r,
-                        offset: Offset(0, 2.h),
+          // App logo with gentle pulsing and glow
+          AnimatedBuilder(
+            animation: Listenable.merge([_pulseAnimation, _glowAnimation]),
+            builder: (context, child) {
+              return SizedBox(
+                width: loadingSize,
+                height: loadingSize,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Outer glow effect
+                    Container(
+                      width: loadingSize * 1.8,
+                      height: loadingSize * 1.8,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            AppColors.affirmationGradient[0].withValues(alpha: _glowAnimation.value * 0.15),
+                            AppColors.affirmationGradient[0].withValues(alpha: 0),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                    // Middle glow circle
+                    Container(
+                      width: loadingSize * 1.3,
+                      height: loadingSize * 1.3,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            AppColors.affirmationGradient[1].withValues(alpha: _glowAnimation.value * 0.2),
+                            AppColors.affirmationGradient[1].withValues(alpha: 0),
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Main logo background circle
+                    Transform.scale(
+                      scale: _pulseAnimation.value,
+                      child: Container(
+                        width: loadingSize * 0.75,
+                        height: loadingSize * 0.75,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: AppColors.affirmationGradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.affirmationGradient[0].withValues(alpha: 0.4),
+                              blurRadius: 20.r,
+                              spreadRadius: 1.r,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.auto_awesome,
+                          color: AppColors.white,
+                          size: loadingSize * 0.35,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              );
+            },
           ),
           
-          if (showMessage) ...[
-            SizedBox(height: 24.h),
+          if (widget.showMessage) ...[
+            SizedBox(height: 32.h),
             
-            // Loading message
-            Text(
-              message ?? 'Loading...',
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: AppColors.textMedium,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
+            // Loading message with flowing gradient hue rotation
+            AnimatedBuilder(
+              animation: Listenable.merge([_glowAnimation, _shimmerAnimation]),
+              builder: (context, child) {
+                final double progress = _shimmerAnimation.value / 360.0; // Normalize to 0-1
+                
+                return ShaderMask(
+                  shaderCallback: (bounds) {
+                    // Create a flowing gradient that moves from left to right
+                    final double offset = progress * 2.0; // Speed multiplier
+                    
+                    // Generate colors that cycle: pink → orange → white → pink → orange → white
+                    List<Color> generateGradientColors() {
+                      final List<Color> colors = [];
+                      
+                      // Create 6 color stops for smooth flowing effect
+                      for (int i = 0; i < 6; i++) {
+                        final double colorProgress = (-offset + i * 0.4) % 3.0; // Negative for left-to-right, 3.0 for 3-color cycle
+                        Color baseColor;
+                        
+                        if (colorProgress < 1.0) {
+                          // Transition from pink to orange
+                          baseColor = Color.lerp(
+                            AppColors.affirmationGradient[0], // Pink
+                            AppColors.affirmationGradient[1], // Orange
+                            colorProgress,
+                          )!;
+                        } else if (colorProgress < 2.0) {
+                          // Transition from orange to white
+                          baseColor = Color.lerp(
+                            AppColors.affirmationGradient[1], // Orange
+                            AppColors.white, // White
+                            colorProgress - 1.0,
+                          )!;
+                        } else {
+                          // Transition from white back to pink
+                          baseColor = Color.lerp(
+                            AppColors.white, // White
+                            AppColors.affirmationGradient[0], // Pink
+                            colorProgress - 2.0,
+                          )!;
+                        }
+                        
+                        colors.add(baseColor);
+                      }
+                      
+                      return colors;
+                    }
+                    
+                    return LinearGradient(
+                      colors: generateGradientColors(),
+                      stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ).createShader(bounds);
+                  },
+                  child: Text(
+                    widget.message ?? 'Loading...',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: AppColors.white, // This will be masked by the gradient
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5,
+                      height: 1.2,
+                      shadows: [
+                        Shadow(
+                          color: AppColors.affirmationGradient[0].withValues(alpha: _glowAnimation.value * 0.3),
+                          blurRadius: 8.r,
+                          offset: Offset(0, 1.h),
+                        ),
+                        Shadow(
+                          color: AppColors.affirmationGradient[1].withValues(alpha: _glowAnimation.value * 0.2),
+                          blurRadius: 12.r,
+                          offset: Offset(0, 2.h),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                );
+              },
             ),
           ],
         ],
       ),
     );
   }
-
 }
 
 class StylishLoadingOverlay extends StatelessWidget {

@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../components/vision_board_canvas.dart';
 import '../services/usage_analytics_service.dart';
+import '../services/vision_board_service.dart';
 import '../models/analytics_models.dart';
-import '../utils/vision_board_xml_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
@@ -35,6 +35,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   int undoIndex = -1;
   bool hasUnsavedChanges = false;
   VisionBoard? lastSavedState;
+  bool hasBeenSavedToServer = false;
+  int? serverPictureId; // Store the server picture ID
   
   late AnimationController _toolbarController;
   late Animation<double> _toolbarAnimation;
@@ -68,6 +70,9 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     // Load board elements if this is an existing board
     if (widget.existingBoard != null) {
       _loadBoardElements();
+      // Only mark as saved to server if it's truly an existing board from server
+      // New boards created with _createNewBoard have IDs but aren't on server yet
+      hasBeenSavedToServer = true;
     }
     
     _initializeControllers();
@@ -98,8 +103,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     _textController.dispose();
     _autoSaveTimer?.cancel(); // Cancel auto-save timer
     
-    // Final sync when user finishes using vision board
-    _triggerFinalSync();
+    // No final sync needed
     
     // End session tracking
     _endSessionTracking();
@@ -107,19 +111,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     super.dispose();
   }
   
-  /// Trigger final sync when user finishes using vision board
-  void _triggerFinalSync() {
-    // Force immediate sync when user exits vision board
-    VisionBoardXMLManager.uploadVisionBoardXMLToDatabase(currentBoard.id, userId: 1).then((success) {
-      if (success) {
-        print('✅ Final sync completed - vision board data uploaded');
-      } else {
-        print('⚠️ Final sync failed - data will sync later');
-      }
-    }).catchError((error) {
-      print('❌ Final sync error: $error');
-    });
-  }
+  /// No final sync needed - everything is saved directly to server
 
   /// End session tracking for vision board
   Future<void> _endSessionTracking() async {
@@ -679,42 +671,21 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     });
     _saveToUndoStack();
     
-    // Auto-save to local XML after each change (debounced)
-    _autoSaveToXML();
+    // Auto-save disabled for server-only mode
+    _autoSaveToServer();
   }
   
   Timer? _autoSaveTimer;
   
-  void _autoSaveToXML() {
+  void _autoSaveToServer() {
     // Cancel previous timer if it exists
     _autoSaveTimer?.cancel();
     
     // Set a new timer to save after 2 seconds of no changes
     _autoSaveTimer = Timer(Duration(seconds: 2), () async {
-      try {
-        // Ensure the board has a proper ID for auto-save
-        if (currentBoard.id.isEmpty) {
-          currentBoard = currentBoard.copyWith(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-          );
-        }
-        
-        await VisionBoardXMLManager.saveVisionBoardToXML(currentBoard, 1);
-        print('🔄 Auto-saved to XML: ${currentBoard.title} (ID: ${currentBoard.id})');
-        
-        // Update session metadata if session is active
-        if (_sessionStarted) {
-          _analyticsService.updateSessionMetadata(
-            ActivityType.visionBoard,
-            {
-              'elementCount': currentBoard.elements.length,
-              'lastAutoSave': DateTime.now().toIso8601String(),
-            },
-          );
-        }
-      } catch (e) {
-        print('❌ Auto-save to XML failed: $e');
-      }
+      // Auto-save is disabled for now - only manual save to server
+      // This prevents too many API calls during editing
+      print('🔄 Auto-save triggered (disabled for server-only mode)');
     });
   }
   
@@ -1273,42 +1244,82 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Future<void> _saveBoard() async {
     try {
-      print('🎯 Saving vision board locally...');
+      print('🎯 Saving vision board to server...');
+      print('🔍 DEBUG: Save board state:');
+      print('  - currentBoard.id: ${currentBoard.id}');
+      print('  - currentBoard.title: ${currentBoard.title}');
+      print('  - currentBoard.elements.length: ${currentBoard.elements.length}');
+      print('  - serverPictureId: $serverPictureId');
+      print('  - hasBeenSavedToServer: $hasBeenSavedToServer');
       
       // Ensure the board has a proper ID if it's empty
       if (currentBoard.id.isEmpty) {
         currentBoard = currentBoard.copyWith(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          id: 'board_${DateTime.now().millisecondsSinceEpoch}',
         );
+        print('🔍 DEBUG: Generated new board ID: ${currentBoard.id}');
       }
       
-      // Always save to local XML first (immediate save)
-      await VisionBoardXMLManager.saveVisionBoardToXML(currentBoard, 1); // Use user ID 1
-      lastSavedState = currentBoard.copyWith();
-      hasUnsavedChanges = false;
+      // Initialize service
+      final visionBoardService = VisionBoardService();
+      print('🔍 DEBUG: Initializing vision board service...');
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      print('🔍 DEBUG: Service initialized successfully');
       
-      print('✅ Vision board saved to local XML: ${currentBoard.title}');
+      // Determine if this is a new board or existing board
+      // A board is new if it doesn't have a serverPictureId yet
+      final isNewBoard = serverPictureId == null;
+      print('🔍 DEBUG: isNewBoard: $isNewBoard (based on serverPictureId == null)');
       
-      // Trigger immediate sync after manual save
-      VisionBoardXMLManager.uploadVisionBoardXMLToDatabase(currentBoard.id, userId: 1).then((success) {
-        if (success) {
-          print('✅ Immediate sync after save completed');
+      if (isNewBoard) {
+        // Create new vision board on server
+        print('🔍 DEBUG: Calling createVisionBoard...');
+        final result = await visionBoardService.createVisionBoard(currentBoard);
+        print('🔍 DEBUG: createVisionBoard result: isSuccess=${result.isSuccess}, message=${result.message}, data=${result.data}');
+        
+        if (result.isSuccess) {
+          print('✅ Vision board created on server with picture ID: ${result.data}');
+          serverPictureId = result.data; // Store the server picture ID
+          print('🔍 DEBUG: Stored serverPictureId: $serverPictureId');
+          lastSavedState = currentBoard.copyWith();
+          hasUnsavedChanges = false;
+          hasBeenSavedToServer = true; // Mark as saved to server
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Vision board created successfully!'),
+              backgroundColor: AppColors.accentMint,
+              duration: Duration(seconds: 1),
+            ),
+          );
+          
+          Navigator.pop(context, currentBoard);
+        } else {
+          print('🔍 DEBUG: Create failed - showing error: ${result.message}');
+          _showErrorSnackBar('Failed to create vision board: ${result.message}');
         }
-      }).catchError((error) {
-        print('⚠️ Immediate sync after save failed: $error');
-      });
-      
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Vision board saved successfully!'),
-          backgroundColor: AppColors.accentMint,
-          duration: Duration(seconds: 1),
-        ),
-      );
-      
-      // Navigate back after successful save
-      Navigator.pop(context, currentBoard);
+      } else {
+        // Update existing vision board on server using stored picture ID
+        final result = await visionBoardService.updateVisionBoard(currentBoard, pictureId: serverPictureId);
+        
+        if (result.isSuccess) {
+          print('✅ Vision board updated on server');
+          lastSavedState = currentBoard.copyWith();
+          hasUnsavedChanges = false;
+          
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Vision board updated successfully!'),
+              backgroundColor: AppColors.accentMint,
+              duration: Duration(seconds: 1),
+            ),
+          );
+          
+          Navigator.pop(context, currentBoard);
+        } else {
+          _showErrorSnackBar('Failed to update vision board: ${result.message}');
+        }
+      }
       
     } catch (e) {
       print('❌ Save board error: $e');

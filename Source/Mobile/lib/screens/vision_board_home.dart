@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
 import '../services/guided_tour_service.dart';
-import '../utils/vision_board_xml_manager.dart';
 import 'vision_board_screen.dart';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class VisionBoardHome extends StatefulWidget {
   const VisionBoardHome({super.key});
@@ -50,15 +50,21 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     });
     
     try {
-      // Initialize XML file if needed
-      await VisionBoardXMLManager.initializeXMLFile(1); // Use user ID 1 for now
+      // Initialize service
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
       
-      // Load from local XML storage
-      final localBoards = await VisionBoardXMLManager.loadVisionBoardsFromXML();
+      // Load from server
+      final result = await visionBoardService.getUserVisionBoards();
       
-      visionBoards = localBoards;
+      if (result.isSuccess) {
+        visionBoards = result.data ?? [];
+      } else {
+        print('❌ Failed to load vision boards: ${result.message}');
+        visionBoards = [];
+      }
     } catch (e) {
-      // Don't create sample boards on error - just use empty list
+      print('❌ Error loading vision boards: $e');
       visionBoards = [];
     }
     
@@ -71,6 +77,16 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
 
   @override
   Widget build(BuildContext context) {
+    // Show loading screen while loading vision boards
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: AppColors.backgroundDark,
+        body: StylishLoading(
+          message: 'Loading your vision boards...',
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       body: SafeArea(
@@ -78,11 +94,9 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           children: [
             _buildHeader(),
             Expanded(
-              child: isLoading 
-                  ? _buildLoadingState()
-                  : visionBoards.isEmpty
-                      ? _buildEmptyState()
-                      : _buildVisionBoardGrid(),
+              child: visionBoards.isEmpty
+                  ? _buildEmptyState()
+                  : _buildVisionBoardGrid(),
             ),
           ],
         ),
@@ -254,27 +268,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(AppColors.accentCoral),
-            backgroundColor: AppColors.accentCoral.withOpacity(0.2),
-          ),
-          SizedBox(height: 16.h),
-          Text(
-            'Loading your vision boards...',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildEmptyState() {
     return Center(
@@ -698,53 +691,25 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
 
   void _createNewBoard() async {
-    try {
-      // Create a new session via API
-      // Create a new empty board that will create a session when saved
-      final newBoard = VisionBoard(
-        id: '', // Empty ID will trigger session creation in VisionBoardService
-        title: 'New Vision Board',
-        elements: [],
-        backgroundColor: AppColors.white,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-      
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VisionBoardScreen(existingBoard: newBoard),
-        ),
-      ).then((editedBoard) {
-        // Reload from XML instead of manually managing the list
-        // This prevents duplicates and ensures consistency
-        _loadVisionBoards();
-      });
-    } catch (e) {
-      print('❌ Error creating new board: $e');
-      // Fallback to empty board creation
-      final newBoard = VisionBoard(
-        id: '',
-        title: 'New Vision Board',
-        elements: [],
-        backgroundColor: AppColors.white,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-      
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VisionBoardScreen(existingBoard: newBoard),
-        ),
-      ).then((result) {
-        if (result != null) {
-          setState(() {
-            visionBoards.add(result);
-          });
-        }
-      });
-    }
+    // Create a new empty board with a generated ID
+    final newBoard = VisionBoard(
+      id: 'board_${DateTime.now().millisecondsSinceEpoch}',
+      title: 'New Vision Board',
+      elements: [],
+      backgroundColor: AppColors.white,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => VisionBoardScreen(existingBoard: newBoard),
+      ),
+    ).then((result) {
+      // Reload vision boards from server after editing
+      _loadVisionBoards();
+    });
   }
 
   void _openBoard(VisionBoard board) {
@@ -982,33 +947,32 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   
   Future<void> _performDelete(VisionBoard board) async {
     try {
-      // Delete from local XML first
-      await VisionBoardXMLManager.deleteVisionBoardFromXML(board.id);
+      // Initialize service
+      final visionBoardService = VisionBoardService();
+      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
       
-      // Delete from API if it has a valid session ID
-      if (board.id.isNotEmpty) {
-        final visionBoardService = VisionBoardService();
-        visionBoardService.initialize();
-        final result = await visionBoardService.deleteVisionBoard(board.id);
+      // Delete from server using vision board ID
+      final result = await visionBoardService.deleteVisionBoard(board.id);
+      
+      if (result.isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Vision board deleted successfully'),
+            backgroundColor: AppColors.accentMint,
+          ),
+        );
         
-        if (result.isSuccess) {
-          print('✅ Board deleted from API: ${board.title}');
-        } else {
-          print('⚠️ API delete failed, removed from local XML: ${result.message}');
-        }
+        // Reload from server to refresh the list
+        await _loadVisionBoards();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to delete vision board: ${result.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
       
-      // Remove from local list regardless of API result
-      setState(() {
-        visionBoards.remove(board);
-      });
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Vision board deleted'),
-          backgroundColor: AppColors.accentMint,
-        ),
-      );
     } catch (e) {
       print('❌ Delete board error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1026,115 +990,37 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
 
   void _syncBoards() async {
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Syncing vision boards...'),
-          backgroundColor: AppColors.secondaryTeal,
-        ),
-      );
-      
-      // Upload all local XML files to database
-      final uploadSuccess = await VisionBoardXMLManager.uploadAllXMLToDatabase(userId: 1);
-      
-      if (uploadSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Vision boards synced successfully!'),
-            backgroundColor: AppColors.accentMint,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Sync failed - check network connection'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Sync error: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    // Refresh from server - no local sync needed
+    await _loadVisionBoards();
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Vision boards refreshed from server'),
+        backgroundColor: AppColors.accentMint,
+      ),
+    );
   }
 
   void _uploadToCloud() async {
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Uploading to cloud...'),
-          backgroundColor: AppColors.secondaryTeal,
-        ),
-      );
-      
-      final success = await VisionBoardXMLManager.uploadAllXMLToDatabase(userId: 1);
-      
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Successfully uploaded to cloud!'),
-            backgroundColor: AppColors.accentMint,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Upload failed'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Upload error: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    // No separate upload needed - everything is already on server
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('All vision boards are automatically saved to server'),
+        backgroundColor: AppColors.accentMint,
+      ),
+    );
   }
 
   void _downloadFromCloud() async {
-    try {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Downloading from cloud...'),
-          backgroundColor: AppColors.secondaryTeal,
-        ),
-      );
-      
-      final success = await VisionBoardXMLManager.downloadAllXMLFromDatabase(1); // Use user ID 1
-      
-      if (success) {
-        // Reload vision boards from the new XML file
-        await _loadVisionBoards();
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Successfully downloaded from cloud!'),
-            backgroundColor: AppColors.accentMint,
-          ),
-        );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Download failed - no data found or network error'),
-            backgroundColor: Colors.orange,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Download error: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
+    // Refresh from server
+    await _loadVisionBoards();
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Vision boards refreshed from server'),
+        backgroundColor: AppColors.accentMint,
+      ),
+    );
   }
 
   void _showSettings() {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/models/vision_board.dart';
 import 'package:fun/constants/colors.dart';
+import 'package:fun/widgets/stylish_loading.dart';
 import 'dart:io';
 
 class VisionBoardCanvas extends StatefulWidget {
@@ -155,11 +156,9 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                  : null,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.secondaryTeal),
+            child: CompactStylishLoading(
+              color: AppColors.secondaryTeal,
+              size: 30.w,
             ),
           );
         },

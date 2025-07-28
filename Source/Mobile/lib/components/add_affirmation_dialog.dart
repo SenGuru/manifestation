@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/constants/colors.dart';
 import 'package:fun/models/affirmations.dart';
+import 'package:fun/widgets/stylish_loading.dart';
 import 'package:uuid/uuid.dart';
 
 class AddAffirmationDialog extends StatefulWidget {
@@ -254,15 +255,9 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                       ),
                       child: Center(
                         child: _isLoading
-                            ? SizedBox(
-                                width: 20.w,
-                                height: 20.h,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                    AppColors.white,
-                                  ),
-                                ),
+                            ? CompactStylishLoading(
+                                color: AppColors.white,
+                                size: 20.w,
                               )
                             : Text(
                                 isEditing ? 'Update' : 'Add Affirmation',

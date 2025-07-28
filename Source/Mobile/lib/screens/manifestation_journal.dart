@@ -8,6 +8,7 @@ import 'package:fun/models/mood_selector.dart';
 import 'package:fun/screens/calendar_view_screen.dart';
 import 'package:fun/services/daily_journal_service.dart';
 import 'package:fun/services/guided_tour_service.dart';
+import 'package:fun/widgets/stylish_loading.dart';
 import 'package:uuid/uuid.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
@@ -82,40 +83,23 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     if (isLoading) {
       return Scaffold(
         backgroundColor: AppColors.backgroundDark,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(AppColors.gradientPurple),
-              ),
-              SizedBox(height: 16.h),
-              Text(
-                'Loading journal...',
-                style: TextStyle(
-                  color: AppColors.textMedium,
-                  fontSize: 16.sp,
-                ),
-              ),
-            ],
-          ),
+        body: StylishLoading(
+          message: 'Loading journal...',
         ),
       );
     }
 
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Column(
           children: [
-            // Header with calendar integration
-            _buildHeader(),
+            // Simple header
+            _buildSimpleHeader(),
             
-            // Show existing entry warning if editing
-            if (isEditingExistingEntry) _buildEditingWarning(),
-            
-            // Progress indicator
-            _buildProgressIndicator(),
+            // Compact progress indicator
+            _buildCompactProgress(),
             
             // Page content
             Expanded(
@@ -144,71 +128,36 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildSimpleHeader() {
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                      color: AppColors.textMedium.withOpacity(0.1),
-                    ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.textLight,
-                size: 20.sp,
-              ),
+            child: Icon(
+              Icons.arrow_back,
+              color: AppColors.textLight,
+              size: 24.sp,
             ),
           ),
           SizedBox(width: 16.w),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isEditingExistingEntry ? 'Edit Journal Entry' : 'Daily Journal',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
-                  ),
-                ),
-                Text(
-                  _formatDate(DateTime.now()),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppColors.textMedium,
-                  ),
-                ),
-              ],
+            child: Text(
+              isEditingExistingEntry ? 'Edit Entry' : 'Daily Journal',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w600,
+                color: AppColors.textLight,
+              ),
             ),
           ),
-          // Calendar icon for viewing past entries
           GestureDetector(
             onTap: _showCalendarView,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.gradientPurple.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppColors.gradientPurple.withOpacity(0.3),
-                ),
-              ),
-              child: Icon(
-                Icons.calendar_today,
-                color: AppColors.gradientPurple,
-                size: 20.sp,
-              ),
+            child: Icon(
+              Icons.calendar_today,
+              color: AppColors.gradientPurple,
+              size: 22.sp,
             ),
           ),
         ],
@@ -216,52 +165,19 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
-  Widget _buildEditingWarning() {
+  Widget _buildCompactProgress() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: AppColors.accentGold.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: AppColors.accentGold.withOpacity(0.3),
-        ),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            Icons.edit,
-            color: AppColors.accentGold,
-            size: 16.sp,
-          ),
-          SizedBox(width: 8.w),
-          Expanded(
-            child: Text(
-              'You\'re editing today\'s journal entry. Your changes will overwrite the existing entry.',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.accentGold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildProgressIndicator() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       child: Row(
         children: List.generate(5, (index) {
           return Expanded(
             child: Container(
-              height: 4.h,
-              margin: EdgeInsets.only(right: index < 4 ? 8.w : 0),
+              height: 3.h,
+              margin: EdgeInsets.only(right: index < 4 ? 6.w : 0),
               decoration: BoxDecoration(
                 color: index <= currentPage
                     ? AppColors.gradientPurple
-                    : AppColors.textMedium.withOpacity(0.3),
+                    : AppColors.textMedium.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -271,30 +187,22 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
+
   Widget _buildMoodPage() {
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h),
           Text(
             'How are you feeling?',
             style: TextStyle(
-              fontSize: 28.sp,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.textLight,
             ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Choose the mood that best describes your current state',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 12.h),
           Expanded(
             child: MoodSelector(
               selectedMood: selectedMood,
@@ -312,28 +220,19 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildGratitudePage() {
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h),
           Text(
-            'Three Gratitudes',
+            'Gratitudes',
             style: TextStyle(
-              fontSize: 28.sp,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.textLight,
             ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Write three things you\'re grateful for today',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 12.h),
           Expanded(
             child: GratitudeSection(
               gratitudeItems: gratitudeItems,
@@ -350,34 +249,23 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   }
 
   Widget _buildReflectionPage() {
-    final prompt = journalPrompts[DateTime.now().day % journalPrompts.length];
-    
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h),
           Text(
             'Daily Reflection',
             style: TextStyle(
-              fontSize: 28.sp,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.textLight,
             ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Take a moment to reflect on your day',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 12.h),
           Expanded(
             child: JournalPrompt(
-              prompt: prompt,
+              prompt: '',
               initialText: reflection,
               onTextChanged: (value) {
                 setState(() {
@@ -393,31 +281,22 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildIntentionPage() {
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h),
           Text(
             'Tomorrow\'s Intention',
             style: TextStyle(
-              fontSize: 28.sp,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.textLight,
             ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Set a clear intention for tomorrow',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 12.h),
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(20.w),
+              padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
                 color: AppColors.cardBackground,
                 borderRadius: BorderRadius.circular(16.r),
@@ -447,6 +326,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     fontSize: 16.sp,
                   ),
                   border: InputBorder.none,
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 16.h,
+                    horizontal: 8.w,
+                  ),
                 ),
                 maxLines: null,
                 expands: true,
@@ -462,28 +345,19 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildSummaryPage() {
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 20.h),
           Text(
             'Journal Complete!',
             style: TextStyle(
-              fontSize: 28.sp,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
               color: AppColors.textLight,
             ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Your thoughts have been saved',
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppColors.textMedium,
-            ),
-          ),
-          SizedBox(height: 20.h),
+          SizedBox(height: 12.h),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -576,7 +450,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildNavigation() {
     return Container(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       child: Row(
         children: [
           if (currentPage > 0)
@@ -584,19 +458,19 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               child: GestureDetector(
                 onTap: _previousPage,
                 child: Container(
-                  height: 50.h,
+                  height: 44.h,
                   decoration: BoxDecoration(
                     color: AppColors.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: AppColors.textMedium.withOpacity(0.3),
+                      color: AppColors.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Center(
                     child: Text(
                       'Previous',
                       style: TextStyle(
-                        fontSize: 16.sp,
+                        fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
                         color: AppColors.textMedium,
                       ),
@@ -605,13 +479,13 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
               ),
             ),
-          if (currentPage > 0) SizedBox(width: 16.w),
+          if (currentPage > 0) SizedBox(width: 12.w),
           Expanded(
             flex: currentPage == 0 ? 1 : 1,
             child: GestureDetector(
               onTap: isSaving ? null : (currentPage < 4 ? _nextPage : _saveEntry),
               child: Container(
-                height: 50.h,
+                height: 44.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: AppColors.journalGradient,
@@ -623,19 +497,15 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       ? Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(
-                              width: 16.w,
-                              height: 16.h,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                              ),
+                            CompactStylishLoading(
+                              color: AppColors.white,
+                              size: 16.w,
                             ),
                             SizedBox(width: 8.w),
                             Text(
                               isEditingExistingEntry ? 'Updating...' : 'Saving...',
                               style: TextStyle(
-                                fontSize: 16.sp,
+                                fontSize: 15.sp,
                                 fontWeight: FontWeight.w600,
                                 color: AppColors.white,
                               ),
@@ -645,7 +515,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       : Text(
                           currentPage < 4 ? 'Next' : (isEditingExistingEntry ? 'Update Entry' : 'Save Entry'),
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
                             color: AppColors.white,
                           ),
