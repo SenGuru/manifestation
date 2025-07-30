@@ -108,11 +108,13 @@ class _JournalPromptState extends State<JournalPrompt> {
                   height: 1.5,
                 ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 16.h,
-                  horizontal: 8.w,
+                contentPadding: EdgeInsets.only(
+                  top: 8.h,
+                  left: 8.w,
+                  right: 8.w,
+                  bottom: 8.h,
                 ),
-                isDense: false,
+                isDense: true,
               ),
               maxLines: null,
               expands: true,

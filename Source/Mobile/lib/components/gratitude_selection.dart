@@ -199,11 +199,13 @@ class _GratitudeSectionState extends State<GratitudeSection> {
                   height: 1.5,
                 ),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 16.h,
-                  horizontal: 8.w,
+                contentPadding: EdgeInsets.only(
+                  top: 4.h,
+                  left: 8.w,
+                  right: 8.w,
+                  bottom: 4.h,
                 ),
-                isDense: false,
+                isDense: true,
               ),
               maxLines: 3,
               minLines: 2,

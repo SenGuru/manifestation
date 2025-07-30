@@ -9,6 +9,7 @@ import 'package:fun/screens/calendar_view_screen.dart';
 import 'package:fun/services/daily_journal_service.dart';
 import 'package:fun/services/guided_tour_service.dart';
 import 'package:fun/widgets/stylish_loading.dart';
+import 'package:fun/widgets/keyboard_dismissal_wrapper.dart';
 import 'package:uuid/uuid.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
@@ -92,37 +93,39 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
       resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Simple header
-            _buildSimpleHeader(),
-            
-            // Compact progress indicator
-            _buildCompactProgress(),
-            
-            // Page content
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    currentPage = index;
-                  });
-                },
-                children: [
-                  _buildMoodPage(),
-                  _buildGratitudePage(),
-                  _buildReflectionPage(),
-                  _buildIntentionPage(),
-                  _buildSummaryPage(),
-                ],
+      body: KeyboardDismissalWrapper(
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Simple header
+              _buildSimpleHeader(),
+              
+              // Compact progress indicator
+              _buildCompactProgress(),
+              
+              // Page content
+              Expanded(
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      currentPage = index;
+                    });
+                  },
+                  children: [
+                    _buildMoodPage(),
+                    _buildGratitudePage(),
+                    _buildReflectionPage(),
+                    _buildIntentionPage(),
+                    _buildSummaryPage(),
+                  ],
+                ),
               ),
-            ),
-            
-            // Navigation
-            _buildNavigation(),
-          ],
+              
+              // Navigation
+              _buildNavigation(),
+            ],
+          ),
         ),
       ),
     );
@@ -326,10 +329,13 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     fontSize: 16.sp,
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 16.h,
-                    horizontal: 8.w,
+                  contentPadding: EdgeInsets.only(
+                    top: 8.h,
+                    left: 8.w,
+                    right: 8.w,
+                    bottom: 8.h,
                   ),
+                  isDense: true,
                 ),
                 maxLines: null,
                 expands: true,

@@ -1008,8 +1008,17 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         children: [
           _buildSessionHeader(),
           Expanded(
-            child: Center(
-              child: _buildSelectedVisual(),
+            child: Container(
+              padding: EdgeInsets.only(bottom: 30.h), // Add padding between visual and controls
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: MediaQuery.of(context).size.height * 0.6, // Limit height to 60% of screen
+                    maxWidth: MediaQuery.of(context).size.width * 0.8,   // Limit width to 80% of screen
+                  ),
+                  child: _buildSelectedVisual(),
+                ),
+              ),
             ),
           ),
           _buildSessionControls(),
@@ -1047,21 +1056,24 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   }
 
   Widget _buildSessionControls() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildControlButton(
-          icon: Icons.stop,
-          onTap: _endSession,
-          color: Colors.red,
-        ),
-        _buildControlButton(
-          icon: isPlaying ? Icons.pause : Icons.play_arrow,
-          onTap: isPlaying ? _pauseSession : _resumeSession,
-          color: AppColors.visualMeditationGradient[0],
-          isPrimary: true,
-        ),
-      ],
+    return Container(
+      padding: EdgeInsets.only(top: 20.h), // Add padding above controls
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildControlButton(
+            icon: Icons.stop,
+            onTap: _endSession,
+            color: Colors.red,
+          ),
+          _buildControlButton(
+            icon: isPlaying ? Icons.pause : Icons.play_arrow,
+            onTap: isPlaying ? _pauseSession : _resumeSession,
+            color: AppColors.visualMeditationGradient[0],
+            isPrimary: true,
+          ),
+        ],
+      ),
     );
   }
 

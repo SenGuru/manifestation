@@ -7,6 +7,7 @@ import 'home_screen.dart';
 import 'forgot_password_screen.dart';
 import '../constants/colors.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/keyboard_dismissal_wrapper.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -77,41 +78,43 @@ class _LoginScreenState extends State<LoginScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 40.h),
-                    
-                    // Header
-                    _buildHeader(),
-                    
-                    SizedBox(height: 40.h),
-                    
-                    
-                    // Login form
-                    _buildLoginForm(),
-                    
-                    SizedBox(height: 30.h),
-                    
-                    // Social login options
-                    _buildSocialLogin(),
-                    
-                    SizedBox(height: 30.h),
-                    
-                    // Sign up link
-                    _buildSignUpLink(),
-                    
-                    SizedBox(height: 40.h),
-                  ],
+      body: KeyboardDismissalWrapper(
+        child: SafeArea(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 40.h),
+                      
+                      // Header
+                      _buildHeader(),
+                      
+                      SizedBox(height: 40.h),
+                      
+                      
+                      // Login form
+                      _buildLoginForm(),
+                      
+                      SizedBox(height: 30.h),
+                      
+                      // Social login options
+                      _buildSocialLogin(),
+                      
+                      SizedBox(height: 30.h),
+                      
+                      // Sign up link
+                      _buildSignUpLink(),
+                      
+                      SizedBox(height: 40.h),
+                    ],
+                  ),
                 ),
               ),
             ),

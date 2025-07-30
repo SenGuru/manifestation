@@ -6,6 +6,7 @@ import 'home_screen.dart';
 import 'post_signup_onboarding.dart';
 import '../constants/colors.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/keyboard_dismissal_wrapper.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -95,38 +96,40 @@ class _SignUpScreenState extends State<SignUpScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
-      body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20.h),
-                  
-                  // Back button
-                  _buildBackButton(),
-                  
-                  SizedBox(height: 16.h),
-                  
-                  // Header
-                  _buildHeader(),
-                  
-                  SizedBox(height: 24.h),
-                  
-                  // Sign up form
-                  Expanded(
-                    child: _buildSignUpForm(),
-                  ),
-                  
-                  // Login link
-                  _buildLoginLink(),
-                  
-                  SizedBox(height: 20.h),
-                ],
+      body: KeyboardDismissalWrapper(
+        child: SafeArea(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: SlideTransition(
+              position: _slideAnimation,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20.h),
+                    
+                    // Back button
+                    _buildBackButton(),
+                    
+                    SizedBox(height: 16.h),
+                    
+                    // Header
+                    _buildHeader(),
+                    
+                    SizedBox(height: 24.h),
+                    
+                    // Sign up form
+                    Expanded(
+                      child: _buildSignUpForm(),
+                    ),
+                    
+                    // Login link
+                    _buildLoginLink(),
+                    
+                    SizedBox(height: 20.h),
+                  ],
+                ),
               ),
             ),
           ),
