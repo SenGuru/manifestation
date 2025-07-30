@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/models/goals.dart';
 
 class EditGoalSheet extends StatefulWidget {
@@ -63,7 +63,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: AppColors.cardBackground,
+            color: AppTheme.cardBackground,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
           ),
           child: Column(
@@ -74,7 +74,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                 height: 4.h,
                 margin: EdgeInsets.only(top: 12.h),
                 decoration: BoxDecoration(
-                  color: AppColors.textMedium.withOpacity(0.3),
+                  color: AppTheme.textMedium.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -107,14 +107,14 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                             style: TextStyle(
                               fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textLight,
+                              color: AppTheme.textLight,
                             ),
                           ),
                           Text(
                             'Update your goal details',
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                             ),
                           ),
                         ],
@@ -126,12 +126,12 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                         width: 32.w,
                         height: 32.h,
                         decoration: BoxDecoration(
-                          color: AppColors.textMedium.withOpacity(0.1),
+                          color: AppTheme.textMedium.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Icon(
                           Icons.close,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           size: 20.sp,
                         ),
                       ),
@@ -180,7 +180,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                           ),
                         ),
                         SizedBox(height: 12.h),
@@ -200,12 +200,12 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                 decoration: BoxDecoration(
                                   color: isSelected 
                                       ? category.color.withOpacity(0.1)
-                                      : AppColors.backgroundMedium,
+                                      : AppTheme.backgroundMedium,
                                   borderRadius: BorderRadius.circular(20.r),
                                   border: Border.all(
                                     color: isSelected 
                                         ? category.color
-                                        : AppColors.textMedium.withOpacity(0.3),
+                                        : AppTheme.textMedium.withOpacity(0.3),
                                   ),
                                 ),
                                 child: Row(
@@ -213,7 +213,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                   children: [
                                     Icon(
                                       category.icon,
-                                      color: isSelected ? category.color : AppColors.textMedium,
+                                      color: isSelected ? category.color : AppTheme.textMedium,
                                       size: 16.sp,
                                     ),
                                     SizedBox(width: 6.w),
@@ -222,7 +222,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                       style: TextStyle(
                                         fontSize: 14.sp,
                                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                                        color: isSelected ? category.color : AppColors.textMedium,
+                                        color: isSelected ? category.color : AppTheme.textMedium,
                                       ),
                                     ),
                                   ],
@@ -246,25 +246,25 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                     style: TextStyle(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.textLight,
+                                      color: AppTheme.textLight,
                                     ),
                                   ),
                                   SizedBox(height: 8.h),
                                   Container(
                                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                                     decoration: BoxDecoration(
-                                      color: AppColors.backgroundMedium,
+                                      color: AppTheme.backgroundMedium,
                                       borderRadius: BorderRadius.circular(12.r),
                                       border: Border.all(
-                                        color: AppColors.textMedium.withOpacity(0.3),
+                                        color: AppTheme.textMedium.withOpacity(0.3),
                                       ),
                                     ),
                                     child: DropdownButton<GoalPriority>(
                                       value: selectedPriority,
                                       isExpanded: true,
                                       underline: SizedBox.shrink(),
-                                      dropdownColor: AppColors.cardBackground,
-                                      style: TextStyle(color: AppColors.textLight),
+                                      dropdownColor: AppTheme.cardBackground,
+                                      style: TextStyle(color: AppTheme.textLight),
                                       onChanged: (GoalPriority? newValue) {
                                         if (newValue != null) {
                                           setState(() {
@@ -309,7 +309,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                     style: TextStyle(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.textLight,
+                                      color: AppTheme.textLight,
                                     ),
                                   ),
                                   SizedBox(height: 8.h),
@@ -325,7 +325,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                             data: Theme.of(context).copyWith(
                                               colorScheme: ColorScheme.dark(
                                                 primary: selectedCategory.color,
-                                                surface: AppColors.cardBackground,
+                                                surface: AppTheme.cardBackground,
                                               ),
                                             ),
                                             child: child!,
@@ -342,10 +342,10 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                       height: 48.h,
                                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                                       decoration: BoxDecoration(
-                                        color: AppColors.backgroundMedium,
+                                        color: AppTheme.backgroundMedium,
                                         borderRadius: BorderRadius.circular(12.r),
                                         border: Border.all(
-                                          color: AppColors.textMedium.withOpacity(0.3),
+                                          color: AppTheme.textMedium.withOpacity(0.3),
                                         ),
                                       ),
                                       child: Row(
@@ -360,7 +360,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                             '${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
                                             style: TextStyle(
                                               fontSize: 14.sp,
-                                              color: AppColors.textLight,
+                                              color: AppTheme.textLight,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
@@ -382,7 +382,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                           ),
                         ),
                         SizedBox(height: 8.h),
@@ -390,7 +390,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                           'Break your goal into smaller, achievable steps',
                           style: TextStyle(
                             fontSize: 14.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                           ),
                         ),
                         SizedBox(height: 12.h),
@@ -425,20 +425,20 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                     decoration: InputDecoration(
                                       hintText: 'Milestone ${index + 1}',
                                       hintStyle: TextStyle(
-                                        color: AppColors.textMedium.withOpacity(0.6),
+                                        color: AppTheme.textMedium.withOpacity(0.6),
                                       ),
                                       filled: true,
-                                      fillColor: AppColors.backgroundMedium,
+                                      fillColor: AppTheme.backgroundMedium,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
-                                          color: AppColors.textMedium.withOpacity(0.3),
+                                          color: AppTheme.textMedium.withOpacity(0.3),
                                         ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12.r),
                                         borderSide: BorderSide(
-                                          color: AppColors.textMedium.withOpacity(0.3),
+                                          color: AppTheme.textMedium.withOpacity(0.3),
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -453,7 +453,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                       ),
                                     ),
                                     style: TextStyle(
-                                      color: AppColors.textLight,
+                                      color: AppTheme.textLight,
                                       fontSize: 14.sp,
                                     ),
                                     onChanged: (value) {
@@ -489,7 +489,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                     style: TextStyle(
                                       fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: AppColors.textLight,
+                                      color: AppTheme.textLight,
                                     ),
                                   ),
                                   Text(
@@ -506,7 +506,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                               Container(
                                 height: 6.h,
                                 decoration: BoxDecoration(
-                                  color: AppColors.textMedium.withOpacity(0.2),
+                                  color: AppTheme.textMedium.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(3.r),
                                 ),
                                 child: FractionallySizedBox(
@@ -525,7 +525,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                 'Note: To update progress, use the progress button on the goal card',
                                 style: TextStyle(
                                   fontSize: 12.sp,
-                                  color: AppColors.textMedium,
+                                  color: AppTheme.textMedium,
                                   fontStyle: FontStyle.italic,
                                 ),
                               ),
@@ -544,10 +544,10 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                 child: Container(
                                   height: 50.h,
                                   decoration: BoxDecoration(
-                                    color: AppColors.backgroundMedium,
+                                    color: AppTheme.backgroundMedium,
                                     borderRadius: BorderRadius.circular(12.r),
                                     border: Border.all(
-                                      color: AppColors.textMedium.withOpacity(0.3),
+                                      color: AppTheme.textMedium.withOpacity(0.3),
                                     ),
                                   ),
                                   child: Center(
@@ -556,7 +556,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                       style: TextStyle(
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w600,
-                                        color: AppColors.textMedium,
+                                        color: AppTheme.textMedium,
                                       ),
                                     ),
                                   ),
@@ -572,7 +572,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                   height: 50.h,
                                   decoration: BoxDecoration(
                                     gradient: LinearGradient(
-                                      colors: AppColors.goalTrackerGradient,
+                                      colors: AppTheme.goalTrackerGradient,
                                     ),
                                     borderRadius: BorderRadius.circular(12.r),
                                   ),
@@ -582,7 +582,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
                                       style: TextStyle(
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w600,
-                                        color: AppColors.white,
+                                        color: AppTheme.white,
                                       ),
                                     ),
                                   ),
@@ -618,7 +618,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
@@ -629,20 +629,20 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-              color: AppColors.textMedium.withOpacity(0.6),
+              color: AppTheme.textMedium.withOpacity(0.6),
             ),
             filled: true,
-            fillColor: AppColors.backgroundMedium,
+            fillColor: AppTheme.backgroundMedium,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
               ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -663,7 +663,7 @@ class _EditGoalSheetState extends State<EditGoalSheet> {
             ),
           ),
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 16.sp,
           ),
         ),

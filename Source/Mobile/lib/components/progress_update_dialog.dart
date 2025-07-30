@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../models/goals.dart';
 
 class ProgressUpdateDialog extends StatefulWidget {
@@ -79,7 +79,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
       child: Container(
         margin: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
             color: widget.goal.category.color.withOpacity(0.3),
@@ -129,7 +129,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textLight,
+                                color: AppTheme.textLight,
                               ),
                             ),
                             SizedBox(height: 4.h),
@@ -137,7 +137,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                               widget.goal.title,
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: AppColors.textMedium,
+                                color: AppTheme.textMedium,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -166,7 +166,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       Text(
@@ -189,7 +189,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                       return Container(
                         height: 12.h,
                         decoration: BoxDecoration(
-                          color: AppColors.textMedium.withOpacity(0.2),
+                          color: AppTheme.textMedium.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(6.r),
                         ),
                         child: FractionallySizedBox(
@@ -219,7 +219,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -227,7 +227,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
                       activeTrackColor: widget.goal.category.color,
-                      inactiveTrackColor: AppColors.textMedium.withOpacity(0.2),
+                      inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
                       thumbColor: widget.goal.category.color,
                       overlayColor: widget.goal.category.color.withOpacity(0.2),
                       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 12.r),
@@ -252,7 +252,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                       SizedBox(width: 12.w),
@@ -286,7 +286,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                       SizedBox(width: 12.w),
@@ -294,10 +294,10 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                         width: 80.w,
                         height: 40.h,
                         decoration: BoxDecoration(
-                          color: AppColors.backgroundMedium,
+                          color: AppTheme.backgroundMedium,
                           borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
-                            color: AppColors.textMedium.withOpacity(0.3),
+                            color: AppTheme.textMedium.withOpacity(0.3),
                           ),
                         ),
                         child: TextField(
@@ -305,7 +305,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                           textAlign: TextAlign.center,
                           keyboardType: TextInputType.number,
                           style: TextStyle(
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -314,7 +314,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                             suffix: Text(
                               '%',
                               style: TextStyle(
-                                color: AppColors.textMedium,
+                                color: AppTheme.textMedium,
                                 fontSize: 12.sp,
                               ),
                             ),
@@ -336,17 +336,17 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                       margin: EdgeInsets.only(top: 16.h),
                       padding: EdgeInsets.all(12.w),
                       decoration: BoxDecoration(
-                        color: AppColors.accentMint.withOpacity(0.1),
+                        color: AppTheme.accentMint.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
-                          color: AppColors.accentMint.withOpacity(0.3),
+                          color: AppTheme.accentMint.withOpacity(0.3),
                         ),
                       ),
                       child: Row(
                         children: [
                           Icon(
                             Icons.celebration,
-                            color: AppColors.accentMint,
+                            color: AppTheme.accentMint,
                             size: 20.sp,
                           ),
                           SizedBox(width: 8.w),
@@ -355,7 +355,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                               'Congratulations! You\'ve completed this goal!',
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: AppColors.accentMint,
+                                color: AppTheme.accentMint,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -378,10 +378,10 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                       child: Container(
                         height: 48.h,
                         decoration: BoxDecoration(
-                          color: AppColors.backgroundMedium,
+                          color: AppTheme.backgroundMedium,
                           borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(
-                            color: AppColors.textMedium.withOpacity(0.3),
+                            color: AppTheme.textMedium.withOpacity(0.3),
                           ),
                         ),
                         child: Center(
@@ -390,7 +390,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                             ),
                           ),
                         ),
@@ -422,7 +422,7 @@ class _ProgressUpdateDialogState extends State<ProgressUpdateDialog>
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.white,
+                              color: AppTheme.white,
                             ),
                           ),
                         ),

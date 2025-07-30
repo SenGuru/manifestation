@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class JournalPrompt extends StatefulWidget {
   final String prompt;
@@ -47,10 +47,10 @@ class _JournalPromptState extends State<JournalPrompt> {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.2),
+          color: AppTheme.textMedium.withOpacity(0.2),
         ),
       ),
       child: Column(
@@ -64,13 +64,13 @@ class _JournalPromptState extends State<JournalPrompt> {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColors.accentGold.withOpacity(0.1),
+                  color: AppTheme.accentGold.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
@@ -78,7 +78,7 @@ class _JournalPromptState extends State<JournalPrompt> {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.accentGold,
+                    color: AppTheme.accentGold,
                   ),
                 ),
               ),
@@ -96,14 +96,14 @@ class _JournalPromptState extends State<JournalPrompt> {
                 _updateWordCount(value);
               },
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 16.sp,
                 height: 1.5,
               ),
               decoration: InputDecoration(
                 hintText: 'Write about your day, your thoughts, or anything on your mind...',
                 hintStyle: TextStyle(
-                  color: AppColors.textMedium.withOpacity(0.6),
+                  color: AppTheme.textMedium.withOpacity(0.6),
                   fontSize: 16.sp,
                   height: 1.5,
                 ),
@@ -147,17 +147,17 @@ class GratitudeSection extends StatelessWidget {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: AppColors.gradientPink.withOpacity(0.1),
+            color: AppTheme.affirmationGradient[0].withOpacity(0.1),
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: AppColors.gradientPink.withOpacity(0.3),
+              color: AppTheme.affirmationGradient[0].withOpacity(0.3),
             ),
           ),
           child: Row(
             children: [
               Icon(
                 Icons.lightbulb_outline,
-                color: AppColors.gradientPink,
+                color: AppTheme.affirmationGradient[0],
                 size: 20.sp,
               ),
               SizedBox(width: 12.w),
@@ -166,7 +166,7 @@ class GratitudeSection extends StatelessWidget {
                   'Focus on specific moments, people, or experiences that brought you joy today',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     height: 1.3,
                   ),
                 ),
@@ -196,12 +196,12 @@ class GratitudeSection extends StatelessWidget {
   Widget _buildGratitudeItem(int index) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: gratitudeItems[index].isNotEmpty
-              ? AppColors.gradientPink.withOpacity(0.3)
-              : AppColors.textMedium.withOpacity(0.2),
+              ? AppTheme.affirmationGradient[0].withOpacity(0.3)
+              : AppTheme.textMedium.withOpacity(0.2),
         ),
       ),
       child: Column(
@@ -211,7 +211,7 @@ class GratitudeSection extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.gradientPink.withOpacity(0.05),
+              color: AppTheme.affirmationGradient[0].withOpacity(0.05),
               borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
             ),
             child: Row(
@@ -220,7 +220,7 @@ class GratitudeSection extends StatelessWidget {
                   width: 32.w,
                   height: 32.h,
                   decoration: BoxDecoration(
-                    color: AppColors.gradientPink,
+                    color: AppTheme.affirmationGradient[0],
                     shape: BoxShape.circle,
                   ),
                   child: Center(
@@ -229,7 +229,7 @@ class GratitudeSection extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                       ),
                     ),
                   ),
@@ -240,7 +240,7 @@ class GratitudeSection extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
               ],
@@ -257,14 +257,14 @@ class GratitudeSection extends StatelessWidget {
                   TextPosition(offset: gratitudeItems[index].length),
                 ),
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 16.sp,
                 height: 1.4,
               ),
               decoration: InputDecoration(
                 hintText: _getGratitudeHint(index),
                 hintStyle: TextStyle(
-                  color: AppColors.textMedium.withOpacity(0.6),
+                  color: AppTheme.textMedium.withOpacity(0.6),
                   fontSize: 16.sp,
                 ),
                 border: InputBorder.none,

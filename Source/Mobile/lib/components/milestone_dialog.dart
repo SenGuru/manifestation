@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/api_milestone.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../utils/milestone_converter.dart';
 import '../widgets/stylish_loading.dart';
 
@@ -58,7 +58,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
         width: double.infinity,
         constraints: BoxConstraints(maxHeight: 600.h),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Column(
@@ -69,7 +69,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: AppColors.goalTrackerGradient,
+                  colors: AppTheme.goalTrackerGradient,
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -82,7 +82,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                 children: [
                   Icon(
                     isEditing ? Icons.edit : Icons.add_task,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     size: 24.sp,
                   ),
                   SizedBox(width: 12.w),
@@ -92,7 +92,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                       ),
                     ),
                   ),
@@ -100,7 +100,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                     onTap: () => Navigator.pop(context),
                     child: Icon(
                       Icons.close,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                       size: 24.sp,
                     ),
                   ),
@@ -146,17 +146,17 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                         width: double.infinity,
                         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
                         decoration: BoxDecoration(
-                          color: AppColors.backgroundDark,
+                          color: AppTheme.backgroundDark,
                           borderRadius: BorderRadius.circular(12.r),
                           border: Border.all(
-                            color: AppColors.textMedium.withOpacity(0.3),
+                            color: AppTheme.textMedium.withOpacity(0.3),
                           ),
                         ),
                         child: Row(
                           children: [
                             Icon(
                               Icons.calendar_today,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                               size: 18.sp,
                             ),
                             SizedBox(width: 12.w),
@@ -168,8 +168,8 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   color: _targetDate != null
-                                      ? AppColors.textLight
-                                      : AppColors.textMedium,
+                                      ? AppTheme.textLight
+                                      : AppTheme.textMedium,
                                 ),
                               ),
                             ),
@@ -178,7 +178,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                                 onTap: () => setState(() => _targetDate = null),
                                 child: Icon(
                                   Icons.clear,
-                                  color: AppColors.textMedium,
+                                  color: AppTheme.textMedium,
                                   size: 18.sp,
                                 ),
                               ),
@@ -213,12 +213,12 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                               height: 24.h,
                               decoration: BoxDecoration(
                                 color: _isCompleted 
-                                    ? AppColors.accentMint
+                                    ? AppTheme.accentMint
                                     : Colors.transparent,
                                 border: Border.all(
                                   color: _isCompleted 
-                                      ? AppColors.accentMint
-                                      : AppColors.textMedium.withOpacity(0.3),
+                                      ? AppTheme.accentMint
+                                      : AppTheme.textMedium.withOpacity(0.3),
                                   width: 2,
                                 ),
                                 borderRadius: BorderRadius.circular(4.r),
@@ -226,7 +226,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                               child: _isCompleted
                                   ? Icon(
                                       Icons.check,
-                                      color: AppColors.white,
+                                      color: AppTheme.white,
                                       size: 16.sp,
                                     )
                                   : null,
@@ -237,7 +237,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                             'Mark as completed',
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: AppColors.textLight,
+                              color: AppTheme.textLight,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -254,7 +254,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                               'Progress: ${_progressPercentage.round()}%',
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: AppColors.textLight,
+                                color: AppTheme.textLight,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -265,10 +265,10 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                         
                         SliderTheme(
                           data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: AppColors.goalTrackerGradient[0],
-                            inactiveTrackColor: AppColors.textMedium.withOpacity(0.2),
-                            thumbColor: AppColors.goalTrackerGradient[0],
-                            overlayColor: AppColors.goalTrackerGradient[0].withOpacity(0.2),
+                            activeTrackColor: AppTheme.goalTrackerGradient[0],
+                            inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
+                            thumbColor: AppTheme.goalTrackerGradient[0],
+                            overlayColor: AppTheme.goalTrackerGradient[0].withOpacity(0.2),
                             trackHeight: 6.h,
                           ),
                           child: Slider(
@@ -301,7 +301,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                       onPressed: _isSaving ? null : () => Navigator.pop(context),
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
-                        backgroundColor: AppColors.textMedium.withOpacity(0.1),
+                        backgroundColor: AppTheme.textMedium.withOpacity(0.1),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
@@ -311,7 +311,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                     ),
@@ -325,7 +325,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                       onPressed: _isSaving ? null : _saveMilestone,
                       style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.symmetric(vertical: 14.h),
-                        backgroundColor: AppColors.goalTrackerGradient[0],
+                        backgroundColor: AppTheme.goalTrackerGradient[0],
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12.r),
                         ),
@@ -333,7 +333,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                       ),
                       child: _isSaving
                           ? CompactStylishLoading(
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               size: 20.w,
                             )
                           : Text(
@@ -341,7 +341,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                               ),
                             ),
                     ),
@@ -361,7 +361,7 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
       style: TextStyle(
         fontSize: 14.sp,
         fontWeight: FontWeight.w600,
-        color: AppColors.textLight,
+        color: AppTheme.textLight,
       ),
     );
   }
@@ -376,32 +376,32 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
       maxLines: maxLines,
       style: TextStyle(
         fontSize: 14.sp,
-        color: AppColors.textLight,
+        color: AppTheme.textLight,
       ),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(
           fontSize: 14.sp,
-          color: AppColors.textMedium,
+          color: AppTheme.textMedium,
         ),
         filled: true,
-        fillColor: AppColors.backgroundDark,
+        fillColor: AppTheme.backgroundDark,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(
-            color: AppColors.textMedium.withOpacity(0.3),
+            color: AppTheme.textMedium.withOpacity(0.3),
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(
-            color: AppColors.textMedium.withOpacity(0.3),
+            color: AppTheme.textMedium.withOpacity(0.3),
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.r),
           borderSide: BorderSide(
-            color: AppColors.goalTrackerGradient[0],
+            color: AppTheme.goalTrackerGradient[0],
             width: 2,
           ),
         ),
@@ -423,8 +423,8 @@ class _MilestoneDialogState extends State<MilestoneDialog> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: AppColors.goalTrackerGradient[0],
-              surface: AppColors.cardBackground,
+              primary: AppTheme.goalTrackerGradient[0],
+              surface: AppTheme.cardBackground,
             ),
           ),
           child: child!,

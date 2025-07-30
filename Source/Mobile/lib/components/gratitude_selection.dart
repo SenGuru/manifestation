@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class GratitudeSection extends StatefulWidget {
   final List<String> gratitudeItems;
@@ -97,20 +97,20 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.gradientPink.withOpacity(0.15),
-                AppColors.accentLavender.withOpacity(0.1),
+                AppTheme.affirmationGradient[0].withOpacity(0.15),
+                AppTheme.accentLavender.withOpacity(0.1),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
-              color: AppColors.gradientPink.withOpacity(0.2),
+              color: AppTheme.affirmationGradient[0].withOpacity(0.2),
               width: 1.5.w,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.gradientPink.withOpacity(0.1),
+                color: AppTheme.affirmationGradient[0].withOpacity(0.1),
                 blurRadius: 12.r,
                 offset: Offset(0, 4.h),
               ),
@@ -125,7 +125,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [AppColors.gradientPink, AppColors.accentLavender],
+                        colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
                       ),
                       borderRadius: BorderRadius.circular(12.r),
                     ),
@@ -145,7 +145,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                           ),
                         ),
                         SizedBox(height: 4.h),
@@ -153,7 +153,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                           'Reflect on what brings joy to your life',
                           style: TextStyle(
                             fontSize: 14.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                             height: 1.3,
                           ),
                         ),
@@ -224,12 +224,12 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
         gradient: LinearGradient(
           colors: hasContent 
             ? [
-                AppColors.cardBackground,
-                AppColors.cardBackground.withOpacity(0.8),
+                AppTheme.cardBackground,
+                AppTheme.cardBackground.withOpacity(0.8),
               ]
             : [
-                AppColors.cardBackground.withOpacity(0.6),
-                AppColors.cardBackground.withOpacity(0.4),
+                AppTheme.cardBackground.withOpacity(0.6),
+                AppTheme.cardBackground.withOpacity(0.4),
               ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -237,15 +237,15 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
           color: hasContent
-              ? AppColors.gradientPink.withOpacity(0.4)
-              : AppColors.textMedium.withOpacity(0.2),
+              ? AppTheme.affirmationGradient[0].withOpacity(0.4)
+              : AppTheme.textMedium.withOpacity(0.2),
           width: hasContent ? 2.w : 1.w,
         ),
         boxShadow: [
           BoxShadow(
             color: hasContent 
-              ? AppColors.gradientPink.withOpacity(0.15)
-              : AppColors.black.withOpacity(0.05),
+              ? AppTheme.affirmationGradient[0].withOpacity(0.15)
+              : AppTheme.black.withOpacity(0.05),
             blurRadius: hasContent ? 16.r : 8.r,
             offset: Offset(0, hasContent ? 6.h : 2.h),
           ),
@@ -268,13 +268,13 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: hasContent 
-                        ? [AppColors.gradientPink, AppColors.accentLavender]
-                        : [AppColors.textMedium.withOpacity(0.3), AppColors.textMedium.withOpacity(0.2)],
+                        ? [AppTheme.affirmationGradient[0], AppTheme.accentLavender]
+                        : [AppTheme.textMedium.withOpacity(0.3), AppTheme.textMedium.withOpacity(0.2)],
                     ),
                     borderRadius: BorderRadius.circular(16.r),
                     boxShadow: hasContent ? [
                       BoxShadow(
-                        color: AppColors.gradientPink.withOpacity(0.3),
+                        color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                         blurRadius: 8.r,
                         offset: Offset(0, 2.h),
                       ),
@@ -287,7 +287,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.bold,
-                        color: hasContent ? Colors.white : AppColors.textMedium,
+                        color: hasContent ? Colors.white : AppTheme.textMedium,
                       ),
                       child: Text('${index + 1}'),
                     ),
@@ -303,7 +303,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -314,7 +314,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                         width: hasContent ? 40.w : 0.w,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [AppColors.gradientPink, AppColors.accentLavender],
+                            colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
                           ),
                           borderRadius: BorderRadius.circular(1.r),
                         ),
@@ -329,16 +329,16 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                       width: 36.w,
                       height: 36.h,
                       decoration: BoxDecoration(
-                        color: AppColors.error.withOpacity(0.1),
+                        color: AppTheme.error.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(18.r),
                         border: Border.all(
-                          color: AppColors.error.withOpacity(0.3),
+                          color: AppTheme.error.withOpacity(0.3),
                         ),
                       ),
                       child: Icon(
                         Icons.close_rounded,
                         size: 18.sp,
-                        color: AppColors.error.withOpacity(0.8),
+                        color: AppTheme.error.withOpacity(0.8),
                       ),
                     ),
                   ),
@@ -351,10 +351,10 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
             padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.backgroundDark.withOpacity(0.3),
+                color: AppTheme.backgroundDark.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.1),
+                  color: AppTheme.textMedium.withOpacity(0.1),
                 ),
               ),
               child: TextField(
@@ -365,7 +365,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                     TextPosition(offset: widget.gratitudeItems[index].length),
                   ),
                 style: TextStyle(
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                   fontSize: 16.sp,
                   height: 1.6,
                   fontWeight: FontWeight.w400,
@@ -373,7 +373,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                 decoration: InputDecoration(
                   hintText: _getGratitudeHint(index),
                   hintStyle: TextStyle(
-                    color: AppColors.textMedium.withOpacity(0.6),
+                    color: AppTheme.textMedium.withOpacity(0.6),
                     fontSize: 16.sp,
                     height: 1.6,
                     fontStyle: FontStyle.italic,
@@ -403,21 +403,21 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.gradientPink.withOpacity(0.15),
-                AppColors.accentLavender.withOpacity(0.1),
+                AppTheme.affirmationGradient[0].withOpacity(0.15),
+                AppTheme.accentLavender.withOpacity(0.1),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
-              color: AppColors.gradientPink.withOpacity(0.3),
+              color: AppTheme.affirmationGradient[0].withOpacity(0.3),
               width: 2.w,
               style: BorderStyle.solid,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.gradientPink.withOpacity(0.1),
+                color: AppTheme.affirmationGradient[0].withOpacity(0.1),
                 blurRadius: 12.r,
                 offset: Offset(0, 4.h),
               ),
@@ -430,7 +430,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                 padding: EdgeInsets.all(8.w),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppColors.gradientPink, AppColors.accentLavender],
+                    colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
                   ),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -446,7 +446,7 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
                 style: TextStyle(
                   fontSize: 17.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],

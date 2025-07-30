@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/models/affirmations.dart';
 import 'package:fun/utils/color_utils.dart';
 import 'package:fun/services/session_manager.dart';
@@ -25,21 +25,21 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
   late TextEditingController _nameController;
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  Color _selectedColor = AppColors.gradientPink;
+  Color _selectedColor = AppTheme.affirmationGradient[0];
   PredefinedIconTypes _selectedIcon = PredefinedIconTypes.flower;
   final List<Color> _availableColors = [
-    AppColors.gradientPink,
-    AppColors.gradientOrange,
-    AppColors.gradientPurple,
-    AppColors.gradientBlue,
-    AppColors.gradientTeal,
-    AppColors.gradientIndigo,
-    AppColors.accentGold,
-    AppColors.accentLavender,
-    AppColors.accentMint,
-    AppColors.secondaryGold,
-    AppColors.secondaryRose,
-    AppColors.secondaryTeal,
+    AppTheme.affirmationGradient[0],
+    AppTheme.affirmationGradient[1],
+    AppTheme.journalGradient[0],
+    AppTheme.goalTrackerGradient[0],
+    AppTheme.visionBoardGradient[1],
+    AppTheme.goalTrackerGradient[1],
+    AppTheme.accentGold,
+    AppTheme.accentLavender,
+    AppTheme.accentMint,
+    AppTheme.accentGold,
+    AppTheme.affirmationGradient[0],
+    AppTheme.visionBoardGradient[0],
   ];
 
  
@@ -49,7 +49,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     _nameController = TextEditingController(
       text: widget.categoryToEdit?.name ?? '',
     );
-    _selectedColor = widget.categoryToEdit?.color ?? AppColors.gradientPink;
+    _selectedColor = widget.categoryToEdit?.color ?? AppTheme.affirmationGradient[0];
     
     // For user categories: use stored icon or default to first icon in picker
     // For default categories: they don't get edited, so this is always user categories
@@ -74,7 +74,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     final isEditing = widget.categoryToEdit != null;
     
     return Dialog(
-      backgroundColor: AppColors.cardBackground,
+      backgroundColor: AppTheme.cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.r),
       ),
@@ -110,14 +110,14 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       Text(
                         'Organize your manifestations',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                     ],
@@ -127,7 +127,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                   onTap: () => Navigator.pop(context),
                   child: Icon(
                     Icons.close,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     size: 20.sp,
                   ),
                 ),
@@ -147,28 +147,28 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Container(
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: AppColors.textMedium.withOpacity(0.2),
+                        color: AppTheme.textMedium.withOpacity(0.2),
                       ),
                     ),
                     child: TextFormField(
                       controller: _nameController,
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                       decoration: InputDecoration(
                         hintText: 'e.g., Career, Self-Love, Prosperity',
                         hintStyle: TextStyle(
-                          color: AppColors.textMedium.withOpacity(0.7),
+                          color: AppTheme.textMedium.withOpacity(0.7),
                           fontSize: 14.sp,
                         ),
                         border: InputBorder.none,
@@ -194,7 +194,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -225,7 +225,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                             decoration: BoxDecoration(
                               color: isSelected 
                                   ? _selectedColor.withOpacity(0.2)
-                                  : AppColors.backgroundMedium,
+                                  : AppTheme.backgroundMedium,
                               borderRadius: BorderRadius.circular(8.r),
                               border: Border.all(
                                 color: isSelected 
@@ -236,7 +236,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                             ),
                             child: Icon(
                               iconType.iconData,
-                              color: isSelected ? _selectedColor : AppColors.textMedium,
+                              color: isSelected ? _selectedColor : AppTheme.textMedium,
                               size: 20.sp,
                             ),
                           ),
@@ -253,7 +253,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -286,7 +286,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: isSelected 
-                                    ? AppColors.white 
+                                    ? AppTheme.white 
                                     : Colors.transparent,
                                 width: 2,
                               ),
@@ -301,7 +301,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                             child: isSelected 
                                 ? Icon(
                                     Icons.check,
-                                    color: AppColors.white,
+                                    color: AppTheme.white,
                                     size: 12.sp,
                                   )
                                 : null,
@@ -325,10 +325,10 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                     child: Container(
                       height: 48.h,
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundMedium,
+                        color: AppTheme.backgroundMedium,
                         borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(
-                          color: AppColors.textMedium.withOpacity(0.3),
+                          color: AppTheme.textMedium.withOpacity(0.3),
                         ),
                       ),
                       child: Center(
@@ -337,7 +337,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                           ),
                         ),
                       ),
@@ -357,7 +357,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                       child: Center(
                         child: _isLoading
                             ? CompactStylishLoading(
-                                color: AppColors.white,
+                                color: AppTheme.white,
                                 size: 20.w,
                               )
                             : Text(
@@ -365,7 +365,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.white,
+                                  color: AppTheme.white,
                                 ),
                               ),
                       ),
@@ -431,7 +431,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
@@ -446,7 +446,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
             Text(
               'Error',
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -456,7 +456,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
         content: Text(
           message,
           style: TextStyle(
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             fontSize: 14.sp,
           ),
         ),
@@ -466,7 +466,7 @@ class _AddCategoryDialogState extends State<AddCategoryDialog> {
             child: Text(
               'OK',
               style: TextStyle(
-                color: AppColors.accentGold,
+                color: AppTheme.accentGold,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
               ),

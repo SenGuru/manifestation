@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/constants/colors.dart';
+import 'package:fun/constants/app_theme.dart';
 import 'package:fun/models/goals.dart';
 
 class GoalCard extends StatefulWidget {
@@ -64,14 +65,14 @@ class _GoalCardState extends State<GoalCard>
       onTap: widget.onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
             color: widget.goal.category.color.withOpacity(0.3),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
+              color: AppTheme.black.withOpacity(0.1),
               blurRadius: 8.r,
               offset: Offset(0, 4.h),
             ),
@@ -114,7 +115,7 @@ class _GoalCardState extends State<GoalCard>
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.textLight,
+                                color: AppTheme.textLight,
                               ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -188,7 +189,7 @@ class _GoalCardState extends State<GoalCard>
                                   'Progress',
                                   style: TextStyle(
                                     fontSize: 14.sp,
-                                    color: AppColors.textMedium,
+                                    color: AppTheme.textMedium,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -211,7 +212,7 @@ class _GoalCardState extends State<GoalCard>
                                 return Container(
                                   height: 6.h,
                                   decoration: BoxDecoration(
-                                    color: AppColors.textMedium.withOpacity(0.2),
+                                    color: AppTheme.textMedium.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(3.r),
                                   ),
                                   child: FractionallySizedBox(
@@ -287,7 +288,7 @@ class _GoalCardState extends State<GoalCard>
                         },
                         child: Icon(
                           isExpanded ? Icons.expand_less : Icons.expand_more,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           size: 20.sp,
                         ),
                       ),
@@ -316,7 +317,7 @@ class _GoalCardState extends State<GoalCard>
       children: [
         Icon(
           icon,
-          color: isOverdue ? Colors.red : AppColors.textMedium,
+          color: isOverdue ? Colors.red : AppTheme.textMedium,
           size: 14.sp,
         ),
         SizedBox(width: 4.w),
@@ -328,7 +329,7 @@ class _GoalCardState extends State<GoalCard>
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: isOverdue ? Colors.red : AppColors.textLight,
+                color: isOverdue ? Colors.red : AppTheme.textLight,
               ),
             ),
             if (label.isNotEmpty)
@@ -336,7 +337,7 @@ class _GoalCardState extends State<GoalCard>
                 label,
                 style: TextStyle(
                   fontSize: 10.sp,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                 ),
               ),
           ],
@@ -348,7 +349,7 @@ class _GoalCardState extends State<GoalCard>
   Widget _buildExpandedSection() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundMedium,
+        color: AppTheme.backgroundMedium,
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(16.r)),
       ),
       child: Column(
@@ -366,7 +367,7 @@ class _GoalCardState extends State<GoalCard>
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -374,7 +375,7 @@ class _GoalCardState extends State<GoalCard>
                     widget.goal.description,
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       height: 1.4,
                     ),
                   ),
@@ -394,7 +395,7 @@ class _GoalCardState extends State<GoalCard>
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -408,8 +409,8 @@ class _GoalCardState extends State<GoalCard>
                                 ? Icons.check_circle
                                 : Icons.radio_button_unchecked,
                             color: milestone.isCompleted 
-                                ? AppColors.accentMint
-                                : AppColors.textMedium,
+                                ? AppTheme.accentMint
+                                : AppTheme.textMedium,
                             size: 16.sp,
                           ),
                           SizedBox(width: 8.w),
@@ -419,8 +420,8 @@ class _GoalCardState extends State<GoalCard>
                               style: TextStyle(
                                 fontSize: 13.sp,
                                 color: milestone.isCompleted 
-                                    ? AppColors.textMedium
-                                    : AppColors.textLight,
+                                    ? AppTheme.textMedium
+                                    : AppTheme.textLight,
                                 decoration: milestone.isCompleted 
                                     ? TextDecoration.lineThrough
                                     : TextDecoration.none,
@@ -437,7 +438,7 @@ class _GoalCardState extends State<GoalCard>
                       '+${widget.goal.milestones.length - 3} more milestones',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -456,10 +457,10 @@ class _GoalCardState extends State<GoalCard>
                     child: Container(
                       height: 40.h,
                       decoration: BoxDecoration(
-                        color: AppColors.cardBackground,
+                        color: AppTheme.cardBackground,
                         borderRadius: BorderRadius.circular(8.r),
                         border: Border.all(
-                          color: AppColors.textMedium.withOpacity(0.3),
+                          color: AppTheme.textMedium.withOpacity(0.3),
                         ),
                       ),
                       child: Center(
@@ -468,7 +469,7 @@ class _GoalCardState extends State<GoalCard>
                           children: [
                             Icon(
                               Icons.edit,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                               size: 16.sp,
                             ),
                             SizedBox(width: 8.w),
@@ -476,7 +477,7 @@ class _GoalCardState extends State<GoalCard>
                               'Edit',
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: AppColors.textMedium,
+                                color: AppTheme.textMedium,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),

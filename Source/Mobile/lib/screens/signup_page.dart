@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../services/unified_auth_service.dart';
-import 'home_screen.dart';
 import 'post_signup_onboarding.dart';
 import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/keyboard_dismissal_wrapper.dart';
+import '../widgets/universal_back_button.dart';
+import '../components/error_popup.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -27,6 +29,12 @@ class _SignUpScreenState extends State<SignUpScreen>
   bool _subscribeToNewsletter = false;
   bool _isLoading = false;
   String _validationError = '';
+  
+  // Field error states
+  String? _nameError;
+  String? _emailError;
+  String? _passwordError;
+  String? _confirmPasswordError;
   
   PasswordStrength _passwordStrength = PasswordStrength(
     strength: 0.0,
@@ -84,10 +92,36 @@ class _SignUpScreenState extends State<SignUpScreen>
       curve: Curves.easeInOut,
     ));
     
-    // Password strength listener
+    // Password strength and validation listeners
     _passwordController.addListener(() {
       setState(() {
         _passwordStrength = PasswordStrength.calculate(_passwordController.text);
+        _passwordError = AuthValidation.validatePassword(_passwordController.text);
+        _confirmPasswordError = AuthValidation.validateConfirmPassword(
+          _passwordController.text, 
+          _confirmPasswordController.text
+        );
+      });
+    });
+    
+    _nameController.addListener(() {
+      setState(() {
+        _nameError = AuthValidation.validateDisplayName(_nameController.text);
+      });
+    });
+    
+    _emailController.addListener(() {
+      setState(() {
+        _emailError = AuthValidation.validateEmail(_emailController.text);
+      });
+    });
+    
+    _confirmPasswordController.addListener(() {
+      setState(() {
+        _confirmPasswordError = AuthValidation.validateConfirmPassword(
+          _passwordController.text, 
+          _confirmPasswordController.text
+        );
       });
     });
     
@@ -96,7 +130,6 @@ class _SignUpScreenState extends State<SignUpScreen>
     _slideController.forward();
     _buttonPulseController.repeat(reverse: true);
   }
-
 
   @override
   void dispose() {
@@ -112,43 +145,51 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   @override
   Widget build(BuildContext context) {
+    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
+      resizeToAvoidBottomInset: false,
       body: KeyboardDismissalWrapper(
         child: SafeArea(
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SlideTransition(
               position: _slideAnimation,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20.h),
-                    
-                    // Back button
-                    _buildBackButton(),
-                    
-                    SizedBox(height: 16.h),
-                    
-                    // Header
-                    _buildHeader(),
-                    
-                    SizedBox(height: 24.h),
-                    
-                    // Sign up form
-                    Expanded(
-                      child: _buildSignUpForm(),
+              child: isKeyboardOpen
+                  ? SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      padding: EdgeInsets.only(
+                        left: 24.w,
+                        right: 24.w,
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 16.h,
+                      ),
+                      child: _buildContent(),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 16.h),
+                          
+                          // Back button with header inline
+                          _buildBackButtonWithHeader(),
+                          
+                          SizedBox(height: 18.h),
+                          
+                          // Sign up form
+                          Expanded(
+                            child: _buildSignUpForm(),
+                          ),
+                          
+                          // Login link
+                          _buildLoginLink(),
+                          
+                          SizedBox(height: 16.h),
+                        ],
+                      ),
                     ),
-                    
-                    // Login link
-                    _buildLoginLink(),
-                    
-                    SizedBox(height: 20.h),
-                  ],
-                ),
-              ),
             ),
           ),
         ),
@@ -156,46 +197,64 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-  Widget _buildBackButton() {
-    return GestureDetector(
-      onTap: () => Navigator.pop(context),
-      child: Container(
-        width: 44.w,
-        height: 44.h,
-        decoration: BoxDecoration(
-          color: AppColors.cardBackground,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Icon(
-          Icons.arrow_back,
-          color: AppColors.textLight,
-          size: 20.sp,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
+  Widget _buildContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Create Account',
-          style: TextStyle(
-            fontSize: 32.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textLight,
-          ),
-        ),
+        SizedBox(height: 16.h),
         
-        SizedBox(height: 8.h),
+        // Back button with header inline
+        _buildBackButtonWithHeader(),
         
-        Text(
-          'Join our community and start manifesting your dreams',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: AppColors.textMedium,
-            height: 1.3,
+        SizedBox(height: 18.h),
+        
+        // Sign up form
+        _buildSignUpForm(),
+        
+        SizedBox(height: 16.h),
+        
+        // Login link
+        _buildLoginLink(),
+        
+        SizedBox(height: 16.h),
+      ],
+    );
+  }
+
+  Widget _buildBackButtonWithHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Back button
+        UniversalBackButton(),
+        
+        SizedBox(width: 16.w),
+        
+        // Header text
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Create Account',
+                style: TextStyle(
+                  fontSize: 28.sp, // Slightly smaller to fit better
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textLight,
+                ),
+              ),
+              
+              SizedBox(height: 4.h),
+              
+              Text(
+                'Join our community and start manifesting your dreams',
+                style: TextStyle(
+                  fontSize: 14.sp, // Slightly smaller to fit better
+                  color: AppTheme.textMedium,
+                  height: 1.3,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -203,83 +262,80 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   Widget _buildSignUpForm() {
-    return SingleChildScrollView(
-      child: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            // Name field
-            _buildTextField(
-              controller: _nameController,
-              label: 'Full Name',
-              hint: 'Enter your full name',
-              icon: Icons.person_outline,
-              validator: AuthValidation.validateDisplayName,
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          // Name field
+          _buildTextField(
+            controller: _nameController,
+            label: 'Full Name',
+            hint: 'Enter your full name',
+            icon: Icons.person_outline,
+            validator: AuthValidation.validateDisplayName,
+          ),
+          
+          SizedBox(height: 12.h),
+          
+          // Email field
+          _buildTextField(
+            controller: _emailController,
+            label: 'Email',
+            hint: 'Enter your email',
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+            validator: AuthValidation.validateEmail,
+          ),
+          
+          SizedBox(height: 12.h),
+          
+          // Password field
+          _buildTextField(
+            controller: _passwordController,
+            label: 'Password',
+            hint: 'Create a strong password',
+            icon: Icons.lock_outline,
+            isPassword: true,
+            validator: AuthValidation.validatePassword,
+          ),
+          
+          // Animated password strength indicator
+          _buildAnimatedPasswordStrengthIndicator(),
+          
+          SizedBox(height: 12.h),
+          
+          // Confirm password field
+          _buildTextField(
+            controller: _confirmPasswordController,
+            label: 'Confirm Password',
+            hint: 'Confirm your password',
+            icon: Icons.lock_outline,
+            isPassword: true,
+            isConfirmPassword: true,
+            validator: (value) => AuthValidation.validateConfirmPassword(
+              _passwordController.text,
+              value,
             ),
-            
-            SizedBox(height: 16.h),
-            
-            // Email field
-            _buildTextField(
-              controller: _emailController,
-              label: 'Email',
-              hint: 'Enter your email',
-              icon: Icons.email_outlined,
-              keyboardType: TextInputType.emailAddress,
-              validator: AuthValidation.validateEmail,
-            ),
-            
-            SizedBox(height: 16.h),
-            
-            // Password field
-            _buildTextField(
-              controller: _passwordController,
-              label: 'Password',
-              hint: 'Create a strong password',
-              icon: Icons.lock_outline,
-              isPassword: true,
-              validator: AuthValidation.validatePassword,
-            ),
-            
-            // Password strength indicator - always allocated space
-            SizedBox(height: 8.h),
-            _buildPasswordStrengthIndicator(),
-            
-            SizedBox(height: 16.h),
-            
-            // Confirm password field
-            _buildTextField(
-              controller: _confirmPasswordController,
-              label: 'Confirm Password',
-              hint: 'Confirm your password',
-              icon: Icons.lock_outline,
-              isPassword: true,
-              isConfirmPassword: true,
-              validator: (value) => AuthValidation.validateConfirmPassword(
-                _passwordController.text,
-                value,
-              ),
-            ),
-            
-            SizedBox(height: 20.h),
-            
-            // Terms and conditions
-            _buildTermsCheckbox(),
-            
-            SizedBox(height: 12.h),
-            
-            // Newsletter subscription
-            _buildNewsletterCheckbox(),
-            
-            // Fixed space for validation errors
-            _buildValidationErrorContainer(),
-            
-            SizedBox(height: 16.h),
-            
-            // Sign up button
-            _buildSignUpButton(),
-          ],
-        ),
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // Terms and conditions
+          _buildTermsCheckbox(),
+          
+          SizedBox(height: 8.h),
+          
+          // Newsletter subscription
+          _buildNewsletterCheckbox(),
+          
+          // Fixed space for validation errors
+          _buildValidationErrorContainer(),
+          
+          SizedBox(height: 12.h),
+          
+          // Sign up button
+          _buildSignUpButton(),
+        ],
       ),
     );
   }
@@ -302,142 +358,225 @@ class _SignUpScreenState extends State<SignUpScreen>
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
-        SizedBox(height: 8.h),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          obscureText: isPassword && (isConfirmPassword 
-              ? !_isConfirmPasswordVisible 
-              : !_isPasswordVisible),
-          keyboardType: keyboardType,
-          style: TextStyle(
-            color: AppColors.textLight,
-            fontSize: 16.sp,
-          ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              color: AppColors.textMedium.withOpacity(0.6),
-            ),
-            prefixIcon: Icon(
-              icon,
-              color: AppColors.textMedium,
-              size: 20.sp,
-            ),
-            suffixIcon: isPassword
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        if (isConfirmPassword) {
-                          _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
-                        } else {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        }
-                      });
-                    },
-                    child: Icon(
-                      (isConfirmPassword ? _isConfirmPasswordVisible : _isPasswordVisible)
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: AppColors.textMedium,
-                      size: 20.sp,
+        SizedBox(height: 6.h),
+        
+        // TextField with custom error handling
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: controller,
+                validator: (value) {
+                  // Store validation result but don't show in TextFormField
+                  final result = validator?.call(value);
+                  return null; // Always return null to prevent default error display
+                },
+                obscureText: isPassword && (isConfirmPassword 
+                    ? !_isConfirmPasswordVisible 
+                    : !_isPasswordVisible),
+                keyboardType: keyboardType,
+                style: TextStyle(
+                  color: AppTheme.textLight,
+                  fontSize: 16.sp,
+                ),
+                decoration: InputDecoration(
+                  hintText: hint,
+                  hintStyle: TextStyle(
+                    color: AppTheme.textMedium.withOpacity(0.6),
+                  ),
+                  prefixIcon: Icon(
+                    icon,
+                    color: AppTheme.textMedium,
+                    size: 20.sp,
+                  ),
+                  suffixIcon: isPassword
+                      ? GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (isConfirmPassword) {
+                                _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                              } else {
+                                _isPasswordVisible = !_isPasswordVisible;
+                              }
+                            });
+                          },
+                          child: Icon(
+                            (isConfirmPassword ? _isConfirmPasswordVisible : _isPasswordVisible)
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: AppTheme.textMedium,
+                            size: 20.sp,
+                          ),
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: AppTheme.cardBackground,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: _getFieldError(controller) != null 
+                          ? Colors.red.withOpacity(0.5)
+                          : AppTheme.textMedium.withOpacity(0.1),
+                      width: 2,
                     ),
-                  )
-                : null,
-            filled: true,
-            fillColor: AppColors.cardBackground,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppColors.textMedium.withOpacity(0.1),
-                width: 2,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: AppTheme.socialGradient[0],
+                      width: 2,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
+                ),
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppColors.socialGradient[0],
-                width: 2,
+              
+              // Fixed space for individual field errors
+              Container(
+                height: 16.h,
+                margin: EdgeInsets.only(top: 2.h),
+                child: _buildFieldError(_getFieldError(controller)),
               ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
-            ),
-            // Remove error text to prevent jumping
-            errorStyle: TextStyle(height: 0, fontSize: 0),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 16.h,
-            ),
+            ],
           ),
         ),
       ],
     );
   }
-
-  Widget _buildPasswordStrengthIndicator() {
-    // Always allocate fixed space to prevent layout jumping
-    return Container(
-      height: 40.h, // Fixed height to prevent jumping
-      child: AnimatedOpacity(
-        opacity: _passwordController.text.isNotEmpty ? 1.0 : 0.0,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        child: _passwordController.text.isNotEmpty 
-          ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  
+  String? _getFieldError(TextEditingController controller) {
+    if (controller == _nameController) return _nameError;
+    if (controller == _emailController) return _emailError;
+    if (controller == _passwordController) return _passwordError;
+    if (controller == _confirmPasswordController) return _confirmPasswordError;
+    return null;
+  }
+  
+  Widget _buildFieldError(String? errorText) {
+    return AnimatedOpacity(
+      opacity: errorText != null && errorText.isNotEmpty ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 200),
+      child: errorText != null && errorText.isNotEmpty
+          ? Row(
               children: [
-                Row(
-                  children: [
-                    Text(
-                      'Password strength: ',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppColors.textMedium,
-                      ),
-                    ),
-                    Text(
-                      _passwordStrength.label,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w600,
-                        color: _passwordStrength.color,
-                      ),
-                    ),
-                  ],
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 12.sp,
                 ),
-                SizedBox(height: 6.h),
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
-                  child: LinearProgressIndicator(
-                    value: _passwordStrength.strength,
-                    backgroundColor: AppColors.textMedium.withOpacity(0.2),
-                    valueColor: AlwaysStoppedAnimation<Color>(_passwordStrength.color),
-                    minHeight: 4.h,
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    errorText,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             )
-          : SizedBox.shrink(), // Invisible placeholder
+          : SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildAnimatedPasswordStrengthIndicator() {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 400),
+      curve: Curves.easeInOutCubic,
+      height: _passwordController.text.isNotEmpty ? 48.h : 0.h,
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(),
+      child: AnimatedOpacity(
+        opacity: _passwordController.text.isNotEmpty ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        child: AnimatedSlide(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeOutCubic,
+          offset: _passwordController.text.isNotEmpty 
+              ? Offset(0, 0) 
+              : Offset(0, -0.3),
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            child: Container(
+              margin: EdgeInsets.only(top: 8.h),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          'Password strength: ',
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: AppTheme.textMedium,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Flexible(
+                        child: Text(
+                          _passwordStrength.label,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: _passwordStrength.color,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 6.h),
+                  TweenAnimationBuilder<double>(
+                    duration: Duration(milliseconds: 500),
+                    curve: Curves.easeInOutCubic,
+                    tween: Tween(begin: 0.0, end: _passwordStrength.strength),
+                    builder: (context, value, child) {
+                      return LinearProgressIndicator(
+                        value: value,
+                        backgroundColor: AppTheme.textMedium.withOpacity(0.2),
+                        valueColor: AlwaysStoppedAnimation<Color>(_passwordStrength.color),
+                        minHeight: 4.h,
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -457,20 +596,20 @@ class _SignUpScreenState extends State<SignUpScreen>
             height: 20.h,
             decoration: BoxDecoration(
               color: _agreeToTerms 
-                  ? AppColors.socialGradient[0]
+                  ? AppTheme.socialGradient[0]
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(4.r),
               border: Border.all(
                 color: _agreeToTerms 
-                    ? AppColors.socialGradient[0]
-                    : AppColors.textMedium.withOpacity(0.5),
+                    ? AppTheme.socialGradient[0]
+                    : AppTheme.textMedium.withOpacity(0.5),
                 width: 2,
               ),
             ),
             child: _agreeToTerms
                 ? Icon(
                     Icons.check,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     size: 14.sp,
                   )
                 : null,
@@ -481,7 +620,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               text: TextSpan(
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                   height: 1.3,
                 ),
                 children: [
@@ -489,7 +628,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   TextSpan(
                     text: 'Terms of Service',
                     style: TextStyle(
-                      color: AppColors.socialGradient[0],
+                      color: AppTheme.socialGradient[0],
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -497,7 +636,7 @@ class _SignUpScreenState extends State<SignUpScreen>
                   TextSpan(
                     text: 'Privacy Policy',
                     style: TextStyle(
-                      color: AppColors.socialGradient[0],
+                      color: AppTheme.socialGradient[0],
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -525,20 +664,20 @@ class _SignUpScreenState extends State<SignUpScreen>
             height: 20.h,
             decoration: BoxDecoration(
               color: _subscribeToNewsletter 
-                  ? AppColors.socialGradient[0]
+                  ? AppTheme.socialGradient[0]
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(4.r),
               border: Border.all(
                 color: _subscribeToNewsletter 
-                    ? AppColors.socialGradient[0]
-                    : AppColors.textMedium.withOpacity(0.5),
+                    ? AppTheme.socialGradient[0]
+                    : AppTheme.textMedium.withOpacity(0.5),
                 width: 2,
               ),
             ),
             child: _subscribeToNewsletter
                 ? Icon(
                     Icons.check,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     size: 14.sp,
                   )
                 : null,
@@ -549,7 +688,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               'Send me manifestation tips and updates',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
               ),
             ),
           ),
@@ -560,8 +699,8 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   Widget _buildValidationErrorContainer() {
     return Container(
-      height: 30.h, // Fixed space for validation errors
-      margin: EdgeInsets.only(top: 8.h),
+      height: 16.h, // Further reduced space for validation errors
+      margin: EdgeInsets.only(top: 2.h),
       child: AnimatedOpacity(
         opacity: _validationError.isNotEmpty ? 1.0 : 0.0,
         duration: Duration(milliseconds: 300),
@@ -630,21 +769,21 @@ class _SignUpScreenState extends State<SignUpScreen>
               child: Ink(
                 decoration: BoxDecoration(
                   gradient: isButtonEnabled
-                      ? LinearGradient(colors: AppColors.socialGradient)
+                      ? LinearGradient(colors: AppTheme.socialGradient)
                       : null,
                   color: isButtonEnabled
                       ? null
-                      : AppColors.textMedium.withOpacity(0.3),
+                      : AppTheme.textMedium.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: isButtonEnabled ? [
                     BoxShadow(
-                      color: AppColors.socialGradient[0].withOpacity(0.4),
+                      color: AppTheme.socialGradient[0].withOpacity(0.4),
                       blurRadius: 20.r,
                       offset: Offset(0, 8.h),
                       spreadRadius: 2.r,
                     ),
                     BoxShadow(
-                      color: AppColors.socialGradient[1].withOpacity(0.2),
+                      color: AppTheme.socialGradient[1].withOpacity(0.2),
                       blurRadius: 40.r,
                       offset: Offset(0, 16.h),
                     ),
@@ -653,13 +792,13 @@ class _SignUpScreenState extends State<SignUpScreen>
                 child: Container(
                   alignment: Alignment.center,
                   child: _isLoading
-                      ? CompactStylishLoading(size: 20.w, color: AppColors.white)
+                      ? CompactStylishLoading(size: 20.w, color: AppTheme.white)
                       : Text(
                           'Create Account',
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -672,7 +811,6 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-
   Widget _buildLoginLink() {
     return Center(
       child: GestureDetector(
@@ -681,14 +819,14 @@ class _SignUpScreenState extends State<SignUpScreen>
           text: TextSpan(
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
             children: [
               TextSpan(text: "Already have an account? "),
               TextSpan(
                 text: 'Sign In',
                 style: TextStyle(
-                  color: AppColors.socialGradient[0],
+                  color: AppTheme.socialGradient[0],
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -705,7 +843,18 @@ class _SignUpScreenState extends State<SignUpScreen>
       _validationError = '';
     });
     
-    if (!_formKey.currentState!.validate()) return;
+    // Custom validation since we disabled TextFormField's built-in validation
+    bool hasErrors = false;
+    
+    if (_nameError != null) hasErrors = true;
+    if (_emailError != null) hasErrors = true;
+    if (_passwordError != null) hasErrors = true;
+    if (_confirmPasswordError != null) hasErrors = true;
+    
+    if (hasErrors) {
+      return;
+    }
+    
     if (!_agreeToTerms) {
       setState(() {
         _validationError = 'Please agree to the Terms of Service and Privacy Policy';
@@ -735,208 +884,54 @@ class _SignUpScreenState extends State<SignUpScreen>
       );
 
       if (result.isSuccess) {
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.message),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          ),
-        );
-
-        // Navigate to onboarding flow for new users
-        Navigator.pushReplacement(
+        // Show success popup before navigation
+        SuccessPopup.show(
           context,
-          MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
+          title: 'Account Created!',
+          message: 'Welcome to our manifestation community! Let\'s get you started on your journey.',
+          actionText: 'Begin Journey',
+          onAction: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
+            );
+          },
+          onDismiss: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
+            );
+          },
         );
       } else {
-        // Handle specific signup errors
-        setState(() {
-          _validationError = _getSignupErrorMessage(result.message);
-        });
+        // Show beautiful error popup instead of validation error
+        ErrorPopup.show(
+          context,
+          title: 'Account Creation Failed',
+          message: _getSignupErrorMessage(result.message),
+          actionText: 'Try Again',
+          onAction: () {
+            // Clear sensitive fields
+            _passwordController.clear();
+            _confirmPasswordController.clear();
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+        );
       }
     } catch (e) {
-      setState(() {
-        _validationError = 'Connection error. Please check your internet and try again.';
-      });
+      ErrorPopup.show(
+        context,
+        title: 'Connection Error',
+        message: 'Unable to create your account right now. Please check your internet connection and try again.',
+        actionText: 'Retry',
+        onAction: () => _handleSignUp(),
+      );
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
   }
-
-  void _showOtpDialog() {
-    final otpController = TextEditingController();
-    bool isVerifying = false;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          backgroundColor: AppColors.cardBackground,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          title: Text(
-            'Verify Email',
-            style: TextStyle(
-              color: AppColors.textLight,
-              fontSize: 20.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'We\'ve sent a verification code to:',
-                style: TextStyle(
-                  color: AppColors.textMedium,
-                  fontSize: 14.sp,
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                _emailController.text.trim(),
-                style: TextStyle(
-                  color: AppColors.textLight,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              SizedBox(height: 20.h),
-              TextField(
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                maxLength: 6,
-                style: TextStyle(
-                  color: AppColors.textLight,
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 2.0,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Enter 6-digit code',
-                  hintStyle: TextStyle(
-                    color: AppColors.textMedium.withOpacity(0.6),
-                  ),
-                  filled: true,
-                  fillColor: AppColors.backgroundDark,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 16.h,
-                  ),
-                  counterText: '',
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: isVerifying ? null : () => Navigator.pop(context),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: AppColors.textMedium,
-                  fontSize: 16.sp,
-                ),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: isVerifying ? null : () async {
-                if (otpController.text.length != 6) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please enter a 6-digit code'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                  return;
-                }
-
-                setDialogState(() {
-                  isVerifying = true;
-                });
-
-                try {
-                  final otpCode = int.parse(otpController.text);
-                  // TODO: Implement OTP verification with generated API
-                  // This is a placeholder implementation as OTP verification endpoint
-                  // is not yet available in the generated API
-                  
-                  try {
-                    Navigator.pop(context); // Close dialog
-                    
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('OTP verification successful! Proceeding to home.'),
-                        backgroundColor: Colors.green,
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                    );
-
-                    // Navigate to onboarding flow
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
-                    );
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('OTP verification failed: ${e.toString()}'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Please enter a valid 6-digit number'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                } finally {
-                  setDialogState(() {
-                    isVerifying = false;
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.affirmationGradient[0],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-              ),
-              child: isVerifying
-                  ? CompactStylishLoading(size: 18.w)
-                  : Text(
-                      'Verify',
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
 
   String _getSignupErrorMessage(String apiMessage) {
     final message = apiMessage.toLowerCase();
@@ -959,18 +954,5 @@ class _SignUpScreenState extends State<SignUpScreen>
       // Fallback for any other error messages
       return 'Account creation failed. Please check your information and try again.';
     }
-  }
-
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-      ),
-    );
   }
 }

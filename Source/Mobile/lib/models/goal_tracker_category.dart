@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../utils/color_utils.dart';
 import '../constants/category_icons.dart';
 
@@ -35,7 +35,7 @@ class GoalTrackerCategory {
           ? Color(json['color']) 
           : (json['color'] is String 
               ? ColorUtils.hexToColor(json['color']) 
-              : AppColors.goalTrackerGradient[0]),
+              : AppTheme.goalTrackerGradient[0]),
       iconValue: json['iconValue'] as int? ?? json['predefinedIconTypeId'] as int?,
       isDefault: json['isDefault'] == true,
       userId: json['userId'] as int?,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../services/usage_analytics_service.dart';
 import '../models/analytics_models.dart';
 import '../widgets/stylish_loading.dart';
@@ -73,7 +74,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -104,15 +105,15 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.2),
+                  color: AppTheme.textMedium.withOpacity(0.2),
                 ),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -122,7 +123,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
             child: Text(
               'Session Statistics',
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -134,15 +135,15 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.2),
+                  color: AppTheme.textMedium.withOpacity(0.2),
                 ),
               ),
               child: Icon(
                 Icons.refresh,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -162,13 +163,13 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
             Icon(
               Icons.error_outline,
               size: 48.sp,
-              color: AppColors.error,
+              color: AppTheme.error,
             ),
             SizedBox(height: 16.h),
             Text(
               'Error Loading Stats',
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -177,7 +178,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
             Text(
               _errorMessage,
               style: TextStyle(
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 fontSize: 14.sp,
               ),
               textAlign: TextAlign.center,
@@ -186,8 +187,8 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
             ElevatedButton(
               onPressed: _loadStats,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentLavender,
-                foregroundColor: AppColors.white,
+                backgroundColor: AppTheme.accentLavender,
+                foregroundColor: AppTheme.white,
               ),
               child: Text('Retry'),
             ),
@@ -202,8 +203,8 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
 
     return RefreshIndicator(
       onRefresh: _loadStats,
-      color: AppColors.accentLavender,
-      backgroundColor: AppColors.cardBackground,
+      color: AppTheme.accentLavender,
+      backgroundColor: AppTheme.cardBackground,
       child: SingleChildScrollView(
         physics: AlwaysScrollableScrollPhysics(),
         padding: EdgeInsets.all(20.w),
@@ -229,7 +230,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: AppColors.analyticsGradient,
+          colors: AppTheme.analyticsGradient,
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -241,7 +242,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           Text(
             'Overview',
             style: TextStyle(
-              color: AppColors.white,
+              color: AppTheme.white,
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -282,7 +283,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.white.withOpacity(0.1),
+        color: AppTheme.white.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: Column(
@@ -290,13 +291,13 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.white, size: 20.sp),
+              Icon(icon, color: AppTheme.white, size: 20.sp),
               SizedBox(width: 8.w),
               Expanded(
                 child: Text(
                   title,
                   style: TextStyle(
-                    color: AppColors.white.withOpacity(0.8),
+                    color: AppTheme.white.withOpacity(0.8),
                     fontSize: 14.sp,
                   ),
                 ),
@@ -307,7 +308,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           Text(
             value,
             style: TextStyle(
-              color: AppColors.white,
+              color: AppTheme.white,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -324,7 +325,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Text(
           'Activity Breakdown',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -372,7 +373,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                   gradient: LinearGradient(colors: gradient),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Icon(icon, color: AppColors.white, size: 20.sp),
+                child: Icon(icon, color: AppTheme.white, size: 20.sp),
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -382,7 +383,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                     Text(
                       title,
                       style: TextStyle(
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
                       ),
@@ -390,7 +391,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                     Text(
                       '${stats.totalSessions} sessions',
                       style: TextStyle(
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                         fontSize: 12.sp,
                       ),
                     ),
@@ -411,7 +412,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                   Text(
                     'avg: ${stats.formattedAverageTime}',
                     style: TextStyle(
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       fontSize: 12.sp,
                     ),
                   ),
@@ -439,7 +440,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Text(
           label,
           style: TextStyle(
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             fontSize: 12.sp,
           ),
         ),
@@ -447,7 +448,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Text(
           value,
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -464,7 +465,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Text(
           'Weekly Activity',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -473,7 +474,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: AppColors.cardBackground,
+            color: AppTheme.cardBackground,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Column(
@@ -505,7 +506,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Text(
           title,
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
           ),
@@ -534,7 +535,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                 Text(
                   data.dayName,
                   style: TextStyle(
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     fontSize: 10.sp,
                   ),
                 ),
@@ -556,7 +557,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Text(
           'Recent Sessions',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -565,21 +566,21 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
         Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: AppColors.cardBackground,
+            color: AppTheme.cardBackground,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: Row(
             children: [
               Icon(
                 Icons.info_outline,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 size: 20.sp,
               ),
               SizedBox(width: 12.w),
               Text(
                 'Session tracking managed by API',
                 style: TextStyle(
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                   fontSize: 14.sp,
                 ),
               ),

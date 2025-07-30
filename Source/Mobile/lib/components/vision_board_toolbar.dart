@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/models/vision_board.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class VisionBoardToolbar extends StatelessWidget {
   final VisionBoardTool selectedTool;
@@ -33,14 +33,14 @@ class VisionBoardToolbar extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.2),
+          color: AppTheme.textMedium.withOpacity(0.2),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.1),
+            color: AppTheme.black.withOpacity(0.1),
             blurRadius: 10.r,
             offset: Offset(0, 4.h),
           ),
@@ -56,7 +56,7 @@ class VisionBoardToolbar extends StatelessWidget {
               icon: Icons.add_photo_alternate,
               label: 'Image',
               onTap: onAddImage,
-              color: AppColors.secondaryTeal,
+              color: AppTheme.visionBoardGradient[0],
               isAction: true,
             ),
             
@@ -67,7 +67,7 @@ class VisionBoardToolbar extends StatelessWidget {
               icon: Icons.text_fields,
               label: 'Text',
               onTap: onAddText,
-              color: AppColors.accentGold,
+              color: AppTheme.accentGold,
               isAction: true,
             ),
             
@@ -76,7 +76,7 @@ class VisionBoardToolbar extends StatelessWidget {
               width: 1,
               height: 30.h,
               margin: EdgeInsets.symmetric(horizontal: 16.w),
-              color: AppColors.textMedium.withOpacity(0.2),
+              color: AppTheme.textMedium.withOpacity(0.2),
             ),
             
             // Tool selector
@@ -87,7 +87,7 @@ class VisionBoardToolbar extends StatelessWidget {
               width: 1,
               height: 30.h,
               margin: EdgeInsets.symmetric(horizontal: 16.w),
-              color: AppColors.textMedium.withOpacity(0.2),
+              color: AppTheme.textMedium.withOpacity(0.2),
             ),
             
             // Undo
@@ -95,7 +95,7 @@ class VisionBoardToolbar extends StatelessWidget {
               icon: Icons.undo,
               label: 'Undo',
               onTap: canUndo ? onUndo : null,
-              color: canUndo ? AppColors.textLight : AppColors.textMedium,
+              color: canUndo ? AppTheme.textLight : AppTheme.textMedium,
               isEnabled: canUndo,
             ),
             
@@ -106,7 +106,7 @@ class VisionBoardToolbar extends StatelessWidget {
               icon: Icons.redo,
               label: 'Redo',
               onTap: canRedo ? onRedo : null,
-              color: canRedo ? AppColors.textLight : AppColors.textMedium,
+              color: canRedo ? AppTheme.textLight : AppTheme.textMedium,
               isEnabled: canRedo,
             ),
             
@@ -115,7 +115,7 @@ class VisionBoardToolbar extends StatelessWidget {
               width: 1,
               height: 30.h,
               margin: EdgeInsets.symmetric(horizontal: 16.w),
-              color: AppColors.textMedium.withOpacity(0.2),
+              color: AppTheme.textMedium.withOpacity(0.2),
             ),
             
             // Save
@@ -123,7 +123,7 @@ class VisionBoardToolbar extends StatelessWidget {
               icon: Icons.save,
               label: 'Save',
               onTap: onSave,
-              color: AppColors.accentMint,
+              color: AppTheme.accentMint,
               isAction: true,
             ),
           ],
@@ -178,8 +178,8 @@ class VisionBoardToolbar extends StatelessWidget {
                 fontSize: 10.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                 color: isEnabled 
-                    ? (isSelected ? color : AppColors.textMedium) 
-                    : AppColors.textMedium.withOpacity(0.4),
+                    ? (isSelected ? color : AppTheme.textMedium) 
+                    : AppTheme.textMedium.withOpacity(0.4),
               ),
             ),
           ],
@@ -196,13 +196,13 @@ class VisionBoardToolbar extends StatelessWidget {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppColors.gradientPurple.withOpacity(0.1),
-              AppColors.gradientBlue.withOpacity(0.1),
+              AppTheme.journalGradient[0].withOpacity(0.1),
+              AppTheme.goalTrackerGradient[0].withOpacity(0.1),
             ],
           ),
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
-            color: AppColors.gradientPurple.withOpacity(0.3),
+            color: AppTheme.journalGradient[0].withOpacity(0.3),
           ),
         ),
         child: Row(
@@ -214,12 +214,12 @@ class VisionBoardToolbar extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(4.w),
                   decoration: BoxDecoration(
-                    color: AppColors.gradientPurple.withOpacity(0.1),
+                    color: AppTheme.journalGradient[0].withOpacity(0.1),
                     borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Icon(
                     selectedTool.icon,
-                    color: AppColors.gradientPurple,
+                    color: AppTheme.journalGradient[0],
                     size: 22.sp,
                   ),
                 ),
@@ -229,7 +229,7 @@ class VisionBoardToolbar extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.gradientPurple,
+                    color: AppTheme.journalGradient[0],
                   ),
                 ),
               ],
@@ -237,7 +237,7 @@ class VisionBoardToolbar extends StatelessWidget {
             SizedBox(width: 6.w),
             Icon(
               Icons.keyboard_arrow_down,
-              color: AppColors.gradientPurple,
+              color: AppTheme.journalGradient[0],
               size: 16.sp,
             ),
           ],
@@ -261,7 +261,7 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
       builder: (context) => Container(
         margin: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Column(
@@ -272,7 +272,7 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -285,7 +285,7 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -310,22 +310,22 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
                             gradient: isSelected
                                 ? LinearGradient(
                                     colors: [
-                                      AppColors.gradientPurple.withOpacity(0.1),
-                                      AppColors.gradientBlue.withOpacity(0.1),
+                                      AppTheme.journalGradient[0].withOpacity(0.1),
+                                      AppTheme.goalTrackerGradient[0].withOpacity(0.1),
                                     ],
                                   )
                                 : null,
-                            color: isSelected ? null : AppColors.backgroundMedium,
+                            color: isSelected ? null : AppTheme.backgroundMedium,
                             borderRadius: BorderRadius.circular(12.r),
                             border: Border.all(
                               color: isSelected
-                                  ? AppColors.gradientPurple.withOpacity(0.3)
-                                  : AppColors.textMedium.withOpacity(0.2),
+                                  ? AppTheme.journalGradient[0].withOpacity(0.3)
+                                  : AppTheme.textMedium.withOpacity(0.2),
                               width: isSelected ? 2 : 1,
                             ),
                             boxShadow: isSelected ? [
                               BoxShadow(
-                                color: AppColors.gradientPurple.withOpacity(0.2),
+                                color: AppTheme.journalGradient[0].withOpacity(0.2),
                                 blurRadius: 8.r,
                                 offset: Offset(0, 4.h),
                               ),
@@ -338,15 +338,15 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
                                 padding: EdgeInsets.all(8.w),
                                 decoration: BoxDecoration(
                                   color: isSelected 
-                                      ? AppColors.gradientPurple.withOpacity(0.1)
+                                      ? AppTheme.journalGradient[0].withOpacity(0.1)
                                       : Colors.transparent,
                                   borderRadius: BorderRadius.circular(8.r),
                                 ),
                                 child: Icon(
                                   tool.icon,
                                   color: isSelected
-                                      ? AppColors.gradientPurple
-                                      : AppColors.textMedium,
+                                      ? AppTheme.journalGradient[0]
+                                      : AppTheme.textMedium,
                                   size: 24.sp,
                                 ),
                               ),
@@ -357,8 +357,8 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
                                   fontSize: 12.sp,
                                   fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                                   color: isSelected
-                                      ? AppColors.gradientPurple
-                                      : AppColors.textMedium,
+                                      ? AppTheme.journalGradient[0]
+                                      : AppTheme.textMedium,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -368,7 +368,7 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
                                   width: 20.w,
                                   height: 2.h,
                                   decoration: BoxDecoration(
-                                    color: AppColors.gradientPurple,
+                                    color: AppTheme.journalGradient[0],
                                     borderRadius: BorderRadius.circular(1.r),
                                   ),
                                 ),
@@ -384,7 +384,7 @@ extension VisionBoardToolbarExtension on VisionBoardToolbar {
                     _getToolDescription(selectedTool),
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       height: 1.4,
                     ),
                     textAlign: TextAlign.center,

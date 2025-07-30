@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'dart:math' as math;
 
 class MeditationTimer extends StatefulWidget {
@@ -80,16 +80,16 @@ class _MeditationTimerState extends State<MeditationTimer>
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: AppColors.black.withOpacity(0.3),
+                color: AppTheme.black.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(
-                  color: (widget.accentColor ?? AppColors.accentLavender).withOpacity(0.3),
+                  color: (widget.accentColor ?? AppTheme.accentLavender).withOpacity(0.3),
                   width: 1.w,
                 ),
                 boxShadow: widget.isActive
                     ? [
                         BoxShadow(
-                          color: (widget.accentColor ?? AppColors.accentLavender).withOpacity(0.2),
+                          color: (widget.accentColor ?? AppTheme.accentLavender).withOpacity(0.2),
                           blurRadius: 8.r,
                           offset: Offset(0, 2.h),
                         ),
@@ -129,7 +129,7 @@ class _MeditationTimerState extends State<MeditationTimer>
           Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: AppColors.textMedium.withOpacity(0.2),
+              color: AppTheme.textMedium.withOpacity(0.2),
             ),
           ),
           
@@ -138,7 +138,7 @@ class _MeditationTimerState extends State<MeditationTimer>
             size: Size(20.w, 20.h),
             painter: CircularProgressPainter(
               progress: progress,
-              color: widget.accentColor ?? AppColors.accentLavender,
+              color: widget.accentColor ?? AppTheme.accentLavender,
               strokeWidth: 2.w,
             ),
           ),
@@ -150,7 +150,7 @@ class _MeditationTimerState extends State<MeditationTimer>
               height: 6.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: (widget.accentColor ?? AppColors.accentLavender).withOpacity(0.8),
+                color: (widget.accentColor ?? AppTheme.accentLavender).withOpacity(0.8),
               ),
             ),
           ),
@@ -165,7 +165,7 @@ class _MeditationTimerState extends State<MeditationTimer>
       style: TextStyle(
         fontSize: 18.sp,
         fontWeight: FontWeight.bold,
-        color: widget.accentColor ?? AppColors.accentLavender,
+        color: widget.accentColor ?? AppTheme.accentLavender,
         letterSpacing: 0.5,
       ),
     );
@@ -393,17 +393,17 @@ extension SessionPhaseExtension on SessionPhase {
   Color get color {
     switch (this) {
       case SessionPhase.preparation:
-        return AppColors.accentGold;
+        return AppTheme.accentGold;
       case SessionPhase.beginning:
-        return AppColors.accentMint;
+        return AppTheme.accentMint;
       case SessionPhase.deepening:
-        return AppColors.secondaryTeal;
+        return AppTheme.visionBoardGradient[0];
       case SessionPhase.peak:
-        return AppColors.accentLavender;
+        return AppTheme.accentLavender;
       case SessionPhase.integration:
-        return AppColors.secondaryRose;
+        return AppTheme.affirmationGradient[0];
       case SessionPhase.completion:
-        return AppColors.accentMint;
+        return AppTheme.accentMint;
     }
   }
 

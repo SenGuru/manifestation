@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class StylishLoading extends StatefulWidget {
   final String? message;
@@ -112,8 +113,8 @@ class _StylishLoadingState extends State<StylishLoading>
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            AppColors.affirmationGradient[0].withValues(alpha: _glowAnimation.value * 0.15),
-                            AppColors.affirmationGradient[0].withValues(alpha: 0),
+                            AppTheme.affirmationGradient[0].withValues(alpha: _glowAnimation.value * 0.15),
+                            AppTheme.affirmationGradient[0].withValues(alpha: 0),
                           ],
                         ),
                       ),
@@ -126,8 +127,8 @@ class _StylishLoadingState extends State<StylishLoading>
                         shape: BoxShape.circle,
                         gradient: RadialGradient(
                           colors: [
-                            AppColors.affirmationGradient[1].withValues(alpha: _glowAnimation.value * 0.2),
-                            AppColors.affirmationGradient[1].withValues(alpha: 0),
+                            AppTheme.affirmationGradient[1].withValues(alpha: _glowAnimation.value * 0.2),
+                            AppTheme.affirmationGradient[1].withValues(alpha: 0),
                           ],
                         ),
                       ),
@@ -141,13 +142,13 @@ class _StylishLoadingState extends State<StylishLoading>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: LinearGradient(
-                            colors: AppColors.affirmationGradient,
+                            colors: AppTheme.affirmationGradient,
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.affirmationGradient[0].withValues(alpha: 0.4),
+                              color: AppTheme.affirmationGradient[0].withValues(alpha: 0.4),
                               blurRadius: 20.r,
                               spreadRadius: 1.r,
                             ),
@@ -155,7 +156,7 @@ class _StylishLoadingState extends State<StylishLoading>
                         ),
                         child: Icon(
                           Icons.auto_awesome,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                           size: loadingSize * 0.35,
                         ),
                       ),
@@ -177,47 +178,46 @@ class _StylishLoadingState extends State<StylishLoading>
                 
                 return ShaderMask(
                   shaderCallback: (bounds) {
-                    // Create a continuously flowing gradient that never resets
-                    final double offset = -progress * 3.0; // Negative for left-to-right flow
+                    // Create a longer, smoother gradient flow (left to right)
+                    final double offset = -progress * 2.0; // Negative for left-to-right flow
                     
-                    // Generate colors that smoothly cycle through: pink → orange → white → pink
-                    List<Color> generateGradientColors() {
-                      final List<Color> colors = [];
-                      final List<Color> baseColors = [
-                        AppColors.affirmationGradient[0], // Pink
-                        AppColors.affirmationGradient[1], // Orange
-                        AppColors.white,                   // White
-                        AppColors.affirmationGradient[0], // Pink (for seamless loop)
-                      ];
+                    // Three distinct colors that flow smoothly
+                    final List<Color> baseColors = [
+                      AppTheme.affirmationGradient[0], // Pink
+                      AppTheme.affirmationGradient[1], // Orange  
+                      AppTheme.white,                   // White
+                    ];
+                    
+                    // Create a longer gradient with more spacing between colors
+                    // This ensures each color appears only once in the visible area
+                    final List<Color> gradientColors = [];
+                    final List<double> gradientStops = [];
+                    
+                    // Generate 6 color stops with wider spacing
+                    for (int i = 0; i < 6; i++) {
+                      final double stop = i / 5.0; // 0.0, 0.2, 0.4, 0.6, 0.8, 1.0
+                      final double shiftedStop = (stop + offset) % 1.0;
                       
-                      // Create smooth gradient stops
-                      for (int i = 0; i < 8; i++) {
-                        // Calculate continuous position without hard resets
-                        final double position = (offset + i * 0.25); // Smooth increment
-                        final double normalizedPosition = position - position.floor(); // Get fractional part (0-1)
-                        final double colorIndex = normalizedPosition * (baseColors.length - 1); // Scale to color array
-                        
-                        // Get the two colors to interpolate between
-                        final int lowerIndex = colorIndex.floor();
-                        final int upperIndex = (lowerIndex + 1) % (baseColors.length - 1); // Wrap around excluding duplicate
-                        final double t = colorIndex - lowerIndex; // Interpolation factor
-                        
-                        // Smooth interpolation between colors
-                        final Color interpolatedColor = Color.lerp(
-                          baseColors[lowerIndex],
-                          baseColors[upperIndex],
-                          t,
-                        )!;
-                        
-                        colors.add(interpolatedColor);
-                      }
+                      // Map the shifted stop to our 3 base colors
+                      final double colorPosition = shiftedStop * 3.0; // 0-3 range
+                      final int colorIndex = colorPosition.floor() % 3;
+                      final int nextColorIndex = (colorIndex + 1) % 3;
+                      final double t = colorPosition - colorPosition.floor();
                       
-                      return colors;
+                      // Smooth interpolation between adjacent colors
+                      final Color color = Color.lerp(
+                        baseColors[colorIndex],
+                        baseColors[nextColorIndex],
+                        t,
+                      )!;
+                      
+                      gradientColors.add(color);
+                      gradientStops.add(stop);
                     }
                     
                     return LinearGradient(
-                      colors: generateGradientColors(),
-                      stops: [0.0, 0.14, 0.28, 0.42, 0.56, 0.70, 0.84, 1.0],
+                      colors: gradientColors,
+                      stops: gradientStops,
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ).createShader(bounds);
@@ -226,18 +226,18 @@ class _StylishLoadingState extends State<StylishLoading>
                     widget.message ?? 'Loading...',
                     style: TextStyle(
                       fontSize: 16.sp,
-                      color: AppColors.white, // This will be masked by the gradient
+                      color: AppTheme.white, // This will be masked by the gradient
                       fontWeight: FontWeight.w600,
                       letterSpacing: 1.5,
                       height: 1.2,
                       shadows: [
                         Shadow(
-                          color: AppColors.affirmationGradient[0].withValues(alpha: _glowAnimation.value * 0.3),
+                          color: AppTheme.affirmationGradient[0].withValues(alpha: _glowAnimation.value * 0.3),
                           blurRadius: 8.r,
                           offset: Offset(0, 1.h),
                         ),
                         Shadow(
-                          color: AppColors.affirmationGradient[1].withValues(alpha: _glowAnimation.value * 0.2),
+                          color: AppTheme.affirmationGradient[1].withValues(alpha: _glowAnimation.value * 0.2),
                           blurRadius: 12.r,
                           offset: Offset(0, 2.h),
                         ),
@@ -270,7 +270,7 @@ class StylishLoadingOverlay extends StatelessWidget {
     if (!isVisible) return SizedBox.shrink();
 
     return Container(
-      color: AppColors.backgroundDark.withValues(alpha: 0.8),
+      color: AppTheme.backgroundDark.withValues(alpha: 0.8),
       child: StylishLoading(
         message: message,
       ),
@@ -294,7 +294,7 @@ class StylishLoadingDialog extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
@@ -346,8 +346,8 @@ class CompactStylishLoading extends StatelessWidget {
       height: size ?? 24.h,
       child: CircularProgressIndicator(
         strokeWidth: 2.5,
-        valueColor: AlwaysStoppedAnimation<Color>(color ?? AppColors.accentCoral),
-        backgroundColor: (color ?? AppColors.accentCoral).withValues(alpha: 0.2),
+        valueColor: AlwaysStoppedAnimation<Color>(color ?? AppTheme.accentCoral),
+        backgroundColor: (color ?? AppTheme.accentCoral).withValues(alpha: 0.2),
       ),
     );
   }

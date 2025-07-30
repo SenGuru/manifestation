@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'dart:math' as math;
 
 import 'package:fun/constants/meditation_constants.dart';
@@ -139,7 +139,7 @@ class MinimalPainter extends CustomPainter {
   }
 
   void _drawBreathingCircles(Canvas canvas, Offset center, double baseRadius) {
-    final colors = AppColors.minimalGradient;
+    final colors = AppTheme.visualMeditationGradient;
     
     // Outer circle - main breathing circle
     final outerRadius = baseRadius * breathingScale * 1.2;
@@ -170,7 +170,7 @@ class MinimalPainter extends CustomPainter {
   }
 
   void _drawCenterPoint(Canvas canvas, Offset center, double baseRadius) {
-    final colors = AppColors.minimalGradient;
+    final colors = AppTheme.visualMeditationGradient;
     
     // Simple center point that breathes
     final centerRadius = 12.r * breathingScale * intensity;

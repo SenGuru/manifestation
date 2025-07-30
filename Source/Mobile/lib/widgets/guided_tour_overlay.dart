@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:math' as math;
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class GuidedTourOverlay extends StatefulWidget {
   final List<TourStep> steps;
@@ -150,7 +150,7 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
       child: Container(
         padding: EdgeInsets.all(24.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
@@ -173,8 +173,8 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                   height: 4.h,
                   decoration: BoxDecoration(
                     color: index == _currentStep 
-                        ? AppColors.affirmationGradient[0]
-                        : AppColors.textMedium.withOpacity(0.3),
+                        ? AppTheme.affirmationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(2.r),
                   ),
                 );
@@ -190,13 +190,13 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                 height: 60.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: step.iconGradient ?? AppColors.affirmationGradient,
+                    colors: step.iconGradient ?? AppTheme.affirmationGradient,
                   ),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   step.icon,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                   size: 30.sp,
                 ),
               ),
@@ -209,7 +209,7 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
               textAlign: TextAlign.center,
             ),
@@ -221,7 +221,7 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
               step.description,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
@@ -240,13 +240,13 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                       child: ElevatedButton(
                         onPressed: _skipTour,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.cardBackground,
+                          backgroundColor: AppTheme.cardBackground,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.r),
                           ),
                           side: BorderSide(
-                            color: AppColors.textMedium.withOpacity(0.2),
+                            color: AppTheme.textMedium.withOpacity(0.2),
                             width: 1,
                           ),
                         ),
@@ -257,7 +257,7 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -276,13 +276,13 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                       child: ElevatedButton(
                         onPressed: _previousStep,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.cardBackground,
+                          backgroundColor: AppTheme.cardBackground,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16.r),
                           ),
                           side: BorderSide(
-                            color: AppColors.textMedium.withOpacity(0.2),
+                            color: AppTheme.textMedium.withOpacity(0.2),
                             width: 1,
                           ),
                         ),
@@ -293,7 +293,7 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.textLight,
+                              color: AppTheme.textLight,
                             ),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -326,14 +326,14 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                       child: Ink(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: AppColors.affirmationGradient,
+                            colors: AppTheme.affirmationGradient,
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
                           borderRadius: BorderRadius.circular(16.r),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                              color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                               blurRadius: 12.r,
                               offset: Offset(0, 6.h),
                             ),
@@ -348,7 +348,7 @@ class _GuidedTourOverlayState extends State<GuidedTourOverlay>
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -427,7 +427,7 @@ class HighlightPainter extends CustomPainter {
     
     // Paint highlight border
     final borderPaint = Paint()
-      ..color = AppColors.affirmationGradient[0].withOpacity(0.5)
+      ..color = AppTheme.affirmationGradient[0].withOpacity(0.5)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.w;
     

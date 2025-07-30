@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class VisionBoard {
   final String id;
@@ -24,7 +24,7 @@ class VisionBoard {
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       title: '',
       elements: [],
-      backgroundColor: AppColors.white,
+      backgroundColor: AppTheme.white,
       createdAt: now,
       updatedAt: now,
     );
@@ -308,48 +308,48 @@ class VisionBoardTemplate {
         name: 'Career Goals',
         description: 'Professional aspirations and achievements',
         icon: Icons.business_center,
-        color: AppColors.gradientBlue,
-        backgroundColor: AppColors.white,
+        color: AppTheme.goalTrackerGradient[0],
+        backgroundColor: AppTheme.white,
         elements: [],
       ),
       VisionBoardTemplate(
         name: 'Travel Dreams',
         description: 'Places to visit and adventures to have',
         icon: Icons.flight,
-        color: AppColors.secondaryTeal,
-        backgroundColor: AppColors.white,
+        color: AppTheme.visionBoardGradient[0],
+        backgroundColor: AppTheme.white,
         elements: [],
       ),
       VisionBoardTemplate(
         name: 'Love & Family',
         description: 'Relationships and personal connections',
         icon: Icons.favorite,
-        color: AppColors.gradientPink,
-        backgroundColor: AppColors.white,
+        color: AppTheme.affirmationGradient[0],
+        backgroundColor: AppTheme.white,
         elements: [],
       ),
       VisionBoardTemplate(
         name: 'Health & Wellness',
         description: 'Physical and mental well-being goals',
         icon: Icons.spa,
-        color: AppColors.accentMint,
-        backgroundColor: AppColors.white,
+        color: AppTheme.accentMint,
+        backgroundColor: AppTheme.white,
         elements: [],
       ),
       VisionBoardTemplate(
         name: 'Financial Freedom',
         description: 'Money goals and abundance mindset',
         icon: Icons.account_balance_wallet,
-        color: AppColors.accentGold,
-        backgroundColor: AppColors.white,
+        color: AppTheme.accentGold,
+        backgroundColor: AppTheme.white,
         elements: [],
       ),
       VisionBoardTemplate(
         name: 'Personal Growth',
         description: 'Self-improvement and learning goals',
         icon: Icons.self_improvement,
-        color: AppColors.gradientPurple,
-        backgroundColor: AppColors.white,
+        color: AppTheme.journalGradient[0],
+        backgroundColor: AppTheme.white,
         elements: [],
       ),
     ];

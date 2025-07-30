@@ -4,7 +4,8 @@ import '../components/achievement_badge_component.dart';
 import '../models/social_models.dart';
 import '../components/social_post_card_component.dart';
 import '../components/user_profile_card.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
+import '../widgets/universal_back_button.dart';
 
 class SocialFeedScreen extends StatefulWidget {
   @override
@@ -187,7 +188,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -219,22 +220,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -245,14 +231,14 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   'Connect with fellow manifesters',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -263,7 +249,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
             width: 44.w,
             height: 44.h,
             decoration: BoxDecoration(
-              color: AppColors.cardBackground,
+              color: AppTheme.cardBackground,
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Stack(
@@ -271,7 +257,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                 Center(
                   child: Icon(
                     Icons.notifications_outlined,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                     size: 20.sp,
                   ),
                 ),
@@ -283,7 +269,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                     width: 8.w,
                     height: 8.h,
                     decoration: BoxDecoration(
-                      color: AppColors.socialGradient[0],
+                      color: AppTheme.socialGradient[0],
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -300,19 +286,19 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
-          gradient: LinearGradient(colors: AppColors.socialGradient),
+          gradient: LinearGradient(colors: AppTheme.socialGradient),
           borderRadius: BorderRadius.circular(12.r),
         ),
         indicatorSize: TabBarIndicatorSize.tab,
         indicatorPadding: EdgeInsets.all(4.w),
-        labelColor: AppColors.white,
-        unselectedLabelColor: AppColors.textMedium,
+        labelColor: AppTheme.white,
+        unselectedLabelColor: AppTheme.textMedium,
         labelStyle: TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.w600,
@@ -368,13 +354,13 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.socialGradient[0].withOpacity(0.1),
-            AppColors.socialGradient[1].withOpacity(0.05),
+            AppTheme.socialGradient[0].withOpacity(0.1),
+            AppTheme.socialGradient[1].withOpacity(0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: AppColors.socialGradient[0].withOpacity(0.3),
+          color: AppTheme.socialGradient[0].withOpacity(0.3),
         ),
       ),
       child: Column(
@@ -387,7 +373,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                 width: 50.w,
                 height: 50.h,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: AppColors.socialGradient),
+                  gradient: LinearGradient(colors: AppTheme.socialGradient),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -396,7 +382,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                     style: TextStyle(
                       fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                     ),
                   ),
                 ),
@@ -411,14 +397,14 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     Text(
                       '${currentUser.stats.level} • ${currentUser.stats.currentStreak} day streak',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -456,7 +442,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   '${currentUser.stats.meditationMinutes}m',
                   'Meditation',
                   Icons.self_improvement,
-                  AppColors.visualMeditationGradient[0],
+                  AppTheme.visualMeditationGradient[0],
                 ),
               ),
               Expanded(
@@ -464,7 +450,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   '${currentUser.stats.goalsAchieved}',
                   'Goals',
                   Icons.flag,
-                  AppColors.goalTrackerGradient[0],
+                  AppTheme.goalTrackerGradient[0],
                 ),
               ),
               Expanded(
@@ -472,7 +458,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   '${currentUser.stats.journalEntries}',
                   'Entries',
                   Icons.book,
-                  AppColors.journalGradient[0],
+                  AppTheme.journalGradient[0],
                 ),
               ),
               Expanded(
@@ -480,7 +466,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   '${currentUser.stats.currentStreak}',
                   'Streak',
                   Icons.local_fire_department,
-                  AppColors.accentGold,
+                  AppTheme.accentGold,
                 ),
               ),
             ],
@@ -512,14 +498,14 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         Text(
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
       ],
@@ -557,13 +543,13 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.socialGradient[0].withOpacity(0.1),
-            AppColors.socialGradient[1].withOpacity(0.05),
+            AppTheme.socialGradient[0].withOpacity(0.1),
+            AppTheme.socialGradient[1].withOpacity(0.05),
           ],
         ),
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.socialGradient[0].withOpacity(0.3),
+          color: AppTheme.socialGradient[0].withOpacity(0.3),
         ),
       ),
       child: Row(
@@ -572,12 +558,12 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
             width: 50.w,
             height: 50.h,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: AppColors.socialGradient),
+              gradient: LinearGradient(colors: AppTheme.socialGradient),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               Icons.person_add,
-              color: AppColors.white,
+              color: AppTheme.white,
               size: 24.sp,
             ),
           ),
@@ -591,14 +577,14 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   'Connect with other manifesters',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -606,7 +592,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
           ),
           Icon(
             Icons.arrow_forward_ios,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             size: 16.sp,
           ),
         ],
@@ -626,7 +612,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 16.h),
@@ -649,7 +635,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 16.h),
@@ -675,7 +661,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
               ),
               child: Ink(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: AppColors.socialGradient),
+                  gradient: LinearGradient(colors: AppTheme.socialGradient),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Container(
@@ -685,7 +671,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                     children: [
                       Icon(
                         Icons.share,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                         size: 20.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -694,7 +680,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                         ),
                       ),
                     ],
@@ -730,10 +716,10 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
           child: Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.cardBackground,
+              color: AppTheme.cardBackground,
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
-                color: AppColors.textMedium.withOpacity(0.2),
+                color: AppTheme.textMedium.withOpacity(0.2),
               ),
             ),
             child: Column(
@@ -741,7 +727,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
               children: [
                 Icon(
                   category.icon,
-                  color: AppColors.socialGradient[0],
+                  color: AppTheme.socialGradient[0],
                   size: 32.sp,
                 ),
                 SizedBox(height: 8.h),
@@ -750,7 +736,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -759,7 +745,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                   '$achievementsInCategory unlocked',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -793,7 +779,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.7,
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         ),
         child: Column(
@@ -803,7 +789,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -814,7 +800,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ),
@@ -833,7 +819,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                           width: 32.w,
                           height: 32.h,
                           decoration: BoxDecoration(
-                            color: AppColors.socialGradient[0],
+                            color: AppTheme.socialGradient[0],
                             shape: BoxShape.circle,
                           ),
                           child: Center(
@@ -842,7 +828,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                               ),
                             ),
                           ),
@@ -857,7 +843,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.textLight,
+                                  color: AppTheme.textLight,
                                 ),
                               ),
                               SizedBox(height: 2.h),
@@ -865,7 +851,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                                 comment.content,
                                 style: TextStyle(
                                   fontSize: 14.sp,
-                                  color: AppColors.textMedium,
+                                  color: AppTheme.textMedium,
                                 ),
                               ),
                             ],
@@ -884,12 +870,12 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                 children: [
                   Expanded(
                     child: TextField(
-                      style: TextStyle(color: AppColors.textLight),
+                      style: TextStyle(color: AppTheme.textLight),
                       decoration: InputDecoration(
                         hintText: 'Add a comment...',
-                        hintStyle: TextStyle(color: AppColors.textMedium),
+                        hintStyle: TextStyle(color: AppTheme.textMedium),
                         filled: true,
-                        fillColor: AppColors.backgroundMedium,
+                        fillColor: AppTheme.backgroundMedium,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(25.r),
                           borderSide: BorderSide.none,
@@ -906,7 +892,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                     width: 44.w,
                     height: 44.h,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(colors: AppColors.socialGradient),
+                      gradient: LinearGradient(colors: AppTheme.socialGradient),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -916,7 +902,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                       },
                       icon: Icon(
                         Icons.send,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                         size: 20.sp,
                       ),
                     ),
@@ -948,7 +934,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
@@ -974,7 +960,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
               textAlign: TextAlign.center,
             ),
@@ -983,7 +969,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
               achievement.description,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
               ),
               textAlign: TextAlign.center,
             ),
@@ -1006,7 +992,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                 ),
                 child: Ink(
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: AppColors.socialGradient),
+                    gradient: LinearGradient(colors: AppTheme.socialGradient),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Container(
@@ -1017,7 +1003,7 @@ class _SocialFeedScreenState extends State<SocialFeedScreen>
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                       ),
                     ),
                   ),

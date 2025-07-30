@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class ManifestationUser {
   final String id;
@@ -145,19 +145,19 @@ class UserStats {
   Color get levelColor {
     switch (level) {
       case 'Beginner':
-        return AppColors.textMedium;
+        return AppTheme.textMedium;
       case 'Explorer':
-        return AppColors.accentMint;
+        return AppTheme.accentMint;
       case 'Practitioner':
-        return AppColors.secondaryTeal;
+        return AppTheme.visionBoardGradient[0];
       case 'Adept':
-        return AppColors.accentGold;
+        return AppTheme.accentGold;
       case 'Master':
-        return AppColors.gradientPurple;
+        return AppTheme.journalGradient[0];
       case 'Sage':
-        return AppColors.gradientPink;
+        return AppTheme.affirmationGradient[0];
       default:
-        return AppColors.textMedium;
+        return AppTheme.textMedium;
     }
   }
 }
@@ -222,7 +222,7 @@ class Achievement {
         title: 'First Light',
         description: 'Completed your first meditation',
         icon: Icons.self_improvement,
-        color: AppColors.visualMeditationGradient[0],
+        color: AppTheme.visualMeditationGradient[0],
         category: AchievementCategory.meditation,
         unlockedAt: DateTime.now(),
         value: 1,
@@ -233,7 +233,7 @@ class Achievement {
         title: 'Zen Master',
         description: 'Meditated for 100 total minutes',
         icon: Icons.spa,
-        color: AppColors.visualMeditationGradient[1],
+        color: AppTheme.visualMeditationGradient[1],
         category: AchievementCategory.meditation,
         unlockedAt: DateTime.now(),
         value: 100,
@@ -246,7 +246,7 @@ class Achievement {
         title: 'Positive Vibes',
         description: 'Listened to affirmations for 7 days straight',
         icon: Icons.favorite,
-        color: AppColors.affirmationGradient[0],
+        color: AppTheme.affirmationGradient[0],
         category: AchievementCategory.affirmations,
         unlockedAt: DateTime.now(),
         value: 7,
@@ -259,7 +259,7 @@ class Achievement {
         title: 'Reflection Master',
         description: 'Wrote 30 journal entries',
         icon: Icons.book,
-        color: AppColors.journalGradient[0],
+        color: AppTheme.journalGradient[0],
         category: AchievementCategory.journaling,
         unlockedAt: DateTime.now(),
         value: 30,
@@ -272,7 +272,7 @@ class Achievement {
         title: 'Goal Getter',
         description: 'Completed your first goal',
         icon: Icons.flag,
-        color: AppColors.goalTrackerGradient[0],
+        color: AppTheme.goalTrackerGradient[0],
         category: AchievementCategory.goals,
         unlockedAt: DateTime.now(),
         value: 1,
@@ -285,7 +285,7 @@ class Achievement {
         title: 'Visionary',
         description: 'Created your first vision board',
         icon: Icons.dashboard,
-        color: AppColors.visionBoardGradient[0],
+        color: AppTheme.visionBoardGradient[0],
         category: AchievementCategory.visionBoard,
         unlockedAt: DateTime.now(),
         value: 1,
@@ -298,7 +298,7 @@ class Achievement {
         title: 'Consistency Champion',
         description: 'Maintained a 30-day practice streak',
         icon: Icons.local_fire_department,
-        color: AppColors.accentGold,
+        color: AppTheme.accentGold,
         category: AchievementCategory.streaks,
         unlockedAt: DateTime.now(),
         value: 30,
@@ -482,15 +482,15 @@ extension SocialPostTypeExtension on SocialPostType {
   Color get color {
     switch (this) {
       case SocialPostType.achievement:
-        return AppColors.accentGold;
+        return AppTheme.accentGold;
       case SocialPostType.reflection:
-        return AppColors.journalGradient[0];
+        return AppTheme.journalGradient[0];
       case SocialPostType.milestone:
-        return AppColors.goalTrackerGradient[0];
+        return AppTheme.goalTrackerGradient[0];
       case SocialPostType.inspiration:
-        return AppColors.affirmationGradient[0];
+        return AppTheme.affirmationGradient[0];
       case SocialPostType.goalComplete:
-        return AppColors.accentMint;
+        return AppTheme.accentMint;
     }
   }
 }

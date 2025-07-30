@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import '../models/affirmations.dart';
 import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../constants/category_icons.dart';
 import '../utils/color_utils.dart';
 import '../services/daily_affirmations_service.dart';
@@ -12,6 +13,7 @@ import '../services/usage_analytics_service.dart';
 import '../services/guided_tour_service.dart';
 import '../models/analytics_models.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/universal_back_button.dart';
 
 class DailyAffirmationsScreen extends StatefulWidget {
   @override
@@ -189,12 +191,12 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
 
   Color _getCategoryColor(int index) {
     final colors = [
-      AppColors.affirmationGradient[0],
-      AppColors.goalTrackerGradient[0],
-      AppColors.accentGold,
-      AppColors.accentCoral,
-      AppColors.visionBoardGradient[0],
-      AppColors.manifestationGradient[0],
+      AppTheme.affirmationGradient[0],
+      AppTheme.goalTrackerGradient[0],
+      AppTheme.accentGold,
+      AppTheme.accentCoral,
+      AppTheme.visionBoardGradient[0],
+      AppTheme.visualMeditationGradient[0],
     ];
     return colors[index % colors.length];
   }
@@ -389,7 +391,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     // Show loading screen while loading affirmations
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.backgroundDark,
+        backgroundColor: AppTheme.backgroundDark,
         body: StylishLoading(
           message: 'Loading affirmations...',
         ),
@@ -397,7 +399,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -415,22 +417,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -441,14 +428,14 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   'Transform your mindset with positive thoughts',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -460,12 +447,12 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
                 Icons.add_circle_outline,
-                color: AppColors.accentGold,
+                color: AppTheme.accentGold,
                 size: 20.sp,
               ),
             ),
@@ -502,10 +489,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               decoration: BoxDecoration(
                 color: isSelected 
                     ? category.color.withAlpha((0.1 * 255).round())
-                    : AppColors.cardBackground,
+                    : AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
-                  color: isSelected ? category.color : AppColors.textMedium.withAlpha((0.3 * 255).round()),
+                  color: isSelected ? category.color : AppTheme.textMedium.withAlpha((0.3 * 255).round()),
                 ),
               ),
               child: Center(
@@ -514,7 +501,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   children: [
                     Icon(
                       category.iconData,
-                      color: isSelected ? category.color : AppColors.textMedium,
+                      color: isSelected ? category.color : AppTheme.textMedium,
                       size: 16.sp,
                     ),
                     SizedBox(width: 6.w),
@@ -523,7 +510,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color: isSelected ? category.color : AppColors.textMedium,
+                        color: isSelected ? category.color : AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -545,7 +532,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             'No affirmations available',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
           ),
         ),
@@ -595,7 +582,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,
@@ -623,15 +610,15 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               width: 36.w,
               height: 36.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.textMedium.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.textMedium.withAlpha((0.3 * 255).round()),
                 ),
               ),
               child: Icon(
                 Icons.edit,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 18.sp,
               ),
             ),
@@ -644,15 +631,15 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               width: 36.w,
               height: 36.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppColors.error.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.error.withAlpha((0.3 * 255).round()),
                 ),
               ),
               child: Icon(
                 Icons.delete_outline,
-                color: AppColors.error,
+                color: AppTheme.error,
                 size: 18.sp,
               ),
             ),
@@ -680,7 +667,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 shape: BoxShape.circle,
                 color: index == currentAffirmationIndex 
                     ? currentCategory.color 
-                    : AppColors.textMedium.withAlpha((0.3 * 255).round()),
+                    : AppTheme.textMedium.withAlpha((0.3 * 255).round()),
               ),
             ),
           ),
@@ -755,17 +742,17 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         width: 48.w,
         height: 48.h,
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           shape: BoxShape.circle,
           border: Border.all(
             color: enabled 
-                ? AppColors.textMedium.withAlpha((0.3 * 255).round())
-                : AppColors.textMedium.withAlpha((0.1 * 255).round()),
+                ? AppTheme.textMedium.withAlpha((0.3 * 255).round())
+                : AppTheme.textMedium.withAlpha((0.1 * 255).round()),
           ),
         ),
         child: Icon(
           icon,
-          color: enabled ? AppColors.textLight : AppColors.textMedium.withAlpha((0.5 * 255).round()),
+          color: enabled ? AppTheme.textLight : AppTheme.textMedium.withAlpha((0.5 * 255).round()),
           size: 24.sp,
         ),
       ),
@@ -798,7 +785,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         ),
         child: Icon(
           isPlaying ? Icons.pause : Icons.play_arrow,
-          color: AppColors.white,
+          color: AppTheme.white,
           size: 32.sp,
         ),
       ),
@@ -881,23 +868,23 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Delete Affirmation',
-            style: TextStyle(color: AppColors.textLight),
+            style: TextStyle(color: AppTheme.textLight),
           ),
           content: Text(
             'Are you sure you want to delete this affirmation?',
-            style: TextStyle(color: AppColors.textMedium),
+            style: TextStyle(color: AppTheme.textMedium),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Delete', style: TextStyle(color: AppColors.error)),
+              child: Text('Delete', style: TextStyle(color: AppTheme.error)),
             ),
           ],
         );
@@ -932,36 +919,36 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Edit Affirmation',
-            style: TextStyle(color: AppColors.textLight),
+            style: TextStyle(color: AppTheme.textLight),
           ),
           content: TextField(
             controller: textController,
-            style: TextStyle(color: AppColors.textLight),
+            style: TextStyle(color: AppTheme.textLight),
             maxLines: 3,
             decoration: InputDecoration(
               hintText: 'Enter your affirmation...',
-              hintStyle: TextStyle(color: AppColors.textMedium),
+              hintStyle: TextStyle(color: AppTheme.textMedium),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.affirmationGradient[0]),
+                borderSide: BorderSide(color: AppTheme.affirmationGradient[0]),
               ),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
             ),
             TextButton(
               onPressed: () async {
@@ -971,7 +958,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   await _updateAffirmation(affirmation, newText);
                 }
               },
-              child: Text('Save', style: TextStyle(color: AppColors.affirmationGradient[0])),
+              child: Text('Save', style: TextStyle(color: AppTheme.affirmationGradient[0])),
             ),
           ],
         );
@@ -1005,7 +992,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.success,
+        backgroundColor: AppTheme.success,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       ),
@@ -1016,7 +1003,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.error,
+        backgroundColor: AppTheme.error,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       ),
@@ -1072,7 +1059,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.cardBackground,
+      backgroundColor: AppTheme.cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
@@ -1087,7 +1074,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppColors.textMedium.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.textMedium.withAlpha((0.3 * 255).round()),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -1099,17 +1086,17 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
               SizedBox(height: 20.h),
               
               // Edit option
               ListTile(
-                leading: Icon(Icons.edit, color: AppColors.textLight),
+                leading: Icon(Icons.edit, color: AppTheme.textLight),
                 title: Text(
                   'Edit Category',
-                  style: TextStyle(color: AppColors.textLight),
+                  style: TextStyle(color: AppTheme.textLight),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -1119,10 +1106,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               
               // Delete option
               ListTile(
-                leading: Icon(Icons.delete, color: AppColors.error),
+                leading: Icon(Icons.delete, color: AppTheme.error),
                 title: Text(
                   'Delete Category',
-                  style: TextStyle(color: AppColors.error),
+                  style: TextStyle(color: AppTheme.error),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -1145,24 +1132,24 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Edit Category',
-            style: TextStyle(color: AppColors.textLight),
+            style: TextStyle(color: AppTheme.textLight),
           ),
           content: TextField(
             controller: nameController,
-            style: TextStyle(color: AppColors.textLight),
+            style: TextStyle(color: AppTheme.textLight),
             decoration: InputDecoration(
               hintText: 'Category name...',
-              hintStyle: TextStyle(color: AppColors.textMedium),
+              hintStyle: TextStyle(color: AppTheme.textMedium),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -1173,7 +1160,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
             ),
             TextButton(
               onPressed: () async {
@@ -1196,26 +1183,26 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Delete Category',
-            style: TextStyle(color: AppColors.textLight),
+            style: TextStyle(color: AppTheme.textLight),
           ),
           content: Text(
             'Are you sure you want to delete "${category.name}"? This will also delete all affirmations in this category.',
-            style: TextStyle(color: AppColors.textMedium),
+            style: TextStyle(color: AppTheme.textMedium),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
             ),
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
                 await _deleteCategory(category, categoryIndex);
               },
-              child: Text('Delete', style: TextStyle(color: AppColors.error)),
+              child: Text('Delete', style: TextStyle(color: AppTheme.error)),
             ),
           ],
         );
@@ -1333,7 +1320,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             style: TextStyle(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
             textAlign: TextAlign.center,
           ),
@@ -1345,7 +1332,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             'Create your first positive affirmation to begin manifesting your dreams in ${category.name.toLowerCase()}.',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -1379,7 +1366,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 children: [
                   Icon(
                     Icons.add_circle_outline,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -1388,7 +1375,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                     ),
                   ),
                 ],
@@ -1423,7 +1410,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                     'Tip: Start with "I am..." or "I believe..." statements',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -1443,7 +1430,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppTheme.cardBackground,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
           title: Row(
             children: [
@@ -1457,7 +1444,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 child: Text(
                   'Add ${category.name} Affirmation',
                   style: TextStyle(
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1472,32 +1459,32 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               Text(
                 'Create a positive affirmation that resonates with your ${category.name.toLowerCase()} goals.',
                 style: TextStyle(
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                   fontSize: 14.sp,
                 ),
               ),
               SizedBox(height: 16.h),
               TextField(
                 controller: textController,
-                style: TextStyle(color: AppColors.textLight),
+                style: TextStyle(color: AppTheme.textLight),
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'I am worthy of ${category.name.toLowerCase()}...',
-                  hintStyle: TextStyle(color: AppColors.textMedium.withAlpha((0.7 * 255).round())),
+                  hintStyle: TextStyle(color: AppTheme.textMedium.withAlpha((0.7 * 255).round())),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                    borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                    borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
                     borderSide: BorderSide(color: category.color, width: 2),
                   ),
                   filled: true,
-                  fillColor: AppColors.backgroundMedium,
+                  fillColor: AppTheme.backgroundMedium,
                 ),
               ),
             ],
@@ -1505,7 +1492,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppColors.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -1521,7 +1508,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               ),
               child: Text(
                 'Add Affirmation',
-                style: TextStyle(color: AppColors.white),
+                style: TextStyle(color: AppTheme.white),
               ),
             ),
           ],
@@ -1576,18 +1563,18 @@ class _AddCategoryDialog extends StatefulWidget {
 
 class _AddCategoryDialogState extends State<_AddCategoryDialog> {
   final TextEditingController _nameController = TextEditingController();
-  Color _selectedColor = AppColors.accentGold;
+  Color _selectedColor = AppTheme.accentGold;
   PredefinedIconTypes _selectedIcon = PredefinedIconTypes.flower;
   bool _isCreating = false;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColors.cardBackground,
+      backgroundColor: AppTheme.cardBackground,
       title: Text(
         'Add Category',
         style: TextStyle(
-          color: AppColors.textLight,
+          color: AppTheme.textLight,
           fontSize: 20.sp,
           fontWeight: FontWeight.bold,
         ),
@@ -1603,7 +1590,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             Text(
               'Category Name',
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -1611,17 +1598,17 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             SizedBox(height: 8.h),
             TextField(
               controller: _nameController,
-              style: TextStyle(color: AppColors.textLight),
+              style: TextStyle(color: AppTheme.textLight),
               decoration: InputDecoration(
                 hintText: 'Enter category name...',
-                hintStyle: TextStyle(color: AppColors.textMedium),
+                hintStyle: TextStyle(color: AppTheme.textMedium),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                  borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppColors.textMedium.withAlpha((0.3 * 255).round())),
+                  borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
@@ -1635,7 +1622,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             Text(
               'Choose Color',
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -1648,7 +1635,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             Text(
               'Choose Icon',
               style: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -1664,7 +1651,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
           onPressed: _isCreating ? null : () => Navigator.of(context).pop(),
           child: Text(
             'Cancel',
-            style: TextStyle(color: AppColors.textMedium),
+            style: TextStyle(color: AppTheme.textMedium),
           ),
         ),
         ElevatedButton(
@@ -1677,12 +1664,12 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
           ),
           child: _isCreating
               ? CompactStylishLoading(
-                  color: AppColors.white,
+                  color: AppTheme.white,
                   size: 16.w,
                 )
               : Text(
                   'Create',
-                  style: TextStyle(color: AppColors.white),
+                  style: TextStyle(color: AppTheme.white),
                 ),
         ),
       ],
@@ -1715,8 +1702,8 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
                 color: color,
                 shape: BoxShape.circle,
                 border: isSelected 
-                    ? Border.all(color: AppColors.white, width: 3)
-                    : Border.all(color: AppColors.textMedium.withAlpha((0.3 * 255).round()), width: 1),
+                    ? Border.all(color: AppTheme.white, width: 3)
+                    : Border.all(color: AppTheme.textMedium.withAlpha((0.3 * 255).round()), width: 1),
               ),
               child: isSelected 
                   ? Icon(
@@ -1760,15 +1747,15 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
               decoration: BoxDecoration(
                 color: isSelected 
                     ? _selectedColor.withAlpha((0.2 * 255).round())
-                    : AppColors.backgroundMedium,
+                    : AppTheme.backgroundMedium,
                 borderRadius: BorderRadius.circular(12.r),
                 border: isSelected
                     ? Border.all(color: _selectedColor, width: 2)
-                    : Border.all(color: AppColors.textMedium.withAlpha((0.3 * 255).round()), width: 1),
+                    : Border.all(color: AppTheme.textMedium.withAlpha((0.3 * 255).round()), width: 1),
               ),
               child: Icon(
                 iconType.iconData,
-                color: isSelected ? _selectedColor : AppColors.textMedium,
+                color: isSelected ? _selectedColor : AppTheme.textMedium,
                 size: 24.sp,
               ),
             ),
@@ -1784,7 +1771,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter a category name'),
-          backgroundColor: AppColors.error,
+          backgroundColor: AppTheme.error,
         ),
       );
       return;
@@ -1810,7 +1797,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Category "$name" created successfully!'),
-            backgroundColor: AppColors.success,
+            backgroundColor: AppTheme.success,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
           ),
@@ -1823,7 +1810,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to create category: ${result.message}'),
-            backgroundColor: AppColors.error,
+            backgroundColor: AppTheme.error,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
           ),
@@ -1837,7 +1824,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error creating category: $e'),
-          backgroundColor: AppColors.error,
+          backgroundColor: AppTheme.error,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
         ),

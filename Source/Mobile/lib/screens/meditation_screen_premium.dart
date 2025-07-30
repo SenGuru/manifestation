@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../models/meditation_models.dart';
 import '../components/meditation_timer.dart';
 
@@ -132,7 +132,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: AnimatedBuilder(
         animation: _backgroundAnimation,
         builder: (context, child) {
@@ -142,11 +142,11 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
                 colors: [
-                  AppColors.backgroundDark,
-                  AppColors.backgroundDark.withBlue(
-                    (AppColors.backgroundDark.blue + _backgroundAnimation.value * 10).clamp(0, 255).toInt()
+                  AppTheme.backgroundDark,
+                  AppTheme.backgroundDark.withBlue(
+                    (AppTheme.backgroundDark.blue + _backgroundAnimation.value * 10).clamp(0, 255).toInt()
                   ),
-                  AppColors.backgroundDark,
+                  AppTheme.backgroundDark,
                 ],
               ),
             ),
@@ -200,16 +200,16 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
             width: 48.w,
             height: 48.h,
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.05),
+              color: AppTheme.white.withOpacity(0.05),
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
-                color: AppColors.white.withOpacity(0.1),
+                color: AppTheme.white.withOpacity(0.1),
                 width: 1,
               ),
             ),
             child: Icon(
               Icons.arrow_back_ios_rounded,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
               size: 20.sp,
             ),
           ),
@@ -224,7 +224,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 style: TextStyle(
                   fontSize: 28.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                   letterSpacing: -0.5,
                 ),
               ),
@@ -233,7 +233,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 'Find your moment of peace',
                 style: TextStyle(
                   fontSize: 16.sp,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -259,14 +259,14 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.affirmationGradient[0].withOpacity(0.3),
-                    AppColors.affirmationGradient[1].withOpacity(0.1),
+                    AppTheme.affirmationGradient[0].withOpacity(0.3),
+                    AppTheme.affirmationGradient[1].withOpacity(0.1),
                     Colors.transparent,
                   ],
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.affirmationGradient[0].withOpacity(0.2),
+                    color: AppTheme.affirmationGradient[0].withOpacity(0.2),
                     blurRadius: 40.r,
                     spreadRadius: 10.r,
                   ),
@@ -277,12 +277,12 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
-                    colors: AppColors.affirmationGradient,
+                    colors: AppTheme.affirmationGradient,
                   ),
                 ),
                 child: Icon(
                   Icons.self_improvement,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                   size: 60.sp,
                 ),
               ),
@@ -302,7 +302,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 20.h),
@@ -324,20 +324,20 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                     width: 90.w,
                     decoration: BoxDecoration(
                       gradient: isSelected
-                          ? LinearGradient(colors: AppColors.affirmationGradient)
+                          ? LinearGradient(colors: AppTheme.affirmationGradient)
                           : null,
-                      color: isSelected ? null : AppColors.white.withOpacity(0.05),
+                      color: isSelected ? null : AppTheme.white.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(20.r),
                       border: Border.all(
                         color: isSelected
                             ? Colors.transparent
-                            : AppColors.white.withOpacity(0.1),
+                            : AppTheme.white.withOpacity(0.1),
                         width: 1,
                       ),
                       boxShadow: isSelected
                           ? [
                               BoxShadow(
-                                color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                                color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                                 blurRadius: 20.r,
                                 offset: Offset(0, 8.h),
                               ),
@@ -352,7 +352,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                           style: TextStyle(
                             fontSize: 24.sp,
                             fontWeight: FontWeight.w700,
-                            color: isSelected ? AppColors.white : AppColors.textLight,
+                            color: isSelected ? AppTheme.white : AppTheme.textLight,
                           ),
                         ),
                         Text(
@@ -361,8 +361,8 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                             color: isSelected
-                                ? AppColors.white.withOpacity(0.8)
-                                : AppColors.textMedium,
+                                ? AppTheme.white.withOpacity(0.8)
+                                : AppTheme.textMedium,
                           ),
                         ),
                       ],
@@ -386,7 +386,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 20.h),
@@ -405,15 +405,15 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 decoration: BoxDecoration(
                   gradient: isSelected
                       ? LinearGradient(
-                          colors: AppColors.affirmationGradient.map((c) => c.withOpacity(0.1)).toList(),
+                          colors: AppTheme.affirmationGradient.map((c) => c.withOpacity(0.1)).toList(),
                         )
                       : null,
-                  color: isSelected ? null : AppColors.white.withOpacity(0.02),
+                  color: isSelected ? null : AppTheme.white.withOpacity(0.02),
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
                     color: isSelected
-                        ? AppColors.affirmationGradient[0].withOpacity(0.3)
-                        : AppColors.white.withOpacity(0.05),
+                        ? AppTheme.affirmationGradient[0].withOpacity(0.3)
+                        : AppTheme.white.withOpacity(0.05),
                     width: 1,
                   ),
                 ),
@@ -425,9 +425,9 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         gradient: isSelected
-                            ? LinearGradient(colors: AppColors.affirmationGradient)
+                            ? LinearGradient(colors: AppTheme.affirmationGradient)
                             : null,
-                        color: isSelected ? null : AppColors.white.withOpacity(0.2),
+                        color: isSelected ? null : AppTheme.white.withOpacity(0.2),
                       ),
                     ),
                     SizedBox(width: 16.w),
@@ -436,7 +436,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
-                        color: isSelected ? AppColors.textLight : AppColors.textMedium,
+                        color: isSelected ? AppTheme.textLight : AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -458,7 +458,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 20.h),
@@ -480,14 +480,14 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                     padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
                     decoration: BoxDecoration(
                       gradient: isSelected
-                          ? LinearGradient(colors: AppColors.affirmationGradient)
+                          ? LinearGradient(colors: AppTheme.affirmationGradient)
                           : null,
-                      color: isSelected ? null : AppColors.white.withOpacity(0.05),
+                      color: isSelected ? null : AppTheme.white.withOpacity(0.05),
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: isSelected
                             ? Colors.transparent
-                            : AppColors.white.withOpacity(0.1),
+                            : AppTheme.white.withOpacity(0.1),
                         width: 1,
                       ),
                     ),
@@ -497,7 +497,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: isSelected ? AppColors.white : AppColors.textMedium,
+                          color: isSelected ? AppTheme.white : AppTheme.textMedium,
                         ),
                       ),
                     ),
@@ -516,11 +516,11 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
       width: double.infinity,
       height: 60.h,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: AppColors.affirmationGradient),
+        gradient: LinearGradient(colors: AppTheme.affirmationGradient),
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.affirmationGradient[0].withOpacity(0.4),
+            color: AppTheme.affirmationGradient[0].withOpacity(0.4),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -538,7 +538,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
               children: [
                 Icon(
                   Icons.play_arrow_rounded,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                   size: 28.sp,
                 ),
                 SizedBox(width: 12.w),
@@ -547,7 +547,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     letterSpacing: 0.5,
                   ),
                 ),
@@ -576,7 +576,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                     gradient: RadialGradient(
                       center: Alignment.center,
                       colors: [
-                        AppColors.affirmationGradient[0].withOpacity(0.1),
+                        AppTheme.affirmationGradient[0].withOpacity(0.1),
                         Colors.transparent,
                       ],
                       stops: [0.3, 1.0],
@@ -627,10 +627,10 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       decoration: BoxDecoration(
-        color: AppColors.black.withOpacity(0.3),
+        color: AppTheme.black.withOpacity(0.3),
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: AppColors.white.withOpacity(0.1),
+          color: AppTheme.white.withOpacity(0.1),
           width: 1,
         ),
       ),
@@ -639,7 +639,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
         style: TextStyle(
           fontSize: 18.sp,
           fontWeight: FontWeight.w600,
-          color: AppColors.white,
+          color: AppTheme.white,
           fontFeatures: [FontFeature.tabularFigures()],
         ),
       ),
@@ -654,11 +654,11 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
         width: 60.w,
         height: 60.h,
         decoration: BoxDecoration(
-          gradient: LinearGradient(colors: AppColors.affirmationGradient),
+          gradient: LinearGradient(colors: AppTheme.affirmationGradient),
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.affirmationGradient[0].withOpacity(0.4),
+              color: AppTheme.affirmationGradient[0].withOpacity(0.4),
               blurRadius: 15.r,
               offset: Offset(0, 5.h),
             ),
@@ -666,7 +666,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
         ),
         child: Icon(
           isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-          color: AppColors.white,
+          color: AppTheme.white,
           size: 30.sp,
         ),
       ),
@@ -687,13 +687,13 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
               shape: BoxShape.circle,
               gradient: RadialGradient(
                 colors: [
-                  AppColors.affirmationGradient[0].withOpacity(0.3),
-                  AppColors.affirmationGradient[1].withOpacity(0.1),
+                  AppTheme.affirmationGradient[0].withOpacity(0.3),
+                  AppTheme.affirmationGradient[1].withOpacity(0.1),
                   Colors.transparent,
                 ],
               ),
               border: Border.all(
-                color: AppColors.white.withOpacity(0.1),
+                color: AppTheme.white.withOpacity(0.1),
                 width: 2,
               ),
             ),
@@ -703,7 +703,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                 ),
               ),
             ),
@@ -721,7 +721,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w500,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
@@ -729,7 +729,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
           ambienceTypes[selectedAmbience],
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium.withOpacity(0.7),
+            color: AppTheme.textMedium.withOpacity(0.7),
           ),
         ),
       ],
@@ -788,7 +788,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
       context: context,
       barrierDismissible: false,
       builder: (context) => Dialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
@@ -801,12 +801,12 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 width: 60.w,
                 height: 60.h,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: AppColors.affirmationGradient),
+                  gradient: LinearGradient(colors: AppTheme.affirmationGradient),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.check_rounded,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                   size: 30.sp,
                 ),
               ),
@@ -816,7 +816,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 style: TextStyle(
                   fontSize: 22.sp,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
               SizedBox(height: 12.h),
@@ -824,7 +824,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 'Well done! You\'ve completed your meditation.',
                 style: TextStyle(
                   fontSize: 16.sp,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -833,7 +833,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                 width: double.infinity,
                 height: 50.h,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: AppColors.affirmationGradient),
+                  gradient: LinearGradient(colors: AppTheme.affirmationGradient),
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 child: Material(
@@ -847,7 +847,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                         ),
                       ),
                     ),

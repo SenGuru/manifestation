@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class Goal {
   final String id;
@@ -345,19 +345,19 @@ extension GoalCategoryExtension on GoalCategory {
   Color get color {
     switch (this) {
       case GoalCategory.all:
-        return AppColors.textMedium;
+        return AppTheme.textMedium;
       case GoalCategory.career:
-        return AppColors.gradientBlue;
+        return AppTheme.goalTrackerGradient[0];
       case GoalCategory.health:
-        return AppColors.gradientPink;
+        return AppTheme.affirmationGradient[0];
       case GoalCategory.relationships:
-        return AppColors.accentLavender;
+        return AppTheme.accentLavender;
       case GoalCategory.financial:
-        return AppColors.accentGold;
+        return AppTheme.accentGold;
       case GoalCategory.personal:
-        return AppColors.secondaryTeal;
+        return AppTheme.visionBoardGradient[0];
       case GoalCategory.spiritual:
-        return AppColors.gradientPurple;
+        return AppTheme.journalGradient[0];
     }
   }
 }
@@ -383,11 +383,11 @@ extension GoalPriorityExtension on GoalPriority {
   Color get color {
     switch (this) {
       case GoalPriority.low:
-        return AppColors.accentMint;
+        return AppTheme.accentMint;
       case GoalPriority.medium:
-        return AppColors.gradientOrange;
+        return AppTheme.affirmationGradient[1];
       case GoalPriority.high:
-        return AppColors.gradientPink;
+        return AppTheme.affirmationGradient[0];
     }
   }
 
@@ -427,11 +427,11 @@ extension GoalStatusExtension on GoalStatus {
   Color get color {
     switch (this) {
       case GoalStatus.notStarted:
-        return AppColors.textMedium;
+        return AppTheme.textMedium;
       case GoalStatus.inProgress:
-        return AppColors.gradientBlue;
+        return AppTheme.goalTrackerGradient[0];
       case GoalStatus.completed:
-        return AppColors.accentMint;
+        return AppTheme.accentMint;
       case GoalStatus.overdue:
         return Colors.red;
     }

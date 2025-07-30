@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class StreakCounter extends StatelessWidget {
   final int streakDays;
@@ -20,10 +21,10 @@ class StreakCounter extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: AppColors.accentGold.withOpacity(0.3),
+            color: AppTheme.accentGold.withOpacity(0.3),
             width: 1,
           ),
         ),
@@ -37,7 +38,7 @@ class StreakCounter extends StatelessWidget {
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.accentGold,
+                    AppTheme.accentGold,
                     AppColors.gradientOrange,
                   ],
                   begin: Alignment.topLeft,
@@ -45,7 +46,7 @@ class StreakCounter extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.accentGold.withOpacity(0.4),
+                    color: AppTheme.accentGold.withOpacity(0.4),
                     blurRadius: 6.r,
                     offset: Offset(0, 2.h),
                   ),
@@ -53,7 +54,7 @@ class StreakCounter extends StatelessWidget {
               ),
               child: Icon(
                 Icons.local_fire_department,
-                color: AppColors.white,
+                color: AppTheme.white,
                 size: 20.sp,
               ),
             ),
@@ -66,7 +67,7 @@ class StreakCounter extends StatelessWidget {
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.accentGold,
+                color: AppTheme.accentGold,
               ),
             ),
             
@@ -76,7 +77,7 @@ class StreakCounter extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
             ),
             
@@ -93,8 +94,8 @@ class StreakCounter extends StatelessWidget {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: index < (streakDays % 7) 
-                        ? AppColors.accentGold 
-                        : AppColors.textMedium.withOpacity(0.3),
+                        ? AppTheme.accentGold 
+                        : AppTheme.textMedium.withOpacity(0.3),
                   ),
                 );
               }),

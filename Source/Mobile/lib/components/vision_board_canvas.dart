@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/models/vision_board.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/widgets/stylish_loading.dart';
 import 'dart:io';
 
@@ -99,11 +99,11 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     if (element is VisionBoardImageElement) {
       return Container(
         decoration: BoxDecoration(
-          color: AppColors.textMedium.withOpacity(0.1),
+          color: AppTheme.textMedium.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8.r),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
+              color: AppTheme.black.withOpacity(0.1),
               blurRadius: 4.r,
               offset: Offset(0, 2.h),
             ),
@@ -122,7 +122,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           borderRadius: BorderRadius.circular(8.r),
           boxShadow: element.style.backgroundColor != null ? [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
+              color: AppTheme.black.withOpacity(0.1),
               blurRadius: 4.r,
               offset: Offset(0, 2.h),
             ),
@@ -157,7 +157,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           if (loadingProgress == null) return child;
           return Center(
             child: CompactStylishLoading(
-              color: AppColors.secondaryTeal,
+              color: AppTheme.visionBoardGradient[0],
               size: 30.w,
             ),
           );
@@ -193,10 +193,10 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   Widget _buildImagePlaceholder() {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundMedium,
+        color: AppTheme.backgroundMedium,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.2),
+          color: AppTheme.textMedium.withOpacity(0.2),
           width: 2,
           style: BorderStyle.solid,
         ),
@@ -207,14 +207,14 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           children: [
             Icon(
               Icons.image_outlined,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               size: 32.sp,
             ),
             SizedBox(height: 8.h),
             Text(
               'Tap to add image',
               style: TextStyle(
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
               ),
@@ -232,10 +232,10 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       child: Container(
         padding: EdgeInsets.all(32.w),
         decoration: BoxDecoration(
-          color: AppColors.white.withOpacity(0.9),
+          color: AppTheme.white.withOpacity(0.9),
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.2),
+            color: AppTheme.textMedium.withOpacity(0.2),
             width: 2,
             style: BorderStyle.solid,
           ),
@@ -245,7 +245,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           children: [
             Icon(
               Icons.dashboard_outlined,
-              color: AppColors.textMedium.withOpacity(0.5),
+              color: AppTheme.textMedium.withOpacity(0.5),
               size: 64.sp,
             ),
             SizedBox(height: 16.h),
@@ -254,7 +254,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textMedium.withOpacity(0.8),
+                color: AppTheme.textMedium.withOpacity(0.8),
               ),
               textAlign: TextAlign.center,
             ),
@@ -263,7 +263,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
               'Start creating by adding images and text\nUse the toolbar below to get started',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: AppColors.textMedium.withOpacity(0.6),
+                color: AppTheme.textMedium.withOpacity(0.6),
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
@@ -383,7 +383,7 @@ class GridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = AppColors.textMedium.withOpacity(0.1)
+      ..color = AppTheme.textMedium.withOpacity(0.1)
       ..strokeWidth = 0.5;
 
     const gridSize = 20.0;

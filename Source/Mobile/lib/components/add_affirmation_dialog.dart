@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/models/affirmations.dart';
 import 'package:fun/widgets/stylish_loading.dart';
 import 'package:uuid/uuid.dart';
@@ -43,7 +43,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
     final isEditing = widget.affirmationToEdit != null;
     
     return Dialog(
-      backgroundColor: AppColors.cardBackground,
+      backgroundColor: AppTheme.cardBackground,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.r),
       ),
@@ -60,12 +60,12 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                   width: 40.w,
                   height: 40.h,
                   decoration: BoxDecoration(
-                    color: AppColors.accentGold.withOpacity(0.2),
+                    color: AppTheme.accentGold.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
                     isEditing ? Icons.edit : Icons.add,
-                    color: AppColors.accentGold,
+                    color: AppTheme.accentGold,
                     size: 20.sp,
                   ),
                 ),
@@ -79,14 +79,14 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       Text(
                         'Create your personal manifestation',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                     ],
@@ -96,7 +96,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                   onTap: () => Navigator.pop(context),
                   child: Icon(
                     Icons.close,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     size: 20.sp,
                   ),
                 ),
@@ -116,16 +116,16 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 8.h),
                   Container(
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: AppColors.textMedium.withOpacity(0.2),
+                        color: AppTheme.textMedium.withOpacity(0.2),
                       ),
                     ),
                     child: TextFormField(
@@ -133,13 +133,13 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                       maxLines: 4,
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                         height: 1.4,
                       ),
                       decoration: InputDecoration(
                         hintText: 'Enter your positive affirmation...\ne.g., "I am confident and capable of achieving my dreams"',
                         hintStyle: TextStyle(
-                          color: AppColors.textMedium.withOpacity(0.7),
+                          color: AppTheme.textMedium.withOpacity(0.7),
                           fontSize: 14.sp,
                         ),
                         border: InputBorder.none,
@@ -163,10 +163,10 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                   Container(
                     padding: EdgeInsets.all(12.w),
                     decoration: BoxDecoration(
-                      color: AppColors.accentGold.withOpacity(0.1),
+                      color: AppTheme.accentGold.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8.r),
                       border: Border.all(
-                        color: AppColors.accentGold.withOpacity(0.3),
+                        color: AppTheme.accentGold.withOpacity(0.3),
                       ),
                     ),
                     child: Column(
@@ -176,7 +176,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                           children: [
                             Icon(
                               Icons.lightbulb_outline,
-                              color: AppColors.accentGold,
+                              color: AppTheme.accentGold,
                               size: 16.sp,
                             ),
                             SizedBox(width: 6.w),
@@ -185,7 +185,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.accentGold,
+                                color: AppTheme.accentGold,
                               ),
                             ),
                           ],
@@ -197,7 +197,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                           '• Make it personal and meaningful to you',
                           style: TextStyle(
                             fontSize: 11.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                             height: 1.3,
                           ),
                         ),
@@ -219,10 +219,10 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                     child: Container(
                       height: 48.h,
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundMedium,
+                        color: AppTheme.backgroundMedium,
                         borderRadius: BorderRadius.circular(12.r),
                         border: Border.all(
-                          color: AppColors.textMedium.withOpacity(0.3),
+                          color: AppTheme.textMedium.withOpacity(0.3),
                         ),
                       ),
                       child: Center(
@@ -231,7 +231,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                           ),
                         ),
                       ),
@@ -247,8 +247,8 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: [
-                            AppColors.accentGold,
-                            AppColors.accentGold.withOpacity(0.8),
+                            AppTheme.accentGold,
+                            AppTheme.accentGold.withOpacity(0.8),
                           ],
                         ),
                         borderRadius: BorderRadius.circular(12.r),
@@ -256,7 +256,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                       child: Center(
                         child: _isLoading
                             ? CompactStylishLoading(
-                                color: AppColors.white,
+                                color: AppTheme.white,
                                 size: 20.w,
                               )
                             : Text(
@@ -264,7 +264,7 @@ class _AddAffirmationDialogState extends State<AddAffirmationDialog> {
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.white,
+                                  color: AppTheme.white,
                                 ),
                               ),
                       ),

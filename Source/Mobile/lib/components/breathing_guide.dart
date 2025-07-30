@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:math' as math;
 
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class BreathingGuide extends StatefulWidget {
   final AnimationController controller;
@@ -115,7 +115,7 @@ class _BreathingGuideState extends State<BreathingGuide>
   }
 
   Widget _buildBreathingCircle() {
-    final primaryColor = widget.color ?? AppColors.accentLavender;
+    final primaryColor = widget.color ?? AppTheme.accentLavender;
     
     return AnimatedBuilder(
       animation: _breathingAnimation,
@@ -165,7 +165,7 @@ class _BreathingGuideState extends State<BreathingGuide>
   }
 
   Widget _buildInstructionText() {
-    final primaryColor = widget.color ?? AppColors.accentLavender;
+    final primaryColor = widget.color ?? AppTheme.accentLavender;
     
     return AnimatedBuilder(
       animation: _textOpacityAnimation,
@@ -178,7 +178,7 @@ class _BreathingGuideState extends State<BreathingGuide>
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textLight.withOpacity(_textOpacityAnimation.value),
+                color: AppTheme.textLight.withOpacity(_textOpacityAnimation.value),
               ),
             ),
             SizedBox(height: 8.h),
@@ -203,7 +203,7 @@ class _BreathingGuideState extends State<BreathingGuide>
   }
 
   Widget _buildProgressIndicator() {
-    final primaryColor = widget.color ?? AppColors.accentLavender;
+    final primaryColor = widget.color ?? AppTheme.accentLavender;
     
     return Container(
       height: 60.h, // Reduced height to prevent overflow
@@ -251,7 +251,7 @@ class _BreathingGuideState extends State<BreathingGuide>
             'Focus on the circle\'s rhythm',
             style: TextStyle(
               fontSize: 10.sp,
-              color: AppColors.textMedium.withOpacity(0.6),
+              color: AppTheme.textMedium.withOpacity(0.6),
             ),
           ),
         ],
@@ -328,7 +328,7 @@ class _AdvancedBreathingGuideState extends State<AdvancedBreathingGuide> {
         painter: BreathingPatternPainter(
           progress: widget.controller.value,
           pattern: widget.pattern,
-          color: widget.color ?? AppColors.accentLavender,
+          color: widget.color ?? AppTheme.accentLavender,
         ),
       ),
     );
@@ -343,7 +343,7 @@ class _AdvancedBreathingGuideState extends State<AdvancedBreathingGuide> {
         painter: BreathingPatternPainter(
           progress: widget.controller.value,
           pattern: widget.pattern,
-          color: widget.color ?? AppColors.accentLavender,
+          color: widget.color ?? AppTheme.accentLavender,
         ),
       ),
     );
@@ -358,7 +358,7 @@ class _AdvancedBreathingGuideState extends State<AdvancedBreathingGuide> {
         painter: BreathingPatternPainter(
           progress: widget.controller.value,
           pattern: widget.pattern,
-          color: widget.color ?? AppColors.accentLavender,
+          color: widget.color ?? AppTheme.accentLavender,
         ),
       ),
     );

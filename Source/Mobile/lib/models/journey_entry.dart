@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 
 class JournalEntry {
@@ -230,11 +230,11 @@ extension MoodExtension on Mood {
       case Mood.bad:
         return Color(0xFFFF8A50); // Orange
       case Mood.neutral:
-        return AppColors.textMedium; // Gray
+        return AppTheme.textMedium; // Gray
       case Mood.good:
-        return AppColors.secondaryTeal; // Teal
+        return AppTheme.visionBoardGradient[0]; // Teal
       case Mood.amazing:
-        return AppColors.accentMint; // Green
+        return AppTheme.accentMint; // Green
     }
   }
 

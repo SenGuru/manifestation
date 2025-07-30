@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../services/session_manager.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 
 /// Widget that displays session status information
@@ -85,7 +85,7 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CompactStylishLoading(
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               size: 12.w,
             ),
             SizedBox(width: 8.w),
@@ -93,7 +93,7 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
               'Loading...',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
               ),
             ),
           ],
@@ -148,10 +148,10 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.2),
+          color: AppTheme.textMedium.withOpacity(0.2),
         ),
       ),
       child: Column(
@@ -174,7 +174,7 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -213,7 +213,7 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
               label + ':',
               style: TextStyle(
                 fontSize: 13.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -223,7 +223,7 @@ class _SessionStatusWidgetState extends State<SessionStatusWidget> {
               value,
               style: TextStyle(
                 fontSize: 13.sp,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
             ),
           ),

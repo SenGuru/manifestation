@@ -6,8 +6,10 @@ import 'signup_page.dart';
 import 'home_screen.dart';
 import 'forgot_password_screen.dart';
 import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/keyboard_dismissal_wrapper.dart';
+import '../components/error_popup.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -24,6 +26,10 @@ class _LoginScreenState extends State<LoginScreen>
   bool _rememberMe = false;
   bool _isLoading = false;
   String _validationError = '';
+  
+  // Field error states
+  String? _usernameError;
+  String? _passwordError;
   
   late AnimationController _fadeController;
   late AnimationController _slideController;
@@ -79,6 +85,19 @@ class _LoginScreenState extends State<LoginScreen>
     _fadeController.forward();
     _slideController.forward();
     _buttonPulseController.repeat(reverse: true);
+    
+    // Validation listeners
+    _emailController.addListener(() {
+      setState(() {
+        _usernameError = _emailController.text.trim().isEmpty ? 'Username is required' : null;
+      });
+    });
+    
+    _passwordController.addListener(() {
+      setState(() {
+        _passwordError = _passwordController.text.trim().isEmpty ? 'Password is required' : null;
+      });
+    });
   }
 
 
@@ -94,47 +113,53 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 0;
+    
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
+      resizeToAvoidBottomInset: false,
       body: KeyboardDismissalWrapper(
         child: SafeArea(
           child: FadeTransition(
             opacity: _fadeAnimation,
             child: SlideTransition(
               position: _slideAnimation,
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 40.h),
-                      
-                      // Header
-                      _buildHeader(),
-                      
-                      SizedBox(height: 40.h),
-                      
-                      
-                      // Login form
-                      _buildLoginForm(),
-                      
-                      SizedBox(height: 30.h),
-                      
-                      // Social login options
-                      _buildSocialLogin(),
-                      
-                      SizedBox(height: 30.h),
-                      
-                      // Sign up link
-                      _buildSignUpLink(),
-                      
-                      SizedBox(height: 40.h),
-                    ],
-                  ),
-                ),
-              ),
+              child: isKeyboardOpen
+                  ? SingleChildScrollView(
+                      physics: ClampingScrollPhysics(),
+                      padding: EdgeInsets.only(
+                        left: 24.w,
+                        right: 24.w,
+                        bottom: MediaQuery.of(context).viewInsets.bottom + 16.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 40.h),
+                          _buildHeader(),
+                          SizedBox(height: 40.h),
+                          _buildLoginForm(),
+                          SizedBox(height: 24.h),
+                          _buildSignUpLink(),
+                          SizedBox(height: 16.h),
+                        ],
+                      ),
+                    )
+                  : Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 40.h),
+                          _buildHeader(),
+                          SizedBox(height: 40.h),
+                          _buildLoginForm(),
+                          SizedBox(height: 24.h), // Same spacing as keyboard mode
+                          _buildSignUpLink(),
+                          SizedBox(height: 16.h),
+                        ],
+                      ),
+                    ),
             ),
           ),
         ),
@@ -152,14 +177,14 @@ class _LoginScreenState extends State<LoginScreen>
           height: 80.h,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: AppColors.affirmationGradient,
+              colors: AppTheme.affirmationGradient,
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                 blurRadius: 20.r,
                 offset: Offset(0, 10.h),
               ),
@@ -167,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen>
           ),
           child: Icon(
             Icons.auto_awesome,
-            color: AppColors.white,
+            color: AppTheme.white,
             size: 40.sp,
           ),
         ),
@@ -179,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen>
           style: TextStyle(
             fontSize: 32.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         
@@ -189,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen>
           'Sign in to continue your manifestation journey',
           style: TextStyle(
             fontSize: 16.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             height: 1.3,
           ),
         ),
@@ -253,20 +278,20 @@ class _LoginScreenState extends State<LoginScreen>
                       height: 20.h,
                       decoration: BoxDecoration(
                         color: _rememberMe 
-                            ? AppColors.affirmationGradient[0]
+                            ? AppTheme.affirmationGradient[0]
                             : Colors.transparent,
                         borderRadius: BorderRadius.circular(4.r),
                         border: Border.all(
                           color: _rememberMe 
-                              ? AppColors.affirmationGradient[0]
-                              : AppColors.textMedium.withOpacity(0.5),
+                              ? AppTheme.affirmationGradient[0]
+                              : AppTheme.textMedium.withOpacity(0.5),
                           width: 2,
                         ),
                       ),
                       child: _rememberMe
                           ? Icon(
                               Icons.check,
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               size: 14.sp,
                             )
                           : null,
@@ -276,7 +301,7 @@ class _LoginScreenState extends State<LoginScreen>
                       'Remember me',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -291,7 +316,7 @@ class _LoginScreenState extends State<LoginScreen>
                   'Forgot Password?',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.affirmationGradient[0],
+                    color: AppTheme.affirmationGradient[0],
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -328,88 +353,145 @@ class _LoginScreenState extends State<LoginScreen>
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          obscureText: isPassword && !_isPasswordVisible,
-          keyboardType: keyboardType,
-          style: TextStyle(
-            color: AppColors.textLight,
-            fontSize: 16.sp,
-          ),
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-              color: AppColors.textMedium.withOpacity(0.6),
-            ),
-            prefixIcon: Icon(
-              icon,
-              color: AppColors.textMedium,
-              size: 20.sp,
-            ),
-            suffixIcon: isPassword
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
-                    child: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: AppColors.textMedium,
-                      size: 20.sp,
+        
+        // TextField with custom error handling
+        Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              TextFormField(
+                controller: controller,
+                validator: (value) {
+                  // Store validation result but don't show in TextFormField
+                  final result = validator?.call(value);
+                  return null; // Always return null to prevent default error display
+                },
+                obscureText: isPassword && !_isPasswordVisible,
+                keyboardType: keyboardType,
+                style: TextStyle(
+                  color: AppTheme.textLight,
+                  fontSize: 16.sp,
+                ),
+                decoration: InputDecoration(
+                  hintText: hint,
+                  hintStyle: TextStyle(
+                    color: AppTheme.textMedium.withOpacity(0.6),
+                  ),
+                  prefixIcon: Icon(
+                    icon,
+                    color: AppTheme.textMedium,
+                    size: 20.sp,
+                  ),
+                  suffixIcon: isPassword
+                      ? GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          child: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                            color: AppTheme.textMedium,
+                            size: 20.sp,
+                          ),
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: AppTheme.cardBackground,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: _getFieldError(controller) != null 
+                          ? Colors.red.withOpacity(0.5)
+                          : AppTheme.textMedium.withOpacity(0.1),
+                      width: 2,
                     ),
-                  )
-                : null,
-            filled: true,
-            fillColor: AppColors.cardBackground,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppColors.textMedium.withOpacity(0.1),
-                width: 2,
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: AppTheme.affirmationGradient[0],
+                      width: 2,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
+                ),
               ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppColors.affirmationGradient[0],
-                width: 2,
+              
+              // Fixed space for individual field errors
+              Container(
+                height: 20.h,
+                margin: EdgeInsets.only(top: 4.h),
+                child: _buildFieldError(_getFieldError(controller)),
               ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
-            ),
-            // Remove error text to prevent jumping
-            errorStyle: TextStyle(height: 0, fontSize: 0),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 16.h,
-            ),
+            ],
           ),
         ),
       ],
+    );
+  }
+  
+  String? _getFieldError(TextEditingController controller) {
+    if (controller == _emailController) return _usernameError;
+    if (controller == _passwordController) return _passwordError;
+    return null;
+  }
+  
+  Widget _buildFieldError(String? errorText) {
+    return AnimatedOpacity(
+      opacity: errorText != null && errorText.isNotEmpty ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 200),
+      child: errorText != null && errorText.isNotEmpty
+          ? Row(
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 12.sp,
+                ),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    errorText,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            )
+          : SizedBox.shrink(),
     );
   }
 
@@ -483,18 +565,18 @@ class _LoginScreenState extends State<LoginScreen>
               child: Ink(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: AppColors.affirmationGradient,
+                    colors: AppTheme.affirmationGradient,
                   ),
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.affirmationGradient[0].withOpacity(0.4),
+                      color: AppTheme.affirmationGradient[0].withOpacity(0.4),
                       blurRadius: 20.r,
                       offset: Offset(0, 8.h),
                       spreadRadius: 2.r,
                     ),
                     BoxShadow(
-                      color: AppColors.affirmationGradient[1].withOpacity(0.2),
+                      color: AppTheme.affirmationGradient[1].withOpacity(0.2),
                       blurRadius: 40.r,
                       offset: Offset(0, 16.h),
                     ),
@@ -503,13 +585,13 @@ class _LoginScreenState extends State<LoginScreen>
                 child: Container(
                   alignment: Alignment.center,
                   child: _isLoading
-                      ? CompactStylishLoading(size: 20.w, color: AppColors.white)
+                      ? CompactStylishLoading(size: 20.w, color: AppTheme.white)
                       : Text(
                           'Sign In',
                           style: TextStyle(
                             fontSize: 18.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -522,114 +604,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildSocialLogin() {
-    return Column(
-      children: [
-        // Divider
-        Row(
-          children: [
-            Expanded(
-              child: Container(
-                height: 1,
-                color: AppColors.textMedium.withOpacity(0.3),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Text(
-                'Or continue with',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppColors.textMedium,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: 1,
-                color: AppColors.textMedium.withOpacity(0.3),
-              ),
-            ),
-          ],
-        ),
-        
-        SizedBox(height: 24.h),
-        
-        // Social buttons
-        Row(
-          children: [
-            Expanded(
-              child: _buildSocialButton(
-                'Google',
-                Icons.g_mobiledata,
-                Colors.white,
-                Colors.black87,
-                () => _handleSocialLogin(AuthProvider.google),
-              ),
-            ),
-            SizedBox(width: 16.w),
-            Expanded(
-              child: _buildSocialButton(
-                'Apple',
-                Icons.apple,
-                Colors.black,
-                Colors.white,
-                () => _handleSocialLogin(AuthProvider.apple),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
 
-  Widget _buildSocialButton(
-    String label,
-    IconData icon,
-    Color backgroundColor,
-    Color textColor,
-    VoidCallback onTap,
-  ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 56.h,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.2),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
-              blurRadius: 8.r,
-              offset: Offset(0, 4.h),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: textColor,
-              size: 24.sp,
-            ),
-            SizedBox(width: 12.w),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _buildSignUpLink() {
     return Center(
@@ -639,14 +614,14 @@ class _LoginScreenState extends State<LoginScreen>
           text: TextSpan(
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
             children: [
               TextSpan(text: "Don't have an account? "),
               TextSpan(
                 text: 'Sign Up',
                 style: TextStyle(
-                  color: AppColors.affirmationGradient[0],
+                  color: AppTheme.affirmationGradient[0],
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -663,7 +638,10 @@ class _LoginScreenState extends State<LoginScreen>
       _validationError = '';
     });
     
-    if (!_formKey.currentState!.validate()) return;
+    // Custom validation since we disabled TextFormField's built-in validation
+    if (_usernameError != null || _passwordError != null) {
+      return;
+    }
 
     setState(() {
       _isLoading = true;
@@ -679,64 +657,55 @@ class _LoginScreenState extends State<LoginScreen>
       );
 
       if (result.isSuccess) {
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.message),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          ),
-        );
-
-        // Navigate to home screen on success
-        Navigator.pushReplacement(
+        // Show success popup before navigation
+        SuccessPopup.show(
           context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
+          title: 'Welcome Back!',
+          message: 'You\'ve successfully signed in. Ready to continue your manifestation journey?',
+          actionText: 'Let\'s Go',
+          onAction: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
+          onDismiss: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
         );
       } else {
-        // Handle specific authentication errors
-        setState(() {
-          _validationError = _getLoginErrorMessage(result.message);
-        });
+        // Show beautiful error popup instead of validation error
+        ErrorPopup.show(
+          context,
+          title: 'Login Failed',
+          message: _getLoginErrorMessage(result.message),
+          actionText: 'Try Again',
+          onAction: () {
+            // Clear fields and focus on email
+            _emailController.clear();
+            _passwordController.clear();
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+        );
       }
     } catch (e) {
-      setState(() {
-        _validationError = 'Connection error. Please check your internet and try again.';
-      });
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _handleSocialLogin(AuthProvider provider) async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      // TODO: Implement social login logic
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
-      
-      print('Signing in with ${provider.displayName}');
-      
-      // Navigate to home screen on success
-      Navigator.pushReplacement(
+      ErrorPopup.show(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        title: 'Connection Error',
+        message: 'Unable to connect to our servers. Please check your internet connection and try again.',
+        actionText: 'Retry',
+        onAction: () => _handleLogin(),
       );
-    } catch (e) {
-      _showErrorSnackBar('${provider.displayName} sign-in failed. Please try again.');
     } finally {
       setState(() {
         _isLoading = false;
       });
     }
   }
+
 
 
   void _navigateToSignUp() {
@@ -745,15 +714,21 @@ class _LoginScreenState extends State<LoginScreen>
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => SignUpScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SlideTransition(
-            position: animation.drive(
-              Tween(begin: Offset(1.0, 0.0), end: Offset.zero)
+          return FadeTransition(
+            opacity: animation.drive(
+              Tween(begin: 0.0, end: 1.0)
                   .chain(CurveTween(curve: Curves.easeInOut)),
             ),
-            child: child,
+            child: ScaleTransition(
+              scale: animation.drive(
+                Tween(begin: 0.95, end: 1.0)
+                    .chain(CurveTween(curve: Curves.easeOutCubic)),
+              ),
+              child: child,
+            ),
           );
         },
-        transitionDuration: Duration(milliseconds: 300),
+        transitionDuration: Duration(milliseconds: 400),
       ),
     );
   }
@@ -786,16 +761,4 @@ class _LoginScreenState extends State<LoginScreen>
     }
   }
 
-  void _showErrorSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-      ),
-    );
-  }
 }

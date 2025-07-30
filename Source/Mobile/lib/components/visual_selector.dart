@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/constants/meditation_constants.dart';
 import 'package:fun/models/meditation_models.dart';
 
@@ -68,7 +68,7 @@ class _VisualSelectorState extends State<VisualSelector>
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         if (widget.showDescription) ...[
@@ -77,7 +77,7 @@ class _VisualSelectorState extends State<VisualSelector>
             'Choose your meditation visual companion',
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
           ),
         ],
@@ -129,11 +129,11 @@ class _VisualSelectorState extends State<VisualSelector>
                           colors: gradient,
                         )
                       : null,
-                  color: isSelected ? null : AppColors.cardBackground,
+                  color: isSelected ? null : AppTheme.cardBackground,
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent
-                        : AppColors.textMedium.withOpacity(0.1),
+                        : AppTheme.textMedium.withOpacity(0.1),
                     width: 1.5.w,
                   ),
                   boxShadow: isSelected
@@ -156,12 +156,12 @@ class _VisualSelectorState extends State<VisualSelector>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isSelected
-                            ? AppColors.white.withOpacity(0.2)
-                            : AppColors.textMedium.withOpacity(0.1),
+                            ? AppTheme.white.withOpacity(0.2)
+                            : AppTheme.textMedium.withOpacity(0.1),
                       ),
                       child: Icon(
                         visualType.icon,
-                        color: isSelected ? AppColors.white : AppColors.textMedium,
+                        color: isSelected ? AppTheme.white : AppTheme.textMedium,
                         size: 24.sp,
                       ),
                     ),
@@ -171,7 +171,7 @@ class _VisualSelectorState extends State<VisualSelector>
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? AppColors.white : AppColors.textMedium,
+                        color: isSelected ? AppTheme.white : AppTheme.textMedium,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -183,8 +183,8 @@ class _VisualSelectorState extends State<VisualSelector>
                         style: TextStyle(
                           fontSize: 10.sp,
                           color: isSelected 
-                              ? AppColors.white.withOpacity(0.8) 
-                              : AppColors.textMedium.withOpacity(0.6),
+                              ? AppTheme.white.withOpacity(0.8) 
+                              : AppTheme.textMedium.withOpacity(0.6),
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
@@ -203,15 +203,15 @@ class _VisualSelectorState extends State<VisualSelector>
   List<Color> _getVisualGradient(VisualType visualType) {
     switch (visualType) {
       case VisualType.candle:
-        return AppColors.candleGradient;
+        return AppTheme.affirmationGradient;
       case VisualType.moon:
-        return AppColors.moonGradient;
+        return AppTheme.journalGradient;
       case VisualType.nature:
-        return AppColors.natureGradient;
+        return AppTheme.socialGradient;
       case VisualType.minimal:
-        return AppColors.minimalGradient;
+        return AppTheme.visualMeditationGradient;
       case VisualType.geometric:
-        return AppColors.geometricGradient;
+        return AppTheme.goalTrackerGradient;
     }
   }
 }
@@ -251,18 +251,18 @@ class CompactVisualSelector extends StatelessWidget {
                   gradient: isSelected
                       ? LinearGradient(colors: gradient)
                       : null,
-                  color: isSelected ? null : AppColors.cardBackground,
+                  color: isSelected ? null : AppTheme.cardBackground,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
                     color: isSelected
                         ? Colors.transparent
-                        : AppColors.textMedium.withOpacity(0.2),
+                        : AppTheme.textMedium.withOpacity(0.2),
                     width: 1.w,
                   ),
                 ),
                 child: Icon(
                   visualType.icon,
-                  color: isSelected ? AppColors.white : AppColors.textMedium,
+                  color: isSelected ? AppTheme.white : AppTheme.textMedium,
                   size: 24.sp,
                 ),
               ),
@@ -276,15 +276,15 @@ class CompactVisualSelector extends StatelessWidget {
   List<Color> _getVisualGradient(VisualType visualType) {
     switch (visualType) {
       case VisualType.candle:
-        return AppColors.candleGradient;
+        return AppTheme.affirmationGradient;
       case VisualType.moon:
-        return AppColors.moonGradient;
+        return AppTheme.journalGradient;
       case VisualType.nature:
-        return AppColors.natureGradient;
+        return AppTheme.socialGradient;
       case VisualType.minimal:
-        return AppColors.minimalGradient;
+        return AppTheme.visualMeditationGradient;
       case VisualType.geometric:
-        return AppColors.geometricGradient;
+        return AppTheme.goalTrackerGradient;
     }
   }
 }
@@ -355,7 +355,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
@@ -382,12 +382,12 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? color.primaryColor.withOpacity(0.2)
-                          : AppColors.cardBackground,
+                          : AppTheme.cardBackground,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: isSelected
                             ? color.primaryColor
-                            : AppColors.textMedium.withOpacity(0.2),
+                            : AppTheme.textMedium.withOpacity(0.2),
                         width: 2.w,
                       ),
                     ),
@@ -417,7 +417,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
-                            color: isSelected ? color.primaryColor : AppColors.textMedium,
+                            color: isSelected ? color.primaryColor : AppTheme.textMedium,
                           ),
                         ),
                       ],
@@ -441,7 +441,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
@@ -468,12 +468,12 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                     decoration: BoxDecoration(
                       color: isSelected
                           ? phase.glowColor.withOpacity(0.1)
-                          : AppColors.cardBackground,
+                          : AppTheme.cardBackground,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: isSelected
                             ? phase.glowColor
-                            : AppColors.textMedium.withOpacity(0.2),
+                            : AppTheme.textMedium.withOpacity(0.2),
                         width: 2.w,
                       ),
                     ),
@@ -506,7 +506,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
-                            color: isSelected ? phase.glowColor : AppColors.textMedium,
+                            color: isSelected ? phase.glowColor : AppTheme.textMedium,
                           ),
                         ),
                       ],
@@ -530,7 +530,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
@@ -558,12 +558,12 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                       gradient: isSelected
                           ? LinearGradient(colors: pattern.colors)
                           : null,
-                      color: isSelected ? null : AppColors.cardBackground,
+                      color: isSelected ? null : AppTheme.cardBackground,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: isSelected
                             ? Colors.transparent
-                            : AppColors.textMedium.withOpacity(0.2),
+                            : AppTheme.textMedium.withOpacity(0.2),
                         width: 2.w,
                       ),
                     ),
@@ -572,7 +572,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                       children: [
                         Icon(
                           _getNaturePatternIcon(pattern),
-                          color: isSelected ? AppColors.white : AppColors.textMedium,
+                          color: isSelected ? AppTheme.white : AppTheme.textMedium,
                           size: 24.sp,
                         ),
                         SizedBox(height: 8.h),
@@ -581,7 +581,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
-                            color: isSelected ? AppColors.white : AppColors.textMedium,
+                            color: isSelected ? AppTheme.white : AppTheme.textMedium,
                           ),
                         ),
                       ],
@@ -606,17 +606,17 @@ class _VisualCustomizationState extends State<VisualCustomization> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           decoration: BoxDecoration(
-            color: AppColors.cardBackground,
+            color: AppTheme.cardBackground,
             borderRadius: BorderRadius.circular(12.r),
             border: Border.all(
-              color: AppColors.textMedium.withOpacity(0.1),
+              color: AppTheme.textMedium.withOpacity(0.1),
               width: 1.w,
             ),
           ),
@@ -630,7 +630,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                     'Slow',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                     ),
                   ),
                   Text(
@@ -638,14 +638,14 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.minimalGradient[0],
+                      color: AppTheme.visualMeditationGradient[0],
                     ),
                   ),
                   Text(
                     'Fast',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                     ),
                   ),
                 ],
@@ -661,9 +661,9 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                   min: 0.5,
                   max: 1.5,
                   divisions: 10,
-                  activeColor: AppColors.minimalGradient[0],
-                  inactiveColor: AppColors.textMedium.withOpacity(0.2),
-                  thumbColor: AppColors.minimalGradient[0],
+                  activeColor: AppTheme.visualMeditationGradient[0],
+                  inactiveColor: AppTheme.textMedium.withOpacity(0.2),
+                  thumbColor: AppTheme.visualMeditationGradient[0],
                   onChanged: (value) {
                     final newSettings = Map<String, dynamic>.from(_currentSettings);
                     newSettings['breathingSpeed'] = value;
@@ -688,7 +688,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
@@ -716,12 +716,12 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                       gradient: isSelected
                           ? LinearGradient(colors: pattern.colors)
                           : null,
-                      color: isSelected ? null : AppColors.cardBackground,
+                      color: isSelected ? null : AppTheme.cardBackground,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
                         color: isSelected
                             ? Colors.transparent
-                            : AppColors.textMedium.withOpacity(0.2),
+                            : AppTheme.textMedium.withOpacity(0.2),
                         width: 2.w,
                       ),
                     ),
@@ -730,7 +730,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                       children: [
                         Icon(
                           _getGeometricPatternIcon(pattern),
-                          color: isSelected ? AppColors.white : AppColors.textMedium,
+                          color: isSelected ? AppTheme.white : AppTheme.textMedium,
                           size: 24.sp,
                         ),
                         SizedBox(height: 8.h),
@@ -740,7 +740,7 @@ class _VisualCustomizationState extends State<VisualCustomization> {
                           style: TextStyle(
                             fontSize: 10.sp,
                             fontWeight: FontWeight.w500,
-                            color: isSelected ? AppColors.white : AppColors.textMedium,
+                            color: isSelected ? AppTheme.white : AppTheme.textMedium,
                           ),
                         ),
                       ],

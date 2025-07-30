@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/journey_entry.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class JournalStatsScreen extends StatelessWidget {
   final Map<String, JournalEntry> entries;
@@ -16,7 +16,7 @@ class JournalStatsScreen extends StatelessWidget {
     final stats = _calculateStats();
     
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -55,12 +55,12 @@ class JournalStatsScreen extends StatelessWidget {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -75,14 +75,14 @@ class JournalStatsScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   'Your manifestation insights',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -102,7 +102,7 @@ class JournalStatsScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
@@ -113,7 +113,7 @@ class JournalStatsScreen extends StatelessWidget {
                 'Total Entries',
                 '${stats.totalEntries}',
                 Icons.book,
-                AppColors.gradientPurple,
+                AppTheme.journalGradient[0],
               ),
             ),
             SizedBox(width: 12.w),
@@ -122,7 +122,7 @@ class JournalStatsScreen extends StatelessWidget {
                 'Current Streak',
                 '${stats.currentStreak} days',
                 Icons.local_fire_department,
-                AppColors.accentGold,
+                AppTheme.accentGold,
               ),
             ),
           ],
@@ -135,7 +135,7 @@ class JournalStatsScreen extends StatelessWidget {
                 'This Month',
                 '${stats.thisMonthEntries}',
                 Icons.calendar_month,
-                AppColors.gradientPink,
+                AppTheme.affirmationGradient[0],
               ),
             ),
             SizedBox(width: 12.w),
@@ -144,7 +144,7 @@ class JournalStatsScreen extends StatelessWidget {
                 'Avg Gratitudes',
                 '${stats.avgGratitudes.toStringAsFixed(1)}',
                 Icons.favorite,
-                AppColors.secondaryTeal,
+                AppTheme.visionBoardGradient[0],
               ),
             ),
           ],
@@ -157,7 +157,7 @@ class JournalStatsScreen extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: color.withOpacity(0.3),
@@ -179,7 +179,7 @@ class JournalStatsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                 ),
               ),
             ],
@@ -190,7 +190,7 @@ class JournalStatsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
         ],
@@ -203,7 +203,7 @@ class JournalStatsScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -214,7 +214,7 @@ class JournalStatsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 16.h),
@@ -241,7 +241,7 @@ class JournalStatsScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w500,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       Spacer(),
@@ -249,7 +249,7 @@ class JournalStatsScreen extends StatelessWidget {
                         '$count ($percentage%)',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                     ],
@@ -257,7 +257,7 @@ class JournalStatsScreen extends StatelessWidget {
                   SizedBox(height: 6.h),
                   LinearProgressIndicator(
                     value: count / stats.totalEntries,
-                    backgroundColor: AppColors.backgroundDark,
+                    backgroundColor: AppTheme.backgroundDark,
                     valueColor: AlwaysStoppedAnimation<Color>(mood.color),
                     minHeight: 4.h,
                   ),
@@ -275,10 +275,10 @@ class JournalStatsScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.accentGold.withOpacity(0.3),
+          color: AppTheme.accentGold.withOpacity(0.3),
         ),
       ),
       child: Column(
@@ -288,7 +288,7 @@ class JournalStatsScreen extends StatelessWidget {
             children: [
               Icon(
                 Icons.local_fire_department,
-                color: AppColors.accentGold,
+                color: AppTheme.accentGold,
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
@@ -297,7 +297,7 @@ class JournalStatsScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -313,7 +313,7 @@ class JournalStatsScreen extends StatelessWidget {
                       'Current Streak',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -322,7 +322,7 @@ class JournalStatsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.accentGold,
+                        color: AppTheme.accentGold,
                       ),
                     ),
                   ],
@@ -336,7 +336,7 @@ class JournalStatsScreen extends StatelessWidget {
                       'Best Streak',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -345,7 +345,7 @@ class JournalStatsScreen extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                   ],
@@ -359,14 +359,14 @@ class JournalStatsScreen extends StatelessWidget {
               width: double.infinity,
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.accentGold.withOpacity(0.1),
+                color: AppTheme.accentGold.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.celebration,
-                    color: AppColors.accentGold,
+                    color: AppTheme.accentGold,
                     size: 16.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -375,7 +375,7 @@ class JournalStatsScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.accentGold,
+                      color: AppTheme.accentGold,
                     ),
                   ),
                 ],
@@ -396,7 +396,7 @@ class JournalStatsScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -407,7 +407,7 @@ class JournalStatsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 16.h),
@@ -416,7 +416,7 @@ class JournalStatsScreen extends StatelessWidget {
               margin: EdgeInsets.only(bottom: 12.h),
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.backgroundDark,
+                color: AppTheme.backgroundDark,
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Row(
@@ -436,7 +436,7 @@ class JournalStatsScreen extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                           ),
                         ),
                         SizedBox(height: 2.h),
@@ -444,7 +444,7 @@ class JournalStatsScreen extends StatelessWidget {
                           '${entry.gratitudes.length} gratitudes • ${entry.mood.displayName}',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                           ),
                         ),
                       ],

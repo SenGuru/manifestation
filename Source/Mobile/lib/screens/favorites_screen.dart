@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/affirmations.dart';
 import '../services/voice/human_tts_service.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 
 class FavoritesScreen extends StatefulWidget {
@@ -52,7 +52,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             createdAt: DateTime.now().subtract(Duration(days: 1)),
           ),
           categoryName: 'Self-Worth',
-          categoryColor: AppColors.affirmationGradient[0],
+          categoryColor: AppTheme.affirmationGradient[0],
           categoryId: 'self_worth',
         ),
         FavoriteAffirmation(
@@ -63,7 +63,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             createdAt: DateTime.now().subtract(Duration(days: 2)),
           ),
           categoryName: 'Success',
-          categoryColor: AppColors.affirmationGradient[1],
+          categoryColor: AppTheme.affirmationGradient[1],
           categoryId: 'success',
         ),
         FavoriteAffirmation(
@@ -74,7 +74,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             createdAt: DateTime.now().subtract(Duration(days: 3)),
           ),
           categoryName: 'Abundance',
-          categoryColor: AppColors.affirmationGradient[0],
+          categoryColor: AppTheme.affirmationGradient[0],
           categoryId: 'abundance',
         ),
       ];
@@ -97,7 +97,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     // Show loading screen while loading favorites
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.backgroundDark,
+        backgroundColor: AppTheme.backgroundDark,
         body: StylishLoading(
           message: 'Loading favorites...',
         ),
@@ -105,7 +105,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -127,8 +127,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.backgroundDark,
-            AppColors.backgroundDark.withOpacity(0.9),
+            AppTheme.backgroundDark,
+            AppTheme.backgroundDark.withOpacity(0.9),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -144,12 +144,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   width: 44.w,
                   height: 44.h,
                   decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
+                    color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(
                     Icons.arrow_back,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                     size: 20.sp,
                   ),
                 ),
@@ -164,14 +164,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     Text(
                       '${favoriteAffirmations.length} affirmations',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -187,14 +187,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 'Total Favorites',
                 favoriteAffirmations.length.toString(),
                 Icons.favorite,
-                AppColors.affirmationGradient,
+                AppTheme.affirmationGradient,
               ),
               SizedBox(width: 12.w),
               _buildStatCard(
                 'Categories',
                 _getUniqueCategoriesCount().toString(),
                 Icons.category,
-                AppColors.visionBoardGradient,
+                AppTheme.visionBoardGradient,
               ),
             ],
           ),
@@ -215,7 +215,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           children: [
             Icon(
               icon,
-              color: AppColors.white,
+              color: AppTheme.white,
               size: 20.sp,
             ),
             SizedBox(height: 8.h),
@@ -224,14 +224,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.white,
+                color: AppTheme.white,
               ),
             ),
             Text(
               title,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.white.withOpacity(0.9),
+                color: AppTheme.white.withOpacity(0.9),
               ),
             ),
           ],
@@ -249,12 +249,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             width: 80.w,
             height: 80.h,
             decoration: BoxDecoration(
-              color: AppColors.accentGold.withOpacity(0.2),
+              color: AppTheme.accentGold.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20.r),
             ),
             child: Icon(
               Icons.favorite_outline,
-              color: AppColors.accentGold,
+              color: AppTheme.accentGold,
               size: 40.sp,
             ),
           ),
@@ -264,7 +264,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 8.h),
@@ -273,7 +273,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               height: 1.4,
             ),
           ),
@@ -299,7 +299,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: favorite.categoryColor.withOpacity(0.3),
@@ -325,7 +325,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   favorite.categoryName,
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -334,7 +334,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   '${index + 1}',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -348,7 +348,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               favorite.affirmation.text,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 height: 1.4,
                 fontWeight: FontWeight.w500,
               ),
@@ -378,7 +378,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                     child: Icon(
                       isPlaying ? Icons.stop : Icons.play_arrow,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                       size: 20.sp,
                     ),
                   ),
@@ -394,7 +394,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         width: 44.w,
                         height: 44.h,
                         decoration: BoxDecoration(
-                          color: AppColors.backgroundMedium,
+                          color: AppTheme.backgroundMedium,
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Icon(
@@ -412,12 +412,12 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         width: 44.w,
                         height: 44.h,
                         decoration: BoxDecoration(
-                          color: AppColors.backgroundMedium,
+                          color: AppTheme.backgroundMedium,
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Icon(
                           Icons.share,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           size: 18.sp,
                         ),
                       ),
@@ -491,7 +491,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.accentMint,
+        backgroundColor: AppTheme.accentMint,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -511,7 +511,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: AppColors.accentGold,
+        backgroundColor: AppTheme.accentGold,
         behavior: SnackBarBehavior.floating,
       ),
     );

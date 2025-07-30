@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/services/user_service.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../models/goals.dart';
 import '../components/progress_update_dialog.dart';
 import '../components/edit_goal_sheet.dart';
@@ -97,7 +97,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -108,19 +108,19 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                 expandedHeight: 140.h,
                 floating: false,
                 pinned: true,
-                backgroundColor: AppColors.backgroundDark,
+                backgroundColor: AppTheme.backgroundDark,
                 elevation: 0,
                 leading: GestureDetector(
                   onTap: () => Navigator.pop(context),
                   child: Container(
                     margin: EdgeInsets.all(8.w),
                     decoration: BoxDecoration(
-                      color: AppColors.cardBackground,
+                      color: AppTheme.cardBackground,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: Icon(
                       Icons.arrow_back,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                       size: 20.sp,
                     ),
                   ),
@@ -132,12 +132,12 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                       margin: EdgeInsets.all(8.w),
                       padding: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: AppColors.cardBackground,
+                        color: AppTheme.cardBackground,
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Icon(
                         Icons.edit,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                         size: 20.sp,
                       ),
                     ),
@@ -166,7 +166,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                         colors: [
                           currentGoal.category.color.withOpacity(0.2),
                           currentGoal.category.color.withOpacity(0.1),
-                          AppColors.backgroundDark,
+                          AppTheme.backgroundDark,
                         ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -203,7 +203,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                                     style: TextStyle(
                                       fontSize: 23.sp,
                                       fontWeight: FontWeight.bold,
-                                      color: AppColors.textLight,
+                                      color: AppTheme.textLight,
                                     ),
                                     maxLines: 3,
                                     overflow: TextOverflow.ellipsis,
@@ -283,13 +283,13 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
         backgroundColor: currentGoal.category.color,
         icon: Icon(
           Icons.trending_up,
-          color: AppColors.white,
+          color: AppTheme.white,
           size: 20.sp,
         ),
         label: Text(
           'Update Progress',
           style: TextStyle(
-            color: AppColors.white,
+            color: AppTheme.white,
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
           ),
@@ -302,7 +302,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: currentGoal.category.color.withOpacity(0.3),
@@ -319,7 +319,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
               Text(
@@ -342,7 +342,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
               return Container(
                 height: 12.h,
                 decoration: BoxDecoration(
-                  color: AppColors.textMedium.withOpacity(0.2),
+                  color: AppTheme.textMedium.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: FractionallySizedBox(
@@ -369,17 +369,17 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
               margin: EdgeInsets.only(top: 16.h),
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: AppColors.accentMint.withOpacity(0.1),
+                color: AppTheme.accentMint.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(
-                  color: AppColors.accentMint.withOpacity(0.3),
+                  color: AppTheme.accentMint.withOpacity(0.3),
                 ),
               ),
               child: Row(
                 children: [
                   Icon(
                     Icons.celebration,
-                    color: AppColors.accentMint,
+                    color: AppTheme.accentMint,
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -388,7 +388,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                       'Congratulations! Goal completed!',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.accentMint,
+                        color: AppTheme.accentMint,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -405,7 +405,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -416,7 +416,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 16.h),
@@ -452,7 +452,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                   title: 'Milestones',
                   value: '${currentGoal.completedMilestones}/${currentGoal.milestones.length}',
                   icon: Icons.flag,
-                  color: AppColors.accentGold,
+                  color: AppTheme.accentGold,
                 ),
               ),
               SizedBox(width: 12.w),
@@ -463,7 +463,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                       ? '${currentGoal.daysUntilTarget.abs()}d'
                       : '${currentGoal.daysUntilTarget}d',
                   icon: Icons.calendar_today,
-                  color: currentGoal.isOverdue ? Colors.red : AppColors.secondaryTeal,
+                  color: currentGoal.isOverdue ? Colors.red : AppTheme.visionBoardGradient[0],
                 ),
               ),
             ],
@@ -508,7 +508,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             title,
             style: TextStyle(
               fontSize: 12.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
           ),
         ],
@@ -520,7 +520,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -531,7 +531,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 12.h),
@@ -539,7 +539,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             currentGoal.description,
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               height: 1.5,
             ),
           ),
@@ -554,7 +554,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -568,7 +568,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
               Row(
@@ -626,7 +626,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                           border: Border.all(
                             color: milestone.isCompleted 
                                 ? currentGoal.category.color
-                                : AppColors.textMedium,
+                                : AppTheme.textMedium,
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(6.r),
@@ -634,7 +634,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                         child: milestone.isCompleted
                             ? Icon(
                                 Icons.check,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                                 size: 16.sp,
                               )
                             : null,
@@ -647,8 +647,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                         style: TextStyle(
                           fontSize: 16.sp,
                           color: milestone.isCompleted 
-                              ? AppColors.textMedium
-                              : AppColors.textLight,
+                              ? AppTheme.textMedium
+                              : AppTheme.textLight,
                           decoration: milestone.isCompleted 
                               ? TextDecoration.lineThrough
                               : TextDecoration.none,
@@ -668,7 +668,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                 children: [
                   Icon(
                     Icons.flag_outlined,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     size: 32.sp,
                   ),
                   SizedBox(height: 8.h),
@@ -676,7 +676,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                     'No milestones yet',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -703,7 +703,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -714,7 +714,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 16.h),
@@ -723,7 +723,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             title: 'Goal Created',
             date: currentGoal.createdAt,
             icon: Icons.flag,
-            color: AppColors.accentGold,
+            color: AppTheme.accentGold,
             isCompleted: true,
           ),
           
@@ -732,7 +732,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
               title: 'Progress Started',
               date: currentGoal.createdAt.add(Duration(days: 1)), // Placeholder
               icon: Icons.play_arrow,
-              color: AppColors.secondaryTeal,
+              color: AppTheme.visionBoardGradient[0],
               isCompleted: true,
             ),
           
@@ -770,7 +770,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             ),
             child: Icon(
               icon,
-              color: isCompleted ? AppColors.white : color,
+              color: isCompleted ? AppTheme.white : color,
               size: 16.sp,
             ),
           ),
@@ -784,14 +784,14 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
-                    color: isCompleted ? AppColors.textLight : AppColors.textMedium,
+                    color: isCompleted ? AppTheme.textLight : AppTheme.textMedium,
                   ),
                 ),
                 Text(
                   '${date.day}/${date.month}/${date.year}',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -863,8 +863,8 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                     : 'Progress updated to ${newProgress.round()}%'
               ),
               backgroundColor: newProgress >= 100.0 
-                  ? AppColors.accentMint 
-                  : AppColors.goalTrackerGradient[0],
+                  ? AppTheme.accentMint 
+                  : AppTheme.goalTrackerGradient[0],
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -893,7 +893,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Goal updated successfully!'),
-              backgroundColor: AppColors.goalTrackerGradient[0],
+              backgroundColor: AppTheme.goalTrackerGradient[0],
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -909,14 +909,14 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),
         title: Text(
           'Delete Goal',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -924,7 +924,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
         content: Text(
           'Are you sure you want to delete "${currentGoal.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             fontSize: 14.sp,
           ),
         ),
@@ -933,7 +933,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.textMedium),
+              style: TextStyle(color: AppTheme.textMedium),
             ),
           ),
           TextButton(
@@ -984,7 +984,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
               ? 'Milestone completed!' 
               : 'Milestone unchecked'
         ),
-        backgroundColor: AppColors.goalTrackerGradient[0],
+        backgroundColor: AppTheme.goalTrackerGradient[0],
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
@@ -1011,7 +1011,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(message),
-          backgroundColor: AppColors.accentMint,
+          backgroundColor: AppTheme.accentMint,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.r),
@@ -1041,14 +1041,14 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: AppColors.cardBackground,
+          backgroundColor: AppTheme.cardBackground,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
           title: Text(
             'Connection Error',
             style: TextStyle(
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
               fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -1056,7 +1056,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
           content: Text(
             'Unable to $actionName. This might be due to a temporary network issue.',
             style: TextStyle(
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               fontSize: 14.sp,
             ),
           ),
@@ -1065,7 +1065,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
               onPressed: () => Navigator.pop(context),
               child: Text(
                 'Cancel',
-                style: TextStyle(color: AppColors.textMedium),
+                style: TextStyle(color: AppTheme.textMedium),
               ),
             ),
             TextButton(
@@ -1075,7 +1075,7 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
               },
               child: Text(
                 'Retry',
-                style: TextStyle(color: AppColors.goalTrackerGradient[0]),
+                style: TextStyle(color: AppTheme.goalTrackerGradient[0]),
               ),
             ),
           ],

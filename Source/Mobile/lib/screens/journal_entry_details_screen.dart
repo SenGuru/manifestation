@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/journey_entry.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class JournalEntryDetailScreen extends StatelessWidget {
   final JournalEntry entry;
@@ -14,7 +14,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -60,12 +60,12 @@ class JournalEntryDetailScreen extends StatelessWidget {
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -80,14 +80,14 @@ class JournalEntryDetailScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   _formatDate(entry.date),
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -113,15 +113,15 @@ class JournalEntryDetailScreen extends StatelessWidget {
         width: 44.w,
         height: 44.h,
         decoration: BoxDecoration(
-          color: AppColors.accentGold.withOpacity(0.1),
+          color: AppTheme.accentGold.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: AppColors.accentGold.withOpacity(0.3),
+            color: AppTheme.accentGold.withOpacity(0.3),
           ),
         ),
         child: Icon(
           Icons.edit,
-          color: AppColors.accentGold,
+          color: AppTheme.accentGold,
           size: 20.sp,
         ),
       ),
@@ -133,7 +133,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
           color: entry.mood.color.withOpacity(0.3),
@@ -166,7 +166,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                     ),
                   ),
                   Text(
@@ -174,7 +174,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                 ],
@@ -191,10 +191,10 @@ class JournalEntryDetailScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.gradientPink.withOpacity(0.3),
+          color: AppTheme.affirmationGradient[0].withOpacity(0.3),
         ),
       ),
       child: Column(
@@ -204,7 +204,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
             children: [
               Icon(
                 Icons.favorite,
-                color: AppColors.gradientPink,
+                color: AppTheme.affirmationGradient[0],
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
@@ -213,7 +213,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -226,10 +226,10 @@ class JournalEntryDetailScreen extends StatelessWidget {
               margin: EdgeInsets.only(bottom: index < entry.gratitudes.length - 1 ? 12.h : 0),
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: AppColors.gradientPink.withOpacity(0.05),
+                color: AppTheme.affirmationGradient[0].withOpacity(0.05),
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.gradientPink.withOpacity(0.1),
+                  color: AppTheme.affirmationGradient[0].withOpacity(0.1),
                 ),
               ),
               child: Row(
@@ -239,7 +239,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                     width: 24.w,
                     height: 24.h,
                     decoration: BoxDecoration(
-                      color: AppColors.gradientPink,
+                      color: AppTheme.affirmationGradient[0],
                       shape: BoxShape.circle,
                     ),
                     child: Center(
@@ -248,7 +248,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                         ),
                       ),
                     ),
@@ -259,7 +259,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                       gratitude,
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                         height: 1.4,
                       ),
                     ),
@@ -278,10 +278,10 @@ class JournalEntryDetailScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.accentGold.withOpacity(0.3),
+          color: AppTheme.accentGold.withOpacity(0.3),
         ),
       ),
       child: Column(
@@ -291,7 +291,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
             children: [
               Icon(
                 Icons.lightbulb,
-                color: AppColors.accentGold,
+                color: AppTheme.accentGold,
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
@@ -300,7 +300,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -310,17 +310,17 @@ class JournalEntryDetailScreen extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.accentGold.withOpacity(0.05),
+              color: AppTheme.accentGold.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: AppColors.accentGold.withOpacity(0.1),
+                color: AppTheme.accentGold.withOpacity(0.1),
               ),
             ),
             child: Text(
               entry.reflection,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 height: 1.5,
               ),
             ),
@@ -335,10 +335,10 @@ class JournalEntryDetailScreen extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.secondaryTeal.withOpacity(0.3),
+          color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
         ),
       ),
       child: Column(
@@ -348,7 +348,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
             children: [
               Icon(
                 Icons.arrow_forward,
-                color: AppColors.secondaryTeal,
+                color: AppTheme.visionBoardGradient[0],
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
@@ -357,7 +357,7 @@ class JournalEntryDetailScreen extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -367,17 +367,17 @@ class JournalEntryDetailScreen extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.secondaryTeal.withOpacity(0.05),
+              color: AppTheme.visionBoardGradient[0].withOpacity(0.05),
               borderRadius: BorderRadius.circular(12.r),
               border: Border.all(
-                color: AppColors.secondaryTeal.withOpacity(0.1),
+                color: AppTheme.visionBoardGradient[0].withOpacity(0.1),
               ),
             ),
             child: Text(
               entry.intention,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 height: 1.5,
               ),
             ),

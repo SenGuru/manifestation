@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'home_screen.dart';
 
 class PostSignupOnboardingScreen extends StatefulWidget {
@@ -111,7 +111,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnimation,
@@ -168,8 +168,8 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                 height: 4.h,
                 decoration: BoxDecoration(
                   color: index == _currentPage 
-                      ? AppColors.affirmationGradient[0]
-                      : AppColors.textMedium.withOpacity(0.3),
+                      ? AppTheme.affirmationGradient[0]
+                      : AppTheme.textMedium.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               );
@@ -186,7 +186,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                       'Skip',
                       style: TextStyle(
                         fontSize: 16.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -201,7 +201,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   Widget _buildWelcomePage() {
     return _buildOnboardingPage(
       icon: Icons.auto_awesome,
-      gradient: AppColors.affirmationGradient,
+      gradient: AppTheme.affirmationGradient,
       title: 'Welcome to Manifestation!',
       subtitle: 'Your journey to transform dreams into reality begins now',
       description: 'We\'re excited to guide you through the powerful tools that will help you manifest your deepest desires and create the life you\'ve always dreamed of.',
@@ -211,7 +211,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   Widget _buildAffirmationsPage() {
     return _buildOnboardingPage(
       icon: Icons.favorite,
-      gradient: AppColors.affirmationGradient,
+      gradient: AppTheme.affirmationGradient,
       title: 'Daily Affirmations',
       subtitle: 'Rewire your mindset with powerful words',
       description: 'Start each day with personalized affirmations that align your thoughts with your goals. Watch as positive thinking becomes your natural state.',
@@ -221,7 +221,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   Widget _buildVisionBoardPage() {
     return _buildOnboardingPage(
       icon: Icons.dashboard,
-      gradient: AppColors.visionBoardGradient,
+      gradient: AppTheme.visionBoardGradient,
       title: 'Vision Boards',
       subtitle: 'Visualize your dreams into existence',
       description: 'Create beautiful vision boards with images and words that represent your goals. What you can see, you can achieve.',
@@ -231,7 +231,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   Widget _buildJournalPage() {
     return _buildOnboardingPage(
       icon: Icons.book,
-      gradient: AppColors.journalGradient,
+      gradient: AppTheme.journalGradient,
       title: 'Manifestation Journal',
       subtitle: 'Track your thoughts and progress',
       description: 'Document your manifestation journey, reflect on your growth, and celebrate your wins along the way.',
@@ -242,7 +242,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   Widget _buildGetStartedPage() {
     return _buildOnboardingPage(
       icon: Icons.rocket_launch,
-      gradient: AppColors.affirmationGradient,
+      gradient: AppTheme.affirmationGradient,
       title: 'You\'re All Set!',
       subtitle: 'Ready to manifest your dreams',
       description: 'Everything is in place for your transformation. Take a deep breath and step into your new reality with confidence.',
@@ -286,7 +286,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                   ),
                   child: Icon(
                     icon,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     size: 60.sp,
                   ),
                 ),
@@ -302,7 +302,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
             style: TextStyle(
               fontSize: 32.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
             textAlign: TextAlign.center,
           ),
@@ -327,7 +327,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
             description,
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -340,7 +340,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
             Container(
               padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
                   color: gradient[0].withOpacity(0.3),
@@ -358,7 +358,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                     '"The universe is not outside of you. Look inside yourself; everything that you want, you already are."',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       fontStyle: FontStyle.italic,
                       height: 1.4,
                     ),
@@ -395,13 +395,13 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                 child: ElevatedButton(
                   onPressed: _previousPage,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.cardBackground,
+                    backgroundColor: AppTheme.cardBackground,
                     shadowColor: Colors.transparent,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     side: BorderSide(
-                      color: AppColors.textMedium.withOpacity(0.2),
+                      color: AppTheme.textMedium.withOpacity(0.2),
                       width: 1,
                     ),
                   ),
@@ -412,7 +412,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -444,14 +444,14 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                 child: Ink(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: AppColors.affirmationGradient,
+                      colors: AppTheme.affirmationGradient,
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
                     borderRadius: BorderRadius.circular(16.r),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                        color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                         blurRadius: 12.r,
                         offset: Offset(0, 6.h),
                       ),
@@ -466,7 +466,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/models/social_models.dart';
 
 class AchievementBadge extends StatefulWidget {
@@ -87,7 +87,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                       gradient: LinearGradient(
                         colors: [
                           Colors.transparent,
-                          AppColors.white.withOpacity(0.1),
+                          AppTheme.white.withOpacity(0.1),
                           Colors.transparent,
                         ],
                         stops: [0.0, 0.5, 1.0],
@@ -139,7 +139,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                       ),
                       child: Icon(
                         widget.achievement.icon,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                         size: 24.sp,
                       ),
                     ),
@@ -151,11 +151,11 @@ class _AchievementBadgeState extends State<AchievementBadge>
                         width: 20.w,
                         height: 20.h,
                         decoration: BoxDecoration(
-                          color: AppColors.accentGold,
+                          color: AppTheme.accentGold,
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.accentGold.withOpacity(0.5),
+                              color: AppTheme.accentGold.withOpacity(0.5),
                               blurRadius: 4.r,
                             ),
                           ],
@@ -187,7 +187,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.textLight,
+                                  color: AppTheme.textLight,
                                 ),
                               ),
                             ),
@@ -216,7 +216,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                           widget.achievement.description,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                             height: 1.3,
                           ),
                           maxLines: 2,
@@ -227,7 +227,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                           children: [
                             Icon(
                               Icons.access_time,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                               size: 12.sp,
                             ),
                             SizedBox(width: 4.w),
@@ -235,7 +235,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                               _formatDate(widget.achievement.unlockedAt),
                               style: TextStyle(
                                 fontSize: 11.sp,
-                                color: AppColors.textMedium,
+                                color: AppTheme.textMedium,
                               ),
                             ),
                             Spacer(),
@@ -248,7 +248,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                                     vertical: 4.h,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.socialGradient[0].withOpacity(0.1),
+                                    color: AppTheme.socialGradient[0].withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(8.r),
                                   ),
                                   child: Row(
@@ -256,7 +256,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                                     children: [
                                       Icon(
                                         Icons.share,
-                                        color: AppColors.socialGradient[0],
+                                        color: AppTheme.socialGradient[0],
                                         size: 12.sp,
                                       ),
                                       SizedBox(width: 4.w),
@@ -265,7 +265,7 @@ class _AchievementBadgeState extends State<AchievementBadge>
                                         style: TextStyle(
                                           fontSize: 10.sp,
                                           fontWeight: FontWeight.w600,
-                                          color: AppColors.socialGradient[0],
+                                          color: AppTheme.socialGradient[0],
                                         ),
                                       ),
                                     ],
@@ -352,7 +352,7 @@ class CompactAchievementBadge extends StatelessWidget {
               ),
               child: Icon(
                 achievement.icon,
-                color: AppColors.white,
+                color: AppTheme.white,
                 size: 12.sp,
               ),
             ),
@@ -366,14 +366,14 @@ class CompactAchievementBadge extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   achievement.category.displayName,
                   style: TextStyle(
                     fontSize: 10.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],

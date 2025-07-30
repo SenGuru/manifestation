@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/guided_tour_overlay.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class GuidedTourService {
   static final GuidedTourService _instance = GuidedTourService._internal();
@@ -110,31 +110,31 @@ class GuidedTourService {
         title: 'Welcome to Vision Boards!',
         description: 'Create visual representations of your dreams and goals. Let\'s explore how to build your first vision board.',
         icon: Icons.dashboard,
-        iconGradient: AppColors.visionBoardGradient,
+        iconGradient: AppTheme.visionBoardGradient,
       ),
       TourStep(
         title: 'Add Images',
         description: 'Tap the "+" button to add images that represent your goals. You can upload from your gallery or choose from our collection.',
         icon: Icons.add_photo_alternate,
-        iconGradient: AppColors.visionBoardGradient,
+        iconGradient: AppTheme.visionBoardGradient,
       ),
       TourStep(
         title: 'Add Text & Affirmations',
         description: 'Include powerful affirmations and goals as text elements. Words have power - use them to manifest your dreams.',
         icon: Icons.text_fields,
-        iconGradient: AppColors.visionBoardGradient,
+        iconGradient: AppTheme.visionBoardGradient,
       ),
       TourStep(
         title: 'Move & Resize',
         description: 'Drag elements around and resize them to create your perfect layout. Make it feel right for you.',
         icon: Icons.open_with,
-        iconGradient: AppColors.visionBoardGradient,
+        iconGradient: AppTheme.visionBoardGradient,
       ),
       TourStep(
         title: 'Save & Manifest',
         description: 'Save your vision board and visit it daily. Visualization is a powerful tool for manifestation!',
         icon: Icons.save,
-        iconGradient: AppColors.visionBoardGradient,
+        iconGradient: AppTheme.visionBoardGradient,
       ),
     ];
   }
@@ -146,31 +146,31 @@ class GuidedTourService {
         title: 'Daily Affirmations',
         description: 'Start each day with powerful affirmations that align your mindset with your goals.',
         icon: Icons.favorite,
-        iconGradient: AppColors.affirmationGradient,
+        iconGradient: AppTheme.affirmationGradient,
       ),
       TourStep(
         title: 'Swipe for More',
         description: 'Swipe left or right to explore different affirmations. Find the ones that resonate with you.',
         icon: Icons.swipe,
-        iconGradient: AppColors.affirmationGradient,
+        iconGradient: AppTheme.affirmationGradient,
       ),
       TourStep(
         title: 'Read Aloud',
         description: 'Tap the play button to hear affirmations spoken aloud. Speaking affirmations increases their power.',
         icon: Icons.volume_up,
-        iconGradient: AppColors.affirmationGradient,
+        iconGradient: AppTheme.affirmationGradient,
       ),
       TourStep(
         title: 'Set Reminders',
         description: 'Tap the bell icon to set daily reminders. Consistency is key to rewiring your mindset.',
         icon: Icons.notifications,
-        iconGradient: AppColors.affirmationGradient,
+        iconGradient: AppTheme.affirmationGradient,
       ),
       TourStep(
         title: 'Make it a Habit',
         description: 'Try to read affirmations daily, especially in the morning. Watch your thoughts transform!',
         icon: Icons.auto_awesome,
-        iconGradient: AppColors.affirmationGradient,
+        iconGradient: AppTheme.affirmationGradient,
       ),
     ];
   }
@@ -182,31 +182,31 @@ class GuidedTourService {
         title: 'Manifestation Journal',
         description: 'Document your manifestation journey, track your progress, and reflect on your growth.',
         icon: Icons.book,
-        iconGradient: AppColors.journalGradient,
+        iconGradient: AppTheme.journalGradient,
       ),
       TourStep(
         title: 'Daily Entries',
         description: 'Write about your goals, thoughts, and feelings. Regular journaling clarifies your desires.',
         icon: Icons.edit,
-        iconGradient: AppColors.journalGradient,
+        iconGradient: AppTheme.journalGradient,
       ),
       TourStep(
         title: 'Gratitude Practice',
         description: 'Include what you\'re grateful for each day. Gratitude raises your vibration and attracts more good.',
         icon: Icons.favorite_border,
-        iconGradient: AppColors.journalGradient,
+        iconGradient: AppTheme.journalGradient,
       ),
       TourStep(
         title: 'Track Manifestations',
         description: 'Record when your desires manifest! This builds faith and shows the power of your thoughts.',
         icon: Icons.star,
-        iconGradient: AppColors.journalGradient,
+        iconGradient: AppTheme.journalGradient,
       ),
       TourStep(
         title: 'Review & Reflect',
         description: 'Look back at past entries to see your growth and patterns. Your journey is inspiring!',
         icon: Icons.history,
-        iconGradient: AppColors.journalGradient,
+        iconGradient: AppTheme.journalGradient,
       ),
     ];
   }
@@ -218,31 +218,31 @@ class GuidedTourService {
         title: 'Goal Tracker',
         description: 'Set clear goals and track your progress toward manifesting them into reality.',
         icon: Icons.track_changes,
-        iconGradient: AppColors.goalTrackerGradient,
+        iconGradient: AppTheme.goalTrackerGradient,
       ),
       TourStep(
         title: 'Create Goals',
         description: 'Tap "+" to add new goals. Be specific and write them as if they\'ve already happened.',
         icon: Icons.add_task,
-        iconGradient: AppColors.goalTrackerGradient,
+        iconGradient: AppTheme.goalTrackerGradient,
       ),
       TourStep(
         title: 'Set Deadlines',
         description: 'Give your goals a timeframe. This creates urgency and helps the universe align with your timing.',
         icon: Icons.schedule,
-        iconGradient: AppColors.goalTrackerGradient,
+        iconGradient: AppTheme.goalTrackerGradient,
       ),
       TourStep(
         title: 'Track Progress',
         description: 'Update your progress regularly. Seeing advancement keeps you motivated and focused.',
         icon: Icons.trending_up,
-        iconGradient: AppColors.goalTrackerGradient,
+        iconGradient: AppTheme.goalTrackerGradient,
       ),
       TourStep(
         title: 'Celebrate Wins',
         description: 'Mark goals as complete and celebrate! Acknowledging success attracts more of it.',
         icon: Icons.celebration,
-        iconGradient: AppColors.goalTrackerGradient,
+        iconGradient: AppTheme.goalTrackerGradient,
       ),
     ];
   }
@@ -254,31 +254,31 @@ class GuidedTourService {
         title: 'Visual Meditation',
         description: 'Use guided meditation to calm your mind and align with your highest self.',
         icon: Icons.visibility,
-        iconGradient: AppColors.visualMeditationGradient,
+        iconGradient: AppTheme.visualMeditationGradient,
       ),
       TourStep(
         title: 'Choose Your Focus',
         description: 'Select from different meditation styles - candle gazing, nature sounds, or guided visualization.',
         icon: Icons.select_all,
-        iconGradient: AppColors.visualMeditationGradient,
+        iconGradient: AppTheme.visualMeditationGradient,
       ),
       TourStep(
         title: 'Set Your Duration',
         description: 'Start with shorter sessions and gradually increase. Even 5 minutes can make a difference.',
         icon: Icons.timer,
-        iconGradient: AppColors.visualMeditationGradient,
+        iconGradient: AppTheme.visualMeditationGradient,
       ),
       TourStep(
         title: 'Focus & Breathe',
         description: 'Follow the guidance and focus on your breath. Let go of thoughts and be present.',
         icon: Icons.air,
-        iconGradient: AppColors.visualMeditationGradient,
+        iconGradient: AppTheme.visualMeditationGradient,
       ),
       TourStep(
         title: 'Daily Practice',
         description: 'Make meditation a daily habit. It raises your vibration and enhances manifestation power.',
         icon: Icons.self_improvement,
-        iconGradient: AppColors.visualMeditationGradient,
+        iconGradient: AppTheme.visualMeditationGradient,
       ),
     ];
   }

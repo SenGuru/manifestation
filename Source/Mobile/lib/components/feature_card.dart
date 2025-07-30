@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class FeatureCard extends StatefulWidget {
   final String title;
@@ -114,7 +115,7 @@ class _FeatureCardState extends State<FeatureCard>
                       height: 80.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.white.withOpacity(_opacityAnimation.value),
+                        color: AppTheme.white.withOpacity(_opacityAnimation.value),
                       ),
                     ),
                   );
@@ -133,12 +134,12 @@ class _FeatureCardState extends State<FeatureCard>
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: AppColors.white.withOpacity(0.2),
+                        color: AppTheme.white.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Icon(
                         widget.icon,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                         size: 22.sp,
                       ),
                     ),
@@ -154,7 +155,7 @@ class _FeatureCardState extends State<FeatureCard>
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               height: 1.2,
                             ),
                             maxLines: 2,
@@ -166,7 +167,7 @@ class _FeatureCardState extends State<FeatureCard>
                             style: TextStyle(
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
-                              color: AppColors.white.withOpacity(0.8),
+                              color: AppTheme.white.withOpacity(0.8),
                               height: 1.2,
                             ),
                             maxLines: 1,
@@ -185,13 +186,13 @@ class _FeatureCardState extends State<FeatureCard>
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                           ),
                         ),
                         SizedBox(width: 6.w),
                         Icon(
                           Icons.arrow_forward,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                           size: 14.sp,
                         ),
                       ],
@@ -206,7 +207,7 @@ class _FeatureCardState extends State<FeatureCard>
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
-                      color: AppColors.black.withOpacity(0.4),
+                      color: AppTheme.black.withOpacity(0.4),
                     ),
                     child: Center(
                       child: Column(
@@ -214,14 +215,14 @@ class _FeatureCardState extends State<FeatureCard>
                         children: [
                           Icon(
                             Icons.lock,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                             size: 32.sp,
                           ),
                           SizedBox(height: 8.h),
                           Text(
                             'Premium',
                             style: TextStyle(
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                             ),

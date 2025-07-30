@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/models/goals.dart';
 
 class MilestoneInput {
@@ -56,7 +56,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
       builder: (context, scrollController) {
         return Container(
           decoration: BoxDecoration(
-            color: AppColors.cardBackground,
+            color: AppTheme.cardBackground,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
           ),
           child: Column(
@@ -67,7 +67,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                 height: 4.h,
                 margin: EdgeInsets.only(top: 12.h),
                 decoration: BoxDecoration(
-                  color: AppColors.textMedium.withOpacity(0.3),
+                  color: AppTheme.textMedium.withOpacity(0.3),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -82,7 +82,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     Spacer(),
@@ -90,7 +90,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                       onTap: () => Navigator.pop(context),
                       child: Icon(
                         Icons.close,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                         size: 24.sp,
                       ),
                     ),
@@ -177,7 +177,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
@@ -186,16 +186,16 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           validator: validator,
           maxLines: maxLines,
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 16.sp,
           ),
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: TextStyle(
-              color: AppColors.textMedium.withOpacity(0.6),
+              color: AppTheme.textMedium.withOpacity(0.6),
             ),
             filled: true,
-            fillColor: AppColors.backgroundMedium,
+            fillColor: AppTheme.backgroundMedium,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12.r),
               borderSide: BorderSide.none,
@@ -216,7 +216,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 12.h),
@@ -236,12 +236,12 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                 decoration: BoxDecoration(
                   color: isSelected 
                       ? category.color.withOpacity(0.1)
-                      : AppColors.backgroundMedium,
+                      : AppTheme.backgroundMedium,
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
                     color: isSelected 
                         ? category.color
-                        : AppColors.textMedium.withOpacity(0.3),
+                        : AppTheme.textMedium.withOpacity(0.3),
                   ),
                 ),
                 child: Row(
@@ -249,7 +249,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                   children: [
                     Icon(
                       category.icon,
-                      color: isSelected ? category.color : AppColors.textMedium,
+                      color: isSelected ? category.color : AppTheme.textMedium,
                       size: 16.sp,
                     ),
                     SizedBox(width: 8.w),
@@ -258,7 +258,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
-                        color: isSelected ? category.color : AppColors.textMedium,
+                        color: isSelected ? category.color : AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -280,21 +280,21 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
         Container(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
           decoration: BoxDecoration(
-            color: AppColors.backgroundMedium,
+            color: AppTheme.backgroundMedium,
             borderRadius: BorderRadius.circular(12.r),
           ),
           child: DropdownButton<GoalPriority>(
             value: selectedPriority,
             isExpanded: true,
             underline: SizedBox(),
-            dropdownColor: AppColors.backgroundMedium,
+            dropdownColor: AppTheme.backgroundMedium,
             onChanged: (GoalPriority? newValue) {
               if (newValue != null) {
                 setState(() {
@@ -316,7 +316,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                     Text(
                       priority.displayName,
                       style: TextStyle(
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                         fontSize: 14.sp,
                       ),
                     ),
@@ -339,7 +339,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
@@ -349,21 +349,21 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
             width: double.infinity,
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: AppColors.backgroundMedium,
+              color: AppTheme.backgroundMedium,
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.calendar_today,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                   size: 16.sp,
                 ),
                 SizedBox(width: 8.w),
                 Text(
                   _formatDate(selectedDate),
                   style: TextStyle(
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                     fontSize: 14.sp,
                   ),
                 ),
@@ -384,7 +384,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           style: TextStyle(
             fontSize: 16.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
@@ -392,7 +392,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           'Break your goal into smaller, achievable steps',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 12.h),
@@ -421,7 +421,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
             child: Ink(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: AppColors.goalTrackerGradient,
+                  colors: AppTheme.goalTrackerGradient,
                 ),
                 borderRadius: BorderRadius.circular(16.r),
               ),
@@ -432,7 +432,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                   ),
                 ),
               ),
@@ -448,7 +448,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.backgroundMedium,
+        color: AppTheme.backgroundMedium,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: selectedCategory.color.withOpacity(0.2),
@@ -488,7 +488,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
               Spacer(),
@@ -510,16 +510,16 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
               });
             },
             style: TextStyle(
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
               fontSize: 14.sp,
             ),
             decoration: InputDecoration(
               hintText: 'What milestone do you want to achieve?',
               hintStyle: TextStyle(
-                color: AppColors.textMedium.withOpacity(0.6),
+                color: AppTheme.textMedium.withOpacity(0.6),
               ),
               filled: true,
-              fillColor: AppColors.cardBackground,
+              fillColor: AppTheme.cardBackground,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.r),
                 borderSide: BorderSide.none,
@@ -530,7 +530,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
               ),
               prefixIcon: Icon(
                 Icons.flag_outlined,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 size: 20.sp,
               ),
             ),
@@ -544,12 +544,12 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
               width: double.infinity,
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(
                   color: milestoneInput.targetDate != null 
                       ? selectedCategory.color.withOpacity(0.3)
-                      : AppColors.textMedium.withOpacity(0.2),
+                      : AppTheme.textMedium.withOpacity(0.2),
                 ),
               ),
               child: Row(
@@ -558,7 +558,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                     Icons.schedule,
                     color: milestoneInput.targetDate != null 
                         ? selectedCategory.color 
-                        : AppColors.textMedium,
+                        : AppTheme.textMedium,
                     size: 20.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -568,8 +568,8 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                         : 'Set target date (optional)',
                     style: TextStyle(
                       color: milestoneInput.targetDate != null 
-                          ? AppColors.textLight 
-                          : AppColors.textMedium.withOpacity(0.6),
+                          ? AppTheme.textLight 
+                          : AppTheme.textMedium.withOpacity(0.6),
                       fontSize: 14.sp,
                     ),
                   ),
@@ -583,7 +583,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
                       },
                       child: Icon(
                         Icons.clear,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                         size: 18.sp,
                       ),
                     ),
@@ -607,9 +607,9 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
               primary: selectedCategory.color,
-              onPrimary: AppColors.white,
-              surface: AppColors.cardBackground,
-              onSurface: AppColors.textLight,
+              onPrimary: AppTheme.white,
+              surface: AppTheme.cardBackground,
+              onSurface: AppTheme.textLight,
             ),
           ),
           child: child!,
@@ -634,10 +634,10 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: AppColors.goalTrackerGradient[0],
-              onPrimary: AppColors.white,
-              surface: AppColors.cardBackground,
-              onSurface: AppColors.textLight,
+              primary: AppTheme.goalTrackerGradient[0],
+              onPrimary: AppTheme.white,
+              surface: AppTheme.cardBackground,
+              onSurface: AppTheme.textLight,
             ),
           ),
           child: child!,
@@ -701,7 +701,7 @@ class _AddGoalSheetState extends State<AddGoalSheet> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Goal created successfully!'),
-          backgroundColor: AppColors.goalTrackerGradient[0],
+          backgroundColor: AppTheme.goalTrackerGradient[0],
         ),
       );
     } else {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'login_screen.dart';
 import 'signup_page.dart';
 
@@ -80,7 +80,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: FadeTransition(
         opacity: _fadeAnimation,
         child: SlideTransition(
@@ -141,14 +141,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 height: 120.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: AppColors.affirmationGradient,
+                    colors: AppTheme.affirmationGradient,
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.affirmationGradient[0].withOpacity(0.4),
+                      color: AppTheme.affirmationGradient[0].withOpacity(0.4),
                       blurRadius: 30.r,
                       offset: Offset(0, 15.h),
                     ),
@@ -156,7 +156,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 ),
                 child: Icon(
                   Icons.auto_awesome,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                   size: 60.sp,
                 ),
               ),
@@ -172,7 +172,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           style: TextStyle(
             fontSize: 40.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         
@@ -183,7 +183,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           'Transform your dreams into reality',
           style: TextStyle(
             fontSize: 18.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             fontWeight: FontWeight.w500,
           ),
           textAlign: TextAlign.center,
@@ -198,19 +198,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         'icon': Icons.favorite,
         'title': 'Daily Affirmations',
         'description': 'Powerful words to rewire your mindset',
-        'gradient': AppColors.affirmationGradient,
+        'gradient': AppTheme.affirmationGradient,
       },
       {
         'icon': Icons.dashboard,
         'title': 'Vision Boards',
         'description': 'Visualize your dreams and goals',
-        'gradient': AppColors.visionBoardGradient,
+        'gradient': AppTheme.visionBoardGradient,
       },
       {
         'icon': Icons.people,
         'title': 'Community',
         'description': 'Connect with fellow manifesters',
-        'gradient': AppColors.socialGradient,
+        'gradient': AppTheme.socialGradient,
       },
     ];
 
@@ -221,7 +221,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           style: TextStyle(
             fontSize: 22.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
           textAlign: TextAlign.center,
         ),
@@ -265,7 +265,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             child: Container(
               padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
                   color: gradient[0].withOpacity(0.2),
@@ -282,7 +282,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     ),
                     child: Icon(
                       icon,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                       size: 24.sp,
                     ),
                   ),
@@ -298,7 +298,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                           ),
                         ),
                         SizedBox(height: 4.h),
@@ -306,7 +306,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                           description,
                           style: TextStyle(
                             fontSize: 13.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                             height: 1.3,
                           ),
                         ),
@@ -344,12 +344,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             child: Ink(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: AppColors.affirmationGradient,
+                  colors: AppTheme.affirmationGradient,
                 ),
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.affirmationGradient[0].withOpacity(0.3),
+                    color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                     blurRadius: 20.r,
                     offset: Offset(0, 10.h),
                   ),
@@ -364,7 +364,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                   ),
                 ),
               ),
@@ -381,13 +381,13 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           child: ElevatedButton(
             onPressed: _navigateToLogin,
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.cardBackground,
+              backgroundColor: AppTheme.cardBackground,
               shadowColor: Colors.transparent,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),
               side: BorderSide(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
               ),
             ),
             child: Text(
@@ -395,7 +395,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
             ),
           ),
@@ -411,7 +411,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             text: TextSpan(
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 height: 1.4,
               ),
               children: [
@@ -419,7 +419,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 TextSpan(
                   text: 'Terms of Service',
                   style: TextStyle(
-                    color: AppColors.affirmationGradient[0],
+                    color: AppTheme.affirmationGradient[0],
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -427,7 +427,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 TextSpan(
                   text: 'Privacy Policy',
                   style: TextStyle(
-                    color: AppColors.affirmationGradient[0],
+                    color: AppTheme.affirmationGradient[0],
                     fontWeight: FontWeight.w600,
                   ),
                 ),

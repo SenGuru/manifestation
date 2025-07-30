@@ -462,42 +462,87 @@ class PasswordStrength {
     }
 
     int score = 0;
+    double multiplier = 1.0;
     
-    // Length check
-    if (password.length >= 8) score++;
-    if (password.length >= 12) score++;
+    // Length scoring (most important factor)
+    if (password.length < 6) {
+      score += 0; // Too short
+      multiplier = 0.3; // Heavily penalize very short passwords
+    } else if (password.length < 8) {
+      score += 10; // Minimum acceptable
+      multiplier = 0.6;
+    } else if (password.length < 12) {
+      score += 25; // Good length
+    } else if (password.length < 16) {
+      score += 35; // Very good length
+    } else {
+      score += 45; // Excellent length
+    }
     
-    // Character variety checks
-    if (password.contains(RegExp(r'[a-z]'))) score++;
-    if (password.contains(RegExp(r'[A-Z]'))) score++;
-    if (password.contains(RegExp(r'[0-9]'))) score++;
-    if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) score++;
-
-    final strength = (score / 6).clamp(0.0, 1.0);
+    // Character variety checks (each adds specific points)
+    bool hasLower = password.contains(RegExp(r'[a-z]'));
+    bool hasUpper = password.contains(RegExp(r'[A-Z]'));
+    bool hasNumbers = password.contains(RegExp(r'[0-9]'));
+    bool hasSpecial = password.contains(RegExp(r'[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>\/?~`]'));
     
-    if (strength < 0.3) {
+    if (hasLower) score += 5;
+    if (hasUpper) score += 5;
+    if (hasNumbers) score += 5;
+    if (hasSpecial) score += 10; // Special chars are more valuable
+    
+    // Bonus points for character diversity
+    int charTypes = [hasLower, hasUpper, hasNumbers, hasSpecial].where((x) => x).length;
+    if (charTypes >= 3) score += 10;
+    if (charTypes == 4) score += 15; // All character types
+    
+    // Penalty for common patterns
+    if (password.toLowerCase().contains('password')) score -= 25;
+    if (password.toLowerCase().contains('123456')) score -= 20;
+    if (password.toLowerCase().contains('qwerty')) score -= 20;
+    if (RegExp(r'(.)\1{2,}').hasMatch(password)) score -= 10; // Repeated characters (aaa, 111)
+    if (RegExp(r'(012|123|234|345|456|567|678|789|890)').hasMatch(password)) score -= 10; // Sequential numbers
+    if (RegExp(r'(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk|jkl|klm|lmn|mno|nop|opq|pqr|qrs|rst|stu|tuv|uvw|vwx|wxy|xyz)').hasMatch(password.toLowerCase())) score -= 10; // Sequential letters
+    
+    // Bonus for mixed case within same word (not just first letter caps)
+    if (RegExp(r'[a-z][A-Z]|[A-Z][a-z]').hasMatch(password)) score += 5;
+    
+    // Bonus for numbers mixed with letters (not just at end)
+    if (RegExp(r'[a-zA-Z]\d|\d[a-zA-Z]').hasMatch(password)) score += 5;
+    
+    // Apply multiplier and clamp
+    final finalScore = (score * multiplier).clamp(0.0, 100.0);
+    final strength = (finalScore / 100.0).clamp(0.0, 1.0);
+    
+    // More realistic strength categories
+    if (strength < 0.2) {
+      return PasswordStrength(
+        strength: strength,
+        label: 'Very Weak',
+        color: Color(0xFFD32F2F), // Dark red
+      );
+    } else if (strength < 0.4) {
       return PasswordStrength(
         strength: strength,
         label: 'Weak',
-        color: Colors.red,
+        color: Color(0xFFFF5722), // Red-orange
       );
     } else if (strength < 0.6) {
       return PasswordStrength(
         strength: strength,
         label: 'Fair',
-        color: Colors.orange,
+        color: Color(0xFFFF9800), // Orange
       );
     } else if (strength < 0.8) {
       return PasswordStrength(
         strength: strength,
         label: 'Good',
-        color: Colors.yellow,
+        color: Color(0xFF689F38), // Light green
       );
     } else {
       return PasswordStrength(
         strength: strength,
         label: 'Strong',
-        color: Colors.green,
+        color: Color(0xFF388E3C), // Dark green
       );
     }
   }

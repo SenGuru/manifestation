@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/services/daily_quote_service.dart';
 import 'package:fun/widgets/stylish_loading.dart';
 
@@ -91,8 +92,8 @@ class _DailyInspirationState extends State<DailyInspiration>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppColors.primaryMedium.withOpacity(0.8),
-              AppColors.primaryLight.withOpacity(0.6),
+              AppTheme.affirmationGradient[0].withOpacity(0.8),
+              AppTheme.affirmationGradient[1].withOpacity(0.6),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -117,8 +118,8 @@ class _DailyInspirationState extends State<DailyInspiration>
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppColors.primaryMedium.withOpacity(0.8),
-                AppColors.primaryLight.withOpacity(0.6),
+                AppTheme.affirmationGradient[0].withOpacity(0.8),
+                AppTheme.affirmationGradient[1].withOpacity(0.6),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -126,7 +127,7 @@ class _DailyInspirationState extends State<DailyInspiration>
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
-                color: AppColors.primaryMedium.withOpacity(0.3),
+                color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                 blurRadius: 8.r,
                 offset: Offset(0, 4.h),
               ),
@@ -145,7 +146,7 @@ class _DailyInspirationState extends State<DailyInspiration>
                       children: [
                         Icon(
                           Icons.auto_awesome,
-                          color: AppColors.accentGold,
+                          color: AppTheme.accentGold,
                           size: 18.sp,
                         ),
                         SizedBox(width: 8.w),
@@ -154,7 +155,7 @@ class _DailyInspirationState extends State<DailyInspiration>
                           style: TextStyle(
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                           ),
                         ),
                       ],
@@ -164,12 +165,12 @@ class _DailyInspirationState extends State<DailyInspiration>
                       child: Container(
                         padding: EdgeInsets.all(4.w),
                         decoration: BoxDecoration(
-                          color: AppColors.white.withOpacity(0.2),
+                          color: AppTheme.white.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Icon(
                           Icons.refresh,
-                          color: AppColors.white,
+                          color: AppTheme.white,
                           size: 16.sp,
                         ),
                       ),
@@ -189,7 +190,7 @@ class _DailyInspirationState extends State<DailyInspiration>
                   style: TextStyle(
                     fontSize: 13.sp,
                     fontWeight: FontWeight.w400,
-                    color: AppColors.white,
+                    color: AppTheme.white,
                     height: 1.3,
                     fontStyle: FontStyle.italic,
                   ),
@@ -208,7 +209,7 @@ class _DailyInspirationState extends State<DailyInspiration>
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
                     decoration: BoxDecoration(
-                      color: AppColors.white.withOpacity(0.15),
+                      color: AppTheme.white.withOpacity(0.15),
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Text(
@@ -216,7 +217,7 @@ class _DailyInspirationState extends State<DailyInspiration>
                       style: TextStyle(
                         fontSize: 11.sp,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.white.withOpacity(0.9),
+                        color: AppTheme.white.withOpacity(0.9),
                       ),
                       maxLines: 1, // Single line for author
                       overflow: TextOverflow.ellipsis,

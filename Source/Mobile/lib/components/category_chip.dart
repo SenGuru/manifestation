@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/constants/category_icons.dart';
 
 class CategoryChip extends StatelessWidget {
@@ -54,12 +54,12 @@ class CategoryChip extends StatelessWidget {
                   end: Alignment.bottomRight,
                 )
               : null,
-          color: isSelected ? null : AppColors.cardBackground,
+          color: isSelected ? null : AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(25.r),
           border: Border.all(
             color: isSelected 
                 ? color.withOpacity(0.5)
-                : AppColors.textMedium.withOpacity(0.3),
+                : AppTheme.textMedium.withOpacity(0.3),
             width: 1,
           ),
           boxShadow: isSelected
@@ -78,7 +78,7 @@ class CategoryChip extends StatelessWidget {
             // Show icon for all categories now
             Icon(
               _getCategoryIcon(),
-              color: isSelected ? AppColors.white.withOpacity(0.8) : color.withOpacity(0.7),
+              color: isSelected ? AppTheme.white.withOpacity(0.8) : color.withOpacity(0.7),
               size: 14.sp,
             ),
             SizedBox(width: 6.w),
@@ -87,7 +87,7 @@ class CategoryChip extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isSelected ? AppColors.white : AppColors.textMedium,
+                color: isSelected ? AppTheme.white : AppTheme.textMedium,
               ),
             ),
           ],

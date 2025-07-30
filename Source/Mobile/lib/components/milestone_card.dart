@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/api_milestone.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class MilestoneCard extends StatelessWidget {
   final ApiMilestone milestone;
@@ -30,18 +30,18 @@ class MilestoneCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: compact ? 8.h : 12.h),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(compact ? 12.r : 16.r),
         border: Border.all(
           color: milestone.isCompleted 
-              ? AppColors.accentMint.withOpacity(0.3)
+              ? AppTheme.accentMint.withOpacity(0.3)
               : milestone.isOverdue 
                   ? Colors.red.withOpacity(0.3)
-                  : AppColors.textMedium.withOpacity(0.1),
+                  : AppTheme.textMedium.withOpacity(0.1),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.backgroundDark.withOpacity(0.1),
+            color: AppTheme.backgroundDark.withOpacity(0.1),
             blurRadius: compact ? 4.r : 8.r,
             offset: Offset(0, compact ? 2.h : 4.h),
           ),
@@ -68,12 +68,12 @@ class MilestoneCard extends StatelessWidget {
                         height: compact ? 20.h : 24.h,
                         decoration: BoxDecoration(
                           color: milestone.isCompleted 
-                              ? AppColors.accentMint
+                              ? AppTheme.accentMint
                               : Colors.transparent,
                           border: Border.all(
                             color: milestone.isCompleted 
-                                ? AppColors.accentMint
-                                : AppColors.textMedium.withOpacity(0.3),
+                                ? AppTheme.accentMint
+                                : AppTheme.textMedium.withOpacity(0.3),
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(4.r),
@@ -81,7 +81,7 @@ class MilestoneCard extends StatelessWidget {
                         child: milestone.isCompleted
                             ? Icon(
                                 Icons.check,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                                 size: compact ? 14.sp : 16.sp,
                               )
                             : null,
@@ -101,8 +101,8 @@ class MilestoneCard extends StatelessWidget {
                               fontSize: compact ? 14.sp : 16.sp,
                               fontWeight: FontWeight.w600,
                               color: milestone.isCompleted 
-                                  ? AppColors.textMedium
-                                  : AppColors.textLight,
+                                  ? AppTheme.textMedium
+                                  : AppTheme.textLight,
                               decoration: milestone.isCompleted 
                                   ? TextDecoration.lineThrough
                                   : null,
@@ -141,10 +141,10 @@ class MilestoneCard extends StatelessWidget {
                       PopupMenuButton<String>(
                         icon: Icon(
                           Icons.more_vert,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           size: compact ? 18.sp : 20.sp,
                         ),
-                        color: AppColors.cardBackground,
+                        color: AppTheme.cardBackground,
                         onSelected: (value) {
                           switch (value) {
                             case 'edit':
@@ -160,11 +160,11 @@ class MilestoneCard extends StatelessWidget {
                             value: 'edit',
                             child: Row(
                               children: [
-                                Icon(Icons.edit, color: AppColors.textLight, size: 16.sp),
+                                Icon(Icons.edit, color: AppTheme.textLight, size: 16.sp),
                                 SizedBox(width: 8.w),
                                 Text(
                                   'Edit',
-                                  style: TextStyle(color: AppColors.textLight),
+                                  style: TextStyle(color: AppTheme.textLight),
                                 ),
                               ],
                             ),
@@ -194,7 +194,7 @@ class MilestoneCard extends StatelessWidget {
                     milestone.description,
                     style: TextStyle(
                       fontSize: 13.sp,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       height: 1.4,
                     ),
                     maxLines: 2,
@@ -215,7 +215,7 @@ class MilestoneCard extends StatelessWidget {
                             'Progress',
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                               fontWeight: FontWeight.w500,
                             ),
                           ),
@@ -223,7 +223,7 @@ class MilestoneCard extends StatelessWidget {
                             '${milestone.progressPercentage.round()}%',
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: AppColors.textLight,
+                              color: AppTheme.textLight,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -233,7 +233,7 @@ class MilestoneCard extends StatelessWidget {
                       Container(
                         height: 6.h,
                         decoration: BoxDecoration(
-                          color: AppColors.textMedium.withOpacity(0.1),
+                          color: AppTheme.textMedium.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(3.r),
                         ),
                         child: FractionallySizedBox(
@@ -241,7 +241,7 @@ class MilestoneCard extends StatelessWidget {
                           widthFactor: milestone.progressPercentage / 100,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: AppColors.goalTrackerGradient[0],
+                              color: AppTheme.goalTrackerGradient[0],
                               borderRadius: BorderRadius.circular(3.r),
                             ),
                           ),
@@ -258,7 +258,7 @@ class MilestoneCard extends StatelessWidget {
                     children: [
                       Icon(
                         milestone.isOverdue ? Icons.warning : Icons.schedule,
-                        color: milestone.isOverdue ? Colors.red : AppColors.textMedium,
+                        color: milestone.isOverdue ? Colors.red : AppTheme.textMedium,
                         size: 14.sp,
                       ),
                       SizedBox(width: 4.w),
@@ -266,7 +266,7 @@ class MilestoneCard extends StatelessWidget {
                         milestone.isOverdue ? 'Overdue' : 'Due',
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: milestone.isOverdue ? Colors.red : AppColors.textMedium,
+                          color: milestone.isOverdue ? Colors.red : AppTheme.textMedium,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -275,7 +275,7 @@ class MilestoneCard extends StatelessWidget {
                         _formatDate(milestone.targetDate!),
                         style: TextStyle(
                           fontSize: 12.sp,
-                          color: milestone.isOverdue ? Colors.red : AppColors.textLight,
+                          color: milestone.isOverdue ? Colors.red : AppTheme.textLight,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -339,8 +339,8 @@ class MilestoneListItem extends StatelessWidget {
           fontSize: 14.sp,
           fontWeight: FontWeight.w500,
           color: milestone.isCompleted 
-              ? AppColors.textMedium
-              : AppColors.textLight,
+              ? AppTheme.textMedium
+              : AppTheme.textLight,
           decoration: milestone.isCompleted 
               ? TextDecoration.lineThrough
               : null,
@@ -353,7 +353,7 @@ class MilestoneListItem extends StatelessWidget {
               _formatDate(milestone.targetDate!),
               style: TextStyle(
                 fontSize: 12.sp,
-                color: milestone.isOverdue ? Colors.red : AppColors.textMedium,
+                color: milestone.isOverdue ? Colors.red : AppTheme.textMedium,
               ),
             )
           : null,
@@ -361,14 +361,14 @@ class MilestoneListItem extends StatelessWidget {
           ? Container(
               padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
               decoration: BoxDecoration(
-                color: AppColors.goalTrackerGradient[0].withOpacity(0.1),
+                color: AppTheme.goalTrackerGradient[0].withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Text(
                 '${milestone.progressPercentage.round()}%',
                 style: TextStyle(
                   fontSize: 11.sp,
-                  color: AppColors.goalTrackerGradient[0],
+                  color: AppTheme.goalTrackerGradient[0],
                   fontWeight: FontWeight.w600,
                 ),
               ),

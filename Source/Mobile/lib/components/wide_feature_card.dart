@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class WideFeatureCard extends StatefulWidget {
   final String title;
@@ -118,7 +118,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                           height: 80.h,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.white.withOpacity(_opacityAnimation.value),
+                            color: AppTheme.white.withOpacity(_opacityAnimation.value),
                           ),
                         ),
                       ),
@@ -131,7 +131,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                           height: 60.h,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.white.withOpacity(_opacityAnimation.value * 0.7),
+                            color: AppTheme.white.withOpacity(_opacityAnimation.value * 0.7),
                           ),
                         ),
                       ),
@@ -144,7 +144,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                           height: 50.h,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AppColors.white.withOpacity(_opacityAnimation.value * 0.5),
+                            color: AppTheme.white.withOpacity(_opacityAnimation.value * 0.5),
                           ),
                         ),
                       ),
@@ -169,12 +169,12 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                             width: 50.w,
                             height: 50.h,
                             decoration: BoxDecoration(
-                              color: AppColors.white.withOpacity(0.2),
+                              color: AppTheme.white.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(14.r),
                             ),
                             child: Icon(
                               widget.icon,
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               size: 26.sp,
                             ),
                           ),
@@ -188,7 +188,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                                 style: TextStyle(
                                   fontSize: 22.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.white,
+                                  color: AppTheme.white,
                                   height: 1.2,
                                 ),
                               ),
@@ -198,7 +198,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
-                                  color: AppColors.white.withOpacity(0.8),
+                                  color: AppTheme.white.withOpacity(0.8),
                                   height: 1.2,
                                 ),
                               ),
@@ -218,7 +218,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                             vertical: 8.h,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.white.withOpacity(0.2),
+                            color: AppTheme.white.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Row(
@@ -229,13 +229,13 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.white,
+                                  color: AppTheme.white,
                                 ),
                               ),
                               SizedBox(width: 8.w),
                               Icon(
                                 Icons.arrow_forward,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                                 size: 16.sp,
                               ),
                             ],
@@ -253,7 +253,7 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
-                      color: AppColors.black.withOpacity(0.4),
+                      color: AppTheme.black.withOpacity(0.4),
                     ),
                     child: Center(
                       child: Column(
@@ -261,14 +261,14 @@ class _WideFeatureCardState extends State<WideFeatureCard>
                         children: [
                           Icon(
                             Icons.lock,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                             size: 32.sp,
                           ),
                           SizedBox(height: 8.h),
                           Text(
                             'Premium',
                             style: TextStyle(
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
                             ),

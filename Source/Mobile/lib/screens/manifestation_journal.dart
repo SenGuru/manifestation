@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/components/gratitude_selection.dart';
 import 'package:fun/models/journey_entry.dart';
 import 'package:fun/constants/colors.dart';
+import 'package:fun/constants/app_theme.dart';
 import 'package:fun/models/mood_selector.dart';
 import 'package:fun/screens/calendar_view_screen.dart';
 import 'package:fun/services/daily_journal_service.dart';
@@ -81,7 +82,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     // Show loading screen while checking for existing entry
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppColors.backgroundDark,
+        backgroundColor: AppTheme.backgroundDark,
         body: StylishLoading(
           message: 'Loading journal...',
         ),
@@ -89,7 +90,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     }
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       resizeToAvoidBottomInset: true,
       body: KeyboardDismissalWrapper(
         child: SafeArea(
@@ -140,15 +141,15 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.1),
+                  color: AppTheme.textMedium.withOpacity(0.1),
                 ),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -163,14 +164,14 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 Text(
                   'Manifest your intentions through reflection',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -182,15 +183,15 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.1),
+                  color: AppTheme.textMedium.withOpacity(0.1),
                 ),
               ),
               child: Icon(
                 Icons.calendar_today,
-                color: AppColors.gradientPurple,
+                color: AppTheme.journalGradient[0],
                 size: 20.sp,
               ),
             ),
@@ -211,8 +212,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               margin: EdgeInsets.only(right: index < 4 ? 6.w : 0),
               decoration: BoxDecoration(
                 color: index <= currentPage
-                    ? AppColors.gradientPurple
-                    : AppColors.textMedium.withOpacity(0.2),
+                    ? AppTheme.journalGradient[0]
+                    : AppTheme.textMedium.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -235,20 +236,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.accentLavender.withOpacity(0.15),
-                  AppColors.gradientPink.withOpacity(0.1),
+                  AppTheme.accentLavender.withOpacity(0.15),
+                  AppTheme.affirmationGradient[0].withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: AppColors.accentLavender.withOpacity(0.2),
+                color: AppTheme.accentLavender.withOpacity(0.2),
                 width: 1.5.w,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accentLavender.withOpacity(0.1),
+                  color: AppTheme.accentLavender.withOpacity(0.1),
                   blurRadius: 12.r,
                   offset: Offset(0, 4.h),
                 ),
@@ -260,7 +261,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.accentLavender, AppColors.gradientPink],
+                      colors: [AppTheme.accentLavender, AppTheme.affirmationGradient[0]],
                     ),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
@@ -280,7 +281,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         style: TextStyle(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -288,7 +289,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         'Choose the mood that resonates with you today',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           height: 1.3,
                         ),
                       ),
@@ -349,20 +350,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.accentGold.withOpacity(0.15),
-                  AppColors.gradientPink.withOpacity(0.1),
+                  AppTheme.accentGold.withOpacity(0.15),
+                  AppTheme.affirmationGradient[0].withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: AppColors.accentGold.withOpacity(0.2),
+                color: AppTheme.accentGold.withOpacity(0.2),
                 width: 1.5.w,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.accentGold.withOpacity(0.1),
+                  color: AppTheme.accentGold.withOpacity(0.1),
                   blurRadius: 12.r,
                   offset: Offset(0, 4.h),
                 ),
@@ -374,7 +375,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.accentGold, AppColors.gradientPink],
+                      colors: [AppTheme.accentGold, AppTheme.affirmationGradient[0]],
                     ),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
@@ -394,7 +395,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         style: TextStyle(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -402,7 +403,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         'Share your thoughts and insights from today',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           height: 1.3,
                         ),
                       ),
@@ -421,20 +422,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.cardBackground,
-                    AppColors.cardBackground.withOpacity(0.8),
+                    AppTheme.cardBackground,
+                    AppTheme.cardBackground.withOpacity(0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.2),
+                  color: AppTheme.textMedium.withOpacity(0.2),
                   width: 1.w,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.black.withOpacity(0.05),
+                    color: AppTheme.black.withOpacity(0.05),
                     blurRadius: 8.r,
                     offset: Offset(0, 2.h),
                   ),
@@ -447,7 +448,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     children: [
                       Icon(
                         Icons.edit_rounded,
-                        color: AppColors.accentGold.withOpacity(0.7),
+                        color: AppTheme.accentGold.withOpacity(0.7),
                         size: 20.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -456,7 +457,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                     ],
@@ -465,10 +466,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundDark.withOpacity(0.3),
+                        color: AppTheme.backgroundDark.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                          color: AppColors.textMedium.withOpacity(0.1),
+                          color: AppTheme.textMedium.withOpacity(0.1),
                         ),
                       ),
                       child: TextField(
@@ -479,7 +480,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                           });
                         },
                         style: TextStyle(
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                           fontSize: 16.sp,
                           height: 1.6,
                           fontWeight: FontWeight.w400,
@@ -487,7 +488,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         decoration: InputDecoration(
                           hintText: 'Write about your day, your feelings, lessons learned, or anything that comes to mind...',
                           hintStyle: TextStyle(
-                            color: AppColors.textMedium.withOpacity(0.6),
+                            color: AppTheme.textMedium.withOpacity(0.6),
                             fontSize: 16.sp,
                             height: 1.6,
                             fontStyle: FontStyle.italic,
@@ -524,20 +525,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.gradientBlue.withOpacity(0.15),
-                  AppColors.accentLavender.withOpacity(0.1),
+                  AppTheme.goalTrackerGradient[0].withOpacity(0.15),
+                  AppTheme.accentLavender.withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: AppColors.gradientBlue.withOpacity(0.2),
+                color: AppTheme.goalTrackerGradient[0].withOpacity(0.2),
                 width: 1.5.w,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.gradientBlue.withOpacity(0.1),
+                  color: AppTheme.goalTrackerGradient[0].withOpacity(0.1),
                   blurRadius: 12.r,
                   offset: Offset(0, 4.h),
                 ),
@@ -549,7 +550,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.gradientBlue, AppColors.accentLavender],
+                      colors: [AppTheme.goalTrackerGradient[0], AppTheme.accentLavender],
                     ),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
@@ -569,7 +570,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         style: TextStyle(
                           fontSize: 22.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -577,7 +578,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         'Set a positive intention for tomorrow',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           height: 1.3,
                         ),
                       ),
@@ -596,20 +597,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    AppColors.cardBackground,
-                    AppColors.cardBackground.withOpacity(0.8),
+                    AppTheme.cardBackground,
+                    AppTheme.cardBackground.withOpacity(0.8),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.2),
+                  color: AppTheme.textMedium.withOpacity(0.2),
                   width: 1.w,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.black.withOpacity(0.05),
+                    color: AppTheme.black.withOpacity(0.05),
                     blurRadius: 8.r,
                     offset: Offset(0, 2.h),
                   ),
@@ -622,7 +623,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     children: [
                       Icon(
                         Icons.lightbulb_rounded,
-                        color: AppColors.gradientBlue.withOpacity(0.7),
+                        color: AppTheme.goalTrackerGradient[0].withOpacity(0.7),
                         size: 20.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -631,7 +632,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         style: TextStyle(
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                     ],
@@ -640,10 +641,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundDark.withOpacity(0.3),
+                        color: AppTheme.backgroundDark.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                          color: AppColors.textMedium.withOpacity(0.1),
+                          color: AppTheme.textMedium.withOpacity(0.1),
                         ),
                       ),
                       child: TextField(
@@ -657,7 +658,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                             TextPosition(offset: intention.length),
                           ),
                         style: TextStyle(
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                           fontSize: 16.sp,
                           height: 1.6,
                           fontWeight: FontWeight.w400,
@@ -665,7 +666,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                         decoration: InputDecoration(
                           hintText: 'How do you want to show up tomorrow? What energy do you want to bring? What would make tomorrow meaningful?',
                           hintStyle: TextStyle(
-                            color: AppColors.textMedium.withOpacity(0.6),
+                            color: AppTheme.textMedium.withOpacity(0.6),
                             fontSize: 16.sp,
                             height: 1.6,
                             fontStyle: FontStyle.italic,
@@ -702,21 +703,21 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.gradientPink.withOpacity(0.2),
-                  AppColors.accentLavender.withOpacity(0.15),
-                  AppColors.accentGold.withOpacity(0.1),
+                  AppTheme.affirmationGradient[0].withOpacity(0.2),
+                  AppTheme.accentLavender.withOpacity(0.15),
+                  AppTheme.accentGold.withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(
-                color: AppColors.gradientPink.withOpacity(0.3),
+                color: AppTheme.affirmationGradient[0].withOpacity(0.3),
                 width: 2.w,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.gradientPink.withOpacity(0.15),
+                  color: AppTheme.affirmationGradient[0].withOpacity(0.15),
                   blurRadius: 20.r,
                   offset: Offset(0, 8.h),
                 ),
@@ -728,7 +729,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.gradientPink, AppColors.accentLavender],
+                      colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
                     ),
                     borderRadius: BorderRadius.circular(20.r),
                   ),
@@ -744,7 +745,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   style: TextStyle(
                     fontSize: 26.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -753,7 +754,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   'Beautiful work! Your thoughts have been captured.',
                   style: TextStyle(
                     fontSize: 16.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     height: 1.3,
                   ),
                   textAlign: TextAlign.center,
@@ -781,7 +782,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     title: 'Gratitudes',
                     content: gratitudeItems.where((item) => item.isNotEmpty).join('\n• '),
                     icon: Icons.favorite_rounded,
-                    gradientColors: [AppColors.gradientPink, AppColors.accentLavender],
+                    gradientColors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
                   ),
                   SizedBox(height: 24.h),
                   if (reflection.isNotEmpty)
@@ -789,7 +790,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       title: 'Daily Reflection',
                       content: reflection,
                       icon: Icons.auto_stories_rounded,
-                      gradientColors: [AppColors.accentGold, AppColors.gradientPink],
+                      gradientColors: [AppTheme.accentGold, AppTheme.affirmationGradient[0]],
                     ),
                   SizedBox(height: 24.h),
                   if (intention.isNotEmpty)
@@ -797,7 +798,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       title: 'Tomorrow\'s Intention',
                       content: intention,
                       icon: Icons.wb_sunny_rounded,
-                      gradientColors: [AppColors.gradientBlue, AppColors.accentLavender],
+                      gradientColors: [AppTheme.goalTrackerGradient[0], AppTheme.accentLavender],
                     ),
                   SizedBox(height: 32.h),
                 ],
@@ -822,8 +823,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            AppColors.cardBackground,
-            AppColors.cardBackground.withOpacity(0.8),
+            AppTheme.cardBackground,
+            AppTheme.cardBackground.withOpacity(0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -868,7 +869,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     SizedBox(height: 4.h),
@@ -890,17 +891,17 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             width: double.infinity,
             padding: EdgeInsets.all(20.w),
             decoration: BoxDecoration(
-              color: AppColors.backgroundDark.withOpacity(0.3),
+              color: AppTheme.backgroundDark.withOpacity(0.3),
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(
-                color: AppColors.textMedium.withOpacity(0.1),
+                color: AppTheme.textMedium.withOpacity(0.1),
               ),
             ),
             child: Text(
               content,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 height: 1.6,
                 fontWeight: FontWeight.w400,
               ),
@@ -920,7 +921,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     return Container(
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(12.r),
         border: Border.all(
           color: color.withOpacity(0.3),
@@ -938,7 +939,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -948,7 +949,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             content.isNotEmpty ? content : 'Not provided',
             style: TextStyle(
               fontSize: 14.sp,
-              color: content.isNotEmpty ? AppColors.textMedium : AppColors.textMedium.withOpacity(0.5),
+              color: content.isNotEmpty ? AppTheme.textMedium : AppTheme.textMedium.withOpacity(0.5),
               height: 1.4,
             ),
           ),
@@ -969,10 +970,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 child: Container(
                   height: 44.h,
                   decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
+                    color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: AppColors.textMedium.withOpacity(0.2),
+                      color: AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Center(
@@ -981,7 +982,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                       style: TextStyle(
                         fontSize: 15.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ),
@@ -997,7 +998,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 height: 44.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: AppColors.journalGradient,
+                    colors: AppTheme.journalGradient,
                   ),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
@@ -1007,7 +1008,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             CompactStylishLoading(
-                              color: AppColors.white,
+                              color: AppTheme.white,
                               size: 16.w,
                             ),
                             SizedBox(width: 8.w),
@@ -1016,7 +1017,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppColors.white,
+                                color: AppTheme.white,
                               ),
                             ),
                           ],
@@ -1026,7 +1027,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                           style: TextStyle(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                           ),
                         ),
                 ),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
+import '../constants/app_theme.dart';
 import '../components/vision_board_canvas.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/vision_board_service.dart';
@@ -165,7 +166,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
@@ -210,11 +211,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     return Container(
       margin: EdgeInsets.all(isFullscreen ? 0 : 16.w),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: AppTheme.white,
         borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
         boxShadow: isFullscreen ? null : [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.1),
+            color: AppTheme.black.withOpacity(0.1),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -253,15 +254,15 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 width: 48.w,
                 height: 48.h,
                 decoration: BoxDecoration(
-                  color: AppColors.cardBackground,
+                  color: AppTheme.cardBackground,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
-                    color: AppColors.textMedium.withOpacity(0.1),
+                    color: AppTheme.textMedium.withOpacity(0.1),
                   ),
                 ),
                 child: Icon(
                   Icons.arrow_back,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                   size: 20.sp,
                 ),
               ),
@@ -277,17 +278,17 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   height: 48.h,
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
+                    color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: AppColors.textMedium.withOpacity(0.1),
+                      color: AppTheme.textMedium.withOpacity(0.1),
                     ),
                   ),
                   child: Row(
                     children: [
                       Icon(
                         Icons.edit,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                         size: 16.sp,
                       ),
                       SizedBox(width: 8.w),
@@ -297,7 +298,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.textLight,
+                            color: AppTheme.textLight,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -324,12 +325,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 padding: EdgeInsets.symmetric(horizontal: 20.w),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: AppColors.visionBoardGradient,
+                    colors: AppTheme.visionBoardGradient,
                   ),
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.visionBoardGradient[0].withOpacity(0.3),
+                      color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
                       blurRadius: 8.r,
                       offset: Offset(0, 4.h),
                     ),
@@ -340,7 +341,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   children: [
                     Icon(
                       Icons.save,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                       size: 16.sp,
                     ),
                     SizedBox(width: 8.w),
@@ -349,7 +350,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
-                        color: AppColors.white,
+                        color: AppTheme.white,
                       ),
                     ),
                   ],
@@ -366,14 +367,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       height: 88.h,
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(24.r),
           border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.1),
+            color: AppTheme.textMedium.withOpacity(0.1),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.1),
+              color: AppTheme.black.withOpacity(0.1),
               blurRadius: 20.r,
               offset: Offset(0, 10.h),
             ),
@@ -390,7 +391,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             Container(
               width: 1.w,
               height: 48.h,
-              color: AppColors.textMedium.withOpacity(0.1),
+              color: AppTheme.textMedium.withOpacity(0.1),
             ),
             
             // Action buttons
@@ -416,13 +417,13 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 height: 64.h,
                 decoration: BoxDecoration(
                   gradient: isSelected
-                      ? LinearGradient(colors: AppColors.visionBoardGradient)
+                      ? LinearGradient(colors: AppTheme.visionBoardGradient)
                       : null,
                   color: isSelected ? null : Colors.transparent,
                   borderRadius: BorderRadius.circular(12.r),
                   boxShadow: isSelected ? [
                     BoxShadow(
-                      color: AppColors.visionBoardGradient[0].withOpacity(0.3),
+                      color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
                       blurRadius: 6.r,
                       offset: Offset(0, 3.h),
                     ),
@@ -433,7 +434,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   children: [
                     Icon(
                       tool.icon,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
+                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
                       size: 22.sp,
                     ),
                     SizedBox(height: 2.h),
@@ -442,7 +443,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       style: TextStyle(
                         fontSize: 8.sp,
                         fontWeight: FontWeight.w500,
-                        color: isSelected ? AppColors.white : AppColors.textMedium,
+                        color: isSelected ? AppTheme.white : AppTheme.textMedium,
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
@@ -516,13 +517,13 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         height: 40.h,
         decoration: BoxDecoration(
           color: isEnabled
-              ? AppColors.backgroundMedium
-              : AppColors.backgroundMedium.withOpacity(0.5),
+              ? AppTheme.backgroundMedium
+              : AppTheme.backgroundMedium.withOpacity(0.5),
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Icon(
           icon,
-          color: isEnabled ? AppColors.textLight : AppColors.textMedium.withOpacity(0.5),
+          color: isEnabled ? AppTheme.textLight : AppTheme.textMedium.withOpacity(0.5),
           size: 18.sp,
         ),
       ),
@@ -540,7 +541,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             icon: Icons.grid_view,
             onTap: _showTemplates,
             tooltip: 'Templates',
-            color: AppColors.accentGold,
+            color: AppTheme.accentGold,
           ),
           
           SizedBox(height: 12.h),
@@ -550,7 +551,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             icon: Icons.color_lens,
             onTap: _showBackgrounds,
             tooltip: 'Backgrounds',
-            color: AppColors.secondaryTeal,
+            color: AppTheme.visionBoardGradient[0],
           ),
           
           SizedBox(height: 12.h),
@@ -560,7 +561,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             icon: Icons.share,
             onTap: _showExportOptions,
             tooltip: 'Share',
-            color: AppColors.gradientPurple,
+            color: AppTheme.journalGradient[0],
           ),
         ],
       ),
@@ -604,15 +605,15 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           width: 48.w,
           height: 48.h,
           decoration: BoxDecoration(
-            color: AppColors.cardBackground.withOpacity(0.9),
+            color: AppTheme.cardBackground.withOpacity(0.9),
             borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
-              color: AppColors.textMedium.withOpacity(0.1),
+              color: AppTheme.textMedium.withOpacity(0.1),
             ),
           ),
           child: Icon(
             isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             size: 20.sp,
           ),
         ),
@@ -627,7 +628,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: AppColors.black.withOpacity(0.7),
+          color: AppTheme.black.withOpacity(0.7),
           borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
@@ -635,7 +636,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           children: [
             Icon(
               Icons.dashboard,
-              color: AppColors.white,
+              color: AppTheme.white,
               size: 14.sp,
             ),
             SizedBox(width: 6.w),
@@ -643,7 +644,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               '${currentBoard.elements.length} items',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.white,
+                color: AppTheme.white,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -713,7 +714,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       height: MediaQuery.of(context).size.height * 0.6,
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(24.r),
       ),
       child: Column(
@@ -724,7 +725,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             height: 4.h,
             margin: EdgeInsets.only(top: 12.h),
             decoration: BoxDecoration(
-              color: AppColors.textMedium.withOpacity(0.3),
+              color: AppTheme.textMedium.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -737,7 +738,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
             ),
           ),
@@ -754,7 +755,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   icon: Icons.camera_alt,
                   title: 'Camera',
                   subtitle: 'Take a photo',
-                  color: AppColors.accentGold,
+                  color: AppTheme.accentGold,
                   onTap: () {
                     Navigator.pop(context);
                     _addImageFromCamera();
@@ -764,7 +765,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   icon: Icons.photo_library,
                   title: 'Gallery',
                   subtitle: 'Choose from photos',
-                  color: AppColors.secondaryTeal,
+                  color: AppTheme.visionBoardGradient[0],
                   onTap: () {
                     Navigator.pop(context);
                     _addImageFromGallery();
@@ -774,7 +775,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   icon: Icons.search,
                   title: 'Search',
                   subtitle: 'Find online images',
-                  color: AppColors.gradientPurple,
+                  color: AppTheme.journalGradient[0],
                   onTap: () {
                     Navigator.pop(context);
                     _addImageFromSearch();
@@ -784,7 +785,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   icon: Icons.auto_awesome,
                   title: 'AI Generate',
                   subtitle: 'Create with AI',
-                  color: AppColors.accentCoral,
+                  color: AppTheme.accentCoral,
                   onTap: () {
                     Navigator.pop(context);
                     _addImageFromAI();
@@ -811,10 +812,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.backgroundMedium,
+          color: AppTheme.backgroundMedium,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.1),
+            color: AppTheme.textMedium.withOpacity(0.1),
           ),
         ),
         child: Column(
@@ -839,7 +840,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
               ),
             ),
             SizedBox(height: 4.h),
@@ -847,7 +848,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               subtitle,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
               ),
               textAlign: TextAlign.center,
             ),
@@ -863,7 +864,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       height: MediaQuery.of(context).size.height * 0.7,
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(24.r),
       ),
       child: Column(
@@ -874,7 +875,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             height: 4.h,
             margin: EdgeInsets.only(top: 12.h),
             decoration: BoxDecoration(
-              color: AppColors.textMedium.withOpacity(0.3),
+              color: AppTheme.textMedium.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -890,7 +891,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 GestureDetector(
@@ -899,12 +900,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     width: 32.w,
                     height: 32.h,
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Icon(
                       Icons.close,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       size: 18.sp,
                     ),
                   ),
@@ -923,10 +924,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   // Text field
                   Container(
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
-                        color: AppColors.textMedium.withOpacity(0.1),
+                        color: AppTheme.textMedium.withOpacity(0.1),
                       ),
                     ),
                     child: TextField(
@@ -940,7 +941,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       decoration: InputDecoration(
                         hintText: 'Enter your inspirational text...',
                         hintStyle: TextStyle(
-                          color: AppColors.textMedium.withOpacity(0.6),
+                          color: AppTheme.textMedium.withOpacity(0.6),
                           fontSize: 16.sp,
                         ),
                         border: InputBorder.none,
@@ -957,16 +958,16 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 12.h),
                   SliderTheme(
                     data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: AppColors.visionBoardGradient[0],
-                      inactiveTrackColor: AppColors.textMedium.withOpacity(0.2),
-                      thumbColor: AppColors.visionBoardGradient[0],
-                      overlayColor: AppColors.visionBoardGradient[0].withOpacity(0.2),
+                      activeTrackColor: AppTheme.visionBoardGradient[0],
+                      inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
+                      thumbColor: AppTheme.visionBoardGradient[0],
+                      overlayColor: AppTheme.visionBoardGradient[0].withOpacity(0.2),
                     ),
                     child: Slider(
                       value: _selectedFontSize,
@@ -990,7 +991,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.textLight,
+                      color: AppTheme.textLight,
                     ),
                   ),
                   SizedBox(height: 12.h),
@@ -1001,12 +1002,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       children: [
                         Colors.black,
                         Colors.white,
-                        AppColors.visionBoardGradient[0],
-                        AppColors.secondaryTeal,
-                        AppColors.accentGold,
-                        AppColors.accentCoral,
-                        AppColors.gradientPurple,
-                        AppColors.accentMint,
+                        AppTheme.visionBoardGradient[0],
+                        AppTheme.visionBoardGradient[0],
+                        AppTheme.accentGold,
+                        AppTheme.accentCoral,
+                        AppTheme.journalGradient[0],
+                        AppTheme.accentMint,
                         Colors.red,
                         Colors.blue,
                         Colors.green,
@@ -1034,12 +1035,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 height: 56.h,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: AppColors.visionBoardGradient,
+                    colors: AppTheme.visionBoardGradient,
                   ),
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.visionBoardGradient[0].withOpacity(0.3),
+                      color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
                       blurRadius: 8.r,
                       offset: Offset(0, 4.h),
                     ),
@@ -1051,7 +1052,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.white,
+                      color: AppTheme.white,
                     ),
                   ),
                 ),
@@ -1080,7 +1081,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           color: color,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected ? AppColors.textLight : AppColors.textMedium.withOpacity(0.2),
+            color: isSelected ? AppTheme.textLight : AppTheme.textMedium.withOpacity(0.2),
             width: isSelected ? 3 : 1,
           ),
           boxShadow: [
@@ -1094,7 +1095,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         child: isSelected
             ? Icon(
                 Icons.check,
-                color: color == Colors.white || color == AppColors.accentMint 
+                color: color == Colors.white || color == AppTheme.accentMint 
                     ? Colors.black 
                     : Colors.white,
                 size: 20.sp,
@@ -1129,7 +1130,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Text added to vision board'),
-        backgroundColor: AppColors.accentMint,
+        backgroundColor: AppTheme.accentMint,
         duration: Duration(seconds: 2),
       ),
     );
@@ -1180,30 +1181,30 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
         title: Text(
           'Edit Title',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
         content: TextField(
           controller: titleController,
-          style: TextStyle(color: AppColors.textLight),
+          style: TextStyle(color: AppTheme.textLight),
           autofocus: true,
           decoration: InputDecoration(
             hintText: 'Enter board title',
-            hintStyle: TextStyle(color: AppColors.textMedium),
+            hintStyle: TextStyle(color: AppTheme.textMedium),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.textMedium.withOpacity(0.3)),
+              borderSide: BorderSide(color: AppTheme.textMedium.withOpacity(0.3)),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.visionBoardGradient[0]),
+              borderSide: BorderSide(color: AppTheme.visionBoardGradient[0]),
             ),
           ),
           onSubmitted: (newTitle) {
@@ -1216,7 +1217,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.textMedium),
+              style: TextStyle(color: AppTheme.textMedium),
             ),
           ),
           TextButton(
@@ -1226,7 +1227,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             },
             child: Text(
               'Save',
-              style: TextStyle(color: AppColors.visionBoardGradient[0]),
+              style: TextStyle(color: AppTheme.visionBoardGradient[0]),
             ),
           ),
         ],
@@ -1288,7 +1289,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Vision board created successfully!'),
-              backgroundColor: AppColors.accentMint,
+              backgroundColor: AppTheme.accentMint,
               duration: Duration(seconds: 1),
             ),
           );
@@ -1310,7 +1311,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Vision board updated successfully!'),
-              backgroundColor: AppColors.accentMint,
+              backgroundColor: AppTheme.accentMint,
               duration: Duration(seconds: 1),
             ),
           );
@@ -1367,7 +1368,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       height: MediaQuery.of(context).size.height * 0.7,
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(24.r),
       ),
       child: Column(
@@ -1378,7 +1379,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             height: 4.h,
             margin: EdgeInsets.only(top: 12.h),
             decoration: BoxDecoration(
-              color: AppColors.textMedium.withOpacity(0.3),
+              color: AppTheme.textMedium.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -1394,7 +1395,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 GestureDetector(
@@ -1403,12 +1404,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     width: 32.w,
                     height: 32.h,
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Icon(
                       Icons.close,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       size: 18.sp,
                     ),
                   ),
@@ -1433,10 +1434,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     margin: EdgeInsets.only(bottom: 16.h),
                     padding: EdgeInsets.all(20.w),
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(16.r),
                       border: Border.all(
-                        color: AppColors.textMedium.withOpacity(0.1),
+                        color: AppTheme.textMedium.withOpacity(0.1),
                       ),
                     ),
                     child: Row(
@@ -1464,7 +1465,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: AppColors.textLight,
+                                  color: AppTheme.textLight,
                                 ),
                               ),
                               SizedBox(height: 4.h),
@@ -1472,7 +1473,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                 template.description,
                                 style: TextStyle(
                                   fontSize: 14.sp,
-                                  color: AppColors.textMedium,
+                                  color: AppTheme.textMedium,
                                 ),
                               ),
                             ],
@@ -1480,7 +1481,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                         ),
                         Icon(
                           Icons.arrow_forward_ios,
-                          color: AppColors.textMedium.withOpacity(0.6),
+                          color: AppTheme.textMedium.withOpacity(0.6),
                           size: 16.sp,
                         ),
                       ],
@@ -1506,7 +1507,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('${template.name} template applied'),
-        backgroundColor: AppColors.accentMint,
+        backgroundColor: AppTheme.accentMint,
         duration: Duration(seconds: 2),
       ),
     );
@@ -1515,8 +1516,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   Widget _buildBackgroundSheet() {
     final backgroundColors = [
       Colors.white,
-      AppColors.backgroundMedium,
-      AppColors.backgroundDark,
+      AppTheme.backgroundMedium,
+      AppTheme.backgroundDark,
       Colors.grey[100]!,
       Color(0xFFF8F9FA),
       Color(0xFFE8F4FD),
@@ -1532,7 +1533,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       height: MediaQuery.of(context).size.height * 0.6,
       margin: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(24.r),
       ),
       child: Column(
@@ -1543,7 +1544,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             height: 4.h,
             margin: EdgeInsets.only(top: 12.h),
             decoration: BoxDecoration(
-              color: AppColors.textMedium.withOpacity(0.3),
+              color: AppTheme.textMedium.withOpacity(0.3),
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -1559,7 +1560,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 GestureDetector(
@@ -1568,12 +1569,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     width: 32.w,
                     height: 32.h,
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundMedium,
+                      color: AppTheme.backgroundMedium,
                       borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Icon(
                       Icons.close,
-                      color: AppColors.textMedium,
+                      color: AppTheme.textMedium,
                       size: 18.sp,
                     ),
                   ),
@@ -1609,8 +1610,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
                           color: isSelected 
-                              ? AppColors.visionBoardGradient[0] 
-                              : AppColors.textMedium.withOpacity(0.2),
+                              ? AppTheme.visionBoardGradient[0] 
+                              : AppTheme.textMedium.withOpacity(0.2),
                           width: isSelected ? 3 : 1,
                         ),
                         boxShadow: [
@@ -1652,7 +1653,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Background updated'),
-        backgroundColor: AppColors.accentMint,
+        backgroundColor: AppTheme.accentMint,
         duration: Duration(seconds: 1),
       ),
     );
@@ -1684,14 +1685,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
         title: Text(
           'Save Changes?',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -1699,7 +1700,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         content: Text(
           'You have unsaved changes. Would you like to save before leaving?',
           style: TextStyle(
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
             fontSize: 16.sp,
           ),
         ),
@@ -1718,7 +1719,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppColors.textMedium),
+              style: TextStyle(color: AppTheme.textMedium),
             ),
           ),
           TextButton(
@@ -1730,7 +1731,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             },
             child: Text(
               'Save',
-              style: TextStyle(color: AppColors.visionBoardGradient[0]),
+              style: TextStyle(color: AppTheme.visionBoardGradient[0]),
             ),
           ),
         ],
@@ -1782,7 +1783,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         height: MediaQuery.of(context).size.height * 0.7,
         margin: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(24.r),
         ),
         child: Column(
@@ -1793,7 +1794,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -1806,7 +1807,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ),
@@ -1831,10 +1832,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppColors.backgroundMedium,
+                        color: AppTheme.backgroundMedium,
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                          color: AppColors.textMedium.withOpacity(0.2),
+                          color: AppTheme.textMedium.withOpacity(0.2),
                         ),
                       ),
                       child: ClipRRect(
@@ -1929,7 +1930,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Stock image added to vision board'),
-        backgroundColor: AppColors.accentMint,
+        backgroundColor: AppTheme.accentMint,
         duration: Duration(seconds: 2),
       ),
     );
@@ -1971,7 +1972,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Image added locally'),
-          backgroundColor: AppColors.accentMint,
+          backgroundColor: AppTheme.accentMint,
           duration: Duration(seconds: 2),
         ),
       );
@@ -1997,7 +1998,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('$source placeholder added'),
-        backgroundColor: AppColors.accentMint,
+        backgroundColor: AppTheme.accentMint,
         duration: Duration(seconds: 2),
       ),
     );
@@ -2005,11 +2006,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Widget _buildSimplePlaceholder() {
     return Container(
-      color: AppColors.backgroundMedium,
+      color: AppTheme.backgroundMedium,
       child: Center(
         child: Icon(
           Icons.image_outlined,
-          color: AppColors.textMedium,
+          color: AppTheme.textMedium,
           size: 32.sp,
         ),
       ),

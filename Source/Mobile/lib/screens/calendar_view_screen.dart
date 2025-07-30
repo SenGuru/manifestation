@@ -4,7 +4,7 @@ import 'journal_entry_details_screen.dart';
 import 'journal_stats_screen.dart';
 import '../models/journey_entry.dart';
 import '../models/mood_selector.dart';
-import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../services/daily_journal_service.dart';
 import '../widgets/stylish_loading.dart';
 
@@ -36,11 +36,11 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _loadJournalEntries,
-          color: AppColors.gradientPurple,
+          color: AppTheme.journalGradient[0],
           child: Column(
             children: [
               _buildHeader(),
@@ -68,15 +68,15 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                   width: 44.w,
                   height: 44.h,
                   decoration: BoxDecoration(
-                    color: AppColors.cardBackground,
+                    color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: AppColors.textMedium.withOpacity(0.2),
+                      color: AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Icon(
                     Icons.arrow_back,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                     size: 20.sp,
                   ),
                 ),
@@ -91,14 +91,14 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     Text(
                       'Track your manifestation journey',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -116,20 +116,20 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppColors.gradientPurple.withOpacity(0.15),
-                  AppColors.accentLavender.withOpacity(0.1),
+                  AppTheme.journalGradient[0].withOpacity(0.15),
+                  AppTheme.accentLavender.withOpacity(0.1),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(20.r),
               border: Border.all(
-                color: AppColors.gradientPurple.withOpacity(0.2),
+                color: AppTheme.journalGradient[0].withOpacity(0.2),
                 width: 1.5.w,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.gradientPurple.withOpacity(0.1),
+                  color: AppTheme.journalGradient[0].withOpacity(0.1),
                   blurRadius: 12.r,
                   offset: Offset(0, 4.h),
                 ),
@@ -141,7 +141,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                   padding: EdgeInsets.all(12.w),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [AppColors.gradientPurple, AppColors.accentLavender],
+                      colors: [AppTheme.journalGradient[0], AppTheme.accentLavender],
                     ),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
@@ -161,7 +161,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                         style: TextStyle(
                           fontSize: 18.sp,
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textLight,
+                          color: AppTheme.textLight,
                         ),
                       ),
                       SizedBox(height: 4.h),
@@ -169,7 +169,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                         '${allJournalEntries.length} journal entries recorded',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           height: 1.3,
                         ),
                       ),
@@ -191,15 +191,15 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
         width: 44.w,
         height: 44.h,
         decoration: BoxDecoration(
-          color: AppColors.accentGold.withOpacity(0.1),
+          color: AppTheme.accentGold.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: AppColors.accentGold.withOpacity(0.3),
+            color: AppTheme.accentGold.withOpacity(0.3),
           ),
         ),
         child: Icon(
           Icons.analytics_outlined,
-          color: AppColors.accentGold,
+          color: AppTheme.accentGold,
           size: 20.sp,
         ),
       ),
@@ -220,13 +220,13 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 decoration: BoxDecoration(
                   color: showingFilteredView 
-                      ? AppColors.secondaryTeal.withOpacity(0.1)
-                      : AppColors.cardBackground,
+                      ? AppTheme.visionBoardGradient[0].withOpacity(0.1)
+                      : AppTheme.cardBackground,
                   borderRadius: BorderRadius.circular(12.r),
                   border: Border.all(
                     color: showingFilteredView 
-                        ? AppColors.secondaryTeal.withOpacity(0.3)
-                        : AppColors.textMedium.withOpacity(0.2),
+                        ? AppTheme.visionBoardGradient[0].withOpacity(0.3)
+                        : AppTheme.textMedium.withOpacity(0.2),
                   ),
                 ),
                 child: Row(
@@ -234,8 +234,8 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                     Icon(
                       Icons.date_range,
                       color: showingFilteredView 
-                          ? AppColors.secondaryTeal 
-                          : AppColors.textMedium,
+                          ? AppTheme.visionBoardGradient[0] 
+                          : AppTheme.textMedium,
                       size: 16.sp,
                     ),
                     SizedBox(width: 8.w),
@@ -247,8 +247,8 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                         style: TextStyle(
                           fontSize: 14.sp,
                           color: showingFilteredView 
-                              ? AppColors.secondaryTeal 
-                              : AppColors.textMedium,
+                              ? AppTheme.visionBoardGradient[0] 
+                              : AppTheme.textMedium,
                           fontWeight: showingFilteredView ? FontWeight.w500 : FontWeight.normal,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -261,7 +261,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                           padding: EdgeInsets.all(4.w),
                           child: Icon(
                             Icons.close,
-                            color: AppColors.secondaryTeal,
+                            color: AppTheme.visionBoardGradient[0],
                             size: 16.sp,
                           ),
                         ),
@@ -289,17 +289,17 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: AppColors.gradientPurple.withOpacity(0.1),
+          color: AppTheme.journalGradient[0].withOpacity(0.1),
           borderRadius: BorderRadius.circular(8.r),
           border: Border.all(
-            color: AppColors.gradientPurple.withOpacity(0.3),
+            color: AppTheme.journalGradient[0].withOpacity(0.3),
           ),
         ),
         child: Text(
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: AppColors.gradientPurple,
+            color: AppTheme.journalGradient[0],
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -319,12 +319,12 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Icon(
                 Icons.chevron_left,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -334,7 +334,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.w600,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           GestureDetector(
@@ -343,12 +343,12 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(10.r),
               ),
               child: Icon(
                 Icons.chevron_right,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -375,7 +375,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                             ),
                           ),
                         ),
@@ -414,32 +414,32 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                             decoration: BoxDecoration(
                               gradient: isSelected 
                                   ? LinearGradient(
-                                      colors: [AppColors.gradientPurple, AppColors.accentLavender],
+                                      colors: [AppTheme.journalGradient[0], AppTheme.accentLavender],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
                                     )
                                   : hasEntry 
                                       ? LinearGradient(
                                           colors: [
-                                            AppColors.gradientPink.withOpacity(0.15),
-                                            AppColors.accentLavender.withOpacity(0.1),
+                                            AppTheme.affirmationGradient[0].withOpacity(0.15),
+                                            AppTheme.accentLavender.withOpacity(0.1),
                                           ],
                                           begin: Alignment.topLeft,
                                           end: Alignment.bottomRight,
                                         )
                                       : null,
                               color: !isSelected && !hasEntry 
-                                  ? AppColors.cardBackground.withOpacity(0.3)
+                                  ? AppTheme.cardBackground.withOpacity(0.3)
                                   : null,
                               borderRadius: BorderRadius.circular(12.r),
                               border: isToday 
-                                  ? Border.all(color: AppColors.accentGold, width: 2.w)
+                                  ? Border.all(color: AppTheme.accentGold, width: 2.w)
                                   : hasEntry && !isSelected
-                                      ? Border.all(color: AppColors.gradientPink.withOpacity(0.4), width: 1.w)
-                                      : Border.all(color: AppColors.textMedium.withOpacity(0.1), width: 0.5.w),
+                                      ? Border.all(color: AppTheme.affirmationGradient[0].withOpacity(0.4), width: 1.w)
+                                      : Border.all(color: AppTheme.textMedium.withOpacity(0.1), width: 0.5.w),
                               boxShadow: isSelected || hasEntry ? [
                                 BoxShadow(
-                                  color: (isSelected ? AppColors.gradientPurple : AppColors.gradientPink).withOpacity(0.2),
+                                  color: (isSelected ? AppTheme.journalGradient[0] : AppTheme.affirmationGradient[0]).withOpacity(0.2),
                                   blurRadius: 8.r,
                                   offset: Offset(0, 2.h),
                                 ),
@@ -454,10 +454,10 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                                       fontSize: 14.sp,
                                       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                                       color: !isCurrentMonth
-                                          ? AppColors.textMedium.withOpacity(0.3)
+                                          ? AppTheme.textMedium.withOpacity(0.3)
                                           : isSelected
-                                              ? AppColors.white
-                                              : AppColors.textLight,
+                                              ? AppTheme.white
+                                              : AppTheme.textLight,
                                     ),
                                   ),
                                 ),
@@ -508,7 +508,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
         width: double.infinity,
         padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         child: Column(
@@ -526,7 +526,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                       style: TextStyle(
                         fontSize: 20.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     if (isToday)
@@ -534,7 +534,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                         'Today',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.accentGold,
+                          color: AppTheme.accentGold,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -569,16 +569,16 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: AppColors.gradientPurple.withOpacity(0.1),
+                color: AppTheme.journalGradient[0].withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: AppColors.gradientPurple.withOpacity(0.3)),
+                border: Border.all(color: AppTheme.journalGradient[0].withOpacity(0.3)),
               ),
               child: Text(
                 'View',
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.gradientPurple,
+                  color: AppTheme.journalGradient[0],
                 ),
               ),
             ),
@@ -590,16 +590,16 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               child: Container(
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
-                  color: AppColors.accentGold.withOpacity(0.1),
+                  color: AppTheme.accentGold.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(color: AppColors.accentGold.withOpacity(0.3)),
+                  border: Border.all(color: AppTheme.accentGold.withOpacity(0.3)),
                 ),
                 child: Text(
                   'Edit',
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppColors.accentGold,
+                    color: AppTheme.accentGold,
                   ),
                 ),
               ),
@@ -612,7 +612,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           decoration: BoxDecoration(
-            gradient: LinearGradient(colors: AppColors.journalGradient),
+            gradient: LinearGradient(colors: AppTheme.journalGradient),
             borderRadius: BorderRadius.circular(20.r),
           ),
           child: Text(
@@ -620,7 +620,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w500,
-              color: AppColors.white,
+              color: AppTheme.white,
             ),
           ),
         ),
@@ -644,7 +644,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                 style: TextStyle(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
-                  color: AppColors.textLight,
+                  color: AppTheme.textLight,
                 ),
               ),
             ],
@@ -657,7 +657,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.gradientPink,
+                color: AppTheme.affirmationGradient[0],
               ),
             ),
             SizedBox(height: 4.h),
@@ -667,7 +667,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                 '• $gratitude',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -678,7 +678,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                 '• +${entry.gratitudes.length - 2} more',
                 style: TextStyle(
                   fontSize: 12.sp,
-                  color: AppColors.textMedium.withOpacity(0.7),
+                  color: AppTheme.textMedium.withOpacity(0.7),
                   fontStyle: FontStyle.italic,
                 ),
               ),
@@ -691,7 +691,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.accentGold,
+                color: AppTheme.accentGold,
               ),
             ),
             SizedBox(height: 4.h),
@@ -699,7 +699,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               entry.reflection,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
               ),
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
@@ -713,7 +713,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.secondaryTeal,
+                color: AppTheme.visionBoardGradient[0],
               ),
             ),
             SizedBox(height: 4.h),
@@ -721,7 +721,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               entry.intention,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -739,7 +739,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
         children: [
           Icon(
             isToday ? Icons.edit_calendar : Icons.calendar_today_outlined,
-            color: AppColors.textMedium.withOpacity(0.5),
+            color: AppTheme.textMedium.withOpacity(0.5),
             size: 32.sp,
           ),
           SizedBox(height: 12.h),
@@ -749,7 +749,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                 : 'No journal entry for this date',
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
           ),
           if (isToday) ...[
@@ -758,7 +758,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
               'Tap "Create" to start your daily reflection',
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppColors.textMedium.withOpacity(0.7),
+                color: AppTheme.textMedium.withOpacity(0.7),
               ),
             ),
           ],
@@ -814,7 +814,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
 
   Color _getMoodColorForDate(DateTime date) {
     final entry = _getEntryForDate(date);
-    return entry?.mood.color ?? AppColors.gradientPink;
+    return entry?.mood.color ?? AppTheme.affirmationGradient[0];
   }
 
   bool _isSameDay(DateTime date1, DateTime date2) {
@@ -950,10 +950,10 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
-              primary: AppColors.secondaryTeal,
-              onPrimary: AppColors.white,
-              surface: AppColors.cardBackground,
-              onSurface: AppColors.textLight,
+              primary: AppTheme.visionBoardGradient[0],
+              onPrimary: AppTheme.white,
+              surface: AppTheme.cardBackground,
+              onSurface: AppTheme.textLight,
             ),
           ),
           child: child!,

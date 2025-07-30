@@ -1,20 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'screens/splash_screen.dart';
 import 'constants/colors.dart';
+import 'constants/app_theme.dart';
 import 'services/unified_auth_service.dart';
 import 'services/vision_board_service.dart';
+import 'services/theme_service.dart';
 import 'widgets/session_activity_tracker.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Lock app to portrait orientation only
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   
   // Initialize unified auth service first and wait for it to complete
   await UnifiedAuthService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
   
   // Initialize VisionBoardService (this depends on auth being ready)
   await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  
+  // Initialize theme service
+  await ThemeService().initialize();
   
   print('🚀 All services initialized, starting app with cache-only mode');
   
@@ -27,20 +39,35 @@ class ManifestationApp extends StatefulWidget {
 }
 
 class _ManifestationAppState extends State<ManifestationApp> {
+  final ThemeService _themeService = ThemeService();
+  
+  @override
+  void initState() {
+    super.initState();
+    _themeService.addListener(_onThemeChanged);
+  }
+  
   @override
   void dispose() {
+    _themeService.removeListener(_onThemeChanged);
     super.dispose();
+  }
+  
+  void _onThemeChanged() {
+    setState(() {
+      // Rebuild with new theme
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Set system UI overlay style
+    // Set system UI overlay style based on current theme
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: AppColors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: AppColors.backgroundDark,
-        systemNavigationBarIconBrightness: Brightness.light,
+        statusBarColor: AppTheme.transparent,
+        statusBarIconBrightness: AppTheme.isDarkMode ? Brightness.light : Brightness.dark,
+        systemNavigationBarColor: AppTheme.backgroundPrimary,
+        systemNavigationBarIconBrightness: AppTheme.isDarkMode ? Brightness.light : Brightness.dark,
       ),
     );
 
@@ -53,36 +80,38 @@ class _ManifestationAppState extends State<ManifestationApp> {
           child: MaterialApp(
           title: 'Manifestation App',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            primarySwatch: Colors.purple,
-            scaffoldBackgroundColor: AppColors.backgroundDark,
-            fontFamily: 'SF Pro Display', // iOS default font
-            textTheme: TextTheme(
+          theme: AppTheme.themeData.copyWith(
+            textTheme: GoogleFonts.poppinsTextTheme(
+              TextTheme(
               headlineLarge: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textPrimary,
                 fontSize: 32.sp,
                 fontWeight: FontWeight.bold,
               ),
               headlineMedium: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textPrimary,
                 fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
               ),
               bodyLarge: TextStyle(
-                color: AppColors.textMedium,
+                color: AppTheme.textSecondary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.normal,
               ),
               bodyMedium: TextStyle(
-                color: AppColors.textMedium,
+                color: AppTheme.textSecondary,
                 fontSize: 14.sp,
                 fontWeight: FontWeight.normal,
               ),
+            ).apply(
+              bodyColor: AppTheme.textSecondary,
+              displayColor: AppTheme.textPrimary,
+            ),
             ),
             // Custom theme for form fields
             inputDecorationTheme: InputDecorationTheme(
               filled: true,
-              fillColor: AppColors.cardBackground,
+              fillColor: AppTheme.inputBackground,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
                 borderSide: BorderSide.none,
@@ -90,21 +119,21 @@ class _ManifestationAppState extends State<ManifestationApp> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
                 borderSide: BorderSide(
-                  color: AppColors.textMedium.withOpacity(0.1),
+                  color: AppTheme.inputBorder,
                   width: 1,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
                 borderSide: BorderSide(
-                  color: AppColors.affirmationGradient[0],
+                  color: AppTheme.affirmationGradient[0],
                   width: 2,
                 ),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(16.r),
                 borderSide: BorderSide(
-                  color: Colors.red,
+                  color: AppTheme.error,
                   width: 1,
                 ),
               ),
@@ -134,7 +163,7 @@ class _ManifestationAppState extends State<ManifestationApp> {
                   borderRadius: BorderRadius.circular(16.r),
                 ),
                 side: BorderSide(
-                  color: AppColors.textMedium.withOpacity(0.3),
+                  color: AppTheme.borderPrimary,
                   width: 1,
                 ),
                 textStyle: TextStyle(
@@ -159,13 +188,13 @@ class _ManifestationAppState extends State<ManifestationApp> {
             checkboxTheme: CheckboxThemeData(
               fillColor: MaterialStateProperty.resolveWith((states) {
                 if (states.contains(MaterialState.selected)) {
-                  return AppColors.affirmationGradient[0];
+                  return AppTheme.affirmationGradient[0];
                 }
                 return Colors.transparent;
               }),
-              checkColor: MaterialStateProperty.all(AppColors.white),
+              checkColor: MaterialStateProperty.all(AppTheme.white),
               side: BorderSide(
-                color: AppColors.textMedium.withOpacity(0.5),
+                color: AppTheme.textSecondary.withOpacity(0.5),
                 width: 2,
               ),
               shape: RoundedRectangleBorder(
@@ -174,17 +203,17 @@ class _ManifestationAppState extends State<ManifestationApp> {
             ),
             // Custom theme for dialogs
             dialogTheme: DialogThemeData(
-              backgroundColor: AppColors.cardBackground,
+              backgroundColor: AppTheme.cardBackground,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16.r),
               ),
               titleTextStyle: TextStyle(
-                color: AppColors.textLight,
+                color: AppTheme.textPrimary,
                 fontSize: 18.sp,
                 fontWeight: FontWeight.bold,
               ),
               contentTextStyle: TextStyle(
-                color: AppColors.textMedium,
+                color: AppTheme.textSecondary,
                 fontSize: 14.sp,
               ),
             ),

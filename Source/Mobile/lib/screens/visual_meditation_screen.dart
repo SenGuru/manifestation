@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
+import '../constants/app_theme.dart';
 import '../models/meditation_models.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/guided_tour_service.dart';
@@ -339,14 +340,14 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.cardBackground,
+        backgroundColor: AppTheme.cardBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.r),
         ),
         title: Text(
           'Session Complete',
           style: TextStyle(
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -357,7 +358,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
             Text(
               'Wonderful! You\'ve completed your ${selectedDuration}-minute visual meditation session.',
               style: TextStyle(
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 fontSize: 16.sp,
               ),
             ),
@@ -373,7 +374,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
             child: Text(
               'Done',
               style: TextStyle(
-                color: AppColors.visualMeditationGradient[0],
+                color: AppTheme.visualMeditationGradient[0],
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -387,7 +388,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundDark,
+      backgroundColor: AppTheme.backgroundDark,
       body: AnimatedBuilder(
         animation: _backgroundFade,
         builder: (context, child) {
@@ -397,9 +398,9 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  AppColors.backgroundDark,
-                  AppColors.backgroundDark.withOpacity(0.9 - (_backgroundFade.value * 0.4)),
-                  Color.lerp(AppColors.backgroundDark, Colors.black, _backgroundFade.value * 0.6)!,
+                  AppTheme.backgroundDark,
+                  AppTheme.backgroundDark.withOpacity(0.9 - (_backgroundFade.value * 0.4)),
+                  Color.lerp(AppTheme.backgroundDark, Colors.black, _backgroundFade.value * 0.6)!,
                 ],
               ),
             ),
@@ -453,15 +454,15 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
+                color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: AppColors.textMedium.withOpacity(0.2),
+                  color: AppTheme.textMedium.withOpacity(0.2),
                 ),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppColors.textLight,
+                color: AppTheme.textLight,
                 size: 20.sp,
               ),
             ),
@@ -476,7 +477,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 SizedBox(height: 4.h),
@@ -484,7 +485,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   'Focus your mind with guided visual elements',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -500,10 +501,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       width: double.infinity,
       height: 300.h,
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.1),
+          color: AppTheme.textMedium.withOpacity(0.1),
         ),
       ),
       child: ClipRRect(
@@ -514,7 +515,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                AppColors.backgroundDark.withOpacity(0.8),
+                AppTheme.backgroundDark.withOpacity(0.8),
                 Colors.black.withOpacity(0.9),
               ],
             ),
@@ -573,7 +574,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 16.h),
@@ -599,7 +600,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 16.h),
@@ -621,14 +622,14 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                   decoration: BoxDecoration(
                     gradient: isSelected ? LinearGradient(
-                      colors: AppColors.visualMeditationGradient,
+                      colors: AppTheme.visualMeditationGradient,
                     ) : null,
-                    color: isSelected ? null : AppColors.cardBackground,
+                    color: isSelected ? null : AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: isSelected 
-                        ? AppColors.visualMeditationGradient[0]
-                        : AppColors.textMedium.withOpacity(0.2),
+                        ? AppTheme.visualMeditationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Text(
@@ -636,7 +637,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                     style: TextStyle(
                       fontSize: 16.sp,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
+                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
                     ),
                   ),
                 ),
@@ -657,7 +658,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 16.h),
@@ -692,16 +693,16 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           'Intensity',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.visualMeditationGradient[0],
-            inactiveTrackColor: AppColors.textMedium.withOpacity(0.3),
-            thumbColor: AppColors.visualMeditationGradient[0],
-            overlayColor: AppColors.visualMeditationGradient[0].withOpacity(0.2),
+            activeTrackColor: AppTheme.visualMeditationGradient[0],
+            inactiveTrackColor: AppTheme.textMedium.withOpacity(0.3),
+            thumbColor: AppTheme.visualMeditationGradient[0],
+            overlayColor: AppTheme.visualMeditationGradient[0].withOpacity(0.2),
           ),
           child: Slider(
             value: visualIntensity,
@@ -728,16 +729,16 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           'Size',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
         SliderTheme(
           data: SliderTheme.of(context).copyWith(
-            activeTrackColor: AppColors.visualMeditationGradient[0],
-            inactiveTrackColor: AppColors.textMedium.withOpacity(0.3),
-            thumbColor: AppColors.visualMeditationGradient[0],
-            overlayColor: AppColors.visualMeditationGradient[0].withOpacity(0.2),
+            activeTrackColor: AppTheme.visualMeditationGradient[0],
+            inactiveTrackColor: AppTheme.textMedium.withOpacity(0.3),
+            thumbColor: AppTheme.visualMeditationGradient[0],
+            overlayColor: AppTheme.visualMeditationGradient[0].withOpacity(0.2),
           ),
           child: Slider(
             value: visualSize,
@@ -764,7 +765,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           'Candle Color',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
@@ -784,19 +785,19 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   margin: EdgeInsets.only(right: 12.w),
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.visualMeditationGradient[0] : AppColors.cardBackground,
+                    color: isSelected ? AppTheme.visualMeditationGradient[0] : AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
                       color: isSelected 
-                        ? AppColors.visualMeditationGradient[0]
-                        : AppColors.textMedium.withOpacity(0.2),
+                        ? AppTheme.visualMeditationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Text(
                     color.name,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
+                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
                     ),
                   ),
                 ),
@@ -816,7 +817,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           'Moon Phase',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
@@ -836,19 +837,19 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   margin: EdgeInsets.only(right: 12.w),
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.visualMeditationGradient[0] : AppColors.cardBackground,
+                    color: isSelected ? AppTheme.visualMeditationGradient[0] : AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
                       color: isSelected 
-                        ? AppColors.visualMeditationGradient[0]
-                        : AppColors.textMedium.withOpacity(0.2),
+                        ? AppTheme.visualMeditationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Text(
                     phase.name,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
+                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
                     ),
                   ),
                 ),
@@ -868,7 +869,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           'Nature Pattern',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
@@ -888,19 +889,19 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   margin: EdgeInsets.only(right: 12.w),
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.visualMeditationGradient[0] : AppColors.cardBackground,
+                    color: isSelected ? AppTheme.visualMeditationGradient[0] : AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
                       color: isSelected 
-                        ? AppColors.visualMeditationGradient[0]
-                        : AppColors.textMedium.withOpacity(0.2),
+                        ? AppTheme.visualMeditationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Text(
                     pattern.name,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
+                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
                     ),
                   ),
                 ),
@@ -920,7 +921,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           'Geometric Pattern',
           style: TextStyle(
             fontSize: 14.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
@@ -940,19 +941,19 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   margin: EdgeInsets.only(right: 12.w),
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.visualMeditationGradient[0] : AppColors.cardBackground,
+                    color: isSelected ? AppTheme.visualMeditationGradient[0] : AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(
                       color: isSelected 
-                        ? AppColors.visualMeditationGradient[0]
-                        : AppColors.textMedium.withOpacity(0.2),
+                        ? AppTheme.visualMeditationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.2),
                     ),
                   ),
                   child: Text(
                     pattern.name,
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: isSelected ? AppColors.white : AppColors.textMedium,
+                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
                     ),
                   ),
                 ),
@@ -970,12 +971,12 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       height: 56.h,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: AppColors.visualMeditationGradient,
+          colors: AppTheme.visualMeditationGradient,
         ),
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: AppColors.visualMeditationGradient[0].withOpacity(0.4),
+            color: AppTheme.visualMeditationGradient[0].withOpacity(0.4),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -992,7 +993,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: AppColors.white,
+                color: AppTheme.white,
               ),
             ),
           ),
@@ -1038,7 +1039,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           style: TextStyle(
             fontSize: 24.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         SizedBox(height: 8.h),
@@ -1047,7 +1048,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           style: TextStyle(
             fontSize: 32.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.visualMeditationGradient[0],
+            color: AppTheme.visualMeditationGradient[0],
           ),
         ),
         SizedBox(height: 20.h),
@@ -1069,7 +1070,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           _buildControlButton(
             icon: isPlaying ? Icons.pause : Icons.play_arrow,
             onTap: isPlaying ? _pauseSession : _resumeSession,
-            color: AppColors.visualMeditationGradient[0],
+            color: AppTheme.visualMeditationGradient[0],
             isPrimary: true,
           ),
         ],
@@ -1101,7 +1102,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         ),
         child: Icon(
           icon,
-          color: AppColors.white,
+          color: AppTheme.white,
           size: isPrimary ? 32.sp : 24.sp,
         ),
       ),

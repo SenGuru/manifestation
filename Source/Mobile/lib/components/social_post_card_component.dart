@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/models/social_models.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 class SocialPostCard extends StatefulWidget {
   final SocialPost post;
@@ -50,14 +50,14 @@ class _SocialPostCardState extends State<SocialPostCard>
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.cardBackground,
+        color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
         border: Border.all(
-          color: AppColors.textMedium.withOpacity(0.1),
+          color: AppTheme.textMedium.withOpacity(0.1),
         ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.black.withOpacity(0.05),
+            color: AppTheme.black.withOpacity(0.05),
             blurRadius: 8.r,
             offset: Offset(0, 4.h),
           ),
@@ -107,7 +107,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.white,
+                  color: AppTheme.white,
                 ),
               ),
             ),
@@ -126,7 +126,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textLight,
+                        color: AppTheme.textLight,
                       ),
                     ),
                     SizedBox(width: 4.w),
@@ -169,7 +169,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                       _formatTime(widget.post.createdAt),
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: AppColors.textMedium,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ],
@@ -185,12 +185,12 @@ class _SocialPostCardState extends State<SocialPostCard>
               width: 32.w,
               height: 32.h,
               decoration: BoxDecoration(
-                color: AppColors.backgroundMedium,
+                color: AppTheme.backgroundMedium,
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Icon(
                 Icons.more_horiz,
-                color: AppColors.textMedium,
+                color: AppTheme.textMedium,
                 size: 16.sp,
               ),
             ),
@@ -207,7 +207,7 @@ class _SocialPostCardState extends State<SocialPostCard>
         widget.post.content,
         style: TextStyle(
           fontSize: 15.sp,
-          color: AppColors.textLight,
+          color: AppTheme.textLight,
           height: 1.4,
         ),
       ),
@@ -260,7 +260,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textLight,
+                    color: AppTheme.textLight,
                   ),
                 ),
                 SizedBox(height: 2.h),
@@ -268,7 +268,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                   achievement.description,
                   style: TextStyle(
                     fontSize: 13.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                   ),
                 ),
               ],
@@ -321,7 +321,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                             : Icons.favorite_border,
                         color: widget.post.isLikedByCurrentUser
                             ? Colors.red
-                            : AppColors.textMedium,
+                            : AppTheme.textMedium,
                         size: 20.sp,
                       ),
                       SizedBox(width: 6.w),
@@ -329,7 +329,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                         '${widget.post.likes.length}',
                         style: TextStyle(
                           fontSize: 14.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -350,7 +350,7 @@ class _SocialPostCardState extends State<SocialPostCard>
               children: [
                 Icon(
                   Icons.chat_bubble_outline,
-                  color: AppColors.textMedium,
+                  color: AppTheme.textMedium,
                   size: 20.sp,
                 ),
                 SizedBox(width: 6.w),
@@ -358,7 +358,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                   '${widget.post.comments.length}',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppColors.textMedium,
+                    color: AppTheme.textMedium,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -374,7 +374,7 @@ class _SocialPostCardState extends State<SocialPostCard>
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
               decoration: BoxDecoration(
-                color: AppColors.socialGradient[0].withOpacity(0.1),
+                color: AppTheme.socialGradient[0].withOpacity(0.1),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Row(
@@ -382,7 +382,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                 children: [
                   Icon(
                     Icons.share,
-                    color: AppColors.socialGradient[0],
+                    color: AppTheme.socialGradient[0],
                     size: 16.sp,
                   ),
                   SizedBox(width: 4.w),
@@ -390,7 +390,7 @@ class _SocialPostCardState extends State<SocialPostCard>
                     'Share',
                     style: TextStyle(
                       fontSize: 12.sp,
-                      color: AppColors.socialGradient[0],
+                      color: AppTheme.socialGradient[0],
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -425,7 +425,7 @@ class _SocialPostCardState extends State<SocialPostCard>
       builder: (context) => Container(
         margin: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Column(
@@ -436,7 +436,7 @@ class _SocialPostCardState extends State<SocialPostCard>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppColors.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -492,7 +492,7 @@ class _SocialPostCardState extends State<SocialPostCard>
           children: [
             Icon(
               icon,
-              color: isDestructive ? Colors.red : AppColors.textMedium,
+              color: isDestructive ? Colors.red : AppTheme.textMedium,
               size: 20.sp,
             ),
             SizedBox(width: 16.w),
@@ -500,7 +500,7 @@ class _SocialPostCardState extends State<SocialPostCard>
               title,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: isDestructive ? Colors.red : AppColors.textLight,
+                color: isDestructive ? Colors.red : AppTheme.textLight,
                 fontWeight: FontWeight.w500,
               ),
             ),

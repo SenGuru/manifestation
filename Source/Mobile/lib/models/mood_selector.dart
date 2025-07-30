@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 import 'package:fun/models/journey_entry.dart';
 
 class MoodSelector extends StatefulWidget {
@@ -98,7 +98,7 @@ class _MoodSelectorState extends State<MoodSelector>
             style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+              color: AppTheme.textLight,
             ),
           ),
           SizedBox(height: 4.h),
@@ -106,7 +106,7 @@ class _MoodSelectorState extends State<MoodSelector>
             widget.selectedMood.description,
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppColors.textMedium,
+              color: AppTheme.textMedium,
             ),
             textAlign: TextAlign.center,
           ),
@@ -140,12 +140,12 @@ class _MoodSelectorState extends State<MoodSelector>
                 decoration: BoxDecoration(
                   color: isSelected 
                       ? mood.color.withOpacity(0.1)
-                      : AppColors.cardBackground,
+                      : AppTheme.cardBackground,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
                     color: isSelected 
                         ? mood.color
-                        : AppColors.textMedium.withOpacity(0.2),
+                        : AppTheme.textMedium.withOpacity(0.2),
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -165,7 +165,7 @@ class _MoodSelectorState extends State<MoodSelector>
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
-                              color: isSelected ? mood.color : AppColors.textLight,
+                              color: isSelected ? mood.color : AppTheme.textLight,
                             ),
                           ),
                           SizedBox(height: 2.h),
@@ -173,7 +173,7 @@ class _MoodSelectorState extends State<MoodSelector>
                             mood.description,
                             style: TextStyle(
                               fontSize: 14.sp,
-                              color: AppColors.textMedium,
+                              color: AppTheme.textMedium,
                             ),
                           ),
                         ],

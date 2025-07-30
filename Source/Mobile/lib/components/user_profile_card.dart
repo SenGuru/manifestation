@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/models/social_models.dart';
-import 'package:fun/constants/colors.dart';
+import '../constants/app_theme.dart';
 
 
 class UserProfileCard extends StatefulWidget {
@@ -54,14 +54,14 @@ class _UserProfileCardState extends State<UserProfileCard>
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
-          color: AppColors.cardBackground,
+          color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: AppColors.textMedium.withOpacity(0.1),
+            color: AppTheme.textMedium.withOpacity(0.1),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppColors.black.withOpacity(0.05),
+              color: AppTheme.black.withOpacity(0.05),
               blurRadius: 8.r,
               offset: Offset(0, 4.h),
             ),
@@ -93,7 +93,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                           style: TextStyle(
                             fontSize: 20.sp,
                             fontWeight: FontWeight.bold,
-                            color: AppColors.white,
+                            color: AppTheme.white,
                           ),
                         ),
                       ),
@@ -107,10 +107,10 @@ class _UserProfileCardState extends State<UserProfileCard>
                           width: 12.w,
                           height: 12.h,
                           decoration: BoxDecoration(
-                            color: AppColors.accentMint,
+                            color: AppTheme.accentMint,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AppColors.cardBackground,
+                              color: AppTheme.cardBackground,
                               width: 2,
                             ),
                           ),
@@ -132,7 +132,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.bold,
-                              color: AppColors.textLight,
+                              color: AppTheme.textLight,
                             ),
                           ),
                           SizedBox(width: 4.w),
@@ -158,7 +158,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                         '@${widget.user.username}',
                         style: TextStyle(
                           fontSize: 13.sp,
-                          color: AppColors.textMedium,
+                          color: AppTheme.textMedium,
                         ),
                       ),
                       if (widget.user.bio.isNotEmpty) ...[
@@ -167,7 +167,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                           widget.user.bio,
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: AppColors.textMedium,
+                            color: AppTheme.textMedium,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -198,14 +198,14 @@ class _UserProfileCardState extends State<UserProfileCard>
                           decoration: BoxDecoration(
                             gradient: widget.user.isFollowing
                                 ? null
-                                : LinearGradient(colors: AppColors.socialGradient),
+                                : LinearGradient(colors: AppTheme.socialGradient),
                             color: widget.user.isFollowing
-                                ? AppColors.backgroundMedium
+                                ? AppTheme.backgroundMedium
                                 : null,
                             borderRadius: BorderRadius.circular(20.r),
                             border: widget.user.isFollowing
                                 ? Border.all(
-                                    color: AppColors.textMedium.withOpacity(0.3),
+                                    color: AppTheme.textMedium.withOpacity(0.3),
                                   )
                                 : null,
                           ),
@@ -215,8 +215,8 @@ class _UserProfileCardState extends State<UserProfileCard>
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
                               color: widget.user.isFollowing
-                                  ? AppColors.textMedium
-                                  : AppColors.white,
+                                  ? AppTheme.textMedium
+                                  : AppTheme.white,
                             ),
                           ),
                         ),
@@ -237,7 +237,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                     '${widget.user.stats.currentStreak}',
                     'Day Streak',
                     Icons.local_fire_department,
-                    AppColors.accentGold,
+                    AppTheme.accentGold,
                   ),
                 ),
                 Expanded(
@@ -245,7 +245,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                     '${widget.user.stats.meditationMinutes}m',
                     'Meditation',
                     Icons.self_improvement,
-                    AppColors.visualMeditationGradient[0],
+                    AppTheme.visualMeditationGradient[0],
                   ),
                 ),
                 Expanded(
@@ -253,7 +253,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                     '${widget.user.stats.goalsAchieved}',
                     'Goals',
                     Icons.flag,
-                    AppColors.goalTrackerGradient[0],
+                    AppTheme.goalTrackerGradient[0],
                   ),
                 ),
                 Expanded(
@@ -261,7 +261,7 @@ class _UserProfileCardState extends State<UserProfileCard>
                     '${widget.user.stats.totalActivities}',
                     'Total',
                     Icons.trending_up,
-                    AppColors.socialGradient[0],
+                    AppTheme.socialGradient[0],
                   ),
                 ),
               ],
@@ -300,14 +300,14 @@ class _UserProfileCardState extends State<UserProfileCard>
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.bold,
-            color: AppColors.textLight,
+            color: AppTheme.textLight,
           ),
         ),
         Text(
           label,
           style: TextStyle(
             fontSize: 10.sp,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
       ],
@@ -323,7 +323,7 @@ class _UserProfileCardState extends State<UserProfileCard>
           style: TextStyle(
             fontSize: 12.sp,
             fontWeight: FontWeight.w600,
-            color: AppColors.textMedium,
+            color: AppTheme.textMedium,
           ),
         ),
         SizedBox(height: 8.h),
@@ -379,61 +379,61 @@ class _UserProfileCardState extends State<UserProfileCard>
         return {
           'name': '7 Day',
           'emoji': '🔥',
-          'color': AppColors.accentGold,
+          'color': AppTheme.accentGold,
         };
       case 'streak_30':
         return {
           'name': '30 Day',
           'emoji': '🔥',
-          'color': AppColors.accentGold,
+          'color': AppTheme.accentGold,
         };
       case 'meditation_master':
         return {
           'name': 'Zen',
           'emoji': '🧘‍♀️',
-          'color': AppColors.visualMeditationGradient[0],
+          'color': AppTheme.visualMeditationGradient[0],
         };
       case 'goal_achiever':
         return {
           'name': 'Goals',
           'emoji': '🎯',
-          'color': AppColors.goalTrackerGradient[0],
+          'color': AppTheme.goalTrackerGradient[0],
         };
       case 'goal_crusher':
         return {
           'name': 'Crusher',
           'emoji': '💪',
-          'color': AppColors.goalTrackerGradient[1],
+          'color': AppTheme.goalTrackerGradient[1],
         };
       case 'vision_creator':
         return {
           'name': 'Vision',
           'emoji': '🎨',
-          'color': AppColors.visionBoardGradient[0],
+          'color': AppTheme.visionBoardGradient[0],
         };
       case 'gratitude_master':
         return {
           'name': 'Grateful',
           'emoji': '🙏',
-          'color': AppColors.affirmationGradient[0],
+          'color': AppTheme.affirmationGradient[0],
         };
       case 'affirmation_lover':
         return {
           'name': 'Positive',
           'emoji': '💖',
-          'color': AppColors.affirmationGradient[1],
+          'color': AppTheme.affirmationGradient[1],
         };
       case 'zen_master':
         return {
           'name': 'Master',
           'emoji': '🏆',
-          'color': AppColors.gradientPurple,
+          'color': AppTheme.journalGradient[0],
         };
       default:
         return {
           'name': 'Badge',
           'emoji': '⭐',
-          'color': AppColors.textMedium,
+          'color': AppTheme.textMedium,
         };
     }
   }
