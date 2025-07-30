@@ -26,6 +26,7 @@ class _SignUpScreenState extends State<SignUpScreen>
   bool _agreeToTerms = false;
   bool _subscribeToNewsletter = false;
   bool _isLoading = false;
+  String _validationError = '';
   
   PasswordStrength _passwordStrength = PasswordStrength(
     strength: 0.0,
@@ -35,8 +36,10 @@ class _SignUpScreenState extends State<SignUpScreen>
   
   late AnimationController _fadeController;
   late AnimationController _slideController;
+  late AnimationController _buttonPulseController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late Animation<double> _buttonPulseAnimation;
 
   @override
   void initState() {
@@ -49,6 +52,11 @@ class _SignUpScreenState extends State<SignUpScreen>
     
     _slideController = AnimationController(
       duration: Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    
+    _buttonPulseController = AnimationController(
+      duration: Duration(milliseconds: 2000),
       vsync: this,
     );
     
@@ -68,6 +76,14 @@ class _SignUpScreenState extends State<SignUpScreen>
       curve: Curves.easeOutCubic,
     ));
     
+    _buttonPulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.02,
+    ).animate(CurvedAnimation(
+      parent: _buttonPulseController,
+      curve: Curves.easeInOut,
+    ));
+    
     // Password strength listener
     _passwordController.addListener(() {
       setState(() {
@@ -78,6 +94,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     // Start animations
     _fadeController.forward();
     _slideController.forward();
+    _buttonPulseController.repeat(reverse: true);
   }
 
 
@@ -89,6 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen>
     _confirmPasswordController.dispose();
     _fadeController.dispose();
     _slideController.dispose();
+    _buttonPulseController.dispose();
     super.dispose();
   }
 
@@ -223,11 +241,9 @@ class _SignUpScreenState extends State<SignUpScreen>
               validator: AuthValidation.validatePassword,
             ),
             
-            // Password strength indicator
-            if (_passwordController.text.isNotEmpty) ...[
-              SizedBox(height: 8.h),
-              _buildPasswordStrengthIndicator(),
-            ],
+            // Password strength indicator - always allocated space
+            SizedBox(height: 8.h),
+            _buildPasswordStrengthIndicator(),
             
             SizedBox(height: 16.h),
             
@@ -255,7 +271,10 @@ class _SignUpScreenState extends State<SignUpScreen>
             // Newsletter subscription
             _buildNewsletterCheckbox(),
             
-            SizedBox(height: 24.h),
+            // Fixed space for validation errors
+            _buildValidationErrorContainer(),
+            
+            SizedBox(height: 16.h),
             
             // Sign up button
             _buildSignUpButton(),
@@ -338,7 +357,7 @@ class _SignUpScreenState extends State<SignUpScreen>
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide(
                 color: AppColors.textMedium.withOpacity(0.1),
-                width: 1,
+                width: 2,
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -352,9 +371,18 @@ class _SignUpScreenState extends State<SignUpScreen>
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide(
                 color: Colors.red,
-                width: 1,
+                width: 2,
               ),
             ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.r),
+              borderSide: BorderSide(
+                color: Colors.red,
+                width: 2,
+              ),
+            ),
+            // Remove error text to prevent jumping
+            errorStyle: TextStyle(height: 0, fontSize: 0),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
               vertical: 16.h,
@@ -366,36 +394,51 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   Widget _buildPasswordStrengthIndicator() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Password strength: ',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppColors.textMedium,
-              ),
-            ),
-            Text(
-              _passwordStrength.label,
-              style: TextStyle(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: _passwordStrength.color,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 6.h),
-        LinearProgressIndicator(
-          value: _passwordStrength.strength,
-          backgroundColor: AppColors.textMedium.withOpacity(0.2),
-          valueColor: AlwaysStoppedAnimation<Color>(_passwordStrength.color),
-          minHeight: 4.h,
-        ),
-      ],
+    // Always allocate fixed space to prevent layout jumping
+    return Container(
+      height: 40.h, // Fixed height to prevent jumping
+      child: AnimatedOpacity(
+        opacity: _passwordController.text.isNotEmpty ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: _passwordController.text.isNotEmpty 
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Password strength: ',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: AppColors.textMedium,
+                      ),
+                    ),
+                    Text(
+                      _passwordStrength.label,
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: _passwordStrength.color,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 6.h),
+                AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: LinearProgressIndicator(
+                    value: _passwordStrength.strength,
+                    backgroundColor: AppColors.textMedium.withOpacity(0.2),
+                    valueColor: AlwaysStoppedAnimation<Color>(_passwordStrength.color),
+                    minHeight: 4.h,
+                  ),
+                ),
+              ],
+            )
+          : SizedBox.shrink(), // Invisible placeholder
+      ),
     );
   }
 
@@ -515,46 +558,117 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
-  Widget _buildSignUpButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 56.h,
-      child: ElevatedButton(
-        onPressed: (_isLoading || !_agreeToTerms) ? null : _handleSignUp,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-        ).copyWith(
-          backgroundColor: MaterialStateProperty.all(Colors.transparent),
-        ),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: (_agreeToTerms && !_isLoading)
-                ? LinearGradient(colors: AppColors.socialGradient)
-                : null,
-            color: (_agreeToTerms && !_isLoading)
-                ? null
-                : AppColors.textMedium.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: _isLoading
-                ? CompactStylishLoading(size: 20.w)
-                : Text(
-                    'Create Account',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                    ),
+  Widget _buildValidationErrorContainer() {
+    return Container(
+      height: 30.h, // Fixed space for validation errors
+      margin: EdgeInsets.only(top: 8.h),
+      child: AnimatedOpacity(
+        opacity: _validationError.isNotEmpty ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: _validationError.isNotEmpty
+            ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: Colors.red.withOpacity(0.3),
+                    width: 1,
                   ),
-          ),
-        ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        _validationError,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox.shrink(),
       ),
+    );
+  }
+
+  Widget _buildSignUpButton() {
+    final bool isButtonEnabled = _agreeToTerms && !_isLoading;
+    
+    return AnimatedBuilder(
+      animation: _buttonPulseAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: (!isButtonEnabled || _isLoading) ? 1.0 : _buttonPulseAnimation.value,
+          child: SizedBox(
+            width: double.infinity,
+            height: 56.h,
+            child: ElevatedButton(
+              onPressed: isButtonEnabled ? _handleSignUp : null,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                padding: EdgeInsets.zero,
+                elevation: 0,
+              ),
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: isButtonEnabled
+                      ? LinearGradient(colors: AppColors.socialGradient)
+                      : null,
+                  color: isButtonEnabled
+                      ? null
+                      : AppColors.textMedium.withOpacity(0.3),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: isButtonEnabled ? [
+                    BoxShadow(
+                      color: AppColors.socialGradient[0].withOpacity(0.4),
+                      blurRadius: 20.r,
+                      offset: Offset(0, 8.h),
+                      spreadRadius: 2.r,
+                    ),
+                    BoxShadow(
+                      color: AppColors.socialGradient[1].withOpacity(0.2),
+                      blurRadius: 40.r,
+                      offset: Offset(0, 16.h),
+                    ),
+                  ] : null,
+                ),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: _isLoading
+                      ? CompactStylishLoading(size: 20.w, color: AppColors.white)
+                      : Text(
+                          'Create Account',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -586,9 +700,16 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   void _handleSignUp() async {
+    // Clear previous validation error
+    setState(() {
+      _validationError = '';
+    });
+    
     if (!_formKey.currentState!.validate()) return;
     if (!_agreeToTerms) {
-      _showErrorSnackBar('Please agree to the Terms of Service and Privacy Policy');
+      setState(() {
+        _validationError = 'Please agree to the Terms of Service and Privacy Policy';
+      });
       return;
     }
 
@@ -632,10 +753,15 @@ class _SignUpScreenState extends State<SignUpScreen>
           MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
         );
       } else {
-        _showErrorSnackBar(result.message);
+        // Handle specific signup errors
+        setState(() {
+          _validationError = _getSignupErrorMessage(result.message);
+        });
       }
     } catch (e) {
-      _showErrorSnackBar('Unexpected error occurred. Please try again.');
+      setState(() {
+        _validationError = 'Connection error. Please check your internet and try again.';
+      });
     } finally {
       setState(() {
         _isLoading = false;
@@ -811,6 +937,29 @@ class _SignUpScreenState extends State<SignUpScreen>
     );
   }
 
+
+  String _getSignupErrorMessage(String apiMessage) {
+    final message = apiMessage.toLowerCase();
+    
+    if (message.contains('email already exists') || message.contains('email already registered') || message.contains('duplicate email')) {
+      return 'This email is already registered. Please use a different email or sign in.';
+    } else if (message.contains('username already exists') || message.contains('username taken') || message.contains('duplicate username')) {
+      return 'This username is already taken. Please choose a different username.';
+    } else if (message.contains('invalid email') || message.contains('email format')) {
+      return 'Please enter a valid email address.';
+    } else if (message.contains('password too weak') || message.contains('password requirements')) {
+      return 'Password is too weak. Please use a stronger password.';
+    } else if (message.contains('network') || message.contains('connection') || message.contains('timeout')) {
+      return 'Connection error. Please check your internet and try again.';
+    } else if (message.contains('server') || message.contains('internal error')) {
+      return 'Server error. Please try again in a moment.';
+    } else if (message.contains('captcha') || message.contains('verification')) {
+      return 'Verification failed. Please try again.';
+    } else {
+      // Fallback for any other error messages
+      return 'Account creation failed. Please check your information and try again.';
+    }
+  }
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(

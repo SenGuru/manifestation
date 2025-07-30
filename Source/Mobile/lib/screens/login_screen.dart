@@ -23,11 +23,14 @@ class _LoginScreenState extends State<LoginScreen>
   bool _isPasswordVisible = false;
   bool _rememberMe = false;
   bool _isLoading = false;
+  String _validationError = '';
   
   late AnimationController _fadeController;
   late AnimationController _slideController;
+  late AnimationController _buttonPulseController;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
+  late Animation<double> _buttonPulseAnimation;
 
   @override
   void initState() {
@@ -40,6 +43,11 @@ class _LoginScreenState extends State<LoginScreen>
     
     _slideController = AnimationController(
       duration: Duration(milliseconds: 1200),
+      vsync: this,
+    );
+    
+    _buttonPulseController = AnimationController(
+      duration: Duration(milliseconds: 2000),
       vsync: this,
     );
     
@@ -59,9 +67,18 @@ class _LoginScreenState extends State<LoginScreen>
       curve: Curves.easeOutCubic,
     ));
     
+    _buttonPulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.02,
+    ).animate(CurvedAnimation(
+      parent: _buttonPulseController,
+      curve: Curves.easeInOut,
+    ));
+    
     // Start animations
     _fadeController.forward();
     _slideController.forward();
+    _buttonPulseController.repeat(reverse: true);
   }
 
 
@@ -71,6 +88,7 @@ class _LoginScreenState extends State<LoginScreen>
     _passwordController.dispose();
     _fadeController.dispose();
     _slideController.dispose();
+    _buttonPulseController.dispose();
     super.dispose();
   }
 
@@ -281,7 +299,10 @@ class _LoginScreenState extends State<LoginScreen>
             ],
           ),
           
-          SizedBox(height: 32.h),
+          // Fixed space for validation errors
+          _buildValidationErrorContainer(),
+          
+          SizedBox(height: 16.h),
           
           // Login button
           _buildPrimaryLoginButton(),
@@ -356,7 +377,7 @@ class _LoginScreenState extends State<LoginScreen>
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide(
                 color: AppColors.textMedium.withOpacity(0.1),
-                width: 1,
+                width: 2,
               ),
             ),
             focusedBorder: OutlineInputBorder(
@@ -370,9 +391,18 @@ class _LoginScreenState extends State<LoginScreen>
               borderRadius: BorderRadius.circular(16.r),
               borderSide: BorderSide(
                 color: Colors.red,
-                width: 1,
+                width: 2,
               ),
             ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16.r),
+              borderSide: BorderSide(
+                color: Colors.red,
+                width: 2,
+              ),
+            ),
+            // Remove error text to prevent jumping
+            errorStyle: TextStyle(height: 0, fontSize: 0),
             contentPadding: EdgeInsets.symmetric(
               horizontal: 16.w,
               vertical: 16.h,
@@ -383,51 +413,112 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildPrimaryLoginButton() {
-    return SizedBox(
-      width: double.infinity,
-      height: 56.h,
-      child: ElevatedButton(
-        onPressed: _isLoading ? null : _handleLogin,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          padding: EdgeInsets.zero,
-        ).copyWith(
-          backgroundColor: MaterialStateProperty.all(Colors.transparent),
-        ),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: AppColors.affirmationGradient,
-            ),
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.affirmationGradient[0].withOpacity(0.3),
-                blurRadius: 20.r,
-                offset: Offset(0, 10.h),
-              ),
-            ],
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: _isLoading
-                ? CompactStylishLoading(size: 20.w)
-                : Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.white,
-                    ),
+  Widget _buildValidationErrorContainer() {
+    return Container(
+      height: 30.h, // Fixed space for validation errors
+      margin: EdgeInsets.only(top: 16.h),
+      child: AnimatedOpacity(
+        opacity: _validationError.isNotEmpty ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        child: _validationError.isNotEmpty
+            ? Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
+                  border: Border.all(
+                    color: Colors.red.withOpacity(0.3),
+                    width: 1,
                   ),
-          ),
-        ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      color: Colors.red,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        _validationError,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : SizedBox.shrink(),
       ),
+    );
+  }
+
+  Widget _buildPrimaryLoginButton() {
+    return AnimatedBuilder(
+      animation: _buttonPulseAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _isLoading ? 1.0 : _buttonPulseAnimation.value,
+          child: SizedBox(
+            width: double.infinity,
+            height: 56.h,
+            child: ElevatedButton(
+              onPressed: _isLoading ? null : _handleLogin,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                padding: EdgeInsets.zero,
+                elevation: 0,
+              ),
+              child: Ink(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppColors.affirmationGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.affirmationGradient[0].withOpacity(0.4),
+                      blurRadius: 20.r,
+                      offset: Offset(0, 8.h),
+                      spreadRadius: 2.r,
+                    ),
+                    BoxShadow(
+                      color: AppColors.affirmationGradient[1].withOpacity(0.2),
+                      blurRadius: 40.r,
+                      offset: Offset(0, 16.h),
+                    ),
+                  ],
+                ),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: _isLoading
+                      ? CompactStylishLoading(size: 20.w, color: AppColors.white)
+                      : Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -567,6 +658,11 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _handleLogin() async {
+    // Clear previous validation error
+    setState(() {
+      _validationError = '';
+    });
+    
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -601,10 +697,15 @@ class _LoginScreenState extends State<LoginScreen>
           MaterialPageRoute(builder: (context) => HomeScreen()),
         );
       } else {
-        _showErrorSnackBar(result.message);
+        // Handle specific authentication errors
+        setState(() {
+          _validationError = _getLoginErrorMessage(result.message);
+        });
       }
     } catch (e) {
-      _showErrorSnackBar('Unexpected error occurred. Please try again.');
+      setState(() {
+        _validationError = 'Connection error. Please check your internet and try again.';
+      });
     } finally {
       setState(() {
         _isLoading = false;
@@ -662,6 +763,27 @@ class _LoginScreenState extends State<LoginScreen>
       context,
       MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
     );
+  }
+
+  String _getLoginErrorMessage(String apiMessage) {
+    final message = apiMessage.toLowerCase();
+    
+    if (message.contains('user not found') || message.contains('account not found') || message.contains('invalid username')) {
+      return 'Account not found. Please check your username or sign up.';
+    } else if (message.contains('invalid password') || message.contains('incorrect password') || message.contains('wrong password')) {
+      return 'Incorrect password. Please try again.';
+    } else if (message.contains('account locked') || message.contains('account disabled')) {
+      return 'Account temporarily locked. Please contact support.';
+    } else if (message.contains('too many attempts') || message.contains('rate limit')) {
+      return 'Too many login attempts. Please wait and try again.';
+    } else if (message.contains('network') || message.contains('connection') || message.contains('timeout')) {
+      return 'Connection error. Please check your internet and try again.';
+    } else if (message.contains('server') || message.contains('internal error')) {
+      return 'Server error. Please try again in a moment.';
+    } else {
+      // Fallback for any other error messages
+      return 'Login failed. Please check your credentials and try again.';
+    }
   }
 
   void _showErrorSnackBar(String message) {

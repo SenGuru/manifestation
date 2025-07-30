@@ -177,42 +177,39 @@ class _StylishLoadingState extends State<StylishLoading>
                 
                 return ShaderMask(
                   shaderCallback: (bounds) {
-                    // Create a flowing gradient that moves from left to right
-                    final double offset = progress * 2.0; // Speed multiplier
+                    // Create a continuously flowing gradient that never resets
+                    final double offset = -progress * 3.0; // Negative for left-to-right flow
                     
-                    // Generate colors that cycle: pink → orange → white → pink → orange → white
+                    // Generate colors that smoothly cycle through: pink → orange → white → pink
                     List<Color> generateGradientColors() {
                       final List<Color> colors = [];
+                      final List<Color> baseColors = [
+                        AppColors.affirmationGradient[0], // Pink
+                        AppColors.affirmationGradient[1], // Orange
+                        AppColors.white,                   // White
+                        AppColors.affirmationGradient[0], // Pink (for seamless loop)
+                      ];
                       
-                      // Create 6 color stops for smooth flowing effect
-                      for (int i = 0; i < 6; i++) {
-                        final double colorProgress = (-offset + i * 0.4) % 3.0; // Negative for left-to-right, 3.0 for 3-color cycle
-                        Color baseColor;
+                      // Create smooth gradient stops
+                      for (int i = 0; i < 8; i++) {
+                        // Calculate continuous position without hard resets
+                        final double position = (offset + i * 0.25); // Smooth increment
+                        final double normalizedPosition = position - position.floor(); // Get fractional part (0-1)
+                        final double colorIndex = normalizedPosition * (baseColors.length - 1); // Scale to color array
                         
-                        if (colorProgress < 1.0) {
-                          // Transition from pink to orange
-                          baseColor = Color.lerp(
-                            AppColors.affirmationGradient[0], // Pink
-                            AppColors.affirmationGradient[1], // Orange
-                            colorProgress,
-                          )!;
-                        } else if (colorProgress < 2.0) {
-                          // Transition from orange to white
-                          baseColor = Color.lerp(
-                            AppColors.affirmationGradient[1], // Orange
-                            AppColors.white, // White
-                            colorProgress - 1.0,
-                          )!;
-                        } else {
-                          // Transition from white back to pink
-                          baseColor = Color.lerp(
-                            AppColors.white, // White
-                            AppColors.affirmationGradient[0], // Pink
-                            colorProgress - 2.0,
-                          )!;
-                        }
+                        // Get the two colors to interpolate between
+                        final int lowerIndex = colorIndex.floor();
+                        final int upperIndex = (lowerIndex + 1) % (baseColors.length - 1); // Wrap around excluding duplicate
+                        final double t = colorIndex - lowerIndex; // Interpolation factor
                         
-                        colors.add(baseColor);
+                        // Smooth interpolation between colors
+                        final Color interpolatedColor = Color.lerp(
+                          baseColors[lowerIndex],
+                          baseColors[upperIndex],
+                          t,
+                        )!;
+                        
+                        colors.add(interpolatedColor);
                       }
                       
                       return colors;
@@ -220,7 +217,7 @@ class _StylishLoadingState extends State<StylishLoading>
                     
                     return LinearGradient(
                       colors: generateGradientColors(),
-                      stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+                      stops: [0.0, 0.14, 0.28, 0.42, 0.56, 0.70, 0.84, 1.0],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ).createShader(bounds);

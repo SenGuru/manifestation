@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fun/components/gratitude_selection.dart';
-import 'package:fun/components/journal_prompt.dart' hide GratitudeSection;
 import 'package:fun/models/journey_entry.dart';
 import 'package:fun/constants/colors.dart';
 import 'package:fun/models/mood_selector.dart';
@@ -10,7 +9,6 @@ import 'package:fun/services/daily_journal_service.dart';
 import 'package:fun/services/guided_tour_service.dart';
 import 'package:fun/widgets/stylish_loading.dart';
 import 'package:fun/widgets/keyboard_dismissal_wrapper.dart';
-import 'package:uuid/uuid.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
   @override
@@ -133,34 +131,68 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildSimpleHeader() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
           GestureDetector(
             onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back,
-              color: AppColors.textLight,
-              size: 24.sp,
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.textMedium.withOpacity(0.1),
+                ),
+              ),
+              child: Icon(
+                Icons.arrow_back,
+                color: AppColors.textLight,
+                size: 20.sp,
+              ),
             ),
           ),
           SizedBox(width: 16.w),
           Expanded(
-            child: Text(
-              isEditingExistingEntry ? 'Edit Entry' : 'Daily Journal',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textLight,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isEditingExistingEntry ? 'Edit Entry' : 'Daily Journal',
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textLight,
+                  ),
+                ),
+                Text(
+                  'Manifest your intentions through reflection',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppColors.textMedium,
+                  ),
+                ),
+              ],
             ),
           ),
           GestureDetector(
             onTap: _showCalendarView,
-            child: Icon(
-              Icons.calendar_today,
-              color: AppColors.gradientPurple,
-              size: 22.sp,
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.textMedium.withOpacity(0.1),
+                ),
+              ),
+              child: Icon(
+                Icons.calendar_today,
+                color: AppColors.gradientPurple,
+                size: 20.sp,
+              ),
             ),
           ),
         ],
@@ -193,19 +225,82 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildMoodPage() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'How are you feeling?',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+          // Enhanced header section
+          Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.accentLavender.withOpacity(0.15),
+                  AppColors.gradientPink.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: AppColors.accentLavender.withOpacity(0.2),
+                width: 1.5.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.accentLavender.withOpacity(0.1),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.accentLavender, AppColors.gradientPink],
+                    ),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.sentiment_satisfied_alt_rounded,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'How are you feeling?',
+                        style: TextStyle(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Choose the mood that resonates with you today',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.textMedium,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 12.h),
+          
+          SizedBox(height: 32.h),
+          
           Expanded(
             child: MoodSelector(
               selectedMood: selectedMood,
@@ -223,19 +318,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildGratitudePage() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Gratitudes',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
-            ),
-          ),
-          SizedBox(height: 12.h),
           Expanded(
             child: GratitudeSection(
               gratitudeItems: gratitudeItems,
@@ -253,28 +339,172 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildReflectionPage() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Daily Reflection',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+          // Enhanced header section
+          Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.accentGold.withOpacity(0.15),
+                  AppColors.gradientPink.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: AppColors.accentGold.withOpacity(0.2),
+                width: 1.5.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.accentGold.withOpacity(0.1),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.accentGold, AppColors.gradientPink],
+                    ),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.auto_stories_rounded,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Daily Reflection',
+                        style: TextStyle(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Share your thoughts and insights from today',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.textMedium,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 12.h),
+          
+          SizedBox(height: 24.h),
+          
           Expanded(
-            child: JournalPrompt(
-              prompt: '',
-              initialText: reflection,
-              onTextChanged: (value) {
-                setState(() {
-                  reflection = value;
-                });
-              },
+            child: Container(
+              padding: EdgeInsets.all(24.w),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.cardBackground,
+                    AppColors.cardBackground.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(
+                  color: AppColors.textMedium.withOpacity(0.2),
+                  width: 1.w,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.black.withOpacity(0.05),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.edit_rounded,
+                        color: AppColors.accentGold.withOpacity(0.7),
+                        size: 20.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'What\'s on your mind?',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 16.h),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundDark.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: AppColors.textMedium.withOpacity(0.1),
+                        ),
+                      ),
+                      child: TextField(
+                        controller: _reflectionController,
+                        onChanged: (value) {
+                          setState(() {
+                            reflection = value;
+                          });
+                        },
+                        style: TextStyle(
+                          color: AppColors.textLight,
+                          fontSize: 16.sp,
+                          height: 1.6,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'Write about your day, your feelings, lessons learned, or anything that comes to mind...',
+                          hintStyle: TextStyle(
+                            color: AppColors.textMedium.withOpacity(0.6),
+                            fontSize: 16.sp,
+                            height: 1.6,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(20.w),
+                          isDense: false,
+                        ),
+                        maxLines: null,
+                        expands: true,
+                        textAlignVertical: TextAlignVertical.top,
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -284,63 +514,174 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildIntentionPage() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Tomorrow\'s Intention',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+          // Enhanced header section
+          Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.gradientBlue.withOpacity(0.15),
+                  AppColors.accentLavender.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: AppColors.gradientBlue.withOpacity(0.2),
+                width: 1.5.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.gradientBlue.withOpacity(0.1),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.gradientBlue, AppColors.accentLavender],
+                    ),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.wb_sunny_rounded,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Tomorrow\'s Intention',
+                        style: TextStyle(
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        'Set a positive intention for tomorrow',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.textMedium,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 12.h),
+          
+          SizedBox(height: 24.h),
+          
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(16.r),
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.cardBackground,
+                    AppColors.cardBackground.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(20.r),
                 border: Border.all(
-                  color: AppColors.gradientPurple.withOpacity(0.3),
+                  color: AppColors.textMedium.withOpacity(0.2),
+                  width: 1.w,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.black.withOpacity(0.05),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
               ),
-              child: TextField(
-                onChanged: (value) {
-                  setState(() {
-                    intention = value;
-                  });
-                },
-                controller: TextEditingController(text: intention)
-                  ..selection = TextSelection.fromPosition(
-                    TextPosition(offset: intention.length),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.lightbulb_rounded,
+                        color: AppColors.gradientBlue.withOpacity(0.7),
+                        size: 20.sp,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'What do you want to focus on?',
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                    ],
                   ),
-                style: TextStyle(
-                  color: AppColors.textLight,
-                  fontSize: 16.sp,
-                  height: 1.5,
-                ),
-                decoration: InputDecoration(
-                  hintText: 'Tomorrow, I intend to...',
-                  hintStyle: TextStyle(
-                    color: AppColors.textMedium.withOpacity(0.7),
-                    fontSize: 16.sp,
+                  SizedBox(height: 16.h),
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.backgroundDark.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: AppColors.textMedium.withOpacity(0.1),
+                        ),
+                      ),
+                      child: TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            intention = value;
+                          });
+                        },
+                        controller: TextEditingController(text: intention)
+                          ..selection = TextSelection.fromPosition(
+                            TextPosition(offset: intention.length),
+                          ),
+                        style: TextStyle(
+                          color: AppColors.textLight,
+                          fontSize: 16.sp,
+                          height: 1.6,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        decoration: InputDecoration(
+                          hintText: 'How do you want to show up tomorrow? What energy do you want to bring? What would make tomorrow meaningful?',
+                          hintStyle: TextStyle(
+                            color: AppColors.textMedium.withOpacity(0.6),
+                            fontSize: 16.sp,
+                            height: 1.6,
+                            fontStyle: FontStyle.italic,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.all(20.w),
+                          isDense: false,
+                        ),
+                        maxLines: null,
+                        expands: true,
+                        textAlignVertical: TextAlignVertical.top,
+                        textCapitalization: TextCapitalization.sentences,
+                      ),
+                    ),
                   ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.only(
-                    top: 8.h,
-                    left: 8.w,
-                    right: 8.w,
-                    bottom: 8.h,
-                  ),
-                  isDense: true,
-                ),
-                maxLines: null,
-                expands: true,
-                textAlignVertical: TextAlignVertical.top,
-                textCapitalization: TextCapitalization.sentences,
+                ],
               ),
             ),
           ),
@@ -351,55 +692,217 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   Widget _buildSummaryPage() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Journal Complete!',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textLight,
+          // Celebration header
+          Container(
+            padding: EdgeInsets.all(32.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.gradientPink.withOpacity(0.2),
+                  AppColors.accentLavender.withOpacity(0.15),
+                  AppColors.accentGold.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24.r),
+              border: Border.all(
+                color: AppColors.gradientPink.withOpacity(0.3),
+                width: 2.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.gradientPink.withOpacity(0.15),
+                  blurRadius: 20.r,
+                  offset: Offset(0, 8.h),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(16.w),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.gradientPink, AppColors.accentLavender],
+                    ),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Icon(
+                    Icons.celebration,
+                    color: Colors.white,
+                    size: 32.sp,
+                  ),
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Journal Complete!',
+                  style: TextStyle(
+                    fontSize: 26.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textLight,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 8.h),
+                Text(
+                  'Beautiful work! Your thoughts have been captured.',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: AppColors.textMedium,
+                    height: 1.3,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
           ),
-          SizedBox(height: 12.h),
+          
+          SizedBox(height: 32.h),
+          
           Expanded(
             child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildSummarySection(
-                    title: 'Mood',
+                  _buildEnhancedSummarySection(
+                    title: 'Your Mood',
                     content: selectedMood.displayName,
                     icon: selectedMood.icon,
-                    color: selectedMood.color,
+                    gradientColors: [selectedMood.color, selectedMood.color.withOpacity(0.7)],
                   ),
-                  SizedBox(height: 20.h),
-                  _buildSummarySection(
+                  SizedBox(height: 24.h),
+                  _buildEnhancedSummarySection(
                     title: 'Gratitudes',
                     content: gratitudeItems.where((item) => item.isNotEmpty).join('\n• '),
-                    icon: Icons.favorite,
-                    color: AppColors.gradientPink,
+                    icon: Icons.favorite_rounded,
+                    gradientColors: [AppColors.gradientPink, AppColors.accentLavender],
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 24.h),
                   if (reflection.isNotEmpty)
-                    _buildSummarySection(
-                      title: 'Reflection',
+                    _buildEnhancedSummarySection(
+                      title: 'Daily Reflection',
                       content: reflection,
-                      icon: Icons.lightbulb,
-                      color: AppColors.accentGold,
+                      icon: Icons.auto_stories_rounded,
+                      gradientColors: [AppColors.accentGold, AppColors.gradientPink],
                     ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 24.h),
                   if (intention.isNotEmpty)
-                    _buildSummarySection(
+                    _buildEnhancedSummarySection(
                       title: 'Tomorrow\'s Intention',
                       content: intention,
-                      icon: Icons.flag,
-                      color: AppColors.secondaryTeal,
+                      icon: Icons.wb_sunny_rounded,
+                      gradientColors: [AppColors.gradientBlue, AppColors.accentLavender],
                     ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 32.h),
                 ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEnhancedSummarySection({
+    required String title,
+    required String content,
+    required IconData icon,
+    required List<Color> gradientColors,
+  }) {
+    if (content.isEmpty) return SizedBox.shrink();
+    
+    return Container(
+      padding: EdgeInsets.all(24.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppColors.cardBackground,
+            AppColors.cardBackground.withOpacity(0.8),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(
+          color: gradientColors[0].withOpacity(0.3),
+          width: 1.5.w,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: gradientColors[0].withOpacity(0.1),
+            blurRadius: 12.r,
+            offset: Offset(0, 4.h),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: gradientColors),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textLight,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Container(
+                      height: 2.h,
+                      width: 40.w,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: gradientColors),
+                        borderRadius: BorderRadius.circular(1.r),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              color: AppColors.backgroundDark.withOpacity(0.3),
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: AppColors.textMedium.withOpacity(0.1),
+              ),
+            ),
+            child: Text(
+              content,
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppColors.textLight,
+                height: 1.6,
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),

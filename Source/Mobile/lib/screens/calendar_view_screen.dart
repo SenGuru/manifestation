@@ -57,49 +57,128 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: EdgeInsets.all(20.w),
-      child: Row(
+      padding: EdgeInsets.all(24.w),
+      child: Column(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppColors.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
-          SizedBox(width: 16.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Journal Calendar',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
+          Row(
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 44.w,
+                  height: 44.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.cardBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: AppColors.textMedium.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Icon(
+                    Icons.arrow_back,
                     color: AppColors.textLight,
+                    size: 20.sp,
                   ),
                 ),
-                Text(
-                  'View your manifestation journey',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppColors.textMedium,
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Journal Calendar',
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textLight,
+                      ),
+                    ),
+                    Text(
+                      'Track your manifestation journey',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppColors.textMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildStatsButton(),
+            ],
+          ),
+          
+          SizedBox(height: 24.h),
+          
+          // Enhanced overview section
+          Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.gradientPurple.withOpacity(0.15),
+                  AppColors.accentLavender.withOpacity(0.1),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(
+                color: AppColors.gradientPurple.withOpacity(0.2),
+                width: 1.5.w,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.gradientPurple.withOpacity(0.1),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColors.gradientPurple, AppColors.accentLavender],
+                    ),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    Icons.calendar_today_rounded,
+                    color: Colors.white,
+                    size: 24.sp,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Your Journey',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textLight,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        '${allJournalEntries.length} journal entries recorded',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppColors.textMedium,
+                          height: 1.3,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
-          _buildStatsButton(),
         ],
       ),
     );
@@ -333,17 +412,38 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                           onTap: () => _selectDate(date),
                           child: Container(
                             decoration: BoxDecoration(
-                              color: isSelected 
-                                  ? AppColors.gradientPurple 
+                              gradient: isSelected 
+                                  ? LinearGradient(
+                                      colors: [AppColors.gradientPurple, AppColors.accentLavender],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    )
                                   : hasEntry 
-                                      ? AppColors.gradientPink.withOpacity(0.1)
-                                      : Colors.transparent,
-                              borderRadius: BorderRadius.circular(8.r),
-                              border: isToday 
-                                  ? Border.all(color: AppColors.accentGold, width: 2)
-                                  : hasEntry
-                                      ? Border.all(color: AppColors.gradientPink.withOpacity(0.3))
+                                      ? LinearGradient(
+                                          colors: [
+                                            AppColors.gradientPink.withOpacity(0.15),
+                                            AppColors.accentLavender.withOpacity(0.1),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
                                       : null,
+                              color: !isSelected && !hasEntry 
+                                  ? AppColors.cardBackground.withOpacity(0.3)
+                                  : null,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: isToday 
+                                  ? Border.all(color: AppColors.accentGold, width: 2.w)
+                                  : hasEntry && !isSelected
+                                      ? Border.all(color: AppColors.gradientPink.withOpacity(0.4), width: 1.w)
+                                      : Border.all(color: AppColors.textMedium.withOpacity(0.1), width: 0.5.w),
+                              boxShadow: isSelected || hasEntry ? [
+                                BoxShadow(
+                                  color: (isSelected ? AppColors.gradientPurple : AppColors.gradientPink).withOpacity(0.2),
+                                  blurRadius: 8.r,
+                                  offset: Offset(0, 2.h),
+                                ),
+                              ] : null,
                             ),
                             child: Stack(
                               children: [
@@ -363,14 +463,25 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
                                 ),
                                 if (hasEntry && !isSelected)
                                   Positioned(
-                                    top: 4.h,
-                                    right: 4.w,
+                                    top: 6.h,
+                                    right: 6.w,
                                     child: Container(
-                                      width: 6.w,
-                                      height: 6.h,
+                                      width: 8.w,
+                                      height: 8.h,
                                       decoration: BoxDecoration(
                                         color: _getMoodColorForDate(date),
                                         shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.5),
+                                          width: 1.w,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.2),
+                                            blurRadius: 2.r,
+                                            offset: Offset(0, 1.h),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   ),

@@ -74,38 +74,83 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundDark,
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundDark,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.textLight),
-          onPressed: () => Navigator.pop(context),
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildHeader(),
+            Expanded(
+              child: _isLoading
+                  ? StylishLoading(
+                      message: 'Loading your statistics...',
+                    )
+                  : _errorMessage.isNotEmpty
+                      ? _buildErrorState()
+                      : _buildStatsContent(),
+            ),
+          ],
         ),
-        title: Text(
-          'Session Statistics',
-          style: TextStyle(
-            color: AppColors.textLight,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: AppColors.textLight),
-            onPressed: _loadStats,
-          ),
-        ],
       ),
-      body: _isLoading
-          ? StylishLoading(
-              message: 'Loading your statistics...',
-            )
-          : _errorMessage.isNotEmpty
-              ? _buildErrorState()
-              : _buildStatsContent(),
     );
   }
 
+  Widget _buildHeader() {
+    return Padding(
+      padding: EdgeInsets.all(20.w),
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.textMedium.withOpacity(0.2),
+                ),
+              ),
+              child: Icon(
+                Icons.arrow_back,
+                color: AppColors.textLight,
+                size: 20.sp,
+              ),
+            ),
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Text(
+              'Session Statistics',
+              style: TextStyle(
+                color: AppColors.textLight,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: _loadStats,
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: AppColors.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.textMedium.withOpacity(0.2),
+                ),
+              ),
+              child: Icon(
+                Icons.refresh,
+                color: AppColors.textLight,
+                size: 20.sp,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget _buildErrorState() {
     return Center(

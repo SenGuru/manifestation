@@ -19,28 +19,28 @@ class MoodSelector extends StatefulWidget {
 
 class _MoodSelectorState extends State<MoodSelector>
     with TickerProviderStateMixin {
-  late AnimationController _scaleController;
-  late Animation<double> _scaleAnimation;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
 
   @override
   void initState() {
     super.initState();
-    _scaleController = AnimationController(
+    _pulseController = AnimationController(
       duration: Duration(milliseconds: 200),
       vsync: this,
     );
-    _scaleAnimation = Tween<double>(
+    _pulseAnimation = Tween<double>(
       begin: 1.0,
-      end: 1.1,
+      end: 0.95,
     ).animate(CurvedAnimation(
-      parent: _scaleController,
+      parent: _pulseController,
       curve: Curves.easeInOut,
     ));
   }
 
   @override
   void dispose() {
-    _scaleController.dispose();
+    _pulseController.dispose();
     super.dispose();
   }
 
@@ -118,75 +118,79 @@ class _MoodSelectorState extends State<MoodSelector>
   Widget _buildMoodOption(Mood mood) {
     final isSelected = widget.selectedMood == mood;
     
-    return GestureDetector(
-      onTap: () {
-        widget.onMoodSelected(mood);
-        _scaleController.forward().then((_) {
-          _scaleController.reverse();
-        });
-      },
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
-            scale: isSelected ? _scaleAnimation.value : 1.0,
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
-              margin: EdgeInsets.symmetric(vertical: 4.h),
-              decoration: BoxDecoration(
-                color: isSelected 
-                    ? mood.color.withOpacity(0.1)
-                    : AppColors.cardBackground,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(
+    return Padding(
+      // Add padding around the entire mood option to give space for animation
+      padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+      child: GestureDetector(
+        onTap: () {
+          widget.onMoodSelected(mood);
+          _pulseController.forward().then((_) {
+            _pulseController.reverse();
+          });
+        },
+        child: AnimatedBuilder(
+          animation: _pulseAnimation,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: isSelected ? _pulseAnimation.value : 1.0,
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+                margin: EdgeInsets.symmetric(vertical: 2.h),
+                decoration: BoxDecoration(
                   color: isSelected 
-                      ? mood.color
-                      : AppColors.textMedium.withOpacity(0.2),
-                  width: isSelected ? 2 : 1,
+                      ? mood.color.withOpacity(0.1)
+                      : AppColors.cardBackground,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: isSelected 
+                        ? mood.color
+                        : AppColors.textMedium.withOpacity(0.2),
+                    width: isSelected ? 2 : 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(
+                      mood.emoji,
+                      style: TextStyle(fontSize: 32.sp),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            mood.displayName,
+                            style: TextStyle(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.w600,
+                              color: isSelected ? mood.color : AppColors.textLight,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Text(
+                            mood.description,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: AppColors.textMedium,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (isSelected)
+                      Icon(
+                        Icons.check_circle,
+                        color: mood.color,
+                        size: 24.sp,
+                      ),
+                  ],
                 ),
               ),
-              child: Row(
-                children: [
-                  Text(
-                    mood.emoji,
-                    style: TextStyle(fontSize: 32.sp),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          mood.displayName,
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
-                            color: isSelected ? mood.color : AppColors.textLight,
-                          ),
-                        ),
-                        SizedBox(height: 2.h),
-                        Text(
-                          mood.description,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AppColors.textMedium,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (isSelected)
-                    Icon(
-                      Icons.check_circle,
-                      color: mood.color,
-                      size: 24.sp,
-                    ),
-                ],
-              ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
