@@ -5,23 +5,18 @@ packages:
     dependency: transitive
     description:
       name: _fe_analyzer_shared
-      sha256: "16e298750b6d0af7ce8a3ba7c18c69c3785d11b15ec83f6dcd0ad2a0009b3cab"
+      sha256: da0d9209ca76bde579f2da330aeb9df62b6319c834fa7baae052021b0462401f
       url: "https://pub.dev"
     source: hosted
-    version: "76.0.0"
-  _macros:
-    dependency: transitive
-    description: dart
-    source: sdk
-    version: "0.3.3"
+    version: "85.0.0"
   analyzer:
     dependency: transitive
     description:
       name: analyzer
-      sha256: "1f14db053a8c23e260789e9b0980fa27f2680dd640932cae5e1137cce0e46e1e"
+      sha256: "974859dc0ff5f37bc4313244b3218c791810d03ab3470a579580279ba971a48d"
       url: "https://pub.dev"
     source: hosted
-    version: "6.11.0"
+    version: "7.7.1"
   archive:
     dependency: transitive
     description:
@@ -194,18 +189,18 @@ packages:
     dependency: "direct main"
     description:
       name: chopper
-      sha256: "18928a74069cf1c257e657809c1b84b0304d8e32a6fc446dd2bbb28657e0358a"
+      sha256: "35cde96292178809ca4290f42dbb83d832551333c2b18a2226a2538103ab40d3"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.0"
+    version: "8.3.0"
   chopper_generator:
     dependency: "direct dev"
     description:
       name: chopper_generator
-      sha256: "2cb23febc9ac9bbc9288b4703e60f3edc8e301a2ef5057d0c22369eab7313c6d"
+      sha256: "4477b8b79aa0b6e2dd3d581e526782e6997f35c7fa3999b80d36003b1213acf2"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.0"
+    version: "8.2.0"
   clock:
     dependency: transitive
     description:
@@ -266,10 +261,10 @@ packages:
     dependency: transitive
     description:
       name: dart_style
-      sha256: "7306ab8a2359a48d22310ad823521d723acfed60ee1f7e37388e8986853b6820"
+      sha256: "8a0e5fba27e8ee025d2ffb4ee820b4e6e2cf5e4246a6b1a477eb66866947e0bb"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.8"
+    version: "3.1.1"
   dio:
     dependency: "direct main"
     description:
@@ -613,14 +608,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
-  macros:
-    dependency: transitive
-    description:
-      name: macros
-      sha256: "1d9e801cd66f7ea3663c45fc708450db1fa57f988142c64289142c9b7ee80656"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.3-main.0"
   markdown:
     dependency: transitive
     description:
@@ -841,10 +828,10 @@ packages:
     dependency: transitive
     description:
       name: qs_dart
-      sha256: ee29717aacc66c41080d7a397ca5d87dbed04fd05c04b6674d2fcd2b1a7e9edd
+      sha256: "2cd1745bcb64d2e3950e0040cc367cad50dd6dd012c54adc07fedfcd7501c77a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.8"
+    version: "1.4.0"
   recase:
     dependency: transitive
     description:
@@ -853,14 +840,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  recursive_regex:
-    dependency: transitive
-    description:
-      name: recursive_regex
-      sha256: f7252e3d3dfd1665e594d9fe035eca6bc54139b1f2fee38256fa427ea41adc60
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -950,10 +929,10 @@ packages:
     dependency: transitive
     description:
       name: source_helper
-      sha256: "86d247119aedce8e63f4751bd9626fc9613255935558447569ad42f9f5b48b3c"
+      sha256: "4f81479fe5194a622cdd1713fe1ecb683a6e6c85cd8cec8e2e35ee5ab3fdf2a1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.5"
+    version: "1.3.6"
   source_span:
     dependency: transitive
     description:
@@ -1030,10 +1009,10 @@ packages:
     dependency: "direct main"
     description:
       name: swagger_dart_code_generator
-      sha256: e6fab279c2adb3f91aa170c9126601d22e1485217dddc1443cf3c05eb6480d45
+      sha256: "64f10f8e2f38c2139b394d00381d69eae55d3bb42b6f524eb21f27145e60c671"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.3"
   synchronized:
     dependency: transitive
     description:
