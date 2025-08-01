@@ -15,12 +15,8 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - speech_to_text (0.0.1):
-    - Flutter
-    - Try
   - text_to_speech (0.0.1):
     - Flutter
-  - Try (2.1.1)
 
 DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
@@ -30,12 +26,7 @@ DEPENDENCIES:
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
-  - speech_to_text (from `.symlinks/plugins/speech_to_text/ios`)
   - text_to_speech (from `.symlinks/plugins/text_to_speech/ios`)
-
-SPEC REPOS:
-  trunk:
-    - Try
 
 EXTERNAL SOURCES:
   audioplayers_darwin:
@@ -52,8 +43,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
-  speech_to_text:
-    :path: ".symlinks/plugins/speech_to_text/ios"
   text_to_speech:
     :path: ".symlinks/plugins/text_to_speech/ios"
 
@@ -65,9 +54,7 @@ SPEC CHECKSUMS:
   path_provider_foundation: 080d55be775b7414fd5a5ef3ac137b97b097e564
   permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
   shared_preferences_foundation: 9e1978ff2562383bd5676f64ec4e9aa8fa06a6f7
-  speech_to_text: ae2abc312e619ff1c53e675a9fc4d785a15c03bb
   text_to_speech: 94cb6c54446c65feaf0007e444113f922fe1fc99
-  Try: 5ef669ae832617b3cee58cb2c6f99fb767a4ff96
 
 PODFILE CHECKSUM: 20e260c9bb3f61194c661a4ba028da86e4f3ed96
 

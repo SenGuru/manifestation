@@ -55,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // Daily inspiration takes more space
         Expanded(
           flex: 3,
-          child: DailyInspiration(),
+          child: MindfulnessMoment(),
         ),
         
         SizedBox(width: 12.w),

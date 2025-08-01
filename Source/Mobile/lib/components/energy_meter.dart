@@ -82,6 +82,7 @@ class _EnergyMeterState extends State<EnergyMeter>
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 200.h,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
@@ -99,6 +100,7 @@ class _EnergyMeterState extends State<EnergyMeter>
         ],
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // Energy meter circle
           AnimatedBuilder(
