@@ -2637,11 +2637,12 @@ namespace Manifest.Repository.Common
             return from item in appDBManager.GetTable<DefaultCategory>()
                        join oa in appDBManager.GetTable<EnumType>() on item.PredefinedCategoryTypeId equals oa.EnumTypeId into aTemp
                    from a in aTemp.DefaultIfEmpty()
-
                    join ocu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.CreatedByUserId equals ocu.UserId into cuTemp
                    from cu in cuTemp.DefaultIfEmpty()
                    join omu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.ModifiedByUserId equals omu.UserId into muTemp
                    from mu in muTemp.DefaultIfEmpty()
+                   join oxu in appDBManager.GetTable<EnumType>() on item.PredefinedIconTypeId equals oxu.EnumTypeId into xuTemp
+                   from xu in xuTemp.DefaultIfEmpty()
                    select new DefaultCategoryView
                    {
                        CreatedByUserFirstName = cu.FirstName,
@@ -2650,9 +2651,9 @@ namespace Manifest.Repository.Common
                        ModifiedByUserFirstName = mu.FirstName,
                        ModifiedByUserLastName = mu.LastName,
                        ModifiedByUserEmail = mu.Email,
-
                        PredefinedCategoryTypeName = a.EnumTypeName,
-
+                       PredefinedIconTypeName = xu.EnumTypeName,
+                       PredefinedIconTypeId = item.PredefinedIconTypeId,
                        DefaultCategoryId = item.DefaultCategoryId,
                        DefaultCategoryName = item.DefaultCategoryName,
                        PredefinedCategoryTypeId = item.PredefinedCategoryTypeId,
@@ -2677,30 +2678,35 @@ namespace Manifest.Repository.Common
 );
             }
 
-    /*if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
-    {
-        if (search.StartDate.Value <= search.EndDate.Value)
-        {
-            sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay() && x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
-        }
-    }
-    else if (search.StartDate.IsValidDate())
-    {
-        sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay());
-    }
-    else if (search.EndDate.IsValidDate())
-    {
-        sql1 = sql1.Where(x => x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
-    }*/
+            /*if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
+            {
+                if (search.StartDate.Value <= search.EndDate.Value)
+                {
+                    sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay() && x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
+                }
+            }
+            else if (search.StartDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay());
+            }
+            else if (search.EndDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
+            }*/
 
-    if (search.PredefinedCategoryTypeIds != null && search.PredefinedCategoryTypeIds.Count > 0)
-                    sql1 = sql1.Where(x => search.PredefinedCategoryTypeIds.Contains(x.PredefinedCategoryTypeId ?? 0));
-                if (search.CreatedByUserId != null && search.CreatedByUserId > 0)
-                    sql1 = sql1.Where(x => search.CreatedByUserId == x.CreatedByUserId);
-                if (search.ModifiedByUserId != null && search.ModifiedByUserId > 0)
-                    sql1 = sql1.Where(x => search.ModifiedByUserId == x.ModifiedByUserId);
+            if (search.PredefinedIconTypeIds != null && search.PredefinedIconTypeIds.Count > 0)
+                sql1 = sql1.Where(x => search.PredefinedIconTypeIds.Contains(x.PredefinedIconTypeId));
 
-    if (search.ShowDeleted == false)
+            if (search.PredefinedCategoryTypeIds != null && search.PredefinedCategoryTypeIds.Count > 0)
+                sql1 = sql1.Where(x => search.PredefinedCategoryTypeIds.Contains(x.PredefinedCategoryTypeId ?? 0));
+
+            if (search.CreatedByUserId != null && search.CreatedByUserId > 0)
+                sql1 = sql1.Where(x => search.CreatedByUserId == x.CreatedByUserId);
+
+            if (search.ModifiedByUserId != null && search.ModifiedByUserId > 0)
+                sql1 = sql1.Where(x => search.ModifiedByUserId == x.ModifiedByUserId);
+
+            if (search.ShowDeleted == false)
                 sql1 = sql1.Where(x => x.IsDeleted == false);
 
             return sql1;

@@ -236,6 +236,7 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("DefaultCategoryId").AsInt64().PrimaryKey("PK_DefaultCategory").Identity().NotNullable()
                 .WithColumn("DefaultCategoryName").AsString(255).NotNullable()
                 .WithColumn("PredefinedCategoryTypeId").AsInt64().Nullable()
+                .WithColumn("PredefinedIconTypeId").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedByUserId").AsInt64().Nullable()
@@ -1297,6 +1298,10 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("PredefinedCategoryTypeId")
             
             ;
+            Create.Index("IX_DefaultCategory_PredefinedIconTypeId").OnTable("DefaultCategory")
+                .OnColumn("PredefinedIconTypeId")
+            
+            ;
             Create.Index("IX_DefaultDailyAffirmationText_CreatedByUserId").OnTable("DefaultDailyAffirmationText")
                 .OnColumn("CreatedByUserId")
             
@@ -2148,6 +2153,8 @@ namespace Manifest.Repository.Migration.Application
             Create.ForeignKey("FK_DefaultCategory_ModifiedByUserId").FromTable("DefaultCategory").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DefaultCategory_PredefinedCategoryTypeId").FromTable("DefaultCategory").ForeignColumns("PredefinedCategoryTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DefaultCategory_PredefinedIconTypeId").FromTable("DefaultCategory").ForeignColumns("PredefinedIconTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_DefaultDailyAffirmationText_CreatedByUserId").FromTable("DefaultDailyAffirmationText").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");

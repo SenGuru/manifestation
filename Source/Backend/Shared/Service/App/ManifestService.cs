@@ -10089,17 +10089,20 @@ namespace Manifest.Service.App
                 }
             }
 
-
-
             if (defaultCategoryModel.DefaultCategoryName != null && defaultCategoryModel.DefaultCategoryName.Length > DefaultCategoryModel.COLUMN_SIZE_DefaultCategoryName)
             {
                 result.Add(new ReturnErrorItem("DefaultCategoryName", $"DefaultCategoryName size should not exceed {DefaultCategoryModel.COLUMN_SIZE_DefaultCategoryName}"));
             }
+
             if (defaultCategoryModel.DefaultCategoryName == null)
             {
                 result.Add(new ReturnErrorItem("DefaultCategoryName", "DefaultCategoryName is required "));
             }
 
+            if (!ValidationUtils.IsEnumValid<PredefinedIconTypes, long>(defaultCategoryModel.PredefinedIconTypeId))
+            {
+                result.Add(new ReturnErrorItem("PredefinedIconTypeId", "Icon Type is not valid"));
+            }
 
             return result.Count > 0 ? result : null;
         }

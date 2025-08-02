@@ -511,6 +511,8 @@ export class SelectService {
       { id: 3600008, type: 'Trophy' },
       { id: 3600009, type: 'Sun' },
       { id: 3600010, type: 'Moon' },
+      { id: 3600011, type: 'Money' },
+      { id: 3600012, type: 'Man' },
     ];
   }
 
@@ -527,6 +529,8 @@ export class SelectService {
       { id: 3600008, type: 'Trophy' },
       { id: 3600009, type: 'Sun' },
       { id: 3600010, type: 'Moon' },
+      { id: 3600011, type: 'Money' },
+      { id: 3600012, type: 'Man' },
     ];
   }
 
@@ -542,6 +546,8 @@ export class SelectService {
       { id: 3600008, type: 'Trophy' },
       { id: 3600009, type: 'Sun' },
       { id: 3600010, type: 'Moon' },
+      { id: 3600011, type: 'Money' },
+      { id: 3600012, type: 'Man' },
     ];
   }
 

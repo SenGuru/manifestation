@@ -12,5 +12,7 @@ namespace Manifest.Common.Enums
         Trophy = 3600008,
         Sun = 3600009,
         Moon = 3600010,
+        Money = 3600011,
+        Man = 3600012,
     }
 }

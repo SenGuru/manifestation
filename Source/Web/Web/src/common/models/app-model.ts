@@ -3206,6 +3206,7 @@ export class CategoryByDefaultCategoryIdSearchCriteria extends BaseSearchCriteri
 }
 
 export class DefaultCategoryModel {
+    predefinedIconTypeName : string = '';
     predefinedCategoryTypeName : string = '';
     createdByUserFirstName : string = '';
     createdByUserLastName : string = '';
@@ -3218,6 +3219,7 @@ export class DefaultCategoryModel {
     defaultCategoryId : number = 0;
     defaultCategoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -3227,6 +3229,8 @@ export class DefaultCategoryModel {
 
     static getCopy(self : DefaultCategoryModel,adjustDateToUTC : boolean = false) : DefaultCategoryModel {
       let obj = new DefaultCategoryModel();
+      if (self.hasOwnProperty('predefinedIconTypeName'))
+        obj.predefinedIconTypeName = self.predefinedIconTypeName;
       if (self.hasOwnProperty('predefinedCategoryTypeName'))
         obj.predefinedCategoryTypeName = self.predefinedCategoryTypeName;
       if (self.hasOwnProperty('createdByUserFirstName'))
@@ -3251,6 +3255,8 @@ export class DefaultCategoryModel {
         obj.defaultCategoryName = self.defaultCategoryName;
       if (self.hasOwnProperty('predefinedCategoryTypeId'))
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -3268,6 +3274,7 @@ export class DefaultCategoryModel {
       let obj = new DefaultCategoryCreateModel();
       obj.defaultCategoryName = self.defaultCategoryName;
       obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 
@@ -3276,6 +3283,7 @@ export class DefaultCategoryModel {
       obj.defaultCategoryId = self.defaultCategoryId;
       obj.defaultCategoryName = self.defaultCategoryName;
       obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -4154,6 +4162,7 @@ export class UserByDailyAffirmationTextIdSearchCriteria extends BaseSearchCriter
 }
 
 export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
+    predefinedIconTypeIds : number[] | null = null;
     showDeleted : boolean = false;
     predefinedCategoryTypeIds : number[] | null = null;
     createdByUserId : number | null = null;
@@ -4161,6 +4170,8 @@ export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
 
     static getCopy(self : DefaultCategorySearchCriteria,adjustDateToUTC : boolean = false) : DefaultCategorySearchCriteria {
       let obj = new DefaultCategorySearchCriteria();
+      if (self.hasOwnProperty('predefinedIconTypeIds'))
+        obj.predefinedIconTypeIds = self.predefinedIconTypeIds;
       if (self.hasOwnProperty('showDeleted'))
         obj.showDeleted = self.showDeleted;
       if (self.hasOwnProperty('predefinedCategoryTypeIds'))
@@ -4188,6 +4199,7 @@ export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
 export class DefaultCategoryCreateModel {
     defaultCategoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     static defaultCategoryName__size : number = 255;
 
     static getCopy(self : DefaultCategoryCreateModel,adjustDateToUTC : boolean = false) : DefaultCategoryCreateModel {
@@ -4196,6 +4208,8 @@ export class DefaultCategoryCreateModel {
         obj.defaultCategoryName = self.defaultCategoryName;
       if (self.hasOwnProperty('predefinedCategoryTypeId'))
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -4215,6 +4229,7 @@ export class DefaultCategoryUpdateModel {
     defaultCategoryId : number = 0;
     defaultCategoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     static defaultCategoryName__size : number = 255;
 
     static getCopy(self : DefaultCategoryUpdateModel,adjustDateToUTC : boolean = false) : DefaultCategoryUpdateModel {
@@ -4225,6 +4240,8 @@ export class DefaultCategoryUpdateModel {
         obj.defaultCategoryName = self.defaultCategoryName;
       if (self.hasOwnProperty('predefinedCategoryTypeId'))
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
