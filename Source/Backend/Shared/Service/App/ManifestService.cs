@@ -17997,8 +17997,18 @@ namespace Manifest.Service.App
                     search.UserId = await currentSessionService.GetCurrentUserIdAsync();
                 }
 
-                return this.ConvertToList(await manifestRepository.GetGoalTrackersAsync(search), objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
-
+                var result = this.ConvertToList(await manifestRepository.GetGoalTrackersAsync(search), objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
+                if (result.IsSuccess)
+                {
+                    var ids = result.Model.SelectToList(x => x.GoalTrackerId);
+                    var cats = await manifestRepository.GetGoalTrackerCategoryViewByGoalTrackerIdAsync(ids);
+                    foreach (var gItem in result.Model)
+                    {
+                        var cchildItems = cats.Where(x => x.GoalTrackerId == gItem.GoalTrackerId).ToList();
+                        gItem.ExistingCategorys = this.ConvertToList<GoalTrackerCategoryView, CategoryModel>(cchildItems, objectMapperService.GoalTrackerCategoryViewListToCategoryModelList).Model;
+                    }
+                }
+                return result;
             }
             catch (Exception ex)
             {
@@ -18040,19 +18050,14 @@ namespace Manifest.Service.App
                 }
 
                 var result = this.ConvertToItem(item,objectMapperService.GoalTrackerViewToGoalTrackerModel);
-                var childItems = await GetGoalTrackerMileStoneByGoalTrackerIdAsync(item.GoalTrackerId);
-                if (!childItems.IsSuccess)
-                    return log.ErrorAndReturnModel<GoalTrackerModel>(childItems);
 
-                result.Model.ExistingGoalTrackerMileStones = childItems.Model.Where(x => x.GoalTrackerId == item.GoalTrackerId).ToList();
+                var childItems = await manifestRepository.GetGoalTrackerMileStoneViewByGoalTrackerIdAsync(goalTrackerId);
+                result.Model.ExistingGoalTrackerMileStones = this.ConvertToList<GoalTrackerMileStoneView, GoalTrackerMileStoneModel>(childItems, objectMapperService.GoalTrackerMileStoneViewListToGoalTrackerMileStoneModelList).Model;
 
                 var cchildItems = await manifestRepository.GetBareCategoryByGoalTrackerIdAsync(item.GoalTrackerId);
-                var cmodels = this.ConvertToList<Category,CategoryModel>(cchildItems, objectMapperService.CategoryListToCategoryModelList);
-                result.Model.ExistingCategorys = cmodels.Model;
+                result.Model.ExistingCategorys = this.ConvertToList<Category,CategoryModel>(cchildItems, objectMapperService.CategoryListToCategoryModelList).Model;
 
                 return result;
-
-                //return this.ConvertToItem(item, objectMapperService.GoalTrackerViewToGoalTrackerModel);
             }
             catch (Exception ex)
             {

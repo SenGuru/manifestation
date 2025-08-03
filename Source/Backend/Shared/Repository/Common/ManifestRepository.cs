@@ -5372,6 +5372,9 @@ ModifiedByUserId = item.ModifiedByUserId,
                        ModifiedByUserEmail = mu.Email,
 
                        CategoryName = a.CategoryName,
+                       PredefinedCategoryTypeId = a.PredefinedCategoryTypeId,
+                       PredefinedIconTypeId = a.PredefinedIconTypeId,
+
                        GoalTrackerName = b.GoalTrackerName,
                        UserName = c.UserName,
 
@@ -5590,6 +5593,11 @@ ModifiedByUserId = item.ModifiedByUserId,
         {
             var idsSql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.IsDeleted == false && goalTrackerId == x.GoalTrackerId).Select(x => x.CategoryId);
             return appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && idsSql.Contains(x.CategoryId)).ToListAsync();
+        }
+
+        public Task<List<GoalTrackerCategoryView>> GetGoalTrackerCategoryViewByGoalTrackerIdAsync(List<long> goalTrackerIds)
+        {
+            return GetGoalTrackerCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && goalTrackerIds.Contains(x.GoalTrackerId)).ToListAsync();
         }
 
         public Task<List<Category>> GetBareCategoryByGoalTrackerCategoryIdAsync(List<long> goalTrackerCategoryIds)

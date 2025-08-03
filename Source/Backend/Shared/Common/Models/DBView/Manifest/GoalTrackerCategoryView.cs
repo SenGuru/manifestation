@@ -6,6 +6,10 @@ namespace Manifest.Common.Models.DBView
 {
     public class GoalTrackerCategoryView : GoalTrackerCategory
     {
+        public long? PredefinedCategoryTypeId { get; set; }
+        
+        public long PredefinedIconTypeId { get; set; }
+
         [NotColumn]
         public string CategoryName { get; set; }
         [NotColumn]
