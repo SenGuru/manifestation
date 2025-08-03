@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:chopper/chopper.dart';
 import '../models/analytics_models.dart';
 import 'daily_affirmations_service.dart';
 import 'vision_board_service.dart';
+import 'unified_auth_service.dart';
+import '../api/generated/code/manifestation.swagger.dart';
 
 /// Service for tracking and retrieving usage analytics across the app
 /// 
@@ -18,6 +21,9 @@ class UsageAnalyticsService {
 
   final DailyAffirmationsService _affirmationService = DailyAffirmationsService();
   final VisionBoardService _visionBoardService = VisionBoardService();
+  
+  late Manifestation _apiClient;
+  bool _isApiInitialized = false;
 
   // Active session tracking
   final Map<ActivityType, ActiveSession> _activeSessions = {};
@@ -25,6 +31,17 @@ class UsageAnalyticsService {
   // Session storage keys
   static const String _sessionHistoryKey = 'session_history';
   static const String _dailyStatsKey = 'daily_stats';
+
+  /// Ensure API client is initialized
+  void _ensureInitialized() {
+    if (!_isApiInitialized) {
+      _apiClient = Manifestation.create(
+        baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+        interceptors: [_AuthInterceptor()],
+      );
+      _isApiInitialized = true;
+    }
+  }
 
   /// Initialize the analytics service
   Future<void> initialize() async {
@@ -172,132 +189,296 @@ class UsageAnalyticsService {
     }
   }
 
-  /// Record vision board session (placeholder - uses XML storage)
+  /// Record vision board session using API
   Future<void> _recordVisionBoardSession(Duration duration, Map<String, dynamic> metadata) async {
     try {
       // Store locally first
       await _saveSessionToHistory(ActivityType.visionBoard, duration, metadata);
       
-      print('📊 Vision board session: ${duration.inSeconds}s (stored locally)');
+      _ensureInitialized();
+      final authService = UnifiedAuthService();
+      final userId = authService.currentUser?.userId;
       
-      // In the future, this would call the vision board API:
-      // final result = await _visionBoardService.updateSession(
-      //   sessionId: metadata['sessionId'],
-      //   timeSpentInSeconds: duration.inSeconds,
-      // );
+      if (userId != null) {
+        final createModel = VisionBoardSessionCreateModel(
+          visionBoardSessionDate: DateTime.now(),
+          visionBoardSessionTimeSpentInSeconds: duration.inSeconds,
+          userId: userId,
+        );
+
+        final response = await _apiClient.apiV1ManifestCreatevisionboardsessionPost(body: createModel);
+        
+        if (response.isSuccessful && response.body?.isSuccess == true) {
+          print('✅ Vision board session recorded: ${duration.inSeconds}s');
+        } else {
+          print('❌ Failed to record vision board session: ${response.body?.errorHolder}');
+        }
+      } else {
+        print('⚠️ No user ID for vision board session');
+      }
     } catch (e) {
       print('❌ Error recording vision board session: $e');
     }
   }
 
-  /// Record meditation session (placeholder - no API yet)
+  /// Record meditation session using API
   Future<void> _recordMeditationSession(Duration duration, Map<String, dynamic> metadata) async {
     try {
       // Store locally first
       await _saveSessionToHistory(ActivityType.visualMeditation, duration, metadata);
       
-      print('📊 Meditation session: ${duration.inSeconds}s (stored locally)');
+      _ensureInitialized();
+      final authService = UnifiedAuthService();
+      final userId = authService.currentUser?.userId;
       
-      // For now, store locally or use a generic session API
-      // final result = await _meditationService.createMeditationSession(...)
+      if (userId != null) {
+        final createModel = MeditationSessionCreateModel(
+          meditationSessionDate: DateTime.now(),
+          meditationSessionTimeSpentInSeconds: duration.inSeconds,
+          userId: userId,
+        );
+
+        final response = await _apiClient.apiV1ManifestCreatemeditationsessionPost(body: createModel);
+        
+        if (response.isSuccessful && response.body?.isSuccess == true) {
+          print('✅ Meditation session recorded: ${duration.inSeconds}s');
+        } else {
+          print('❌ Failed to record meditation session: ${response.body?.errorHolder}');
+        }
+      } else {
+        print('⚠️ No user ID for meditation session');
+      }
     } catch (e) {
       print('❌ Error recording meditation session: $e');
     }
   }
 
-  /// Get comprehensive usage statistics
+  /// Get comprehensive usage statistics from API
   Future<UsageStats> getUsageStats() async {
     try {
-      print('📊 ANALYTICS: Loading session history...');
-      final sessionHistory = await _getSessionHistory();
-      print('📊 ANALYTICS: Found ${sessionHistory.length} sessions in history');
+      print('📊 ANALYTICS: Loading real session data from API...');
       
-      // If no sessions exist, return demo data as fallback
+      // Try to get real API data first
+      final apiStats = await _getApiUsageStats();
+      if (apiStats != null) {
+        print('📊 ANALYTICS: Successfully loaded real API data');
+        return apiStats;
+      }
+      
+      // Fall back to local data if API fails
+      print('📊 ANALYTICS: API failed, falling back to local session history...');
+      final sessionHistory = await _getSessionHistory();
+      print('📊 ANALYTICS: Found ${sessionHistory.length} sessions in local history');
+      
+      // If no sessions exist, return demo data as last resort
       if (sessionHistory.isEmpty) {
         print('📊 ANALYTICS: No sessions found, using demo data');
         return _getDemoUsageStats();
       }
       
-      final now = DateTime.now();
-      
-      // Calculate overall statistics
-      int totalSessions = sessionHistory.length;
-      int totalTimeInSeconds = sessionHistory.fold(0, (sum, session) => sum + session['duration'] as int);
-      print('📊 ANALYTICS: Total sessions: $totalSessions, Total time: ${totalTimeInSeconds}s');
-      double averageSessionTime = totalSessions > 0 ? totalTimeInSeconds / totalSessions : 0;
-      
-      // Group sessions by activity type
-      Map<ActivityType, List<Map<String, dynamic>>> sessionsByActivity = {};
-      for (final session in sessionHistory) {
-        final activityTypeStr = session['activityType'] as String;
-        final activityType = ActivityType.values.firstWhere(
-          (type) => type.name == activityTypeStr,
-          orElse: () => ActivityType.dailyAffirmations,
-        );
-        sessionsByActivity.putIfAbsent(activityType, () => []).add(session);
-      }
-      
-      // Calculate activity-specific stats
-      Map<ActivityType, ActivityStats> activities = {};
-      ActivityType mostActiveActivity = ActivityType.dailyAffirmations;
-      int maxSessions = 0;
-      
-      for (final activityType in ActivityType.values) {
-        final sessions = sessionsByActivity[activityType] ?? [];
-        final activityTotalTime = sessions.fold(0, (sum, session) => sum + session['duration'] as int);
-        final activityAvgTime = sessions.isNotEmpty ? activityTotalTime / sessions.length : 0;
-        
-        // Find last session date
-        DateTime? lastSessionDate;
-        if (sessions.isNotEmpty) {
-          lastSessionDate = sessions
-              .map((s) => DateTime.fromMillisecondsSinceEpoch(s['timestamp'] as int))
-              .reduce((a, b) => a.isAfter(b) ? a : b);
-        }
-        
-        activities[activityType] = ActivityStats(
-          activityType: activityType,
-          totalSessions: sessions.length,
-          totalTimeInSeconds: activityTotalTime,
-          averageSessionTimeInSeconds: activityAvgTime.round(),
-          currentStreak: _calculateStreak(sessions, activityType),
-          lastSessionDate: lastSessionDate,
-          weeklyActivity: _generateWeeklyActivity(activityType),
-        );
-        
-        if (sessions.length > maxSessions) {
-          maxSessions = sessions.length;
-          mostActiveActivity = activityType;
-        }
-      }
-      
-      // Calculate streaks and weekly/monthly data
-      final thisWeekSessions = sessionHistory.where((session) {
-        final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
-        final weekStart = now.subtract(Duration(days: now.weekday - 1));
-        return sessionDate.isAfter(weekStart);
-      }).length;
-      
-      final thisMonthSessions = sessionHistory.where((session) {
-        final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
-        return sessionDate.month == now.month && sessionDate.year == now.year;
-      }).length;
-      
-      return UsageStats(
-        totalSessions: totalSessions,
-        totalTimeInSeconds: totalTimeInSeconds,
-        averageSessionTimeInSeconds: averageSessionTime.round(),
-        mostActiveActivity: mostActiveActivity,
-        currentStreak: _calculateOverallStreak(sessionHistory),
-        longestStreak: _calculateLongestStreak(sessionHistory),
-        thisWeekSessions: thisWeekSessions,
-        thisMonthSessions: thisMonthSessions,
-        activities: activities,
-      );
+      // Use the same processing method for local data
+      return _processSessionsToStats(sessionHistory);
     } catch (e) {
       print('❌ Error fetching usage stats: $e');
       return _getEmptyUsageStats();
     }
+  }
+
+  /// Get real usage statistics from API endpoints
+  Future<UsageStats?> _getApiUsageStats() async {
+    try {
+      final authService = UnifiedAuthService();
+      final userId = authService.currentUser?.userId;
+      
+      if (userId == null) {
+        print('📊 API: No user ID available');
+        return null;
+      }
+
+      print('📊 API: Fetching session data for user ID: $userId');
+
+      // Initialize API client if needed
+      _ensureInitialized();
+      
+      List<Map<String, dynamic>> allSessions = [];
+      
+      // 1. Get Daily Affirmation Sessions
+      try {
+        final affirmationResponse = await _apiClient.apiV1ManifestGetdailyaffirmationsessionbyuseridGet(userId: userId);
+        if (affirmationResponse.isSuccessful && affirmationResponse.body?.isSuccess == true && affirmationResponse.body?.model != null) {
+          for (final session in affirmationResponse.body!.model!) {
+            allSessions.add({
+              'activityType': 'dailyAffirmations',
+              'duration': session.dailyAffirmationSessionTimeSpentInSeconds ?? 0,
+              'timestamp': session.dailyAffirmationSessionDate?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
+              'metadata': {'sessionId': session.dailyAffirmationSessionId},
+            });
+          }
+          print('📊 API: Found ${affirmationResponse.body!.model!.length} affirmation sessions');
+        }
+      } catch (e) {
+        print('❌ API: Error fetching affirmation sessions: $e');
+      }
+
+      // 2. Get Vision Board Sessions
+      try {
+        final visionResponse = await _apiClient.apiV1ManifestGetvisionboardsessionbyuseridGet(userId: userId);
+        if (visionResponse.isSuccessful && visionResponse.body?.isSuccess == true && visionResponse.body?.model != null) {
+          for (final session in visionResponse.body!.model!) {
+            allSessions.add({
+              'activityType': 'visionBoard',
+              'duration': session.visionBoardSessionTimeSpentInSeconds ?? 0,
+              'timestamp': session.visionBoardSessionDate?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
+              'metadata': {'sessionId': session.visionBoardSessionId},
+            });
+          }
+          print('📊 API: Found ${visionResponse.body!.model!.length} vision board sessions');
+        }
+      } catch (e) {
+        print('❌ API: Error fetching vision board sessions: $e');
+      }
+
+      // 3. Get Meditation Sessions
+      try {
+        final meditationResponse = await _apiClient.apiV1ManifestGetmeditationsessionbyuseridGet(userId: userId);
+        if (meditationResponse.isSuccessful && meditationResponse.body?.isSuccess == true && meditationResponse.body?.model != null) {
+          for (final session in meditationResponse.body!.model!) {
+            allSessions.add({
+              'activityType': 'visualMeditation',
+              'duration': session.meditationSessionTimeSpentInSeconds ?? 0,
+              'timestamp': session.meditationSessionDate?.millisecondsSinceEpoch ?? DateTime.now().millisecondsSinceEpoch,
+              'metadata': {'sessionId': session.meditationSessionId},
+            });
+          }
+          print('📊 API: Found ${meditationResponse.body!.model!.length} meditation sessions');
+        }
+      } catch (e) {
+        print('❌ API: Error fetching meditation sessions: $e');
+      }
+
+      if (allSessions.isEmpty) {
+        print('📊 API: No sessions found from API');
+        return null;
+      }
+
+      print('📊 API: Total sessions from API: ${allSessions.length}');
+      
+      // Process API sessions using the same logic as local sessions
+      return _processSessionsToStats(allSessions);
+      
+    } catch (e) {
+      print('❌ API: Error fetching API usage stats: $e');
+      return null;
+    }
+  }
+
+  /// Process sessions data into UsageStats object
+  Future<UsageStats> _processSessionsToStats(List<Map<String, dynamic>> sessionHistory) async {
+    final now = DateTime.now();
+    
+    // Calculate overall statistics
+    int totalSessions = sessionHistory.length;
+    int totalTimeInSeconds = sessionHistory.fold(0, (sum, session) => sum + session['duration'] as int);
+    print('📊 ANALYTICS: Total sessions: $totalSessions, Total time: ${totalTimeInSeconds}s');
+    double averageSessionTime = totalSessions > 0 ? totalTimeInSeconds / totalSessions : 0;
+    
+    // Group sessions by activity type
+    Map<ActivityType, List<Map<String, dynamic>>> sessionsByActivity = {};
+    for (final session in sessionHistory) {
+      final activityTypeStr = session['activityType'] as String;
+      final activityType = ActivityType.values.firstWhere(
+        (type) => type.name == activityTypeStr,
+        orElse: () => ActivityType.dailyAffirmations,
+      );
+      sessionsByActivity.putIfAbsent(activityType, () => []).add(session);
+    }
+    
+    // Calculate activity-specific stats
+    Map<ActivityType, ActivityStats> activities = {};
+    ActivityType mostActiveActivity = ActivityType.dailyAffirmations;
+    int maxSessions = 0;
+    
+    for (final activityType in ActivityType.values) {
+      final sessions = sessionsByActivity[activityType] ?? [];
+      final activityTotalTime = sessions.fold(0, (sum, session) => sum + session['duration'] as int);
+      final activityAvgTime = sessions.isNotEmpty ? activityTotalTime / sessions.length : 0;
+      
+      // Find last session date
+      DateTime? lastSessionDate;
+      if (sessions.isNotEmpty) {
+        lastSessionDate = sessions
+            .map((s) => DateTime.fromMillisecondsSinceEpoch(s['timestamp'] as int))
+            .reduce((a, b) => a.isAfter(b) ? a : b);
+      }
+      
+      activities[activityType] = ActivityStats(
+        activityType: activityType,
+        totalSessions: sessions.length,
+        totalTimeInSeconds: activityTotalTime,
+        averageSessionTimeInSeconds: activityAvgTime.round(),
+        currentStreak: _calculateStreak(sessions, activityType),
+        lastSessionDate: lastSessionDate,
+        weeklyActivity: _generateWeeklyActivityFromSessions(sessions, activityType),
+      );
+      
+      if (sessions.length > maxSessions) {
+        maxSessions = sessions.length;
+        mostActiveActivity = activityType;
+      }
+    }
+    
+    // Calculate streaks and weekly/monthly data
+    final thisWeekSessions = sessionHistory.where((session) {
+      final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
+      final weekStart = now.subtract(Duration(days: now.weekday - 1));
+      return sessionDate.isAfter(weekStart);
+    }).length;
+    
+    final thisMonthSessions = sessionHistory.where((session) {
+      final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
+      return sessionDate.month == now.month && sessionDate.year == now.year;
+    }).length;
+    
+    return UsageStats(
+      totalSessions: totalSessions,
+      totalTimeInSeconds: totalTimeInSeconds,
+      averageSessionTimeInSeconds: averageSessionTime.round(),
+      mostActiveActivity: mostActiveActivity,
+      currentStreak: _calculateOverallStreak(sessionHistory),
+      longestStreak: _calculateLongestStreak(sessionHistory),
+      thisWeekSessions: thisWeekSessions,
+      thisMonthSessions: thisMonthSessions,
+      activities: activities,
+    );
+  }
+
+  /// Generate weekly activity data from real session data
+  List<DailyActivity> _generateWeeklyActivityFromSessions(List<Map<String, dynamic>> sessions, ActivityType activityType) {
+    final activities = <DailyActivity>[];
+    final now = DateTime.now();
+    
+    for (int i = 6; i >= 0; i--) {
+      final date = now.subtract(Duration(days: i));
+      final dayStart = DateTime(date.year, date.month, date.day);
+      final dayEnd = dayStart.add(Duration(days: 1));
+      
+      // Filter sessions for this day
+      final daySessions = sessions.where((session) {
+        final sessionDate = DateTime.fromMillisecondsSinceEpoch(session['timestamp'] as int);
+        return sessionDate.isAfter(dayStart) && sessionDate.isBefore(dayEnd);
+      }).toList();
+      
+      final sessionCount = daySessions.length;
+      final totalTime = daySessions.fold(0, (sum, session) => sum + (session['duration'] as int));
+      
+      activities.add(DailyActivity(
+        date: date,
+        sessionCount: sessionCount,
+        totalTimeInSeconds: totalTime,
+      ));
+    }
+    
+    return activities;
   }
 
   /// Get usage statistics for a specific activity
@@ -623,5 +804,33 @@ class UsageAnalyticsService {
     for (final activityType in activeSessions) {
       await endSession(activityType);
     }
+  }
+}
+
+// ========================= AUTH INTERCEPTOR =========================
+
+class _AuthInterceptor implements Interceptor {
+  @override
+  FutureOr<Response<BodyType>> intercept<BodyType>(Chain<BodyType> chain) async {
+    final request = chain.request;
+    
+    try {
+      final authService = UnifiedAuthService();
+      final authToken = authService.authToken;
+      
+      if (authToken != null && authToken.isNotEmpty) {
+        final updatedRequest = request.copyWith(
+          headers: {
+            ...request.headers,
+            'Authorization': 'Bearer $authToken',
+          },
+        );
+        return chain.proceed(updatedRequest);
+      }
+    } catch (e) {
+      print('❌ Error getting auth token: $e');
+    }
+    
+    return chain.proceed(request);
   }
 }

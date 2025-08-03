@@ -206,16 +206,19 @@ class _ErrorPopupState extends State<ErrorPopup>
                       SizedBox(height: 12.h),
 
                       // Message
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24.w),
-                        child: Text(
-                          widget.message,
-                          style: TextStyle(
-                            fontSize: 16.sp,
-                            color: AppTheme.textMedium,
-                            height: 1.4,
+                      Container(
+                        constraints: BoxConstraints(maxHeight: 300.h),
+                        child: SingleChildScrollView(
+                          padding: EdgeInsets.symmetric(horizontal: 24.w),
+                          child: Text(
+                            widget.message,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              color: AppTheme.textMedium,
+                              height: 1.4,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
                         ),
                       ),
 

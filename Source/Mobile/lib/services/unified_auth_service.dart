@@ -47,12 +47,38 @@ class UnifiedAuthService {
     try {
       print('=== UNIFIED AUTH SERVICE INITIALIZATION ===');
       
-      // Initialize API client
-      final apiBaseUrl = baseUrl ?? 'http://manifestation-qa-1.senthilguru.net';
-      _apiClient = Manifestation.create(
-        baseUrl: Uri.parse(apiBaseUrl),
-        interceptors: [_AuthInterceptor()],
-      );
+      // Try multiple API URLs in order of preference
+      final apiUrls = [
+        baseUrl,
+        'http://manifestation-qa-1.senthilguru.net',
+        'http://24.199.119.33',
+        'https://manifestation-qa-1.senthilguru.net',
+        'https://24.199.119.33'
+      ].where((url) => url != null).cast<String>().toList();
+      
+      String? workingUrl;
+      for (final url in apiUrls) {
+        try {
+          print('🔄 Trying API URL: $url');
+          _apiClient = Manifestation.create(
+            baseUrl: Uri.parse(url),
+            interceptors: [_AuthInterceptor()],
+          );
+          
+          // Test the connection with a simple ping
+          // We'll consider initialization successful and test during actual API calls
+          workingUrl = url;
+          print('✅ API client initialized with: $url');
+          break;
+        } catch (e) {
+          print('❌ Failed to initialize with $url: $e');
+          continue;
+        }
+      }
+      
+      if (workingUrl == null) {
+        throw Exception('Failed to initialize API client with any URL');
+      }
       
       // Check existing session state
       await _checkStoredSession();
@@ -133,7 +159,14 @@ class UnifiedAuthService {
     bool rememberMe = false,
   }) async {
     try {
+      print('🔐=== ACCOUNT CREATION DEBUG START ===');
       print('🔐 Attempting account creation for: $email');
+      print('🔐 First Name: $firstName');
+      print('🔐 Last Name: $lastName');
+      print('🔐 Password Length: ${password.length}');
+      print('🔐 Captcha Code: $captchaCode');
+      print('🔐 Remember Me: $rememberMe');
+      print('🔐 API Base URL: [Multiple URLs attempted - check initialization logs]');
 
       final createModel = AccountCreateModel(
         email: email,
@@ -143,16 +176,86 @@ class UnifiedAuthService {
         captchaCode: captchaCode,
       );
 
+      print('🔐 Created AccountCreateModel:');
+      print('🔐   - email: ${createModel.email}');
+      print('🔐   - firstName: ${createModel.firstName}');
+      print('🔐   - lastName: ${createModel.lastName}');
+      print('🔐   - initialPassword: ${createModel.initialPassword?.isNotEmpty == true ? "[PRESENT]" : "[MISSING]"}');
+      print('🔐   - captchaCode: ${createModel.captchaCode}');
+
+      print('🔐 Making API call to: apiV1AccountCreateaccountPost');
       final response = await _apiClient.apiV1AccountCreateaccountPost(body: createModel);
+
+      print('🔐=== API RESPONSE DEBUG ===');
+      print('🔐 Response Status Code: ${response.statusCode}');
+      print('🔐 Response isSuccessful: ${response.isSuccessful}');
+      print('🔐 Response hasBody: ${response.body != null}');
+      print('🔐 Raw Response: ${response.bodyString}');
+      
+      if (response.headers.isNotEmpty) {
+        print('🔐 Response Headers:');
+        response.headers.forEach((key, value) {
+          print('🔐   $key: $value');
+        });
+      }
 
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
+        
+        print('🔐=== RETURN MODEL DEBUG ===');
+        print('🔐 Return Model Type: ${returnModel.runtimeType}');
+        print('🔐 Return Model isSuccess: ${returnModel.isSuccess}');
+        print('🔐 Return Model hasModel: ${returnModel.model != null}');
+        print('🔐 Return Model successMessage: ${returnModel.successMessage}');
+        print('🔐 Return Model errorHolder: ${returnModel.errorHolder}');
+        
+        // Check for session codes or additional debug info
+        try {
+          final rawResponse = response.bodyString;
+          if (rawResponse != null && rawResponse.contains('sessionCode')) {
+            final sessionCodeMatch = RegExp(r'"sessionCode"\s*:\s*"([^"]*)"').firstMatch(rawResponse);
+            if (sessionCodeMatch != null) {
+              print('🔐 SESSION CODE FOUND: ${sessionCodeMatch.group(1)}');
+            }
+          }
+          if (rawResponse != null && rawResponse.contains('traceId')) {
+            final traceIdMatch = RegExp(r'"traceId"\s*:\s*"([^"]*)"').firstMatch(rawResponse);
+            if (traceIdMatch != null) {
+              print('🔐 TRACE ID FOUND: ${traceIdMatch.group(1)}');
+            }
+          }
+          if (rawResponse != null && rawResponse.contains('requestId')) {
+            final requestIdMatch = RegExp(r'"requestId"\s*:\s*"([^"]*)"').firstMatch(rawResponse);
+            if (requestIdMatch != null) {
+              print('🔐 REQUEST ID FOUND: ${requestIdMatch.group(1)}');
+            }
+          }
+        } catch (e) {
+          print('🔐 Error parsing session codes: $e');
+        }
+        
+        if (returnModel.model != null) {
+          print('🔐 User Model Details:');
+          print('🔐   - userId: ${returnModel.model!.userId}');
+          print('🔐   - userName: ${returnModel.model!.userName}');
+          print('🔐   - firstName: ${returnModel.model!.firstName}');
+          print('🔐   - lastName: ${returnModel.model!.lastName}');
+          print('🔐   - email: ${email}');
+          print('🔐   - hasToken: ${returnModel.model!.token?.isNotEmpty == true}');
+          print('🔐   - tokenLength: ${returnModel.model!.token?.length ?? 0}');
+        }
         
         if (returnModel.isSuccess == true && returnModel.model != null) {
           _currentUser = returnModel.model!;
           _authToken = returnModel.model!.token;
           
+          print('🔐 SUCCESS: Setting current user and token');
+          print('🔐 Current User ID: ${_currentUser!.userId}');
+          print('🔐 Current User Name: ${_currentUser!.userName}');
+          print('🔐 Auth Token Present: ${_authToken?.isNotEmpty == true}');
+          
           // Save session
+          print('🔐 Saving session data...');
           await _saveSession(
             token: _authToken!,
             userData: _currentUser!.toJson(),
@@ -160,24 +263,41 @@ class UnifiedAuthService {
           );
           
           print('✅ Account creation successful for: ${_currentUser!.userName}');
+          print('🔐=== ACCOUNT CREATION DEBUG END (SUCCESS) ===');
           return AuthResult.success(
             user: _currentUser!,
             token: _authToken!,
             message: returnModel.successMessage ?? 'Account created successfully',
           );
         } else {
+          print('❌ FAILURE: Return model indicates failure');
+          print('❌ isSuccess: ${returnModel.isSuccess}');
+          print('❌ model is null: ${returnModel.model == null}');
+          print('❌ errorHolder: ${returnModel.errorHolder}');
+          print('🔐=== ACCOUNT CREATION DEBUG END (API FAILURE) ===');
           return AuthResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Account creation failed',
           );
         }
       } else {
+        print('❌ NETWORK ERROR:');
+        print('❌ Status Code: ${response.statusCode}');
+        print('❌ isSuccessful: ${response.isSuccessful}');
+        print('❌ Response Body: ${response.bodyString}');
+        print('❌ Error: ${response.error}');
+        print('🔐=== ACCOUNT CREATION DEBUG END (NETWORK ERROR) ===');
         return AuthResult.failure(
-          message: 'Network error: ${response.statusCode}',
+          message: 'Network error: ${response.statusCode} - ${response.bodyString ?? "No response body"}',
         );
       }
       
-    } catch (e) {
-      print('❌ Account creation error: $e');
+    } catch (e, stackTrace) {
+      print('❌=== ACCOUNT CREATION EXCEPTION ===');
+      print('❌ Exception Type: ${e.runtimeType}');
+      print('❌ Exception Message: $e');
+      print('❌ Stack Trace:');
+      print(stackTrace);
+      print('🔐=== ACCOUNT CREATION DEBUG END (EXCEPTION) ===');
       return AuthResult.failure(message: 'Network error: $e');
     }
   }
@@ -538,10 +658,21 @@ class _AuthInterceptor implements Interceptor {
   FutureOr<Response<BodyType>> intercept<BodyType>(Chain<BodyType> chain) async {
     final request = chain.request;
     
+    print('🌐=== HTTP REQUEST DEBUG ===');
+    print('🌐 Method: ${request.method}');
+    print('🌐 URL: ${request.url}');
+    print('🌐 Headers: ${request.headers}');
+    print('🌐 Body Type: ${request.body.runtimeType}');
+    
     try {
       // Get auth token from the unified service
       final authService = UnifiedAuthService();
       final authToken = authService.authToken;
+      
+      print('🌐 Auth token available: ${authToken != null && authToken.isNotEmpty}');
+      if (authToken != null && authToken.isNotEmpty) {
+        print('🌐 Auth token length: ${authToken.length}');
+      }
       
       if (authToken != null && authToken.isNotEmpty) {
         final updatedRequest = request.copyWith(
@@ -550,12 +681,33 @@ class _AuthInterceptor implements Interceptor {
             'Authorization': 'Bearer $authToken',
           },
         );
-        return chain.proceed(updatedRequest);
+        print('🌐 Added Authorization header');
+        final response = await chain.proceed(updatedRequest);
+        
+        print('🌐=== HTTP RESPONSE DEBUG ===');
+        print('🌐 Status: ${response.statusCode}');
+        print('🌐 Headers: ${response.headers}');
+        print('🌐 Body: ${response.bodyString}');
+        
+        return response;
+      } else {
+        print('🌐 No auth token, proceeding without Authorization header');
+        final response = await chain.proceed(request);
+        
+        print('🌐=== HTTP RESPONSE DEBUG ===');
+        print('🌐 Status: ${response.statusCode}');
+        print('🌐 Headers: ${response.headers}');
+        print('🌐 Body: ${response.bodyString}');
+        
+        return response;
       }
-    } catch (e) {
-      print('❌ Error getting auth token: $e');
+    } catch (e, stackTrace) {
+      print('❌=== HTTP INTERCEPTOR ERROR ===');
+      print('❌ Error type: ${e.runtimeType}');
+      print('❌ Error message: $e');
+      print('❌ Stack trace:');
+      print(stackTrace);
+      rethrow;
     }
-    
-    return chain.proceed(request);
   }
 }
