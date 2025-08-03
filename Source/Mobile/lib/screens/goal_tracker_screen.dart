@@ -665,7 +665,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               final cat = actualCategories[j];
               print('   - Category $j details:');
               print('     * categoryId: ${cat.categoryId}');
-              print('     * goalTrackerId: ${cat.goalTrackerId}');
+              print('     * categoryName: ${cat.categoryName}');
               print('     * userId: ${cat.userId}');
               print('     * Full object: ${cat.toString()}');
             }

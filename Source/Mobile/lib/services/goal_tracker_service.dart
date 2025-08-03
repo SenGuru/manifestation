@@ -116,6 +116,8 @@ class GoalTrackerService {
     1312: 4, // money
     1313: 5, // personal
     1314: 6, // spiritual
+    // Real server category IDs from API
+    1007: 2, // Health (from actual API response)
     // Handle user custom categories that might exist
     1045: 3, // Love -> love
     1046: 5, // Success -> personal
