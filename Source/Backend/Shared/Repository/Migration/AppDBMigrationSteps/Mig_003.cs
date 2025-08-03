@@ -708,6 +708,13 @@ namespace Manifest.Repository.Migration.Application
             //};
 
             //InsertData("DefaultUserTypePermission", defaultUserRolePermissionParams);
+
+            dynamic[] companyStorageConfigurationParams = new dynamic[]
+            {
+                new  { CompanyStorageConfigurationGuid = Guid.NewGuid(), CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, IsDeleted = false, FileAttachmentFileStorageConnectionString = "|ConfigPath|/../Data/FileStorage/FileAttachments", ProfilePictureFileStorageConnectionString = "|ConfigPath|/../Data/FileStorage/ProfileFiles", ReportServerFileStorageConnectionString = "|ConfigPath|/../Data/FileStorage/ReportFiles" }
+            };
+
+            InsertData("CompanyStorageConfiguration", companyStorageConfigurationParams);
         }
     }
 }
