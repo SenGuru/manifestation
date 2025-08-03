@@ -5627,15 +5627,18 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public DefaultCategoryModel(Int64 defaultCategoryId,String defaultCategoryName,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public DefaultCategoryModel(Int64 defaultCategoryId,String defaultCategoryName,Int64 predefinedIconTypeId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             DefaultCategoryId = defaultCategoryId;
             DefaultCategoryName = defaultCategoryName;
+            PredefinedIconTypeId = predefinedIconTypeId;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
             ModifiedDate = modifiedDate;
         }
 
+        [JsonPropertyName("predefinedIconTypeName")]
+        public String PredefinedIconTypeName {set; get;}
         [JsonPropertyName("predefinedCategoryTypeName")]
         public String PredefinedCategoryTypeName {set; get;}
         [JsonPropertyName("createdByUserFirstName")]
@@ -5660,6 +5663,8 @@ namespace Manifest.Tests.Common
         public String DefaultCategoryName {set; get;}
         [JsonPropertyName("predefinedCategoryTypeId")]
         public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
         [JsonPropertyName("isDeleted")]
         public Boolean IsDeleted {set; get;}
         [JsonPropertyName("createdDate")]
@@ -5676,6 +5681,7 @@ namespace Manifest.Tests.Common
             var obj = new DefaultCategoryCreateModel();
             obj.DefaultCategoryName = DefaultCategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -5684,6 +5690,7 @@ namespace Manifest.Tests.Common
             var result = true;
             result = result && (obj.DefaultCategoryName == DefaultCategoryName);
             result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
+            result = result && (obj.PredefinedIconTypeId == PredefinedIconTypeId);
             return result;
         }
 
@@ -5694,6 +5701,7 @@ namespace Manifest.Tests.Common
             obj.DefaultCategoryId = DefaultCategoryId;
             obj.DefaultCategoryName = DefaultCategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -5703,6 +5711,7 @@ namespace Manifest.Tests.Common
             result = result && (obj.DefaultCategoryId == DefaultCategoryId);
             result = result && (obj.DefaultCategoryName == DefaultCategoryName);
             result = result && (obj.PredefinedCategoryTypeId == PredefinedCategoryTypeId);
+            result = result && (obj.PredefinedIconTypeId == PredefinedIconTypeId);
             return result;
         }
 
@@ -5710,6 +5719,7 @@ namespace Manifest.Tests.Common
         public DefaultCategoryModel GetCopy()
         {
             var obj = new DefaultCategoryModel();
+            obj.PredefinedIconTypeName = PredefinedIconTypeName;
             obj.PredefinedCategoryTypeName = PredefinedCategoryTypeName;
             obj.CreatedByUserFirstName = CreatedByUserFirstName;
             obj.CreatedByUserLastName = CreatedByUserLastName;
@@ -5722,6 +5732,7 @@ namespace Manifest.Tests.Common
             obj.DefaultCategoryId = DefaultCategoryId;
             obj.DefaultCategoryName = DefaultCategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
             obj.CreatedByUserId = CreatedByUserId;
@@ -5731,6 +5742,7 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string PredefinedIconTypeName__Name = "PredefinedIconTypeName";
         public const string PredefinedCategoryTypeName__Name = "PredefinedCategoryTypeName";
         public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
         public const string CreatedByUserLastName__Name = "CreatedByUserLastName";
@@ -5743,6 +5755,7 @@ namespace Manifest.Tests.Common
         public const string DefaultCategoryId__Name = "DefaultCategoryId";
         public const string DefaultCategoryName__Name = "DefaultCategoryName";
         public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         public const string IsDeleted__Name = "IsDeleted";
         public const string CreatedDate__Name = "CreatedDate";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -7422,6 +7435,8 @@ namespace Manifest.Tests.Common
         public DefaultCategorySearchCriteria()
         {
         }
+        [JsonPropertyName("predefinedIconTypeIds")]
+        public List<Int64> PredefinedIconTypeIds {set; get;}
         [JsonPropertyName("showDeleted")]
         public Boolean ShowDeleted {set; get;}
         [JsonPropertyName("predefinedCategoryTypeIds")]
@@ -7446,6 +7461,7 @@ namespace Manifest.Tests.Common
         public DefaultCategorySearchCriteria GetCopy()
         {
             var obj = new DefaultCategorySearchCriteria();
+            obj.PredefinedIconTypeIds = PredefinedIconTypeIds;
             obj.ShowDeleted = ShowDeleted;
             obj.PredefinedCategoryTypeIds = PredefinedCategoryTypeIds;
             obj.CreatedByUserId = CreatedByUserId;
@@ -7460,6 +7476,7 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string PredefinedIconTypeIds__Name = "PredefinedIconTypeIds";
         public const string ShowDeleted__Name = "ShowDeleted";
         public const string PredefinedCategoryTypeIds__Name = "PredefinedCategoryTypeIds";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -7482,27 +7499,32 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public DefaultCategoryCreateModel(String defaultCategoryName)
+        public DefaultCategoryCreateModel(String defaultCategoryName,Int64 predefinedIconTypeId)
         {
             DefaultCategoryName = defaultCategoryName;
+            PredefinedIconTypeId = predefinedIconTypeId;
         }
 
         [JsonPropertyName("defaultCategoryName")]
         public String DefaultCategoryName {set; get;}
         [JsonPropertyName("predefinedCategoryTypeId")]
         public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
 
         public DefaultCategoryCreateModel GetCopy()
         {
             var obj = new DefaultCategoryCreateModel();
             obj.DefaultCategoryName = DefaultCategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
         // Property Names
         public const string DefaultCategoryName__Name = "DefaultCategoryName";
         public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         // String Column Sizes
         public const int DefaultCategoryName__Size = 255;
     }
@@ -7534,10 +7556,11 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public DefaultCategoryUpdateModel(Int64 defaultCategoryId,String defaultCategoryName)
+        public DefaultCategoryUpdateModel(Int64 defaultCategoryId,String defaultCategoryName,Int64 predefinedIconTypeId)
         {
             DefaultCategoryId = defaultCategoryId;
             DefaultCategoryName = defaultCategoryName;
+            PredefinedIconTypeId = predefinedIconTypeId;
         }
 
         [JsonPropertyName("defaultCategoryId")]
@@ -7546,6 +7569,8 @@ namespace Manifest.Tests.Common
         public String DefaultCategoryName {set; get;}
         [JsonPropertyName("predefinedCategoryTypeId")]
         public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
 
         public DefaultCategoryUpdateModel GetCopy()
         {
@@ -7553,6 +7578,7 @@ namespace Manifest.Tests.Common
             obj.DefaultCategoryId = DefaultCategoryId;
             obj.DefaultCategoryName = DefaultCategoryName;
             obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             return obj;
         }
 
@@ -7560,6 +7586,7 @@ namespace Manifest.Tests.Common
         public const string DefaultCategoryId__Name = "DefaultCategoryId";
         public const string DefaultCategoryName__Name = "DefaultCategoryName";
         public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         // String Column Sizes
         public const int DefaultCategoryName__Size = 255;
     }

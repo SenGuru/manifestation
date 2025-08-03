@@ -1997,6 +1997,7 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_DefaultCategoryId = "DefaultCategoryId";
         public const string COLUMN_DefaultCategoryName = "DefaultCategoryName";
         public const string COLUMN_PredefinedCategoryTypeId = "PredefinedCategoryTypeId";
+        public const string COLUMN_PredefinedIconTypeId = "PredefinedIconTypeId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
         public const string COLUMN_CreatedByUserId = "CreatedByUserId";
@@ -2012,6 +2013,7 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_DefaultCategoryId = false;
         public const bool COLUMN_NULLABLE_DefaultCategoryName = false;
         public const bool COLUMN_NULLABLE_PredefinedCategoryTypeId = true;
+        public const bool COLUMN_NULLABLE_PredefinedIconTypeId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
         public const bool COLUMN_NULLABLE_CreatedByUserId = true;
@@ -2032,6 +2034,10 @@ namespace Manifest.Common.Models.DB
         
         [Column("PredefinedCategoryTypeId")]
         public long? PredefinedCategoryTypeId { get; set; }
+        
+        [Column("PredefinedIconTypeId")]
+        [NotNull]
+        public long PredefinedIconTypeId { get; set; }
         
         [Column("IsDeleted")]
         [NotNull]
@@ -2057,6 +2063,7 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"DefaultCategoryId = {DefaultCategoryId} , ");
             sb.AppendLine($"DefaultCategoryName = {DefaultCategoryName} , ");
             sb.AppendLine($"PredefinedCategoryTypeId = {PredefinedCategoryTypeId} , ");
+            sb.AppendLine($"PredefinedIconTypeId = {PredefinedIconTypeId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
             sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
@@ -2075,6 +2082,7 @@ namespace Manifest.Common.Models.DB
             DefaultCategoryId = item.DefaultCategoryId,
             DefaultCategoryName = item.DefaultCategoryName,
             PredefinedCategoryTypeId = item.PredefinedCategoryTypeId,
+            PredefinedIconTypeId = item.PredefinedIconTypeId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
             CreatedByUserId = item.CreatedByUserId,
