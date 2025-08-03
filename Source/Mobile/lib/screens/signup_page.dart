@@ -838,13 +838,29 @@ class _SignUpScreenState extends State<SignUpScreen>
   }
 
   void _handleSignUp() async {
+    print('📱=== SIGNUP UI DEBUG START ===');
+    
     // Clear previous validation error
     setState(() {
       _validationError = '';
     });
     
+    print('📱 Signup form validation:');
+    print('📱   - Name: "${_nameController.text.trim()}"');
+    print('📱   - Email: "${_emailController.text.trim()}"');
+    print('📱   - Password length: ${_passwordController.text.length}');
+    print('📱   - Confirm password matches: ${_passwordController.text == _confirmPasswordController.text}');
+    print('📱   - Agree to terms: $_agreeToTerms');
+    print('📱   - Subscribe to newsletter: $_subscribeToNewsletter');
+    
     // Custom validation since we disabled TextFormField's built-in validation
     bool hasErrors = false;
+    
+    print('📱 Field validation errors:');
+    print('📱   - Name error: $_nameError');
+    print('📱   - Email error: $_emailError');
+    print('📱   - Password error: $_passwordError');
+    print('📱   - Confirm password error: $_confirmPasswordError');
     
     if (_nameError != null) hasErrors = true;
     if (_emailError != null) hasErrors = true;
@@ -852,10 +868,12 @@ class _SignUpScreenState extends State<SignUpScreen>
     if (_confirmPasswordError != null) hasErrors = true;
     
     if (hasErrors) {
+      print('📱 STOPPING: Form has validation errors');
       return;
     }
     
     if (!_agreeToTerms) {
+      print('📱 STOPPING: User did not agree to terms');
       setState(() {
         _validationError = 'Please agree to the Terms of Service and Privacy Policy';
       });
@@ -872,7 +890,23 @@ class _SignUpScreenState extends State<SignUpScreen>
       final firstName = nameParts.isNotEmpty ? nameParts.first : '';
       final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
+      print('📱 Parsed name parts:');
+      print('📱   - Full name: "${_nameController.text.trim()}"');
+      print('📱   - First name: "$firstName"');
+      print('📱   - Last name: "$lastName"');
+
       final authService = UnifiedAuthService();
+      
+      print('📱 Initializing auth service...');
+      await authService.initialize();
+      
+      print('📱 Calling createAccount with:');
+      print('📱   - email: "${_emailController.text.trim()}"');
+      print('📱   - firstName: "$firstName"');
+      print('📱   - lastName: "$lastName"');
+      print('📱   - password: [${_passwordController.text.trim().length} chars]');
+      print('📱   - captchaCode: "dummy_captcha"');
+      print('📱   - rememberMe: true');
       
       final result = await authService.createAccount(
         email: _emailController.text.trim(),
@@ -883,7 +917,23 @@ class _SignUpScreenState extends State<SignUpScreen>
         rememberMe: true, // Remember new users by default
       );
 
+      print('📱=== SIGNUP RESULT DEBUG ===');
+      print('📱 Result isSuccess: ${result.isSuccess}');
+      print('📱 Result message: "${result.message}"');
+      print('📱 Result has user: ${result.user != null}');
+      print('📱 Result has token: ${result.token != null}');
+      
+      if (result.user != null) {
+        print('📱 User details:');
+        print('📱   - User ID: ${result.user!.userId}');
+        print('📱   - Username: ${result.user!.userName}');
+        print('📱   - Email: ${_emailController.text.trim()}');
+        print('📱   - First name: ${result.user!.firstName}');
+        print('📱   - Last name: ${result.user!.lastName}');
+      }
+
       if (result.isSuccess) {
+        print('📱 SUCCESS: Showing success popup and navigating');
         // Show success popup before navigation
         SuccessPopup.show(
           context,
@@ -904,11 +954,38 @@ class _SignUpScreenState extends State<SignUpScreen>
           },
         );
       } else {
+        print('📱 FAILURE: Showing error popup');
+        print('📱 Original error message: "${result.message}"');
+        final friendlyMessage = _getSignupErrorMessage(result.message);
+        print('📱 Friendly error message: "$friendlyMessage"');
+        
+        // Extract just the friendly message from the error
+        String debugMessage = result.message;
+        String? serverFriendlyMessage;
+        
+        try {
+          // Try to extract friendlyMessage from JSON if it exists
+          if (debugMessage.contains('"friendlyMessage"')) {
+            final startIndex = debugMessage.indexOf('"friendlyMessage":"') + 18;
+            final endIndex = debugMessage.indexOf('"', startIndex);
+            if (startIndex > 17 && endIndex > startIndex) {
+              serverFriendlyMessage = debugMessage.substring(startIndex, endIndex);
+            }
+          }
+        } catch (e) {
+          print('📱 Error parsing server message: $e');
+        }
+        
+        final displayMessage = serverFriendlyMessage ?? friendlyMessage;
+        final hasDebugInfo = result.message.length > 200;
+        
         // Show beautiful error popup instead of validation error
         ErrorPopup.show(
           context,
           title: 'Account Creation Failed',
-          message: _getSignupErrorMessage(result.message),
+          message: hasDebugInfo 
+              ? '$displayMessage\n\n🔍 Server says: "${serverFriendlyMessage ?? "Server error occurred"}"\n\n💡 This appears to be a server-side issue. Please try again or contact support if the problem persists.'
+              : displayMessage,
           actionText: 'Try Again',
           onAction: () {
             // Clear sensitive fields
@@ -918,18 +995,26 @@ class _SignUpScreenState extends State<SignUpScreen>
           },
         );
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      print('📱=== SIGNUP UI EXCEPTION ===');
+      print('📱 Exception type: ${e.runtimeType}');
+      print('📱 Exception message: $e');
+      print('📱 Stack trace:');
+      print(stackTrace);
+      
       ErrorPopup.show(
         context,
         title: 'Connection Error',
-        message: 'Unable to create your account right now. Please check your internet connection and try again.',
+        message: 'Unable to create your account right now. Please check your internet connection and try again.\n\nError: $e',
         actionText: 'Retry',
         onAction: () => _handleSignUp(),
       );
     } finally {
+      print('📱 Setting loading to false');
       setState(() {
         _isLoading = false;
       });
+      print('📱=== SIGNUP UI DEBUG END ===');
     }
   }
 

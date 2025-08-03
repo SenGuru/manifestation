@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fun/components/gratitude_selection.dart';
 import 'package:fun/models/journey_entry.dart';
 import 'package:fun/constants/colors.dart';
@@ -1221,8 +1223,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               margin: EdgeInsets.only(left: 8.w),
               child: ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).pop(false); // Close dialog
-                  await _saveEntry(); // Save the entry
+                  Navigator.of(context).pop(true); // Close dialog and allow navigation
+                  await _saveDraftProgress(); // Save as draft/progress, not as finished entry
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.journalGradient[0],
@@ -1371,5 +1373,61 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         ],
       ),
     );
+  }
+
+  // Save current progress as draft without creating a finalized journal entry
+  Future<void> _saveDraftProgress() async {
+    try {
+      print('📖 Saving draft progress...');
+      
+      // Save draft data to local storage/shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      // Create draft data map
+      final draftData = {
+        'mood': selectedMood.displayName,
+        'gratitudes': gratitudeItems.where((item) => item.trim().isNotEmpty).toList(),
+        'reflection': reflection.trim(),
+        'intention': intention.trim(),
+        'lastSaved': DateTime.now().toIso8601String(),
+      };
+      
+      // Save as JSON string
+      await prefs.setString('journal_draft_$dateKey', jsonEncode(draftData));
+      
+      print('📖 Draft progress saved successfully');
+      print('   Mood: ${selectedMood.displayName}');
+      print('   Gratitudes: ${draftData['gratitudes']}');
+      print('   Has Reflection: ${reflection.trim().isNotEmpty}');
+      print('   Has Intention: ${intention.trim().isNotEmpty}');
+      
+      // Show confirmation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
+              SizedBox(width: 8.w),
+              Text('Progress saved as draft'),
+            ],
+          ),
+          backgroundColor: AppTheme.journalGradient[0],
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      
+    } catch (e) {
+      print('📖 Error saving draft progress: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to save progress: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 }
