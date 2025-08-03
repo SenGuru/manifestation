@@ -18470,6 +18470,10 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("AddedToFeedDate", $"AddedToFeedDate is not a valid date"));
             }
 
+            if (!ValidationUtils.IsEnumValid<PredefinedGoalPriorityTypes, long>(goalTrackerModel.PredefinedGoalPriorityTypeId))
+            {
+                result.Add(new ReturnErrorItem("PredefinedGoalPriorityTypeId", "Priority Type is not valid"));
+            }
 
             return result.Count > 0 ? result : null;
         }

@@ -34,6 +34,7 @@ export enum EnumGroupTypes{
   PredefinedMeditationType = 35,
   PredefinedIconType = 36,
   PredefinedMoodType = 37,
+  PredefinedGoalPriorityType = 38,
 }
 
 export enum PredefinedAuditOperationTypes{
@@ -130,6 +131,13 @@ export enum PredefinedFileStorageTypes{
   ReportServerFileStorage = 800001,
   ProfilePictureFileStorage = 800002,
   FileAttachmentFileStorage = 800003,
+}
+
+export enum PredefinedGoalPriorityTypes{
+  Low = 3800001,
+  Medium = 3800002,
+  High = 3800003,
+  Critical = 3800004,
 }
 
 export enum PredefinedGoalStatusTypes{

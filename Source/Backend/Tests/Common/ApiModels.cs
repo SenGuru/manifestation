@@ -10609,11 +10609,12 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public GoalTrackerModel(Int64 goalTrackerId,String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public GoalTrackerModel(Int64 goalTrackerId,String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 predefinedGoalPriorityTypeId,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             GoalTrackerId = goalTrackerId;
             GoalTrackerName = goalTrackerName;
             PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            PredefinedGoalPriorityTypeId = predefinedGoalPriorityTypeId;
             UserId = userId;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
@@ -10624,6 +10625,8 @@ namespace Manifest.Tests.Common
         public List<GoalTrackerMileStoneModel> ExistingGoalTrackerMileStones {set; get;}
         [JsonPropertyName("existingCategorys")]
         public List<CategoryModel> ExistingCategorys {set; get;}
+        [JsonPropertyName("predefinedGoalPriorityTypeName")]
+        public String PredefinedGoalPriorityTypeName {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeName")]
         public String PredefinedGoalStatusTypeName {set; get;}
         [JsonPropertyName("userName")]
@@ -10650,6 +10653,8 @@ namespace Manifest.Tests.Common
         public String GoalTrackerName {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
         public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("predefinedGoalPriorityTypeId")]
+        public Int64 PredefinedGoalPriorityTypeId {set; get;}
         [JsonPropertyName("goalTrackerStartDate")]
         public DateTime? GoalTrackerStartDate {set; get;}
         [JsonPropertyName("goalTrackerEndDate")]
@@ -10678,6 +10683,7 @@ namespace Manifest.Tests.Common
             var obj = new GoalTrackerCreateModel();
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.PredefinedGoalPriorityTypeId = PredefinedGoalPriorityTypeId;
             obj.GoalTrackerStartDate = GoalTrackerStartDate;
             obj.GoalTrackerEndDate = GoalTrackerEndDate;
             obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
@@ -10692,6 +10698,7 @@ namespace Manifest.Tests.Common
             var result = true;
             result = result && (obj.GoalTrackerName == GoalTrackerName);
             result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.PredefinedGoalPriorityTypeId == PredefinedGoalPriorityTypeId);
             result = result && (obj.GoalTrackerStartDate == GoalTrackerStartDate);
             result = result && (obj.GoalTrackerEndDate == GoalTrackerEndDate);
             result = result && (obj.GoalTrackerCompletedDate == GoalTrackerCompletedDate);
@@ -10708,6 +10715,7 @@ namespace Manifest.Tests.Common
             obj.GoalTrackerId = GoalTrackerId;
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.PredefinedGoalPriorityTypeId = PredefinedGoalPriorityTypeId;
             obj.GoalTrackerStartDate = GoalTrackerStartDate;
             obj.GoalTrackerEndDate = GoalTrackerEndDate;
             obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
@@ -10723,6 +10731,7 @@ namespace Manifest.Tests.Common
             result = result && (obj.GoalTrackerId == GoalTrackerId);
             result = result && (obj.GoalTrackerName == GoalTrackerName);
             result = result && (obj.PredefinedGoalStatusTypeId == PredefinedGoalStatusTypeId);
+            result = result && (obj.PredefinedGoalPriorityTypeId == PredefinedGoalPriorityTypeId);
             result = result && (obj.GoalTrackerStartDate == GoalTrackerStartDate);
             result = result && (obj.GoalTrackerEndDate == GoalTrackerEndDate);
             result = result && (obj.GoalTrackerCompletedDate == GoalTrackerCompletedDate);
@@ -10738,6 +10747,7 @@ namespace Manifest.Tests.Common
             var obj = new GoalTrackerModel();
             obj.ExistingGoalTrackerMileStones = ExistingGoalTrackerMileStones;
             obj.ExistingCategorys = ExistingCategorys;
+            obj.PredefinedGoalPriorityTypeName = PredefinedGoalPriorityTypeName;
             obj.PredefinedGoalStatusTypeName = PredefinedGoalStatusTypeName;
             obj.UserName = UserName;
             obj.CreatedByUserFirstName = CreatedByUserFirstName;
@@ -10751,6 +10761,7 @@ namespace Manifest.Tests.Common
             obj.GoalTrackerId = GoalTrackerId;
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.PredefinedGoalPriorityTypeId = PredefinedGoalPriorityTypeId;
             obj.GoalTrackerStartDate = GoalTrackerStartDate;
             obj.GoalTrackerEndDate = GoalTrackerEndDate;
             obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
@@ -10768,6 +10779,7 @@ namespace Manifest.Tests.Common
         // Property Names
         public const string ExistingGoalTrackerMileStones__Name = "ExistingGoalTrackerMileStones";
         public const string ExistingCategorys__Name = "ExistingCategorys";
+        public const string PredefinedGoalPriorityTypeName__Name = "PredefinedGoalPriorityTypeName";
         public const string PredefinedGoalStatusTypeName__Name = "PredefinedGoalStatusTypeName";
         public const string UserName__Name = "UserName";
         public const string CreatedByUserFirstName__Name = "CreatedByUserFirstName";
@@ -10781,6 +10793,7 @@ namespace Manifest.Tests.Common
         public const string GoalTrackerId__Name = "GoalTrackerId";
         public const string GoalTrackerName__Name = "GoalTrackerName";
         public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string PredefinedGoalPriorityTypeId__Name = "PredefinedGoalPriorityTypeId";
         public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
         public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
         public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
@@ -11128,6 +11141,8 @@ namespace Manifest.Tests.Common
         }
         [JsonPropertyName("showDeleted")]
         public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("predefinedGoalPriorityTypeIds")]
+        public List<Int64> PredefinedGoalPriorityTypeIds {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeIds")]
         public List<Int64> PredefinedGoalStatusTypeIds {set; get;}
         [JsonPropertyName("userId")]
@@ -11153,6 +11168,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new GoalTrackerSearchCriteria();
             obj.ShowDeleted = ShowDeleted;
+            obj.PredefinedGoalPriorityTypeIds = PredefinedGoalPriorityTypeIds;
             obj.PredefinedGoalStatusTypeIds = PredefinedGoalStatusTypeIds;
             obj.UserId = UserId;
             obj.CreatedByUserId = CreatedByUserId;
@@ -11168,6 +11184,7 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string ShowDeleted__Name = "ShowDeleted";
+        public const string PredefinedGoalPriorityTypeIds__Name = "PredefinedGoalPriorityTypeIds";
         public const string PredefinedGoalStatusTypeIds__Name = "PredefinedGoalStatusTypeIds";
         public const string UserId__Name = "UserId";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -11190,10 +11207,11 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public GoalTrackerCreateModel(String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 userId)
+        public GoalTrackerCreateModel(String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 predefinedGoalPriorityTypeId,Int64 userId)
         {
             GoalTrackerName = goalTrackerName;
             PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            PredefinedGoalPriorityTypeId = predefinedGoalPriorityTypeId;
             UserId = userId;
         }
 
@@ -11205,6 +11223,8 @@ namespace Manifest.Tests.Common
         public String GoalTrackerName {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
         public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("predefinedGoalPriorityTypeId")]
+        public Int64 PredefinedGoalPriorityTypeId {set; get;}
         [JsonPropertyName("goalTrackerStartDate")]
         public DateTime? GoalTrackerStartDate {set; get;}
         [JsonPropertyName("goalTrackerEndDate")]
@@ -11225,6 +11245,7 @@ namespace Manifest.Tests.Common
             obj.ExistingGoalTrackerCategoryModels = ExistingGoalTrackerCategoryModels;
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.PredefinedGoalPriorityTypeId = PredefinedGoalPriorityTypeId;
             obj.GoalTrackerStartDate = GoalTrackerStartDate;
             obj.GoalTrackerEndDate = GoalTrackerEndDate;
             obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
@@ -11239,6 +11260,7 @@ namespace Manifest.Tests.Common
         public const string ExistingGoalTrackerCategoryModels__Name = "ExistingGoalTrackerCategoryModels";
         public const string GoalTrackerName__Name = "GoalTrackerName";
         public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string PredefinedGoalPriorityTypeId__Name = "PredefinedGoalPriorityTypeId";
         public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
         public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
         public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
@@ -11276,11 +11298,12 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public GoalTrackerUpdateModel(Int64 goalTrackerId,String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 userId)
+        public GoalTrackerUpdateModel(Int64 goalTrackerId,String goalTrackerName,Int64 predefinedGoalStatusTypeId,Int64 predefinedGoalPriorityTypeId,Int64 userId)
         {
             GoalTrackerId = goalTrackerId;
             GoalTrackerName = goalTrackerName;
             PredefinedGoalStatusTypeId = predefinedGoalStatusTypeId;
+            PredefinedGoalPriorityTypeId = predefinedGoalPriorityTypeId;
             UserId = userId;
         }
 
@@ -11294,6 +11317,8 @@ namespace Manifest.Tests.Common
         public String GoalTrackerName {set; get;}
         [JsonPropertyName("predefinedGoalStatusTypeId")]
         public Int64 PredefinedGoalStatusTypeId {set; get;}
+        [JsonPropertyName("predefinedGoalPriorityTypeId")]
+        public Int64 PredefinedGoalPriorityTypeId {set; get;}
         [JsonPropertyName("goalTrackerStartDate")]
         public DateTime? GoalTrackerStartDate {set; get;}
         [JsonPropertyName("goalTrackerEndDate")]
@@ -11315,6 +11340,7 @@ namespace Manifest.Tests.Common
             obj.GoalTrackerId = GoalTrackerId;
             obj.GoalTrackerName = GoalTrackerName;
             obj.PredefinedGoalStatusTypeId = PredefinedGoalStatusTypeId;
+            obj.PredefinedGoalPriorityTypeId = PredefinedGoalPriorityTypeId;
             obj.GoalTrackerStartDate = GoalTrackerStartDate;
             obj.GoalTrackerEndDate = GoalTrackerEndDate;
             obj.GoalTrackerCompletedDate = GoalTrackerCompletedDate;
@@ -11330,6 +11356,7 @@ namespace Manifest.Tests.Common
         public const string GoalTrackerId__Name = "GoalTrackerId";
         public const string GoalTrackerName__Name = "GoalTrackerName";
         public const string PredefinedGoalStatusTypeId__Name = "PredefinedGoalStatusTypeId";
+        public const string PredefinedGoalPriorityTypeId__Name = "PredefinedGoalPriorityTypeId";
         public const string GoalTrackerStartDate__Name = "GoalTrackerStartDate";
         public const string GoalTrackerEndDate__Name = "GoalTrackerEndDate";
         public const string GoalTrackerCompletedDate__Name = "GoalTrackerCompletedDate";
@@ -11452,6 +11479,10 @@ namespace Manifest.Tests.Common
             ModifiedDate = modifiedDate;
         }
 
+        [JsonPropertyName("predefinedCategoryTypeId")]
+        public Int64? PredefinedCategoryTypeId {set; get;}
+        [JsonPropertyName("predefinedIconTypeId")]
+        public Int64 PredefinedIconTypeId {set; get;}
         [JsonPropertyName("categoryName")]
         public String CategoryName {set; get;}
         [JsonPropertyName("goalTrackerName")]
@@ -11536,6 +11567,8 @@ namespace Manifest.Tests.Common
         public GoalTrackerCategoryModel GetCopy()
         {
             var obj = new GoalTrackerCategoryModel();
+            obj.PredefinedCategoryTypeId = PredefinedCategoryTypeId;
+            obj.PredefinedIconTypeId = PredefinedIconTypeId;
             obj.CategoryName = CategoryName;
             obj.GoalTrackerName = GoalTrackerName;
             obj.UserName = UserName;
@@ -11560,6 +11593,8 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string PredefinedCategoryTypeId__Name = "PredefinedCategoryTypeId";
+        public const string PredefinedIconTypeId__Name = "PredefinedIconTypeId";
         public const string CategoryName__Name = "CategoryName";
         public const string GoalTrackerName__Name = "GoalTrackerName";
         public const string UserName__Name = "UserName";

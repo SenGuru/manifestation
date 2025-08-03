@@ -401,6 +401,7 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("GoalTrackerId").AsInt64().PrimaryKey("PK_GoalTracker").Identity().NotNullable()
                 .WithColumn("GoalTrackerName").AsString(255).NotNullable()
                 .WithColumn("PredefinedGoalStatusTypeId").AsInt64().NotNullable()
+                .WithColumn("PredefinedGoalPriorityTypeId").AsInt64().NotNullable()
                 .WithColumn("GoalTrackerStartDate").AsDateTime().Nullable()
                 .WithColumn("GoalTrackerEndDate").AsDateTime().Nullable()
                 .WithColumn("GoalTrackerCompletedDate").AsDateTime().Nullable()
@@ -1478,6 +1479,10 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("ModifiedByUserId")
             
             ;
+            Create.Index("IX_GoalTracker_PredefinedGoalPriorityTypeId").OnTable("GoalTracker")
+                .OnColumn("PredefinedGoalPriorityTypeId")
+            
+            ;
             Create.Index("IX_GoalTracker_PredefinedGoalStatusTypeId").OnTable("GoalTracker")
                 .OnColumn("PredefinedGoalStatusTypeId")
             
@@ -2244,6 +2249,8 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_GoalTracker_ModifiedByUserId").FromTable("GoalTracker").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTracker_PredefinedGoalPriorityTypeId").FromTable("GoalTracker").ForeignColumns("PredefinedGoalPriorityTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_GoalTracker_PredefinedGoalStatusTypeId").FromTable("GoalTracker").ForeignColumns("PredefinedGoalStatusTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_GoalTracker_UserId").FromTable("GoalTracker").ForeignColumns("UserId")

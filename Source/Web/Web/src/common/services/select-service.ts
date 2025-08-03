@@ -44,6 +44,7 @@ export class SelectService {
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
       { id: 37, type: 'Predefined Mood Type' },
+      { id: 38, type: 'Predefined Goal Priority Type' },
     ];
   }
 
@@ -81,6 +82,7 @@ export class SelectService {
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
       { id: 37, type: 'Predefined Mood Type' },
+      { id: 38, type: 'Predefined Goal Priority Type' },
     ];
   }
 
@@ -117,6 +119,7 @@ export class SelectService {
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
       { id: 37, type: 'Predefined Mood Type' },
+      { id: 38, type: 'Predefined Goal Priority Type' },
     ];
   }
 
@@ -469,6 +472,35 @@ export class SelectService {
       { id: 800001, type: 'Report Server File Storage' },
       { id: 800002, type: 'Profile Picture File Storage' },
       { id: 800003, type: 'File Attachment File Storage' },
+    ];
+  }
+
+ public GetAllPredefinedGoalPriorityTypes(): Status[] {
+    return [
+      { id: null, type: 'All' },
+      { id: 3800001, type: 'Low' },
+      { id: 3800002, type: 'Medium' },
+      { id: 3800003, type: 'High' },
+      { id: 3800004, type: 'Critical' },
+    ];
+  }
+
+ public GetWithBlankPredefinedGoalPriorityTypes(): Status[] {
+    return [
+      { id: null, type: '' },
+      { id: 3800001, type: 'Low' },
+      { id: 3800002, type: 'Medium' },
+      { id: 3800003, type: 'High' },
+      { id: 3800004, type: 'Critical' },
+    ];
+  }
+
+ public GetPredefinedGoalPriorityTypes(): Status[] {
+    return [
+      { id: 3800001, type: 'Low' },
+      { id: 3800002, type: 'Medium' },
+      { id: 3800003, type: 'High' },
+      { id: 3800004, type: 'Critical' },
     ];
   }
 

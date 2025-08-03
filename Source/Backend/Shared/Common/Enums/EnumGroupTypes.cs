@@ -35,6 +35,7 @@ namespace Manifest.Common.Enums
         PredefinedCategoryType = 34,
         PredefinedMeditationType = 35,
         PredefinedIconType = 36,
-        PredefinedMoodType = 37
+        PredefinedMoodType = 37,
+        PredefinedGoalPriorityType = 38
     }
 }

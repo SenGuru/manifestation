@@ -46,6 +46,7 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedMeditationType,  EnumGroupName = "PredefinedMeditationType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedIconType,  EnumGroupName = "PredefinedIconType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType,  EnumGroupName = "PredefinedMoodType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumGroupId = (int)EnumGroupTypes.PredefinedGoalPriorityType,  EnumGroupName = "PredefinedGoalPriorityType", IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
             };
                 InsertData("EnumGroup", enumGroupParams);
 
@@ -313,6 +314,10 @@ namespace Manifest.Repository.Migration.Application
                 new { EnumTypeId = (int)PredefinedMoodTypes.Neutral,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Neutral", InternalValue = 3700003 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedMoodTypes.Good,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Good", InternalValue = 3700004 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
                 new { EnumTypeId = (int)PredefinedMoodTypes.Amazing,  EnumGroupId = (int)EnumGroupTypes.PredefinedMoodType, EnumTypeName = "Amazing", InternalValue = 3700005 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedGoalPriorityTypes.Low,  EnumGroupId = (int)EnumGroupTypes.PredefinedGoalPriorityType, EnumTypeName = "Low", InternalValue = 3800001 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedGoalPriorityTypes.Medium,  EnumGroupId = (int)EnumGroupTypes.PredefinedGoalPriorityType, EnumTypeName = "Medium", InternalValue = 3800002 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedGoalPriorityTypes.High,  EnumGroupId = (int)EnumGroupTypes.PredefinedGoalPriorityType, EnumTypeName = "High", InternalValue = 3800003 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
+                new { EnumTypeId = (int)PredefinedGoalPriorityTypes.Critical,  EnumGroupId = (int)EnumGroupTypes.PredefinedGoalPriorityType, EnumTypeName = "Critical", InternalValue = 3800004 , IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow }, 
             };
                 InsertData("EnumType", enumTypeParams);
         }

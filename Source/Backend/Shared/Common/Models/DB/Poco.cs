@@ -3520,6 +3520,7 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_GoalTrackerId = "GoalTrackerId";
         public const string COLUMN_GoalTrackerName = "GoalTrackerName";
         public const string COLUMN_PredefinedGoalStatusTypeId = "PredefinedGoalStatusTypeId";
+        public const string COLUMN_PredefinedGoalPriorityTypeId = "PredefinedGoalPriorityTypeId";
         public const string COLUMN_GoalTrackerStartDate = "GoalTrackerStartDate";
         public const string COLUMN_GoalTrackerEndDate = "GoalTrackerEndDate";
         public const string COLUMN_GoalTrackerCompletedDate = "GoalTrackerCompletedDate";
@@ -3541,6 +3542,7 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_GoalTrackerId = false;
         public const bool COLUMN_NULLABLE_GoalTrackerName = false;
         public const bool COLUMN_NULLABLE_PredefinedGoalStatusTypeId = false;
+        public const bool COLUMN_NULLABLE_PredefinedGoalPriorityTypeId = false;
         public const bool COLUMN_NULLABLE_GoalTrackerStartDate = true;
         public const bool COLUMN_NULLABLE_GoalTrackerEndDate = true;
         public const bool COLUMN_NULLABLE_GoalTrackerCompletedDate = true;
@@ -3568,6 +3570,10 @@ namespace Manifest.Common.Models.DB
         [Column("PredefinedGoalStatusTypeId")]
         [NotNull]
         public long PredefinedGoalStatusTypeId { get; set; }
+        
+        [Column("PredefinedGoalPriorityTypeId")]
+        [NotNull]
+        public long PredefinedGoalPriorityTypeId { get; set; }
         
         [Column("GoalTrackerStartDate")]
         public DateTime? GoalTrackerStartDate { get; set; }
@@ -3612,6 +3618,7 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"GoalTrackerId = {GoalTrackerId} , ");
             sb.AppendLine($"GoalTrackerName = {GoalTrackerName} , ");
             sb.AppendLine($"PredefinedGoalStatusTypeId = {PredefinedGoalStatusTypeId} , ");
+            sb.AppendLine($"PredefinedGoalPriorityTypeId = {PredefinedGoalPriorityTypeId} , ");
             sb.AppendLine($"GoalTrackerStartDate = {GoalTrackerStartDate} , ");
             sb.AppendLine($"GoalTrackerEndDate = {GoalTrackerEndDate} , ");
             sb.AppendLine($"GoalTrackerCompletedDate = {GoalTrackerCompletedDate} , ");
@@ -3636,6 +3643,7 @@ namespace Manifest.Common.Models.DB
             GoalTrackerId = item.GoalTrackerId,
             GoalTrackerName = item.GoalTrackerName,
             PredefinedGoalStatusTypeId = item.PredefinedGoalStatusTypeId,
+            PredefinedGoalPriorityTypeId = item.PredefinedGoalPriorityTypeId,
             GoalTrackerStartDate = item.GoalTrackerStartDate,
             GoalTrackerEndDate = item.GoalTrackerEndDate,
             GoalTrackerCompletedDate = item.GoalTrackerCompletedDate,
