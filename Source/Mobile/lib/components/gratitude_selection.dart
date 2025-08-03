@@ -16,38 +16,14 @@ class GratitudeSection extends StatefulWidget {
   State<GratitudeSection> createState() => _GratitudeSectionState();
 }
 
-class _GratitudeSectionState extends State<GratitudeSection> with TickerProviderStateMixin {
+class _GratitudeSectionState extends State<GratitudeSection> {
   late List<bool> _visibleItems;
   late ScrollController _scrollController;
-  late List<AnimationController> _itemControllers;
-  late List<Animation<double>> _itemAnimations;
-  late List<Animation<Offset>> _slideAnimations;
   
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    
-    // Initialize animation controllers
-    _itemControllers = List.generate(5, (index) => 
-      AnimationController(
-        duration: Duration(milliseconds: 300),
-        vsync: this,
-      )
-    );
-    
-    // Initialize animations
-    _itemAnimations = _itemControllers.map((controller) =>
-      Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeOutCubic)
-      )
-    ).toList();
-    
-    _slideAnimations = _itemControllers.map((controller) =>
-      Tween<Offset>(begin: Offset(0, 0.15), end: Offset.zero).animate(
-        CurvedAnimation(parent: controller, curve: Curves.easeOutCubic)
-      )
-    ).toList();
     
     // Initialize visibility - show items that have content, minimum 1
     _visibleItems = List.generate(5, (index) => false);
@@ -65,25 +41,11 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
     if (visibleCount == 0) {
       _visibleItems[0] = true;
     }
-    
-    // Start initial animations
-    Future.delayed(Duration(milliseconds: 200), () {
-      for (int i = 0; i < _visibleItems.length; i++) {
-        if (_visibleItems[i]) {
-          Future.delayed(Duration(milliseconds: i * 150), () {
-            if (mounted) _itemControllers[i].forward();
-          });
-        }
-      }
-    });
   }
   
   @override
   void dispose() {
     _scrollController.dispose();
-    for (var controller in _itemControllers) {
-      controller.dispose();
-    }
     super.dispose();
   }
 
@@ -91,98 +53,88 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Enhanced Instructions
+        // Header with subtle gradient
         Container(
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [
-                AppTheme.affirmationGradient[0].withOpacity(0.15),
-                AppTheme.accentLavender.withOpacity(0.1),
+                AppTheme.cardBackground,
+                AppTheme.cardBackground.withOpacity(0.95),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
             borderRadius: BorderRadius.circular(20.r),
             border: Border.all(
-              color: AppTheme.affirmationGradient[0].withOpacity(0.2),
-              width: 1.5.w,
+              color: AppTheme.journalGradient[0].withOpacity(0.2),
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.affirmationGradient[0].withOpacity(0.1),
-                blurRadius: 12.r,
-                offset: Offset(0, 4.h),
+                color: AppTheme.journalGradient[0].withOpacity(0.1),
+                blurRadius: 8.r,
+                offset: Offset(0, 2.h),
               ),
             ],
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
+              Container(
+                padding: EdgeInsets.all(12.w),
+                decoration: BoxDecoration(
+                  color: AppTheme.journalGradient[0],
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  Icons.favorite_outline,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Daily Gratitudes',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textLight,
                       ),
-                      borderRadius: BorderRadius.circular(12.r),
                     ),
-                    child: Icon(
-                      Icons.favorite_rounded,
-                      color: Colors.white,
-                      size: 24.sp,
+                    SizedBox(height: 2.h),
+                    Text(
+                      'What are you grateful for today?',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppTheme.textMedium,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 16.w),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Daily Gratitudes',
-                          style: TextStyle(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppTheme.textLight,
-                          ),
-                        ),
-                        SizedBox(height: 4.h),
-                        Text(
-                          'Reflect on what brings joy to your life',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: AppTheme.textMedium,
-                            height: 1.3,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
         ),
         
-        SizedBox(height: 32.h),
+        SizedBox(height: 24.h),
         
-        // Gratitude items with better keyboard handling
+        // Gratitude items
         Expanded(
           child: SingleChildScrollView(
             controller: _scrollController,
-            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 // Visible gratitude items
-                ..._buildVisibleGratitudeItems(),
+                ..._buildGratitudeItems(),
                 
                 // Add button (if less than 5 items visible)
                 if (_getVisibleCount() < 5) _buildAddButton(),
                 
                 // Extra padding for keyboard space
-                SizedBox(height: MediaQuery.of(context).viewInsets.bottom + 100.h),
+                SizedBox(height: 100.h),
               ],
             ),
           ),
@@ -191,20 +143,14 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
     );
   }
 
-  List<Widget> _buildVisibleGratitudeItems() {
+  List<Widget> _buildGratitudeItems() {
     List<Widget> items = [];
     for (int i = 0; i < _visibleItems.length; i++) {
       if (_visibleItems[i]) {
         items.add(
           Container(
-            margin: EdgeInsets.only(bottom: 24.h),
-            child: SlideTransition(
-              position: _slideAnimations[i],
-              child: ScaleTransition(
-                scale: _itemAnimations[i],
-                child: _buildEnhancedGratitudeItem(i),
-              ),
-            ),
+            margin: EdgeInsets.only(bottom: 16.h),
+            child: _buildGratitudeItem(i),
           ),
         );
       }
@@ -212,133 +158,83 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
     return items;
   }
 
-  Widget _buildEnhancedGratitudeItem(int index) {
-    final isFirstItem = index == 0;
-    final canRemove = !isFirstItem && _getVisibleCount() > 1;
+  Widget _buildGratitudeItem(int index) {
+    final canRemove = index > 0 && _getVisibleCount() > 1;
     final hasContent = widget.gratitudeItems[index].isNotEmpty;
     
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 400),
-      curve: Curves.easeInOutCubic,
+    return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: hasContent 
-            ? [
-                AppTheme.cardBackground,
-                AppTheme.cardBackground.withOpacity(0.8),
-              ]
-            : [
-                AppTheme.cardBackground.withOpacity(0.6),
-                AppTheme.cardBackground.withOpacity(0.4),
-              ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20.r),
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(18.r),
         border: Border.all(
-          color: hasContent
-              ? AppTheme.affirmationGradient[0].withOpacity(0.4)
-              : AppTheme.textMedium.withOpacity(0.2),
-          width: hasContent ? 2.w : 1.w,
+          color: hasContent 
+            ? AppTheme.journalGradient[0].withOpacity(0.3)
+            : AppTheme.borderSecondary,
+          width: hasContent ? 1.5 : 1,
         ),
         boxShadow: [
           BoxShadow(
             color: hasContent 
-              ? AppTheme.affirmationGradient[0].withOpacity(0.15)
-              : AppTheme.black.withOpacity(0.05),
-            blurRadius: hasContent ? 16.r : 8.r,
-            offset: Offset(0, hasContent ? 6.h : 2.h),
+              ? AppTheme.journalGradient[0].withOpacity(0.08)
+              : AppTheme.black.withOpacity(0.04),
+            blurRadius: hasContent ? 8.r : 4.r,
+            offset: Offset(0, 2.h),
           ),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Enhanced header with number indicator
-          Container(
-            padding: EdgeInsets.fromLTRB(24.w, 20.h, 16.w, 12.h),
+          // Header
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 18.h, 16.w, 12.h),
             child: Row(
               children: [
-                // Animated number indicator
-                AnimatedContainer(
-                  duration: Duration(milliseconds: 400),
-                  curve: Curves.easeInOutCubic,
-                  width: 32.w,
-                  height: 32.h,
+                Container(
+                  width: 28.w,
+                  height: 28.h,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: hasContent 
-                        ? [AppTheme.affirmationGradient[0], AppTheme.accentLavender]
-                        : [AppTheme.textMedium.withOpacity(0.3), AppTheme.textMedium.withOpacity(0.2)],
-                    ),
-                    borderRadius: BorderRadius.circular(16.r),
-                    boxShadow: hasContent ? [
-                      BoxShadow(
-                        color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                        blurRadius: 8.r,
-                        offset: Offset(0, 2.h),
-                      ),
-                    ] : null,
+                    color: hasContent 
+                      ? AppTheme.journalGradient[0] 
+                      : AppTheme.textMedium.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(14.r),
                   ),
                   child: Center(
-                    child: AnimatedDefaultTextStyle(
-                      duration: Duration(milliseconds: 400),
-                      curve: Curves.easeInOutCubic,
+                    child: Text(
+                      '${index + 1}',
                       style: TextStyle(
-                        fontSize: 14.sp,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.bold,
-                        color: hasContent ? Colors.white : AppTheme.textMedium,
+                        color: Colors.white,
                       ),
-                      child: Text('${index + 1}'),
                     ),
                   ),
                 ),
-                SizedBox(width: 16.w),
+                SizedBox(width: 12.w),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        isFirstItem ? 'I\'m grateful for...' : 'Also grateful for...',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 500),
-                        curve: Curves.easeOutCubic,
-                        height: 2.h,
-                        width: hasContent ? 40.w : 0.w,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
-                          ),
-                          borderRadius: BorderRadius.circular(1.r),
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    index == 0 ? 'I\'m grateful for...' : 'Also grateful for...',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textLight,
+                    ),
                   ),
                 ),
                 if (canRemove)
                   GestureDetector(
                     onTap: () => _removeGratitudeItem(index),
                     child: Container(
-                      width: 36.w,
-                      height: 36.h,
+                      width: 32.w,
+                      height: 32.h,
                       decoration: BoxDecoration(
-                        color: AppTheme.error.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(18.r),
-                        border: Border.all(
-                          color: AppTheme.error.withOpacity(0.3),
-                        ),
+                        color: AppTheme.textMedium.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(16.r),
                       ),
                       child: Icon(
-                        Icons.close_rounded,
-                        size: 18.sp,
-                        color: AppTheme.error.withOpacity(0.8),
+                        Icons.close,
+                        size: 16.sp,
+                        color: AppTheme.textMedium,
                       ),
                     ),
                   ),
@@ -346,46 +242,44 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
             ),
           ),
           
-          // Enhanced text field
-          Padding(
-            padding: EdgeInsets.fromLTRB(24.w, 0, 24.w, 24.h),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppTheme.backgroundDark.withOpacity(0.3),
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.1),
-                ),
+          // Text field with proper styling to match other pages
+          Container(
+            margin: EdgeInsets.fromLTRB(20.w, 0, 20.w, 24.h),
+            decoration: BoxDecoration(
+              color: AppTheme.cardBackground,
+              borderRadius: BorderRadius.circular(16.r),
+              border: Border.all(
+                color: AppTheme.borderSecondary,
               ),
-              child: TextField(
-                onChanged: (value) => widget.onGratitudeChanged(index, value),
-                onTap: () => _scrollToField(index),
-                controller: TextEditingController(text: widget.gratitudeItems[index])
-                  ..selection = TextSelection.fromPosition(
-                    TextPosition(offset: widget.gratitudeItems[index].length),
-                  ),
-                style: TextStyle(
-                  color: AppTheme.textLight,
+            ),
+            child: TextField(
+              onChanged: (value) => widget.onGratitudeChanged(index, value),
+              controller: TextEditingController(text: widget.gratitudeItems[index])
+                ..selection = TextSelection.fromPosition(
+                  TextPosition(offset: widget.gratitudeItems[index].length),
+                ),
+              style: TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: 16.sp,
+                height: 1.6,
+                fontWeight: FontWeight.w400,
+              ),
+              decoration: InputDecoration(
+                hintText: _getGratitudeHint(index),
+                hintStyle: TextStyle(
+                  color: AppTheme.textSecondary,
                   fontSize: 16.sp,
                   height: 1.6,
-                  fontWeight: FontWeight.w400,
+                  fontStyle: FontStyle.italic,
                 ),
-                decoration: InputDecoration(
-                  hintText: _getGratitudeHint(index),
-                  hintStyle: TextStyle(
-                    color: AppTheme.textMedium.withOpacity(0.6),
-                    fontSize: 16.sp,
-                    height: 1.6,
-                    fontStyle: FontStyle.italic,
-                  ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.all(20.w),
-                  isDense: false,
-                ),
-                maxLines: 4,
-                minLines: 3,
-                textCapitalization: TextCapitalization.sentences,
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(20.w),
+                isDense: false,
               ),
+              maxLines: null,
+              minLines: 4,
+              textAlignVertical: TextAlignVertical.top,
+              textCapitalization: TextCapitalization.sentences,
             ),
           ),
         ],
@@ -395,31 +289,24 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
 
   Widget _buildAddButton() {
     return Container(
-      margin: EdgeInsets.only(top: 16.h, bottom: 24.h),
+      margin: EdgeInsets.only(top: 12.h, bottom: 24.h),
       child: GestureDetector(
         onTap: _addGratitudeItem,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 24.w),
+          padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 24.w),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppTheme.affirmationGradient[0].withOpacity(0.15),
-                AppTheme.accentLavender.withOpacity(0.1),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20.r),
+            color: AppTheme.cardBackground,
+            borderRadius: BorderRadius.circular(16.r),
             border: Border.all(
-              color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-              width: 2.w,
+              color: AppTheme.journalGradient[0].withOpacity(0.4),
+              width: 1.5,
               style: BorderStyle.solid,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.affirmationGradient[0].withOpacity(0.1),
-                blurRadius: 12.r,
-                offset: Offset(0, 4.h),
+                color: AppTheme.journalGradient[0].withOpacity(0.1),
+                blurRadius: 6.r,
+                offset: Offset(0, 2.h),
               ),
             ],
           ),
@@ -427,26 +314,24 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all(8.w),
+                padding: EdgeInsets.all(6.w),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
-                  ),
-                  borderRadius: BorderRadius.circular(12.r),
+                  color: AppTheme.journalGradient[0].withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Icon(
-                  Icons.add_rounded,
-                  color: Colors.white,
-                  size: 20.sp,
+                  Icons.add,
+                  color: AppTheme.journalGradient[0],
+                  size: 18.sp,
                 ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: 12.w),
               Text(
-                'Add Another Gratitude',
+                'Add another gratitude',
                 style: TextStyle(
-                  fontSize: 17.sp,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
+                  color: AppTheme.journalGradient[0],
                 ),
               ),
             ],
@@ -457,71 +342,21 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
   }
 
   void _addGratitudeItem() {
-    int newIndex = -1;
     setState(() {
       // Find the first non-visible item and make it visible
       for (int i = 0; i < _visibleItems.length; i++) {
         if (!_visibleItems[i]) {
           _visibleItems[i] = true;
-          newIndex = i;
           break;
         }
-      }
-    });
-    
-    // Animate the new item
-    if (newIndex != -1) {
-      Future.delayed(Duration(milliseconds: 100), () {
-        if (mounted) {
-          _itemControllers[newIndex].forward();
-        }
-      });
-    }
-    
-    // Auto scroll to the new item after a brief delay
-    Future.delayed(Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 500),
-          curve: Curves.easeOutBack,
-        );
       }
     });
   }
 
   void _removeGratitudeItem(int index) {
-    // Animate out first
-    _itemControllers[index].reverse().then((_) {
-      if (mounted) {
-        setState(() {
-          _visibleItems[index] = false;
-          // Clear the text when removing
-          widget.onGratitudeChanged(index, '');
-        });
-      }
-    });
-  }
-
-  void _scrollToField(int index) {
-    // Scroll to keep the focused field visible when keyboard appears
-    Future.delayed(Duration(milliseconds: 300), () {
-      if (_scrollController.hasClients) {
-        final context = this.context;
-        final renderBox = context.findRenderObject() as RenderBox?;
-        if (renderBox != null) {
-          final position = renderBox.localToGlobal(Offset.zero);
-          final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-          
-          if (keyboardHeight > 0) {
-            _scrollController.animateTo(
-              _scrollController.offset + (keyboardHeight * 0.3),
-              duration: Duration(milliseconds: 300),
-              curve: Curves.easeOut,
-            );
-          }
-        }
-      }
+    setState(() {
+      _visibleItems[index] = false;
+      widget.onGratitudeChanged(index, '');
     });
   }
 
@@ -532,17 +367,17 @@ class _GratitudeSectionState extends State<GratitudeSection> with TickerProvider
   String _getGratitudeHint(int index) {
     switch (index) {
       case 0:
-        return 'Someone who brought joy to your day...';
+        return 'Someone or something that brought joy...';
       case 1:
-        return 'A moment that filled your heart with warmth...';
+        return 'A moment that made you smile...';
       case 2:
-        return 'Something beautiful you noticed today...';
+        return 'Something beautiful you noticed...';
       case 3:
-        return 'An experience that made you feel alive...';
+        return 'An experience you appreciated...';
       case 4:
-        return 'A blessing that touched your soul...';
+        return 'A blessing in your life...';
       default:
-        return 'Something that fills you with gratitude...';
+        return 'Something you\'re grateful for...';
     }
   }
 }

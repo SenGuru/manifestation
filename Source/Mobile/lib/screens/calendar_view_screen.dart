@@ -108,77 +108,6 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
             ],
           ),
           
-          SizedBox(height: 24.h),
-          
-          // Enhanced overview section
-          Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.journalGradient[0].withOpacity(0.15),
-                  AppTheme.accentLavender.withOpacity(0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: AppTheme.journalGradient[0].withOpacity(0.2),
-                width: 1.5.w,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.journalGradient[0].withOpacity(0.1),
-                  blurRadius: 12.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.journalGradient[0], AppTheme.accentLavender],
-                    ),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.calendar_today_rounded,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Your Journey',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        '${allJournalEntries.length} journal entries recorded',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppTheme.textMedium,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -503,7 +432,7 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
     final isToday = _isSameDay(selectedDate, DateTime.now());
     
     return Expanded(
-      flex: 1,
+      flex: 2,
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(20.w),

@@ -444,29 +444,27 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Celebration header
+          // Completion header with subtle styling
           Container(
             padding: EdgeInsets.all(32.w),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppTheme.affirmationGradient[0].withOpacity(0.2),
-                  AppTheme.accentLavender.withOpacity(0.15),
-                  AppTheme.accentGold.withOpacity(0.1),
+                  AppTheme.cardBackground,
+                  AppTheme.cardBackground.withOpacity(0.95),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(
-                color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                width: 2.w,
+                color: AppTheme.journalGradient[0].withOpacity(0.2),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.affirmationGradient[0].withOpacity(0.15),
-                  blurRadius: 20.r,
-                  offset: Offset(0, 8.h),
+                  color: AppTheme.journalGradient[0].withOpacity(0.1),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
                 ),
               ],
             ),
@@ -475,32 +473,37 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
-                    ),
+                    color: AppTheme.journalGradient[0],
                     borderRadius: BorderRadius.circular(20.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.journalGradient[0].withOpacity(0.3),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
+                      ),
+                    ],
                   ),
                   child: Icon(
-                    Icons.celebration,
+                    Icons.check_circle_outline,
                     color: Colors.white,
-                    size: 32.sp,
+                    size: 28.sp,
                   ),
                 ),
                 SizedBox(height: 16.h),
                 Text(
                   'Journal Complete!',
                   style: TextStyle(
-                    fontSize: 26.sp,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.textLight,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 6.h),
                 Text(
-                  'Beautiful work! Your thoughts have been captured.',
+                  'Your thoughts have been captured beautifully',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     color: AppTheme.textMedium,
                     height: 1.3,
                   ),
@@ -510,147 +513,40 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             ),
           ),
           
-          SizedBox(height: 32.h),
+          SizedBox(height: 24.h),
           
           Expanded(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildEnhancedSummarySection(
+                  _buildSummarySection(
                     title: 'Your Mood',
                     content: selectedMood.displayName,
                     icon: selectedMood.icon,
-                    gradientColors: [selectedMood.color, selectedMood.color.withOpacity(0.7)],
                   ),
-                  SizedBox(height: 24.h),
-                  _buildEnhancedSummarySection(
+                  SizedBox(height: 16.h),
+                  _buildSummarySection(
                     title: 'Gratitudes',
                     content: gratitudeItems.where((item) => item.isNotEmpty).join('\n• '),
-                    icon: Icons.favorite_rounded,
-                    gradientColors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
+                    icon: Icons.favorite_outline,
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   if (reflection.isNotEmpty)
-                    _buildEnhancedSummarySection(
+                    _buildSummarySection(
                       title: 'Daily Reflection',
                       content: reflection,
-                      icon: Icons.auto_stories_rounded,
-                      gradientColors: [AppTheme.accentGold, AppTheme.affirmationGradient[0]],
+                      icon: Icons.auto_stories_outlined,
                     ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   if (intention.isNotEmpty)
-                    _buildEnhancedSummarySection(
+                    _buildSummarySection(
                       title: 'Tomorrow\'s Intention',
                       content: intention,
-                      icon: Icons.wb_sunny_rounded,
-                      gradientColors: [AppTheme.goalTrackerGradient[0], AppTheme.accentLavender],
+                      icon: Icons.wb_sunny_outlined,
                     ),
-                  SizedBox(height: 32.h),
+                  SizedBox(height: 24.h),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEnhancedSummarySection({
-    required String title,
-    required String content,
-    required IconData icon,
-    required List<Color> gradientColors,
-  }) {
-    if (content.isEmpty) return SizedBox.shrink();
-    
-    return Container(
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppTheme.cardBackground,
-            AppTheme.cardBackground.withOpacity(0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: gradientColors[0].withOpacity(0.3),
-          width: 1.5.w,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: gradientColors[0].withOpacity(0.1),
-            blurRadius: 12.r,
-            offset: Offset(0, 4.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: gradientColors),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Container(
-                      height: 2.h,
-                      width: 40.w,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: gradientColors),
-                        borderRadius: BorderRadius.circular(1.r),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              color: AppTheme.backgroundDark.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(
-                color: AppTheme.textMedium.withOpacity(0.1),
-              ),
-            ),
-            child: Text(
-              content,
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: AppTheme.textLight,
-                height: 1.6,
-                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -663,47 +559,77 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     required String title,
     required String content,
     required IconData icon,
-    required Color color,
   }) {
+    if (content.isEmpty) return SizedBox.shrink();
+    
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: AppTheme.journalGradient[0].withOpacity(0.2),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.journalGradient[0].withOpacity(0.06),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: color, size: 20.sp),
-              SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: AppTheme.journalGradient[0].withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  icon,
+                  color: AppTheme.journalGradient[0],
+                  size: 18.sp,
+                ),
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textLight,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8.h),
-          Text(
-            content.isNotEmpty ? content : 'Not provided',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: content.isNotEmpty ? AppTheme.textMedium : AppTheme.textMedium.withOpacity(0.5),
-              height: 1.4,
+          SizedBox(height: 16.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundDark.withOpacity(0.025),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Text(
+              content,
+              style: TextStyle(
+                fontSize: 15.sp,
+                color: AppTheme.textMedium,
+                height: 1.6,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildNavigation() {
     return Container(
@@ -1117,6 +1043,11 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   Future<bool> _onWillPop() async {
     // If we're on the summary page or saving, allow normal back navigation
     if (currentPage == 4 || isSaving) {
+      return true;
+    }
+    
+    // If editing existing entry, allow normal back navigation without dialog
+    if (isEditingExistingEntry) {
       return true;
     }
 
