@@ -4789,14 +4789,6 @@
             }
           },
           {
-            "name": "CompanyEntityId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
             "name": "CreatedByUserId",
             "in": "query",
             "schema": {
@@ -10644,6 +10636,17 @@
         ],
         "parameters": [
           {
+            "name": "PredefinedIconTypeIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          },
+          {
             "name": "ShowDeleted",
             "in": "query",
             "schema": {
@@ -15386,6 +15389,17 @@
             "in": "query",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "name": "PredefinedGoalPriorityTypeIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
             }
           },
           {
@@ -37141,6 +37155,10 @@
             "type": "integer",
             "format": "int64",
             "nullable": true
+          },
+          "predefinedIconTypeId": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -37163,6 +37181,10 @@
             "format": "int64",
             "nullable": true
           },
+          "predefinedIconTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
           "isDeleted": {
             "type": "boolean"
           },
@@ -37182,6 +37204,10 @@
           "modifiedByUserId": {
             "type": "integer",
             "format": "int64",
+            "nullable": true
+          },
+          "predefinedIconTypeName": {
+            "type": "string",
             "nullable": true
           },
           "predefinedCategoryTypeName": {
@@ -37323,6 +37349,10 @@
             "type": "integer",
             "format": "int64",
             "nullable": true
+          },
+          "predefinedIconTypeId": {
+            "type": "integer",
+            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -40656,6 +40686,15 @@
             "format": "int64",
             "nullable": true
           },
+          "predefinedCategoryTypeId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "predefinedIconTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
           "categoryName": {
             "type": "string",
             "nullable": true
@@ -40818,6 +40857,10 @@
             "nullable": true
           },
           "predefinedGoalStatusTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedGoalPriorityTypeId": {
             "type": "integer",
             "format": "int64"
           },
@@ -41258,6 +41301,10 @@
             "type": "integer",
             "format": "int64"
           },
+          "predefinedGoalPriorityTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
           "goalTrackerStartDate": {
             "type": "string",
             "format": "date-time",
@@ -41305,6 +41352,10 @@
           "modifiedByUserId": {
             "type": "integer",
             "format": "int64",
+            "nullable": true
+          },
+          "predefinedGoalPriorityTypeName": {
+            "type": "string",
             "nullable": true
           },
           "predefinedGoalStatusTypeName": {
@@ -41461,6 +41512,10 @@
             "nullable": true
           },
           "predefinedGoalStatusTypeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "predefinedGoalPriorityTypeId": {
             "type": "integer",
             "format": "int64"
           },
@@ -50577,10 +50632,6 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
-          },
-          "companyEntityId": {
-            "type": "integer",
-            "format": "int64"
           }
         },
         "additionalProperties": false
@@ -50597,10 +50648,6 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
-          },
-          "companyEntityId": {
-            "type": "integer",
-            "format": "int64"
           },
           "isDeleted": {
             "type": "boolean"
@@ -50757,10 +50804,6 @@
             "minLength": 0,
             "type": "string",
             "nullable": true
-          },
-          "companyEntityId": {
-            "type": "integer",
-            "format": "int64"
           }
         },
         "additionalProperties": false

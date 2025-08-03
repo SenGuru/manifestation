@@ -15,6 +15,15 @@ class PredefinedCategoryTypes {
   static const int goalTracker = 3400004;      // PredefinedCategoryTypes.GoalTracker
 }
 
+/// Priority types for goal trackers
+/// These correspond to the Manifest.Common.Enums.PredefinedGoalPriorityTypes enum on the server
+class GoalPriorityTypes {
+  static const int low = 3800001;      // PredefinedGoalPriorityTypes.Low
+  static const int medium = 3800002;   // PredefinedGoalPriorityTypes.Medium
+  static const int high = 3800003;     // PredefinedGoalPriorityTypes.High
+  static const int critical = 3800004; // PredefinedGoalPriorityTypes.Critical
+}
+
 /// Extension to get display names for goal status types
 extension GoalStatusTypeExtension on int {
   String get goalStatusDisplayName {
@@ -25,6 +34,24 @@ extension GoalStatusTypeExtension on int {
         return 'Completed';
       case GoalStatusTypes.abandoned:
         return 'Abandoned';
+      default:
+        return 'Unknown';
+    }
+  }
+}
+
+/// Extension to get display names for goal priority types
+extension GoalPriorityTypeExtension on int {
+  String get goalPriorityDisplayName {
+    switch (this) {
+      case GoalPriorityTypes.low:
+        return 'Low';
+      case GoalPriorityTypes.medium:
+        return 'Medium';
+      case GoalPriorityTypes.high:
+        return 'High';
+      case GoalPriorityTypes.critical:
+        return 'Critical';
       default:
         return 'Unknown';
     }
