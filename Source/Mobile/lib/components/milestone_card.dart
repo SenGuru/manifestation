@@ -210,7 +210,7 @@ class MilestoneCard extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: [ 
                           Text(
                             'Progress',
                             style: TextStyle(
@@ -229,6 +229,7 @@ class MilestoneCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      
                       SizedBox(height: 6.h),
                       Container(
                         height: 6.h,

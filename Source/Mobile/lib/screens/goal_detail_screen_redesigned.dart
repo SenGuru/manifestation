@@ -9,6 +9,7 @@ import '../components/milestone_dialog.dart';
 import '../widgets/universal_back_button.dart';
 import '../models/api_milestone.dart';
 import '../services/goal_tracker_service.dart';
+import '../constants/goal_constants.dart';
 
 class GoalDetailScreenRedesigned extends StatefulWidget {
   final Goal goal;
@@ -747,30 +748,153 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
     );
   }
 
-  void _toggleMilestone(int index) {
-    final updatedMilestones = List<Milestone>.from(currentGoal.milestones);
-    updatedMilestones[index] = updatedMilestones[index].copyWith(
-      isCompleted: !updatedMilestones[index].isCompleted,
-    );
+  void _toggleMilestone(int index) async {
+    final milestone = currentGoal.milestones[index];
+    final isNowCompleted = !milestone.isCompleted;
     
-    final updatedGoal = Goal(
-      id: currentGoal.id,
-      title: currentGoal.title,
-      description: currentGoal.description,
-      category: currentGoal.category,
-      priority: currentGoal.priority,
-      targetDate: currentGoal.targetDate,
-      createdAt: currentGoal.createdAt,
-      milestones: updatedMilestones,
-      currentProgress: currentGoal.currentProgress,
-      tags: currentGoal.tags,
-    );
+    print('🎯 Toggling milestone completion:');
+    print('   Milestone: ${milestone.title}');
+    print('   ID: ${milestone.id}');
+    print('   Was completed: ${milestone.isCompleted}');
+    print('   Now completed: $isNowCompleted');
     
-    setState(() {
-      currentGoal = updatedGoal;
-    });
-    
-    widget.onGoalUpdated(updatedGoal);
+    try {
+      // Parse milestone ID
+      final milestoneId = int.tryParse(milestone.id);
+      if (milestoneId == null) {
+        throw Exception('Invalid milestone ID: ${milestone.id}');
+      }
+      
+      // Parse goal ID for the API call
+      final goalId = int.tryParse(currentGoal.id);
+      if (goalId == null) {
+        throw Exception('Invalid goal ID: ${currentGoal.id}');
+      }
+      
+      // Update milestone completion via API
+      print('📡 Updating milestone completion via API...');
+      print('   goalTrackerId: $goalId');
+      print('   milestoneId: $milestoneId');
+      print('   completedDate: ${isNowCompleted ? DateTime.now() : null}');
+      
+      // Try different milestone status types like in creation
+      final statusTypesToTry = [
+        3700001, // Milestone Active/Open
+        3700002, // Milestone In Progress  
+        3700003, // Milestone Pending
+        GoalStatusTypes.open,       // Basic Open
+        GoalStatusTypes.completed,  // Basic Complete
+        1,       // Basic Active
+        2,       // Basic Complete
+      ];
+      
+      dynamic result;
+      bool success = false;
+      
+      for (int i = 0; i < statusTypesToTry.length; i++) {
+        final statusId = statusTypesToTry[i];
+        print('🧪 Update attempt ${i + 1}: Trying statusTypeId: $statusId');
+        
+        result = await _goalTrackerService.updateMilestone(
+          milestoneId: milestoneId,
+          goalTrackerId: goalId,
+          milestoneName: milestone.title, // Required: milestone name
+          completedDate: isNowCompleted ? DateTime.now() : null,
+          statusTypeId: statusId, // Try different status types
+        );
+        
+        print('📡 Response for statusTypeId $statusId:');
+        print('   isSuccess: ${result.isSuccess}');
+        print('   message: ${result.message}');
+        
+        if (result.isSuccess) {
+          print('✅ SUCCESS with statusTypeId: $statusId');
+          success = true;
+          break;
+        } else {
+          print('❌ Failed with statusTypeId $statusId, trying next...');
+          if (i < statusTypesToTry.length - 1) {
+            await Future.delayed(Duration(milliseconds: 300)); // Small delay between attempts
+          }
+        }
+      }
+      
+      print('📡 Final API Response:');
+      print('   isSuccess: ${result?.isSuccess}');
+      print('   message: ${result?.message}');
+      
+      if (success && result != null && result.isSuccess) {
+        print('✅ Milestone completion updated successfully in database');
+        
+        // Update local UI state
+        final updatedMilestones = List<Milestone>.from(currentGoal.milestones);
+        updatedMilestones[index] = updatedMilestones[index].copyWith(
+          isCompleted: isNowCompleted,
+          completedAt: isNowCompleted ? DateTime.now() : null,
+        );
+        
+        final updatedGoal = Goal(
+          id: currentGoal.id,
+          title: currentGoal.title,
+          description: currentGoal.description,
+          category: currentGoal.category,
+          priority: currentGoal.priority,
+          targetDate: currentGoal.targetDate,
+          createdAt: currentGoal.createdAt,
+          milestones: updatedMilestones,
+          currentProgress: currentGoal.currentProgress,
+          tags: currentGoal.tags,
+        );
+        
+        setState(() {
+          currentGoal = updatedGoal;
+        });
+        
+        widget.onGoalUpdated(updatedGoal);
+        
+        // Show success feedback and prompt for progress update if milestone was completed
+        if (isNowCompleted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Milestone completed!'),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          
+          // Prompt user to update goal progress after milestone completion
+          Future.delayed(Duration(milliseconds: 500), () {
+            _promptProgressUpdateAfterMilestone();
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Milestone marked as incomplete'),
+              backgroundColor: currentGoal.category.color,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      } else {
+        print('❌ Failed to update milestone: ${result.message}');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to update milestone'),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Exception updating milestone: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error updating milestone'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   void _showAddMilestone() async {
@@ -779,6 +903,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         SnackBar(
           content: Text('User not loaded. Please try again.'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.fixed,
         ),
       );
       return;
@@ -817,20 +942,74 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
       print('   startDate: ${DateTime.now()}');
       print('   endDate: ${apiMilestone.targetDate}');
 
-      // Create milestone via service
-      final result = await _goalTrackerService.createMilestone(
-        goalTrackerId: goalId,
-        milestoneName: apiMilestone.title,
-        startDate: DateTime.now(),
-        endDate: apiMilestone.targetDate,
-      );
+      // Ensure end date is valid (not earlier than start date)
+      final startDate = DateTime.now();
+      DateTime? endDate = apiMilestone.targetDate;
+      
+      if (endDate != null) {
+        if (endDate.isBefore(startDate)) {
+          print('⚠️  Target date is in the past, setting to tomorrow...');
+          // If target date is in the past, set to tomorrow
+          endDate = startDate.add(Duration(days: 1));
+        } else if (isSameDay(endDate, startDate)) {
+          print('⚠️  Target date is today, setting to null to avoid constraints...');
+          // If same day, make it null to avoid time conflicts
+          endDate = null;
+        }
+      }
+      
+      print('📅 Final dates:');
+      print('   startDate: $startDate');
+      print('   endDate: $endDate');
 
-      print('📡 API Response received:');
-      print('   isSuccess: ${result.isSuccess}');
-      print('   message: ${result.message}');
-      print('   data: ${result.data}');
+      // Create milestone via service - try different milestone status types
+      print('🔍 Trying milestone creation with different status types...');
+      
+      // Try common milestone status type IDs
+      final statusTypesToTry = [
+        3700001, // Milestone Active/Open
+        3700002, // Milestone In Progress  
+        3700003, // Milestone Pending
+        1,       // Basic Active
+        2,       // Basic Complete
+        null,    // No status (let server default)
+      ];
+      
+      dynamic result;
+      
+      for (int i = 0; i < statusTypesToTry.length; i++) {
+        final statusId = statusTypesToTry[i];
+        print('🧪 Attempt ${i + 1}: Trying statusTypeId: $statusId');
+        
+        result = await _goalTrackerService.createMilestone(
+          goalTrackerId: goalId,
+          milestoneName: apiMilestone.title,
+          startDate: startDate,
+          endDate: endDate,
+          statusTypeId: statusId,
+        );
+        
+        print('📡 Response for statusTypeId $statusId:');
+        print('   isSuccess: ${result.isSuccess}');
+        print('   message: ${result.message}');
+        
+        if (result.isSuccess) {
+          print('✅ SUCCESS with statusTypeId: $statusId');
+          break;
+        } else {
+          print('❌ Failed with statusTypeId $statusId, trying next...');
+          if (i < statusTypesToTry.length - 1) {
+            await Future.delayed(Duration(milliseconds: 500)); // Small delay between attempts
+          }
+        }
+      }
 
-      if (result.isSuccess && result.data != null) {
+      print('📡 Final API Response:');
+      print('   isSuccess: ${result?.isSuccess}');
+      print('   message: ${result?.message}');
+      print('   data: ${result?.data}');
+
+      if (result != null && result.isSuccess && result.data != null) {
         print('✅ Milestone created successfully: ${result.message}');
         
         // Convert API milestone to UI milestone
@@ -874,18 +1053,16 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
           SnackBar(
             content: Text('Milestone created successfully!'),
             backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
+            behavior: SnackBarBehavior.fixed,
           ),
         );
       } else {
-        print('❌ Failed to create milestone: ${result.message}');
+        print('❌ Failed to create milestone: ${result?.message ?? "No result"}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create milestone: ${result.message}'),
+            content: Text('Failed to create milestone'),
             backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.fixed,
           ),
         );
       }
@@ -893,11 +1070,78 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
       print('❌ Exception creating milestone: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error creating milestone: ${e.toString()}'),
+          content: Text('Error creating milestone'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.fixed,
         ),
       );
     }
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && 
+           date1.month == date2.month && 
+           date1.day == date2.day;
+  }
+
+  void _promptProgressUpdateAfterMilestone() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.cardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+        title: Text(
+          'Update Goal Progress?',
+          style: TextStyle(
+            color: AppTheme.textLight,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'You completed a milestone! Would you like to update your overall goal progress?',
+              style: TextStyle(
+                color: AppTheme.textMedium,
+                fontSize: 14.sp,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              'Current progress: ${currentGoal.progressPercentage.round()}%',
+              style: TextStyle(
+                color: currentGoal.category.color,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Not Now',
+              style: TextStyle(color: AppTheme.textMedium),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showProgressUpdate();
+            },
+            child: Text(
+              'Update Progress',
+              style: TextStyle(color: currentGoal.category.color),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _refreshGoalData() async {

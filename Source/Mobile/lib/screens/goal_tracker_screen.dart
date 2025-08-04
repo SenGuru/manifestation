@@ -1109,6 +1109,63 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       }
   }
 
+  /// Create milestones for a newly created goal
+  Future<void> _createMilestonesForNewGoal(int goalId, List<Milestone> milestones) async {
+    print('🎯 Creating milestones for goal ID: $goalId');
+    
+    for (int i = 0; i < milestones.length; i++) {
+      final milestone = milestones[i];
+      print('📋 Creating milestone ${i + 1}/${milestones.length}: ${milestone.title}');
+      
+      try {
+        // Ensure dates are valid
+        final startDate = DateTime.now();
+        DateTime? endDate = milestone.targetDate;
+        
+        if (endDate != null) {
+          if (endDate.isBefore(startDate)) {
+            print('⚠️  Milestone target date is in the past, setting to tomorrow...');
+            endDate = startDate.add(Duration(days: 1));
+          } else if (_isSameDay(endDate, startDate)) {
+            print('⚠️  Milestone target date is today, setting to tomorrow...');
+            endDate = startDate.add(Duration(days: 1));
+          }
+        }
+        
+        // Create milestone using the working status type we discovered
+        final result = await _goalTrackerService.createMilestone(
+          goalTrackerId: goalId,
+          milestoneName: milestone.title,
+          startDate: startDate,
+          endDate: endDate,
+          statusTypeId: 3700001, // Use the working status type
+        );
+        
+        if (result.isSuccess) {
+          print('✅ Milestone "${milestone.title}" created successfully');
+        } else {
+          print('❌ Failed to create milestone "${milestone.title}": ${result.message}');
+        }
+        
+        // Small delay between milestone creations to avoid overwhelming the API
+        if (i < milestones.length - 1) {
+          await Future.delayed(Duration(milliseconds: 300));
+        }
+      } catch (e) {
+        print('❌ Exception creating milestone "${milestone.title}": $e');
+      }
+    }
+    
+    print('✅ Finished creating milestones for goal ID: $goalId');
+  }
+
+  /// Helper method to check if two dates are the same day
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && 
+           date1.month == date2.month && 
+           date1.day == date2.day;
+  }
+
   // ========================= API GOAL MANAGEMENT =========================
 
   Future<void> _createGoalWithService({
@@ -1116,6 +1173,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     required GoalCategory category,
     required GoalPriority priority,
     required DateTime targetDate,
+    List<Milestone>? milestones,
   }) async {
     print('\n🎯 Creating new goal via API...');
     print('   Title: $title');
@@ -1184,6 +1242,16 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       if (result.isSuccess && result.data != null) {
         print('✅ Goal created successfully (category $categoryId handled locally): ${result.message}');
         
+        // Get the created goal ID from the API response
+        final createdGoalId = result.data?.goalTrackerId;
+        print('🔍 Created goal ID from API: $createdGoalId');
+        
+        // Create milestones if any were provided
+        if (milestones != null && milestones.isNotEmpty && createdGoalId != null) {
+          print('🎯 Creating ${milestones.length} milestones for goal ID $createdGoalId...');
+          await _createMilestonesForNewGoal(createdGoalId, milestones);
+        }
+        
         // Reload goals to get the updated list
         print('🔄 Reloading goals after creation...');
         await _loadGoals();
@@ -1244,9 +1312,29 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Is Completed: $isCompleted');
     
     try {
+      // Find the current goal to get its existing status and priority
+      final currentGoal = goals.firstWhere(
+        (g) => g.id == goalId,
+        orElse: () => goals.first, // Fallback to avoid errors
+      );
+      
+      // Determine status based on completion
+      final statusId = isCompleted == true 
+          ? GoalStatusTypes.completed 
+          : GoalStatusTypes.open;
+      
+      // Use existing priority or default to medium
+      final priorityId = _goalTrackerService.mapUiPriorityToApiPriority(currentGoal.priority);
+      
+      print('🔧 Using API fields:');
+      print('   Status ID: $statusId (${statusId.goalStatusDisplayName})');
+      print('   Priority ID: $priorityId (${priorityId.goalPriorityDisplayName})');
+      
       final result = await _goalTrackerService.updateGoalTracker(
         goalTrackerId: int.parse(goalId),
         goalName: title,
+        goalStatusTypeId: statusId, // FIX: Add required status field
+        goalPriorityTypeId: priorityId, // FIX: Add required priority field
         endDate: targetDate,
         completedDate: isCompleted == true ? DateTime.now() : null,
       );
@@ -1361,6 +1449,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           print('   Title: ${goal.title}');
           print('   Category: ${goal.category.displayName}');
           print('   Priority: ${goal.priority.name}');
+          print('   Milestones: ${goal.milestones.length}');
           
           // Create goal using the service
           await _createGoalWithService(
@@ -1368,6 +1457,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             category: goal.category,
             priority: goal.priority,
             targetDate: goal.targetDate,
+            milestones: goal.milestones, // Pass milestones to be created
           );
           
           ScaffoldMessenger.of(context).showSnackBar(
