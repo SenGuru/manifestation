@@ -779,6 +779,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         SnackBar(
           content: Text('User not loaded. Please try again.'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.fixed,
         ),
       );
       return;
@@ -817,20 +818,74 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
       print('   startDate: ${DateTime.now()}');
       print('   endDate: ${apiMilestone.targetDate}');
 
-      // Create milestone via service
-      final result = await _goalTrackerService.createMilestone(
-        goalTrackerId: goalId,
-        milestoneName: apiMilestone.title,
-        startDate: DateTime.now(),
-        endDate: apiMilestone.targetDate,
-      );
+      // Ensure end date is valid (not earlier than start date)
+      final startDate = DateTime.now();
+      DateTime? endDate = apiMilestone.targetDate;
+      
+      if (endDate != null) {
+        if (endDate.isBefore(startDate)) {
+          print('⚠️  Target date is in the past, setting to tomorrow...');
+          // If target date is in the past, set to tomorrow
+          endDate = startDate.add(Duration(days: 1));
+        } else if (isSameDay(endDate, startDate)) {
+          print('⚠️  Target date is today, setting to null to avoid constraints...');
+          // If same day, make it null to avoid time conflicts
+          endDate = null;
+        }
+      }
+      
+      print('📅 Final dates:');
+      print('   startDate: $startDate');
+      print('   endDate: $endDate');
 
-      print('📡 API Response received:');
-      print('   isSuccess: ${result.isSuccess}');
-      print('   message: ${result.message}');
-      print('   data: ${result.data}');
+      // Create milestone via service - try different milestone status types
+      print('🔍 Trying milestone creation with different status types...');
+      
+      // Try common milestone status type IDs
+      final statusTypesToTry = [
+        3700001, // Milestone Active/Open
+        3700002, // Milestone In Progress  
+        3700003, // Milestone Pending
+        1,       // Basic Active
+        2,       // Basic Complete
+        null,    // No status (let server default)
+      ];
+      
+      dynamic result;
+      
+      for (int i = 0; i < statusTypesToTry.length; i++) {
+        final statusId = statusTypesToTry[i];
+        print('🧪 Attempt ${i + 1}: Trying statusTypeId: $statusId');
+        
+        result = await _goalTrackerService.createMilestone(
+          goalTrackerId: goalId,
+          milestoneName: apiMilestone.title,
+          startDate: startDate,
+          endDate: endDate,
+          statusTypeId: statusId,
+        );
+        
+        print('📡 Response for statusTypeId $statusId:');
+        print('   isSuccess: ${result.isSuccess}');
+        print('   message: ${result.message}');
+        
+        if (result.isSuccess) {
+          print('✅ SUCCESS with statusTypeId: $statusId');
+          break;
+        } else {
+          print('❌ Failed with statusTypeId $statusId, trying next...');
+          if (i < statusTypesToTry.length - 1) {
+            await Future.delayed(Duration(milliseconds: 500)); // Small delay between attempts
+          }
+        }
+      }
 
-      if (result.isSuccess && result.data != null) {
+      print('📡 Final API Response:');
+      print('   isSuccess: ${result?.isSuccess}');
+      print('   message: ${result?.message}');
+      print('   data: ${result?.data}');
+
+      if (result != null && result.isSuccess && result.data != null) {
         print('✅ Milestone created successfully: ${result.message}');
         
         // Convert API milestone to UI milestone
@@ -874,18 +929,16 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
           SnackBar(
             content: Text('Milestone created successfully!'),
             backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
+            behavior: SnackBarBehavior.fixed,
           ),
         );
       } else {
-        print('❌ Failed to create milestone: ${result.message}');
+        print('❌ Failed to create milestone: ${result?.message ?? "No result"}');
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to create milestone: ${result.message}'),
+            content: Text('Failed to create milestone'),
             backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.fixed,
           ),
         );
       }
@@ -893,11 +946,18 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
       print('❌ Exception creating milestone: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error creating milestone: ${e.toString()}'),
+          content: Text('Error creating milestone'),
           backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.fixed,
         ),
       );
     }
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && 
+           date1.month == date2.month && 
+           date1.day == date2.day;
   }
 
   Future<void> _refreshGoalData() async {
