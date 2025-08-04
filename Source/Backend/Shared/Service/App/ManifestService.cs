@@ -25152,11 +25152,6 @@ namespace Manifest.Service.App
 
             if (isCreate)
             {
-                if (await manifestRepository.IsVisionBoardPictureNameAlreadyExistsForOtherVisionBoardPictureAsync(visionBoardPictureModel.FileName, visionBoardPictureModel.UserId))
-                {
-                    result.Add(new ReturnErrorItem("", "Another Vision Board Picture already exists"));
-                }
-
                 if (visionBoardPictureModel.VisionBoardPictureId > 0)
                 {
                     result.Add(new ReturnErrorItem("", "Vision Board Picture Identifier is not valid"));
@@ -25164,11 +25159,6 @@ namespace Manifest.Service.App
             }
             else
             {
-                if (await manifestRepository.IsVisionBoardPictureNameAlreadyExistsForOtherVisionBoardPictureAsync(visionBoardPictureModel.VisionBoardPictureId, visionBoardPictureModel.FileName, visionBoardPictureModel.UserId))
-                {
-                    result.Add(new ReturnErrorItem("", "Another Vision Board Picture already exists"));
-                }
-
                 if (visionBoardPictureModel.VisionBoardPictureId <= 0)
                 {
                     result.Add(new ReturnErrorItem("", "Vision Board Picture Unique Identifier is not valid"));
@@ -25187,9 +25177,6 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
                 return result;
             }
-
-
-
 
             if (visionBoardPictureModel.Location != null && visionBoardPictureModel.Location.Length > VisionBoardPictureModel.COLUMN_SIZE_Location)
             {
@@ -25223,11 +25210,8 @@ namespace Manifest.Service.App
                 }
             }
 
-
             return result.Count > 0 ? result : null;
         }
-
-
 
         public async Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByUserIdAsync(long userId)
         {
@@ -25248,7 +25232,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByUserIdAsync(VisionBoardPictureByUserIdSearchCriteria search)
         {
             try
@@ -25267,7 +25250,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<VisionBoardPictureModel>($"Unexpected error when getting Vision Board Picture by UserId", new { search.UserId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<VisionBoardPicture>> GetBareVisionBoardPictureByUserIdAsync(long userId)
         {
@@ -25288,7 +25270,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<VisionBoardPicture>> GetBareVisionBoardPictureByUserIdAsync(VisionBoardPictureByUserIdSearchCriteria search)
         {
             try
@@ -25307,7 +25288,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<VisionBoardPicture>($"Unexpected error when getting Vision Board Picture by UserId", new { search.UserId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<UserModel>> GetUserByVisionBoardPictureIdAsync(long visionBoardPictureId)
         {
@@ -25328,7 +25308,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<UserModel>> GetUserByVisionBoardPictureIdAsync(UserByVisionBoardPictureIdSearchCriteria search)
         {
             try
@@ -25347,7 +25326,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<UserModel>($"Unexpected error when getting Vision Board Picture by VisionBoardPicture", new { search.VisionBoardPictureId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<User>> GetBareUserByVisionBoardPictureIdAsync(long visionBoardPictureId)
         {
