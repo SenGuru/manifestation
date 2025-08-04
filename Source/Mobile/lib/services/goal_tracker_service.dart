@@ -725,6 +725,7 @@ class GoalTrackerService {
     required int goalTrackerId,
     String? goalName,
     int? goalStatusTypeId,
+    int? goalPriorityTypeId, // NEW: Add priority type parameter
     DateTime? startDate,
     DateTime? endDate,
     DateTime? completedDate,
@@ -749,6 +750,7 @@ class GoalTrackerService {
         goalTrackerId: goalTrackerId,
         goalTrackerName: goalName,
         predefinedGoalStatusTypeId: goalStatusTypeId,
+        predefinedGoalPriorityTypeId: goalPriorityTypeId, // FIX: Add priority field
         goalTrackerStartDate: startDate,
         goalTrackerEndDate: endDate,
         goalTrackerCompletedDate: completedDate,

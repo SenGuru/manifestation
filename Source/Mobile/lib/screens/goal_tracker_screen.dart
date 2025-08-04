@@ -1312,9 +1312,29 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Is Completed: $isCompleted');
     
     try {
+      // Find the current goal to get its existing status and priority
+      final currentGoal = goals.firstWhere(
+        (g) => g.id == goalId,
+        orElse: () => goals.first, // Fallback to avoid errors
+      );
+      
+      // Determine status based on completion
+      final statusId = isCompleted == true 
+          ? GoalStatusTypes.completed 
+          : GoalStatusTypes.open;
+      
+      // Use existing priority or default to medium
+      final priorityId = _goalTrackerService.mapUiPriorityToApiPriority(currentGoal.priority);
+      
+      print('🔧 Using API fields:');
+      print('   Status ID: $statusId (${statusId.goalStatusDisplayName})');
+      print('   Priority ID: $priorityId (${priorityId.goalPriorityDisplayName})');
+      
       final result = await _goalTrackerService.updateGoalTracker(
         goalTrackerId: int.parse(goalId),
         goalName: title,
+        goalStatusTypeId: statusId, // FIX: Add required status field
+        goalPriorityTypeId: priorityId, // FIX: Add required priority field
         endDate: targetDate,
         completedDate: isCompleted == true ? DateTime.now() : null,
       );
