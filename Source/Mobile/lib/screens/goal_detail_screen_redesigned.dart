@@ -10,6 +10,8 @@ import '../widgets/universal_back_button.dart';
 import '../models/api_milestone.dart';
 import '../services/goal_tracker_service.dart';
 import '../constants/goal_constants.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 
 class GoalDetailScreenRedesigned extends StatefulWidget {
   final Goal goal;
@@ -85,7 +87,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -133,7 +135,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: currentGoal.category.color.withOpacity(0.3),
+              color: currentGoal.category.color.withValues(alpha: 0.3),
               blurRadius: 12.r,
               offset: Offset(0, 4.h),
             ),
@@ -183,7 +185,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             width: 60.w,
             height: 60.h,
             decoration: BoxDecoration(
-              color: currentGoal.category.color.withOpacity(0.1),
+              color: currentGoal.category.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(
@@ -202,7 +204,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -231,7 +233,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
               ),
               child: Icon(
                 Icons.edit,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -242,7 +244,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
@@ -274,7 +276,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             Text(
@@ -319,7 +321,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                 ? '${currentGoal.daysUntilTarget.abs()}d'
                 : '${currentGoal.daysUntilTarget}d',
             Icons.schedule,
-            currentGoal.isOverdue ? Colors.red : AppTheme.textMedium,
+            currentGoal.isOverdue ? Colors.red : AppTheme.textSecondary,
           ),
         ),
       ],
@@ -353,7 +355,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             label,
             style: TextStyle(
               fontSize: 11.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -377,7 +379,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
           ),
           SizedBox(height: 12.h),
@@ -385,7 +387,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             currentGoal.description,
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
               height: 1.5,
             ),
           ),
@@ -412,7 +414,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
               ),
               Row(
@@ -431,7 +433,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                     child: Container(
                       padding: EdgeInsets.all(6.w),
                       decoration: BoxDecoration(
-                        color: currentGoal.category.color.withOpacity(0.1),
+                        color: currentGoal.category.color.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(6.r),
                       ),
                       child: Icon(
@@ -470,7 +472,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                         border: Border.all(
                           color: milestone.isCompleted 
                               ? currentGoal.category.color
-                              : AppTheme.textMedium,
+                              : AppTheme.textSecondary,
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(4.r),
@@ -491,8 +493,8 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: milestone.isCompleted 
-                            ? AppTheme.textMedium
-                            : AppTheme.textLight,
+                            ? AppTheme.textSecondary
+                            : AppTheme.textPrimary,
                         decoration: milestone.isCompleted 
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
@@ -512,7 +514,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                 children: [
                   Icon(
                     Icons.flag_outlined,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                     size: 32.sp,
                   ),
                   SizedBox(height: 8.h),
@@ -520,7 +522,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                     'No milestones yet',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppTheme.textMedium,
+                      color: AppTheme.textSecondary,
                     ),
                   ),
                   SizedBox(height: 8.h),
@@ -558,7 +560,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
           ),
           SizedBox(height: 16.h),
@@ -567,7 +569,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             'Goal Created',
             currentGoal.createdAt,
             Icons.flag_outlined,
-            AppTheme.textMedium,
+            AppTheme.textSecondary,
             true,
           ),
           
@@ -584,7 +586,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             'Target Date',
             currentGoal.targetDate,
             Icons.celebration_outlined,
-            currentGoal.isCompleted ? Colors.green : AppTheme.textMedium,
+            currentGoal.isCompleted ? Colors.green : AppTheme.textSecondary,
             currentGoal.isCompleted,
           ),
         ],
@@ -607,7 +609,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             width: 28.w,
             height: 28.h,
             decoration: BoxDecoration(
-              color: isCompleted ? color : color.withOpacity(0.2),
+              color: isCompleted ? color : color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6.r),
             ),
             child: Icon(
@@ -626,14 +628,14 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   '${date.day}/${date.month}/${date.year}',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
@@ -712,7 +714,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         title: Text(
           'Delete Goal',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -720,7 +722,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         content: Text(
           'Are you sure you want to delete "${currentGoal.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -729,7 +731,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(
@@ -904,6 +906,20 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
           content: Text('User not loaded. Please try again.'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.fixed,
+        ),
+      );
+      return;
+    }
+
+    // Check subscription limits for milestones
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateMilestone(currentGoal.milestones.length)) {
+      print('🚫 Milestone creation blocked - limit reached: ${currentGoal.milestones.length}/${SubscriptionService.maxFreeMilestonesPerGoal}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'milestone',
+          customMessage: 'Unlock unlimited milestones and premium goal tracking',
         ),
       );
       return;
@@ -1095,7 +1111,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         title: Text(
           'Update Goal Progress?',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -1106,7 +1122,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             Text(
               'You completed a milestone! Would you like to update your overall goal progress?',
               style: TextStyle(
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
                 fontSize: 14.sp,
               ),
             ),
@@ -1126,7 +1142,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Not Now',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(

@@ -81,7 +81,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     // Show loading screen while loading vision boards
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading your vision boards...',
         ),
@@ -89,7 +89,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -123,12 +123,12 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
+                      color: AppTheme.textSecondary.withValues(alpha: 0.1),
                     ),
                   ),
                   child: Icon(
                     Icons.arrow_back,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                     size: 20.sp,
                   ),
                 ),
@@ -143,14 +143,14 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                       ),
                     ),
                     Text(
                       'Visualize your dreams',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppTheme.textMedium,
+                        color: AppTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -176,12 +176,12 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Icon(
           Icons.more_vert,
-          color: AppTheme.textLight,
+          color: AppTheme.textPrimary,
           size: 20.sp,
         ),
       ),
@@ -228,7 +228,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Column(
@@ -238,7 +238,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               width: 32.w,
               height: 32.h,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Icon(
@@ -253,14 +253,14 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             Text(
               title,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
               ),
             ),
           ],
@@ -298,7 +298,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -306,7 +306,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             'Create your first vision board to start\nmanifesting your dreams',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -358,7 +358,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
           ),
         ),
         GestureDetector(
@@ -387,11 +387,11 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.black.withOpacity(0.05),
+              color: AppTheme.black.withValues(alpha: 0.05),
               blurRadius: 10.r,
               offset: Offset(0, 5.h),
             ),
@@ -407,8 +407,8 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppTheme.visionBoardGradient[0].withOpacity(0.1),
-                      AppTheme.visionBoardGradient[1].withOpacity(0.05),
+                      AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
+                      AppTheme.visionBoardGradient[1].withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -431,7 +431,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -441,7 +441,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                       '${board.elements.length} items • Last edited ${_formatDate(board.updatedAt)}',
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: AppTheme.textMedium,
+                        color: AppTheme.textSecondary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -451,7 +451,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                       children: [
                         Icon(
                           Icons.edit,
-                          color: AppTheme.textMedium.withOpacity(0.6),
+                          color: AppTheme.textSecondary.withValues(alpha: 0.6),
                           size: 12.sp,
                         ),
                         SizedBox(width: 4.w),
@@ -459,14 +459,14 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                           _formatDate(board.updatedAt),
                           style: TextStyle(
                             fontSize: 10.sp,
-                            color: AppTheme.textMedium.withOpacity(0.6),
+                            color: AppTheme.textSecondary.withValues(alpha: 0.6),
                           ),
                         ),
                         Spacer(),
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
                           decoration: BoxDecoration(
-                            color: AppTheme.visionBoardGradient[0].withOpacity(0.1),
+                            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                           child: Text(
@@ -499,7 +499,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         children: [
           Icon(
             Icons.dashboard,
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
+            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
             size: 40.sp,
           ),
           SizedBox(height: 8.h),
@@ -507,7 +507,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             'Vision Board',
             style: TextStyle(
               fontSize: 12.sp,
-              color: AppTheme.textMedium.withOpacity(0.6),
+              color: AppTheme.textSecondary.withValues(alpha: 0.6),
             ),
           ),
         ],
@@ -557,7 +557,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Column(
@@ -566,7 +566,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: (template['color'] as Color).withOpacity(0.1),
+                  color: (template['color'] as Color).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
                 ),
                 child: Icon(
@@ -583,7 +583,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                 style: TextStyle(
                   fontSize: 12.sp,
                   fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -607,7 +607,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         borderRadius: BorderRadius.circular(28.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.4),
+            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.4),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -641,7 +641,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         borderRadius: BorderRadius.circular(25.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.4),
+            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.4),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -756,7 +756,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -769,7 +769,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -808,7 +808,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           children: [
             Icon(
               icon,
-              color: isDestructive ? Colors.red : AppTheme.textMedium,
+              color: isDestructive ? Colors.red : AppTheme.textSecondary,
               size: 20.sp,
             ),
             SizedBox(width: 16.w),
@@ -816,7 +816,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               title,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: isDestructive ? Colors.red : AppTheme.textLight,
+                color: isDestructive ? Colors.red : AppTheme.textPrimary,
               ),
             ),
           ],
@@ -843,7 +843,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -856,7 +856,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -911,7 +911,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         title: Text(
           'Delete Vision Board',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -919,7 +919,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         content: Text(
           'Are you sure you want to delete "${board.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -928,7 +928,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(

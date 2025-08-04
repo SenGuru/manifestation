@@ -12,6 +12,8 @@ import '../constants/app_theme.dart';
 import '../constants/goal_constants.dart';
 import '../services/goal_tracker_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import '../widgets/stylish_loading.dart';
 import 'goal_detail_screen_redesigned.dart';
@@ -86,7 +88,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     // Show loading screen while loading goals
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading goals...',
         ),
@@ -102,7 +104,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Show completed: $showCompletedGoals');
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -158,12 +160,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
+                      color: AppTheme.textSecondary.withValues(alpha: 0.1),
                     ),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -178,14 +180,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   'Track your manifestation progress',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
@@ -203,7 +205,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               ),
               child: Icon(
                 Icons.tune,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -231,7 +233,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.goalTrackerGradient[0].withOpacity(0.3),
+            color: AppTheme.goalTrackerGradient[0].withValues(alpha: 0.3),
             blurRadius: 12.r,
             offset: Offset(0, 6.h),
           ),
@@ -254,7 +256,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                         child: CircularProgressIndicator(
                           value: overallProgress / 100,
                           strokeWidth: 6,
-                          backgroundColor: AppTheme.white.withOpacity(0.3),
+                          backgroundColor: AppTheme.white.withValues(alpha: 0.3),
                           valueColor: AlwaysStoppedAnimation<Color>(AppTheme.white),
                         ),
                       ),
@@ -290,7 +292,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                       'Keep manifesting your dreams!',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppTheme.white.withOpacity(0.8),
+                        color: AppTheme.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -310,7 +312,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               Container(
                 width: 1,
                 height: 30.h,
-                color: AppTheme.white.withOpacity(0.3),
+                color: AppTheme.white.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem('Active', activeGoals.toString(), Icons.trending_up),
@@ -318,7 +320,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               Container(
                 width: 1,
                 height: 30.h,
-                color: AppTheme.white.withOpacity(0.3),
+                color: AppTheme.white.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem('Done', completedGoals.toString(), Icons.check_circle),
@@ -351,7 +353,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: AppTheme.white.withOpacity(0.8),
+            color: AppTheme.white.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -382,13 +384,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
               decoration: BoxDecoration(
                 color: isSelected 
-                    ? category.color.withOpacity(0.1)
+                    ? category.color.withValues(alpha: 0.1)
                     : AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
                   color: isSelected 
                       ? category.color
-                      : AppTheme.textMedium.withOpacity(0.3),
+                      : AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -396,7 +398,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 children: [
                   Icon(
                     category.icon,
-                    color: isSelected ? category.color : AppTheme.textMedium,
+                    color: isSelected ? category.color : AppTheme.textSecondary,
                     size: 16.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -405,7 +407,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected ? category.color : AppTheme.textMedium,
+                      color: isSelected ? category.color : AppTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -449,7 +451,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               width: 120.w,
               height: 120.h,
               decoration: BoxDecoration(
-                color: AppTheme.goalTrackerGradient[0].withOpacity(0.1),
+                color: AppTheme.goalTrackerGradient[0].withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -466,7 +468,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             SizedBox(height: 12.h),
@@ -476,7 +478,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   : 'Create a goal in this category to get started',
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -1439,6 +1441,21 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   void _showAddGoalSheet() {
     print('➕ Opening add goal sheet...');
+    
+    // Check subscription limits
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateGoal(goals.length)) {
+      print('🚫 Goal creation blocked - limit reached: ${goals.length}/${SubscriptionService.maxFreeGoals}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'goal',
+          customMessage: 'Unlock unlimited goals and premium tracking features',
+        ),
+      );
+      return;
+    }
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1695,7 +1712,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         title: Text(
           'Delete Goal',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -1703,7 +1720,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         content: Text(
           'Are you sure you want to delete "${goal.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -1712,7 +1729,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(
@@ -1752,7 +1769,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -1763,7 +1780,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ),
@@ -1774,12 +1791,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   ListTile(
                     leading: Icon(
                       Icons.visibility,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                     title: Text(
                       'Show Completed Goals',
                       style: TextStyle(
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                         fontSize: 16.sp,
                       ),
                     ),

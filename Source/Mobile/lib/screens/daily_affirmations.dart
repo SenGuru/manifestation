@@ -11,6 +11,8 @@ import '../utils/color_utils.dart';
 import '../services/daily_affirmations_service.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 import '../models/analytics_models.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/universal_back_button.dart';
@@ -391,7 +393,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     // Show loading screen while loading affirmations
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading affirmations...',
         ),
@@ -399,7 +401,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -428,14 +430,14 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   'Transform your mindset with positive thoughts',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
@@ -488,11 +490,11 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
               decoration: BoxDecoration(
                 color: isSelected 
-                    ? category.color.withAlpha((0.1 * 255).round())
+                    ? category.color.withValues(alpha: 0.1)
                     : AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
-                  color: isSelected ? category.color : AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                  color: isSelected ? category.color : AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Center(
@@ -501,7 +503,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   children: [
                     Icon(
                       category.iconData,
-                      color: isSelected ? category.color : AppTheme.textMedium,
+                      color: isSelected ? category.color : AppTheme.textSecondary,
                       size: 16.sp,
                     ),
                     SizedBox(width: 6.w),
@@ -510,7 +512,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color: isSelected ? category.color : AppTheme.textMedium,
+                        color: isSelected ? category.color : AppTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -532,7 +534,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             'No affirmations available',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
             ),
           ),
         ),
@@ -555,7 +557,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              currentCategory.color.withAlpha((0.1 * 255).round()),
+              currentCategory.color.withValues(alpha: 0.1),
               currentCategory.color.withAlpha((0.05 * 255).round()),
             ],
             begin: Alignment.topCenter,
@@ -563,7 +565,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           ),
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: currentCategory.color.withAlpha((0.3 * 255).round()),
+            color: currentCategory.color.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -582,7 +584,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                     height: 1.4,
                   ),
                   textAlign: TextAlign.center,
@@ -613,12 +615,12 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Icon(
                 Icons.edit,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 18.sp,
               ),
             ),
@@ -634,7 +636,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppTheme.error.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.error.withValues(alpha: 0.3),
                 ),
               ),
               child: Icon(
@@ -667,7 +669,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 shape: BoxShape.circle,
                 color: index == currentAffirmationIndex 
                     ? currentCategory.color 
-                    : AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                    : AppTheme.textSecondary.withValues(alpha: 0.3),
               ),
             ),
           ),
@@ -699,10 +701,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
             decoration: BoxDecoration(
-              color: currentCategory.color.withAlpha((0.1 * 255).round()),
+              color: currentCategory.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(
-                color: currentCategory.color.withAlpha((0.3 * 255).round()),
+                color: currentCategory.color.withValues(alpha: 0.3),
                 width: 1.5,
               ),
             ),
@@ -746,13 +748,13 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           shape: BoxShape.circle,
           border: Border.all(
             color: enabled 
-                ? AppTheme.textMedium.withAlpha((0.3 * 255).round())
-                : AppTheme.textMedium.withAlpha((0.1 * 255).round()),
+                ? AppTheme.textSecondary.withValues(alpha: 0.3)
+                : AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Icon(
           icon,
-          color: enabled ? AppTheme.textLight : AppTheme.textMedium.withAlpha((0.5 * 255).round()),
+          color: enabled ? AppTheme.textPrimary : AppTheme.textSecondary.withValues(alpha: 0.5),
           size: 24.sp,
         ),
       ),
@@ -871,16 +873,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Delete Affirmation',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: Text(
             'Are you sure you want to delete this affirmation?',
-            style: TextStyle(color: AppTheme.textMedium),
+            style: TextStyle(color: AppTheme.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
@@ -922,22 +924,22 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Edit Affirmation',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: TextField(
             controller: textController,
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
             maxLines: 3,
             decoration: InputDecoration(
               hintText: 'Enter your affirmation...',
-              hintStyle: TextStyle(color: AppTheme.textMedium),
+              hintStyle: TextStyle(color: AppTheme.textSecondary),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -948,7 +950,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () async {
@@ -1074,7 +1076,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.textSecondary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -1086,17 +1088,17 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
               ),
               SizedBox(height: 20.h),
               
               // Edit option
               ListTile(
-                leading: Icon(Icons.edit, color: AppTheme.textLight),
+                leading: Icon(Icons.edit, color: AppTheme.textPrimary),
                 title: Text(
                   'Edit Category',
-                  style: TextStyle(color: AppTheme.textLight),
+                  style: TextStyle(color: AppTheme.textPrimary),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -1135,21 +1137,21 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Edit Category',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: TextField(
             controller: nameController,
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
             decoration: InputDecoration(
               hintText: 'Category name...',
-              hintStyle: TextStyle(color: AppTheme.textMedium),
+              hintStyle: TextStyle(color: AppTheme.textSecondary),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -1160,7 +1162,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () async {
@@ -1186,16 +1188,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Delete Category',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: Text(
             'Are you sure you want to delete "${category.name}"? This will also delete all affirmations in this category.',
-            style: TextStyle(color: AppTheme.textMedium),
+            style: TextStyle(color: AppTheme.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () async {
@@ -1298,10 +1300,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             width: 80.w,
             height: 80.h,
             decoration: BoxDecoration(
-              color: category.color.withAlpha((0.1 * 255).round()),
+              color: category.color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
               border: Border.all(
-                color: category.color.withAlpha((0.3 * 255).round()),
+                color: category.color.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -1320,7 +1322,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             style: TextStyle(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -1332,7 +1334,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             'Create your first positive affirmation to begin manifesting your dreams in ${category.name.toLowerCase()}.',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -1355,7 +1357,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 borderRadius: BorderRadius.circular(25.r),
                 boxShadow: [
                   BoxShadow(
-                    color: category.color.withAlpha((0.3 * 255).round()),
+                    color: category.color.withValues(alpha: 0.3),
                     blurRadius: 12.r,
                     offset: Offset(0, 6.h),
                   ),
@@ -1410,7 +1412,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                     'Tip: Start with "I am..." or "I believe..." statements',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppTheme.textMedium,
+                      color: AppTheme.textSecondary,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -1424,6 +1426,20 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 
   void _showAddAffirmationDialog(AffirmationCategory category) {
+    // Check subscription limits for affirmations in this category
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateAffirmation(category.affirmations.length)) {
+      print('🚫 Affirmation creation blocked - limit reached: ${category.affirmations.length}/${SubscriptionService.maxFreeAffirmationsPerCategory}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'affirmation',
+          customMessage: 'Unlock unlimited affirmations and premium categories',
+        ),
+      );
+      return;
+    }
+    
     final TextEditingController textController = TextEditingController();
     
     showDialog(
@@ -1444,7 +1460,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 child: Text(
                   'Add ${category.name} Affirmation',
                   style: TextStyle(
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1459,25 +1475,25 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               Text(
                 'Create a positive affirmation that resonates with your ${category.name.toLowerCase()} goals.',
                 style: TextStyle(
-                  color: AppTheme.textMedium,
+                  color: AppTheme.textSecondary,
                   fontSize: 14.sp,
                 ),
               ),
               SizedBox(height: 16.h),
               TextField(
                 controller: textController,
-                style: TextStyle(color: AppTheme.textLight),
+                style: TextStyle(color: AppTheme.textPrimary),
                 maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'I am worthy of ${category.name.toLowerCase()}...',
-                  hintStyle: TextStyle(color: AppTheme.textMedium.withAlpha((0.7 * 255).round())),
+                  hintStyle: TextStyle(color: AppTheme.textSecondary.withValues(alpha: 0.7)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                    borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                    borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
@@ -1492,7 +1508,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -1541,6 +1557,20 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 
   void _showAddCategoryDialog() {
+    // Check subscription limits for categories
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateAffirmationCategory(categories.length)) {
+      print('🚫 Category creation blocked - limit reached: ${categories.length}/${SubscriptionService.maxFreeAffirmationCategories}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'affirmation_category',
+          customMessage: 'Unlock unlimited categories and premium features',
+        ),
+      );
+      return;
+    }
+    
     showDialog(
       context: context,
       builder: (BuildContext context) => _AddCategoryDialog(
@@ -1574,7 +1604,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       title: Text(
         'Add Category',
         style: TextStyle(
-          color: AppTheme.textLight,
+          color: AppTheme.textPrimary,
           fontSize: 20.sp,
           fontWeight: FontWeight.bold,
         ),
@@ -1590,7 +1620,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             Text(
               'Category Name',
               style: TextStyle(
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -1598,17 +1628,17 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             SizedBox(height: 8.h),
             TextField(
               controller: _nameController,
-              style: TextStyle(color: AppTheme.textLight),
+              style: TextStyle(color: AppTheme.textPrimary),
               decoration: InputDecoration(
                 hintText: 'Enter category name...',
-                hintStyle: TextStyle(color: AppTheme.textMedium),
+                hintStyle: TextStyle(color: AppTheme.textSecondary),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                  borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                  borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.r),
@@ -1622,7 +1652,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             Text(
               'Choose Color',
               style: TextStyle(
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -1635,7 +1665,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
             Text(
               'Choose Icon',
               style: TextStyle(
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
               ),
@@ -1651,7 +1681,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
           onPressed: _isCreating ? null : () => Navigator.of(context).pop(),
           child: Text(
             'Cancel',
-            style: TextStyle(color: AppTheme.textMedium),
+            style: TextStyle(color: AppTheme.textSecondary),
           ),
         ),
         ElevatedButton(
@@ -1703,7 +1733,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
                 shape: BoxShape.circle,
                 border: isSelected 
                     ? Border.all(color: AppTheme.white, width: 3)
-                    : Border.all(color: AppTheme.textMedium.withAlpha((0.3 * 255).round()), width: 1),
+                    : Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3), width: 1),
               ),
               child: isSelected 
                   ? Icon(
@@ -1751,11 +1781,11 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
                 borderRadius: BorderRadius.circular(12.r),
                 border: isSelected
                     ? Border.all(color: _selectedColor, width: 2)
-                    : Border.all(color: AppTheme.textMedium.withAlpha((0.3 * 255).round()), width: 1),
+                    : Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3), width: 1),
               ),
               child: Icon(
                 iconType.iconData,
-                color: isSelected ? _selectedColor : AppTheme.textMedium,
+                color: isSelected ? _selectedColor : AppTheme.textSecondary,
                 size: 24.sp,
               ),
             ),

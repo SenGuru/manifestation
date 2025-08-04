@@ -13,6 +13,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class VisionBoardScreen extends StatefulWidget {
   final VisionBoard? existingBoard;        
@@ -38,6 +39,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   VisionBoard? lastSavedState;
   bool hasBeenSavedToServer = false;
   int? serverPictureId; // Store the server picture ID
+  bool isLoadingContent = false; // Track if we're loading content from server
   
   late AnimationController _toolbarController;
   late Animation<double> _toolbarAnimation;
@@ -165,6 +167,16 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Show loading screen while content is being loaded from server
+    if (isLoadingContent) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundPrimary,
+        body: StylishLoading(
+          message: 'Loading your vision board...',
+        ),
+      );
+    }
+    
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
@@ -1329,10 +1341,62 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
   
   Future<void> _loadBoardElements() async {
-    // NOTE: API loading disabled - using XML storage only
     if (widget.existingBoard != null && widget.existingBoard!.id.isNotEmpty) {
-      print('📝 Loading board elements from XML storage for: ${widget.existingBoard!.id}');
-      // Board data already loaded via widget.existingBoard
+      print('📝 Loading full board content from server for: ${widget.existingBoard!.id}');
+      
+      // Set loading state
+      setState(() {
+        isLoadingContent = true;
+      });
+      
+      try {
+        // Initialize vision board service
+        final visionBoardService = VisionBoardService();
+        await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+        
+        // Load full board content from server
+        final result = await visionBoardService.getVisionBoard(widget.existingBoard!.id);
+        
+        if (result.isSuccess && result.data != null) {
+          print('✅ Loaded full board with ${result.data!.elements.length} elements');
+          
+          // Get the picture ID for this existing board so we can update it later
+          try {
+            final pictureId = await visionBoardService.getPictureIdForBoard(widget.existingBoard!.id);
+            if (pictureId != null) {
+              serverPictureId = pictureId;
+              print('🔍 DEBUG: Retrieved serverPictureId: $serverPictureId for existing board');
+            }
+          } catch (e) {
+            print('⚠️ Could not get picture ID for existing board: $e');
+          }
+          
+          // Update current board with full content from server
+          setState(() {
+            currentBoard = result.data!;
+            isLoadingContent = false;
+          });
+          
+          // Clear undo stack and create new initial state
+          undoStack.clear();
+          undoIndex = -1;
+          _saveToUndoStack();
+          
+        } else {
+          print('❌ Failed to load board content: ${result.message}');
+          // Keep the lightweight board but show empty state
+          setState(() {
+            isLoadingContent = false;
+          });
+        }
+        
+      } catch (e) {
+        print('❌ Error loading board elements: $e');
+        // Keep the lightweight board but show empty state
+        setState(() {
+          isLoadingContent = false;
+        });
+      }
     }
   }
   
