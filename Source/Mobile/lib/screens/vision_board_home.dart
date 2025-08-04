@@ -204,13 +204,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           value: '${visionBoards.where((b) => b.updatedAt.isAfter(DateTime.now().subtract(Duration(days: 7)))).length}',
           color: AppTheme.visionBoardGradient[1],
         ),
-        SizedBox(width: 12.w),
-        _buildStatCard(
-          icon: Icons.favorite,
-          title: 'Favorites',
-          value: '2', // TODO: Implement favorites
-          color: AppTheme.accentGold,
-        ),
       ],
     );
   }

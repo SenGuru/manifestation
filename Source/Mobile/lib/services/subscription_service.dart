@@ -14,7 +14,7 @@ class SubscriptionService {
   DateTime? _subscriptionExpiry;
   
   // Free tier limits
-  static const int maxFreeAffirmationCategories = 3;
+  static const int maxFreeCustomAffirmationCategories = 3; // User can create 3 custom categories on top of 5 default ones
   static const int maxFreeAffirmationsPerCategory = 3;
   static const int maxFreeVisionBoards = 3;
   static const int maxFreeGoals = 5;
@@ -95,9 +95,10 @@ class SubscriptionService {
   // Usage limit checks for different features
   
   /// Check if user can create more affirmation categories
-  bool canCreateAffirmationCategory(int currentCount) {
+  /// Only counts custom categories (default categories don't count against limit)
+  bool canCreateAffirmationCategory(int currentCustomCount) {
     if (isPremium) return true;
-    return currentCount < maxFreeAffirmationCategories;
+    return currentCustomCount < maxFreeCustomAffirmationCategories;
   }
   
   /// Check if user can create more affirmations in a category
@@ -157,7 +158,7 @@ class SubscriptionService {
   String getUpgradeMessage(String feature) {
     switch (feature) {
       case 'affirmation_category':
-        return 'Upgrade to Premium to create more than $maxFreeAffirmationCategories affirmation categories!';
+        return 'Upgrade to Premium to create more than $maxFreeCustomAffirmationCategories custom affirmation categories!';
       case 'affirmation':
         return 'Upgrade to Premium to add more than $maxFreeAffirmationsPerCategory affirmations per category!';
       case 'vision_board':
@@ -191,7 +192,7 @@ class SubscriptionService {
       'isPremium': _isPremium,
       'subscriptionExpiry': _subscriptionExpiry?.toIso8601String(),
       'freeLimits': {
-        'affirmationCategories': maxFreeAffirmationCategories,
+        'customAffirmationCategories': maxFreeCustomAffirmationCategories,
         'affirmationsPerCategory': maxFreeAffirmationsPerCategory,
         'visionBoards': maxFreeVisionBoards,
         'goals': maxFreeGoals,

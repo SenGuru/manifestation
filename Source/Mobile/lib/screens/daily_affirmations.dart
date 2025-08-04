@@ -1557,15 +1557,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 
   void _showAddCategoryDialog() {
-    // Check subscription limits for categories
+    // Check subscription limits for custom categories only (default categories don't count)
     final subscriptionService = SubscriptionService();
-    if (!subscriptionService.canCreateAffirmationCategory(categories.length)) {
-      print('🚫 Category creation blocked - limit reached: ${categories.length}/${SubscriptionService.maxFreeAffirmationCategories}');
+    final customCategoriesCount = categories.where((cat) => cat.isCustom).length;
+    if (!subscriptionService.canCreateAffirmationCategory(customCategoriesCount)) {
+      print('🚫 Category creation blocked - custom category limit reached: $customCategoriesCount/${SubscriptionService.maxFreeCustomAffirmationCategories}');
       showDialog(
         context: context,
         builder: (context) => PremiumUpgradeDialog(
           feature: 'affirmation_category',
-          customMessage: 'Unlock unlimited categories and premium features',
+          customMessage: 'Unlock unlimited custom categories and premium features',
         ),
       );
       return;
