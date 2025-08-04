@@ -1,7 +1,8 @@
 using System;
+using Framework.Infrastructure.Logging;
 using Manifest.Common.Enums;
 using Manifest.Service.Cache;
-using Framework.Infrastructure.Logging;
+using Manifest.Service.Config;
 
 namespace Manifest.Service.Storage
 {
@@ -9,8 +10,8 @@ namespace Manifest.Service.Storage
     {
         private readonly string reportStoragePrefix;
 
-        public ProfilePictureFileStorage(ILog log, CompanyCacheService companyCacheService)
-            : base(PredefinedFileStorageTypes.ProfilePictureFileStorage, log, companyCacheService)
+        public ProfilePictureFileStorage(ILog log, CompanyCacheService companyCacheService, AppConfigurationFile appConfigurationFile)
+            : base(PredefinedFileStorageTypes.ProfilePictureFileStorage, log, companyCacheService, appConfigurationFile)
         {
             reportStoragePrefix = "ProfilePictures";
         }
