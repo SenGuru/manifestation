@@ -24,6 +24,9 @@ class VisionBoardCanvas extends StatefulWidget {
 class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   bool isDragging = false;
   String? draggingElementId; // Track which element is being dragged
+  String? selectedElementId; // Track which element is selected
+  bool isResizing = false;
+  String? resizeHandle; // Which resize handle is being dragged
 
   // Canvas zoom and pan
   double canvasScale = 1.0;
@@ -37,7 +40,15 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       height: double.infinity,
       color: widget.board.backgroundColor,
       child: GestureDetector(
-        behavior: HitTestBehavior.deferToChild, // Let child elements handle gestures first
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          // Clear selection when tapping empty space
+          if (selectedElementId != null) {
+            setState(() {
+              selectedElementId = null;
+            });
+          }
+        },
         child: Stack(
           children: [
             // Background grid
@@ -51,7 +62,9 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
               return _buildElement(element, index);
             }),
             
-            // No selection overlay needed - drag-only interaction
+            // Selection overlay with resize handles
+            if (selectedElementId != null && widget.selectedTool == VisionBoardTool.resize)
+              _buildSelectionOverlay(),
             
             // Empty state
             if (widget.board.elements.isEmpty)
@@ -71,24 +84,48 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   Widget _buildElement(VisionBoardElement element, int index) {
+    final isBeingDragged = draggingElementId == element.id;
     
     return Positioned(
       left: element.position.dx,
       top: element.position.dy,
       child: GestureDetector(
+        onTap: () => _onElementTap(element),
         onPanStart: (details) => _onElementPanStart(element, details),
         onPanUpdate: (details) => _onElementPanUpdate(element, details),
         onPanEnd: (details) => _onElementPanEnd(element, details),
-        behavior: HitTestBehavior.opaque, // Opaque for reliable gesture detection
-        child: Transform.rotate(
-          angle: element.rotation,
-          child: Container(
-            width: element.size.width,
-            height: element.size.height,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4.r),
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: isBeingDragged ? 0 : 200),
+          curve: Curves.easeOut,
+          child: Transform.rotate(
+            angle: element.rotation,
+            child: Container(
+              width: element.size.width,
+              height: element.size.height,
+              padding: EdgeInsets.all(2.w), // Add breathing room
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r), // Rounder corners
+                border: _shouldShowElementBorder(element) 
+                    ? Border.all(
+                        color: _getElementBorderColor(element),
+                        width: _getBorderWidth(element),
+                      ) 
+                    : null,
+                boxShadow: _getElementShadow(element, isBeingDragged),
+              ),
+              child: Stack(
+                children: [
+                  Container(
+                    margin: EdgeInsets.all(2.w), // Inner margin for content
+                    child: _buildElementContent(element),
+                  ),
+                  // Show tool cursor overlay
+                  if (_shouldShowToolCursor(element))
+                    _buildToolCursorOverlay(element),
+                ],
+              ),
             ),
-            child: _buildElementContent(element),
           ),
         ),
       ),
@@ -99,46 +136,37 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     if (element is VisionBoardImageElement) {
       return Container(
         decoration: BoxDecoration(
-          color: AppTheme.textMedium.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8.r),
+          color: AppTheme.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: AppTheme.textMedium.withOpacity(0.1),
+            width: 1.w,
+          ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.black.withOpacity(0.1),
-              blurRadius: 4.r,
-              offset: Offset(0, 2.h),
+              color: AppTheme.black.withOpacity(0.08),
+              blurRadius: 8.r,
+              offset: Offset(0, 4.h),
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(12.r),
           child: _buildImageWidget(element),
         ),
       );
     } else if (element is VisionBoardTextElement) {
-      return Container(
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-          color: element.style.backgroundColor ?? Colors.transparent,
-          borderRadius: BorderRadius.circular(8.r),
-          boxShadow: element.style.backgroundColor != null ? [
-            BoxShadow(
-              color: AppTheme.black.withOpacity(0.1),
-              blurRadius: 4.r,
-              offset: Offset(0, 2.h),
-            ),
-          ] : null,
+      return Text(
+        element.text,
+        style: element.style.copyWith(
+          fontSize: (element.style.fontSize ?? 16.sp) * 
+              (element.size.width / 200).clamp(0.6, 1.8),
+          height: 1.3, // Better line height
+          shadows: null, // No shadows - completely clean text
         ),
-        child: Center(
-          child: Text(
-            element.text,
-            style: element.style.copyWith(
-              fontSize: (element.style.fontSize ?? 16.sp) * (element.size.width / 200).clamp(0.5, 2.0),
-            ),
-            textAlign: element.alignment,
-            overflow: TextOverflow.visible,
-            maxLines: null,
-          ),
-        ),
+        textAlign: element.alignment,
+        overflow: TextOverflow.visible,
+        maxLines: null,
       );
     }
     
@@ -274,68 +302,413 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     );
   }
 
-  // Removed tap handling - drag-only interaction
+  // Element interaction handlers
+  void _onElementTap(VisionBoardElement element) {
+    switch (widget.selectedTool) {
+      case VisionBoardTool.select:
+      case VisionBoardTool.move:
+      case VisionBoardTool.resize:
+        // Select the element for move/resize operations
+        setState(() {
+          selectedElementId = element.id;
+        });
+        break;
+      case VisionBoardTool.delete:
+        // Delete the element immediately
+        _deleteElement(element);
+        break;
+      case VisionBoardTool.rotate:
+        // Select for rotation (could add rotation gesture here)
+        setState(() {
+          selectedElementId = element.id;
+        });
+        break;
+    }
+  }
 
-  // Removed selection logic - drag-only interaction
+  void _deleteElement(VisionBoardElement element) {
+    final updatedElements = widget.board.elements.where((e) => e.id != element.id).toList();
+    final updatedBoard = widget.board.copyWith(elements: updatedElements);
+    
+    // Clear selection if we deleted the selected element
+    if (selectedElementId == element.id) {
+      selectedElementId = null;
+    }
+    
+    widget.onBoardChanged(updatedBoard);
+  }
+
+  // Visual feedback methods
+  bool _shouldShowElementBorder(VisionBoardElement element) {
+    return selectedElementId == element.id || 
+           draggingElementId == element.id ||
+           widget.selectedTool == VisionBoardTool.delete;
+  }
+
+  Color _getElementBorderColor(VisionBoardElement element) {
+    if (widget.selectedTool == VisionBoardTool.delete) {
+      return Colors.red.withOpacity(0.8);
+    } else if (selectedElementId == element.id) {
+      return AppTheme.visionBoardGradient[0];
+    } else if (draggingElementId == element.id) {
+      return AppTheme.visionBoardGradient[1];
+    }
+    return AppTheme.textMedium.withOpacity(0.3);
+  }
+
+  double _getBorderWidth(VisionBoardElement element) {
+    if (widget.selectedTool == VisionBoardTool.delete) {
+      return 3.w;
+    } else if (selectedElementId == element.id) {
+      return 2.5.w;
+    } else if (draggingElementId == element.id) {
+      return 2.w;
+    }
+    return 1.w;
+  }
+
+  List<BoxShadow> _getElementShadow(VisionBoardElement element, bool isBeingDragged) {
+    // No shadows for text elements - keep them completely clean
+    if (element is VisionBoardTextElement) {
+      return [];
+    }
+    
+    // Only apply shadows to image elements
+    if (isBeingDragged) {
+      return [
+        BoxShadow(
+          color: AppTheme.visionBoardGradient[0].withOpacity(0.4),
+          blurRadius: 20.r,
+          offset: Offset(0, 10.h),
+        ),
+        BoxShadow(
+          color: AppTheme.black.withOpacity(0.1),
+          blurRadius: 8.r,
+          offset: Offset(0, 4.h),
+        ),
+      ];
+    } else if (selectedElementId == element.id) {
+      return [
+        BoxShadow(
+          color: AppTheme.visionBoardGradient[0].withOpacity(0.2),
+          blurRadius: 12.r,
+          offset: Offset(0, 6.h),
+        ),
+      ];
+    } else if (widget.selectedTool == VisionBoardTool.delete) {
+      return [
+        BoxShadow(
+          color: Colors.red.withOpacity(0.2),
+          blurRadius: 8.r,
+          offset: Offset(0, 4.h),
+        ),
+      ];
+    }
+    return [
+      BoxShadow(
+        color: AppTheme.black.withOpacity(0.05),
+        blurRadius: 4.r,
+        offset: Offset(0, 2.h),
+      ),
+    ];
+  }
+
+  bool _shouldShowToolCursor(VisionBoardElement element) {
+    return widget.selectedTool == VisionBoardTool.delete && 
+           selectedElementId != element.id; // Don't show on selected element
+  }
+
+  Widget _buildToolCursorOverlay(VisionBoardElement element) {
+    if (widget.selectedTool == VisionBoardTool.delete) {
+      return Positioned.fill(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+          child: Center(
+            child: Container(
+              width: 40.w,
+              height: 40.w,
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.9),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.delete_rounded,
+                color: Colors.white,
+                size: 20.sp,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+    return SizedBox.shrink();
+  }
+
+  // Selection overlay with resize handles
+  Widget _buildSelectionOverlay() {
+    if (selectedElementId == null || widget.board.elements.isEmpty) {
+      return SizedBox.shrink();
+    }
+    
+    VisionBoardElement? selectedElement;
+    try {
+      selectedElement = widget.board.elements.firstWhere(
+        (e) => e.id == selectedElementId,
+      );
+    } catch (e) {
+      return SizedBox.shrink();
+    }
+
+    return Positioned(
+      left: selectedElement.position.dx - 12.w,
+      top: selectedElement.position.dy - 12.w,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+        width: selectedElement.size.width + 24.w,
+        height: selectedElement.size.height + 24.w,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: AppTheme.visionBoardGradient[0],
+            width: 2.w,
+          ),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.visionBoardGradient[0].withOpacity(0.1),
+              blurRadius: 8.r,
+              offset: Offset(0, 4.h),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            // Corner resize handles
+            _buildResizeHandle('top-left', -10.w, -10.w),
+            _buildResizeHandle('top-right', selectedElement.size.width + 4.w, -10.w),
+            _buildResizeHandle('bottom-left', -10.w, selectedElement.size.height + 4.w),
+            _buildResizeHandle('bottom-right', selectedElement.size.width + 4.w, selectedElement.size.height + 4.w),
+            
+            // Edge handles
+            _buildResizeHandle('top-center', selectedElement.size.width / 2 - 3.w, -10.w),
+            _buildResizeHandle('bottom-center', selectedElement.size.width / 2 - 3.w, selectedElement.size.height + 4.w),
+            _buildResizeHandle('left-center', -10.w, selectedElement.size.height / 2 - 3.w),
+            _buildResizeHandle('right-center', selectedElement.size.width + 4.w, selectedElement.size.height / 2 - 3.w),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResizeHandle(String handleId, double left, double top) {
+    return Positioned(
+      left: left,
+      top: top,
+      child: GestureDetector(
+        onPanStart: (details) => _onResizeStart(handleId, details),
+        onPanUpdate: (details) => _onResizeUpdate(handleId, details),
+        onPanEnd: (details) => _onResizeEnd(handleId, details),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 150),
+          width: 20.w,
+          height: 20.w,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.white,
+                AppTheme.white.withOpacity(0.95),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            border: Border.all(
+              color: AppTheme.visionBoardGradient[0],
+              width: 2.5.w,
+            ),
+            borderRadius: BorderRadius.circular(10.w),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
+                blurRadius: 8.r,
+                offset: Offset(0, 4.h),
+              ),
+              BoxShadow(
+                color: AppTheme.black.withOpacity(0.1),
+                blurRadius: 4.r,
+                offset: Offset(0, 2.h),
+              ),
+            ],
+          ),
+          child: _getResizeHandleCursor(handleId),
+        ),
+      ),
+    );
+  }
+
+  Widget _getResizeHandleCursor(String handleId) {
+    IconData icon;
+    switch (handleId) {
+      case 'top-left':
+      case 'bottom-right':
+        icon = Icons.north_west;
+        break;
+      case 'top-right':
+      case 'bottom-left':
+        icon = Icons.north_east;
+        break;
+      case 'top-center':
+      case 'bottom-center':
+        icon = Icons.north;
+        break;
+      case 'left-center':
+      case 'right-center':
+        icon = Icons.west;
+        break;
+      default:
+        icon = Icons.open_with;
+    }
+    
+    return Icon(
+      icon,
+      size: 10.sp,
+      color: AppTheme.visionBoardGradient[0],
+    );
+  }
+
+  // Resize handling
+  void _onResizeStart(String handleId, DragStartDetails details) {
+    setState(() {
+      isResizing = true;
+      resizeHandle = handleId;
+    });
+  }
+
+  void _onResizeUpdate(String handleId, DragUpdateDetails details) {
+    if (!isResizing || selectedElementId == null) return;
+
+    final selectedElement = widget.board.elements.firstWhere((e) => e.id == selectedElementId);
+    final delta = details.delta;
+    
+    Size newSize = selectedElement.size;
+    Offset newPosition = selectedElement.position;
+
+    // Calculate new size and position based on which handle is being dragged
+    switch (handleId) {
+      case 'top-left':
+        newSize = Size(
+          (selectedElement.size.width - delta.dx).clamp(50.w, double.infinity),
+          (selectedElement.size.height - delta.dy).clamp(50.h, double.infinity),
+        );
+        newPosition = Offset(
+          selectedElement.position.dx + (selectedElement.size.width - newSize.width),
+          selectedElement.position.dy + (selectedElement.size.height - newSize.height),
+        );
+        break;
+      case 'top-right':
+        newSize = Size(
+          (selectedElement.size.width + delta.dx).clamp(50.w, double.infinity),
+          (selectedElement.size.height - delta.dy).clamp(50.h, double.infinity),
+        );
+        newPosition = Offset(
+          selectedElement.position.dx,
+          selectedElement.position.dy + (selectedElement.size.height - newSize.height),
+        );
+        break;
+      case 'bottom-left':
+        newSize = Size(
+          (selectedElement.size.width - delta.dx).clamp(50.w, double.infinity),
+          (selectedElement.size.height + delta.dy).clamp(50.h, double.infinity),
+        );
+        newPosition = Offset(
+          selectedElement.position.dx + (selectedElement.size.width - newSize.width),
+          selectedElement.position.dy,
+        );
+        break;
+      case 'bottom-right':
+        newSize = Size(
+          (selectedElement.size.width + delta.dx).clamp(50.w, double.infinity),
+          (selectedElement.size.height + delta.dy).clamp(50.h, double.infinity),
+        );
+        break;
+      case 'top-center':
+        newSize = Size(
+          selectedElement.size.width,
+          (selectedElement.size.height - delta.dy).clamp(50.h, double.infinity),
+        );
+        newPosition = Offset(
+          selectedElement.position.dx,
+          selectedElement.position.dy + (selectedElement.size.height - newSize.height),
+        );
+        break;
+      case 'bottom-center':
+        newSize = Size(
+          selectedElement.size.width,
+          (selectedElement.size.height + delta.dy).clamp(50.h, double.infinity),
+        );
+        break;
+      case 'left-center':
+        newSize = Size(
+          (selectedElement.size.width - delta.dx).clamp(50.w, double.infinity),
+          selectedElement.size.height,
+        );
+        newPosition = Offset(
+          selectedElement.position.dx + (selectedElement.size.width - newSize.width),
+          selectedElement.position.dy,
+        );
+        break;
+      case 'right-center':
+        newSize = Size(
+          (selectedElement.size.width + delta.dx).clamp(50.w, double.infinity),
+          selectedElement.size.height,
+        );
+        break;
+    }
+
+    _updateElement(selectedElement, size: newSize, position: newPosition);
+  }
+
+  void _onResizeEnd(String handleId, DragEndDetails details) {
+    setState(() {
+      isResizing = false;
+      resizeHandle = null;
+    });
+  }
 
   void _onElementPanStart(VisionBoardElement element, DragStartDetails details) {
-    print('🎯 Pan start for element: ${element.id}');
-    
-    // Always allow dragging - no tool selection needed
-    setState(() {
-      isDragging = true;
-      draggingElementId = element.id;
-    });
-    
-    print('✅ Started dragging element: ${element.id}');
+    // Only allow dragging with move tool or when element is selected
+    if (widget.selectedTool == VisionBoardTool.move || 
+        (widget.selectedTool == VisionBoardTool.select && selectedElementId == element.id)) {
+      setState(() {
+        isDragging = true;
+        draggingElementId = element.id;
+        selectedElementId = element.id; // Select the element being dragged
+      });
+    }
   }
 
   void _onElementPanUpdate(VisionBoardElement element, DragUpdateDetails details) {
-    // Simple: if we're dragging this element, update its position
+    // Only update position if we're in drag mode
     if (isDragging && draggingElementId == element.id) {
       final delta = details.delta;
       final newPosition = element.position + delta;
       _updateElementPosition(element, newPosition);
     }
   }
-  
-  bool _canDragElement(VisionBoardElement element) {
-    // Simple check: currently dragging this element
-    return isDragging && draggingElementId == element.id;
-  }
 
   void _onElementPanEnd(VisionBoardElement element, DragEndDetails details) {
-    print('🛑 Pan end for element: ${element.id}');
-    
-    // Clear drag states
     if (mounted) {
       setState(() {
         isDragging = false;
         draggingElementId = null;
       });
-      
-      print('✅ Finished dragging element: ${element.id}');
     }
   }
 
   // Removed resize and rotation functionality - drag-only interaction
 
-  VisionBoardElement? _getElementAtPosition(Offset position) {
-    for (int i = widget.board.elements.length - 1; i >= 0; i--) {
-      final element = widget.board.elements[i];
-      final rect = Rect.fromLTWH(
-        element.position.dx,
-        element.position.dy,
-        element.size.width,
-        element.size.height,
-      );
-      
-      if (rect.contains(position)) {
-        return element;
-      }
-    }
-    return null;
-  }
 
   // Removed selection state methods - drag-only interaction
 

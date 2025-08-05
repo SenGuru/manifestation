@@ -33,7 +33,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   late VisionBoard currentBoard;
   VisionBoardTool selectedTool = VisionBoardTool.select;
   bool showToolbar = true;
-  bool isFullscreen = false;
   List<VisionBoard> undoStack = [];
   int undoIndex = -1;
   bool hasUnsavedChanges = false;
@@ -184,7 +183,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         child: Column(
           children: [
             // Top header
-            if (!isFullscreen) _buildHeader(),
+            _buildHeader(),
             
             // Main canvas area
             Expanded(
@@ -192,24 +191,24 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 children: [
                   _buildCanvasArea(),
                   
-                  // Quick actions
-                  if (!isFullscreen) _buildQuickActions(),
-                  
-                  // Fullscreen toggle
-                  _buildFullscreenToggle(),
+                  // Quick actions (only background color picker)
+                  _buildQuickActions(),
                 ],
               ),
             ),
             
-            // Floating toolbar
+            // Floating toolbar with better positioning
             AnimatedBuilder(
               animation: _toolbarAnimation,
               builder: (context, child) {
                 return Transform.translate(
-                  offset: Offset(0, (1 - _toolbarAnimation.value) * 100.h),
+                  offset: Offset(0, (1 - _toolbarAnimation.value) * 120.h),
                   child: Opacity(
                     opacity: _toolbarAnimation.value,
-                    child: _buildFloatingToolbar(),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12.h), // Add safe area
+                      child: _buildFloatingToolbar(),
+                    ),
                   ),
                 );
               },
@@ -222,32 +221,56 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Widget _buildCanvasArea() {
     return Container(
-      margin: EdgeInsets.all(isFullscreen ? 0 : 16.w),
+      margin: EdgeInsets.only(
+        left: 20.w,
+        right: 20.w,
+        top: 12.h,
+        bottom: 8.h, // Less bottom margin to prevent cutoff
+      ),
       decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
-        boxShadow: isFullscreen ? null : [
+        gradient: LinearGradient(
+          colors: [
+            currentBoard.backgroundColor,
+            currentBoard.backgroundColor.withOpacity(0.98),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(28.r),
+        border: Border.all(
+          color: AppTheme.textMedium.withOpacity(0.08),
+          width: 1.w,
+        ),
+        boxShadow: [
           BoxShadow(
-            color: AppTheme.black.withOpacity(0.1),
-            blurRadius: 20.r,
-            offset: Offset(0, 10.h),
+            color: AppTheme.black.withOpacity(0.08),
+            blurRadius: 25.r,
+            offset: Offset(0, 12.h),
+          ),
+          BoxShadow(
+            color: AppTheme.visionBoardGradient[0].withOpacity(0.05),
+            blurRadius: 40.r,
+            offset: Offset(0, 20.h),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
+        borderRadius: BorderRadius.circular(28.r),
         child: Stack(
           children: [
-            // Canvas
-            VisionBoardCanvas(
-              board: currentBoard,
-              selectedTool: selectedTool,
-              onBoardChanged: _onBoardChanged,
+            // Canvas with padding to prevent cutoff
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: VisionBoardCanvas(
+                  board: currentBoard,
+                  selectedTool: selectedTool,
+                  onBoardChanged: _onBoardChanged,
+                ),
+              ),
             ),
             
-            // Canvas overlay controls
-            if (currentBoard.elements.isNotEmpty)
-              _buildCanvasOverlay(),
+            // Canvas overlay removed - cleaner interface
           ],
         ),
       ),
@@ -399,32 +422,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       right: 20.w,
       child: Column(
         children: [
-          // Templates
-          _buildQuickActionButton(
-            icon: Icons.grid_view,
-            onTap: _showTemplates,
-            tooltip: 'Templates',
-            color: AppTheme.accentGold,
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Backgrounds
+          // Backgrounds only
           _buildQuickActionButton(
             icon: Icons.color_lens,
             onTap: _showBackgrounds,
             tooltip: 'Backgrounds',
             color: AppTheme.visionBoardGradient[0],
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Export
-          _buildQuickActionButton(
-            icon: Icons.share,
-            onTap: _showExportOptions,
-            tooltip: 'Share',
-            color: AppTheme.journalGradient[0],
           ),
         ],
       ),
@@ -458,75 +461,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  Widget _buildFullscreenToggle() {
-    return Positioned(
-      top: 20.h,
-      left: 20.w,
-      child: GestureDetector(
-        onTap: _toggleFullscreen,
-        child: Container(
-          width: 48.w,
-          height: 48.h,
-          decoration: BoxDecoration(
-            color: AppTheme.cardBackground.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(
-              color: AppTheme.textMedium.withOpacity(0.1),
-            ),
-          ),
-          child: Icon(
-            isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
-            color: AppTheme.textLight,
-            size: 20.sp,
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildCanvasOverlay() {
-    return Positioned(
-      top: 16.h,
-      left: 16.w,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: AppTheme.black.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.dashboard,
-              color: AppTheme.white,
-              size: 14.sp,
-            ),
-            SizedBox(width: 6.w),
-            Text(
-              '${currentBoard.elements.length} items',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppTheme.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  void _selectTool(VisionBoardTool tool) {
-    setState(() {
-      selectedTool = tool;
-    });
-    
-    // Animate tool selection
-    _zoomController.forward().then((_) {
-      _zoomController.reverse();
-    });
-  }
 
   void _onBoardChanged(VisionBoard newBoard) {
     setState(() {
@@ -851,37 +787,42 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Widget _buildTextEditorSheet() {
     return StatefulBuilder(
-      builder: (context, setModalState) => Container(
-        height: MediaQuery.of(context).size.height * 0.75,
-        margin: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppTheme.cardBackground,
-              AppTheme.cardBackground.withOpacity(0.95),
+      builder: (context, setModalState) => GestureDetector(
+        onTap: () {
+          // Dismiss keyboard when tapping anywhere on the sheet
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          margin: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.cardBackground,
+                AppTheme.cardBackground.withOpacity(0.95),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(
+              color: Color(0xFF6C63FF).withOpacity(0.2),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0xFF6C63FF).withOpacity(0.15),
+                blurRadius: 30.r,
+                offset: Offset(0, 15.h),
+              ),
+              BoxShadow(
+                color: AppTheme.black.withOpacity(0.1),
+                blurRadius: 20.r,
+                offset: Offset(0, 8.h),
+              ),
             ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
           ),
-          borderRadius: BorderRadius.circular(28.r),
-          border: Border.all(
-            color: Color(0xFF6C63FF).withOpacity(0.2),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF6C63FF).withOpacity(0.15),
-              blurRadius: 30.r,
-              offset: Offset(0, 15.h),
-            ),
-            BoxShadow(
-              color: AppTheme.black.withOpacity(0.1),
-              blurRadius: 20.r,
-              offset: Offset(0, 8.h),
-            ),
-          ],
-        ),
-        child: Column(
+          child: Column(
           children: [
             // Modern handle with gradient
             Container(
@@ -1187,6 +1128,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             ),
           ],
         ),
+        ),
       ),
     );
   }
@@ -1431,17 +1373,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     }
   }
 
-  void _toggleFullscreen() {
-    setState(() {
-      isFullscreen = !isFullscreen;
-    });
-    
-    if (isFullscreen) {
-      _toolbarController.reverse();
-    } else {
-      _toolbarController.forward();
-    }
-  }
 
   void _editTitle() {
     final titleController = TextEditingController(text: currentBoard.title);
@@ -1531,7 +1462,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       
       // Initialize service
       final visionBoardService = VisionBoardService();
-      print('🔍 DEBUG: Initializing vision board service...');
+      print('🔍 DEBUG: Initializing vi3sion board service...');
       await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
       print('🔍 DEBUG: Service initialized successfully');
       
@@ -1672,166 +1603,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     // Implementation commented out for XML-only mode
   } */
 
-  void _showTemplates() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => _buildTemplateSheet(),
-    );
-  }
-
-  Widget _buildTemplateSheet() {
-    final templates = VisionBoardTemplate.getDefaultTemplates();
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      margin: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(24.r),
-      ),
-      child: Column(
-        children: [
-          // Handle
-          Container(
-            width: 40.w,
-            height: 4.h,
-            margin: EdgeInsets.only(top: 12.h),
-            decoration: BoxDecoration(
-              color: AppTheme.textMedium.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2.r),
-            ),
-          ),
-          
-          // Header
-          Padding(
-            padding: EdgeInsets.all(24.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Choose Template',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 32.w,
-                    height: 32.h,
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      color: AppTheme.textMedium,
-                      size: 18.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          // Template list
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              itemCount: templates.length,
-              itemBuilder: (context, index) {
-                final template = templates[index];
-                return GestureDetector(
-                  onTap: () {
-                    _applyTemplate(template);
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 16.h),
-                    padding: EdgeInsets.all(20.w),
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium,
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(
-                        color: AppTheme.textMedium.withOpacity(0.1),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48.w,
-                          height: 48.h,
-                          decoration: BoxDecoration(
-                            color: template.color.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Icon(
-                            template.icon,
-                            color: template.color,
-                            size: 24.sp,
-                          ),
-                        ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                template.name,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.textLight,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                template.description,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: AppTheme.textMedium,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppTheme.textMedium.withOpacity(0.6),
-                          size: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          
-          SizedBox(height: 20.h),
-        ],
-      ),
-    );
-  }
-
-  void _applyTemplate(VisionBoardTemplate template) {
-    setState(() {
-      currentBoard = VisionBoard.fromTemplate(template);
-    });
-    _saveToUndoStack();
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${template.name} template applied'),
-        backgroundColor: AppTheme.accentMint,
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
 
   Widget _buildBackgroundSheet() {
     final backgroundColors = [
@@ -1988,10 +1759,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  void _showExportOptions() {
-    // TODO: Implement export
-    print('Show export options');
-  }
 
   void _handleBackButton() {
     if (hasUnsavedChanges) {
@@ -2090,37 +1857,42 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     String? _previewUrl;
     
     return StatefulBuilder(
-      builder: (context, setModalState) => Container(
-        height: MediaQuery.of(context).size.height * 0.75,
-        margin: EdgeInsets.all(16.w),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppTheme.cardBackground,
-              AppTheme.cardBackground.withOpacity(0.95),
+      builder: (context, setModalState) => GestureDetector(
+        onTap: () {
+          // Dismiss keyboard when tapping anywhere on the sheet
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          margin: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.cardBackground,
+                AppTheme.cardBackground.withOpacity(0.95),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(
+              color: AppTheme.journalGradient[0].withOpacity(0.2),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.journalGradient[0].withOpacity(0.15),
+                blurRadius: 30.r,
+                offset: Offset(0, 15.h),
+              ),
+              BoxShadow(
+                color: AppTheme.black.withOpacity(0.1),
+                blurRadius: 20.r,
+                offset: Offset(0, 8.h),
+              ),
             ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
           ),
-          borderRadius: BorderRadius.circular(28.r),
-          border: Border.all(
-            color: AppTheme.journalGradient[0].withOpacity(0.2),
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.journalGradient[0].withOpacity(0.15),
-              blurRadius: 30.r,
-              offset: Offset(0, 15.h),
-            ),
-            BoxShadow(
-              color: AppTheme.black.withOpacity(0.1),
-              blurRadius: 20.r,
-              offset: Offset(0, 8.h),
-            ),
-          ],
-        ),
-        child: Column(
+          child: Column(
           children: [
             // Handle
             Container(
@@ -2461,6 +2233,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             ),
           ],
         ),
+      ),
       ),
     );
   }
