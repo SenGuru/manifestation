@@ -462,7 +462,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     );
   }
 
-  Widget _buildPricingOption(
+Widget _buildPricingOption(
     String planId,
     String title,
     String price,
@@ -471,117 +471,113 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     String? savings,
   }) {
     final isSelected = _selectedPlan == planId;
-    
+
     return GestureDetector(
       onTap: () => setState(() => _selectedPlan = planId),
-      child: Container(
-        margin: EdgeInsets.only(top: isPopular ? 8.h : 0), // Add top margin for badge
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 200),
-          width: double.infinity,
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: isSelected 
-                ? AppTheme.accentGold.withValues(alpha: 0.1) 
-                : AppTheme.cardBackground,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(
-              color: isSelected 
-                  ? AppTheme.accentGold 
-                  : AppTheme.textSecondary.withValues(alpha: 0.1),
-              width: isSelected ? 2 : 1,
-            ),
+      // The outer margin is no longer needed as the new layout prevents the badge from being cut off.
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? AppTheme.accentGold.withOpacity(0.1)
+              : AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isSelected
+                ? AppTheme.accentGold
+                : AppTheme.textSecondary.withOpacity(0.1),
+            width: isSelected ? 2 : 1.5,
           ),
-        child: Stack(
+        ),
+        child: Row(
           children: [
-            Row(
+            // Selection indicator (no changes here)
+            Container(
+              width: 24.w,
+              height: 24.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected
+                      ? AppTheme.accentGold
+                      : AppTheme.textSecondary.withOpacity(0.3),
+                  width: 2,
+                ),
+                color: isSelected ? AppTheme.accentGold : Colors.transparent,
+              ),
+              child: isSelected
+                  ? Icon(
+                      Icons.check,
+                      color: AppTheme.white,
+                      size: 16.sp,
+                    )
+                  : null,
+            ),
+
+            SizedBox(width: 16.w),
+
+            // Title and Period - The `Expanded` widget has been removed to prevent wrapping.
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Selection indicator
-                Container(
-                  width: 24.w,
-                  height: 24.h,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected 
-                          ? AppTheme.accentGold 
-                          : AppTheme.textSecondary.withValues(alpha: 0.3),
-                      width: 2,
-                    ),
-                    color: isSelected ? AppTheme.accentGold : Colors.transparent,
-                  ),
-                  child: isSelected ? Icon(
-                    Icons.check,
-                    color: AppTheme.white,
-                    size: 16.sp,
-                  ) : null,
-                ),
-                
-                SizedBox(width: 16.w),
-                
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textPrimary,
-                        ),
-                      ),
-                      
-                      SizedBox(height: 4.h),
-                      
-                      Text(
-                        period,
-                        style: TextStyle(
-                          fontSize: 13.sp,
-                          color: AppTheme.textSecondary,
-                        ),
-                      ),
-                    ],
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
-                
-                Padding(
-                  padding: EdgeInsets.only(right: isPopular ? 50.w : 0), // Add spacing when badge is present
-                  child: Text(
-                    price,
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.textPrimary,
-                    ),
+                SizedBox(height: 4.h),
+                Text(
+                  period,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
             ),
-            
-            // Best Value badge
-            if (isPopular)
-              Positioned(
-                top: 4.h,
-                right: 4.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: AppTheme.accentGold,
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    savings ?? 'BEST VALUE',
-                    style: TextStyle(
-                      fontSize: 8.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.black,
+
+            // Spacer pushes the price and badge to the end of the row.
+            Spacer(),
+
+            // Price and Badge are now grouped together in a Column for proper alignment.
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isPopular)
+                  Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppTheme.accentGold,
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      savings ?? 'BEST VALUE',
+                      style: TextStyle(
+                        fontSize: 9.sp, // Slightly larger for readability
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.black,
+                      ),
                     ),
                   ),
+                if (isPopular) SizedBox(height: 6.h), // Spacing between badge and price
+                Text(
+                  price,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
-              ),
+              ],
+            ),
           ],
-        ),
         ),
       ),
     );
