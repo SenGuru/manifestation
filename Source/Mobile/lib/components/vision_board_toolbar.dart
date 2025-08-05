@@ -6,11 +6,10 @@ import '../constants/app_theme.dart';
 class VisionBoardToolbar extends StatelessWidget {
   final VisionBoardTool selectedTool;
   final Function(VisionBoardTool) onToolSelected;
-  final VoidCallback onAddImage;
   final VoidCallback onAddText;
-  final VoidCallback onUndo;
-  final VoidCallback onRedo;
-  final VoidCallback onSave;
+  final VoidCallback onAddImage;
+  final VoidCallback? onUndo;
+  final VoidCallback? onRedo;
   final bool canUndo;
   final bool canRedo;
 
@@ -18,11 +17,10 @@ class VisionBoardToolbar extends StatelessWidget {
     Key? key,
     required this.selectedTool,
     required this.onToolSelected,
-    required this.onAddImage,
     required this.onAddText,
-    required this.onUndo,
-    required this.onRedo,
-    required this.onSave,
+    required this.onAddImage,
+    this.onUndo,
+    this.onRedo,
     this.canUndo = false,
     this.canRedo = false,
   }) : super(key: key);
@@ -30,101 +28,142 @@ class VisionBoardToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.w),
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: AppTheme.textMedium.withOpacity(0.2),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.black.withOpacity(0.1),
-            blurRadius: 10.r,
-            offset: Offset(0, 4.h),
+      margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 14.h),
+        decoration: BoxDecoration(
+          color: AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(24.r),
+          border: Border.all(
+            color: AppTheme.visionBoardGradient[0].withOpacity(0.15),
+            width: 1,
           ),
-        ],
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.black.withOpacity(0.12),
+              blurRadius: 24.r,
+              offset: Offset(0, 12.h),
+            ),
+          ],
+        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            // Add Image
-            _buildActionButton(
-              icon: Icons.add_photo_alternate,
-              label: 'Image',
-              onTap: onAddImage,
-              color: AppTheme.visionBoardGradient[0],
-              isAction: true,
-            ),
-            
-            SizedBox(width: 8.w),
-            
-            // Add Text
-            _buildActionButton(
-              icon: Icons.text_fields,
-              label: 'Text',
-              onTap: onAddText,
-              color: AppTheme.accentGold,
-              isAction: true,
-            ),
-            
-            // Tool separator
-            Container(
-              width: 1,
-              height: 30.h,
-              margin: EdgeInsets.symmetric(horizontal: 16.w),
-              color: AppTheme.textMedium.withOpacity(0.2),
-            ),
-            
-            // Tool selector
-            _buildToolSelector(),
-            
-            // Tool separator
-            Container(
-              width: 1,
-              height: 30.h,
-              margin: EdgeInsets.symmetric(horizontal: 16.w),
-              color: AppTheme.textMedium.withOpacity(0.2),
-            ),
-            
-            // Undo
-            _buildActionButton(
-              icon: Icons.undo,
-              label: 'Undo',
+            // Undo arrow
+            _buildArrowButton(
+              icon: Icons.undo_rounded,
               onTap: canUndo ? onUndo : null,
-              color: canUndo ? AppTheme.textLight : AppTheme.textMedium,
               isEnabled: canUndo,
             ),
             
-            SizedBox(width: 8.w),
-            
-            // Redo
+            // Add Image button
             _buildActionButton(
-              icon: Icons.redo,
-              label: 'Redo',
+              icon: Icons.add_photo_alternate_rounded,
+              label: 'Image',
+              onTap: onAddImage,
+              color: AppTheme.accentGold,
+            ),
+            
+            // Add Text button - redesigned
+            _buildTextButton(),
+            
+            // Divider
+            Container(
+              width: 1.5.w,
+              height: 40.h,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppTheme.visionBoardGradient[0].withOpacity(0.2),
+                    AppTheme.visionBoardGradient[1].withOpacity(0.2),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(1.r),
+              ),
+            ),
+            
+            // Move tool
+            _buildToolButton(
+              icon: Icons.open_in_full_rounded,
+              label: 'Move',
+              isSelected: selectedTool == VisionBoardTool.move,
+              onTap: () => onToolSelected(VisionBoardTool.move),
+            ),
+            
+            // Resize tool
+            _buildToolButton(
+              icon: Icons.aspect_ratio_rounded,
+              label: 'Resize',
+              isSelected: selectedTool == VisionBoardTool.resize,
+              onTap: () => onToolSelected(VisionBoardTool.resize),
+            ),
+            
+            // Delete tool
+            _buildToolButton(
+              icon: Icons.delete_outline_rounded,
+              label: 'Delete',
+              isSelected: selectedTool == VisionBoardTool.delete,
+              onTap: () => onToolSelected(VisionBoardTool.delete),
+            ),
+            
+            // Redo arrow
+            _buildArrowButton(
+              icon: Icons.redo_rounded,
               onTap: canRedo ? onRedo : null,
-              color: canRedo ? AppTheme.textLight : AppTheme.textMedium,
               isEnabled: canRedo,
             ),
-            
-            // Tool separator
-            Container(
-              width: 1,
-              height: 30.h,
-              margin: EdgeInsets.symmetric(horizontal: 16.w),
-              color: AppTheme.textMedium.withOpacity(0.2),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildToolButton({
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+        decoration: BoxDecoration(
+          gradient: isSelected 
+              ? LinearGradient(
+                  colors: AppTheme.visionBoardGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : Colors.transparent,
+          borderRadius: BorderRadius.circular(12.r),
+          border: isSelected 
+              ? null
+              : Border.all(
+                  color: AppTheme.textMedium.withOpacity(0.1),
+                  width: 1,
+                ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? AppTheme.white : AppTheme.textMedium,
+              size: 20.sp,
             ),
-            
-            // Save
-            _buildActionButton(
-              icon: Icons.save,
-              label: 'Save',
-              onTap: onSave,
-              color: AppTheme.accentMint,
-              isAction: true,
+            SizedBox(height: 4.h),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10.sp,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                color: isSelected ? AppTheme.white : AppTheme.textMedium,
+              ),
             ),
           ],
         ),
@@ -135,51 +174,43 @@ class VisionBoardToolbar extends StatelessWidget {
   Widget _buildActionButton({
     required IconData icon,
     required String label,
-    required VoidCallback? onTap,
+    required VoidCallback onTap,
     required Color color,
-    bool isSelected = false,
-    bool isAction = false,
-    bool isEnabled = true,
   }) {
     return GestureDetector(
-      onTap: isEnabled ? onTap : null,
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? color.withOpacity(0.15) 
-              : (isAction ? color.withOpacity(0.1) : Colors.transparent),
-          borderRadius: BorderRadius.circular(10.r),
-          border: isSelected
-              ? Border.all(color: color.withOpacity(0.3))
-              : null,
+          gradient: LinearGradient(
+            colors: [color, color.withOpacity(0.8)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              blurRadius: 8.r,
+              offset: Offset(0, 4.h),
+            ),
+          ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              padding: EdgeInsets.all(isAction ? 4.w : 2.w),
-              decoration: BoxDecoration(
-                color: isAction ? color.withOpacity(0.1) : Colors.transparent,
-                borderRadius: BorderRadius.circular(6.r),
-              ),
-              child: Icon(
-                icon,
-                color: isEnabled ? color : color.withOpacity(0.4),
-                size: isAction ? 22.sp : 20.sp,
-              ),
+            Icon(
+              icon,
+              color: AppTheme.white,
+              size: 18.sp,
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: 3.h),
             Text(
               label,
               style: TextStyle(
-                fontSize: 10.sp,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                color: isEnabled 
-                    ? (isSelected ? color : AppTheme.textMedium) 
-                    : AppTheme.textMedium.withOpacity(0.4),
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.white,
               ),
             ),
           ],
@@ -188,57 +219,61 @@ class VisionBoardToolbar extends StatelessWidget {
     );
   }
 
-  Widget _buildToolSelector() {
+  Widget _buildTextButton() {
     return GestureDetector(
-      onTap: () => _showToolSelector(),
+      onTap: onAddText,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              AppTheme.journalGradient[0].withOpacity(0.1),
-              AppTheme.goalTrackerGradient[0].withOpacity(0.1),
+              Color(0xFF6C63FF),
+              Color(0xFF5A52E8),
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(10.r),
-          border: Border.all(
-            color: AppTheme.journalGradient[0].withOpacity(0.3),
-          ),
+          borderRadius: BorderRadius.circular(12.r),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF6C63FF).withOpacity(0.4),
+              blurRadius: 12.r,
+              offset: Offset(0, 6.h),
+            ),
+          ],
         ),
-        child: Row(
+        child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Column(
-              mainAxisSize: MainAxisSize.min,
+            Stack(
+              alignment: Alignment.center,
               children: [
                 Container(
-                  padding: EdgeInsets.all(4.w),
+                  width: 22.w,
+                  height: 16.h,
                   decoration: BoxDecoration(
-                    color: AppTheme.journalGradient[0].withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Icon(
-                    selectedTool.icon,
-                    color: AppTheme.journalGradient[0],
-                    size: 22.sp,
+                    color: AppTheme.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(3.r),
                   ),
                 ),
-                SizedBox(height: 4.h),
                 Text(
-                  selectedTool.name,
+                  'Aa',
                   style: TextStyle(
-                    fontSize: 10.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.journalGradient[0],
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.white,
                   ),
                 ),
               ],
             ),
-            SizedBox(width: 6.w),
-            Icon(
-              Icons.keyboard_arrow_down,
-              color: AppTheme.journalGradient[0],
-              size: 16.sp,
+            SizedBox(height: 3.h),
+            Text(
+              'Text',
+              style: TextStyle(
+                fontSize: 9.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.white,
+              ),
             ),
           ],
         ),
@@ -246,10 +281,39 @@ class VisionBoardToolbar extends StatelessWidget {
     );
   }
 
-  void _showToolSelector() {
-    // This will be called from the parent widget
-    // We need to pass the context through
+  Widget _buildArrowButton({
+    required IconData icon,
+    required VoidCallback? onTap,
+    required bool isEnabled,
+  }) {
+    return GestureDetector(
+      onTap: isEnabled ? onTap : null,
+      child: Container(
+        width: 36.w,
+        height: 36.h,
+        decoration: BoxDecoration(
+          color: isEnabled 
+              ? AppTheme.visionBoardGradient[0].withOpacity(0.1)
+              : AppTheme.textMedium.withOpacity(0.05),
+          borderRadius: BorderRadius.circular(18.r),
+          border: Border.all(
+            color: isEnabled 
+                ? AppTheme.visionBoardGradient[0].withOpacity(0.3)
+                : AppTheme.textMedium.withOpacity(0.1),
+            width: 1,
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: isEnabled 
+              ? AppTheme.visionBoardGradient[0]
+              : AppTheme.textMedium.withOpacity(0.3),
+          size: 18.sp,
+        ),
+      ),
+    );
   }
+
 }
 
 // Extension to add the missing field to toolbar

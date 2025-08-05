@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
+import '../services/in_app_purchase_service.dart';
 
 class PremiumUpgradeDialog extends StatefulWidget {
   final String feature;
   final String customMessage;
   final VoidCallback? onUpgrade;
+  // Fixed text sizing, overflow, badge cutoff, and added spacing - v4
 
   const PremiumUpgradeDialog({
     Key? key,
@@ -22,8 +24,14 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     with TickerProviderStateMixin {
   late AnimationController _scaleController;
   late AnimationController _shimmerController;
+  late AnimationController _transitionController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _shimmerAnimation;
+  
+  final InAppPurchaseService _iapService = InAppPurchaseService();
+  bool _showPricing = false;
+  bool _isPurchasing = false;
+  String _selectedPlan = 'yearly'; // Default to yearly for better value
 
   @override
   void initState() {
@@ -39,6 +47,11 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
       vsync: this,
     )..repeat();
     
+    _transitionController = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+    
     _scaleAnimation = CurvedAnimation(
       parent: _scaleController,
       curve: Curves.easeOutBack,
@@ -52,13 +65,16 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
       curve: Curves.easeInOut,
     ));
     
+    
     _scaleController.forward();
+    _iapService.initialize();
   }
 
   @override
   void dispose() {
     _scaleController.dispose();
     _shimmerController.dispose();
+    _transitionController.dispose();
     super.dispose();
   }
 
@@ -96,8 +112,61 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildHeader(),
-              _buildFeaturesList(),
-              _buildActionButtons(),
+              
+              // Content with smooth transition
+              Flexible(
+                child: Container(
+                  constraints: BoxConstraints(
+                    maxHeight: 480.h, // Reduced height to prevent overflow
+                  ),
+                  child: Stack(
+                    children: [
+                    // Original content
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 600),
+                      curve: Curves.easeInOutCubic,
+                      left: _showPricing ? -400.w : 0,
+                      right: _showPricing ? 400.w : 0,
+                      top: 0,
+                      child: AnimatedOpacity(
+                        opacity: _showPricing ? 0.0 : 1.0,
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildFeaturesList(),
+                            _buildActionButtons(),
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    // Pricing content
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 600),
+                      curve: Curves.easeInOutCubic,
+                      left: _showPricing ? 0 : 400.w,
+                      right: _showPricing ? 0 : -400.w,
+                      top: 0,
+                      child: AnimatedOpacity(
+                        opacity: _showPricing ? 1.0 : 0.0,
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.easeInOut,
+                        child: Container(
+                          constraints: BoxConstraints(
+                            maxHeight: 440.h, // Reduced pricing content height
+                          ),
+                          child: SingleChildScrollView(
+                            child: _buildPricingContent(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -187,7 +256,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     final features = [
       {'icon': '✨', 'text': 'Unlimited affirmations & goals'},
       {'icon': '🎯', 'text': 'Advanced meditation sessions'},
-      {'icon': '🔮', 'text': 'Custom vision boards'},
+      {'icon': '🔮', 'text': 'Unlimited Vision Boards'},
       {'icon': '📊', 'text': 'Detailed analytics & insights'},
     ];
 
@@ -215,7 +284,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     final features = [
       {'icon': '✨', 'text': 'Unlimited affirmations & goals'},
       {'icon': '🎯', 'text': 'Advanced meditation sessions'},
-      {'icon': '🔮', 'text': 'Custom vision boards'},
+      {'icon': '🔮', 'text': 'Unlimited Vision Boards'},
       {'icon': '📊', 'text': 'Detailed analytics & insights'},
     ];
     
@@ -266,14 +335,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
             width: double.infinity,
             height: 56.h,
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-                if (widget.onUpgrade != null) {
-                  widget.onUpgrade!();
-                } else {
-                  _handleUpgrade(context);
-                }
-              },
+              onPressed: _showPricingOptions,
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.accentGold,
                 foregroundColor: AppTheme.black,
@@ -330,30 +392,329 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     );
   }
 
-  void _handleUpgrade(BuildContext context) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(Icons.rocket_launch_rounded, color: AppTheme.white, size: 20.sp),
-            SizedBox(width: 12.w),
-            Text(
-              'Premium upgrade coming soon!',
-              style: TextStyle(
-                color: AppTheme.white,
-                fontWeight: FontWeight.w500,
-              ),
+  void _showPricingOptions() {
+    setState(() {
+      _showPricing = true;
+    });
+  }
+
+  void _goBackToFeatures() {
+    setState(() {
+      _showPricing = false;
+    });
+  }
+
+  Widget _buildPricingContent() {
+    return Padding(
+      padding: EdgeInsets.all(24.w),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            'Choose Your Plan',
+            style: TextStyle(
+              fontSize: 18.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
             ),
-          ],
-        ),
-        backgroundColor: AppTheme.accentGold,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        margin: EdgeInsets.all(16.w),
+          ),
+          
+          SizedBox(height: 24.h),
+          
+          // Monthly Plan
+          _buildPricingOption(
+            'monthly',
+            'Monthly Plan',
+            '\$4.99',
+            'per month',
+            false,
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // Yearly Plan (Best Value)
+          _buildPricingOption(
+            'yearly',
+            'Yearly Plan',
+            '\$49.99',
+            'per year',
+            true,
+            savings: 'Save 17%',
+          ),
+          
+          SizedBox(height: 20.h),
+          
+          // Action buttons for pricing
+          _buildPricingActionButtons(),
+          
+          SizedBox(height: 12.h),
+          
+          Text(
+            'Cancel anytime. No hidden fees.',
+            style: TextStyle(
+              fontSize: 11.sp,
+              color: AppTheme.textTertiary,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
+  }
+
+  Widget _buildPricingOption(
+    String planId,
+    String title,
+    String price,
+    String period,
+    bool isPopular, {
+    String? savings,
+  }) {
+    final isSelected = _selectedPlan == planId;
+    
+    return GestureDetector(
+      onTap: () => setState(() => _selectedPlan = planId),
+      child: Container(
+        margin: EdgeInsets.only(top: isPopular ? 8.h : 0), // Add top margin for badge
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          width: double.infinity,
+          padding: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            color: isSelected 
+                ? AppTheme.accentGold.withValues(alpha: 0.1) 
+                : AppTheme.cardBackground,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: isSelected 
+                  ? AppTheme.accentGold 
+                  : AppTheme.textSecondary.withValues(alpha: 0.1),
+              width: isSelected ? 2 : 1,
+            ),
+          ),
+        child: Stack(
+          children: [
+            Row(
+              children: [
+                // Selection indicator
+                Container(
+                  width: 24.w,
+                  height: 24.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isSelected 
+                          ? AppTheme.accentGold 
+                          : AppTheme.textSecondary.withValues(alpha: 0.3),
+                      width: 2,
+                    ),
+                    color: isSelected ? AppTheme.accentGold : Colors.transparent,
+                  ),
+                  child: isSelected ? Icon(
+                    Icons.check,
+                    color: AppTheme.white,
+                    size: 16.sp,
+                  ) : null,
+                ),
+                
+                SizedBox(width: 16.w),
+                
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.textPrimary,
+                        ),
+                      ),
+                      
+                      SizedBox(height: 4.h),
+                      
+                      Text(
+                        period,
+                        style: TextStyle(
+                          fontSize: 13.sp,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                Padding(
+                  padding: EdgeInsets.only(right: isPopular ? 50.w : 0), // Add spacing when badge is present
+                  child: Text(
+                    price,
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
+            // Best Value badge
+            if (isPopular)
+              Positioned(
+                top: 4.h,
+                right: 4.w,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentGold,
+                    borderRadius: BorderRadius.circular(6.r),
+                  ),
+                  child: Text(
+                    savings ?? 'BEST VALUE',
+                    style: TextStyle(
+                      fontSize: 8.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.black,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPricingActionButtons() {
+    return Column(
+      children: [
+        // Primary purchase button
+        Container(
+          width: double.infinity,
+          height: 48.h,
+          child: ElevatedButton(
+            onPressed: _isPurchasing ? null : _handlePurchase,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.accentGold,
+              foregroundColor: AppTheme.black,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              elevation: 0,
+              shadowColor: Colors.transparent,
+            ),
+            child: _isPurchasing
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 20.w,
+                        height: 20.h,
+                        child: CircularProgressIndicator(
+                          color: AppTheme.black,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Processing...',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.diamond_rounded,
+                        size: 20.sp,
+                        color: AppTheme.black,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Subscribe Now',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+        
+        SizedBox(height: 8.h),
+        
+        // Back button
+        TextButton(
+          onPressed: _goBackToFeatures,
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+          child: Text(
+            'Back',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: AppTheme.textTertiary,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _handlePurchase() async {
+    setState(() {
+      _isPurchasing = true;
+    });
+
+    try {
+      bool success = false;
+      
+      if (_selectedPlan == 'monthly') {
+        success = await _iapService.purchaseMonthlySubscription();
+      } else if (_selectedPlan == 'yearly') {
+        success = await _iapService.purchaseYearlySubscription();
+      }
+
+      if (success) {
+        // Close dialog on successful purchase initiation
+        Navigator.pop(context);
+        
+        if (widget.onUpgrade != null) {
+          widget.onUpgrade!();
+        }
+      }
+
+    } catch (e) {
+      // Show error but keep dialog open
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Purchase failed: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          margin: EdgeInsets.all(16.w),
+        ),
+      );
+    } finally {
+      setState(() {
+        _isPurchasing = false;
+      });
+    }
   }
 
 }

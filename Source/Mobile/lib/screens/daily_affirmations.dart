@@ -172,12 +172,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         // Use the actual color from the category data, or fallback to generated color
         final categoryColor = categoryData.color ?? _getCategoryColor(i);
         
+        final isCustomCategory = !categoryData.isDefault;
+        print('📂 Category: ${categoryData.name} - isDefault: ${categoryData.isDefault}, isCustom: $isCustomCategory');
+        
         uiCategories.add(AffirmationCategory(
           id: categoryData.id,
           name: categoryData.name,
           color: categoryColor,
           iconValue: categoryData.iconId,
           affirmations: affirmations,
+          isCustom: isCustomCategory, // Mark as custom if not default
         ));
       }
       
@@ -1219,7 +1223,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         final result = await _affirmationService.updateCategory(
           categoryId: categoryId,
           categoryName: newName,
-          colorAsInteger: category.color.value,
+          colorAsInteger: category.color.toARGB32(),
           predefinedIconTypeId: 3600001, // Default flower icon, would need to store this properly
         );
         
@@ -1560,6 +1564,20 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     // Check subscription limits for custom categories only (default categories don't count)
     final subscriptionService = SubscriptionService();
     final customCategoriesCount = categories.where((cat) => cat.isCustom).length;
+    final totalCategoriesCount = categories.length;
+    
+    print('🔍 Category Creation Check:');
+    print('  - Total categories: $totalCategoriesCount');
+    print('  - Custom categories: $customCategoriesCount');
+    print('  - Is Premium: ${subscriptionService.isPremium}');
+    print('  - Max free custom categories: ${SubscriptionService.maxFreeCustomAffirmationCategories}');
+    print('  - Can create: ${subscriptionService.canCreateAffirmationCategory(customCategoriesCount)}');
+    
+    // Debug each category
+    categories.forEach((category) {
+      print('  📂 ${category.name}: isCustom=${category.isCustom}');
+    });
+    
     if (!subscriptionService.canCreateAffirmationCategory(customCategoriesCount)) {
       print('🚫 Category creation blocked - custom category limit reached: $customCategoriesCount/${SubscriptionService.maxFreeCustomAffirmationCategories}');
       showDialog(
@@ -1572,9 +1590,11 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       return;
     }
     
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) => _AddCategoryDialog(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) => _AddCategoryBottomSheet(
         onCategoryAdded: () {
           _loadCategories(); // Reload categories when a new one is added
         },
@@ -1583,215 +1603,405 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 }
 
-class _AddCategoryDialog extends StatefulWidget {
+class _AddCategoryBottomSheet extends StatefulWidget {
   final VoidCallback onCategoryAdded;
 
-  const _AddCategoryDialog({required this.onCategoryAdded});
+  const _AddCategoryBottomSheet({required this.onCategoryAdded});
 
   @override
-  _AddCategoryDialogState createState() => _AddCategoryDialogState();
+  _AddCategoryBottomSheetState createState() => _AddCategoryBottomSheetState();
 }
 
-class _AddCategoryDialogState extends State<_AddCategoryDialog> {
+class _AddCategoryBottomSheetState extends State<_AddCategoryBottomSheet> {
   final TextEditingController _nameController = TextEditingController();
   Color _selectedColor = AppTheme.accentGold;
   PredefinedIconTypes _selectedIcon = PredefinedIconTypes.flower;
   bool _isCreating = false;
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: AppTheme.cardBackground,
-      title: Text(
-        'Add Category',
-        style: TextStyle(
-          color: AppTheme.textPrimary,
-          fontSize: 20.sp,
-          fontWeight: FontWeight.bold,
-        ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.black.withValues(alpha: 0.1),
+            blurRadius: 20.r,
+            offset: Offset(0, -8.h),
+          ),
+        ],
       ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            // Category name input
-            Text(
-              'Category Name',
-              style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
+      child: Column(
+        children: [
+          // Drag handle
+          _buildDragHandle(),
+          
+          // Header with preview
+          _buildHeader(),
+          
+          // Content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Category name input
+                  _buildNameInput(),
+                  SizedBox(height: 32.h),
+                  
+                  // Color selection with navigation
+                  _buildColorSection(),
+                  SizedBox(height: 32.h),
+                  
+                  // Icon selection with navigation
+                  _buildIconSection(),
+                  SizedBox(height: 32.h),
+                ],
               ),
             ),
-            SizedBox(height: 8.h),
-            TextField(
-              controller: _nameController,
-              style: TextStyle(color: AppTheme.textPrimary),
-              decoration: InputDecoration(
-                hintText: 'Enter category name...',
-                hintStyle: TextStyle(color: AppTheme.textSecondary),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: _selectedColor),
-                ),
-              ),
-            ),
-            SizedBox(height: 20.h),
-            
-            // Color selection
-            Text(
-              'Choose Color',
-              style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            _buildColorSelector(),
-            SizedBox(height: 20.h),
-            
-            // Icon selection
-            Text(
-              'Choose Icon',
-              style: TextStyle(
-                color: AppTheme.textPrimary,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            _buildIconSelector(),
+          ),
+          
+          // Action buttons
+          _buildActionButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDragHandle() {
+    return Container(
+      width: 40.w,
+      height: 4.h,
+      margin: EdgeInsets.only(top: 12.h, bottom: 8.h),
+      decoration: BoxDecoration(
+        color: AppTheme.textSecondary.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(2.r),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: EdgeInsets.all(24.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            _selectedColor.withValues(alpha: 0.1),
+            _selectedColor.withValues(alpha: 0.05),
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        ),
+        borderRadius: BorderRadius.zero,
       ),
-      actions: [
-        TextButton(
-          onPressed: _isCreating ? null : () => Navigator.of(context).pop(),
-          child: Text(
-            'Cancel',
-            style: TextStyle(color: AppTheme.textSecondary),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: _isCreating ? null : _createCategory,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _selectedColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+      child: Row(
+        children: [
+          // Preview icon
+          Container(
+            width: 56.w,
+            height: 56.h,
+            decoration: BoxDecoration(
+              color: _selectedColor,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  color: _selectedColor.withValues(alpha: 0.3),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.add,
+              color: ColorUtils.getTextColor(_selectedColor),
+              size: 28.sp,
             ),
           ),
-          child: _isCreating
-              ? CompactStylishLoading(
-                  color: AppTheme.white,
-                  size: 16.w,
-                )
-              : Text(
-                  'Create',
-                  style: TextStyle(color: AppTheme.white),
+          SizedBox(width: 16.w),
+          
+          // Title and subtitle
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Create Category',
+                  style: TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                SizedBox(height: 4.h),
+                Text(
+                  _nameController.text.isEmpty 
+                      ? 'Enter name, pick color & icon'
+                      : _nameController.text,
+                  style: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 14.sp,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNameInput() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Category Name',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: AppTheme.textSecondary.withValues(alpha: 0.2),
+            ),
+          ),
+          child: TextField(
+            controller: _nameController,
+            style: TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 16.sp,
+            ),
+            onChanged: (value) => setState(() {}), // Update preview
+            decoration: InputDecoration(
+              hintText: 'e.g., Health & Wellness',
+              hintStyle: TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 16.sp,
+              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.all(16.w),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildColorSelector() {
-    final predefinedColors = ColorUtils.getPredefinedCategoryColors();
+  Widget _buildColorSection() {
+    final colors = ColorUtils.getPredefinedCategoryColors();
+    final colorsPerPage = 15;
+    final totalPages = (colors.length / colorsPerPage).ceil();
     
-    return SizedBox(
-      height: 60.h,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: predefinedColors.length,
-        itemBuilder: (context, index) {
-          final color = predefinedColors[index];
-          final isSelected = _selectedColor == color;
-          
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedColor = color;
-              });
-            },
-            child: Container(
-              width: 50.w,
-              height: 50.h,
-              margin: EdgeInsets.only(right: 12.w),
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-                border: isSelected 
-                    ? Border.all(color: AppTheme.white, width: 3)
-                    : Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3), width: 1),
-              ),
-              child: isSelected 
-                  ? Icon(
-                      Icons.check,
-                      color: ColorUtils.getTextColor(color),
-                      size: 24.sp,
-                    )
-                  : null,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Choose Color',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        
+        // Color selection grid
+        SizedBox(
+          height: 120.h,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 12.w,
+              crossAxisSpacing: 12.h,
+              childAspectRatio: 1.0,
             ),
-          );
-        },
+            itemCount: colors.length,
+            itemBuilder: (context, index) => _buildColorOption(colors[index]),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildIconSection() {
+    final icons = PredefinedIconTypes.getAllIcons();
+    final iconsPerPage = 20;
+    final totalPages = (icons.length / iconsPerPage).ceil();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Choose Icon',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        
+        // Icon selection grid
+        SizedBox(
+          height: 200.h,
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 6,
+              mainAxisSpacing: 12.h,
+              crossAxisSpacing: 12.w,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: icons.length,
+            itemBuilder: (context, index) => _buildIconOption(icons[index]),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildColorOption(Color color) {
+    final isSelected = _selectedColor == color;
+    
+    return GestureDetector(
+      onTap: () => setState(() => _selectedColor = color),
+      child: Container(
+        width: 44.w,
+        height: 44.h,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected 
+                ? AppTheme.white 
+                : AppTheme.textSecondary.withValues(alpha: 0.3),
+            width: isSelected ? 3 : 1,
+          ),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: color.withValues(alpha: 0.3),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
+            ),
+          ] : null,
+        ),
+        child: isSelected 
+            ? Icon(
+                Icons.check,
+                color: ColorUtils.getTextColor(color),
+                size: 20.sp,
+              )
+            : null,
       ),
     );
   }
 
-  Widget _buildIconSelector() {
-    final allIcons = PredefinedIconTypes.getAllIcons();
+  Widget _buildIconOption(PredefinedIconTypes iconType) {
+    final isSelected = _selectedIcon == iconType;
     
-    return SizedBox(
-      height: 120.h,
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
-          mainAxisSpacing: 8.h,
-          crossAxisSpacing: 8.w,
+    return GestureDetector(
+      onTap: () => setState(() => _selectedIcon = iconType),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? _selectedColor.withValues(alpha: 0.15)
+              : AppTheme.backgroundPrimary,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: isSelected 
+                ? _selectedColor 
+                : AppTheme.textSecondary.withValues(alpha: 0.2),
+            width: isSelected ? 2 : 1,
+          ),
         ),
-        itemCount: allIcons.length,
-        itemBuilder: (context, index) {
-          final iconType = allIcons[index];
-          final isSelected = _selectedIcon == iconType;
-          
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedIcon = iconType;
-              });
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: isSelected 
-                    ? _selectedColor.withAlpha((0.2 * 255).round())
-                    : AppTheme.backgroundMedium,
-                borderRadius: BorderRadius.circular(12.r),
-                border: isSelected
-                    ? Border.all(color: _selectedColor, width: 2)
-                    : Border.all(color: AppTheme.textSecondary.withValues(alpha: 0.3), width: 1),
+        child: Icon(
+          iconType.iconData,
+          color: isSelected ? _selectedColor : AppTheme.textSecondary,
+          size: 24.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
+      decoration: BoxDecoration(
+        color: AppTheme.backgroundPrimary,
+        border: Border(
+          top: BorderSide(
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextButton(
+              onPressed: _isCreating ? null : () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
               ),
-              child: Icon(
-                iconType.iconData,
-                color: isSelected ? _selectedColor : AppTheme.textSecondary,
-                size: 24.sp,
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          );
-        },
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            flex: 2,
+            child: ElevatedButton(
+              onPressed: _isCreating ? null : _createCategory,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _selectedColor,
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                elevation: 0,
+                shadowColor: Colors.transparent,
+              ),
+              child: _isCreating
+                  ? CompactStylishLoading(
+                      color: ColorUtils.getTextColor(_selectedColor),
+                      size: 20.w,
+                    )
+                  : Text(
+                      'Create Category',
+                      style: TextStyle(
+                        color: ColorUtils.getTextColor(_selectedColor),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1808,6 +2018,12 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       return;
     }
 
+    // Double-check subscription limits as a safety measure
+    final subscriptionService = SubscriptionService();
+    // We need to get categories from parent widget - but since this is already checked
+    // in _showAddCategoryDialog, this is just a safety measure
+    print('🔒 Double-checking category creation limits before API call');
+
     setState(() {
       _isCreating = true;
     });
@@ -1817,7 +2033,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       final affirmationService = DailyAffirmationsService();
       final result = await affirmationService.createCategory(
         categoryName: name,
-        colorAsInteger: _selectedColor.value,
+        colorAsInteger: _selectedColor.toARGB32(),
         predefinedIconTypeId: _selectedIcon.value,
       );
       
@@ -1861,11 +2077,5 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
         ),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
   }
 }

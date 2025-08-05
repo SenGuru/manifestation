@@ -17,6 +17,9 @@ import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import 'login_screen.dart';
 import 'profile_screen.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
+import 'premium_purchase_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -31,6 +34,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadUserName();
+    
+    // Show premium upgrade dialog for non-premium users after a short delay
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkAndShowPremiumUpgrade();
+    });
   }
 
   void _loadUserName() async {
@@ -47,6 +55,50 @@ class _HomeScreenState extends State<HomeScreen> {
         userName = 'User';
       });
     }
+  }
+
+  void _checkAndShowPremiumUpgrade() async {
+    try {
+      final subscriptionService = SubscriptionService();
+      await subscriptionService.initialize();
+      
+      // Check if user is premium
+      if (!subscriptionService.isPremium) {
+        print('🎯 User is not premium, showing upgrade dialog');
+        
+        // Show the premium upgrade dialog after a short delay for better UX
+        await Future.delayed(Duration(milliseconds: 1000));
+        
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => PremiumUpgradeDialog(
+              feature: 'app_launch',
+              customMessage: 'Unlock all features and enhance your manifestation journey with Premium!',
+              onUpgrade: () {
+                _handlePremiumUpgrade();
+              },
+            ),
+          );
+        }
+      } else {
+        print('✅ User has premium access');
+      }
+    } catch (e) {
+      print('❌ Error checking premium status: $e');
+    }
+  }
+
+  void _handlePremiumUpgrade() {
+    print('🚀 Premium upgrade requested - navigating to purchase screen');
+    
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PremiumPurchaseScreen(),
+      ),
+    );
   }
   
   Widget _buildTopSection() {

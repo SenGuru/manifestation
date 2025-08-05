@@ -14,6 +14,7 @@ import 'package:fun/widgets/stylish_loading.dart';
 import 'package:fun/widgets/keyboard_dismissal_wrapper.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
+  // Enhanced with manual draft saving functionality - debug exit dialog
   @override
   _ManifestationJournalScreenState createState() => _ManifestationJournalScreenState();
 }
@@ -56,6 +57,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     
     // Check for existing entry for today
     _checkForExistingEntry();
+    
+    // Load any existing draft
+    _loadDraftProgress();
     
     // Show guided tour after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -182,6 +186,33 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               ],
             ),
           ),
+          // Save Draft button
+          GestureDetector(
+            onTap: _hasUnsavedChanges() ? () async => await _saveDraftProgress(true) : null,
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: _hasUnsavedChanges() 
+                    ? AppTheme.journalGradient[0].withOpacity(0.1)
+                    : AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: _hasUnsavedChanges() 
+                      ? AppTheme.journalGradient[0].withOpacity(0.3)
+                      : AppTheme.textMedium.withOpacity(0.1),
+                ),
+              ),
+              child: Icon(
+                Icons.save_outlined,
+                color: _hasUnsavedChanges() 
+                    ? AppTheme.journalGradient[0]
+                    : AppTheme.textMedium.withOpacity(0.5),
+                size: 20.sp,
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
           GestureDetector(
             onTap: _showCalendarView,
             child: Container(
@@ -780,6 +811,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
         if (result.isSuccess) {
           print('📖 Journal entry updated successfully!');
+          await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Journal entry updated successfully! 📖'),
@@ -807,6 +839,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
         if (result.isSuccess) {
           print('📖 Journal entry created successfully!');
+          await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Journal entry saved successfully! 📖'),
@@ -1000,10 +1033,21 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   // Check if user has unsaved changes
   bool _hasUnsavedChanges() {
+    print('📖 Checking for unsaved changes...');
+    print('   isEditingExistingEntry: $isEditingExistingEntry');
+    print('   selectedMood: ${selectedMood.displayName}');
+    print('   gratitudeItems: ${gratitudeItems.where((item) => item.trim().isNotEmpty).toList()}');
+    print('   reflection: "${reflection.trim()}"');
+    print('   intention: "${intention.trim()}"');
+    
     // If we're editing an existing entry, compare with original values
     if (isEditingExistingEntry && existingEntry != null) {
+      print('   Comparing with existing entry...');
       // Check if mood changed
-      if (selectedMood != existingEntry!.mood) return true;
+      if (selectedMood != existingEntry!.mood) {
+        print('   → Mood changed: ${existingEntry!.mood.displayName} → ${selectedMood.displayName}');
+        return true;
+      }
       
       // Check if gratitudes changed
       final originalGratitudes = List<String>.filled(5, '');
@@ -1011,30 +1055,54 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         originalGratitudes[i] = existingEntry!.gratitudes[i];
       }
       for (int i = 0; i < 5; i++) {
-        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) return true;
+        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) {
+          print('   → Gratitude $i changed: "${originalGratitudes[i]}" → "${gratitudeItems[i].trim()}"');
+          return true;
+        }
       }
       
       // Check if reflection changed
-      if (reflection.trim() != existingEntry!.reflection.trim()) return true;
+      if (reflection.trim() != existingEntry!.reflection.trim()) {
+        print('   → Reflection changed');
+        return true;
+      }
       
       // Check if intention changed
-      if (intention.trim() != existingEntry!.intention.trim()) return true;
+      if (intention.trim() != existingEntry!.intention.trim()) {
+        print('   → Intention changed');
+        return true;
+      }
       
+      print('   → No changes detected in existing entry');
       return false;
     } else {
+      print('   Checking new entry for changes...');
       // For new entries, check if any data has been entered
       // Check if mood is not neutral (default)
-      if (selectedMood != Mood.neutral) return true;
+      if (selectedMood != Mood.neutral) {
+        print('   → Mood is not neutral: ${selectedMood.displayName}');
+        return true;
+      }
       
       // Check if any gratitude items have content
-      if (gratitudeItems.any((item) => item.trim().isNotEmpty)) return true;
+      if (gratitudeItems.any((item) => item.trim().isNotEmpty)) {
+        print('   → Has gratitude items');
+        return true;
+      }
       
       // Check if reflection has content
-      if (reflection.trim().isNotEmpty) return true;
+      if (reflection.trim().isNotEmpty) {
+        print('   → Has reflection content');
+        return true;
+      }
       
       // Check if intention has content
-      if (intention.trim().isNotEmpty) return true;
+      if (intention.trim().isNotEmpty) {
+        print('   → Has intention content');
+        return true;
+      }
       
+      print('   → No changes detected in new entry');
       return false;
     }
   }
@@ -1058,6 +1126,105 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
     // Show save progress dialog
     return await _showSaveProgressDialog() ?? false;
+  }
+
+  // Show dialog asking user if they want to save as draft
+  Future<void> _showSaveDraftDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.journalGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(
+                  Icons.save_outlined,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  'Save as Draft?',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textLight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Would you like to save your current progress as a draft? You can continue working on it later.',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppTheme.textMedium,
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              ..._buildUnsavedChangesSummary(),
+            ],
+          ),
+          actions: [
+            // Don't Save button
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Don\'t Save',
+                style: TextStyle(
+                  color: AppTheme.textMedium,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            // Save Draft button
+            Container(
+              margin: EdgeInsets.only(left: 8.w),
+              child: ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(); // Close dialog
+                  await _saveDraftProgress(true); // Save the draft with snackbar
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.journalGradient[0],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                ),
+                child: Text(
+                  'Save Draft',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   // Show dialog asking user what to do with unsaved changes
@@ -1149,13 +1316,14 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
               ),
             ),
-            // Save button
+            // Save as Draft button
             Container(
               margin: EdgeInsets.only(left: 8.w),
               child: ElevatedButton(
                 onPressed: () async {
+                  // Save draft directly without showing another dialog
+                  await _saveDraftProgress();
                   Navigator.of(context).pop(true); // Close dialog and allow navigation
-                  await _saveDraftProgress(); // Save as draft/progress, not as finished entry
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.journalGradient[0],
@@ -1166,7 +1334,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 ),
                 child: Text(
-                  isEditingExistingEntry ? 'Update' : 'Save',
+                  'Save as Draft',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -1306,8 +1474,93 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
+
+  // Load existing draft progress
+  Future<void> _loadDraftProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      final draftJson = prefs.getString('journal_draft_$dateKey');
+      if (draftJson != null) {
+        final draftData = jsonDecode(draftJson) as Map<String, dynamic>;
+        
+        print('📖 Loading draft progress...');
+        print('   Draft data found: ${draftData.keys}');
+        
+        setState(() {
+          // Load mood (find by display name)
+          final moodName = draftData['mood'] as String?;
+          if (moodName != null) {
+            final mood = Mood.values.firstWhere(
+              (m) => m.displayName == moodName,
+              orElse: () => Mood.neutral,
+            );
+            selectedMood = mood;
+          }
+          
+          // Load gratitudes
+          final draftGratitudes = draftData['gratitudes'] as List<dynamic>?;
+          if (draftGratitudes != null) {
+            gratitudeItems = List<String>.filled(5, '');
+            for (int i = 0; i < draftGratitudes.length && i < 5; i++) {
+              gratitudeItems[i] = draftGratitudes[i].toString();
+            }
+          }
+          
+          // Load reflection
+          final draftReflection = draftData['reflection'] as String?;
+          if (draftReflection != null) {
+            reflection = draftReflection;
+            _reflectionController.text = reflection;
+          }
+          
+          // Load intention
+          final draftIntention = draftData['intention'] as String?;
+          if (draftIntention != null) {
+            intention = draftIntention;
+          }
+        });
+        
+        print('📖 Draft progress loaded successfully');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.restore, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Draft progress restored'),
+              ],
+            ),
+            backgroundColor: AppTheme.journalGradient[0],
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('📖 Error loading draft progress: $e');
+      // Continue silently without draft
+    }
+  }
+
+  // Clear draft progress (when entry is saved or no longer needed)
+  Future<void> _clearDraftProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      await prefs.remove('journal_draft_$dateKey');
+      print('📖 Draft progress cleared');
+    } catch (e) {
+      print('📖 Error clearing draft progress: $e');
+    }
+  }
+
   // Save current progress as draft without creating a finalized journal entry
-  Future<void> _saveDraftProgress() async {
+  Future<bool> _saveDraftProgress([bool showSnackBar = false]) async {
     try {
       print('📖 Saving draft progress...');
       
@@ -1334,31 +1587,37 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       print('   Has Reflection: ${reflection.trim().isNotEmpty}');
       print('   Has Intention: ${intention.trim().isNotEmpty}');
       
-      // Show confirmation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
-              SizedBox(width: 8.w),
-              Text('Progress saved as draft'),
-            ],
+      // Show confirmation only if requested and context is valid
+      if (showSnackBar && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Progress saved as draft'),
+              ],
+            ),
+            backgroundColor: AppTheme.journalGradient[0],
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 2),
           ),
-          backgroundColor: AppTheme.journalGradient[0],
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
-        ),
-      );
+        );
+      }
       
+      return true;
     } catch (e) {
       print('📖 Error saving draft progress: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to save progress: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      if (showSnackBar && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save progress: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return false;
     }
   }
 }
