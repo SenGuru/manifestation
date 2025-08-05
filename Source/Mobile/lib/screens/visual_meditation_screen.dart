@@ -6,8 +6,10 @@ import '../constants/app_theme.dart';
 import '../models/meditation_models.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/meditation_audio_service.dart';
 import '../models/analytics_models.dart';
 import '../components/visual_selector.dart';
+import '../components/audio_selector.dart';
 import '../components/animated_candle.dart';
 import '../components/animated_moon.dart';
 import '../components/animated_nature.dart';
@@ -39,6 +41,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   double visualIntensity = 0.8;
   double visualSize = 200.0;
   
+  // Audio settings
+  AudioType selectedAudioType = AudioType.none;
+  double audioVolume = 0.7;
+  
   // Controllers
   late AnimationController _sessionController;
   late AnimationController _backgroundController;
@@ -46,6 +52,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   
   // Session tracking with UsageAnalyticsService
   final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
+  final MeditationAudioService _audioService = MeditationAudioService();
   bool _sessionStarted = false;
   DateTime? _sessionStartTime;
   
@@ -68,9 +75,11 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   Future<void> _initializeAnalytics() async {
     try {
       await _analyticsService.initialize();
+      await _audioService.initialize();
       print('📊 Visual meditation analytics initialized');
+      print('🎵 Visual meditation audio initialized');
     } catch (e) {
-      print('❌ Error initializing visual meditation analytics: $e');
+      print('❌ Error initializing visual meditation services: $e');
     }
   }
 
@@ -103,6 +112,9 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     if (_sessionStarted) {
       _endSessionTracking();
     }
+    
+    // Dispose audio service
+    _audioService.dispose();
     
     super.dispose();
   }
@@ -147,6 +159,11 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         // Load geometric pattern
         final geometricPatternIndex = prefs.getInt('visual_meditation_geometric_pattern') ?? GeometricPattern.mandala.index;
         selectedGeometricPattern = GeometricPattern.values[geometricPatternIndex];
+        
+        // Load audio settings
+        final audioTypeIndex = prefs.getInt('visual_meditation_audio_type') ?? AudioType.none.index;
+        selectedAudioType = AudioType.values[audioTypeIndex];
+        audioVolume = prefs.getDouble('visual_meditation_audio_volume') ?? 0.7;
       });
     } catch (e) {
       print('Error loading visual meditation settings: $e');
@@ -178,6 +195,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       
       // Save geometric pattern
       await prefs.setInt('visual_meditation_geometric_pattern', selectedGeometricPattern.index);
+      
+      // Save audio settings
+      await prefs.setInt('visual_meditation_audio_type', selectedAudioType.index);
+      await prefs.setDouble('visual_meditation_audio_volume', audioVolume);
     } catch (e) {
       print('Error saving visual meditation settings: $e');
     }
@@ -198,6 +219,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       });
       
       _backgroundController.forward();
+      
+      // Start audio if selected
+      await _audioService.playAudio(selectedAudioType, volume: audioVolume);
+      
       _startTimer();
       
       print('📊 Visual meditation session started');
@@ -260,6 +285,9 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     });
     _sessionController.stop();
     
+    // Pause audio
+    _audioService.pauseAudio();
+    
     // Update session metadata
     if (_sessionStarted) {
       _analyticsService.updateSessionMetadata(
@@ -277,6 +305,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     setState(() {
       isPlaying = true;
     });
+    
+    // Resume audio
+    _audioService.resumeAudio();
+    
     _startTimer();
     
     // Update session metadata
@@ -300,6 +332,9 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     
     _sessionController.stop();
     _backgroundController.reverse();
+    
+    // Stop audio
+    await _audioService.stopAudio();
     
     // End session tracking
     await _endSessionTracking();
@@ -428,6 +463,8 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           _buildVisualPreview(),
           SizedBox(height: 30.h),
           _buildVisualSelector(),
+          SizedBox(height: 30.h),
+          _buildAudioSelector(),
           SizedBox(height: 30.h),
           _buildDurationSelector(),
           SizedBox(height: 30.h),
@@ -591,6 +628,32 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     );
   }
 
+  Widget _buildAudioSelector() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Choose Your Audio',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textLight,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        CompactAudioSelector(
+          selectedAudio: selectedAudioType,
+          onAudioChanged: (type) {
+            setState(() {
+              selectedAudioType = type;
+            });
+            _saveSettings();
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildDurationSelector() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -665,6 +728,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         _buildIntensitySlider(),
         SizedBox(height: 16.h),
         _buildSizeSlider(),
+        if (selectedAudioType != AudioType.none) ...[
+          SizedBox(height: 16.h),
+          _buildVolumeSlider(),
+        ],
         if (selectedVisualType == VisualType.candle) ...[
           SizedBox(height: 16.h),
           _buildCandleColorSelector(),
@@ -748,6 +815,42 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
             onChanged: (value) {
               setState(() {
                 visualSize = value;
+              });
+              _saveSettings();
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVolumeSlider() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Audio Volume',
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: AppTheme.textMedium,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        SliderTheme(
+          data: SliderTheme.of(context).copyWith(
+            activeTrackColor: selectedAudioType.colors[0],
+            inactiveTrackColor: AppTheme.textMedium.withOpacity(0.3),
+            thumbColor: selectedAudioType.colors[0],
+            overlayColor: selectedAudioType.colors[0].withOpacity(0.2),
+          ),
+          child: Slider(
+            value: audioVolume,
+            min: 0.0,
+            max: 1.0,
+            divisions: 10,
+            onChanged: (value) {
+              setState(() {
+                audioVolume = value;
               });
               _saveSettings();
             },

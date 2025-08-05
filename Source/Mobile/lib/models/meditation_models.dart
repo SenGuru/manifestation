@@ -57,6 +57,8 @@ class MeditationSession {
   final bool completed;
   final bool usedBreathingGuide;
   final Map<String, dynamic>? visualSettings; // Store visual-specific settings
+  final AudioType? audioType; // Store selected audio type
+  final double? audioVolume; // Store audio volume
 
   const MeditationSession({
     required this.id,
@@ -69,6 +71,8 @@ class MeditationSession {
     required this.completed,
     required this.usedBreathingGuide,
     this.visualSettings,
+    this.audioType,
+    this.audioVolume,
   });
 
   Map<String, dynamic> toJson() {
@@ -83,6 +87,8 @@ class MeditationSession {
       'completed': completed,
       'usedBreathingGuide': usedBreathingGuide,
       'visualSettings': visualSettings,
+      'audioType': audioType?.index,
+      'audioVolume': audioVolume,
     };
   }
 
@@ -98,6 +104,8 @@ class MeditationSession {
       completed: json['completed'],
       usedBreathingGuide: json['usedBreathingGuide'],
       visualSettings: json['visualSettings']?.cast<String, dynamic>(),
+      audioType: json['audioType'] != null ? AudioType.values[json['audioType']] : null,
+      audioVolume: json['audioVolume']?.toDouble(),
     );
   }
 }
@@ -478,6 +486,159 @@ extension GeometricPatternExtension on GeometricPattern {
         return [Color(0xFF06B6D4), Color(0xFF8B5CF6)];
       case GeometricPattern.fractals:
         return [Color(0xFFF59E0B), Color(0xFFEF4444)];
+    }
+  }
+}
+
+// Audio types enum for meditation
+enum AudioType {
+  none,
+  nature,
+  binaural,
+  whitenoise,
+  bowls,
+  ambient,
+  breathingGuide,
+}
+
+extension AudioTypeExtension on AudioType {
+  String get name {
+    switch (this) {
+      case AudioType.none:
+        return 'Silent';
+      case AudioType.nature:
+        return 'Nature';
+      case AudioType.binaural:
+        return 'Binaural';
+      case AudioType.whitenoise:
+        return 'White Noise';
+      case AudioType.bowls:
+        return 'Singing Bowls';
+      case AudioType.ambient:
+      case AudioType.breathingGuide:
+        return 'Breathing Guide';
+    }
+  }
+
+  String get description {
+    switch (this) {
+      case AudioType.none:
+        return 'Pure silence for focused meditation';
+      case AudioType.nature:
+        return 'Natural sounds like rain, ocean, forest';
+      case AudioType.binaural:
+        return 'Frequency beats for deep focus';
+      case AudioType.whitenoise:
+        return 'Consistent background noise';
+      case AudioType.bowls:
+        return 'Healing Tibetan singing bowls';
+      case AudioType.ambient:
+        return 'Ethereal atmospheric tones';
+      case AudioType.breathingGuide:
+        return 'Guided breathing rhythm';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case AudioType.none:
+        return Icons.volume_off;
+      case AudioType.nature:
+        return Icons.nature;
+      case AudioType.binaural:
+        return Icons.graphic_eq;
+      case AudioType.whitenoise:
+        return Icons.waves;
+      case AudioType.bowls:
+        return Icons.music_note;
+      case AudioType.ambient:
+        return Icons.cloud;
+      case AudioType.breathingGuide:
+        return Icons.air;
+    }
+  }
+
+  String get audioPath {
+    switch (this) {
+      case AudioType.none:
+        return '';
+      case AudioType.nature:
+        return 'assets/audio/nature_forest.mp3';
+      case AudioType.binaural:
+        return 'assets/audio/binaural_40hz.mp3';
+      case AudioType.whitenoise:
+        return 'assets/audio/white_noise.mp3';
+      case AudioType.bowls:
+        return 'assets/audio/singing_bowls.mp3';
+      case AudioType.ambient:
+        return 'assets/audio/ambient_space.mp3';
+      case AudioType.breathingGuide:
+        return 'assets/audio/breathing_478.mp3';
+    }
+  }
+
+  List<Color> get colors {
+    switch (this) {
+      case AudioType.none:
+        return [Color(0xFF6B7280), Color(0xFF4B5563)];
+      case AudioType.nature:
+        return [Color(0xFF10B981), Color(0xFF059669)];
+      case AudioType.binaural:
+        return [Color(0xFF8B5CF6), Color(0xFF7C3AED)];
+      case AudioType.whitenoise:
+        return [Color(0xFF64748B), Color(0xFF475569)];
+      case AudioType.bowls:
+        return [Color(0xFFF59E0B), Color(0xFFD97706)];
+      case AudioType.ambient:
+        return [Color(0xFF06B6D4), Color(0xFF0891B2)];
+      case AudioType.breathingGuide:
+        return [Color(0xFFEC4899), Color(0xFFDB2777)];
+    }
+  }
+}
+
+// Nature audio sub-types
+enum NatureAudioType {
+  forest,
+  ocean,
+  rain,
+  thunder,
+  birds,
+  wind,
+}
+
+extension NatureAudioTypeExtension on NatureAudioType {
+  String get name {
+    switch (this) {
+      case NatureAudioType.forest:
+        return 'Forest';
+      case NatureAudioType.ocean:
+        return 'Ocean Waves';
+      case NatureAudioType.rain:
+        return 'Gentle Rain';
+      case NatureAudioType.thunder:
+        return 'Thunderstorm';
+      case NatureAudioType.birds:
+        return 'Birds Singing';
+      case NatureAudioType.wind:
+        return 'Wind Chimes';
+    }
+  }
+
+  String get audioPath {
+    switch (this) {
+      case NatureAudioType.forest:
+        return 'assets/audio/nature_forest.mp3';
+      case NatureAudioType.ocean:
+        return 'assets/audio/nature_ocean.mp3';
+      case NatureAudioType.rain:
+        return 'assets/audio/nature_rain.mp3';
+      case NatureAudioType.thunder:
+        return 'assets/audio/nature_thunder.mp3';
+      case NatureAudioType.birds:
+        return 'assets/audio/nature_birds.mp3';
+      case NatureAudioType.wind:
+        return 'assets/audio/nature_windchimes.mp3';
     }
   }
 }
