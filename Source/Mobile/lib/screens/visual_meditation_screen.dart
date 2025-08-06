@@ -113,8 +113,8 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       _endSessionTracking();
     }
     
-    // Dispose audio service
-    _audioService.dispose();
+    // Don't dispose audio service here - let it continue playing
+    // Only stop audio if user explicitly ended the session
     
     super.dispose();
   }
@@ -221,7 +221,15 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       _backgroundController.forward();
       
       // Start audio if selected
-      await _audioService.playAudio(selectedAudioType, volume: audioVolume);
+      if (selectedAudioType != AudioType.none) {
+        print('🎵 Starting ${selectedAudioType.name} audio for meditation session');
+        final audioStarted = await _audioService.playAudio(selectedAudioType, volume: audioVolume);
+        if (!audioStarted) {
+          print('⚠️ Audio failed to start, continuing session without audio');
+        }
+      } else {
+        print('🎵 No audio selected - silent meditation session');
+      }
       
       _startTimer();
       
@@ -333,8 +341,8 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     _sessionController.stop();
     _backgroundController.reverse();
     
-    // Stop audio
-    await _audioService.stopAudio();
+    // End meditation session audio properly
+    await _audioService.endMeditationSession();
     
     // End session tracking
     await _endSessionTracking();
@@ -1154,6 +1162,35 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
             color: AppTheme.visualMeditationGradient[0],
           ),
         ),
+        SizedBox(height: 12.h),
+        if (selectedAudioType != AudioType.none)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                selectedAudioType.icon,
+                size: 16.sp,
+                color: selectedAudioType.colors[0],
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                selectedAudioType.name,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: selectedAudioType.colors[0],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          )
+        else
+          Text(
+            'Silent Session',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: AppTheme.textMedium.withOpacity(0.7),
+            ),
+          ),
         SizedBox(height: 20.h),
       ],
     );

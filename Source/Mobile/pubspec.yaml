@@ -87,6 +87,11 @@ flutter:
   assets:
     - assets/animations/Loading.json
     - assets/audio/
+    - assets/audio/ambient.mp3
+    - assets/audio/binaural.mp3
+    - assets/audio/bowl.mp3
+    - assets/audio/nature.mp3
+    - assets/audio/white.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

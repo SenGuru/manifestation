@@ -27,28 +27,72 @@ class MeditationAudioService {
         await initialize();
       }
 
+      if (_audioPlayer == null) {
+        print('❌ Audio player not initialized properly');
+        return false;
+      }
+
+      // Stop any currently playing audio first
+      if (_audioPlayer!.playing) {
+        await _audioPlayer!.stop();
+      }
+
       if (audioType == AudioType.none || audioType.audioPath.isEmpty) {
         await stopAudio();
+        print('🎵 Audio set to Silent - no audio will play');
         return true;
       }
 
       _currentAudioType = audioType;
       _currentVolume = volume;
 
-      // Set volume
-      await _audioPlayer!.setVolume(volume);
+      print('🎵 Attempting to play ${audioType.name} audio from ${audioType.audioPath}');
       
-      // For meditation, we want to loop the audio
-      await _audioPlayer!.setLoopMode(LoopMode.one);
+      try {
+        // Set volume first
+        await _audioPlayer!.setVolume(volume);
+        print('🎵 Volume set to ${(volume * 100).round()}%');
+        
+        // For meditation, we want to loop the audio
+        await _audioPlayer!.setLoopMode(LoopMode.one);
+        print('🎵 Loop mode set');
 
-      // Load and play the audio
-      await _audioPlayer!.setAsset(audioType.audioPath);
-      await _audioPlayer!.play();
+        // Load the audio asset
+        print('🎵 Loading audio asset: ${audioType.audioPath}');
+        final duration = await _audioPlayer!.setAsset(audioType.audioPath);
+        print('🎵 Asset loaded successfully, duration: ${duration?.inSeconds ?? 0}s');
+        
+        // Start playing
+        print('🎵 Starting playback...');
+        await _audioPlayer!.play();
+        print('🎵 Play command sent');
 
-      print('🎵 Playing ${audioType.name} audio at volume ${(volume * 100).round()}%');
-      return true;
+        // Verify it's actually playing with a longer delay to allow for loading
+        await Future.delayed(Duration(milliseconds: 1000));
+        final isPlaying = _audioPlayer!.playing;
+        final playerState = _audioPlayer!.playerState;
+        final processingState = _audioPlayer!.processingState;
+        
+        print('🎵 Player state: $playerState');
+        print('🎵 Processing state: $processingState');
+        print('🎵 Is playing: $isPlaying');
+        
+        if (isPlaying && processingState == ProcessingState.ready) {
+          print('✅ Successfully playing ${audioType.name} audio at volume ${(volume * 100).round()}%');
+          return true;
+        } else {
+          print('❌ Audio failed to start playing - State: $playerState, Processing: $processingState');
+          return false;
+        }
+      } catch (assetError) {
+        print('❌ Error loading or playing audio asset: $assetError');
+        print('❌ Error type: ${assetError.runtimeType}');
+        print('❌ Stack trace: ${StackTrace.current}');
+        return false;
+      }
     } catch (e) {
       print('❌ Error playing audio: $e');
+      print('❌ AudioType: ${audioType.name}, Path: ${audioType.audioPath}');
       // Fallback - continue without audio rather than blocking meditation
       return false;
     }
@@ -124,13 +168,29 @@ class MeditationAudioService {
   AudioType get currentAudioType => _currentAudioType;
   double get currentVolume => _currentVolume;
 
-  // Dispose resources
+  // Dispose resources (only call when completely done with audio)
   Future<void> dispose() async {
     if (_audioPlayer != null) {
-      await _audioPlayer!.dispose();
+      try {
+        if (_audioPlayer!.playing) {
+          await _audioPlayer!.stop();
+        }
+        await _audioPlayer!.dispose();
+      } catch (e) {
+        print('❌ Error disposing audio player: $e');
+      }
       _audioPlayer = null;
       _isInitialized = false;
+      _currentAudioType = AudioType.none;
       print('🎵 Meditation audio service disposed');
+    }
+  }
+  
+  // Stop and dispose when meditation session ends completely
+  Future<void> endMeditationSession() async {
+    if (_audioPlayer != null && _isInitialized) {
+      await stopAudio();
+      print('🎵 Meditation session ended - audio stopped but service remains active');
     }
   }
 }

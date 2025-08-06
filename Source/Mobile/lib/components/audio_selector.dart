@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
 import '../models/meditation_models.dart';
+import '../services/meditation_audio_service.dart';
 
 class AudioSelector extends StatefulWidget {
   final AudioType selectedAudio;
@@ -166,7 +167,7 @@ class _AudioSelectorState extends State<AudioSelector>
 }
 
 // Compact version for smaller spaces
-class CompactAudioSelector extends StatelessWidget {
+class CompactAudioSelector extends StatefulWidget {
   final AudioType selectedAudio;
   final Function(AudioType) onAudioChanged;
 
@@ -177,14 +178,27 @@ class CompactAudioSelector extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _CompactAudioSelectorState createState() => _CompactAudioSelectorState();
+}
+
+class _CompactAudioSelectorState extends State<CompactAudioSelector> {
+  final MeditationAudioService _audioService = MeditationAudioService();
+
+  @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
         children: AudioType.values.map((audioType) {
-          final isSelected = selectedAudio == audioType;
+          final isSelected = widget.selectedAudio == audioType;
           return GestureDetector(
-            onTap: () => onAudioChanged(audioType),
+            onTap: () {
+              widget.onAudioChanged(audioType);
+              // Preview the selected audio
+              if (audioType != AudioType.none) {
+                _audioService.previewAudio(audioType, duration: Duration(seconds: 2));
+              }
+            },
             child: Container(
               width: 80.w,
               height: 80.h,

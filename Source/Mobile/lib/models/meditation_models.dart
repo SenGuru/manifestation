@@ -498,7 +498,6 @@ enum AudioType {
   whitenoise,
   bowls,
   ambient,
-  breathingGuide,
 }
 
 extension AudioTypeExtension on AudioType {
@@ -515,8 +514,7 @@ extension AudioTypeExtension on AudioType {
       case AudioType.bowls:
         return 'Singing Bowls';
       case AudioType.ambient:
-      case AudioType.breathingGuide:
-        return 'Breathing Guide';
+        return 'Ambient';
     }
   }
 
@@ -534,8 +532,6 @@ extension AudioTypeExtension on AudioType {
         return 'Healing Tibetan singing bowls';
       case AudioType.ambient:
         return 'Ethereal atmospheric tones';
-      case AudioType.breathingGuide:
-        return 'Guided breathing rhythm';
     }
   }
 
@@ -553,8 +549,6 @@ extension AudioTypeExtension on AudioType {
         return Icons.music_note;
       case AudioType.ambient:
         return Icons.cloud;
-      case AudioType.breathingGuide:
-        return Icons.air;
     }
   }
 
@@ -563,17 +557,15 @@ extension AudioTypeExtension on AudioType {
       case AudioType.none:
         return '';
       case AudioType.nature:
-        return 'assets/audio/nature_forest.mp3';
+        return 'assets/audio/nature.mp3';
       case AudioType.binaural:
-        return 'assets/audio/binaural_40hz.mp3';
+        return 'assets/audio/binaural.mp3';
       case AudioType.whitenoise:
-        return 'assets/audio/white_noise.mp3';
+        return 'assets/audio/white.mp3';
       case AudioType.bowls:
-        return 'assets/audio/singing_bowls.mp3';
+        return 'assets/audio/bowl.mp3';
       case AudioType.ambient:
-        return 'assets/audio/ambient_space.mp3';
-      case AudioType.breathingGuide:
-        return 'assets/audio/breathing_478.mp3';
+        return 'assets/audio/ambient.mp3';
     }
   }
 
@@ -591,8 +583,6 @@ extension AudioTypeExtension on AudioType {
         return [Color(0xFFF59E0B), Color(0xFFD97706)];
       case AudioType.ambient:
         return [Color(0xFF06B6D4), Color(0xFF0891B2)];
-      case AudioType.breathingGuide:
-        return [Color(0xFFEC4899), Color(0xFFDB2777)];
     }
   }
 }
@@ -628,17 +618,12 @@ extension NatureAudioTypeExtension on NatureAudioType {
   String get audioPath {
     switch (this) {
       case NatureAudioType.forest:
-        return 'assets/audio/nature_forest.mp3';
       case NatureAudioType.ocean:
-        return 'assets/audio/nature_ocean.mp3';
       case NatureAudioType.rain:
-        return 'assets/audio/nature_rain.mp3';
       case NatureAudioType.thunder:
-        return 'assets/audio/nature_thunder.mp3';
       case NatureAudioType.birds:
-        return 'assets/audio/nature_birds.mp3';
       case NatureAudioType.wind:
-        return 'assets/audio/nature_windchimes.mp3';
+        return 'assets/audio/nature.mp3'; // All nature types use the same file
     }
   }
 }
