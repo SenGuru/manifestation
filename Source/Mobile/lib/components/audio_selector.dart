@@ -194,10 +194,10 @@ class _CompactAudioSelectorState extends State<CompactAudioSelector> {
           return GestureDetector(
             onTap: () {
               widget.onAudioChanged(audioType);
-              // Preview the selected audio
-              if (audioType != AudioType.none) {
-                _audioService.previewAudio(audioType, duration: Duration(seconds: 2));
-              }
+              // Preview disabled to avoid conflicts with meditation audio
+              // if (audioType != AudioType.none) {
+              //   _audioService.previewAudio(audioType, duration: Duration(seconds: 2));
+              // }
             },
             child: Container(
               width: 80.w,

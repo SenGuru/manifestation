@@ -105,11 +105,14 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
 
   @override
   void dispose() {
+    print('🔄 dispose() called - _sessionStarted: $_sessionStarted, isSessionActive: $isSessionActive');
+    
     _sessionController.dispose();
     _backgroundController.dispose();
     
-    // End session tracking if active
-    if (_sessionStarted) {
+    // End session tracking if active (but don't stop audio)
+    if (_sessionStarted && isSessionActive) {
+      print('🔄 Disposing active session - ending tracking only');
       _endSessionTracking();
     }
     
@@ -220,6 +223,9 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       
       _backgroundController.forward();
       
+      // Wait for setState to complete
+      await Future.delayed(Duration(milliseconds: 100));
+      
       // Start audio if selected
       if (selectedAudioType != AudioType.none) {
         print('🎵 Starting ${selectedAudioType.name} audio for meditation session');
@@ -231,7 +237,13 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         print('🎵 No audio selected - silent meditation session');
       }
       
-      _startTimer();
+      // Only start timer after everything is set up
+      if (mounted && isSessionActive) {
+        print('🎯 About to start timer - mounted: $mounted, isSessionActive: $isSessionActive, remainingSeconds: $remainingSeconds');
+        _startTimer();
+      } else {
+        print('⚠️ Not starting timer - mounted: $mounted, isSessionActive: $isSessionActive');
+      }
       
       print('📊 Visual meditation session started');
     } catch (e) {
@@ -245,7 +257,13 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       });
       
       _backgroundController.forward();
-      _startTimer();
+      
+      // Wait for setState to complete
+      await Future.delayed(Duration(milliseconds: 100));
+      
+      if (mounted && isSessionActive) {
+        _startTimer();
+      }
     }
   }
   
@@ -273,15 +291,17 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   }
 
   void _startTimer() {
+    print('🎯 Starting timer - remainingSeconds: $remainingSeconds, isPlaying: $isPlaying');
     _sessionController.repeat();
     
     Future.delayed(Duration(seconds: 1), () {
-      if (isPlaying && remainingSeconds > 0) {
+      if (mounted && isPlaying && remainingSeconds > 0) {
         setState(() {
           remainingSeconds--;
         });
         _startTimer();
       } else if (remainingSeconds <= 0) {
+        print('🎯 Timer ending session - remainingSeconds: $remainingSeconds');
         _endSession();
       }
     });
@@ -333,6 +353,13 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   }
 
   void _endSession() async {
+    print('🛑 _endSession called - Stack trace: ${StackTrace.current}');
+    
+    if (!isSessionActive) {
+      print('🛑 Session already ended, skipping');
+      return;
+    }
+    
     setState(() {
       isSessionActive = false;
       isPlaying = false;
@@ -1121,19 +1148,32 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           _buildSessionHeader(),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(bottom: 30.h), // Add padding between visual and controls
+              padding: EdgeInsets.only(bottom: 30.h),
               child: Center(
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height * 0.6, // Limit height to 60% of screen
-                    maxWidth: MediaQuery.of(context).size.width * 0.8,   // Limit width to 80% of screen
+                    maxHeight: MediaQuery.of(context).size.height * 0.6,
+                    maxWidth: MediaQuery.of(context).size.width * 0.8,
                   ),
-                  child: _buildSelectedVisual(),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Single tap to pause/resume
+                      if (isPlaying) {
+                        _pauseSession();
+                      } else {
+                        _resumeSession();
+                      }
+                    },
+                    onLongPress: () {
+                      // Long press to show options
+                      _showSessionOptions();
+                    },
+                    child: _buildSelectedVisual(),
+                  ),
                 ),
               ),
             ),
           ),
-          _buildSessionControls(),
         ],
       ),
     );
@@ -1196,55 +1236,265 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     );
   }
 
-  Widget _buildSessionControls() {
-    return Container(
-      padding: EdgeInsets.only(top: 20.h), // Add padding above controls
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          _buildControlButton(
-            icon: Icons.stop,
-            onTap: _endSession,
-            color: Colors.red,
-          ),
-          _buildControlButton(
-            icon: isPlaying ? Icons.pause : Icons.play_arrow,
-            onTap: isPlaying ? _pauseSession : _resumeSession,
-            color: AppTheme.visualMeditationGradient[0],
-            isPrimary: true,
-          ),
-        ],
+  void _showSessionOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: BoxDecoration(
+          color: AppTheme.cardBackground,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              width: 40.w,
+              height: 4.h,
+              margin: EdgeInsets.only(top: 12.h, bottom: 20.h),
+              decoration: BoxDecoration(
+                color: AppTheme.textMedium.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            
+            // Session status
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+              child: Text(
+                isPlaying ? 'Meditation In Progress' : 'Meditation Paused',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textLight,
+                ),
+              ),
+            ),
+            
+            SizedBox(height: 20.h),
+            
+            // Audio control
+            _buildOptionTile(
+              icon: selectedAudioType.icon,
+              title: 'Change Audio',
+              subtitle: selectedAudioType.name,
+              onTap: () {
+                Navigator.pop(context);
+                _showAudioSelector();
+              },
+            ),
+            
+            // Pause/Resume
+            _buildOptionTile(
+              icon: isPlaying ? Icons.pause : Icons.play_arrow,
+              title: isPlaying ? 'Pause Session' : 'Resume Session',
+              subtitle: isPlaying ? 'Temporarily stop the session' : 'Continue your meditation',
+              onTap: () {
+                Navigator.pop(context);
+                if (isPlaying) {
+                  _pauseSession();
+                } else {
+                  _resumeSession();
+                }
+              },
+            ),
+            
+            // End session
+            _buildOptionTile(
+              icon: Icons.stop,
+              title: 'End Session',
+              subtitle: 'Complete your meditation now',
+              onTap: () {
+                Navigator.pop(context);
+                _showEndConfirmation();
+              },
+              isDestructive: true,
+            ),
+            
+            SizedBox(height: 20.h),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildControlButton({
+  Widget _buildOptionTile({
     required IconData icon,
+    required String title,
+    required String subtitle,
     required VoidCallback onTap,
-    required Color color,
-    bool isPrimary = false,
+    bool isDestructive = false,
   }) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
-      child: Container(
-        width: isPrimary ? 80.w : 60.w,
-        height: isPrimary ? 80.h : 60.h,
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.4),
-              blurRadius: 20.r,
-              offset: Offset(0, 10.h),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+        child: Row(
+          children: [
+            Container(
+              width: 48.w,
+              height: 48.h,
+              decoration: BoxDecoration(
+                color: isDestructive 
+                  ? Colors.red.withOpacity(0.1)
+                  : AppTheme.visualMeditationGradient[0].withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                icon,
+                color: isDestructive ? Colors.red : AppTheme.visualMeditationGradient[0],
+                size: 24.sp,
+              ),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textLight,
+                    ),
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: AppTheme.textMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 16.sp,
+              color: AppTheme.textMedium.withOpacity(0.5),
             ),
           ],
         ),
-        child: Icon(
-          icon,
-          color: AppTheme.white,
-          size: isPrimary ? 32.sp : 24.sp,
+      ),
+    );
+  }
+
+  void _showAudioSelector() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        height: 300.h,
+        decoration: BoxDecoration(
+          color: AppTheme.cardBackground,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
         ),
+        child: Column(
+          children: [
+            // Handle bar
+            Container(
+              width: 40.w,
+              height: 4.h,
+              margin: EdgeInsets.only(top: 12.h, bottom: 20.h),
+              decoration: BoxDecoration(
+                color: AppTheme.textMedium.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            
+            Text(
+              'Change Audio',
+              style: TextStyle(
+                fontSize: 18.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textLight,
+              ),
+            ),
+            
+            SizedBox(height: 20.h),
+            
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                child: CompactAudioSelector(
+                  selectedAudio: selectedAudioType,
+                  onAudioChanged: (audioType) {
+                    setState(() {
+                      selectedAudioType = audioType;
+                    });
+                    
+                    // Change audio during session
+                    if (audioType != AudioType.none) {
+                      _audioService.playAudio(audioType, volume: audioVolume);
+                    } else {
+                      _audioService.stopAudio();
+                    }
+                    
+                    _saveSettings();
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showEndConfirmation() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.cardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        title: Text(
+          'End Session?',
+          style: TextStyle(
+            color: AppTheme.textLight,
+            fontSize: 18.sp,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        content: Text(
+          'Are you sure you want to end your meditation session now?',
+          style: TextStyle(
+            color: AppTheme.textMedium,
+            fontSize: 14.sp,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Continue',
+              style: TextStyle(
+                color: AppTheme.textMedium,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              print('🛑 End session confirmed by user');
+              _endSession();
+            },
+            child: Text(
+              'End Session',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
