@@ -7,6 +7,9 @@ namespace Manifest.Common.Models.DBView
     public class DefaultCategoryView : DefaultCategory
     {
         [NotColumn]
+        public string PredefinedIconTypeName { get; set; }
+
+        [NotColumn]
         public string PredefinedCategoryTypeName { get; set; }
 
 

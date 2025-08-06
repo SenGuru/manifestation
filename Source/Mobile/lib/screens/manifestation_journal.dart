@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fun/components/gratitude_selection.dart';
 import 'package:fun/models/journey_entry.dart';
 import 'package:fun/constants/colors.dart';
@@ -12,6 +14,7 @@ import 'package:fun/widgets/stylish_loading.dart';
 import 'package:fun/widgets/keyboard_dismissal_wrapper.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
+  // Enhanced with manual draft saving functionality - debug exit dialog
   @override
   _ManifestationJournalScreenState createState() => _ManifestationJournalScreenState();
 }
@@ -55,6 +58,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     // Check for existing entry for today
     _checkForExistingEntry();
     
+    // Load any existing draft
+    _loadDraftProgress();
+    
     // Show guided tour after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showGuidedTourIfNeeded();
@@ -89,41 +95,44 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       );
     }
 
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
-      resizeToAvoidBottomInset: true,
-      body: KeyboardDismissalWrapper(
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Simple header
-              _buildSimpleHeader(),
-              
-              // Compact progress indicator
-              _buildCompactProgress(),
-              
-              // Page content
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-                  onPageChanged: (index) {
-                    setState(() {
-                      currentPage = index;
-                    });
-                  },
-                  children: [
-                    _buildMoodPage(),
-                    _buildGratitudePage(),
-                    _buildReflectionPage(),
-                    _buildIntentionPage(),
-                    _buildSummaryPage(),
-                  ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        backgroundColor: AppTheme.backgroundDark,
+        resizeToAvoidBottomInset: true,
+        body: KeyboardDismissalWrapper(
+          child: SafeArea(
+            child: Column(
+              children: [
+                // Simple header
+                _buildSimpleHeader(),
+                
+                // Compact progress indicator
+                _buildCompactProgress(),
+                
+                // Page content
+                Expanded(
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        currentPage = index;
+                      });
+                    },
+                    children: [
+                      _buildMoodPage(),
+                      _buildGratitudePage(),
+                      _buildReflectionPage(),
+                      _buildIntentionPage(),
+                      _buildSummaryPage(),
+                    ],
+                  ),
                 ),
-              ),
-              
-              // Navigation
-              _buildNavigation(),
-            ],
+                
+                // Navigation
+                _buildNavigation(),
+              ],
+            ),
           ),
         ),
       ),
@@ -136,7 +145,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => Navigator.pop(context),
+            onTap: _handleBackButton,
             child: Container(
               width: 44.w,
               height: 44.h,
@@ -177,6 +186,33 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               ],
             ),
           ),
+          // Save Draft button
+          GestureDetector(
+            onTap: _hasUnsavedChanges() ? () async => await _saveDraftProgress(true) : null,
+            child: Container(
+              width: 44.w,
+              height: 44.h,
+              decoration: BoxDecoration(
+                color: _hasUnsavedChanges() 
+                    ? AppTheme.journalGradient[0].withOpacity(0.1)
+                    : AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: _hasUnsavedChanges() 
+                      ? AppTheme.journalGradient[0].withOpacity(0.3)
+                      : AppTheme.textMedium.withOpacity(0.1),
+                ),
+              ),
+              child: Icon(
+                Icons.save_outlined,
+                color: _hasUnsavedChanges() 
+                    ? AppTheme.journalGradient[0]
+                    : AppTheme.textMedium.withOpacity(0.5),
+                size: 20.sp,
+              ),
+            ),
+          ),
+          SizedBox(width: 12.w),
           GestureDetector(
             onTap: _showCalendarView,
             child: Container(
@@ -230,73 +266,21 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Enhanced header section
-          Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.accentLavender.withOpacity(0.15),
-                  AppTheme.affirmationGradient[0].withOpacity(0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: AppTheme.accentLavender.withOpacity(0.2),
-                width: 1.5.w,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.accentLavender.withOpacity(0.1),
-                  blurRadius: 12.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
+          // Simple header
+          Text(
+            'How are you feeling?',
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.accentLavender, AppTheme.affirmationGradient[0]],
-                    ),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.sentiment_satisfied_alt_rounded,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'How are you feeling?',
-                        style: TextStyle(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Choose the mood that resonates with you today',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppTheme.textMedium,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Choose the mood that resonates with you today',
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: AppTheme.textSecondary,
             ),
           ),
           
@@ -344,73 +328,21 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Enhanced header section
-          Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.accentGold.withOpacity(0.15),
-                  AppTheme.affirmationGradient[0].withOpacity(0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: AppTheme.accentGold.withOpacity(0.2),
-                width: 1.5.w,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.accentGold.withOpacity(0.1),
-                  blurRadius: 12.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
+          // Simple header
+          Text(
+            'Daily Reflection',
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.accentGold, AppTheme.affirmationGradient[0]],
-                    ),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.auto_stories_rounded,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Daily Reflection',
-                        style: TextStyle(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Share your thoughts and insights from today',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppTheme.textMedium,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Share your thoughts and insights from today',
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: AppTheme.textSecondary,
             ),
           ),
           
@@ -418,93 +350,42 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppTheme.cardBackground,
-                    AppTheme.cardBackground.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20.r),
+                color: AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                  width: 1.w,
+                  color: AppTheme.borderSecondary,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.black.withOpacity(0.05),
-                    blurRadius: 8.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.edit_rounded,
-                        color: AppTheme.accentGold.withOpacity(0.7),
-                        size: 20.sp,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'What\'s on your mind?',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                    ],
+              child: TextField(
+                controller: _reflectionController,
+                onChanged: (value) {
+                  setState(() {
+                    reflection = value;
+                  });
+                },
+                style: TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 16.sp,
+                  height: 1.6,
+                  fontWeight: FontWeight.w400,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Write about your day, your feelings, lessons learned, or anything that comes to mind...',
+                  hintStyle: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 16.sp,
+                    height: 1.6,
+                    fontStyle: FontStyle.italic,
                   ),
-                  SizedBox(height: 16.h),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppTheme.backgroundDark.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                          color: AppTheme.textMedium.withOpacity(0.1),
-                        ),
-                      ),
-                      child: TextField(
-                        controller: _reflectionController,
-                        onChanged: (value) {
-                          setState(() {
-                            reflection = value;
-                          });
-                        },
-                        style: TextStyle(
-                          color: AppTheme.textLight,
-                          fontSize: 16.sp,
-                          height: 1.6,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Write about your day, your feelings, lessons learned, or anything that comes to mind...',
-                          hintStyle: TextStyle(
-                            color: AppTheme.textMedium.withOpacity(0.6),
-                            fontSize: 16.sp,
-                            height: 1.6,
-                            fontStyle: FontStyle.italic,
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(20.w),
-                          isDense: false,
-                        ),
-                        maxLines: null,
-                        expands: true,
-                        textAlignVertical: TextAlignVertical.top,
-                        textCapitalization: TextCapitalization.sentences,
-                      ),
-                    ),
-                  ),
-                ],
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(20.w),
+                  isDense: false,
+                ),
+                maxLines: null,
+                expands: true,
+                textAlignVertical: TextAlignVertical.top,
+                textCapitalization: TextCapitalization.sentences,
               ),
             ),
           ),
@@ -519,73 +400,21 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Enhanced header section
-          Container(
-            padding: EdgeInsets.all(24.w),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppTheme.goalTrackerGradient[0].withOpacity(0.15),
-                  AppTheme.accentLavender.withOpacity(0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(20.r),
-              border: Border.all(
-                color: AppTheme.goalTrackerGradient[0].withOpacity(0.2),
-                width: 1.5.w,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.goalTrackerGradient[0].withOpacity(0.1),
-                  blurRadius: 12.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
+          // Simple header
+          Text(
+            'Tomorrow\'s Intention',
+            style: TextStyle(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.textPrimary,
             ),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(12.w),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.goalTrackerGradient[0], AppTheme.accentLavender],
-                    ),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.wb_sunny_rounded,
-                    color: Colors.white,
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Tomorrow\'s Intention',
-                        style: TextStyle(
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        'Set a positive intention for tomorrow',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppTheme.textMedium,
-                          height: 1.3,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Set a positive intention for tomorrow',
+            style: TextStyle(
+              fontSize: 16.sp,
+              color: AppTheme.textSecondary,
             ),
           ),
           
@@ -593,96 +422,45 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           
           Expanded(
             child: Container(
-              padding: EdgeInsets.all(24.w),
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    AppTheme.cardBackground,
-                    AppTheme.cardBackground.withOpacity(0.8),
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(20.r),
+                color: AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(16.r),
                 border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                  width: 1.w,
+                  color: AppTheme.borderSecondary,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.black.withOpacity(0.05),
-                    blurRadius: 8.r,
-                    offset: Offset(0, 2.h),
-                  ),
-                ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.lightbulb_rounded,
-                        color: AppTheme.goalTrackerGradient[0].withOpacity(0.7),
-                        size: 20.sp,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'What do you want to focus on?',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.textLight,
-                        ),
-                      ),
-                    ],
+              child: TextField(
+                onChanged: (value) {
+                  setState(() {
+                    intention = value;
+                  });
+                },
+                controller: TextEditingController(text: intention)
+                  ..selection = TextSelection.fromPosition(
+                    TextPosition(offset: intention.length),
                   ),
-                  SizedBox(height: 16.h),
-                  Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppTheme.backgroundDark.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(16.r),
-                        border: Border.all(
-                          color: AppTheme.textMedium.withOpacity(0.1),
-                        ),
-                      ),
-                      child: TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            intention = value;
-                          });
-                        },
-                        controller: TextEditingController(text: intention)
-                          ..selection = TextSelection.fromPosition(
-                            TextPosition(offset: intention.length),
-                          ),
-                        style: TextStyle(
-                          color: AppTheme.textLight,
-                          fontSize: 16.sp,
-                          height: 1.6,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'How do you want to show up tomorrow? What energy do you want to bring? What would make tomorrow meaningful?',
-                          hintStyle: TextStyle(
-                            color: AppTheme.textMedium.withOpacity(0.6),
-                            fontSize: 16.sp,
-                            height: 1.6,
-                            fontStyle: FontStyle.italic,
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(20.w),
-                          isDense: false,
-                        ),
-                        maxLines: null,
-                        expands: true,
-                        textAlignVertical: TextAlignVertical.top,
-                        textCapitalization: TextCapitalization.sentences,
-                      ),
-                    ),
+                style: TextStyle(
+                  color: AppTheme.textPrimary,
+                  fontSize: 16.sp,
+                  height: 1.6,
+                  fontWeight: FontWeight.w400,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'How do you want to show up tomorrow? What energy do you want to bring? What would make tomorrow meaningful?',
+                  hintStyle: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 16.sp,
+                    height: 1.6,
+                    fontStyle: FontStyle.italic,
                   ),
-                ],
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.all(20.w),
+                  isDense: false,
+                ),
+                maxLines: null,
+                expands: true,
+                textAlignVertical: TextAlignVertical.top,
+                textCapitalization: TextCapitalization.sentences,
               ),
             ),
           ),
@@ -697,29 +475,27 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Celebration header
+          // Completion header with subtle styling
           Container(
             padding: EdgeInsets.all(32.w),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  AppTheme.affirmationGradient[0].withOpacity(0.2),
-                  AppTheme.accentLavender.withOpacity(0.15),
-                  AppTheme.accentGold.withOpacity(0.1),
+                  AppTheme.cardBackground,
+                  AppTheme.cardBackground.withOpacity(0.95),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(
-                color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                width: 2.w,
+                color: AppTheme.journalGradient[0].withOpacity(0.2),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.affirmationGradient[0].withOpacity(0.15),
-                  blurRadius: 20.r,
-                  offset: Offset(0, 8.h),
+                  color: AppTheme.journalGradient[0].withOpacity(0.1),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
                 ),
               ],
             ),
@@ -728,32 +504,37 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
-                    ),
+                    color: AppTheme.journalGradient[0],
                     borderRadius: BorderRadius.circular(20.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.journalGradient[0].withOpacity(0.3),
+                        blurRadius: 8.r,
+                        offset: Offset(0, 2.h),
+                      ),
+                    ],
                   ),
                   child: Icon(
-                    Icons.celebration,
+                    Icons.check_circle_outline,
                     color: Colors.white,
-                    size: 32.sp,
+                    size: 28.sp,
                   ),
                 ),
                 SizedBox(height: 16.h),
                 Text(
                   'Journal Complete!',
                   style: TextStyle(
-                    fontSize: 26.sp,
+                    fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
                     color: AppTheme.textLight,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: 6.h),
                 Text(
-                  'Beautiful work! Your thoughts have been captured.',
+                  'Your thoughts have been captured beautifully',
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 15.sp,
                     color: AppTheme.textMedium,
                     height: 1.3,
                   ),
@@ -763,147 +544,40 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             ),
           ),
           
-          SizedBox(height: 32.h),
+          SizedBox(height: 24.h),
           
           Expanded(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildEnhancedSummarySection(
+                  _buildSummarySection(
                     title: 'Your Mood',
                     content: selectedMood.displayName,
                     icon: selectedMood.icon,
-                    gradientColors: [selectedMood.color, selectedMood.color.withOpacity(0.7)],
                   ),
-                  SizedBox(height: 24.h),
-                  _buildEnhancedSummarySection(
+                  SizedBox(height: 16.h),
+                  _buildSummarySection(
                     title: 'Gratitudes',
                     content: gratitudeItems.where((item) => item.isNotEmpty).join('\n• '),
-                    icon: Icons.favorite_rounded,
-                    gradientColors: [AppTheme.affirmationGradient[0], AppTheme.accentLavender],
+                    icon: Icons.favorite_outline,
                   ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   if (reflection.isNotEmpty)
-                    _buildEnhancedSummarySection(
+                    _buildSummarySection(
                       title: 'Daily Reflection',
                       content: reflection,
-                      icon: Icons.auto_stories_rounded,
-                      gradientColors: [AppTheme.accentGold, AppTheme.affirmationGradient[0]],
+                      icon: Icons.auto_stories_outlined,
                     ),
-                  SizedBox(height: 24.h),
+                  SizedBox(height: 16.h),
                   if (intention.isNotEmpty)
-                    _buildEnhancedSummarySection(
+                    _buildSummarySection(
                       title: 'Tomorrow\'s Intention',
                       content: intention,
-                      icon: Icons.wb_sunny_rounded,
-                      gradientColors: [AppTheme.goalTrackerGradient[0], AppTheme.accentLavender],
+                      icon: Icons.wb_sunny_outlined,
                     ),
-                  SizedBox(height: 32.h),
+                  SizedBox(height: 24.h),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEnhancedSummarySection({
-    required String title,
-    required String content,
-    required IconData icon,
-    required List<Color> gradientColors,
-  }) {
-    if (content.isEmpty) return SizedBox.shrink();
-    
-    return Container(
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppTheme.cardBackground,
-            AppTheme.cardBackground.withOpacity(0.8),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: gradientColors[0].withOpacity(0.3),
-          width: 1.5.w,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: gradientColors[0].withOpacity(0.1),
-            blurRadius: 12.r,
-            offset: Offset(0, 4.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: gradientColors),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  icon,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
-                      ),
-                    ),
-                    SizedBox(height: 4.h),
-                    Container(
-                      height: 2.h,
-                      width: 40.w,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(colors: gradientColors),
-                        borderRadius: BorderRadius.circular(1.r),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 20.h),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              color: AppTheme.backgroundDark.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(
-                color: AppTheme.textMedium.withOpacity(0.1),
-              ),
-            ),
-            child: Text(
-              content,
-              style: TextStyle(
-                fontSize: 16.sp,
-                color: AppTheme.textLight,
-                height: 1.6,
-                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -916,47 +590,77 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     required String title,
     required String content,
     required IconData icon,
-    required Color color,
   }) {
+    if (content.isEmpty) return SizedBox.shrink();
+    
     return Container(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(24.w),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: AppTheme.journalGradient[0].withOpacity(0.2),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.journalGradient[0].withOpacity(0.06),
+            blurRadius: 8.r,
+            offset: Offset(0, 2.h),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: color, size: 20.sp),
-              SizedBox(width: 8.w),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  color: AppTheme.journalGradient[0].withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  icon,
+                  color: AppTheme.journalGradient[0],
+                  size: 18.sp,
+                ),
+              ),
+              SizedBox(width: 14.w),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 17.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textLight,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 8.h),
-          Text(
-            content.isNotEmpty ? content : 'Not provided',
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: content.isNotEmpty ? AppTheme.textMedium : AppTheme.textMedium.withOpacity(0.5),
-              height: 1.4,
+          SizedBox(height: 16.h),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(16.w),
+            decoration: BoxDecoration(
+              color: AppTheme.backgroundDark.withOpacity(0.025),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Text(
+              content,
+              style: TextStyle(
+                fontSize: 15.sp,
+                color: AppTheme.textMedium,
+                height: 1.6,
+              ),
             ),
           ),
         ],
       ),
     );
   }
+
 
   Widget _buildNavigation() {
     return Container(
@@ -1107,6 +811,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
         if (result.isSuccess) {
           print('📖 Journal entry updated successfully!');
+          await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Journal entry updated successfully! 📖'),
@@ -1134,6 +839,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
         if (result.isSuccess) {
           print('📖 Journal entry created successfully!');
+          await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Journal entry saved successfully! 📖'),
@@ -1315,5 +1021,603 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       'July', 'August', 'September', 'October', 'November', 'December'
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  // Handle back button tap in header
+  void _handleBackButton() async {
+    final shouldPop = await _onWillPop();
+    if (shouldPop) {
+      Navigator.pop(context);
+    }
+  }
+
+  // Check if user has unsaved changes
+  bool _hasUnsavedChanges() {
+    print('📖 Checking for unsaved changes...');
+    print('   isEditingExistingEntry: $isEditingExistingEntry');
+    print('   selectedMood: ${selectedMood.displayName}');
+    print('   gratitudeItems: ${gratitudeItems.where((item) => item.trim().isNotEmpty).toList()}');
+    print('   reflection: "${reflection.trim()}"');
+    print('   intention: "${intention.trim()}"');
+    
+    // If we're editing an existing entry, compare with original values
+    if (isEditingExistingEntry && existingEntry != null) {
+      print('   Comparing with existing entry...');
+      // Check if mood changed
+      if (selectedMood != existingEntry!.mood) {
+        print('   → Mood changed: ${existingEntry!.mood.displayName} → ${selectedMood.displayName}');
+        return true;
+      }
+      
+      // Check if gratitudes changed
+      final originalGratitudes = List<String>.filled(5, '');
+      for (int i = 0; i < existingEntry!.gratitudes.length && i < 5; i++) {
+        originalGratitudes[i] = existingEntry!.gratitudes[i];
+      }
+      for (int i = 0; i < 5; i++) {
+        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) {
+          print('   → Gratitude $i changed: "${originalGratitudes[i]}" → "${gratitudeItems[i].trim()}"');
+          return true;
+        }
+      }
+      
+      // Check if reflection changed
+      if (reflection.trim() != existingEntry!.reflection.trim()) {
+        print('   → Reflection changed');
+        return true;
+      }
+      
+      // Check if intention changed
+      if (intention.trim() != existingEntry!.intention.trim()) {
+        print('   → Intention changed');
+        return true;
+      }
+      
+      print('   → No changes detected in existing entry');
+      return false;
+    } else {
+      print('   Checking new entry for changes...');
+      // For new entries, check if any data has been entered
+      // Check if mood is not neutral (default)
+      if (selectedMood != Mood.neutral) {
+        print('   → Mood is not neutral: ${selectedMood.displayName}');
+        return true;
+      }
+      
+      // Check if any gratitude items have content
+      if (gratitudeItems.any((item) => item.trim().isNotEmpty)) {
+        print('   → Has gratitude items');
+        return true;
+      }
+      
+      // Check if reflection has content
+      if (reflection.trim().isNotEmpty) {
+        print('   → Has reflection content');
+        return true;
+      }
+      
+      // Check if intention has content
+      if (intention.trim().isNotEmpty) {
+        print('   → Has intention content');
+        return true;
+      }
+      
+      print('   → No changes detected in new entry');
+      return false;
+    }
+  }
+
+  // Handle will pop (back gesture or back button)
+  Future<bool> _onWillPop() async {
+    // If we're on the summary page or saving, allow normal back navigation
+    if (currentPage == 4 || isSaving) {
+      return true;
+    }
+    
+    // If editing existing entry, allow normal back navigation without dialog
+    if (isEditingExistingEntry) {
+      return true;
+    }
+
+    // Check if user has unsaved changes
+    if (!_hasUnsavedChanges()) {
+      return true; // No changes, allow back navigation
+    }
+
+    // Show save progress dialog
+    return await _showSaveProgressDialog() ?? false;
+  }
+
+  // Show dialog asking user if they want to save as draft
+  Future<void> _showSaveDraftDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.journalGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(
+                  Icons.save_outlined,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  'Save as Draft?',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textLight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Would you like to save your current progress as a draft? You can continue working on it later.',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppTheme.textMedium,
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              ..._buildUnsavedChangesSummary(),
+            ],
+          ),
+          actions: [
+            // Don't Save button
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Don\'t Save',
+                style: TextStyle(
+                  color: AppTheme.textMedium,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            // Save Draft button
+            Container(
+              margin: EdgeInsets.only(left: 8.w),
+              child: ElevatedButton(
+                onPressed: () async {
+                  Navigator.of(context).pop(); // Close dialog
+                  await _saveDraftProgress(true); // Save the draft with snackbar
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.journalGradient[0],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                ),
+                child: Text(
+                  'Save Draft',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Show dialog asking user what to do with unsaved changes
+  Future<bool?> _showSaveProgressDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppTheme.cardBackground,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          title: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(8.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.journalGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                child: Icon(
+                  Icons.save_outlined,
+                  color: Colors.white,
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 12.w),
+              Expanded(
+                child: Text(
+                  'Save Your Progress?',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textLight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'You have unsaved changes in your journal entry:',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppTheme.textMedium,
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 16.h),
+              ..._buildUnsavedChangesSummary(),
+              SizedBox(height: 16.h),
+              Text(
+                'What would you like to do?',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  color: AppTheme.textLight,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            // Cancel button
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: AppTheme.textMedium,
+                  fontSize: 16.sp,
+                ),
+              ),
+            ),
+            // Discard button
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(
+                'Discard',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            // Save as Draft button
+            Container(
+              margin: EdgeInsets.only(left: 8.w),
+              child: ElevatedButton(
+                onPressed: () async {
+                  // Save draft directly without showing another dialog
+                  await _saveDraftProgress();
+                  Navigator.of(context).pop(true); // Close dialog and allow navigation
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.journalGradient[0],
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+                ),
+                child: Text(
+                  'Save as Draft',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Build summary of unsaved changes for the dialog
+  List<Widget> _buildUnsavedChangesSummary() {
+    List<Widget> changes = [];
+    
+    if (isEditingExistingEntry && existingEntry != null) {
+      // For existing entries, show what changed
+      if (selectedMood != existingEntry!.mood) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.mood,
+          text: 'Mood updated to ${selectedMood.displayName}',
+          color: selectedMood.color,
+        ));
+      }
+      
+      // Check gratitude changes
+      final originalGratitudes = List<String>.filled(5, '');
+      for (int i = 0; i < existingEntry!.gratitudes.length && i < 5; i++) {
+        originalGratitudes[i] = existingEntry!.gratitudes[i];
+      }
+      bool gratitudesChanged = false;
+      for (int i = 0; i < 5; i++) {
+        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) {
+          gratitudesChanged = true;
+          break;
+        }
+      }
+      if (gratitudesChanged) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.favorite,
+          text: 'Gratitude entries modified',
+          color: AppTheme.affirmationGradient[0],
+        ));
+      }
+      
+      if (reflection.trim() != existingEntry!.reflection.trim()) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.auto_stories,
+          text: reflection.trim().isEmpty ? 'Reflection removed' : 'Reflection updated',
+          color: AppTheme.accentGold,
+        ));
+      }
+      
+      if (intention.trim() != existingEntry!.intention.trim()) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.wb_sunny,
+          text: intention.trim().isEmpty ? 'Intention removed' : 'Tomorrow\'s intention updated',
+          color: AppTheme.goalTrackerGradient[0],
+        ));
+      }
+    } else {
+      // For new entries, show what's been entered
+      if (selectedMood != Mood.neutral) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.mood,
+          text: 'Mood: ${selectedMood.displayName}',
+          color: selectedMood.color,
+        ));
+      }
+      
+      final gratitudeCount = gratitudeItems.where((item) => item.trim().isNotEmpty).length;
+      if (gratitudeCount > 0) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.favorite,
+          text: '$gratitudeCount gratitude ${gratitudeCount == 1 ? 'entry' : 'entries'}',
+          color: AppTheme.affirmationGradient[0],
+        ));
+      }
+      
+      if (reflection.trim().isNotEmpty) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.auto_stories,
+          text: 'Daily reflection written',
+          color: AppTheme.accentGold,
+        ));
+      }
+      
+      if (intention.trim().isNotEmpty) {
+        changes.add(_buildChangeSummaryItem(
+          icon: Icons.wb_sunny,
+          text: 'Tomorrow\'s intention set',
+          color: AppTheme.goalTrackerGradient[0],
+        ));
+      }
+    }
+    
+    return changes;
+  }
+
+  // Build individual change summary item
+  Widget _buildChangeSummaryItem({
+    required IconData icon,
+    required String text,
+    required Color color,
+  }) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 8.h),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(6.w),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: Icon(
+              icon,
+              color: color,
+              size: 16.sp,
+            ),
+          ),
+          SizedBox(width: 12.w),
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppTheme.textMedium,
+                height: 1.3,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  // Load existing draft progress
+  Future<void> _loadDraftProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      final draftJson = prefs.getString('journal_draft_$dateKey');
+      if (draftJson != null) {
+        final draftData = jsonDecode(draftJson) as Map<String, dynamic>;
+        
+        print('📖 Loading draft progress...');
+        print('   Draft data found: ${draftData.keys}');
+        
+        setState(() {
+          // Load mood (find by display name)
+          final moodName = draftData['mood'] as String?;
+          if (moodName != null) {
+            final mood = Mood.values.firstWhere(
+              (m) => m.displayName == moodName,
+              orElse: () => Mood.neutral,
+            );
+            selectedMood = mood;
+          }
+          
+          // Load gratitudes
+          final draftGratitudes = draftData['gratitudes'] as List<dynamic>?;
+          if (draftGratitudes != null) {
+            gratitudeItems = List<String>.filled(5, '');
+            for (int i = 0; i < draftGratitudes.length && i < 5; i++) {
+              gratitudeItems[i] = draftGratitudes[i].toString();
+            }
+          }
+          
+          // Load reflection
+          final draftReflection = draftData['reflection'] as String?;
+          if (draftReflection != null) {
+            reflection = draftReflection;
+            _reflectionController.text = reflection;
+          }
+          
+          // Load intention
+          final draftIntention = draftData['intention'] as String?;
+          if (draftIntention != null) {
+            intention = draftIntention;
+          }
+        });
+        
+        print('📖 Draft progress loaded successfully');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.restore, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Draft progress restored'),
+              ],
+            ),
+            backgroundColor: AppTheme.journalGradient[0],
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('📖 Error loading draft progress: $e');
+      // Continue silently without draft
+    }
+  }
+
+  // Clear draft progress (when entry is saved or no longer needed)
+  Future<void> _clearDraftProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      await prefs.remove('journal_draft_$dateKey');
+      print('📖 Draft progress cleared');
+    } catch (e) {
+      print('📖 Error clearing draft progress: $e');
+    }
+  }
+
+  // Save current progress as draft without creating a finalized journal entry
+  Future<bool> _saveDraftProgress([bool showSnackBar = false]) async {
+    try {
+      print('📖 Saving draft progress...');
+      
+      // Save draft data to local storage/shared preferences
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      // Create draft data map
+      final draftData = {
+        'mood': selectedMood.displayName,
+        'gratitudes': gratitudeItems.where((item) => item.trim().isNotEmpty).toList(),
+        'reflection': reflection.trim(),
+        'intention': intention.trim(),
+        'lastSaved': DateTime.now().toIso8601String(),
+      };
+      
+      // Save as JSON string
+      await prefs.setString('journal_draft_$dateKey', jsonEncode(draftData));
+      
+      print('📖 Draft progress saved successfully');
+      print('   Mood: ${selectedMood.displayName}');
+      print('   Gratitudes: ${draftData['gratitudes']}');
+      print('   Has Reflection: ${reflection.trim().isNotEmpty}');
+      print('   Has Intention: ${intention.trim().isNotEmpty}');
+      
+      // Show confirmation only if requested and context is valid
+      if (showSnackBar && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Progress saved as draft'),
+              ],
+            ),
+            backgroundColor: AppTheme.journalGradient[0],
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      
+      return true;
+    } catch (e) {
+      print('📖 Error saving draft progress: $e');
+      if (showSnackBar && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save progress: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return false;
+    }
   }
 }

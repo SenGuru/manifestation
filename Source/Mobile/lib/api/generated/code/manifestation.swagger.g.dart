@@ -3464,6 +3464,7 @@ DefaultCategoryCreateModel _$DefaultCategoryCreateModelFromJson(
       defaultCategoryName: json['defaultCategoryName'] as String?,
       predefinedCategoryTypeId:
           (json['predefinedCategoryTypeId'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$DefaultCategoryCreateModelToJson(
@@ -3471,6 +3472,7 @@ Map<String, dynamic> _$DefaultCategoryCreateModelToJson(
     <String, dynamic>{
       'defaultCategoryName': instance.defaultCategoryName,
       'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
     };
 
 DefaultCategoryModel _$DefaultCategoryModelFromJson(
@@ -3480,6 +3482,7 @@ DefaultCategoryModel _$DefaultCategoryModelFromJson(
       defaultCategoryName: json['defaultCategoryName'] as String?,
       predefinedCategoryTypeId:
           (json['predefinedCategoryTypeId'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
       isDeleted: json['isDeleted'] as bool?,
       createdDate: json['createdDate'] == null
           ? null
@@ -3489,6 +3492,7 @@ DefaultCategoryModel _$DefaultCategoryModelFromJson(
           ? null
           : DateTime.parse(json['modifiedDate'] as String),
       modifiedByUserId: (json['modifiedByUserId'] as num?)?.toInt(),
+      predefinedIconTypeName: json['predefinedIconTypeName'] as String?,
       predefinedCategoryTypeName: json['predefinedCategoryTypeName'] as String?,
       createdByUserFirstName: json['createdByUserFirstName'] as String?,
       createdByUserLastName: json['createdByUserLastName'] as String?,
@@ -3506,11 +3510,13 @@ Map<String, dynamic> _$DefaultCategoryModelToJson(
       'defaultCategoryId': instance.defaultCategoryId,
       'defaultCategoryName': instance.defaultCategoryName,
       'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
       'isDeleted': instance.isDeleted,
       'createdDate': instance.createdDate?.toIso8601String(),
       'createdByUserId': instance.createdByUserId,
       'modifiedDate': instance.modifiedDate?.toIso8601String(),
       'modifiedByUserId': instance.modifiedByUserId,
+      'predefinedIconTypeName': instance.predefinedIconTypeName,
       'predefinedCategoryTypeName': instance.predefinedCategoryTypeName,
       'createdByUserFirstName': instance.createdByUserFirstName,
       'createdByUserLastName': instance.createdByUserLastName,
@@ -3604,6 +3610,7 @@ DefaultCategoryUpdateModel _$DefaultCategoryUpdateModelFromJson(
       defaultCategoryName: json['defaultCategoryName'] as String?,
       predefinedCategoryTypeId:
           (json['predefinedCategoryTypeId'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$DefaultCategoryUpdateModelToJson(
@@ -3612,6 +3619,7 @@ Map<String, dynamic> _$DefaultCategoryUpdateModelToJson(
       'defaultCategoryId': instance.defaultCategoryId,
       'defaultCategoryName': instance.defaultCategoryName,
       'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
     };
 
 DefaultDailyAffirmationTextByDefaultCategoryIdSearchCriteria
@@ -6130,6 +6138,9 @@ GoalTrackerCategoryModel _$GoalTrackerCategoryModelFromJson(
           ? null
           : DateTime.parse(json['modifiedDate'] as String),
       modifiedByUserId: (json['modifiedByUserId'] as num?)?.toInt(),
+      predefinedCategoryTypeId:
+          (json['predefinedCategoryTypeId'] as num?)?.toInt(),
+      predefinedIconTypeId: (json['predefinedIconTypeId'] as num?)?.toInt(),
       categoryName: json['categoryName'] as String?,
       goalTrackerName: json['goalTrackerName'] as String?,
       userName: json['userName'] as String?,
@@ -6155,6 +6166,8 @@ Map<String, dynamic> _$GoalTrackerCategoryModelToJson(
       'createdByUserId': instance.createdByUserId,
       'modifiedDate': instance.modifiedDate?.toIso8601String(),
       'modifiedByUserId': instance.modifiedByUserId,
+      'predefinedCategoryTypeId': instance.predefinedCategoryTypeId,
+      'predefinedIconTypeId': instance.predefinedIconTypeId,
       'categoryName': instance.categoryName,
       'goalTrackerName': instance.goalTrackerName,
       'userName': instance.userName,
@@ -6269,6 +6282,8 @@ GoalTrackerCreateModel _$GoalTrackerCreateModelFromJson(
       goalTrackerName: json['goalTrackerName'] as String?,
       predefinedGoalStatusTypeId:
           (json['predefinedGoalStatusTypeId'] as num?)?.toInt(),
+      predefinedGoalPriorityTypeId:
+          (json['predefinedGoalPriorityTypeId'] as num?)?.toInt(),
       goalTrackerStartDate: json['goalTrackerStartDate'] == null
           ? null
           : DateTime.parse(json['goalTrackerStartDate'] as String),
@@ -6302,6 +6317,7 @@ Map<String, dynamic> _$GoalTrackerCreateModelToJson(
     <String, dynamic>{
       'goalTrackerName': instance.goalTrackerName,
       'predefinedGoalStatusTypeId': instance.predefinedGoalStatusTypeId,
+      'predefinedGoalPriorityTypeId': instance.predefinedGoalPriorityTypeId,
       'goalTrackerStartDate': instance.goalTrackerStartDate?.toIso8601String(),
       'goalTrackerEndDate': instance.goalTrackerEndDate?.toIso8601String(),
       'goalTrackerCompletedDate':
@@ -6628,6 +6644,8 @@ GoalTrackerModel _$GoalTrackerModelFromJson(Map<String, dynamic> json) =>
       goalTrackerName: json['goalTrackerName'] as String?,
       predefinedGoalStatusTypeId:
           (json['predefinedGoalStatusTypeId'] as num?)?.toInt(),
+      predefinedGoalPriorityTypeId:
+          (json['predefinedGoalPriorityTypeId'] as num?)?.toInt(),
       goalTrackerStartDate: json['goalTrackerStartDate'] == null
           ? null
           : DateTime.parse(json['goalTrackerStartDate'] as String),
@@ -6651,6 +6669,8 @@ GoalTrackerModel _$GoalTrackerModelFromJson(Map<String, dynamic> json) =>
           ? null
           : DateTime.parse(json['modifiedDate'] as String),
       modifiedByUserId: (json['modifiedByUserId'] as num?)?.toInt(),
+      predefinedGoalPriorityTypeName:
+          json['predefinedGoalPriorityTypeName'] as String?,
       predefinedGoalStatusTypeName:
           json['predefinedGoalStatusTypeName'] as String?,
       userName: json['userName'] as String?,
@@ -6679,6 +6699,7 @@ Map<String, dynamic> _$GoalTrackerModelToJson(GoalTrackerModel instance) =>
       'goalTrackerId': instance.goalTrackerId,
       'goalTrackerName': instance.goalTrackerName,
       'predefinedGoalStatusTypeId': instance.predefinedGoalStatusTypeId,
+      'predefinedGoalPriorityTypeId': instance.predefinedGoalPriorityTypeId,
       'goalTrackerStartDate': instance.goalTrackerStartDate?.toIso8601String(),
       'goalTrackerEndDate': instance.goalTrackerEndDate?.toIso8601String(),
       'goalTrackerCompletedDate':
@@ -6691,6 +6712,7 @@ Map<String, dynamic> _$GoalTrackerModelToJson(GoalTrackerModel instance) =>
       'createdByUserId': instance.createdByUserId,
       'modifiedDate': instance.modifiedDate?.toIso8601String(),
       'modifiedByUserId': instance.modifiedByUserId,
+      'predefinedGoalPriorityTypeName': instance.predefinedGoalPriorityTypeName,
       'predefinedGoalStatusTypeName': instance.predefinedGoalStatusTypeName,
       'userName': instance.userName,
       'createdByUserFirstName': instance.createdByUserFirstName,
@@ -6786,6 +6808,8 @@ GoalTrackerUpdateModel _$GoalTrackerUpdateModelFromJson(
       goalTrackerName: json['goalTrackerName'] as String?,
       predefinedGoalStatusTypeId:
           (json['predefinedGoalStatusTypeId'] as num?)?.toInt(),
+      predefinedGoalPriorityTypeId:
+          (json['predefinedGoalPriorityTypeId'] as num?)?.toInt(),
       goalTrackerStartDate: json['goalTrackerStartDate'] == null
           ? null
           : DateTime.parse(json['goalTrackerStartDate'] as String),
@@ -6820,6 +6844,7 @@ Map<String, dynamic> _$GoalTrackerUpdateModelToJson(
       'goalTrackerId': instance.goalTrackerId,
       'goalTrackerName': instance.goalTrackerName,
       'predefinedGoalStatusTypeId': instance.predefinedGoalStatusTypeId,
+      'predefinedGoalPriorityTypeId': instance.predefinedGoalPriorityTypeId,
       'goalTrackerStartDate': instance.goalTrackerStartDate?.toIso8601String(),
       'goalTrackerEndDate': instance.goalTrackerEndDate?.toIso8601String(),
       'goalTrackerCompletedDate':
@@ -13280,21 +13305,18 @@ UserGroupCreateModel _$UserGroupCreateModelFromJson(
         Map<String, dynamic> json) =>
     UserGroupCreateModel(
       userGroupName: json['userGroupName'] as String?,
-      companyEntityId: (json['companyEntityId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserGroupCreateModelToJson(
         UserGroupCreateModel instance) =>
     <String, dynamic>{
       'userGroupName': instance.userGroupName,
-      'companyEntityId': instance.companyEntityId,
     };
 
 UserGroupModel _$UserGroupModelFromJson(Map<String, dynamic> json) =>
     UserGroupModel(
       userGroupId: (json['userGroupId'] as num?)?.toInt(),
       userGroupName: json['userGroupName'] as String?,
-      companyEntityId: (json['companyEntityId'] as num?)?.toInt(),
       isDeleted: json['isDeleted'] as bool?,
       createdDate: json['createdDate'] == null
           ? null
@@ -13319,7 +13341,6 @@ Map<String, dynamic> _$UserGroupModelToJson(UserGroupModel instance) =>
     <String, dynamic>{
       'userGroupId': instance.userGroupId,
       'userGroupName': instance.userGroupName,
-      'companyEntityId': instance.companyEntityId,
       'isDeleted': instance.isDeleted,
       'createdDate': instance.createdDate?.toIso8601String(),
       'createdByUserId': instance.createdByUserId,
@@ -13412,7 +13433,6 @@ UserGroupUpdateModel _$UserGroupUpdateModelFromJson(
     UserGroupUpdateModel(
       userGroupId: (json['userGroupId'] as num?)?.toInt(),
       userGroupName: json['userGroupName'] as String?,
-      companyEntityId: (json['companyEntityId'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UserGroupUpdateModelToJson(
@@ -13420,7 +13440,6 @@ Map<String, dynamic> _$UserGroupUpdateModelToJson(
     <String, dynamic>{
       'userGroupId': instance.userGroupId,
       'userGroupName': instance.userGroupName,
-      'companyEntityId': instance.companyEntityId,
     };
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(

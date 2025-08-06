@@ -7,6 +7,9 @@ namespace Manifest.Common.Models.DBView
     public class GoalTrackerView : GoalTracker
     {
         [NotColumn]
+        public string PredefinedGoalPriorityTypeName { get; set; }
+
+        [NotColumn]
         public string PredefinedGoalStatusTypeName { get; set; }
         [NotColumn]
         public string UserName { get; set; }

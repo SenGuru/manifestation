@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../constants/app_theme.dart';
 import '../components/vision_board_canvas.dart';
+import '../components/vision_board_toolbar.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/vision_board_service.dart';
 import '../models/analytics_models.dart';
@@ -13,6 +14,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 import '../constants/colors.dart';
+import '../widgets/stylish_loading.dart';
 
 class VisionBoardScreen extends StatefulWidget {
   final VisionBoard? existingBoard;        
@@ -31,13 +33,13 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   late VisionBoard currentBoard;
   VisionBoardTool selectedTool = VisionBoardTool.select;
   bool showToolbar = true;
-  bool isFullscreen = false;
   List<VisionBoard> undoStack = [];
   int undoIndex = -1;
   bool hasUnsavedChanges = false;
   VisionBoard? lastSavedState;
   bool hasBeenSavedToServer = false;
   int? serverPictureId; // Store the server picture ID
+  bool isLoadingContent = false; // Track if we're loading content from server
   
   late AnimationController _toolbarController;
   late Animation<double> _toolbarAnimation;
@@ -165,13 +167,23 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   @override
   Widget build(BuildContext context) {
+    // Show loading screen while content is being loaded from server
+    if (isLoadingContent) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundPrimary,
+        body: StylishLoading(
+          message: 'Loading your vision board...',
+        ),
+      );
+    }
+    
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
         child: Column(
           children: [
             // Top header
-            if (!isFullscreen) _buildHeader(),
+            _buildHeader(),
             
             // Main canvas area
             Expanded(
@@ -179,24 +191,24 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 children: [
                   _buildCanvasArea(),
                   
-                  // Quick actions
-                  if (!isFullscreen) _buildQuickActions(),
-                  
-                  // Fullscreen toggle
-                  _buildFullscreenToggle(),
+                  // Quick actions (only background color picker)
+                  _buildQuickActions(),
                 ],
               ),
             ),
             
-            // Floating toolbar
+            // Floating toolbar with better positioning
             AnimatedBuilder(
               animation: _toolbarAnimation,
               builder: (context, child) {
                 return Transform.translate(
-                  offset: Offset(0, (1 - _toolbarAnimation.value) * 100.h),
+                  offset: Offset(0, (1 - _toolbarAnimation.value) * 120.h),
                   child: Opacity(
                     opacity: _toolbarAnimation.value,
-                    child: _buildFloatingToolbar(),
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12.h), // Add safe area
+                      child: _buildFloatingToolbar(),
+                    ),
                   ),
                 );
               },
@@ -209,32 +221,56 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Widget _buildCanvasArea() {
     return Container(
-      margin: EdgeInsets.all(isFullscreen ? 0 : 16.w),
+      margin: EdgeInsets.only(
+        left: 20.w,
+        right: 20.w,
+        top: 12.h,
+        bottom: 8.h, // Less bottom margin to prevent cutoff
+      ),
       decoration: BoxDecoration(
-        color: AppTheme.white,
-        borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
-        boxShadow: isFullscreen ? null : [
+        gradient: LinearGradient(
+          colors: [
+            currentBoard.backgroundColor,
+            currentBoard.backgroundColor.withOpacity(0.98),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.circular(28.r),
+        border: Border.all(
+          color: AppTheme.textMedium.withOpacity(0.08),
+          width: 1.w,
+        ),
+        boxShadow: [
           BoxShadow(
-            color: AppTheme.black.withOpacity(0.1),
-            blurRadius: 20.r,
-            offset: Offset(0, 10.h),
+            color: AppTheme.black.withOpacity(0.08),
+            blurRadius: 25.r,
+            offset: Offset(0, 12.h),
+          ),
+          BoxShadow(
+            color: AppTheme.visionBoardGradient[0].withOpacity(0.05),
+            blurRadius: 40.r,
+            offset: Offset(0, 20.h),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(isFullscreen ? 0 : 24.r),
+        borderRadius: BorderRadius.circular(28.r),
         child: Stack(
           children: [
-            // Canvas
-            VisionBoardCanvas(
-              board: currentBoard,
-              selectedTool: selectedTool,
-              onBoardChanged: _onBoardChanged,
+            // Canvas with padding to prevent cutoff
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.all(12.w),
+                child: VisionBoardCanvas(
+                  board: currentBoard,
+                  selectedTool: selectedTool,
+                  onBoardChanged: _onBoardChanged,
+                ),
+              ),
             ),
             
-            // Canvas overlay controls
-            if (currentBoard.elements.isNotEmpty)
-              _buildCanvasOverlay(),
+            // Canvas overlay removed - cleaner interface
           ],
         ),
       ),
@@ -363,172 +399,22 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
 
   Widget _buildFloatingToolbar() {
-    return Container(
-      height: 88.h,
-      margin: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-          color: AppTheme.cardBackground,
-          borderRadius: BorderRadius.circular(24.r),
-          border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.black.withOpacity(0.1),
-              blurRadius: 20.r,
-              offset: Offset(0, 10.h),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Tool selector
-            Expanded(
-              child: _buildToolSelector(),
-            ),
-            
-            // Divider
-            Container(
-              width: 1.w,
-              height: 48.h,
-              color: AppTheme.textMedium.withOpacity(0.1),
-            ),
-            
-            // Action buttons
-            _buildActionButtons(),
-          ],
-        ),
+    return VisionBoardToolbar(
+      selectedTool: selectedTool,
+      onToolSelected: (tool) {
+        setState(() {
+          selectedTool = tool;
+        });
+      },
+      onAddText: _showTextEditor,
+      onAddImage: _showImagePicker,
+      onUndo: _undo,
+      onRedo: _redo,
+      canUndo: undoIndex > 0,
+      canRedo: undoIndex < undoStack.length - 1,
     );
   }
 
-  Widget _buildToolSelector() {
-    return Container(
-      height: 80.h,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: VisionBoardTool.values.map((tool) {
-          final isSelected = selectedTool == tool;
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => _selectTool(tool),
-              child: AnimatedContainer(
-                duration: Duration(milliseconds: 200),
-                margin: EdgeInsets.symmetric(horizontal: 1.w),
-                height: 64.h,
-                decoration: BoxDecoration(
-                  gradient: isSelected
-                      ? LinearGradient(colors: AppTheme.visionBoardGradient)
-                      : null,
-                  color: isSelected ? null : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12.r),
-                  boxShadow: isSelected ? [
-                    BoxShadow(
-                      color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
-                      blurRadius: 6.r,
-                      offset: Offset(0, 3.h),
-                    ),
-                  ] : null,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      tool.icon,
-                      color: isSelected ? AppTheme.white : AppTheme.textMedium,
-                      size: 22.sp,
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      tool.shortName,
-                      style: TextStyle(
-                        fontSize: 8.sp,
-                        fontWeight: FontWeight.w500,
-                        color: isSelected ? AppTheme.white : AppTheme.textMedium,
-                      ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Row(
-        children: [
-          // Add Image
-          _buildActionButton(
-            icon: Icons.image,
-            onTap: _showImagePicker,
-            tooltip: 'Add Image',
-          ),
-          
-          SizedBox(width: 12.w),
-          
-          // Add Text
-          _buildActionButton(
-            icon: Icons.text_fields,
-            onTap: _showTextEditor,
-            tooltip: 'Add Text',
-          ),
-          
-          SizedBox(width: 12.w),
-          
-          // Undo
-          _buildActionButton(
-            icon: Icons.undo,
-            onTap: undoIndex > 0 ? _undo : null,
-            tooltip: 'Undo',
-            isEnabled: undoIndex > 0,
-          ),
-          
-          SizedBox(width: 12.w),
-          
-          // Redo
-          _buildActionButton(
-            icon: Icons.redo,
-            onTap: undoIndex < undoStack.length - 1 ? _redo : null,
-            tooltip: 'Redo',
-            isEnabled: undoIndex < undoStack.length - 1,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required VoidCallback? onTap,
-    required String tooltip,
-    bool isEnabled = true,
-  }) {
-    return GestureDetector(
-      onTap: isEnabled ? onTap : null,
-      child: Container(
-        width: 40.w,
-        height: 40.h,
-        decoration: BoxDecoration(
-          color: isEnabled
-              ? AppTheme.backgroundMedium
-              : AppTheme.backgroundMedium.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Icon(
-          icon,
-          color: isEnabled ? AppTheme.textLight : AppTheme.textMedium.withOpacity(0.5),
-          size: 18.sp,
-        ),
-      ),
-    );
-  }
 
   Widget _buildQuickActions() {
     return Positioned(
@@ -536,32 +422,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       right: 20.w,
       child: Column(
         children: [
-          // Templates
-          _buildQuickActionButton(
-            icon: Icons.grid_view,
-            onTap: _showTemplates,
-            tooltip: 'Templates',
-            color: AppTheme.accentGold,
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Backgrounds
+          // Backgrounds only
           _buildQuickActionButton(
             icon: Icons.color_lens,
             onTap: _showBackgrounds,
             tooltip: 'Backgrounds',
             color: AppTheme.visionBoardGradient[0],
-          ),
-          
-          SizedBox(height: 12.h),
-          
-          // Export
-          _buildQuickActionButton(
-            icon: Icons.share,
-            onTap: _showExportOptions,
-            tooltip: 'Share',
-            color: AppTheme.journalGradient[0],
           ),
         ],
       ),
@@ -595,75 +461,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  Widget _buildFullscreenToggle() {
-    return Positioned(
-      top: 20.h,
-      left: 20.w,
-      child: GestureDetector(
-        onTap: _toggleFullscreen,
-        child: Container(
-          width: 48.w,
-          height: 48.h,
-          decoration: BoxDecoration(
-            color: AppTheme.cardBackground.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(
-              color: AppTheme.textMedium.withOpacity(0.1),
-            ),
-          ),
-          child: Icon(
-            isFullscreen ? Icons.fullscreen_exit : Icons.fullscreen,
-            color: AppTheme.textLight,
-            size: 20.sp,
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _buildCanvasOverlay() {
-    return Positioned(
-      top: 16.h,
-      left: 16.w,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-        decoration: BoxDecoration(
-          color: AppTheme.black.withOpacity(0.7),
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.dashboard,
-              color: AppTheme.white,
-              size: 14.sp,
-            ),
-            SizedBox(width: 6.w),
-            Text(
-              '${currentBoard.elements.length} items',
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: AppTheme.white,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  void _selectTool(VisionBoardTool tool) {
-    setState(() {
-      selectedTool = tool;
-    });
-    
-    // Animate tool selection
-    _zoomController.forward().then((_) {
-      _zoomController.reverse();
-    });
-  }
 
   void _onBoardChanged(VisionBoard newBoard) {
     setState(() {
@@ -743,55 +542,73 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             ),
           ),
           
-          // Options grid
+          // Options - Only Gallery and Internet
           Expanded(
-            child: GridView.count(
-              crossAxisCount: 2,
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 24.w),
-              crossAxisSpacing: 16.w,
-              mainAxisSpacing: 16.h,
-              children: [
-                _buildImageSourceCard(
-                  icon: Icons.camera_alt,
-                  title: 'Camera',
-                  subtitle: 'Take a photo',
-                  color: AppTheme.accentGold,
-                  onTap: () {
-                    Navigator.pop(context);
-                    _addImageFromCamera();
-                  },
-                ),
-                _buildImageSourceCard(
-                  icon: Icons.photo_library,
-                  title: 'Gallery',
-                  subtitle: 'Choose from photos',
-                  color: AppTheme.visionBoardGradient[0],
-                  onTap: () {
-                    Navigator.pop(context);
-                    _addImageFromGallery();
-                  },
-                ),
-                _buildImageSourceCard(
-                  icon: Icons.search,
-                  title: 'Search',
-                  subtitle: 'Find online images',
-                  color: AppTheme.journalGradient[0],
-                  onTap: () {
-                    Navigator.pop(context);
-                    _addImageFromSearch();
-                  },
-                ),
-                _buildImageSourceCard(
-                  icon: Icons.auto_awesome,
-                  title: 'AI Generate',
-                  subtitle: 'Create with AI',
-                  color: AppTheme.accentCoral,
-                  onTap: () {
-                    Navigator.pop(context);
-                    _addImageFromAI();
-                  },
-                ),
-              ],
+              child: Column(
+                children: [
+                  // Gallery option
+                  _buildEnhancedImageSourceCard(
+                    icon: Icons.photo_library_rounded,
+                    title: 'Gallery',
+                    subtitle: 'Upload from your device photos',
+                    color: AppTheme.visionBoardGradient[0],
+                    onTap: () {
+                      Navigator.pop(context);
+                      _addImageFromGallery();
+                    },
+                  ),
+                  
+                  SizedBox(height: 20.h),
+                  
+                  // Internet URL option
+                  _buildEnhancedImageSourceCard(
+                    icon: Icons.link_rounded,
+                    title: 'Image URL',
+                    subtitle: 'Paste an image URL from the internet',
+                    color: AppTheme.journalGradient[0],
+                    onTap: () {
+                      Navigator.pop(context);
+                      _addImageFromURL();
+                    },
+                  ),
+                  
+                  SizedBox(height: 32.h),
+                  
+                  // Info text
+                  Container(
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundMedium.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: AppTheme.textMedium.withOpacity(0.1),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          color: AppTheme.textMedium,
+                          size: 20.sp,
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Text(
+                            'Use gallery for local photos or paste image URLs from the web',
+                            style: TextStyle(
+                              fontSize: 13.sp,
+                              color: AppTheme.textMedium,
+                              height: 1.3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           
@@ -858,210 +675,461 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  Widget _buildTextEditorSheet() {
-    return StatefulBuilder(
-      builder: (context, setModalState) => Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      margin: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(24.r),
-      ),
-      child: Column(
-        children: [
-          // Handle
-          Container(
-            width: 40.w,
-            height: 4.h,
-            margin: EdgeInsets.only(top: 12.h),
-            decoration: BoxDecoration(
-              color: AppTheme.textMedium.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2.r),
-            ),
+  Widget _buildEnhancedImageSourceCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(24.w),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppTheme.cardBackground,
+              AppTheme.cardBackground.withOpacity(0.8),
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          
-          // Header
-          Padding(
-            padding: EdgeInsets.all(24.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Add Text',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 32.w,
-                    height: 32.h,
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      color: AppTheme.textMedium,
-                      size: 18.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: color.withOpacity(0.2),
+            width: 1.5,
           ),
-          
-          // Text input
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.1),
+              blurRadius: 20.r,
+              offset: Offset(0, 8.h),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Icon container
+            Container(
+              width: 64.w,
+              height: 64.h,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [color, color.withOpacity(0.8)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(18.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: color.withOpacity(0.3),
+                    blurRadius: 12.r,
+                    offset: Offset(0, 6.h),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon,
+                color: AppTheme.white,
+                size: 32.sp,
+              ),
+            ),
+            
+            SizedBox(width: 20.w),
+            
+            // Text content
+            Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Text field
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium,
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(
-                        color: AppTheme.textMedium.withOpacity(0.1),
-                      ),
-                    ),
-                    child: TextField(
-                      controller: _textController,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: _selectedTextColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      maxLines: 4,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your inspirational text...',
-                        hintStyle: TextStyle(
-                          color: AppTheme.textMedium.withOpacity(0.6),
-                          fontSize: 16.sp,
-                        ),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(20.w),
-                      ),
-                    ),
-                  ),
-                  
-                  SizedBox(height: 24.h),
-                  
-                  // Font size slider
                   Text(
-                    'Font Size',
+                    title,
                     style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textLight,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 12.h),
-                  SliderTheme(
-                    data: SliderTheme.of(context).copyWith(
-                      activeTrackColor: AppTheme.visionBoardGradient[0],
-                      inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
-                      thumbColor: AppTheme.visionBoardGradient[0],
-                      overlayColor: AppTheme.visionBoardGradient[0].withOpacity(0.2),
-                    ),
-                    child: Slider(
-                      value: _selectedFontSize,
-                      min: 12.0,
-                      max: 48.0,
-                      divisions: 18,
-                      label: _selectedFontSize.round().toString(),
-                      onChanged: (value) {
-                        setModalState(() {
-                          _selectedFontSize = value;
-                        });
-                      },
-                    ),
-                  ),
-                  
-                  SizedBox(height: 24.h),
-                  
-                  // Color picker
+                  SizedBox(height: 6.h),
                   Text(
-                    'Text Color',
+                    subtitle,
                     style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textLight,
-                    ),
-                  ),
-                  SizedBox(height: 12.h),
-                  Container(
-                    height: 60.h,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        Colors.black,
-                        Colors.white,
-                        AppTheme.visionBoardGradient[0],
-                        AppTheme.visionBoardGradient[0],
-                        AppTheme.accentGold,
-                        AppTheme.accentCoral,
-                        AppTheme.journalGradient[0],
-                        AppTheme.accentMint,
-                        Colors.red,
-                        Colors.blue,
-                        Colors.green,
-                        Colors.orange,
-                      ].map((color) => _buildColorOption(color, setModalState)).toList(),
+                      fontSize: 14.sp,
+                      color: AppTheme.textSecondary,
+                      height: 1.3,
                     ),
                   ),
                 ],
               ),
             ),
+            
+            // Arrow indicator
+            Container(
+              width: 40.w,
+              height: 40.h,
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+              child: Icon(
+                Icons.arrow_forward_rounded,
+                color: color,
+                size: 20.sp,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextEditorSheet() {
+    return StatefulBuilder(
+      builder: (context, setModalState) => GestureDetector(
+        onTap: () {
+          // Dismiss keyboard when tapping anywhere on the sheet
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          margin: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.cardBackground,
+                AppTheme.cardBackground.withOpacity(0.95),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(
+              color: Color(0xFF6C63FF).withOpacity(0.2),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0xFF6C63FF).withOpacity(0.15),
+                blurRadius: 30.r,
+                offset: Offset(0, 15.h),
+              ),
+              BoxShadow(
+                color: AppTheme.black.withOpacity(0.1),
+                blurRadius: 20.r,
+                offset: Offset(0, 8.h),
+              ),
+            ],
           ),
-          
-          // Add button
-          Padding(
-            padding: EdgeInsets.all(24.w),
-            child: GestureDetector(
-              onTap: () {
-                if (_textController.text.trim().isNotEmpty) {
-                  _addTextToBoard();
-                  Navigator.pop(context);
-                }
-              },
-              child: Container(
-                width: double.infinity,
-                height: 56.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: AppTheme.visionBoardGradient,
-                  ),
-                  borderRadius: BorderRadius.circular(16.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
-                      blurRadius: 8.r,
-                      offset: Offset(0, 4.h),
-                    ),
-                  ],
+          child: Column(
+          children: [
+            // Modern handle with gradient
+            Container(
+              width: 50.w,
+              height: 5.h,
+              margin: EdgeInsets.only(top: 12.h),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF6C63FF), Color(0xFF5A52E8)],
                 ),
-                child: Center(
-                  child: Text(
-                    'Add Text',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.white,
+                borderRadius: BorderRadius.circular(3.r),
+              ),
+            ),
+            
+            // Enhanced header
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Row(
+                children: [
+                  // Icon with gradient background
+                  Container(
+                    width: 48.w,
+                    height: 48.h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF6C63FF), Color(0xFF5A52E8)],
+                      ),
+                      borderRadius: BorderRadius.circular(16.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color(0xFF6C63FF).withOpacity(0.3),
+                          blurRadius: 12.r,
+                          offset: Offset(0, 6.h),
+                        ),
+                      ],
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 24.w,
+                          height: 18.h,
+                          decoration: BoxDecoration(
+                            color: AppTheme.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(4.r),
+                          ),
+                        ),
+                        Text(
+                          'Aa',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.white,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  
+                  SizedBox(width: 16.w),
+                  
+                  // Title and subtitle
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Add Text',
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Create inspiring text for your vision',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Enhanced close button
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        color: AppTheme.textMedium.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.close_rounded,
+                        color: AppTheme.textMedium,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Enhanced content area
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Live preview section
+                    
+                    // Enhanced text field
+                    TextField(
+                      controller: _textController,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: AppTheme.textPrimary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      maxLines: 3,
+                      onChanged: (value) => setModalState(() {}),
+                      decoration: InputDecoration(
+                        hintText: 'Type your inspirational message...',
+                        hintStyle: TextStyle(
+                          color: AppTheme.textMedium.withOpacity(0.6),
+                          fontSize: 16.sp,
+                        ),
+                        filled: true,
+                        fillColor: AppTheme.backgroundMedium.withOpacity(0.3),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16.r),
+                          borderSide: BorderSide(
+                            color: Color(0xFF6C63FF),
+                            width: 2,
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.all(20.w),
+                      ),
+                    ),
+                    
+                    SizedBox(height: 24.h),
+                    
+                    // Font size with visual feedback
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Font Size',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          decoration: BoxDecoration(
+                            color: Color(0xFF6C63FF).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Text(
+                            '${_selectedFontSize.round()}px',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Color(0xFF6C63FF),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Color(0xFF6C63FF),
+                        inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
+                        thumbColor: Color(0xFF6C63FF),
+                        overlayColor: Color(0xFF6C63FF).withOpacity(0.2),
+                        trackHeight: 4.h,
+                      ),
+                      child: Slider(
+                        value: _selectedFontSize,
+                        min: 12.0,
+                        max: 48.0,
+                        divisions: 18,
+                        onChanged: (value) {
+                          setModalState(() {
+                            _selectedFontSize = value;
+                          });
+                        },
+                      ),
+                    ),
+                    
+                    SizedBox(height: 24.h),
+                    
+                    // Enhanced color picker with navigation
+                    Text(
+                      'Text Color',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildColorPickerWithArrows(setModalState),
+                  ],
                 ),
               ),
             ),
-          ),
-        ],
+            
+            // Enhanced action buttons
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Row(
+                children: [
+                  // Cancel button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                          color: AppTheme.textMedium.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textMedium,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  SizedBox(width: 16.w),
+                  
+                  // Add button
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: () {
+                        if (_textController.text.trim().isNotEmpty) {
+                          _addTextToBoard();
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF6C63FF), Color(0xFF5A52E8)],
+                          ),
+                          borderRadius: BorderRadius.circular(16.r),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color(0xFF6C63FF).withOpacity(0.4),
+                              blurRadius: 16.r,
+                              offset: Offset(0, 8.h),
+                            ),
+                          ],
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_rounded,
+                                color: AppTheme.white,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Add to Vision Board',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        ),
       ),
-    ),
     );
   }
 
@@ -1101,6 +1169,148 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 size: 20.sp,
               )
             : null,
+      ),
+    );
+  }
+
+  Widget _buildEnhancedColorOption(Color color, StateSetter setModalState) {
+    final isSelected = _selectedTextColor == color;
+    return GestureDetector(
+      onTap: () {
+        setModalState(() {
+          _selectedTextColor = color;
+        });
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        width: 48.w,
+        height: 48.h,
+        margin: EdgeInsets.only(right: 12.w),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isSelected ? Color(0xFF6C63FF) : AppTheme.textMedium.withOpacity(0.2),
+            width: isSelected ? 3 : 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected 
+                  ? Color(0xFF6C63FF).withOpacity(0.3)
+                  : Colors.black.withOpacity(0.1),
+              blurRadius: isSelected ? 8.r : 4.r,
+              offset: Offset(0, isSelected ? 4.h : 2.h),
+            ),
+          ],
+        ),
+        child: isSelected
+            ? Icon(
+                Icons.check_rounded,
+                color: color == Colors.white || color.computeLuminance() > 0.7
+                    ? Colors.black 
+                    : Colors.white,
+                size: 22.sp,
+              )
+            : null,
+      ),
+    );
+  }
+
+  Widget _buildColorPickerWithArrows(StateSetter setModalState) {
+    final ScrollController _colorScrollController = ScrollController();
+    final List<Color> colors = [
+      Colors.black,
+      Colors.white,
+      Color(0xFF6C63FF),
+      AppTheme.accentGold,
+      AppTheme.accentCoral,
+      AppTheme.accentMint,
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.orange,
+      Colors.pink,
+      Colors.purple,
+      Colors.teal,
+      Colors.indigo,
+      Colors.amber,
+      Colors.cyan,
+    ];
+
+    return Container(
+      height: 60.h,
+      child: Row(
+        children: [
+          // Left arrow
+          GestureDetector(
+            onTap: () {
+              _colorScrollController.animateTo(
+                _colorScrollController.offset - 120.w,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            child: Container(
+              width: 32.w,
+              height: 48.h,
+              decoration: BoxDecoration(
+                color: Color(0xFF6C63FF).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: Color(0xFF6C63FF).withOpacity(0.2),
+                ),
+              ),
+              child: Icon(
+                Icons.chevron_left_rounded,
+                color: Color(0xFF6C63FF),
+                size: 20.sp,
+              ),
+            ),
+          ),
+          
+          SizedBox(width: 8.w),
+          
+          // Color list
+          Expanded(
+            child: ListView.builder(
+              controller: _colorScrollController,
+              scrollDirection: Axis.horizontal,
+              itemCount: colors.length,
+              itemBuilder: (context, index) {
+                return _buildEnhancedColorOption(colors[index], setModalState);
+              },
+            ),
+          ),
+          
+          SizedBox(width: 8.w),
+          
+          // Right arrow
+          GestureDetector(
+            onTap: () {
+              _colorScrollController.animateTo(
+                _colorScrollController.offset + 120.w,
+                duration: Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+            child: Container(
+              width: 32.w,
+              height: 48.h,
+              decoration: BoxDecoration(
+                color: Color(0xFF6C63FF).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: Color(0xFF6C63FF).withOpacity(0.2),
+                ),
+              ),
+              child: Icon(
+                Icons.chevron_right_rounded,
+                color: Color(0xFF6C63FF),
+                size: 20.sp,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1163,17 +1373,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     }
   }
 
-  void _toggleFullscreen() {
-    setState(() {
-      isFullscreen = !isFullscreen;
-    });
-    
-    if (isFullscreen) {
-      _toolbarController.reverse();
-    } else {
-      _toolbarController.forward();
-    }
-  }
 
   void _editTitle() {
     final titleController = TextEditingController(text: currentBoard.title);
@@ -1263,7 +1462,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       
       // Initialize service
       final visionBoardService = VisionBoardService();
-      print('🔍 DEBUG: Initializing vision board service...');
+      print('🔍 DEBUG: Initializing vi3sion board service...');
       await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
       print('🔍 DEBUG: Service initialized successfully');
       
@@ -1329,10 +1528,62 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
   
   Future<void> _loadBoardElements() async {
-    // NOTE: API loading disabled - using XML storage only
     if (widget.existingBoard != null && widget.existingBoard!.id.isNotEmpty) {
-      print('📝 Loading board elements from XML storage for: ${widget.existingBoard!.id}');
-      // Board data already loaded via widget.existingBoard
+      print('📝 Loading full board content from server for: ${widget.existingBoard!.id}');
+      
+      // Set loading state
+      setState(() {
+        isLoadingContent = true;
+      });
+      
+      try {
+        // Initialize vision board service
+        final visionBoardService = VisionBoardService();
+        await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+        
+        // Load full board content from server
+        final result = await visionBoardService.getVisionBoard(widget.existingBoard!.id);
+        
+        if (result.isSuccess && result.data != null) {
+          print('✅ Loaded full board with ${result.data!.elements.length} elements');
+          
+          // Get the picture ID for this existing board so we can update it later
+          try {
+            final pictureId = await visionBoardService.getPictureIdForBoard(widget.existingBoard!.id);
+            if (pictureId != null) {
+              serverPictureId = pictureId;
+              print('🔍 DEBUG: Retrieved serverPictureId: $serverPictureId for existing board');
+            }
+          } catch (e) {
+            print('⚠️ Could not get picture ID for existing board: $e');
+          }
+          
+          // Update current board with full content from server
+          setState(() {
+            currentBoard = result.data!;
+            isLoadingContent = false;
+          });
+          
+          // Clear undo stack and create new initial state
+          undoStack.clear();
+          undoIndex = -1;
+          _saveToUndoStack();
+          
+        } else {
+          print('❌ Failed to load board content: ${result.message}');
+          // Keep the lightweight board but show empty state
+          setState(() {
+            isLoadingContent = false;
+          });
+        }
+        
+      } catch (e) {
+        print('❌ Error loading board elements: $e');
+        // Keep the lightweight board but show empty state
+        setState(() {
+          isLoadingContent = false;
+        });
+      }
     }
   }
   
@@ -1352,166 +1603,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     // Implementation commented out for XML-only mode
   } */
 
-  void _showTemplates() {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context) => _buildTemplateSheet(),
-    );
-  }
-
-  Widget _buildTemplateSheet() {
-    final templates = VisionBoardTemplate.getDefaultTemplates();
-
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      margin: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(24.r),
-      ),
-      child: Column(
-        children: [
-          // Handle
-          Container(
-            width: 40.w,
-            height: 4.h,
-            margin: EdgeInsets.only(top: 12.h),
-            decoration: BoxDecoration(
-              color: AppTheme.textMedium.withOpacity(0.3),
-              borderRadius: BorderRadius.circular(2.r),
-            ),
-          ),
-          
-          // Header
-          Padding(
-            padding: EdgeInsets.all(24.w),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Choose Template',
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    width: 32.w,
-                    height: 32.h,
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium,
-                      borderRadius: BorderRadius.circular(8.r),
-                    ),
-                    child: Icon(
-                      Icons.close,
-                      color: AppTheme.textMedium,
-                      size: 18.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          // Template list
-          Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 24.w),
-              itemCount: templates.length,
-              itemBuilder: (context, index) {
-                final template = templates[index];
-                return GestureDetector(
-                  onTap: () {
-                    _applyTemplate(template);
-                    Navigator.pop(context);
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(bottom: 16.h),
-                    padding: EdgeInsets.all(20.w),
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium,
-                      borderRadius: BorderRadius.circular(16.r),
-                      border: Border.all(
-                        color: AppTheme.textMedium.withOpacity(0.1),
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 48.w,
-                          height: 48.h,
-                          decoration: BoxDecoration(
-                            color: template.color.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(12.r),
-                          ),
-                          child: Icon(
-                            template.icon,
-                            color: template.color,
-                            size: 24.sp,
-                          ),
-                        ),
-                        SizedBox(width: 16.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                template.name,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppTheme.textLight,
-                                ),
-                              ),
-                              SizedBox(height: 4.h),
-                              Text(
-                                template.description,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: AppTheme.textMedium,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: AppTheme.textMedium.withOpacity(0.6),
-                          size: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          
-          SizedBox(height: 20.h),
-        ],
-      ),
-    );
-  }
-
-  void _applyTemplate(VisionBoardTemplate template) {
-    setState(() {
-      currentBoard = VisionBoard.fromTemplate(template);
-    });
-    _saveToUndoStack();
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${template.name} template applied'),
-        backgroundColor: AppTheme.accentMint,
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
 
   Widget _buildBackgroundSheet() {
     final backgroundColors = [
@@ -1668,10 +1759,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  void _showExportOptions() {
-    // TODO: Implement export
-    print('Show export options');
-  }
 
   void _handleBackButton() {
     if (hasUnsavedChanges) {
@@ -1739,20 +1826,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  Future<void> _addImageFromCamera() async {
-    try {
-      final XFile? image = await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        imageQuality: 80,
-      );
-      
-      if (image != null) {
-        await _addImageToBoard(image);
-      }
-    } catch (e) {
-      _showErrorSnackBar('Failed to take photo: $e');
-    }
-  }
 
   Future<void> _addImageFromGallery() async {
     try {
@@ -1769,9 +1842,459 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     }
   }
 
-  void _addImageFromSearch() async {
-    // Stock images disabled - API integration pending
-    _showErrorSnackBar('Stock images coming soon - use camera or gallery for now');
+  void _addImageFromURL() async {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => _buildURLImageInput(),
+    );
+  }
+
+  Widget _buildURLImageInput() {
+    final TextEditingController _urlController = TextEditingController();
+    bool _isValidUrl = false;
+    String? _previewUrl;
+    
+    return StatefulBuilder(
+      builder: (context, setModalState) => GestureDetector(
+        onTap: () {
+          // Dismiss keyboard when tapping anywhere on the sheet
+          FocusScope.of(context).unfocus();
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          margin: EdgeInsets.all(16.w),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppTheme.cardBackground,
+                AppTheme.cardBackground.withOpacity(0.95),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(
+              color: AppTheme.journalGradient[0].withOpacity(0.2),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.journalGradient[0].withOpacity(0.15),
+                blurRadius: 30.r,
+                offset: Offset(0, 15.h),
+              ),
+              BoxShadow(
+                color: AppTheme.black.withOpacity(0.1),
+                blurRadius: 20.r,
+                offset: Offset(0, 8.h),
+              ),
+            ],
+          ),
+          child: Column(
+          children: [
+            // Handle
+            Container(
+              width: 50.w,
+              height: 5.h,
+              margin: EdgeInsets.only(top: 12.h),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: AppTheme.journalGradient,
+                ),
+                borderRadius: BorderRadius.circular(3.r),
+              ),
+            ),
+            
+            // Header
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Row(
+                children: [
+                  // Icon with gradient background
+                  Container(
+                    width: 48.w,
+                    height: 48.h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: AppTheme.journalGradient,
+                      ),
+                      borderRadius: BorderRadius.circular(16.r),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppTheme.journalGradient[0].withOpacity(0.3),
+                          blurRadius: 12.r,
+                          offset: Offset(0, 6.h),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.link_rounded,
+                      color: AppTheme.white,
+                      size: 24.sp,
+                    ),
+                  ),
+                  
+                  SizedBox(width: 16.w),
+                  
+                  // Title and subtitle
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Add Image URL',
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          'Paste an image URL from the internet',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  
+                  // Close button
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      width: 40.w,
+                      height: 40.h,
+                      decoration: BoxDecoration(
+                        color: AppTheme.textMedium.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Icon(
+                        Icons.close_rounded,
+                        color: AppTheme.textMedium,
+                        size: 20.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // URL input field
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: AppTheme.backgroundMedium.withOpacity(0.5),
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: _isValidUrl 
+                        ? AppTheme.accentMint.withOpacity(0.5)
+                        : AppTheme.journalGradient[0].withOpacity(0.2),
+                    width: _isValidUrl ? 2 : 1,
+                  ),
+                ),
+                child: TextField(
+                  controller: _urlController,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: AppTheme.textPrimary,
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'https://example.com/image.jpg',
+                    hintStyle: TextStyle(
+                      color: AppTheme.textMedium.withOpacity(0.6),
+                      fontSize: 16.sp,
+                    ),
+                    prefixIcon: Icon(
+                      Icons.link_rounded,
+                      color: AppTheme.journalGradient[0],
+                      size: 24.sp,
+                    ),
+                    suffixIcon: _isValidUrl 
+                        ? Icon(
+                            Icons.check_circle_rounded,
+                            color: AppTheme.accentMint,
+                            size: 24.sp,
+                          )
+                        : null,
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.all(16.w),
+                  ),
+                  onChanged: (value) {
+                    setModalState(() {
+                      _isValidUrl = _isValidImageUrl(value);
+                      _previewUrl = _isValidUrl ? value : null;
+                    });
+                  },
+                ),
+              ),
+            ),
+            
+            SizedBox(height: 24.h),
+            
+            // Preview area
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: AppTheme.backgroundMedium.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(20.r),
+                    border: Border.all(
+                      color: AppTheme.textMedium.withOpacity(0.1),
+                    ),
+                  ),
+                  child: _previewUrl != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(20.r),
+                          child: Image.network(
+                            _previewUrl!,
+                            fit: BoxFit.contain,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      color: AppTheme.journalGradient[0],
+                                      value: loadingProgress.expectedTotalBytes != null
+                                          ? loadingProgress.cumulativeBytesLoaded /
+                                              loadingProgress.expectedTotalBytes!
+                                          : null,
+                                    ),
+                                    SizedBox(height: 16.h),
+                                    Text(
+                                      'Loading preview...',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: AppTheme.textMedium,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                            errorBuilder: (context, error, stackTrace) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline_rounded,
+                                    color: Colors.red.withOpacity(0.6),
+                                    size: 48.sp,
+                                  ),
+                                  SizedBox(height: 16.h),
+                                  Text(
+                                    'Failed to load image',
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.red.withOpacity(0.8),
+                                    ),
+                                  ),
+                                  SizedBox(height: 8.h),
+                                  Text(
+                                    'Please check the URL and try again',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      color: AppTheme.textMedium.withOpacity(0.6),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.image_outlined,
+                              color: AppTheme.textMedium.withOpacity(0.6),
+                              size: 64.sp,
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              'Paste image URL above',
+                              style: TextStyle(
+                                fontSize: 18.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textMedium.withOpacity(0.8),
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              'Copy an image URL from the web and paste it here to add to your vision board',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: AppTheme.textMedium.withOpacity(0.6),
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                ),
+              ),
+            ),
+            
+            // Action buttons
+            Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Row(
+                children: [
+                  // Cancel button
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                          color: AppTheme.textMedium.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'Cancel',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: AppTheme.textMedium,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  SizedBox(width: 16.w),
+                  
+                  // Add button
+                  Expanded(
+                    flex: 2,
+                    child: GestureDetector(
+                      onTap: _isValidUrl
+                          ? () {
+                              _addImageFromUrlToBoard(_urlController.text.trim());
+                              Navigator.pop(context);
+                            }
+                          : null,
+                      child: Container(
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                          gradient: _isValidUrl
+                              ? LinearGradient(colors: AppTheme.journalGradient)
+                              : null,
+                          color: _isValidUrl ? null : AppTheme.textMedium.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(16.r),
+                          boxShadow: _isValidUrl
+                              ? [
+                                  BoxShadow(
+                                    color: AppTheme.journalGradient[0].withOpacity(0.4),
+                                    blurRadius: 16.r,
+                                    offset: Offset(0, 8.h),
+                                  ),
+                                ]
+                              : null,
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_rounded,
+                                color: _isValidUrl ? AppTheme.white : AppTheme.textMedium.withOpacity(0.6),
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Add to Vision Board',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: _isValidUrl ? AppTheme.white : AppTheme.textMedium.withOpacity(0.6),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      ),
+    );
+  }
+
+  bool _isValidImageUrl(String url) {
+    if (url.isEmpty) return false;
+    
+    // Basic URL validation
+    final Uri? uri = Uri.tryParse(url);
+    if (uri == null || !uri.hasScheme || !uri.hasAuthority) return false;
+    
+    // Check for common image extensions
+    final imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+    final lowercaseUrl = url.toLowerCase();
+    
+    return imageExtensions.any((ext) => lowercaseUrl.contains(ext)) || 
+           lowercaseUrl.contains('image') ||
+           lowercaseUrl.contains('img') ||
+           (uri.scheme == 'https' && uri.host.isNotEmpty);
+  }
+
+  void _addImageFromUrlToBoard(String imageUrl) {
+    // Create image element with URL
+    final imageElement = VisionBoardImageElement(
+      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      position: Offset(100.w, 100.h),
+      size: Size(200.w, 200.h),
+      imagePath: '', // No local path for URL images
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+    );
+
+    final updatedElements = [...currentBoard.elements, imageElement];
+    final updatedBoard = currentBoard.copyWith(elements: updatedElements);
+    
+    _onBoardChanged(updatedBoard);
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: AppTheme.white, size: 20.sp),
+            SizedBox(width: 12.w),
+            Text(
+              'Image added from URL!',
+              style: TextStyle(
+                color: AppTheme.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: AppTheme.accentMint,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        margin: EdgeInsets.all(16.w),
+        duration: Duration(seconds: 2),
+      ),
+    );
   }
   
   void _showDefaultImagesDialog(List<Map<String, dynamic>> defaultImages) {
@@ -1936,10 +2459,6 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     );
   }
 
-  void _addImageFromAI() {
-    // TODO: Implement AI generation
-    _addPlaceholderImage('AI');
-  }
 
   Future<void> _addImageToBoard(XFile image) async {
     try {

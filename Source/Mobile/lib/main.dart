@@ -8,6 +8,8 @@ import 'constants/app_theme.dart';
 import 'services/unified_auth_service.dart';
 import 'services/vision_board_service.dart';
 import 'services/theme_service.dart';
+import 'services/in_app_purchase_service.dart';
+import 'services/subscription_service.dart';
 import 'widgets/session_activity_tracker.dart';
 
 void main() async {
@@ -27,6 +29,14 @@ void main() async {
   
   // Initialize theme service
   await ThemeService().initialize();
+  
+  // Initialize subscription service
+  await SubscriptionService().initialize();
+  
+  // Initialize in-app purchase service (don't wait for this as it might fail on simulators)
+  InAppPurchaseService().initialize().catchError((e) {
+    print('⚠️ In-App Purchase Service initialization failed (this is normal on simulators): $e');
+  });
   
   print('🚀 All services initialized, starting app with cache-only mode');
   

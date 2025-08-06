@@ -184,7 +184,7 @@ class _GoalCardState extends State<GoalCard>
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
+                              children: [ 
                                 Text(
                                   'Progress',
                                   style: TextStyle(

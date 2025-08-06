@@ -2239,7 +2239,6 @@ abstract class Manifestation extends ChopperService {
 
   ///
   ///@param ShowDeleted
-  ///@param CompanyEntityId
   ///@param CreatedByUserId
   ///@param ModifiedByUserId
   ///@param SelectedId
@@ -2254,7 +2253,6 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<UserGroupModelReturnListModel>>
       apiV1CompanyGetusergroupsGet({
     bool? showDeleted,
-    int? companyEntityId,
     int? createdByUserId,
     int? modifiedByUserId,
     int? selectedId,
@@ -2272,7 +2270,6 @@ abstract class Manifestation extends ChopperService {
 
     return _apiV1CompanyGetusergroupsGet(
         showDeleted: showDeleted,
-        companyEntityId: companyEntityId,
         createdByUserId: createdByUserId,
         modifiedByUserId: modifiedByUserId,
         selectedId: selectedId,
@@ -2288,7 +2285,6 @@ abstract class Manifestation extends ChopperService {
 
   ///
   ///@param ShowDeleted
-  ///@param CompanyEntityId
   ///@param CreatedByUserId
   ///@param ModifiedByUserId
   ///@param SelectedId
@@ -2304,7 +2300,6 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<UserGroupModelReturnListModel>>
       _apiV1CompanyGetusergroupsGet({
     @Query('ShowDeleted') bool? showDeleted,
-    @Query('CompanyEntityId') int? companyEntityId,
     @Query('CreatedByUserId') int? createdByUserId,
     @Query('ModifiedByUserId') int? modifiedByUserId,
     @Query('SelectedId') int? selectedId,
@@ -4885,6 +4880,7 @@ abstract class Manifestation extends ChopperService {
           {@Body() required UserByDailyAffirmationTextIdSearchCriteria? body});
 
   ///
+  ///@param PredefinedIconTypeIds
   ///@param ShowDeleted
   ///@param PredefinedCategoryTypeIds
   ///@param CreatedByUserId
@@ -4900,6 +4896,7 @@ abstract class Manifestation extends ChopperService {
   ///@param NumericPageCount
   Future<chopper.Response<DefaultCategoryModelReturnListModel>>
       apiV1ManifestGetdefaultcategorysGet({
+    List<int>? predefinedIconTypeIds,
     bool? showDeleted,
     List<int>? predefinedCategoryTypeIds,
     int? createdByUserId,
@@ -4918,6 +4915,7 @@ abstract class Manifestation extends ChopperService {
         () => DefaultCategoryModelReturnListModel.fromJsonFactory);
 
     return _apiV1ManifestGetdefaultcategorysGet(
+        predefinedIconTypeIds: predefinedIconTypeIds,
         showDeleted: showDeleted,
         predefinedCategoryTypeIds: predefinedCategoryTypeIds,
         createdByUserId: createdByUserId,
@@ -4934,6 +4932,7 @@ abstract class Manifestation extends ChopperService {
   }
 
   ///
+  ///@param PredefinedIconTypeIds
   ///@param ShowDeleted
   ///@param PredefinedCategoryTypeIds
   ///@param CreatedByUserId
@@ -4950,6 +4949,7 @@ abstract class Manifestation extends ChopperService {
   @Get(path: '/api/v1/manifest/getdefaultcategorys')
   Future<chopper.Response<DefaultCategoryModelReturnListModel>>
       _apiV1ManifestGetdefaultcategorysGet({
+    @Query('PredefinedIconTypeIds') List<int>? predefinedIconTypeIds,
     @Query('ShowDeleted') bool? showDeleted,
     @Query('PredefinedCategoryTypeIds') List<int>? predefinedCategoryTypeIds,
     @Query('CreatedByUserId') int? createdByUserId,
@@ -6937,6 +6937,7 @@ abstract class Manifestation extends ChopperService {
 
   ///
   ///@param ShowDeleted
+  ///@param PredefinedGoalPriorityTypeIds
   ///@param PredefinedGoalStatusTypeIds
   ///@param UserId
   ///@param CreatedByUserId
@@ -6953,6 +6954,7 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<GoalTrackerModelReturnListModel>>
       apiV1ManifestGetgoaltrackersGet({
     bool? showDeleted,
+    List<int>? predefinedGoalPriorityTypeIds,
     List<int>? predefinedGoalStatusTypeIds,
     int? userId,
     int? createdByUserId,
@@ -6972,6 +6974,7 @@ abstract class Manifestation extends ChopperService {
 
     return _apiV1ManifestGetgoaltrackersGet(
         showDeleted: showDeleted,
+        predefinedGoalPriorityTypeIds: predefinedGoalPriorityTypeIds,
         predefinedGoalStatusTypeIds: predefinedGoalStatusTypeIds,
         userId: userId,
         createdByUserId: createdByUserId,
@@ -6989,6 +6992,7 @@ abstract class Manifestation extends ChopperService {
 
   ///
   ///@param ShowDeleted
+  ///@param PredefinedGoalPriorityTypeIds
   ///@param PredefinedGoalStatusTypeIds
   ///@param UserId
   ///@param CreatedByUserId
@@ -7006,6 +7010,8 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<GoalTrackerModelReturnListModel>>
       _apiV1ManifestGetgoaltrackersGet({
     @Query('ShowDeleted') bool? showDeleted,
+    @Query('PredefinedGoalPriorityTypeIds')
+    List<int>? predefinedGoalPriorityTypeIds,
     @Query('PredefinedGoalStatusTypeIds')
     List<int>? predefinedGoalStatusTypeIds,
     @Query('UserId') int? userId,
@@ -29966,6 +29972,7 @@ class DefaultCategoryCreateModel {
   const DefaultCategoryCreateModel({
     this.defaultCategoryName,
     this.predefinedCategoryTypeId,
+    this.predefinedIconTypeId,
   });
 
   factory DefaultCategoryCreateModel.fromJson(Map<String, dynamic> json) =>
@@ -29978,6 +29985,8 @@ class DefaultCategoryCreateModel {
   final String? defaultCategoryName;
   @JsonKey(name: 'predefinedCategoryTypeId')
   final int? predefinedCategoryTypeId;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   static const fromJsonFactory = _$DefaultCategoryCreateModelFromJson;
 
   @override
@@ -29990,7 +29999,11 @@ class DefaultCategoryCreateModel {
             (identical(
                     other.predefinedCategoryTypeId, predefinedCategoryTypeId) ||
                 const DeepCollectionEquality().equals(
-                    other.predefinedCategoryTypeId, predefinedCategoryTypeId)));
+                    other.predefinedCategoryTypeId,
+                    predefinedCategoryTypeId)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality()
+                    .equals(other.predefinedIconTypeId, predefinedIconTypeId)));
   }
 
   @override
@@ -30000,28 +30013,37 @@ class DefaultCategoryCreateModel {
   int get hashCode =>
       const DeepCollectionEquality().hash(defaultCategoryName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       runtimeType.hashCode;
 }
 
 extension $DefaultCategoryCreateModelExtension on DefaultCategoryCreateModel {
   DefaultCategoryCreateModel copyWith(
-      {String? defaultCategoryName, int? predefinedCategoryTypeId}) {
+      {String? defaultCategoryName,
+      int? predefinedCategoryTypeId,
+      int? predefinedIconTypeId}) {
     return DefaultCategoryCreateModel(
         defaultCategoryName: defaultCategoryName ?? this.defaultCategoryName,
         predefinedCategoryTypeId:
-            predefinedCategoryTypeId ?? this.predefinedCategoryTypeId);
+            predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
+        predefinedIconTypeId:
+            predefinedIconTypeId ?? this.predefinedIconTypeId);
   }
 
   DefaultCategoryCreateModel copyWithWrapped(
       {Wrapped<String?>? defaultCategoryName,
-      Wrapped<int?>? predefinedCategoryTypeId}) {
+      Wrapped<int?>? predefinedCategoryTypeId,
+      Wrapped<int?>? predefinedIconTypeId}) {
     return DefaultCategoryCreateModel(
         defaultCategoryName: (defaultCategoryName != null
             ? defaultCategoryName.value
             : this.defaultCategoryName),
         predefinedCategoryTypeId: (predefinedCategoryTypeId != null
             ? predefinedCategoryTypeId.value
-            : this.predefinedCategoryTypeId));
+            : this.predefinedCategoryTypeId),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId));
   }
 }
 
@@ -30031,11 +30053,13 @@ class DefaultCategoryModel {
     this.defaultCategoryId,
     this.defaultCategoryName,
     this.predefinedCategoryTypeId,
+    this.predefinedIconTypeId,
     this.isDeleted,
     this.createdDate,
     this.createdByUserId,
     this.modifiedDate,
     this.modifiedByUserId,
+    this.predefinedIconTypeName,
     this.predefinedCategoryTypeName,
     this.createdByUserFirstName,
     this.createdByUserLastName,
@@ -30059,6 +30083,8 @@ class DefaultCategoryModel {
   final String? defaultCategoryName;
   @JsonKey(name: 'predefinedCategoryTypeId')
   final int? predefinedCategoryTypeId;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   @JsonKey(name: 'isDeleted')
   final bool? isDeleted;
   @JsonKey(name: 'createdDate')
@@ -30069,6 +30095,8 @@ class DefaultCategoryModel {
   final DateTime? modifiedDate;
   @JsonKey(name: 'modifiedByUserId')
   final int? modifiedByUserId;
+  @JsonKey(name: 'predefinedIconTypeName')
+  final String? predefinedIconTypeName;
   @JsonKey(name: 'predefinedCategoryTypeName')
   final String? predefinedCategoryTypeName;
   @JsonKey(name: 'createdByUserFirstName')
@@ -30103,6 +30131,9 @@ class DefaultCategoryModel {
                 const DeepCollectionEquality().equals(
                     other.predefinedCategoryTypeId,
                     predefinedCategoryTypeId)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedIconTypeId, predefinedIconTypeId)) &&
             (identical(other.isDeleted, isDeleted) ||
                 const DeepCollectionEquality()
                     .equals(other.isDeleted, isDeleted)) &&
@@ -30118,6 +30149,9 @@ class DefaultCategoryModel {
             (identical(other.modifiedByUserId, modifiedByUserId) ||
                 const DeepCollectionEquality()
                     .equals(other.modifiedByUserId, modifiedByUserId)) &&
+            (identical(other.predefinedIconTypeName, predefinedIconTypeName) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedIconTypeName, predefinedIconTypeName)) &&
             (identical(other.predefinedCategoryTypeName, predefinedCategoryTypeName) ||
                 const DeepCollectionEquality().equals(
                     other.predefinedCategoryTypeName,
@@ -30132,11 +30166,8 @@ class DefaultCategoryModel {
                 const DeepCollectionEquality()
                     .equals(other.createdByUserEmail, createdByUserEmail)) &&
             (identical(other.modifiedByUserFirstName, modifiedByUserFirstName) ||
-                const DeepCollectionEquality().equals(
-                    other.modifiedByUserFirstName, modifiedByUserFirstName)) &&
-            (identical(other.modifiedByUserLastName, modifiedByUserLastName) ||
-                const DeepCollectionEquality().equals(
-                    other.modifiedByUserLastName, modifiedByUserLastName)) &&
+                const DeepCollectionEquality().equals(other.modifiedByUserFirstName, modifiedByUserFirstName)) &&
+            (identical(other.modifiedByUserLastName, modifiedByUserLastName) || const DeepCollectionEquality().equals(other.modifiedByUserLastName, modifiedByUserLastName)) &&
             (identical(other.modifiedByUserEmail, modifiedByUserEmail) || const DeepCollectionEquality().equals(other.modifiedByUserEmail, modifiedByUserEmail)) &&
             (identical(other.createdBy, createdBy) || const DeepCollectionEquality().equals(other.createdBy, createdBy)) &&
             (identical(other.modifiedBy, modifiedBy) || const DeepCollectionEquality().equals(other.modifiedBy, modifiedBy)));
@@ -30150,11 +30181,13 @@ class DefaultCategoryModel {
       const DeepCollectionEquality().hash(defaultCategoryId) ^
       const DeepCollectionEquality().hash(defaultCategoryName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       const DeepCollectionEquality().hash(createdDate) ^
       const DeepCollectionEquality().hash(createdByUserId) ^
       const DeepCollectionEquality().hash(modifiedDate) ^
       const DeepCollectionEquality().hash(modifiedByUserId) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeName) ^
       const DeepCollectionEquality().hash(createdByUserFirstName) ^
       const DeepCollectionEquality().hash(createdByUserLastName) ^
@@ -30172,11 +30205,13 @@ extension $DefaultCategoryModelExtension on DefaultCategoryModel {
       {int? defaultCategoryId,
       String? defaultCategoryName,
       int? predefinedCategoryTypeId,
+      int? predefinedIconTypeId,
       bool? isDeleted,
       DateTime? createdDate,
       int? createdByUserId,
       DateTime? modifiedDate,
       int? modifiedByUserId,
+      String? predefinedIconTypeName,
       String? predefinedCategoryTypeName,
       String? createdByUserFirstName,
       String? createdByUserLastName,
@@ -30191,11 +30226,14 @@ extension $DefaultCategoryModelExtension on DefaultCategoryModel {
         defaultCategoryName: defaultCategoryName ?? this.defaultCategoryName,
         predefinedCategoryTypeId:
             predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
+        predefinedIconTypeId: predefinedIconTypeId ?? this.predefinedIconTypeId,
         isDeleted: isDeleted ?? this.isDeleted,
         createdDate: createdDate ?? this.createdDate,
         createdByUserId: createdByUserId ?? this.createdByUserId,
         modifiedDate: modifiedDate ?? this.modifiedDate,
         modifiedByUserId: modifiedByUserId ?? this.modifiedByUserId,
+        predefinedIconTypeName:
+            predefinedIconTypeName ?? this.predefinedIconTypeName,
         predefinedCategoryTypeName:
             predefinedCategoryTypeName ?? this.predefinedCategoryTypeName,
         createdByUserFirstName:
@@ -30216,11 +30254,13 @@ extension $DefaultCategoryModelExtension on DefaultCategoryModel {
       {Wrapped<int?>? defaultCategoryId,
       Wrapped<String?>? defaultCategoryName,
       Wrapped<int?>? predefinedCategoryTypeId,
+      Wrapped<int?>? predefinedIconTypeId,
       Wrapped<bool?>? isDeleted,
       Wrapped<DateTime?>? createdDate,
       Wrapped<int?>? createdByUserId,
       Wrapped<DateTime?>? modifiedDate,
       Wrapped<int?>? modifiedByUserId,
+      Wrapped<String?>? predefinedIconTypeName,
       Wrapped<String?>? predefinedCategoryTypeName,
       Wrapped<String?>? createdByUserFirstName,
       Wrapped<String?>? createdByUserLastName,
@@ -30240,6 +30280,9 @@ extension $DefaultCategoryModelExtension on DefaultCategoryModel {
         predefinedCategoryTypeId: (predefinedCategoryTypeId != null
             ? predefinedCategoryTypeId.value
             : this.predefinedCategoryTypeId),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId),
         isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
         createdDate:
             (createdDate != null ? createdDate.value : this.createdDate),
@@ -30251,6 +30294,9 @@ extension $DefaultCategoryModelExtension on DefaultCategoryModel {
         modifiedByUserId: (modifiedByUserId != null
             ? modifiedByUserId.value
             : this.modifiedByUserId),
+        predefinedIconTypeName: (predefinedIconTypeName != null
+            ? predefinedIconTypeName.value
+            : this.predefinedIconTypeName),
         predefinedCategoryTypeName: (predefinedCategoryTypeName != null
             ? predefinedCategoryTypeName.value
             : this.predefinedCategoryTypeName),
@@ -30566,6 +30612,7 @@ class DefaultCategoryUpdateModel {
     this.defaultCategoryId,
     this.defaultCategoryName,
     this.predefinedCategoryTypeId,
+    this.predefinedIconTypeId,
   });
 
   factory DefaultCategoryUpdateModel.fromJson(Map<String, dynamic> json) =>
@@ -30580,6 +30627,8 @@ class DefaultCategoryUpdateModel {
   final String? defaultCategoryName;
   @JsonKey(name: 'predefinedCategoryTypeId')
   final int? predefinedCategoryTypeId;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   static const fromJsonFactory = _$DefaultCategoryUpdateModelFromJson;
 
   @override
@@ -30595,7 +30644,11 @@ class DefaultCategoryUpdateModel {
             (identical(
                     other.predefinedCategoryTypeId, predefinedCategoryTypeId) ||
                 const DeepCollectionEquality().equals(
-                    other.predefinedCategoryTypeId, predefinedCategoryTypeId)));
+                    other.predefinedCategoryTypeId,
+                    predefinedCategoryTypeId)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality()
+                    .equals(other.predefinedIconTypeId, predefinedIconTypeId)));
   }
 
   @override
@@ -30606,6 +30659,7 @@ class DefaultCategoryUpdateModel {
       const DeepCollectionEquality().hash(defaultCategoryId) ^
       const DeepCollectionEquality().hash(defaultCategoryName) ^
       const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       runtimeType.hashCode;
 }
 
@@ -30613,18 +30667,22 @@ extension $DefaultCategoryUpdateModelExtension on DefaultCategoryUpdateModel {
   DefaultCategoryUpdateModel copyWith(
       {int? defaultCategoryId,
       String? defaultCategoryName,
-      int? predefinedCategoryTypeId}) {
+      int? predefinedCategoryTypeId,
+      int? predefinedIconTypeId}) {
     return DefaultCategoryUpdateModel(
         defaultCategoryId: defaultCategoryId ?? this.defaultCategoryId,
         defaultCategoryName: defaultCategoryName ?? this.defaultCategoryName,
         predefinedCategoryTypeId:
-            predefinedCategoryTypeId ?? this.predefinedCategoryTypeId);
+            predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
+        predefinedIconTypeId:
+            predefinedIconTypeId ?? this.predefinedIconTypeId);
   }
 
   DefaultCategoryUpdateModel copyWithWrapped(
       {Wrapped<int?>? defaultCategoryId,
       Wrapped<String?>? defaultCategoryName,
-      Wrapped<int?>? predefinedCategoryTypeId}) {
+      Wrapped<int?>? predefinedCategoryTypeId,
+      Wrapped<int?>? predefinedIconTypeId}) {
     return DefaultCategoryUpdateModel(
         defaultCategoryId: (defaultCategoryId != null
             ? defaultCategoryId.value
@@ -30634,7 +30692,10 @@ extension $DefaultCategoryUpdateModelExtension on DefaultCategoryUpdateModel {
             : this.defaultCategoryName),
         predefinedCategoryTypeId: (predefinedCategoryTypeId != null
             ? predefinedCategoryTypeId.value
-            : this.predefinedCategoryTypeId));
+            : this.predefinedCategoryTypeId),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId));
   }
 }
 
@@ -41498,6 +41559,8 @@ class GoalTrackerCategoryModel {
     this.createdByUserId,
     this.modifiedDate,
     this.modifiedByUserId,
+    this.predefinedCategoryTypeId,
+    this.predefinedIconTypeId,
     this.categoryName,
     this.goalTrackerName,
     this.userName,
@@ -41535,6 +41598,10 @@ class GoalTrackerCategoryModel {
   final DateTime? modifiedDate;
   @JsonKey(name: 'modifiedByUserId')
   final int? modifiedByUserId;
+  @JsonKey(name: 'predefinedCategoryTypeId')
+  final int? predefinedCategoryTypeId;
+  @JsonKey(name: 'predefinedIconTypeId')
+  final int? predefinedIconTypeId;
   @JsonKey(name: 'categoryName')
   final String? categoryName;
   @JsonKey(name: 'goalTrackerName')
@@ -41589,6 +41656,13 @@ class GoalTrackerCategoryModel {
             (identical(other.modifiedByUserId, modifiedByUserId) ||
                 const DeepCollectionEquality()
                     .equals(other.modifiedByUserId, modifiedByUserId)) &&
+            (identical(other.predefinedCategoryTypeId, predefinedCategoryTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedCategoryTypeId,
+                    predefinedCategoryTypeId)) &&
+            (identical(other.predefinedIconTypeId, predefinedIconTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedIconTypeId, predefinedIconTypeId)) &&
             (identical(other.categoryName, categoryName) ||
                 const DeepCollectionEquality()
                     .equals(other.categoryName, categoryName)) &&
@@ -41610,18 +41684,10 @@ class GoalTrackerCategoryModel {
             (identical(other.modifiedByUserFirstName, modifiedByUserFirstName) ||
                 const DeepCollectionEquality().equals(
                     other.modifiedByUserFirstName, modifiedByUserFirstName)) &&
-            (identical(other.modifiedByUserLastName, modifiedByUserLastName) ||
-                const DeepCollectionEquality().equals(
-                    other.modifiedByUserLastName, modifiedByUserLastName)) &&
-            (identical(other.modifiedByUserEmail, modifiedByUserEmail) ||
-                const DeepCollectionEquality()
-                    .equals(other.modifiedByUserEmail, modifiedByUserEmail)) &&
-            (identical(other.createdBy, createdBy) ||
-                const DeepCollectionEquality()
-                    .equals(other.createdBy, createdBy)) &&
-            (identical(other.modifiedBy, modifiedBy) ||
-                const DeepCollectionEquality()
-                    .equals(other.modifiedBy, modifiedBy)));
+            (identical(other.modifiedByUserLastName, modifiedByUserLastName) || const DeepCollectionEquality().equals(other.modifiedByUserLastName, modifiedByUserLastName)) &&
+            (identical(other.modifiedByUserEmail, modifiedByUserEmail) || const DeepCollectionEquality().equals(other.modifiedByUserEmail, modifiedByUserEmail)) &&
+            (identical(other.createdBy, createdBy) || const DeepCollectionEquality().equals(other.createdBy, createdBy)) &&
+            (identical(other.modifiedBy, modifiedBy) || const DeepCollectionEquality().equals(other.modifiedBy, modifiedBy)));
   }
 
   @override
@@ -41638,6 +41704,8 @@ class GoalTrackerCategoryModel {
       const DeepCollectionEquality().hash(createdByUserId) ^
       const DeepCollectionEquality().hash(modifiedDate) ^
       const DeepCollectionEquality().hash(modifiedByUserId) ^
+      const DeepCollectionEquality().hash(predefinedCategoryTypeId) ^
+      const DeepCollectionEquality().hash(predefinedIconTypeId) ^
       const DeepCollectionEquality().hash(categoryName) ^
       const DeepCollectionEquality().hash(goalTrackerName) ^
       const DeepCollectionEquality().hash(userName) ^
@@ -41663,6 +41731,8 @@ extension $GoalTrackerCategoryModelExtension on GoalTrackerCategoryModel {
       int? createdByUserId,
       DateTime? modifiedDate,
       int? modifiedByUserId,
+      int? predefinedCategoryTypeId,
+      int? predefinedIconTypeId,
       String? categoryName,
       String? goalTrackerName,
       String? userName,
@@ -41685,6 +41755,9 @@ extension $GoalTrackerCategoryModelExtension on GoalTrackerCategoryModel {
         createdByUserId: createdByUserId ?? this.createdByUserId,
         modifiedDate: modifiedDate ?? this.modifiedDate,
         modifiedByUserId: modifiedByUserId ?? this.modifiedByUserId,
+        predefinedCategoryTypeId:
+            predefinedCategoryTypeId ?? this.predefinedCategoryTypeId,
+        predefinedIconTypeId: predefinedIconTypeId ?? this.predefinedIconTypeId,
         categoryName: categoryName ?? this.categoryName,
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
         userName: userName ?? this.userName,
@@ -41712,6 +41785,8 @@ extension $GoalTrackerCategoryModelExtension on GoalTrackerCategoryModel {
       Wrapped<int?>? createdByUserId,
       Wrapped<DateTime?>? modifiedDate,
       Wrapped<int?>? modifiedByUserId,
+      Wrapped<int?>? predefinedCategoryTypeId,
+      Wrapped<int?>? predefinedIconTypeId,
       Wrapped<String?>? categoryName,
       Wrapped<String?>? goalTrackerName,
       Wrapped<String?>? userName,
@@ -41742,6 +41817,12 @@ extension $GoalTrackerCategoryModelExtension on GoalTrackerCategoryModel {
         modifiedByUserId: (modifiedByUserId != null
             ? modifiedByUserId.value
             : this.modifiedByUserId),
+        predefinedCategoryTypeId: (predefinedCategoryTypeId != null
+            ? predefinedCategoryTypeId.value
+            : this.predefinedCategoryTypeId),
+        predefinedIconTypeId: (predefinedIconTypeId != null
+            ? predefinedIconTypeId.value
+            : this.predefinedIconTypeId),
         categoryName:
             (categoryName != null ? categoryName.value : this.categoryName),
         goalTrackerName: (goalTrackerName != null
@@ -42146,6 +42227,7 @@ class GoalTrackerCreateModel {
   const GoalTrackerCreateModel({
     this.goalTrackerName,
     this.predefinedGoalStatusTypeId,
+    this.predefinedGoalPriorityTypeId,
     this.goalTrackerStartDate,
     this.goalTrackerEndDate,
     this.goalTrackerCompletedDate,
@@ -42166,6 +42248,8 @@ class GoalTrackerCreateModel {
   final String? goalTrackerName;
   @JsonKey(name: 'predefinedGoalStatusTypeId')
   final int? predefinedGoalStatusTypeId;
+  @JsonKey(name: 'predefinedGoalPriorityTypeId')
+  final int? predefinedGoalPriorityTypeId;
   @JsonKey(name: 'goalTrackerStartDate')
   final DateTime? goalTrackerStartDate;
   @JsonKey(name: 'goalTrackerEndDate')
@@ -42199,6 +42283,10 @@ class GoalTrackerCreateModel {
                 const DeepCollectionEquality().equals(
                     other.predefinedGoalStatusTypeId,
                     predefinedGoalStatusTypeId)) &&
+            (identical(other.predefinedGoalPriorityTypeId, predefinedGoalPriorityTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedGoalPriorityTypeId,
+                    predefinedGoalPriorityTypeId)) &&
             (identical(other.goalTrackerStartDate, goalTrackerStartDate) ||
                 const DeepCollectionEquality().equals(
                     other.goalTrackerStartDate, goalTrackerStartDate)) &&
@@ -42217,16 +42305,13 @@ class GoalTrackerCreateModel {
             (identical(other.addedToFeedDate, addedToFeedDate) ||
                 const DeepCollectionEquality()
                     .equals(other.addedToFeedDate, addedToFeedDate)) &&
-            (identical(other.newGoalTrackerCategoryModels,
-                    newGoalTrackerCategoryModels) ||
+            (identical(other.newGoalTrackerCategoryModels, newGoalTrackerCategoryModels) ||
                 const DeepCollectionEquality().equals(
                     other.newGoalTrackerCategoryModels,
                     newGoalTrackerCategoryModels)) &&
-            (identical(other.existingGoalTrackerCategoryModels,
-                    existingGoalTrackerCategoryModels) ||
+            (identical(other.existingGoalTrackerCategoryModels, existingGoalTrackerCategoryModels) ||
                 const DeepCollectionEquality().equals(
-                    other.existingGoalTrackerCategoryModels,
-                    existingGoalTrackerCategoryModels)));
+                    other.existingGoalTrackerCategoryModels, existingGoalTrackerCategoryModels)));
   }
 
   @override
@@ -42236,6 +42321,7 @@ class GoalTrackerCreateModel {
   int get hashCode =>
       const DeepCollectionEquality().hash(goalTrackerName) ^
       const DeepCollectionEquality().hash(predefinedGoalStatusTypeId) ^
+      const DeepCollectionEquality().hash(predefinedGoalPriorityTypeId) ^
       const DeepCollectionEquality().hash(goalTrackerStartDate) ^
       const DeepCollectionEquality().hash(goalTrackerEndDate) ^
       const DeepCollectionEquality().hash(goalTrackerCompletedDate) ^
@@ -42251,6 +42337,7 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
   GoalTrackerCreateModel copyWith(
       {String? goalTrackerName,
       int? predefinedGoalStatusTypeId,
+      int? predefinedGoalPriorityTypeId,
       DateTime? goalTrackerStartDate,
       DateTime? goalTrackerEndDate,
       DateTime? goalTrackerCompletedDate,
@@ -42264,6 +42351,8 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
         predefinedGoalStatusTypeId:
             predefinedGoalStatusTypeId ?? this.predefinedGoalStatusTypeId,
+        predefinedGoalPriorityTypeId:
+            predefinedGoalPriorityTypeId ?? this.predefinedGoalPriorityTypeId,
         goalTrackerStartDate: goalTrackerStartDate ?? this.goalTrackerStartDate,
         goalTrackerEndDate: goalTrackerEndDate ?? this.goalTrackerEndDate,
         goalTrackerCompletedDate:
@@ -42280,6 +42369,7 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
   GoalTrackerCreateModel copyWithWrapped(
       {Wrapped<String?>? goalTrackerName,
       Wrapped<int?>? predefinedGoalStatusTypeId,
+      Wrapped<int?>? predefinedGoalPriorityTypeId,
       Wrapped<DateTime?>? goalTrackerStartDate,
       Wrapped<DateTime?>? goalTrackerEndDate,
       Wrapped<DateTime?>? goalTrackerCompletedDate,
@@ -42297,6 +42387,9 @@ extension $GoalTrackerCreateModelExtension on GoalTrackerCreateModel {
         predefinedGoalStatusTypeId: (predefinedGoalStatusTypeId != null
             ? predefinedGoalStatusTypeId.value
             : this.predefinedGoalStatusTypeId),
+        predefinedGoalPriorityTypeId: (predefinedGoalPriorityTypeId != null
+            ? predefinedGoalPriorityTypeId.value
+            : this.predefinedGoalPriorityTypeId),
         goalTrackerStartDate: (goalTrackerStartDate != null
             ? goalTrackerStartDate.value
             : this.goalTrackerStartDate),
@@ -43582,6 +43675,7 @@ class GoalTrackerModel {
     this.goalTrackerId,
     this.goalTrackerName,
     this.predefinedGoalStatusTypeId,
+    this.predefinedGoalPriorityTypeId,
     this.goalTrackerStartDate,
     this.goalTrackerEndDate,
     this.goalTrackerCompletedDate,
@@ -43593,6 +43687,7 @@ class GoalTrackerModel {
     this.createdByUserId,
     this.modifiedDate,
     this.modifiedByUserId,
+    this.predefinedGoalPriorityTypeName,
     this.predefinedGoalStatusTypeName,
     this.userName,
     this.createdByUserFirstName,
@@ -43619,6 +43714,8 @@ class GoalTrackerModel {
   final String? goalTrackerName;
   @JsonKey(name: 'predefinedGoalStatusTypeId')
   final int? predefinedGoalStatusTypeId;
+  @JsonKey(name: 'predefinedGoalPriorityTypeId')
+  final int? predefinedGoalPriorityTypeId;
   @JsonKey(name: 'goalTrackerStartDate')
   final DateTime? goalTrackerStartDate;
   @JsonKey(name: 'goalTrackerEndDate')
@@ -43641,6 +43738,8 @@ class GoalTrackerModel {
   final DateTime? modifiedDate;
   @JsonKey(name: 'modifiedByUserId')
   final int? modifiedByUserId;
+  @JsonKey(name: 'predefinedGoalPriorityTypeName')
+  final String? predefinedGoalPriorityTypeName;
   @JsonKey(name: 'predefinedGoalStatusTypeName')
   final String? predefinedGoalStatusTypeName;
   @JsonKey(name: 'userName')
@@ -43683,6 +43782,10 @@ class GoalTrackerModel {
                 const DeepCollectionEquality().equals(
                     other.predefinedGoalStatusTypeId,
                     predefinedGoalStatusTypeId)) &&
+            (identical(other.predefinedGoalPriorityTypeId, predefinedGoalPriorityTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedGoalPriorityTypeId,
+                    predefinedGoalPriorityTypeId)) &&
             (identical(other.goalTrackerStartDate, goalTrackerStartDate) ||
                 const DeepCollectionEquality().equals(
                     other.goalTrackerStartDate, goalTrackerStartDate)) &&
@@ -43708,16 +43811,11 @@ class GoalTrackerModel {
                 const DeepCollectionEquality()
                     .equals(other.createdDate, createdDate)) &&
             (identical(other.createdByUserId, createdByUserId) ||
-                const DeepCollectionEquality()
-                    .equals(other.createdByUserId, createdByUserId)) &&
-            (identical(other.modifiedDate, modifiedDate) ||
-                const DeepCollectionEquality()
-                    .equals(other.modifiedDate, modifiedDate)) &&
-            (identical(other.modifiedByUserId, modifiedByUserId) ||
-                const DeepCollectionEquality()
-                    .equals(other.modifiedByUserId, modifiedByUserId)) &&
-            (identical(other.predefinedGoalStatusTypeName, predefinedGoalStatusTypeName) ||
-                const DeepCollectionEquality().equals(other.predefinedGoalStatusTypeName, predefinedGoalStatusTypeName)) &&
+                const DeepCollectionEquality().equals(other.createdByUserId, createdByUserId)) &&
+            (identical(other.modifiedDate, modifiedDate) || const DeepCollectionEquality().equals(other.modifiedDate, modifiedDate)) &&
+            (identical(other.modifiedByUserId, modifiedByUserId) || const DeepCollectionEquality().equals(other.modifiedByUserId, modifiedByUserId)) &&
+            (identical(other.predefinedGoalPriorityTypeName, predefinedGoalPriorityTypeName) || const DeepCollectionEquality().equals(other.predefinedGoalPriorityTypeName, predefinedGoalPriorityTypeName)) &&
+            (identical(other.predefinedGoalStatusTypeName, predefinedGoalStatusTypeName) || const DeepCollectionEquality().equals(other.predefinedGoalStatusTypeName, predefinedGoalStatusTypeName)) &&
             (identical(other.userName, userName) || const DeepCollectionEquality().equals(other.userName, userName)) &&
             (identical(other.createdByUserFirstName, createdByUserFirstName) || const DeepCollectionEquality().equals(other.createdByUserFirstName, createdByUserFirstName)) &&
             (identical(other.createdByUserLastName, createdByUserLastName) || const DeepCollectionEquality().equals(other.createdByUserLastName, createdByUserLastName)) &&
@@ -43739,6 +43837,7 @@ class GoalTrackerModel {
       const DeepCollectionEquality().hash(goalTrackerId) ^
       const DeepCollectionEquality().hash(goalTrackerName) ^
       const DeepCollectionEquality().hash(predefinedGoalStatusTypeId) ^
+      const DeepCollectionEquality().hash(predefinedGoalPriorityTypeId) ^
       const DeepCollectionEquality().hash(goalTrackerStartDate) ^
       const DeepCollectionEquality().hash(goalTrackerEndDate) ^
       const DeepCollectionEquality().hash(goalTrackerCompletedDate) ^
@@ -43750,6 +43849,7 @@ class GoalTrackerModel {
       const DeepCollectionEquality().hash(createdByUserId) ^
       const DeepCollectionEquality().hash(modifiedDate) ^
       const DeepCollectionEquality().hash(modifiedByUserId) ^
+      const DeepCollectionEquality().hash(predefinedGoalPriorityTypeName) ^
       const DeepCollectionEquality().hash(predefinedGoalStatusTypeName) ^
       const DeepCollectionEquality().hash(userName) ^
       const DeepCollectionEquality().hash(createdByUserFirstName) ^
@@ -43770,6 +43870,7 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
       {int? goalTrackerId,
       String? goalTrackerName,
       int? predefinedGoalStatusTypeId,
+      int? predefinedGoalPriorityTypeId,
       DateTime? goalTrackerStartDate,
       DateTime? goalTrackerEndDate,
       DateTime? goalTrackerCompletedDate,
@@ -43781,6 +43882,7 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
       int? createdByUserId,
       DateTime? modifiedDate,
       int? modifiedByUserId,
+      String? predefinedGoalPriorityTypeName,
       String? predefinedGoalStatusTypeName,
       String? userName,
       String? createdByUserFirstName,
@@ -43798,6 +43900,8 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
         predefinedGoalStatusTypeId:
             predefinedGoalStatusTypeId ?? this.predefinedGoalStatusTypeId,
+        predefinedGoalPriorityTypeId:
+            predefinedGoalPriorityTypeId ?? this.predefinedGoalPriorityTypeId,
         goalTrackerStartDate: goalTrackerStartDate ?? this.goalTrackerStartDate,
         goalTrackerEndDate: goalTrackerEndDate ?? this.goalTrackerEndDate,
         goalTrackerCompletedDate:
@@ -43810,6 +43914,8 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
         createdByUserId: createdByUserId ?? this.createdByUserId,
         modifiedDate: modifiedDate ?? this.modifiedDate,
         modifiedByUserId: modifiedByUserId ?? this.modifiedByUserId,
+        predefinedGoalPriorityTypeName: predefinedGoalPriorityTypeName ??
+            this.predefinedGoalPriorityTypeName,
         predefinedGoalStatusTypeName:
             predefinedGoalStatusTypeName ?? this.predefinedGoalStatusTypeName,
         userName: userName ?? this.userName,
@@ -43834,6 +43940,7 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
       {Wrapped<int?>? goalTrackerId,
       Wrapped<String?>? goalTrackerName,
       Wrapped<int?>? predefinedGoalStatusTypeId,
+      Wrapped<int?>? predefinedGoalPriorityTypeId,
       Wrapped<DateTime?>? goalTrackerStartDate,
       Wrapped<DateTime?>? goalTrackerEndDate,
       Wrapped<DateTime?>? goalTrackerCompletedDate,
@@ -43845,6 +43952,7 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
       Wrapped<int?>? createdByUserId,
       Wrapped<DateTime?>? modifiedDate,
       Wrapped<int?>? modifiedByUserId,
+      Wrapped<String?>? predefinedGoalPriorityTypeName,
       Wrapped<String?>? predefinedGoalStatusTypeName,
       Wrapped<String?>? userName,
       Wrapped<String?>? createdByUserFirstName,
@@ -43866,6 +43974,9 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
         predefinedGoalStatusTypeId: (predefinedGoalStatusTypeId != null
             ? predefinedGoalStatusTypeId.value
             : this.predefinedGoalStatusTypeId),
+        predefinedGoalPriorityTypeId: (predefinedGoalPriorityTypeId != null
+            ? predefinedGoalPriorityTypeId.value
+            : this.predefinedGoalPriorityTypeId),
         goalTrackerStartDate: (goalTrackerStartDate != null
             ? goalTrackerStartDate.value
             : this.goalTrackerStartDate),
@@ -43892,6 +44003,9 @@ extension $GoalTrackerModelExtension on GoalTrackerModel {
         modifiedByUserId: (modifiedByUserId != null
             ? modifiedByUserId.value
             : this.modifiedByUserId),
+        predefinedGoalPriorityTypeName: (predefinedGoalPriorityTypeName != null
+            ? predefinedGoalPriorityTypeName.value
+            : this.predefinedGoalPriorityTypeName),
         predefinedGoalStatusTypeName: (predefinedGoalStatusTypeName != null
             ? predefinedGoalStatusTypeName.value
             : this.predefinedGoalStatusTypeName),
@@ -44211,6 +44325,7 @@ class GoalTrackerUpdateModel {
     this.goalTrackerId,
     this.goalTrackerName,
     this.predefinedGoalStatusTypeId,
+    this.predefinedGoalPriorityTypeId,
     this.goalTrackerStartDate,
     this.goalTrackerEndDate,
     this.goalTrackerCompletedDate,
@@ -44233,6 +44348,8 @@ class GoalTrackerUpdateModel {
   final String? goalTrackerName;
   @JsonKey(name: 'predefinedGoalStatusTypeId')
   final int? predefinedGoalStatusTypeId;
+  @JsonKey(name: 'predefinedGoalPriorityTypeId')
+  final int? predefinedGoalPriorityTypeId;
   @JsonKey(name: 'goalTrackerStartDate')
   final DateTime? goalTrackerStartDate;
   @JsonKey(name: 'goalTrackerEndDate')
@@ -44269,14 +44386,17 @@ class GoalTrackerUpdateModel {
                 const DeepCollectionEquality().equals(
                     other.predefinedGoalStatusTypeId,
                     predefinedGoalStatusTypeId)) &&
+            (identical(other.predefinedGoalPriorityTypeId, predefinedGoalPriorityTypeId) ||
+                const DeepCollectionEquality().equals(
+                    other.predefinedGoalPriorityTypeId,
+                    predefinedGoalPriorityTypeId)) &&
             (identical(other.goalTrackerStartDate, goalTrackerStartDate) ||
                 const DeepCollectionEquality().equals(
                     other.goalTrackerStartDate, goalTrackerStartDate)) &&
             (identical(other.goalTrackerEndDate, goalTrackerEndDate) ||
                 const DeepCollectionEquality()
                     .equals(other.goalTrackerEndDate, goalTrackerEndDate)) &&
-            (identical(
-                    other.goalTrackerCompletedDate, goalTrackerCompletedDate) ||
+            (identical(other.goalTrackerCompletedDate, goalTrackerCompletedDate) ||
                 const DeepCollectionEquality().equals(
                     other.goalTrackerCompletedDate,
                     goalTrackerCompletedDate)) &&
@@ -44292,11 +44412,9 @@ class GoalTrackerUpdateModel {
                 const DeepCollectionEquality().equals(
                     other.newGoalTrackerCategoryModels,
                     newGoalTrackerCategoryModels)) &&
-            (identical(other.existingGoalTrackerCategoryModels,
-                    existingGoalTrackerCategoryModels) ||
-                const DeepCollectionEquality().equals(
-                    other.existingGoalTrackerCategoryModels,
-                    existingGoalTrackerCategoryModels)));
+            (identical(other.existingGoalTrackerCategoryModels, existingGoalTrackerCategoryModels) ||
+                const DeepCollectionEquality()
+                    .equals(other.existingGoalTrackerCategoryModels, existingGoalTrackerCategoryModels)));
   }
 
   @override
@@ -44307,6 +44425,7 @@ class GoalTrackerUpdateModel {
       const DeepCollectionEquality().hash(goalTrackerId) ^
       const DeepCollectionEquality().hash(goalTrackerName) ^
       const DeepCollectionEquality().hash(predefinedGoalStatusTypeId) ^
+      const DeepCollectionEquality().hash(predefinedGoalPriorityTypeId) ^
       const DeepCollectionEquality().hash(goalTrackerStartDate) ^
       const DeepCollectionEquality().hash(goalTrackerEndDate) ^
       const DeepCollectionEquality().hash(goalTrackerCompletedDate) ^
@@ -44323,6 +44442,7 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
       {int? goalTrackerId,
       String? goalTrackerName,
       int? predefinedGoalStatusTypeId,
+      int? predefinedGoalPriorityTypeId,
       DateTime? goalTrackerStartDate,
       DateTime? goalTrackerEndDate,
       DateTime? goalTrackerCompletedDate,
@@ -44337,6 +44457,8 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
         goalTrackerName: goalTrackerName ?? this.goalTrackerName,
         predefinedGoalStatusTypeId:
             predefinedGoalStatusTypeId ?? this.predefinedGoalStatusTypeId,
+        predefinedGoalPriorityTypeId:
+            predefinedGoalPriorityTypeId ?? this.predefinedGoalPriorityTypeId,
         goalTrackerStartDate: goalTrackerStartDate ?? this.goalTrackerStartDate,
         goalTrackerEndDate: goalTrackerEndDate ?? this.goalTrackerEndDate,
         goalTrackerCompletedDate:
@@ -44354,6 +44476,7 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
       {Wrapped<int?>? goalTrackerId,
       Wrapped<String?>? goalTrackerName,
       Wrapped<int?>? predefinedGoalStatusTypeId,
+      Wrapped<int?>? predefinedGoalPriorityTypeId,
       Wrapped<DateTime?>? goalTrackerStartDate,
       Wrapped<DateTime?>? goalTrackerEndDate,
       Wrapped<DateTime?>? goalTrackerCompletedDate,
@@ -44373,6 +44496,9 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
         predefinedGoalStatusTypeId: (predefinedGoalStatusTypeId != null
             ? predefinedGoalStatusTypeId.value
             : this.predefinedGoalStatusTypeId),
+        predefinedGoalPriorityTypeId: (predefinedGoalPriorityTypeId != null
+            ? predefinedGoalPriorityTypeId.value
+            : this.predefinedGoalPriorityTypeId),
         goalTrackerStartDate: (goalTrackerStartDate != null
             ? goalTrackerStartDate.value
             : this.goalTrackerStartDate),
@@ -72776,7 +72902,6 @@ extension $UserByVisionBoardSessionPictureIdSearchCriteriaExtension
 class UserGroupCreateModel {
   const UserGroupCreateModel({
     this.userGroupName,
-    this.companyEntityId,
   });
 
   factory UserGroupCreateModel.fromJson(Map<String, dynamic> json) =>
@@ -72787,8 +72912,6 @@ class UserGroupCreateModel {
 
   @JsonKey(name: 'userGroupName')
   final String? userGroupName;
-  @JsonKey(name: 'companyEntityId')
-  final int? companyEntityId;
   static const fromJsonFactory = _$UserGroupCreateModelFromJson;
 
   @override
@@ -72797,10 +72920,7 @@ class UserGroupCreateModel {
         (other is UserGroupCreateModel &&
             (identical(other.userGroupName, userGroupName) ||
                 const DeepCollectionEquality()
-                    .equals(other.userGroupName, userGroupName)) &&
-            (identical(other.companyEntityId, companyEntityId) ||
-                const DeepCollectionEquality()
-                    .equals(other.companyEntityId, companyEntityId)));
+                    .equals(other.userGroupName, userGroupName)));
   }
 
   @override
@@ -72808,26 +72928,19 @@ class UserGroupCreateModel {
 
   @override
   int get hashCode =>
-      const DeepCollectionEquality().hash(userGroupName) ^
-      const DeepCollectionEquality().hash(companyEntityId) ^
-      runtimeType.hashCode;
+      const DeepCollectionEquality().hash(userGroupName) ^ runtimeType.hashCode;
 }
 
 extension $UserGroupCreateModelExtension on UserGroupCreateModel {
-  UserGroupCreateModel copyWith({String? userGroupName, int? companyEntityId}) {
+  UserGroupCreateModel copyWith({String? userGroupName}) {
     return UserGroupCreateModel(
-        userGroupName: userGroupName ?? this.userGroupName,
-        companyEntityId: companyEntityId ?? this.companyEntityId);
+        userGroupName: userGroupName ?? this.userGroupName);
   }
 
-  UserGroupCreateModel copyWithWrapped(
-      {Wrapped<String?>? userGroupName, Wrapped<int?>? companyEntityId}) {
+  UserGroupCreateModel copyWithWrapped({Wrapped<String?>? userGroupName}) {
     return UserGroupCreateModel(
         userGroupName:
-            (userGroupName != null ? userGroupName.value : this.userGroupName),
-        companyEntityId: (companyEntityId != null
-            ? companyEntityId.value
-            : this.companyEntityId));
+            (userGroupName != null ? userGroupName.value : this.userGroupName));
   }
 }
 
@@ -72836,7 +72949,6 @@ class UserGroupModel {
   const UserGroupModel({
     this.userGroupId,
     this.userGroupName,
-    this.companyEntityId,
     this.isDeleted,
     this.createdDate,
     this.createdByUserId,
@@ -72863,8 +72975,6 @@ class UserGroupModel {
   final int? userGroupId;
   @JsonKey(name: 'userGroupName')
   final String? userGroupName;
-  @JsonKey(name: 'companyEntityId')
-  final int? companyEntityId;
   @JsonKey(name: 'isDeleted')
   final bool? isDeleted;
   @JsonKey(name: 'createdDate')
@@ -72905,9 +73015,6 @@ class UserGroupModel {
             (identical(other.userGroupName, userGroupName) ||
                 const DeepCollectionEquality()
                     .equals(other.userGroupName, userGroupName)) &&
-            (identical(other.companyEntityId, companyEntityId) ||
-                const DeepCollectionEquality()
-                    .equals(other.companyEntityId, companyEntityId)) &&
             (identical(other.isDeleted, isDeleted) ||
                 const DeepCollectionEquality()
                     .equals(other.isDeleted, isDeleted)) &&
@@ -72960,7 +73067,6 @@ class UserGroupModel {
   int get hashCode =>
       const DeepCollectionEquality().hash(userGroupId) ^
       const DeepCollectionEquality().hash(userGroupName) ^
-      const DeepCollectionEquality().hash(companyEntityId) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       const DeepCollectionEquality().hash(createdDate) ^
       const DeepCollectionEquality().hash(createdByUserId) ^
@@ -72982,7 +73088,6 @@ extension $UserGroupModelExtension on UserGroupModel {
   UserGroupModel copyWith(
       {int? userGroupId,
       String? userGroupName,
-      int? companyEntityId,
       bool? isDeleted,
       DateTime? createdDate,
       int? createdByUserId,
@@ -73000,7 +73105,6 @@ extension $UserGroupModelExtension on UserGroupModel {
     return UserGroupModel(
         userGroupId: userGroupId ?? this.userGroupId,
         userGroupName: userGroupName ?? this.userGroupName,
-        companyEntityId: companyEntityId ?? this.companyEntityId,
         isDeleted: isDeleted ?? this.isDeleted,
         createdDate: createdDate ?? this.createdDate,
         createdByUserId: createdByUserId ?? this.createdByUserId,
@@ -73024,7 +73128,6 @@ extension $UserGroupModelExtension on UserGroupModel {
   UserGroupModel copyWithWrapped(
       {Wrapped<int?>? userGroupId,
       Wrapped<String?>? userGroupName,
-      Wrapped<int?>? companyEntityId,
       Wrapped<bool?>? isDeleted,
       Wrapped<DateTime?>? createdDate,
       Wrapped<int?>? createdByUserId,
@@ -73044,9 +73147,6 @@ extension $UserGroupModelExtension on UserGroupModel {
             (userGroupId != null ? userGroupId.value : this.userGroupId),
         userGroupName:
             (userGroupName != null ? userGroupName.value : this.userGroupName),
-        companyEntityId: (companyEntityId != null
-            ? companyEntityId.value
-            : this.companyEntityId),
         isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
         createdDate:
             (createdDate != null ? createdDate.value : this.createdDate),
@@ -73368,7 +73468,6 @@ class UserGroupUpdateModel {
   const UserGroupUpdateModel({
     this.userGroupId,
     this.userGroupName,
-    this.companyEntityId,
   });
 
   factory UserGroupUpdateModel.fromJson(Map<String, dynamic> json) =>
@@ -73381,8 +73480,6 @@ class UserGroupUpdateModel {
   final int? userGroupId;
   @JsonKey(name: 'userGroupName')
   final String? userGroupName;
-  @JsonKey(name: 'companyEntityId')
-  final int? companyEntityId;
   static const fromJsonFactory = _$UserGroupUpdateModelFromJson;
 
   @override
@@ -73394,10 +73491,7 @@ class UserGroupUpdateModel {
                     .equals(other.userGroupId, userGroupId)) &&
             (identical(other.userGroupName, userGroupName) ||
                 const DeepCollectionEquality()
-                    .equals(other.userGroupName, userGroupName)) &&
-            (identical(other.companyEntityId, companyEntityId) ||
-                const DeepCollectionEquality()
-                    .equals(other.companyEntityId, companyEntityId)));
+                    .equals(other.userGroupName, userGroupName)));
   }
 
   @override
@@ -73407,31 +73501,23 @@ class UserGroupUpdateModel {
   int get hashCode =>
       const DeepCollectionEquality().hash(userGroupId) ^
       const DeepCollectionEquality().hash(userGroupName) ^
-      const DeepCollectionEquality().hash(companyEntityId) ^
       runtimeType.hashCode;
 }
 
 extension $UserGroupUpdateModelExtension on UserGroupUpdateModel {
-  UserGroupUpdateModel copyWith(
-      {int? userGroupId, String? userGroupName, int? companyEntityId}) {
+  UserGroupUpdateModel copyWith({int? userGroupId, String? userGroupName}) {
     return UserGroupUpdateModel(
         userGroupId: userGroupId ?? this.userGroupId,
-        userGroupName: userGroupName ?? this.userGroupName,
-        companyEntityId: companyEntityId ?? this.companyEntityId);
+        userGroupName: userGroupName ?? this.userGroupName);
   }
 
   UserGroupUpdateModel copyWithWrapped(
-      {Wrapped<int?>? userGroupId,
-      Wrapped<String?>? userGroupName,
-      Wrapped<int?>? companyEntityId}) {
+      {Wrapped<int?>? userGroupId, Wrapped<String?>? userGroupName}) {
     return UserGroupUpdateModel(
         userGroupId:
             (userGroupId != null ? userGroupId.value : this.userGroupId),
         userGroupName:
-            (userGroupName != null ? userGroupName.value : this.userGroupName),
-        companyEntityId: (companyEntityId != null
-            ? companyEntityId.value
-            : this.companyEntityId));
+            (userGroupName != null ? userGroupName.value : this.userGroupName));
   }
 }
 

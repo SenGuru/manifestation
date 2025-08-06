@@ -10089,17 +10089,20 @@ namespace Manifest.Service.App
                 }
             }
 
-
-
             if (defaultCategoryModel.DefaultCategoryName != null && defaultCategoryModel.DefaultCategoryName.Length > DefaultCategoryModel.COLUMN_SIZE_DefaultCategoryName)
             {
                 result.Add(new ReturnErrorItem("DefaultCategoryName", $"DefaultCategoryName size should not exceed {DefaultCategoryModel.COLUMN_SIZE_DefaultCategoryName}"));
             }
+
             if (defaultCategoryModel.DefaultCategoryName == null)
             {
                 result.Add(new ReturnErrorItem("DefaultCategoryName", "DefaultCategoryName is required "));
             }
 
+            if (!ValidationUtils.IsEnumValid<PredefinedIconTypes, long>(defaultCategoryModel.PredefinedIconTypeId))
+            {
+                result.Add(new ReturnErrorItem("PredefinedIconTypeId", "Icon Type is not valid"));
+            }
 
             return result.Count > 0 ? result : null;
         }
@@ -17994,8 +17997,18 @@ namespace Manifest.Service.App
                     search.UserId = await currentSessionService.GetCurrentUserIdAsync();
                 }
 
-                return this.ConvertToList(await manifestRepository.GetGoalTrackersAsync(search), objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
-
+                var result = this.ConvertToList(await manifestRepository.GetGoalTrackersAsync(search), objectMapperService.GoalTrackerViewListToGoalTrackerModelList);
+                if (result.IsSuccess)
+                {
+                    var ids = result.Model.SelectToList(x => x.GoalTrackerId);
+                    var cats = await manifestRepository.GetGoalTrackerCategoryViewByGoalTrackerIdAsync(ids);
+                    foreach (var gItem in result.Model)
+                    {
+                        var cchildItems = cats.Where(x => x.GoalTrackerId == gItem.GoalTrackerId).ToList();
+                        gItem.ExistingCategorys = this.ConvertToList<GoalTrackerCategoryView, CategoryModel>(cchildItems, objectMapperService.GoalTrackerCategoryViewListToCategoryModelList).Model;
+                    }
+                }
+                return result;
             }
             catch (Exception ex)
             {
@@ -18037,19 +18050,14 @@ namespace Manifest.Service.App
                 }
 
                 var result = this.ConvertToItem(item,objectMapperService.GoalTrackerViewToGoalTrackerModel);
-                var childItems = await GetGoalTrackerMileStoneByGoalTrackerIdAsync(item.GoalTrackerId);
-                if (!childItems.IsSuccess)
-                    return log.ErrorAndReturnModel<GoalTrackerModel>(childItems);
 
-                result.Model.ExistingGoalTrackerMileStones = childItems.Model.Where(x => x.GoalTrackerId == item.GoalTrackerId).ToList();
+                var childItems = await manifestRepository.GetGoalTrackerMileStoneViewByGoalTrackerIdAsync(goalTrackerId);
+                result.Model.ExistingGoalTrackerMileStones = this.ConvertToList<GoalTrackerMileStoneView, GoalTrackerMileStoneModel>(childItems, objectMapperService.GoalTrackerMileStoneViewListToGoalTrackerMileStoneModelList).Model;
 
                 var cchildItems = await manifestRepository.GetBareCategoryByGoalTrackerIdAsync(item.GoalTrackerId);
-                var cmodels = this.ConvertToList<Category,CategoryModel>(cchildItems, objectMapperService.CategoryListToCategoryModelList);
-                result.Model.ExistingCategorys = cmodels.Model;
+                result.Model.ExistingCategorys = this.ConvertToList<Category,CategoryModel>(cchildItems, objectMapperService.CategoryListToCategoryModelList).Model;
 
                 return result;
-
-                //return this.ConvertToItem(item, objectMapperService.GoalTrackerViewToGoalTrackerModel);
             }
             catch (Exception ex)
             {
@@ -18462,6 +18470,10 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("AddedToFeedDate", $"AddedToFeedDate is not a valid date"));
             }
 
+            if (!ValidationUtils.IsEnumValid<PredefinedGoalPriorityTypes, long>(goalTrackerModel.PredefinedGoalPriorityTypeId))
+            {
+                result.Add(new ReturnErrorItem("PredefinedGoalPriorityTypeId", "Priority Type is not valid"));
+            }
 
             return result.Count > 0 ? result : null;
         }
@@ -25140,11 +25152,6 @@ namespace Manifest.Service.App
 
             if (isCreate)
             {
-                if (await manifestRepository.IsVisionBoardPictureNameAlreadyExistsForOtherVisionBoardPictureAsync(visionBoardPictureModel.FileName, visionBoardPictureModel.UserId))
-                {
-                    result.Add(new ReturnErrorItem("", "Another Vision Board Picture already exists"));
-                }
-
                 if (visionBoardPictureModel.VisionBoardPictureId > 0)
                 {
                     result.Add(new ReturnErrorItem("", "Vision Board Picture Identifier is not valid"));
@@ -25152,11 +25159,6 @@ namespace Manifest.Service.App
             }
             else
             {
-                if (await manifestRepository.IsVisionBoardPictureNameAlreadyExistsForOtherVisionBoardPictureAsync(visionBoardPictureModel.VisionBoardPictureId, visionBoardPictureModel.FileName, visionBoardPictureModel.UserId))
-                {
-                    result.Add(new ReturnErrorItem("", "Another Vision Board Picture already exists"));
-                }
-
                 if (visionBoardPictureModel.VisionBoardPictureId <= 0)
                 {
                     result.Add(new ReturnErrorItem("", "Vision Board Picture Unique Identifier is not valid"));
@@ -25175,9 +25177,6 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
                 return result;
             }
-
-
-
 
             if (visionBoardPictureModel.Location != null && visionBoardPictureModel.Location.Length > VisionBoardPictureModel.COLUMN_SIZE_Location)
             {
@@ -25211,11 +25210,8 @@ namespace Manifest.Service.App
                 }
             }
 
-
             return result.Count > 0 ? result : null;
         }
-
-
 
         public async Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByUserIdAsync(long userId)
         {
@@ -25236,7 +25232,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<VisionBoardPictureModel>> GetVisionBoardPictureByUserIdAsync(VisionBoardPictureByUserIdSearchCriteria search)
         {
             try
@@ -25255,7 +25250,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<VisionBoardPictureModel>($"Unexpected error when getting Vision Board Picture by UserId", new { search.UserId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<VisionBoardPicture>> GetBareVisionBoardPictureByUserIdAsync(long userId)
         {
@@ -25276,7 +25270,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<VisionBoardPicture>> GetBareVisionBoardPictureByUserIdAsync(VisionBoardPictureByUserIdSearchCriteria search)
         {
             try
@@ -25295,7 +25288,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<VisionBoardPicture>($"Unexpected error when getting Vision Board Picture by UserId", new { search.UserId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<UserModel>> GetUserByVisionBoardPictureIdAsync(long visionBoardPictureId)
         {
@@ -25316,7 +25308,6 @@ namespace Manifest.Service.App
             }
         }
 
-
         public async Task<ReturnListModel<UserModel>> GetUserByVisionBoardPictureIdAsync(UserByVisionBoardPictureIdSearchCriteria search)
         {
             try
@@ -25335,7 +25326,6 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnListModel<UserModel>($"Unexpected error when getting Vision Board Picture by VisionBoardPicture", new { search.VisionBoardPictureId }, ex);
             }
         }
-
 
         public async Task<ReturnListModel<User>> GetBareUserByVisionBoardPictureIdAsync(long visionBoardPictureId)
         {

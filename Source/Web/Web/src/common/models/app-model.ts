@@ -3206,6 +3206,7 @@ export class CategoryByDefaultCategoryIdSearchCriteria extends BaseSearchCriteri
 }
 
 export class DefaultCategoryModel {
+    predefinedIconTypeName : string = '';
     predefinedCategoryTypeName : string = '';
     createdByUserFirstName : string = '';
     createdByUserLastName : string = '';
@@ -3218,6 +3219,7 @@ export class DefaultCategoryModel {
     defaultCategoryId : number = 0;
     defaultCategoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -3227,6 +3229,8 @@ export class DefaultCategoryModel {
 
     static getCopy(self : DefaultCategoryModel,adjustDateToUTC : boolean = false) : DefaultCategoryModel {
       let obj = new DefaultCategoryModel();
+      if (self.hasOwnProperty('predefinedIconTypeName'))
+        obj.predefinedIconTypeName = self.predefinedIconTypeName;
       if (self.hasOwnProperty('predefinedCategoryTypeName'))
         obj.predefinedCategoryTypeName = self.predefinedCategoryTypeName;
       if (self.hasOwnProperty('createdByUserFirstName'))
@@ -3251,6 +3255,8 @@ export class DefaultCategoryModel {
         obj.defaultCategoryName = self.defaultCategoryName;
       if (self.hasOwnProperty('predefinedCategoryTypeId'))
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -3268,6 +3274,7 @@ export class DefaultCategoryModel {
       let obj = new DefaultCategoryCreateModel();
       obj.defaultCategoryName = self.defaultCategoryName;
       obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 
@@ -3276,6 +3283,7 @@ export class DefaultCategoryModel {
       obj.defaultCategoryId = self.defaultCategoryId;
       obj.defaultCategoryName = self.defaultCategoryName;
       obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -4154,6 +4162,7 @@ export class UserByDailyAffirmationTextIdSearchCriteria extends BaseSearchCriter
 }
 
 export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
+    predefinedIconTypeIds : number[] | null = null;
     showDeleted : boolean = false;
     predefinedCategoryTypeIds : number[] | null = null;
     createdByUserId : number | null = null;
@@ -4161,6 +4170,8 @@ export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
 
     static getCopy(self : DefaultCategorySearchCriteria,adjustDateToUTC : boolean = false) : DefaultCategorySearchCriteria {
       let obj = new DefaultCategorySearchCriteria();
+      if (self.hasOwnProperty('predefinedIconTypeIds'))
+        obj.predefinedIconTypeIds = self.predefinedIconTypeIds;
       if (self.hasOwnProperty('showDeleted'))
         obj.showDeleted = self.showDeleted;
       if (self.hasOwnProperty('predefinedCategoryTypeIds'))
@@ -4188,6 +4199,7 @@ export class DefaultCategorySearchCriteria extends BaseSearchCriteria{
 export class DefaultCategoryCreateModel {
     defaultCategoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     static defaultCategoryName__size : number = 255;
 
     static getCopy(self : DefaultCategoryCreateModel,adjustDateToUTC : boolean = false) : DefaultCategoryCreateModel {
@@ -4196,6 +4208,8 @@ export class DefaultCategoryCreateModel {
         obj.defaultCategoryName = self.defaultCategoryName;
       if (self.hasOwnProperty('predefinedCategoryTypeId'))
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -4215,6 +4229,7 @@ export class DefaultCategoryUpdateModel {
     defaultCategoryId : number = 0;
     defaultCategoryName : string = '';
     predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     static defaultCategoryName__size : number = 255;
 
     static getCopy(self : DefaultCategoryUpdateModel,adjustDateToUTC : boolean = false) : DefaultCategoryUpdateModel {
@@ -4225,6 +4240,8 @@ export class DefaultCategoryUpdateModel {
         obj.defaultCategoryName = self.defaultCategoryName;
       if (self.hasOwnProperty('predefinedCategoryTypeId'))
         obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       return obj;
     }
 }
@@ -5888,6 +5905,7 @@ export class FeedByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
 export class GoalTrackerModel {
     existingGoalTrackerMileStones : GoalTrackerMileStoneModel[] | null = null;
     existingCategorys : CategoryModel[] | null = null;
+    predefinedGoalPriorityTypeName : string = '';
     predefinedGoalStatusTypeName : string = '';
     userName : string = '';
     createdByUserFirstName : string = '';
@@ -5901,6 +5919,7 @@ export class GoalTrackerModel {
     goalTrackerId : number = 0;
     goalTrackerName : string = '';
     predefinedGoalStatusTypeId : number = 0;
+    predefinedGoalPriorityTypeId : number = 0;
     goalTrackerStartDate : Date | null = null;
     goalTrackerEndDate : Date | null = null;
     goalTrackerCompletedDate : Date | null = null;
@@ -5920,6 +5939,8 @@ export class GoalTrackerModel {
         obj.existingGoalTrackerMileStones = self.existingGoalTrackerMileStones;
       if (self.hasOwnProperty('existingCategorys'))
         obj.existingCategorys = self.existingCategorys;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeName'))
+        obj.predefinedGoalPriorityTypeName = self.predefinedGoalPriorityTypeName;
       if (self.hasOwnProperty('predefinedGoalStatusTypeName'))
         obj.predefinedGoalStatusTypeName = self.predefinedGoalStatusTypeName;
       if (self.hasOwnProperty('userName'))
@@ -5946,6 +5967,8 @@ export class GoalTrackerModel {
         obj.goalTrackerName = self.goalTrackerName;
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeId'))
+        obj.predefinedGoalPriorityTypeId = self.predefinedGoalPriorityTypeId;
       if (self.hasOwnProperty('goalTrackerStartDate'))
         obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
       if (self.hasOwnProperty('goalTrackerEndDate'))
@@ -5979,6 +6002,7 @@ export class GoalTrackerModel {
         obj.existingGoalTrackerCategoryModels = (self as GoalTrackerWithDiffModel)['existingGoalTrackerCategoryModels'];
       obj.goalTrackerName = self.goalTrackerName;
       obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.predefinedGoalPriorityTypeId = self.predefinedGoalPriorityTypeId;
       obj.goalTrackerStartDate = self.goalTrackerStartDate;
       obj.goalTrackerEndDate = self.goalTrackerEndDate;
       obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate;
@@ -5997,6 +6021,7 @@ export class GoalTrackerModel {
       obj.goalTrackerId = self.goalTrackerId;
       obj.goalTrackerName = self.goalTrackerName;
       obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      obj.predefinedGoalPriorityTypeId = self.predefinedGoalPriorityTypeId;
       obj.goalTrackerStartDate = self.goalTrackerStartDate;
       obj.goalTrackerEndDate = self.goalTrackerEndDate;
       obj.goalTrackerCompletedDate = self.goalTrackerCompletedDate;
@@ -6017,6 +6042,8 @@ export class GoalTrackerWithDiffModel extends GoalTrackerModel {
         obj.existingGoalTrackerMileStones = self.existingGoalTrackerMileStones;
       if (self.hasOwnProperty('existingCategorys'))
         obj.existingCategorys = self.existingCategorys;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeName'))
+        obj.predefinedGoalPriorityTypeName = self.predefinedGoalPriorityTypeName;
       if (self.hasOwnProperty('predefinedGoalStatusTypeName'))
         obj.predefinedGoalStatusTypeName = self.predefinedGoalStatusTypeName;
       if (self.hasOwnProperty('userName'))
@@ -6043,6 +6070,8 @@ export class GoalTrackerWithDiffModel extends GoalTrackerModel {
         obj.goalTrackerName = self.goalTrackerName;
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeId'))
+        obj.predefinedGoalPriorityTypeId = self.predefinedGoalPriorityTypeId;
       if (self.hasOwnProperty('goalTrackerStartDate'))
         obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
       if (self.hasOwnProperty('goalTrackerEndDate'))
@@ -6246,6 +6275,7 @@ export class GoalTrackerMileStoneByFeedIdSearchCriteria extends BaseSearchCriter
 
 export class GoalTrackerSearchCriteria extends BaseSearchCriteria{
     showDeleted : boolean = false;
+    predefinedGoalPriorityTypeIds : number[] | null = null;
     predefinedGoalStatusTypeIds : number[] | null = null;
     userId : number | null = null;
     createdByUserId : number | null = null;
@@ -6255,6 +6285,8 @@ export class GoalTrackerSearchCriteria extends BaseSearchCriteria{
       let obj = new GoalTrackerSearchCriteria();
       if (self.hasOwnProperty('showDeleted'))
         obj.showDeleted = self.showDeleted;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeIds'))
+        obj.predefinedGoalPriorityTypeIds = self.predefinedGoalPriorityTypeIds;
       if (self.hasOwnProperty('predefinedGoalStatusTypeIds'))
         obj.predefinedGoalStatusTypeIds = self.predefinedGoalStatusTypeIds;
       if (self.hasOwnProperty('userId'))
@@ -6284,6 +6316,7 @@ export class GoalTrackerCreateModel {
     existingGoalTrackerCategoryModels : GoalTrackerCategoryUpdateModel[] | null = null;
     goalTrackerName : string = '';
     predefinedGoalStatusTypeId : number = 0;
+    predefinedGoalPriorityTypeId : number = 0;
     goalTrackerStartDate : Date | null = null;
     goalTrackerEndDate : Date | null = null;
     goalTrackerCompletedDate : Date | null = null;
@@ -6302,6 +6335,8 @@ export class GoalTrackerCreateModel {
         obj.goalTrackerName = self.goalTrackerName;
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeId'))
+        obj.predefinedGoalPriorityTypeId = self.predefinedGoalPriorityTypeId;
       if (self.hasOwnProperty('goalTrackerStartDate'))
         obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
       if (self.hasOwnProperty('goalTrackerEndDate'))
@@ -6335,6 +6370,7 @@ export class GoalTrackerUpdateModel {
     goalTrackerId : number = 0;
     goalTrackerName : string = '';
     predefinedGoalStatusTypeId : number = 0;
+    predefinedGoalPriorityTypeId : number = 0;
     goalTrackerStartDate : Date | null = null;
     goalTrackerEndDate : Date | null = null;
     goalTrackerCompletedDate : Date | null = null;
@@ -6355,6 +6391,8 @@ export class GoalTrackerUpdateModel {
         obj.goalTrackerName = self.goalTrackerName;
       if (self.hasOwnProperty('predefinedGoalStatusTypeId'))
         obj.predefinedGoalStatusTypeId = self.predefinedGoalStatusTypeId;
+      if (self.hasOwnProperty('predefinedGoalPriorityTypeId'))
+        obj.predefinedGoalPriorityTypeId = self.predefinedGoalPriorityTypeId;
       if (self.hasOwnProperty('goalTrackerStartDate'))
         obj.goalTrackerStartDate = self.goalTrackerStartDate ?? (!adjustDateToUTC ? self.goalTrackerStartDate : (self.goalTrackerStartDate !== null ? DateUtils.parseAsUTC(self.goalTrackerStartDate) : self.goalTrackerStartDate ));
       if (self.hasOwnProperty('goalTrackerEndDate'))
@@ -6418,6 +6456,8 @@ export class UserByGoalTrackerIdSearchCriteria extends BaseSearchCriteria{
 }
 
 export class GoalTrackerCategoryModel {
+    predefinedCategoryTypeId : number | null = null;
+    predefinedIconTypeId : number = 0;
     categoryName : string = '';
     goalTrackerName : string = '';
     userName : string = '';
@@ -6441,6 +6481,10 @@ export class GoalTrackerCategoryModel {
 
     static getCopy(self : GoalTrackerCategoryModel,adjustDateToUTC : boolean = false) : GoalTrackerCategoryModel {
       let obj = new GoalTrackerCategoryModel();
+      if (self.hasOwnProperty('predefinedCategoryTypeId'))
+        obj.predefinedCategoryTypeId = self.predefinedCategoryTypeId;
+      if (self.hasOwnProperty('predefinedIconTypeId'))
+        obj.predefinedIconTypeId = self.predefinedIconTypeId;
       if (self.hasOwnProperty('categoryName'))
         obj.categoryName = self.categoryName;
       if (self.hasOwnProperty('goalTrackerName'))

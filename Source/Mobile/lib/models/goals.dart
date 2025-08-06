@@ -366,6 +366,7 @@ enum GoalPriority {
   low,
   medium,
   high,
+  critical,
 }
 
 extension GoalPriorityExtension on GoalPriority {
@@ -377,6 +378,8 @@ extension GoalPriorityExtension on GoalPriority {
         return 'Medium';
       case GoalPriority.high:
         return 'High';
+      case GoalPriority.critical:
+        return 'Critical';
     }
   }
 
@@ -388,6 +391,8 @@ extension GoalPriorityExtension on GoalPriority {
         return AppTheme.affirmationGradient[1];
       case GoalPriority.high:
         return AppTheme.affirmationGradient[0];
+      case GoalPriority.critical:
+        return Colors.red;
     }
   }
 
@@ -399,6 +404,8 @@ extension GoalPriorityExtension on GoalPriority {
         return Icons.remove;
       case GoalPriority.high:
         return Icons.priority_high;
+      case GoalPriority.critical:
+        return Icons.warning;
     }
   }
 }

@@ -44,6 +44,7 @@ export class SelectService {
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
       { id: 37, type: 'Predefined Mood Type' },
+      { id: 38, type: 'Predefined Goal Priority Type' },
     ];
   }
 
@@ -81,6 +82,7 @@ export class SelectService {
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
       { id: 37, type: 'Predefined Mood Type' },
+      { id: 38, type: 'Predefined Goal Priority Type' },
     ];
   }
 
@@ -117,6 +119,7 @@ export class SelectService {
       { id: 35, type: 'Predefined Meditation Type' },
       { id: 36, type: 'Predefined Icon Type' },
       { id: 37, type: 'Predefined Mood Type' },
+      { id: 38, type: 'Predefined Goal Priority Type' },
     ];
   }
 
@@ -472,6 +475,35 @@ export class SelectService {
     ];
   }
 
+ public GetAllPredefinedGoalPriorityTypes(): Status[] {
+    return [
+      { id: null, type: 'All' },
+      { id: 3800001, type: 'Low' },
+      { id: 3800002, type: 'Medium' },
+      { id: 3800003, type: 'High' },
+      { id: 3800004, type: 'Critical' },
+    ];
+  }
+
+ public GetWithBlankPredefinedGoalPriorityTypes(): Status[] {
+    return [
+      { id: null, type: '' },
+      { id: 3800001, type: 'Low' },
+      { id: 3800002, type: 'Medium' },
+      { id: 3800003, type: 'High' },
+      { id: 3800004, type: 'Critical' },
+    ];
+  }
+
+ public GetPredefinedGoalPriorityTypes(): Status[] {
+    return [
+      { id: 3800001, type: 'Low' },
+      { id: 3800002, type: 'Medium' },
+      { id: 3800003, type: 'High' },
+      { id: 3800004, type: 'Critical' },
+    ];
+  }
+
  public GetAllPredefinedGoalStatusTypes(): Status[] {
     return [
       { id: null, type: 'All' },
@@ -511,6 +543,8 @@ export class SelectService {
       { id: 3600008, type: 'Trophy' },
       { id: 3600009, type: 'Sun' },
       { id: 3600010, type: 'Moon' },
+      { id: 3600011, type: 'Money' },
+      { id: 3600012, type: 'Man' },
     ];
   }
 
@@ -527,6 +561,8 @@ export class SelectService {
       { id: 3600008, type: 'Trophy' },
       { id: 3600009, type: 'Sun' },
       { id: 3600010, type: 'Moon' },
+      { id: 3600011, type: 'Money' },
+      { id: 3600012, type: 'Man' },
     ];
   }
 
@@ -542,6 +578,8 @@ export class SelectService {
       { id: 3600008, type: 'Trophy' },
       { id: 3600009, type: 'Sun' },
       { id: 3600010, type: 'Moon' },
+      { id: 3600011, type: 'Money' },
+      { id: 3600012, type: 'Man' },
     ];
   }
 

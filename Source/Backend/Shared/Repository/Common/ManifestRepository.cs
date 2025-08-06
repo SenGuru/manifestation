@@ -2637,11 +2637,12 @@ namespace Manifest.Repository.Common
             return from item in appDBManager.GetTable<DefaultCategory>()
                        join oa in appDBManager.GetTable<EnumType>() on item.PredefinedCategoryTypeId equals oa.EnumTypeId into aTemp
                    from a in aTemp.DefaultIfEmpty()
-
                    join ocu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.CreatedByUserId equals ocu.UserId into cuTemp
                    from cu in cuTemp.DefaultIfEmpty()
                    join omu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.ModifiedByUserId equals omu.UserId into muTemp
                    from mu in muTemp.DefaultIfEmpty()
+                   join oxu in appDBManager.GetTable<EnumType>() on item.PredefinedIconTypeId equals oxu.EnumTypeId into xuTemp
+                   from xu in xuTemp.DefaultIfEmpty()
                    select new DefaultCategoryView
                    {
                        CreatedByUserFirstName = cu.FirstName,
@@ -2650,9 +2651,9 @@ namespace Manifest.Repository.Common
                        ModifiedByUserFirstName = mu.FirstName,
                        ModifiedByUserLastName = mu.LastName,
                        ModifiedByUserEmail = mu.Email,
-
                        PredefinedCategoryTypeName = a.EnumTypeName,
-
+                       PredefinedIconTypeName = xu.EnumTypeName,
+                       PredefinedIconTypeId = item.PredefinedIconTypeId,
                        DefaultCategoryId = item.DefaultCategoryId,
                        DefaultCategoryName = item.DefaultCategoryName,
                        PredefinedCategoryTypeId = item.PredefinedCategoryTypeId,
@@ -2677,30 +2678,35 @@ namespace Manifest.Repository.Common
 );
             }
 
-    /*if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
-    {
-        if (search.StartDate.Value <= search.EndDate.Value)
-        {
-            sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay() && x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
-        }
-    }
-    else if (search.StartDate.IsValidDate())
-    {
-        sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay());
-    }
-    else if (search.EndDate.IsValidDate())
-    {
-        sql1 = sql1.Where(x => x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
-    }*/
+            /*if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
+            {
+                if (search.StartDate.Value <= search.EndDate.Value)
+                {
+                    sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay() && x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
+                }
+            }
+            else if (search.StartDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay());
+            }
+            else if (search.EndDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
+            }*/
 
-    if (search.PredefinedCategoryTypeIds != null && search.PredefinedCategoryTypeIds.Count > 0)
-                    sql1 = sql1.Where(x => search.PredefinedCategoryTypeIds.Contains(x.PredefinedCategoryTypeId ?? 0));
-                if (search.CreatedByUserId != null && search.CreatedByUserId > 0)
-                    sql1 = sql1.Where(x => search.CreatedByUserId == x.CreatedByUserId);
-                if (search.ModifiedByUserId != null && search.ModifiedByUserId > 0)
-                    sql1 = sql1.Where(x => search.ModifiedByUserId == x.ModifiedByUserId);
+            if (search.PredefinedIconTypeIds != null && search.PredefinedIconTypeIds.Count > 0)
+                sql1 = sql1.Where(x => search.PredefinedIconTypeIds.Contains(x.PredefinedIconTypeId));
 
-    if (search.ShowDeleted == false)
+            if (search.PredefinedCategoryTypeIds != null && search.PredefinedCategoryTypeIds.Count > 0)
+                sql1 = sql1.Where(x => search.PredefinedCategoryTypeIds.Contains(x.PredefinedCategoryTypeId ?? 0));
+
+            if (search.CreatedByUserId != null && search.CreatedByUserId > 0)
+                sql1 = sql1.Where(x => search.CreatedByUserId == x.CreatedByUserId);
+
+            if (search.ModifiedByUserId != null && search.ModifiedByUserId > 0)
+                sql1 = sql1.Where(x => search.ModifiedByUserId == x.ModifiedByUserId);
+
+            if (search.ShowDeleted == false)
                 sql1 = sql1.Where(x => x.IsDeleted == false);
 
             return sql1;
@@ -5008,11 +5014,13 @@ ModifiedByUserId = item.ModifiedByUserId,
             return from item in appDBManager.GetTable<GoalTracker>()
                        join a in appDBManager.GetTable<EnumType>() on item.PredefinedGoalStatusTypeId equals a.EnumTypeId
                    join b in appDBManager.GetTable<User>() on item.UserId equals b.UserId
-
                    join ocu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.CreatedByUserId equals ocu.UserId into cuTemp
                    from cu in cuTemp.DefaultIfEmpty()
                    join omu in appDBManager.GetTableWithOutTenantOrCompanySetter<User>() on item.ModifiedByUserId equals omu.UserId into muTemp
                    from mu in muTemp.DefaultIfEmpty()
+                   join oxu in appDBManager.GetTable<EnumType>() on item.PredefinedGoalPriorityTypeId equals oxu.EnumTypeId into xuTemp
+                   from xu in xuTemp.DefaultIfEmpty()
+
                    select new GoalTrackerView
                    {
                        CreatedByUserFirstName = cu.FirstName,
@@ -5024,7 +5032,8 @@ ModifiedByUserId = item.ModifiedByUserId,
 
                        PredefinedGoalStatusTypeName = a.EnumTypeName,
                        UserName = b.UserName,
-
+                       PredefinedGoalPriorityTypeName = xu.EnumTypeName,
+                       PredefinedGoalPriorityTypeId = item.PredefinedGoalPriorityTypeId,
                        GoalTrackerId = item.GoalTrackerId,
                        GoalTrackerName = item.GoalTrackerName,
                        PredefinedGoalStatusTypeId = item.PredefinedGoalStatusTypeId,
@@ -5055,23 +5064,26 @@ ModifiedByUserId = item.ModifiedByUserId,
 );
             }
 
-    /*if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
-    {
-        if (search.StartDate.Value <= search.EndDate.Value)
-        {
-            sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay() && x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
-        }
-    }
-    else if (search.StartDate.IsValidDate())
-    {
-        sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay());
-    }
-    else if (search.EndDate.IsValidDate())
-    {
-        sql1 = sql1.Where(x => x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
-    }*/
+            /*if (search.StartDate.IsValidDate() && search.EndDate.IsValidDate())
+            {
+                if (search.StartDate.Value <= search.EndDate.Value)
+                {
+                    sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay() && x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
+                }
+            }
+            else if (search.StartDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.OrderDate >= search.StartDate.Value.StartOfDay());
+            }
+            else if (search.EndDate.IsValidDate())
+            {
+                sql1 = sql1.Where(x => x.OrderDate || x.DueDate <= search.EndDate.Value.EndOfDay());
+            }*/
 
-    if (search.PredefinedGoalStatusTypeIds != null && search.PredefinedGoalStatusTypeIds.Count > 0)
+            if (search.PredefinedGoalPriorityTypeIds != null && search.PredefinedGoalPriorityTypeIds.Count > 0)
+                sql1 = sql1.Where(x => search.PredefinedGoalPriorityTypeIds.Contains(x.PredefinedGoalPriorityTypeId));
+
+            if (search.PredefinedGoalStatusTypeIds != null && search.PredefinedGoalStatusTypeIds.Count > 0)
                     sql1 = sql1.Where(x => search.PredefinedGoalStatusTypeIds.Contains(x.PredefinedGoalStatusTypeId));
                 if (search.UserId != null && search.UserId > 0)
                     sql1 = sql1.Where(x => search.UserId == x.UserId);
@@ -5366,6 +5378,9 @@ ModifiedByUserId = item.ModifiedByUserId,
                        ModifiedByUserEmail = mu.Email,
 
                        CategoryName = a.CategoryName,
+                       PredefinedCategoryTypeId = a.PredefinedCategoryTypeId,
+                       PredefinedIconTypeId = a.PredefinedIconTypeId,
+
                        GoalTrackerName = b.GoalTrackerName,
                        UserName = c.UserName,
 
@@ -5584,6 +5599,11 @@ ModifiedByUserId = item.ModifiedByUserId,
         {
             var idsSql = appDBManager.GetTable<GoalTrackerCategory>().Where(x => x.IsDeleted == false && goalTrackerId == x.GoalTrackerId).Select(x => x.CategoryId);
             return appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && idsSql.Contains(x.CategoryId)).ToListAsync();
+        }
+
+        public Task<List<GoalTrackerCategoryView>> GetGoalTrackerCategoryViewByGoalTrackerIdAsync(List<long> goalTrackerIds)
+        {
+            return GetGoalTrackerCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && goalTrackerIds.Contains(x.GoalTrackerId)).ToListAsync();
         }
 
         public Task<List<Category>> GetBareCategoryByGoalTrackerCategoryIdAsync(List<long> goalTrackerCategoryIds)

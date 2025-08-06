@@ -12,9 +12,11 @@ import '../constants/app_theme.dart';
 import '../constants/goal_constants.dart';
 import '../services/goal_tracker_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import '../widgets/stylish_loading.dart';
-import 'goal_detail_screen.dart';
+import 'goal_detail_screen_redesigned.dart';
 
 class GoalTrackerScreen extends StatefulWidget {
   @override
@@ -86,7 +88,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     // Show loading screen while loading goals
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading goals...',
         ),
@@ -102,7 +104,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Show completed: $showCompletedGoals');
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -158,12 +160,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 color: AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
+                      color: AppTheme.textSecondary.withValues(alpha: 0.1),
                     ),
               ),
               child: Icon(
                 Icons.arrow_back,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -178,14 +180,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   'Track your manifestation progress',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
@@ -203,7 +205,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               ),
               child: Icon(
                 Icons.tune,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -231,7 +233,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.goalTrackerGradient[0].withOpacity(0.3),
+            color: AppTheme.goalTrackerGradient[0].withValues(alpha: 0.3),
             blurRadius: 12.r,
             offset: Offset(0, 6.h),
           ),
@@ -254,7 +256,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                         child: CircularProgressIndicator(
                           value: overallProgress / 100,
                           strokeWidth: 6,
-                          backgroundColor: AppTheme.white.withOpacity(0.3),
+                          backgroundColor: AppTheme.white.withValues(alpha: 0.3),
                           valueColor: AlwaysStoppedAnimation<Color>(AppTheme.white),
                         ),
                       ),
@@ -290,7 +292,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                       'Keep manifesting your dreams!',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppTheme.white.withOpacity(0.8),
+                        color: AppTheme.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -310,7 +312,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               Container(
                 width: 1,
                 height: 30.h,
-                color: AppTheme.white.withOpacity(0.3),
+                color: AppTheme.white.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem('Active', activeGoals.toString(), Icons.trending_up),
@@ -318,7 +320,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               Container(
                 width: 1,
                 height: 30.h,
-                color: AppTheme.white.withOpacity(0.3),
+                color: AppTheme.white.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem('Done', completedGoals.toString(), Icons.check_circle),
@@ -351,7 +353,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: AppTheme.white.withOpacity(0.8),
+            color: AppTheme.white.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -382,13 +384,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
               decoration: BoxDecoration(
                 color: isSelected 
-                    ? category.color.withOpacity(0.1)
+                    ? category.color.withValues(alpha: 0.1)
                     : AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
                   color: isSelected 
                       ? category.color
-                      : AppTheme.textMedium.withOpacity(0.3),
+                      : AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -396,7 +398,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 children: [
                   Icon(
                     category.icon,
-                    color: isSelected ? category.color : AppTheme.textMedium,
+                    color: isSelected ? category.color : AppTheme.textSecondary,
                     size: 16.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -405,7 +407,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected ? category.color : AppTheme.textMedium,
+                      color: isSelected ? category.color : AppTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -449,7 +451,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               width: 120.w,
               height: 120.h,
               decoration: BoxDecoration(
-                color: AppTheme.goalTrackerGradient[0].withOpacity(0.1),
+                color: AppTheme.goalTrackerGradient[0].withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -466,7 +468,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             SizedBox(height: 12.h),
@@ -476,7 +478,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   : 'Create a goal in this category to get started',
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -628,6 +630,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           print('   - goalTrackerId: ${apiGoal.goalTrackerId}');
           print('   - goalTrackerName: ${apiGoal.goalTrackerName}');
           print('   - userId: ${apiGoal.userId}');
+          print('   - predefinedGoalPriorityTypeId: ${apiGoal.predefinedGoalPriorityTypeId}');
+          print('   - predefinedGoalPriorityTypeName: ${apiGoal.predefinedGoalPriorityTypeName}');
           print('   - existingCategorys length: ${apiGoal.existingCategorys?.length ?? 0}');
           print('   - existingCategorys raw data: ${apiGoal.existingCategorys}');
           print('   - existingCategorys type: ${apiGoal.existingCategorys.runtimeType}');
@@ -665,7 +669,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               final cat = actualCategories[j];
               print('   - Category $j details:');
               print('     * categoryId: ${cat.categoryId}');
-              print('     * goalTrackerId: ${cat.goalTrackerId}');
+              print('     * categoryName: ${cat.categoryName}');
               print('     * userId: ${cat.userId}');
               print('     * Full object: ${cat.toString()}');
             }
@@ -679,10 +683,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           // Determine category from actualCategories (either from existingCategorys or separate API)
           final goalCategory = _getGoalCategoryFromActualCategories(actualCategories, apiGoal.goalTrackerName ?? '', apiGoal.goalTrackerId);
           
+          // Determine priority from API data
+          final goalPriority = _goalTrackerService.mapApiPriorityToUiPriority(apiGoal.predefinedGoalPriorityTypeId);
+          
           // Calculate progress based on completed milestones
           final progress = _calculateGoalProgress(milestones);
           
           print('🏷️  Goal "${apiGoal.goalTrackerName}" FINAL categorized as: ${goalCategory.displayName}');
+          print('🔥 Goal priority mapped: API ID ${apiGoal.predefinedGoalPriorityTypeId} → ${goalPriority.displayName}');
           print('📊 Goal progress calculated: ${progress.toStringAsFixed(1)}%');
           
           convertedGoals.add(Goal(
@@ -690,7 +698,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             title: apiGoal.goalTrackerName ?? '',
             description: '', // API doesn't have description field
             category: goalCategory,
-            priority: GoalPriority.medium, // Default priority
+            priority: goalPriority,
             targetDate: apiGoal.goalTrackerEndDate ?? DateTime.now().add(Duration(days: 30)),
             createdAt: apiGoal.goalTrackerStartDate ?? DateTime.now(), // Use start date as creation date
             milestones: milestones,
@@ -1103,6 +1111,63 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       }
   }
 
+  /// Create milestones for a newly created goal
+  Future<void> _createMilestonesForNewGoal(int goalId, List<Milestone> milestones) async {
+    print('🎯 Creating milestones for goal ID: $goalId');
+    
+    for (int i = 0; i < milestones.length; i++) {
+      final milestone = milestones[i];
+      print('📋 Creating milestone ${i + 1}/${milestones.length}: ${milestone.title}');
+      
+      try {
+        // Ensure dates are valid
+        final startDate = DateTime.now();
+        DateTime? endDate = milestone.targetDate;
+        
+        if (endDate != null) {
+          if (endDate.isBefore(startDate)) {
+            print('⚠️  Milestone target date is in the past, setting to tomorrow...');
+            endDate = startDate.add(Duration(days: 1));
+          } else if (_isSameDay(endDate, startDate)) {
+            print('⚠️  Milestone target date is today, setting to tomorrow...');
+            endDate = startDate.add(Duration(days: 1));
+          }
+        }
+        
+        // Create milestone using the working status type we discovered
+        final result = await _goalTrackerService.createMilestone(
+          goalTrackerId: goalId,
+          milestoneName: milestone.title,
+          startDate: startDate,
+          endDate: endDate,
+          statusTypeId: 3700001, // Use the working status type
+        );
+        
+        if (result.isSuccess) {
+          print('✅ Milestone "${milestone.title}" created successfully');
+        } else {
+          print('❌ Failed to create milestone "${milestone.title}": ${result.message}');
+        }
+        
+        // Small delay between milestone creations to avoid overwhelming the API
+        if (i < milestones.length - 1) {
+          await Future.delayed(Duration(milliseconds: 300));
+        }
+      } catch (e) {
+        print('❌ Exception creating milestone "${milestone.title}": $e');
+      }
+    }
+    
+    print('✅ Finished creating milestones for goal ID: $goalId');
+  }
+
+  /// Helper method to check if two dates are the same day
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && 
+           date1.month == date2.month && 
+           date1.day == date2.day;
+  }
+
   // ========================= API GOAL MANAGEMENT =========================
 
   Future<void> _createGoalWithService({
@@ -1110,6 +1175,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     required GoalCategory category,
     required GoalPriority priority,
     required DateTime targetDate,
+    List<Milestone>? milestones,
   }) async {
     print('\n🎯 Creating new goal via API...');
     print('   Title: $title');
@@ -1157,6 +1223,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         endDate: targetDate,
         userId: userId,
         categoryId: categoryId, // Simple single category ID for local handling
+        priorityId: _goalTrackerService.mapUiPriorityToApiPriority(priority),
       );
 
       print('📡 Create goal API response:');
@@ -1176,6 +1243,16 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
       if (result.isSuccess && result.data != null) {
         print('✅ Goal created successfully (category $categoryId handled locally): ${result.message}');
+        
+        // Get the created goal ID from the API response
+        final createdGoalId = result.data?.goalTrackerId;
+        print('🔍 Created goal ID from API: $createdGoalId');
+        
+        // Create milestones if any were provided
+        if (milestones != null && milestones.isNotEmpty && createdGoalId != null) {
+          print('🎯 Creating ${milestones.length} milestones for goal ID $createdGoalId...');
+          await _createMilestonesForNewGoal(createdGoalId, milestones);
+        }
         
         // Reload goals to get the updated list
         print('🔄 Reloading goals after creation...');
@@ -1237,9 +1314,29 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Is Completed: $isCompleted');
     
     try {
+      // Find the current goal to get its existing status and priority
+      final currentGoal = goals.firstWhere(
+        (g) => g.id == goalId,
+        orElse: () => goals.first, // Fallback to avoid errors
+      );
+      
+      // Determine status based on completion
+      final statusId = isCompleted == true 
+          ? GoalStatusTypes.completed 
+          : GoalStatusTypes.open;
+      
+      // Use existing priority or default to medium
+      final priorityId = _goalTrackerService.mapUiPriorityToApiPriority(currentGoal.priority);
+      
+      print('🔧 Using API fields:');
+      print('   Status ID: $statusId (${statusId.goalStatusDisplayName})');
+      print('   Priority ID: $priorityId (${priorityId.goalPriorityDisplayName})');
+      
       final result = await _goalTrackerService.updateGoalTracker(
         goalTrackerId: int.parse(goalId),
         goalName: title,
+        goalStatusTypeId: statusId, // FIX: Add required status field
+        goalPriorityTypeId: priorityId, // FIX: Add required priority field
         endDate: targetDate,
         completedDate: isCompleted == true ? DateTime.now() : null,
       );
@@ -1344,6 +1441,21 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   void _showAddGoalSheet() {
     print('➕ Opening add goal sheet...');
+    
+    // Check subscription limits
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateGoal(goals.length)) {
+      print('🚫 Goal creation blocked - limit reached: ${goals.length}/${SubscriptionService.maxFreeGoals}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'goal',
+          customMessage: 'Unlock unlimited goals and premium tracking features',
+        ),
+      );
+      return;
+    }
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1354,6 +1466,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           print('   Title: ${goal.title}');
           print('   Category: ${goal.category.displayName}');
           print('   Priority: ${goal.priority.name}');
+          print('   Milestones: ${goal.milestones.length}');
           
           // Create goal using the service
           await _createGoalWithService(
@@ -1361,6 +1474,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             category: goal.category,
             priority: goal.priority,
             targetDate: goal.targetDate,
+            milestones: goal.milestones, // Pass milestones to be created
           );
           
           ScaffoldMessenger.of(context).showSnackBar(
@@ -1378,13 +1492,45 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     );
   }
 
-  void _showGoalDetails(Goal goal) {
+  void _showGoalDetails(Goal goal) async {
     print('👁️  Opening goal details for: ${goal.title}');
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => GoalDetailScreen(
-          goal: goal,
+    print('🎯 Fetching fresh goal data from API...');
+    
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+    
+    try {
+      // Parse goal ID to int
+      final goalId = int.tryParse(goal.id);
+      if (goalId == null) {
+        print('❌ Invalid goal ID: ${goal.id}');
+        Navigator.pop(context); // Close loading dialog
+        return;
+      }
+      
+      // Fetch fresh goal data from API
+      final result = await _goalTrackerService.getSingleGoalTracker(goalId);
+      
+      // Close loading dialog
+      Navigator.pop(context);
+      
+      if (result.isSuccess && result.data != null) {
+        print('✅ Fresh goal data loaded, opening details screen');
+        
+        // Convert API goal to UI Goal with fresh data
+        final freshGoal = await _convertApiGoalToUiGoal(result.data!);
+        
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GoalDetailScreenRedesigned(
+              goal: freshGoal,
           onGoalUpdated: (updatedGoal) async {
             print('🔄 Goal updated from details screen:');
             print('   Original: ${goal.title}');
@@ -1405,6 +1551,73 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           },
         ),
       ),
+    );
+      } else {
+        print('❌ Failed to load fresh goal data: ${result.message}');
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load goal details: ${result.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog if still open
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+      
+      print('❌ Exception while loading goal details: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading goal details'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// Convert a single API goal to UI Goal object (used when fetching fresh goal details)
+  Future<Goal> _convertApiGoalToUiGoal(GoalTrackerModel apiGoal) async {
+    print('🔄 Converting API goal to UI goal: ${apiGoal.goalTrackerName}');
+    
+    // Get category from existingCategorys
+    final goalCategory = _getGoalCategoryFromActualCategories(
+      apiGoal.existingCategorys, 
+      apiGoal.goalTrackerName ?? '', 
+      apiGoal.goalTrackerId
+    );
+    
+    // Get priority from API data
+    final goalPriority = _goalTrackerService.mapApiPriorityToUiPriority(apiGoal.predefinedGoalPriorityTypeId);
+    
+    // Convert milestones
+    final milestones = (apiGoal.existingGoalTrackerMileStones ?? []).map((apiMilestone) => Milestone(
+      id: apiMilestone.goalTrackerMileStoneId?.toString() ?? '',
+      title: apiMilestone.goalTrackerMileStoneName ?? '',
+      description: '',
+      isCompleted: apiMilestone.goalTrackerMileStoneCompletedDate != null,
+      completedAt: apiMilestone.goalTrackerMileStoneCompletedDate,
+      targetDate: apiMilestone.goalTrackerMileStoneEndDate,
+    )).toList();
+    
+    // Calculate progress
+    final progress = _calculateGoalProgress(milestones);
+    
+    print('✅ Converted goal with ${milestones.length} milestones, ${progress.toStringAsFixed(1)}% progress');
+    
+    return Goal(
+      id: apiGoal.goalTrackerId?.toString() ?? '',
+      title: apiGoal.goalTrackerName ?? '',
+      description: '', // API doesn't have description field
+      category: goalCategory,
+      priority: goalPriority,
+      targetDate: apiGoal.goalTrackerEndDate ?? DateTime.now().add(Duration(days: 30)),
+      createdAt: apiGoal.goalTrackerStartDate ?? DateTime.now(),
+      milestones: milestones,
+      currentProgress: progress,
+      tags: [goalCategory.displayName.toLowerCase()],
     );
   }
 
@@ -1499,7 +1712,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         title: Text(
           'Delete Goal',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -1507,7 +1720,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         content: Text(
           'Are you sure you want to delete "${goal.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -1516,7 +1729,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(
@@ -1556,7 +1769,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -1567,7 +1780,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ),
@@ -1578,12 +1791,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   ListTile(
                     leading: Icon(
                       Icons.visibility,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                     title: Text(
                       'Show Completed Goals',
                       style: TextStyle(
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                         fontSize: 16.sp,
                       ),
                     ),

@@ -312,6 +312,7 @@ namespace Manifest.Service.App
                             UserId = user.UserId,
                             CategoryName = defaultCategory.DefaultCategoryName,
                             PredefinedCategoryTypeId = defaultCategory.PredefinedCategoryTypeId,
+                            PredefinedIconTypeId = defaultCategory.PredefinedIconTypeId,
                             IsDeleted = false,
                             CreatedDate = DateTime.UtcNow,
                             ModifiedDate = DateTime.UtcNow,

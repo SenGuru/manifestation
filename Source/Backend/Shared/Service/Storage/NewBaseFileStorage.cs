@@ -7,11 +7,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using Manifest.Common.Enums;
-using Manifest.Service.Cache;
 using Framework.Infrastructure.Exceptions;
 using Framework.Infrastructure.Logging;
 using Framework.Infrastructure.Utils;
+using Manifest.Common.Enums;
+using Manifest.Service.Cache;
+using Manifest.Service.Config;
 using Stowage;
 
 namespace Manifest.Service.Storage
@@ -21,12 +22,14 @@ namespace Manifest.Service.Storage
         protected ILog log;
         private readonly PredefinedFileStorageTypes customerFileStorageType;
         private readonly CompanyCacheService customerCacheService;
+        private readonly AppConfigurationFile appConfigurationFile;
 
-        protected NewBaseFileStorage(PredefinedFileStorageTypes customerFileStorageType, ILog log, CompanyCacheService customerCacheService)
+        protected NewBaseFileStorage(PredefinedFileStorageTypes customerFileStorageType, ILog log, CompanyCacheService customerCacheService, AppConfigurationFile appConfigurationFile)
         {
             this.customerFileStorageType = customerFileStorageType;
             this.log = log;
             this.customerCacheService = customerCacheService;
+            this.appConfigurationFile = appConfigurationFile;
         }
 
         public async Task<bool> ExistsAsync(long companyId, IOPath path, CancellationToken cancellationToken = default)
@@ -77,6 +80,7 @@ namespace Manifest.Service.Storage
                 throw new RollbackException("Storage setting is not configured properly", new { companyId });
             }
 
+            connectionString = appConfigurationFile.GetReplacedConfigFolderString(connectionString);
             return Files.Of.ConnectionString(connectionString);
 
             /*

@@ -508,18 +508,18 @@ namespace Manifest.Repository.Migration.Application
 
             dynamic[] defaultCategoryParams =
             {
-                new {DefaultCategoryId = 1, DefaultCategoryName = "Love", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 2,DefaultCategoryName = "Success", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 3,DefaultCategoryName = "Health", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 4,DefaultCategoryName = "Abundance", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 5,DefaultCategoryName = "Confidence", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 1, DefaultCategoryName = "Love", PredefinedIconTypeId = (int)PredefinedIconTypes.Heart, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 2,DefaultCategoryName = "Success",PredefinedIconTypeId = (int)PredefinedIconTypes.Target,  PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 3,DefaultCategoryName = "Health", PredefinedIconTypeId = (int)PredefinedIconTypes.Brain, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 4,DefaultCategoryName = "Abundance", PredefinedIconTypeId = (int)PredefinedIconTypes.Leaf, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 5,DefaultCategoryName = "Confidence", PredefinedIconTypeId = (int)PredefinedIconTypes.Trophy, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.DailyAffirmation,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
 
-                new {DefaultCategoryId = 100,DefaultCategoryName = "Career", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 101,DefaultCategoryName = "Health", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 102,DefaultCategoryName = "Love", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 103,DefaultCategoryName = "Money", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new {DefaultCategoryId = 104,DefaultCategoryName = "Personal", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
-                new { DefaultCategoryId = 105, DefaultCategoryName = "Spiritual", PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker, IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 100,DefaultCategoryName = "Career", PredefinedIconTypeId = (int)PredefinedIconTypes.Star, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 101,DefaultCategoryName = "Health", PredefinedIconTypeId = (int)PredefinedIconTypes.Brain, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 102,DefaultCategoryName = "Love", PredefinedIconTypeId = (int)PredefinedIconTypes.Heart, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 103,DefaultCategoryName = "Money", PredefinedIconTypeId = (int)PredefinedIconTypes.Money, PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new {DefaultCategoryId = 104,DefaultCategoryName = "Personal",PredefinedIconTypeId = (int)PredefinedIconTypes.Man,  PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker,  IsDeleted = false, CreatedDate = DateTime.UtcNow ,  ModifiedDate = DateTime.UtcNow } ,
+                new { DefaultCategoryId = 105, DefaultCategoryName = "Spiritual",PredefinedIconTypeId = (int)PredefinedIconTypes.Star,  PredefinedCategoryTypeId = (int)PredefinedCategoryTypes.GoalTracker, IsDeleted = false, CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow } ,
             }; 
 
 
@@ -708,6 +708,13 @@ namespace Manifest.Repository.Migration.Application
             //};
 
             //InsertData("DefaultUserTypePermission", defaultUserRolePermissionParams);
+
+            dynamic[] companyStorageConfigurationParams = new dynamic[]
+            {
+                new  { CompanyStorageConfigurationGuid = Guid.NewGuid(), CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, IsDeleted = false, FileAttachmentFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/FileAttachments", ProfilePictureFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/ProfileFiles", ReportServerFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/ReportFiles" }
+            };
+
+            InsertData("CompanyStorageConfiguration", companyStorageConfigurationParams);
         }
     }
 }

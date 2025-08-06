@@ -34,6 +34,7 @@ export enum EnumGroupTypes{
   PredefinedMeditationType = 35,
   PredefinedIconType = 36,
   PredefinedMoodType = 37,
+  PredefinedGoalPriorityType = 38,
 }
 
 export enum PredefinedAuditOperationTypes{
@@ -132,6 +133,13 @@ export enum PredefinedFileStorageTypes{
   FileAttachmentFileStorage = 800003,
 }
 
+export enum PredefinedGoalPriorityTypes{
+  Low = 3800001,
+  Medium = 3800002,
+  High = 3800003,
+  Critical = 3800004,
+}
+
 export enum PredefinedGoalStatusTypes{
   Open = 3300001,
   Completed = 3300002,
@@ -149,6 +157,8 @@ export enum PredefinedIconTypes{
   Trophy = 3600008,
   Sun = 3600009,
   Moon = 3600010,
+  Money = 3600011,
+  Man = 3600012,
 }
 
 export enum PredefinedJobOrReportTypes{

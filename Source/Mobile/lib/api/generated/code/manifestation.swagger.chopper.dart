@@ -1760,7 +1760,6 @@ final class _$Manifestation extends Manifestation {
   Future<Response<UserGroupModelReturnListModel>>
       _apiV1CompanyGetusergroupsGet({
     bool? showDeleted,
-    int? companyEntityId,
     int? createdByUserId,
     int? modifiedByUserId,
     int? selectedId,
@@ -1776,7 +1775,6 @@ final class _$Manifestation extends Manifestation {
     final Uri $url = Uri.parse('/api/v1/company/getusergroups');
     final Map<String, dynamic> $params = <String, dynamic>{
       'ShowDeleted': showDeleted,
-      'CompanyEntityId': companyEntityId,
       'CreatedByUserId': createdByUserId,
       'ModifiedByUserId': modifiedByUserId,
       'SelectedId': selectedId,
@@ -3806,6 +3804,7 @@ final class _$Manifestation extends Manifestation {
   @override
   Future<Response<DefaultCategoryModelReturnListModel>>
       _apiV1ManifestGetdefaultcategorysGet({
+    List<int>? predefinedIconTypeIds,
     bool? showDeleted,
     List<int>? predefinedCategoryTypeIds,
     int? createdByUserId,
@@ -3822,6 +3821,7 @@ final class _$Manifestation extends Manifestation {
   }) {
     final Uri $url = Uri.parse('/api/v1/manifest/getdefaultcategorys');
     final Map<String, dynamic> $params = <String, dynamic>{
+      'PredefinedIconTypeIds': predefinedIconTypeIds,
       'ShowDeleted': showDeleted,
       'PredefinedCategoryTypeIds': predefinedCategoryTypeIds,
       'CreatedByUserId': createdByUserId,
@@ -5424,6 +5424,7 @@ final class _$Manifestation extends Manifestation {
   Future<Response<GoalTrackerModelReturnListModel>>
       _apiV1ManifestGetgoaltrackersGet({
     bool? showDeleted,
+    List<int>? predefinedGoalPriorityTypeIds,
     List<int>? predefinedGoalStatusTypeIds,
     int? userId,
     int? createdByUserId,
@@ -5441,6 +5442,7 @@ final class _$Manifestation extends Manifestation {
     final Uri $url = Uri.parse('/api/v1/manifest/getgoaltrackers');
     final Map<String, dynamic> $params = <String, dynamic>{
       'ShowDeleted': showDeleted,
+      'PredefinedGoalPriorityTypeIds': predefinedGoalPriorityTypeIds,
       'PredefinedGoalStatusTypeIds': predefinedGoalStatusTypeIds,
       'UserId': userId,
       'CreatedByUserId': createdByUserId,

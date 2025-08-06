@@ -1,8 +1,9 @@
 using System;
+using Framework.Infrastructure.Logging;
 using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Service.Config;
 using Manifest.Service.Cache;
-using Framework.Infrastructure.Logging;
+using Manifest.Service.Config;
 
 namespace Manifest.Service.Storage
 {
@@ -10,8 +11,8 @@ namespace Manifest.Service.Storage
     {
         private readonly string reportStoragePrefix;
 
-        public NewReportServerFileStorage(IReportServerConfiguration config, ILog log, CompanyCacheService companyCacheService)
-            : base(PredefinedFileStorageTypes.ReportServerFileStorage, log, companyCacheService)
+        public NewReportServerFileStorage(IReportServerConfiguration config, ILog log, CompanyCacheService companyCacheService, AppConfigurationFile appConfigurationFile)
+            : base(PredefinedFileStorageTypes.ReportServerFileStorage, log, companyCacheService, appConfigurationFile)
         {
             reportStoragePrefix = config.ReportStoragePrefix;
         }

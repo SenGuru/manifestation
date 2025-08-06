@@ -1,7 +1,8 @@
 using System;
+using Framework.Infrastructure.Logging;
 using Manifest.Common.Enums;
 using Manifest.Service.Cache;
-using Framework.Infrastructure.Logging;
+using Manifest.Service.Config;
 
 namespace Manifest.Service.Storage
 {
@@ -10,8 +11,8 @@ namespace Manifest.Service.Storage
         private const string reportStoragePrefix = "AttachmentFiles";
         private const string userStoragePrefix = "UserFiles";
 
-        public FileAttachmentFileStorage(ILog log, CompanyCacheService companyCacheService)
-            : base(PredefinedFileStorageTypes.FileAttachmentFileStorage, log, companyCacheService)
+        public FileAttachmentFileStorage(ILog log, CompanyCacheService companyCacheService, AppConfigurationFile appConfigurationFile)
+            : base(PredefinedFileStorageTypes.FileAttachmentFileStorage, log, companyCacheService, appConfigurationFile)
         {
         }
 

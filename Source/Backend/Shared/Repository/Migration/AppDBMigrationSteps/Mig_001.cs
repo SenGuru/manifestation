@@ -236,6 +236,7 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("DefaultCategoryId").AsInt64().PrimaryKey("PK_DefaultCategory").Identity().NotNullable()
                 .WithColumn("DefaultCategoryName").AsString(255).NotNullable()
                 .WithColumn("PredefinedCategoryTypeId").AsInt64().Nullable()
+                .WithColumn("PredefinedIconTypeId").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedByUserId").AsInt64().Nullable()
@@ -400,6 +401,7 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("GoalTrackerId").AsInt64().PrimaryKey("PK_GoalTracker").Identity().NotNullable()
                 .WithColumn("GoalTrackerName").AsString(255).NotNullable()
                 .WithColumn("PredefinedGoalStatusTypeId").AsInt64().NotNullable()
+                .WithColumn("PredefinedGoalPriorityTypeId").AsInt64().NotNullable()
                 .WithColumn("GoalTrackerStartDate").AsDateTime().Nullable()
                 .WithColumn("GoalTrackerEndDate").AsDateTime().Nullable()
                 .WithColumn("GoalTrackerCompletedDate").AsDateTime().Nullable()
@@ -1297,6 +1299,10 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("PredefinedCategoryTypeId")
             
             ;
+            Create.Index("IX_DefaultCategory_PredefinedIconTypeId").OnTable("DefaultCategory")
+                .OnColumn("PredefinedIconTypeId")
+            
+            ;
             Create.Index("IX_DefaultDailyAffirmationText_CreatedByUserId").OnTable("DefaultDailyAffirmationText")
                 .OnColumn("CreatedByUserId")
             
@@ -1471,6 +1477,10 @@ namespace Manifest.Repository.Migration.Application
             ;
             Create.Index("IX_GoalTracker_ModifiedByUserId").OnTable("GoalTracker")
                 .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_GoalTracker_PredefinedGoalPriorityTypeId").OnTable("GoalTracker")
+                .OnColumn("PredefinedGoalPriorityTypeId")
             
             ;
             Create.Index("IX_GoalTracker_PredefinedGoalStatusTypeId").OnTable("GoalTracker")
@@ -2149,6 +2159,8 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DefaultCategory_PredefinedCategoryTypeId").FromTable("DefaultCategory").ForeignColumns("PredefinedCategoryTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
+            Create.ForeignKey("FK_DefaultCategory_PredefinedIconTypeId").FromTable("DefaultCategory").ForeignColumns("PredefinedIconTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_DefaultDailyAffirmationText_CreatedByUserId").FromTable("DefaultDailyAffirmationText").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_DefaultDailyAffirmationText_DefaultCategoryId").FromTable("DefaultDailyAffirmationText").ForeignColumns("DefaultCategoryId")
@@ -2237,6 +2249,8 @@ namespace Manifest.Repository.Migration.Application
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_GoalTracker_ModifiedByUserId").FromTable("GoalTracker").ForeignColumns("ModifiedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_GoalTracker_PredefinedGoalPriorityTypeId").FromTable("GoalTracker").ForeignColumns("PredefinedGoalPriorityTypeId")
+                .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_GoalTracker_PredefinedGoalStatusTypeId").FromTable("GoalTracker").ForeignColumns("PredefinedGoalStatusTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_GoalTracker_UserId").FromTable("GoalTracker").ForeignColumns("UserId")

@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math' as math;
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import '../models/vision_board.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import 'unified_auth_service.dart';
@@ -24,6 +24,42 @@ class VisionBoardService {
   Manifestation? _apiClient;
   UnifiedAuthService? _authService;
   
+  // Memory cache for vision board XML content (cleared on app restart)
+  final Map<String, String> _memoryCache = {};
+  final Map<String, DateTime> _cacheTimestamps = {};
+  
+  /// Clear all cached vision board content
+  void clearCache() {
+    _memoryCache.clear();
+    _cacheTimestamps.clear();
+    print('🗑️ Cleared all vision board memory cache');
+  }
+  
+  /// Clear specific vision board from cache
+  void clearCacheForBoard(String visionBoardId, int userId) {
+    final cacheKey = '${userId}_$visionBoardId';
+    _memoryCache.remove(cacheKey);
+    _cacheTimestamps.remove(cacheKey);
+    print('🗑️ Cleared cache for vision board: $visionBoardId');
+  }
+  
+  /// Get cache statistics
+  Map<String, dynamic> getCacheStats() {
+    return {
+      'cachedBoards': _memoryCache.length,
+      'totalCacheSize': _memoryCache.values.fold(0, (sum, xml) => sum + xml.length),
+      'oldestCache': _cacheTimestamps.values.isEmpty ? null : _cacheTimestamps.values.reduce((a, b) => a.isBefore(b) ? a : b),
+      'newestCache': _cacheTimestamps.values.isEmpty ? null : _cacheTimestamps.values.reduce((a, b) => a.isAfter(b) ? a : b),
+    };
+  }
+  
+  /// Public method to get picture ID for a vision board (for external use)
+  Future<int?> getPictureIdForBoard(String visionBoardId) async {
+    final userId = await _authService!.getUserId();
+    if (userId == null) return null;
+    return await _getPictureIdByVisionBoardId(visionBoardId, userId);
+  }
+  
   Future<void> initialize({String? baseUrl}) async {
     if (baseUrl != null) {
       final chopperClient = ChopperClient(
@@ -44,17 +80,14 @@ class VisionBoardService {
   /// Create a new vision board on server
   Future<VisionBoardResult<int?>> createVisionBoard(VisionBoard visionBoard) async {
     try {
-      print('🔍 DEBUG: Starting createVisionBoard...');
+      print('📤 Creating vision board "${visionBoard.title}" on server...');
       
       if (_apiClient == null || _authService == null) {
-        print('🔍 DEBUG: Service not initialized - _apiClient: $_apiClient, _authService: $_authService');
         return VisionBoardResult.failure(message: 'Service not initialized');
       }
       
       final userId = await _authService!.getUserId();
-      print('🔍 DEBUG: Got userId: $userId');
       if (userId == null) {
-        print('🔍 DEBUG: User not authenticated');
         return VisionBoardResult.failure(message: 'User not authenticated');
       }
       
@@ -62,29 +95,18 @@ class VisionBoardService {
       final xmlContent = _generateVisionBoardXML(visionBoard, userId);
       final xmlBytes = utf8.encode(xmlContent);
       
-      print('🔍 DEBUG: Generated XML content length: ${xmlBytes.length} bytes');
-      print('🔍 DEBUG: Vision board details:');
-      print('  - ID: ${visionBoard.id}');
-      print('  - Title: ${visionBoard.title}');
-      print('  - Elements: ${visionBoard.elements.length}');
-      print('  - XML preview: ${xmlContent.length > 200 ? xmlContent.substring(0, 200) + "..." : xmlContent}');
+      print('Vision board details: ID=${visionBoard.id}, Title=${visionBoard.title}, Elements=${visionBoard.elements.length}');
+      print('Generated XML content (${xmlBytes.length} bytes):');
+      print(xmlContent.length > 500 ? '${xmlContent.substring(0, 500)}...' : xmlContent);
       
-      print('📤 Creating vision board "${visionBoard.title}" on server...');
-      
-      // Use Swagger-generated client for upload
-      print('🔍 DEBUG: Calling API with parameters:');
-      print('  - UploadedFile size: ${xmlBytes.length}');
-      print('  - UploadedFile type: ${xmlBytes.runtimeType}');
-      print('  - UploadedFile first 50 bytes: ${xmlBytes.take(50).toList()}');
+      // Use manual HTTP for multipart upload (Swagger client has multipart issues)
+      print('API call parameters:');
+      print('  - UploadedFile: ${xmlBytes.length} bytes');
       print('  - location: ${visionBoard.id}');
       print('  - fileName: visionboard_${visionBoard.id}.xml');
       print('  - fileSize: ${xmlBytes.length}');
       print('  - userId: $userId');
       
-      print('🔍 DEBUG: About to make API call...');
-      print('🔍 DEBUG: Trying manual multipart request approach...');
-      
-      // Try using http package directly for multipart
       final client = _apiClient!.client;
       final authService = UnifiedAuthService();
       final token = authService.authToken;
@@ -97,81 +119,57 @@ class VisionBoardService {
         request.headers['Authorization'] = 'Bearer $token';
       }
       
-      // Try sending only the required field first to isolate the issue
-      // request.fields['Location'] = visionBoard.id;
-      // request.fields['FileName'] = 'visionboard_${visionBoard.id}.xml';
-      // request.fields['FileSize'] = xmlBytes.length.toString();
-      // request.fields['UserId'] = userId.toString();
+      // Add form fields
+      request.fields['Location'] = visionBoard.id;
+      request.fields['FileName'] = 'visionboard_${visionBoard.id}.xml';
+      request.fields['FileSize'] = xmlBytes.length.toString();
+      request.fields['UserId'] = userId.toString();
       
-      print('🔍 DEBUG: Trying minimal request (only UploadedFile)');
-      
-      // Add file with explicit content-type
+      // Add file
       request.files.add(http.MultipartFile.fromBytes(
         'UploadedFile',
         xmlBytes,
         filename: 'visionboard_${visionBoard.id}.xml',
-        contentType: MediaType('text', 'xml'),
       ));
       
-      print('🔍 DEBUG: Manual request fields: ${request.fields}');
-      print('🔍 DEBUG: Manual request files: ${request.files.length}');
+      print('Manual multipart request:');
+      print('  - Fields: ${request.fields}');
+      print('  - Files: ${request.files.length}');
       
       final streamedResponse = await request.send();
       final responseString = await streamedResponse.stream.bytesToString();
       
-      print('🔍 DEBUG: Manual API Response:');
-      print('  - statusCode: ${streamedResponse.statusCode}');
-      print('  - responseString: $responseString');
-      
-      // Parse response manually since we're bypassing Chopper
-      final Map<String, dynamic> responseJson = jsonDecode(responseString);
-      final isSuccess = responseJson['isSuccess'] == true;
-      final int? pictureId = responseJson['model']?['visionBoardPictureId'];
-      final errorHolder = responseJson['errorHolder'];
-      final successMessage = responseJson['successMessage'] as String?;
-      
-      print('🔍 DEBUG: Parsed response - isSuccess: $isSuccess, pictureId: $pictureId');
-      
+      // Convert to response format
+      final responseData = jsonDecode(responseString);
       final response = _ManualResponse(
         isSuccessful: streamedResponse.statusCode >= 200 && streamedResponse.statusCode < 300,
         statusCode: streamedResponse.statusCode,
-        bodyString: responseString,
-        body: _ManualResponseBody(
-          isSuccess: isSuccess, 
-          model: isSuccess ? _ManualModel(visionBoardPictureId: pictureId) : null,
-          errorHolder: errorHolder,
-          successMessage: successMessage,
-        ),
+        body: responseData,
       );
       
-      print('🔍 DEBUG: API Response received:');
-      print('  - isSuccessful: ${response.isSuccessful}');
-      print('  - statusCode: ${response.statusCode}');
-      print('  - response.bodyString: ${response.bodyString}');
-      print('  - response.body: ${response.body}');
-      print('  - response.body?.isSuccess: ${response.body?.isSuccess}');
-      print('  - response.body?.model: ${response.body?.model}');
-      print('  - response.body?.errorHolder: ${response.body?.errorHolder}');
-      print('  - response.body?.successMessage: ${response.body?.successMessage}');
-      
-      if (response.isSuccessful && response.body?.isSuccess == true) {
-        final pictureId = response.body?.model?.visionBoardPictureId;
+      if (response.isSuccessful && response.body['isSuccess'] == true) {
+        final pictureId = response.body['model']?['visionBoardPictureId'];
         print('✅ Vision board created successfully with ID: $pictureId');
         return VisionBoardResult.success(
           data: pictureId,
           message: 'Vision board created successfully'
         );
       } else {
-        final errorMessage = response.body?.errorHolder?.toString() ?? 
-                            response.body?.successMessage ?? 
+        print('❌ API Response Details:');
+        print('  - Status Code: ${response.statusCode}');
+        print('  - Is Successful: ${response.isSuccessful}');
+        print('  - Response Body: ${response.body}');
+        print('  - Error Holder: ${response.body['errorHolder']}');
+        print('  - Success Message: ${response.body['successMessage']}');
+        
+        final errorMessage = response.body['errorHolder']?.toString() ?? 
+                            response.body['successMessage'] ?? 
                             'Failed to create vision board';
-        print('🔍 DEBUG: API call failed with error: $errorMessage');
         return VisionBoardResult.failure(message: errorMessage);
       }
       
     } catch (e) {
       print('❌ Error creating vision board: $e');
-      print('🔍 DEBUG: Exception stack trace: ${StackTrace.current}');
       return VisionBoardResult.failure(message: 'Failed to create vision board: $e');
     }
   }
@@ -202,25 +200,76 @@ class VisionBoardService {
       
       print('📤 Updating vision board "${visionBoard.title}" (Picture ID: $finalPictureId) on server...');
       
-      // Use Swagger-generated client for update
-      final response = await _apiClient!.apiV1ManifestUpdatevisionboardpicturePost(
-        UploadedFile: xmlBytes,
-        visionBoardPictureId: finalPictureId,
-        location: visionBoard.id,
-        fileName: 'visionboard_${visionBoard.id}.xml',
-        fileSize: xmlBytes.length,
-        userId: userId,
+      // Use manual HTTP for multipart upload (same as create method)
+      print('API call parameters:');
+      print('  - UploadedFile: ${xmlBytes.length} bytes');
+      print('  - visionBoardPictureId: $finalPictureId');
+      print('  - location: ${visionBoard.id}');
+      print('  - fileName: visionboard_${visionBoard.id}.xml');
+      print('  - fileSize: ${xmlBytes.length}');
+      print('  - userId: $userId');
+      
+      final client = _apiClient!.client;
+      final authService = UnifiedAuthService();
+      final token = authService.authToken;
+      
+      final uri = Uri.parse('${client.baseUrl}/api/v1/manifest/updatevisionboardpicture');
+      final request = http.MultipartRequest('POST', uri);
+      
+      // Add headers
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      
+      // Add form fields
+      request.fields['VisionBoardPictureId'] = finalPictureId.toString();
+      request.fields['Location'] = visionBoard.id;
+      request.fields['FileName'] = 'visionboard_${visionBoard.id}.xml';
+      request.fields['FileSize'] = xmlBytes.length.toString();
+      request.fields['UserId'] = userId.toString();
+      
+      // Add file
+      request.files.add(http.MultipartFile.fromBytes(
+        'UploadedFile',
+        xmlBytes,
+        filename: 'visionboard_${visionBoard.id}.xml',
+      ));
+      
+      print('Manual multipart request:');
+      print('  - Fields: ${request.fields}');
+      print('  - Files: ${request.files.length}');
+      
+      final streamedResponse = await request.send();
+      final responseString = await streamedResponse.stream.bytesToString();
+      
+      // Convert to response format
+      final responseData = jsonDecode(responseString);
+      final response = _ManualResponse(
+        isSuccessful: streamedResponse.statusCode >= 200 && streamedResponse.statusCode < 300,
+        statusCode: streamedResponse.statusCode,
+        body: responseData,
       );
       
-      if (response.isSuccessful && response.body?.isSuccess == true) {
+      if (response.isSuccessful && response.body['isSuccess'] == true) {
         print('✅ Vision board updated successfully');
+        
+        // Clear cache for this vision board since it was updated
+        clearCacheForBoard(visionBoard.id, userId);
+        
         return VisionBoardResult.success(
           data: true,
           message: 'Vision board updated successfully'
         );
       } else {
-        final errorMessage = response.body?.errorHolder?.toString() ?? 
-                            response.body?.successMessage ?? 
+        print('❌ API Response Details:');
+        print('  - Status Code: ${response.statusCode}');
+        print('  - Is Successful: ${response.isSuccessful}');
+        print('  - Response Body: ${response.body}');
+        print('  - Error Holder: ${response.body['errorHolder']}');
+        print('  - Success Message: ${response.body['successMessage']}');
+        
+        final errorMessage = response.body['errorHolder']?.toString() ?? 
+                            response.body['successMessage'] ?? 
                             'Failed to update vision board';
         return VisionBoardResult.failure(message: errorMessage);
       }
@@ -233,7 +282,7 @@ class VisionBoardService {
   
   // ========================= GET VISION BOARDS =========================
   
-  /// Get all vision boards for current user
+  /// Get all vision boards for current user (metadata only for listing)
   Future<VisionBoardResult<List<VisionBoard>>> getUserVisionBoards() async {
     try {
       if (_apiClient == null || _authService == null) {
@@ -245,10 +294,10 @@ class VisionBoardService {
         return VisionBoardResult.failure(message: 'User not authenticated');
       }
       
-      print('📥 Getting vision boards for user: $userId');
+      print('📥 Getting vision board list for user: $userId');
       
-      // Get list of XML files from server
-      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturebyuseridGet(
+      // Get list of vision boards from server (metadata only)
+      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturesGet(
         userId: userId,
       );
       
@@ -261,17 +310,20 @@ class VisionBoardService {
       final visionBoards = <VisionBoard>[];
       final pictures = response.body?.model ?? [];
       
-      // Download and parse each XML file
+      print('📋 Found ${pictures.length} vision board files');
+      
+      // Create lightweight VisionBoard objects from metadata (no XML content)
       for (final picture in pictures) {
-        if (picture.fileName?.endsWith('.xml') == true) {
+        if (picture.fileName?.endsWith('.xml') == true && picture.isDeleted != true) {
           try {
-            final visionBoard = await _downloadAndParseVisionBoard(picture.visionBoardPictureId!);
+            final visionBoard = _createVisionBoardFromMetadata(picture);
             if (visionBoard != null) {
               visionBoards.add(visionBoard);
+              print('📝 Added vision board: ${visionBoard.id} (Picture ID: ${picture.visionBoardPictureId})');
             }
           } catch (e) {
-            print('⚠️ Failed to parse vision board ${picture.visionBoardPictureId}: $e');
-            // Continue with other vision boards
+            print('⚠️ Failed to create vision board from metadata ${picture.visionBoardPictureId}: $e');
+            continue;
           }
         }
       }
@@ -279,7 +331,7 @@ class VisionBoardService {
       // Sort by creation date (newest first)
       visionBoards.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       
-      print('✅ Retrieved ${visionBoards.length} vision boards');
+      print('✅ Retrieved ${visionBoards.length} vision boards for home screen');
       return VisionBoardResult.success(
         data: visionBoards,
         message: 'Vision boards retrieved successfully'
@@ -291,33 +343,96 @@ class VisionBoardService {
     }
   }
   
-  /// Get specific vision board by ID
+  /// Get specific vision board with full content by ID
   Future<VisionBoardResult<VisionBoard?>> getVisionBoard(String visionBoardId) async {
     try {
-      // Get all vision boards and find the specific one
-      final result = await getUserVisionBoards();
-      if (!result.isSuccess) {
-        return VisionBoardResult.failure(message: result.message);
+      if (_apiClient == null || _authService == null) {
+        return VisionBoardResult.failure(message: 'Service not initialized');
       }
       
-      final visionBoard = result.data?.firstWhere(
-        (board) => board.id == visionBoardId,
-        orElse: () => throw StateError('Vision board not found'),
+      final userId = await _authService!.getUserId();
+      if (userId == null) {
+        return VisionBoardResult.failure(message: 'User not authenticated');
+      }
+      
+      print('📥 Getting full vision board content for ID: $visionBoardId');
+      
+      // Check memory cache first
+      final cacheKey = '${userId}_$visionBoardId';
+      if (_memoryCache.containsKey(cacheKey)) {
+        final cachedXml = _memoryCache[cacheKey]!;
+        final cacheTime = _cacheTimestamps[cacheKey]!;
+        print('💾 Found cached XML content (${cachedXml.length} chars, cached at ${cacheTime.toIso8601String()})');
+        
+        // Parse cached XML content
+        final visionBoard = _parseVisionBoardXML(cachedXml);
+        if (visionBoard != null) {
+          print('✅ Successfully parsed cached vision board with ${visionBoard.elements.length} elements');
+          return VisionBoardResult.success(
+            data: visionBoard,
+            message: 'Vision board retrieved from cache'
+          );
+        }
+      }
+      
+      // Not in cache or cache invalid, download from server
+      print('🌐 Downloading fresh content from server');
+      
+      // First, find the picture ID for this vision board ID
+      final pictureId = await _getPictureIdForVisionBoard(visionBoardId, userId);
+      if (pictureId == null) {
+        return VisionBoardResult.failure(message: 'Vision board not found');
+      }
+      
+      print('🔍 Found picture ID $pictureId for vision board $visionBoardId');
+      
+      // Download the actual XML content using the correct endpoint
+      final response = await _apiClient!.apiV1ManifestDownloadvisionboardpicturefileGet(
+        visionBoardPictureId: pictureId,
       );
       
+      if (!response.isSuccessful) {
+        print('❌ Failed to download vision board file: ${response.statusCode}');
+        return VisionBoardResult.failure(message: 'Failed to download vision board content');
+      }
+      
+      // Get the XML content from the response
+      final xmlContent = response.bodyString;
+      if (xmlContent.trim().isEmpty) {
+        print('❌ Empty response from download endpoint');
+        return VisionBoardResult.failure(message: 'Empty vision board content');
+      }
+      
+      print('✅ Downloaded XML content (${xmlContent.length} chars)');
+      print('🔍 XML preview: ${xmlContent.substring(0, math.min(200, xmlContent.length))}...');
+      
+      // Cache the XML content in memory
+      _memoryCache[cacheKey] = xmlContent;
+      _cacheTimestamps[cacheKey] = DateTime.now();
+      print('💾 Cached XML content for vision board $visionBoardId');
+      
+      // Parse the XML content to create VisionBoard object
+      final visionBoard = _parseVisionBoardXML(xmlContent);
       if (visionBoard != null) {
+        print('✅ Successfully parsed vision board with ${visionBoard.elements.length} elements');
         return VisionBoardResult.success(
           data: visionBoard,
           message: 'Vision board retrieved successfully'
         );
       } else {
-        return VisionBoardResult.failure(message: 'Vision board not found');
+        return VisionBoardResult.failure(message: 'Failed to parse vision board XML');
       }
       
     } catch (e) {
       print('❌ Error getting vision board: $e');
       return VisionBoardResult.failure(message: 'Failed to get vision board: $e');
     }
+  }
+  
+  /// Helper method to find picture ID for a given vision board ID
+  Future<int?> _getPictureIdForVisionBoard(String visionBoardId, int userId) async {
+    // Use the same improved logic as _getPictureIdByVisionBoardId
+    return await _getPictureIdByVisionBoardId(visionBoardId, userId);
   }
   
   // ========================= DELETE VISION BOARD =========================
@@ -369,20 +484,34 @@ class VisionBoardService {
   /// Get picture ID for a vision board by its ID
   Future<int?> _getPictureIdByVisionBoardId(String visionBoardId, int userId) async {
     try {
-      // Get all vision board pictures for user
-      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturebyuseridGet(
+      print('🔍 Looking for picture ID for vision board: $visionBoardId');
+      
+      // Get all vision board pictures for user using correct endpoint
+      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturesGet(
         userId: userId,
       );
       
       if (response.isSuccessful && response.body?.isSuccess == true) {
         final pictures = response.body?.model ?? [];
+        print('🔍 Found ${pictures.length} pictures, searching for match...');
         
         // Find the picture with matching location (vision board ID)
         for (final picture in pictures) {
-          if (picture.location == visionBoardId && picture.fileName?.endsWith('.xml') == true) {
+          print('🔍 Checking picture: ID=${picture.visionBoardPictureId}, location=${picture.location}, fileName=${picture.fileName}');
+          
+          // Check multiple possible matches
+          if ((picture.location == visionBoardId || 
+               picture.fileName?.contains(visionBoardId) == true) && 
+              picture.fileName?.endsWith('.xml') == true &&
+              picture.isDeleted != true) {
+            print('✅ Found matching picture ID: ${picture.visionBoardPictureId}');
             return picture.visionBoardPictureId;
           }
         }
+        
+        print('⚠️ No matching picture found for vision board: $visionBoardId');
+      } else {
+        print('❌ Failed to get pictures list: ${response.body?.errorHolder}');
       }
       
       return null;
@@ -392,20 +521,33 @@ class VisionBoardService {
     }
   }
   
-  /// Download and parse vision board XML from server
-  Future<VisionBoard?> _downloadAndParseVisionBoard(int pictureId) async {
+  
+  /// Create VisionBoard from metadata when XML is not available
+  VisionBoard? _createVisionBoardFromMetadata(dynamic metadata) {
     try {
-      final response = await _apiClient!.apiV1ManifestDownloadvisionboardpicturefileGet(
-        visionBoardPictureId: pictureId,
+      // Extract what we can from the metadata
+      final fileName = metadata.fileName as String?;
+      if (fileName == null) return null;
+      
+      // Extract board ID from filename (e.g., "visionboard_board_1754292620094.xml")
+      final match = RegExp(r'visionboard_(.+)\.xml').firstMatch(fileName);
+      final boardId = match?.group(1) ?? DateTime.now().millisecondsSinceEpoch.toString();
+      
+      final createdAt = DateTime.tryParse(metadata.createdDate?.toString() ?? '') ?? DateTime.now();
+      final modifiedAt = DateTime.tryParse(metadata.modifiedDate?.toString() ?? '') ?? DateTime.now();
+      
+      print('🔧 Creating VisionBoard from metadata: ID=$boardId, Created=$createdAt');
+      
+      return VisionBoard(
+        id: boardId,
+        title: 'Vision Board', // Default title, could be enhanced
+        elements: [], // Empty elements since we can't parse XML
+        backgroundColor: const Color(0xFFFFFFFF), // White color
+        createdAt: createdAt,
+        updatedAt: modifiedAt,
       );
-      
-      if (response.isSuccessful && response.bodyString.isNotEmpty) {
-        return _parseVisionBoardXML(response.bodyString);
-      }
-      
-      return null;
     } catch (e) {
-      print('❌ Error downloading vision board XML: $e');
+      print('❌ Error creating VisionBoard from metadata: $e');
       return null;
     }
   }
@@ -422,7 +564,7 @@ class VisionBoardService {
       builder.element('VisionBoard', nest: () {
         builder.attribute('id', visionBoard.id);
         builder.attribute('title', visionBoard.title);
-        builder.attribute('backgroundColor', '#${visionBoard.backgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2)}');
+        builder.attribute('backgroundColor', '#${visionBoard.backgroundColor.toARGB32().toRadixString(16).padLeft(8, '0').substring(2)}');
         builder.attribute('createdAt', visionBoard.createdAt.toUtc().toIso8601String());
         builder.attribute('updatedAt', visionBoard.updatedAt.toUtc().toIso8601String());
         
@@ -455,7 +597,7 @@ class VisionBoardService {
                 builder.attribute('text', element.text);
                 builder.attribute('fontSize', (element.style.fontSize ?? 16.0).toString());
                 builder.attribute('fontWeight', (element.style.fontWeight?.index ?? 3).toString());
-                builder.attribute('color', '#${(element.style.color?.value ?? 0xFF000000).toRadixString(16).padLeft(8, '0').substring(2)}');
+                builder.attribute('color', '#${(element.style.color?.toARGB32() ?? 0xFF000000).toRadixString(16).padLeft(8, '0').substring(2)}');
                 builder.attribute('textAlign', element.alignment.name);
               });
             }
@@ -636,37 +778,16 @@ class _AuthInterceptor implements Interceptor {
   }
 }
 
-/// Manual response classes for bypassing Chopper multipart issues
+/// Simple response wrapper for manual HTTP calls
 class _ManualResponse {
   final bool isSuccessful;
   final int statusCode;
-  final String bodyString;
-  final _ManualResponseBody? body;
+  final Map<String, dynamic> body;
 
   _ManualResponse({
     required this.isSuccessful,
     required this.statusCode,
-    required this.bodyString,
-    this.body,
+    required this.body,
   });
 }
 
-class _ManualResponseBody {
-  final bool isSuccess;
-  final _ManualModel? model;
-  final dynamic errorHolder;
-  final String? successMessage;
-
-  _ManualResponseBody({
-    required this.isSuccess,
-    this.model,
-    this.errorHolder,
-    this.successMessage,
-  });
-}
-
-class _ManualModel {
-  final int? visionBoardPictureId;
-
-  _ManualModel({this.visionBoardPictureId});
-}

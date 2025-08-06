@@ -4,6 +4,7 @@ import 'dart:async';
 import '../api/generated/code/manifestation.swagger.dart';
 import '../constants/goal_constants.dart';
 import '../models/goal_tracker_category.dart';
+import '../models/goals.dart';
 import 'unified_auth_service.dart';
 
 class GoalTrackerService {
@@ -116,6 +117,13 @@ class GoalTrackerService {
     1312: 4, // money
     1313: 5, // personal
     1314: 6, // spiritual
+    // Real server category IDs from API
+    1006: 1, // Career (from actual API response)
+    1007: 2, // Health (from actual API response)
+    1008: 3, // Love (from actual API response)
+    1009: 4, // Money (from actual API response)
+    1010: 5, // Personal (from actual API response)
+    1011: 6, // Spiritual (from actual API response)
     // Handle user custom categories that might exist
     1045: 3, // Love -> love
     1046: 5, // Success -> personal
@@ -472,6 +480,7 @@ class GoalTrackerService {
     DateTime? endDate,
     required int userId,
     int? categoryId, // Category ID (could be local 1-6 or database 100+)
+    int? priorityId, // Priority ID from GoalPriorityTypes
   }) async {
     try {
       // Simple validation
@@ -483,7 +492,7 @@ class GoalTrackerService {
       if (categoryId != null) {
         print('📝 Attempting goal creation with category ID: $categoryId');
         final resultWithCategory = await _createGoalWithCategory(
-          goalName, goalStatusTypeId, startDate, endDate, userId, categoryId
+          goalName, goalStatusTypeId, startDate, endDate, userId, categoryId, priorityId
         );
         
         if (resultWithCategory.isSuccess) {
@@ -496,7 +505,7 @@ class GoalTrackerService {
       
       // Fallback: Create goal without category
       final resultWithoutCategory = await _createGoalWithoutCategory(
-        goalName, goalStatusTypeId, startDate, endDate, userId
+        goalName, goalStatusTypeId, startDate, endDate, userId, priorityId
       );
       
       if (resultWithoutCategory.isSuccess && categoryId != null) {
@@ -524,6 +533,7 @@ class GoalTrackerService {
     DateTime? endDate,
     int userId,
     int categoryId,
+    int? priorityId,
   ) async {
     // First, get the actual categories from the server to debug
     print('🔍 Checking server categories before goal creation...');
@@ -621,6 +631,7 @@ class GoalTrackerService {
     final createModel = GoalTrackerCreateModel(
       goalTrackerName: goalName.trim(),
       predefinedGoalStatusTypeId: goalStatusTypeId,
+      predefinedGoalPriorityTypeId: priorityId ?? GoalPriorityTypes.medium, // Default to medium
       goalTrackerStartDate: startDate ?? DateTime.now(),
       goalTrackerEndDate: endDate,
       userId: userId,
@@ -674,10 +685,12 @@ class GoalTrackerService {
     DateTime? startDate,
     DateTime? endDate,
     int userId,
+    int? priorityId,
   ) async {
     final createModel = GoalTrackerCreateModel(
       goalTrackerName: goalName.trim(),
       predefinedGoalStatusTypeId: goalStatusTypeId,
+      predefinedGoalPriorityTypeId: priorityId ?? GoalPriorityTypes.medium, // Default to medium
       goalTrackerStartDate: startDate ?? DateTime.now(),
       goalTrackerEndDate: endDate,
       userId: userId,
@@ -712,6 +725,7 @@ class GoalTrackerService {
     required int goalTrackerId,
     String? goalName,
     int? goalStatusTypeId,
+    int? goalPriorityTypeId, // NEW: Add priority type parameter
     DateTime? startDate,
     DateTime? endDate,
     DateTime? completedDate,
@@ -736,6 +750,7 @@ class GoalTrackerService {
         goalTrackerId: goalTrackerId,
         goalTrackerName: goalName,
         predefinedGoalStatusTypeId: goalStatusTypeId,
+        predefinedGoalPriorityTypeId: goalPriorityTypeId, // FIX: Add priority field
         goalTrackerStartDate: startDate,
         goalTrackerEndDate: endDate,
         goalTrackerCompletedDate: completedDate,
@@ -1045,6 +1060,80 @@ class GoalTrackerService {
   Color _convertIntToColor(int? colorValue) {
     if (colorValue == null) return Color(0xFF4CAF50); // Default green
     return Color(colorValue);
+  }
+
+  // ========================= PRIORITY MAPPING =========================
+
+  /// Map API priority ID to UI GoalPriority enum
+  GoalPriority mapApiPriorityToUiPriority(int? apiPriorityId) {
+    switch (apiPriorityId) {
+      case GoalPriorityTypes.low:
+        return GoalPriority.low;
+      case GoalPriorityTypes.medium:
+        return GoalPriority.medium;
+      case GoalPriorityTypes.high:
+        return GoalPriority.high;
+      case GoalPriorityTypes.critical:
+        return GoalPriority.critical;
+      default:
+        return GoalPriority.medium; // Default fallback
+    }
+  }
+
+  /// Map UI GoalPriority enum to API priority ID
+  int mapUiPriorityToApiPriority(GoalPriority uiPriority) {
+    switch (uiPriority) {
+      case GoalPriority.low:
+        return GoalPriorityTypes.low;
+      case GoalPriority.medium:
+        return GoalPriorityTypes.medium;
+      case GoalPriority.high:
+        return GoalPriorityTypes.high;
+      case GoalPriority.critical:
+        return GoalPriorityTypes.critical;
+    }
+  }
+
+  // ========================= SINGLE GOAL API =========================
+
+  /// Get detailed data for a specific goal by ID
+  Future<GoalTrackerResult<GoalTrackerModel>> getSingleGoalTracker(int goalTrackerId) async {
+    try {
+      print('🎯 Fetching detailed data for goal ID: $goalTrackerId');
+      
+      final response = await _apiClient.apiV1ManifestGetgoaltrackerGet(id: goalTrackerId);
+
+      if (response.isSuccessful && response.body != null) {
+        final returnModel = response.body!;
+        
+        if (returnModel.isSuccess == true && returnModel.model != null) {
+          print('✅ Successfully fetched goal details for ID: $goalTrackerId');
+          print('📊 Goal data: ${returnModel.model!.goalTrackerName}');
+          print('🏷️  Categories: ${returnModel.model!.existingCategorys?.length ?? 0}');
+          print('🎯 Milestones: ${returnModel.model!.existingGoalTrackerMileStones?.length ?? 0}');
+          
+          return GoalTrackerResult.success(
+            data: returnModel.model!,
+            message: 'Goal details loaded successfully',
+          );
+        } else {
+          print('❌ API returned success=false: ${returnModel.errorHolder?.friendlyMessage}');
+          return GoalTrackerResult.failure(
+            message: returnModel.errorHolder?.friendlyMessage ?? 'Failed to load goal details',
+          );
+        }
+      } else {
+        print('❌ API request failed with status: ${response.statusCode}');
+        return GoalTrackerResult.failure(
+          message: 'Network error: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('❌ Exception while fetching goal details: $e');
+      return GoalTrackerResult.failure(
+        message: 'Error loading goal details: ${e.toString()}',
+      );
+    }
   }
 }
 
