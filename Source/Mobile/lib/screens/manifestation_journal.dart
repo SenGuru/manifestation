@@ -25,6 +25,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   final DailyJournalService _journalService = DailyJournalService();
   
   int currentPage = 0;
+  double scrollPosition = 0.0; // Track partial scroll position
   Mood selectedMood = Mood.neutral;
   List<String> gratitudeItems = ['', '', '', '', '']; // Expanded to 5 gratitudes
   String reflection = '';
@@ -52,6 +53,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     // Initialize the service
     _journalService.initialize();
     
+    // Add scroll listener to track partial scroll positions
+    _pageController.addListener(_onPageScroll);
+    
     // For debugging purposes - uncomment this line to run constraint debugging
     // _journalService.runConstraintDebugging();
     
@@ -76,8 +80,22 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
+  void _onPageScroll() {
+    if (_pageController.hasClients && _pageController.page != null) {
+      final page = _pageController.page!;
+      // Clamp the page value to ensure it's within valid bounds
+      final clampedPage = page.clamp(0.0, 4.0);
+      
+      setState(() {
+        scrollPosition = clampedPage;
+        currentPage = clampedPage.round();
+      });
+    }
+  }
+
   @override
   void dispose() {
+    _pageController.removeListener(_onPageScroll);
     _pageController.dispose();
     _reflectionController.dispose();
     super.dispose();
@@ -114,11 +132,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 Expanded(
                   child: PageView(
                     controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        currentPage = index;
-                      });
-                    },
                     children: [
                       _buildMoodPage(),
                       _buildGratitudePage(),
@@ -247,16 +260,51 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               height: 3.h,
               margin: EdgeInsets.only(right: index < 4 ? 6.w : 0),
               decoration: BoxDecoration(
-                color: index <= currentPage
-                    ? AppTheme.journalGradient[0]
-                    : AppTheme.textMedium.withOpacity(0.2),
+                color: AppTheme.textMedium.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(2.r),
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Get real-time scroll position directly from controller
+                  final realTimePosition = _pageController.hasClients 
+                    ? (_pageController.page ?? 0.0).clamp(0.0, 4.0)
+                    : 0.0;
+                  
+                  return Stack(
+                    children: [
+                      // Flowing progress overlay for this segment
+                      Container(
+                        height: 3.h,
+                        width: _calculateSegmentWidth(index, constraints.maxWidth, realTimePosition),
+                        decoration: BoxDecoration(
+                          color: AppTheme.journalGradient[0],
+                          borderRadius: BorderRadius.circular(2.r),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           );
         }),
       ),
     );
+  }
+  
+  double _calculateSegmentWidth(int segmentIndex, double maxWidth, double position) {
+    // Calculate what percentage of this segment should be filled based on scroll position
+    if (position <= segmentIndex) {
+      // Haven't reached this segment yet
+      return 0.0;
+    } else if (position >= segmentIndex + 1) {
+      // This segment is fully completed
+      return maxWidth;
+    } else {
+      // Partially filled segment - fill from left to right
+      final segmentProgress = position - segmentIndex;
+      return maxWidth * segmentProgress.clamp(0.0, 1.0);
+    }
   }
 
 

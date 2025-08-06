@@ -43,6 +43,7 @@ dependencies:
   json_annotation: ^4.8.1
   crypto: ^3.0.3
   flutter_tabler_icons: ^1.43.0
+  text_to_speech: ^0.2.3
   chopper: ^8.0.0
   swagger_dart_code_generator: ^3.0.0
   xml: ^6.4.2
