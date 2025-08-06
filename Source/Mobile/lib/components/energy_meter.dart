@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
+import '../screens/daily_energy_screen.dart';
 import 'dart:math' as math;
 
 class EnergyMeter extends StatefulWidget {
@@ -81,7 +82,16 @@ class _EnergyMeterState extends State<EnergyMeter>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DailyEnergyScreen(),
+          ),
+        );
+      },
+      child: Container(
       height: 200.h,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -201,6 +211,7 @@ class _EnergyMeterState extends State<EnergyMeter>
             ),
           ),
         ],
+      ),
       ),
     );
   }
