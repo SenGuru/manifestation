@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,9 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   late AnimationController _sessionController;
   late AnimationController _backgroundController;
   late Animation<double> _backgroundFade;
+  
+  // Timer for meditation session
+  Timer? _meditationTimer;
   
   // Session tracking with UsageAnalyticsService
   final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
@@ -106,6 +110,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   @override
   void dispose() {
     print('🔄 dispose() called - _sessionStarted: $_sessionStarted, isSessionActive: $isSessionActive');
+    
+    // Cancel timer to prevent double counting
+    _meditationTimer?.cancel();
+    _meditationTimer = null;
     
     _sessionController.dispose();
     _backgroundController.dispose();
@@ -208,63 +216,39 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   }
 
   void _startSession() async {
-    try {
-      print('📊 Starting visual meditation session');
-      
-      // Start analytics tracking
-      await _startSessionTracking();
-      
-      setState(() {
-        isSessionActive = true;
-        isPlaying = true;
-        remainingSeconds = selectedDuration * 60;
-        _sessionStartTime = DateTime.now();
-      });
-      
-      _backgroundController.forward();
-      
-      // Wait for setState to complete
-      await Future.delayed(Duration(milliseconds: 100));
-      
-      // Start audio if selected
-      if (selectedAudioType != AudioType.none) {
-        print('🎵 Starting ${selectedAudioType.name} audio for meditation session');
-        final audioStarted = await _audioService.playAudio(selectedAudioType, volume: audioVolume);
-        if (!audioStarted) {
+    print('📊 Starting visual meditation session');
+    
+    // Set session state and start immediately
+    setState(() {
+      isSessionActive = true;
+      isPlaying = true;
+      remainingSeconds = selectedDuration * 60;
+      _sessionStartTime = DateTime.now();
+    });
+    
+    // Start UI animations
+    _backgroundController.forward();
+    
+    // Start timer immediately - no delays, no complexity
+    _startTimer();
+    
+    // Start analytics tracking (async, don't wait)
+    _startSessionTracking().catchError((e) {
+      print('⚠️ Analytics tracking failed: $e');
+    });
+    
+    // Start audio (async, don't wait)
+    if (selectedAudioType != AudioType.none) {
+      _audioService.playAudio(selectedAudioType, volume: audioVolume).then((success) {
+        if (!success) {
           print('⚠️ Audio failed to start, continuing session without audio');
         }
-      } else {
-        print('🎵 No audio selected - silent meditation session');
-      }
-      
-      // Only start timer after everything is set up
-      if (mounted && isSessionActive) {
-        print('🎯 About to start timer - mounted: $mounted, isSessionActive: $isSessionActive, remainingSeconds: $remainingSeconds');
-        _startTimer();
-      } else {
-        print('⚠️ Not starting timer - mounted: $mounted, isSessionActive: $isSessionActive');
-      }
-      
-      print('📊 Visual meditation session started');
-    } catch (e) {
-      print('❌ Error starting meditation session: $e');
-      // Continue without tracking if there's an error
-      setState(() {
-        isSessionActive = true;
-        isPlaying = true;
-        remainingSeconds = selectedDuration * 60;
-        _sessionStartTime = DateTime.now();
+      }).catchError((e) {
+        print('⚠️ Audio error: $e');
       });
-      
-      _backgroundController.forward();
-      
-      // Wait for setState to complete
-      await Future.delayed(Duration(milliseconds: 100));
-      
-      if (mounted && isSessionActive) {
-        _startTimer();
-      }
     }
+    
+    print('✅ Visual meditation session started - timer is running');
   }
   
   /// Start session tracking for visual meditation
@@ -291,23 +275,43 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
   }
 
   void _startTimer() {
-    print('🎯 Starting timer - remainingSeconds: $remainingSeconds, isPlaying: $isPlaying');
+    print('🎯 Starting timer - ${remainingSeconds}s remaining');
+    
+    // Cancel any existing timer
+    _meditationTimer?.cancel();
+    
+    // Start UI animation
     _sessionController.repeat();
     
-    Future.delayed(Duration(seconds: 1), () {
-      if (mounted && isPlaying && remainingSeconds > 0) {
+    // Start countdown timer
+    _meditationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        _meditationTimer = null;
+        return;
+      }
+      
+      if (remainingSeconds > 0) {
         setState(() {
           remainingSeconds--;
         });
-        _startTimer();
-      } else if (remainingSeconds <= 0) {
-        print('🎯 Timer ending session - remainingSeconds: $remainingSeconds');
+      } else {
+        timer.cancel();
+        _meditationTimer = null;
         _endSession();
       }
     });
+    
+    print('✅ Timer started and counting down');
   }
 
   void _pauseSession() {
+    print('⏸️ Pausing session');
+    
+    // Cancel timer first to prevent double counting
+    _meditationTimer?.cancel();
+    _meditationTimer = null;
+    
     setState(() {
       isPlaying = false;
     });
@@ -327,9 +331,13 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         },
       );
     }
+    
+    print('⏸️ Session paused - timer cancelled');
   }
 
   void _resumeSession() {
+    print('▶️ Resuming session');
+    
     setState(() {
       isPlaying = true;
     });
@@ -337,6 +345,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     // Resume audio
     _audioService.resumeAudio();
     
+    // Start timer again
     _startTimer();
     
     // Update session metadata
@@ -350,6 +359,8 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         },
       );
     }
+    
+    print('▶️ Session resumed - timer restarted');
   }
 
   void _endSession() async {
@@ -359,6 +370,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       print('🛑 Session already ended, skipping');
       return;
     }
+    
+    // Cancel timer immediately to prevent double counting
+    _meditationTimer?.cancel();
+    _meditationTimer = null;
     
     setState(() {
       isSessionActive = false;
@@ -1157,10 +1172,10 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   ),
                   child: GestureDetector(
                     onTap: () {
-                      // Single tap to pause/resume
+                      // Simple pause/resume toggle
                       if (isPlaying) {
                         _pauseSession();
-                      } else {
+                      } else if (isSessionActive) {
                         _resumeSession();
                       }
                     },
@@ -1294,7 +1309,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                 Navigator.pop(context);
                 if (isPlaying) {
                   _pauseSession();
-                } else {
+                } else if (isSessionActive) {
                   _resumeSession();
                 }
               },

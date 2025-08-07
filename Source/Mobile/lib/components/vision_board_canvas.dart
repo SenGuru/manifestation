@@ -174,6 +174,10 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   Widget _buildImageWidget(VisionBoardImageElement element) {
+    print('🖼️ Building image widget for element ${element.id}');
+    print('🖼️ ImagePath: "${element.imagePath}"');
+    print('🖼️ ImageUrl: "${element.imageUrl ?? 'null'}"');
+    
     // Try to load from URL first, then local path, then placeholder
     if (element.imageUrl != null && element.imageUrl!.isNotEmpty) {
       return Image.network(
@@ -194,24 +198,36 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           print('🌐 Network image failed, trying local: $error');
           // Fallback to local image
           if (element.imagePath.isNotEmpty) {
+            final imageFile = File(element.imagePath);
+            print('📁 Checking local file: ${element.imagePath}');
+            print('📁 File exists: ${imageFile.existsSync()}');
             return Image.file(
-              File(element.imagePath),
+              imageFile,
               fit: element.fit,
               width: double.infinity,
               height: double.infinity,
-              errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(),
+              errorBuilder: (context, error, stackTrace) {
+                print('❌ Local image failed too: $error');
+                return _buildImagePlaceholder();
+              },
             );
           }
           return _buildImagePlaceholder();
         },
       );
     } else if (element.imagePath.isNotEmpty) {
+      final imageFile = File(element.imagePath);
+      print('📁 Loading image from path: ${element.imagePath}');
+      print('📁 File exists: ${imageFile.existsSync()}');
       return Image.file(
-        File(element.imagePath),
+        imageFile,
         fit: element.fit,
         width: double.infinity,
         height: double.infinity,
-        errorBuilder: (context, error, stackTrace) => _buildImagePlaceholder(),
+        errorBuilder: (context, error, stackTrace) {
+          print('❌ Local image load failed: $error');
+          return _buildImagePlaceholder();
+        },
       );
     } else {
       return _buildImagePlaceholder();

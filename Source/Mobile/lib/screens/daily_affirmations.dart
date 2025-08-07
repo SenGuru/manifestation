@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import '../services/voice/hybrid_voice_service.dart';
 import '../models/affirmations.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
@@ -34,19 +34,22 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   // Services
   final DailyAffirmationsService _affirmationService = DailyAffirmationsService();
   final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
-  final FlutterTts _flutterTts = FlutterTts();
+  final HybridVoiceService _voiceService = HybridVoiceService();
   
   // Session tracking
   String? _sessionTracker;
   DateTime? _sessionStartTime;
   bool _sessionStarted = false;
+  
+  // Voice state monitoring
+  Timer? _voiceStateTimer;
 
   @override
   void initState() {
     super.initState();
     _initializeService();
     _loadCategories();
-    _initializeTTS();
+    _initializeVoiceService();
     _startSessionTracking();
     _startAnalyticsSession();
     
@@ -69,42 +72,32 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     _affirmationService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
   }
 
-  Future<void> _initializeTTS() async {
+  Future<void> _initializeVoiceService() async {
     try {
-      await _flutterTts.setLanguage('en-US');
-      await _flutterTts.setSpeechRate(0.5);
-      await _flutterTts.setVolume(0.8);
-      await _flutterTts.setPitch(1.0);
+      await _voiceService.initialize();
+      await _voiceService.setVolume(0.8);
+      await _voiceService.setRate(0.5);
       
-      _flutterTts.setStartHandler(() {
-        if (mounted) {
-          setState(() {
-            isPlaying = true;
-          });
-        }
-      });
-
-      _flutterTts.setCompletionHandler(() {
-        if (mounted) {
-          setState(() {
-            isPlaying = false;
-          });
-        }
-      });
-
-      _flutterTts.setErrorHandler((message) {
-        print('TTS Error: $message');
-        if (mounted) {
-          setState(() {
-            isPlaying = false;
-          });
-        }
-      });
-
-      print('✅ TTS initialized successfully');
+      // Monitor voice service state
+      _startVoiceStateMonitoring();
+      
+      print('✅ HybridVoiceService initialized successfully');
     } catch (e) {
-      print('❌ TTS initialization failed: $e');
+      print('❌ HybridVoiceService initialization failed: $e');
     }
+  }
+
+  void _startVoiceStateMonitoring() {
+    _voiceStateTimer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      if (mounted) {
+        final voiceIsPlaying = _voiceService.isPlaying;
+        if (isPlaying != voiceIsPlaying) {
+          setState(() {
+            isPlaying = voiceIsPlaying;
+          });
+        }
+      }
+    });
   }
 
   void _startSessionTracking() {
@@ -362,8 +355,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     _recordSessionData();
     // End analytics session
     _endAnalyticsSession();
-    // Stop and dispose TTS
-    _flutterTts.stop();
+    // Stop voice service and clean up
+    _voiceStateTimer?.cancel();
+    _voiceService.stop();
+    _voiceService.dispose();
     super.dispose();
   }
 
@@ -481,7 +476,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           
           return GestureDetector(
             onTap: () async {
-              await _flutterTts.stop();
+              await _voiceService.stop();
               setState(() {
                 selectedCategoryIndex = index;
                 currentAffirmationIndex = 0;
@@ -809,20 +804,17 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     
     try {
       if (isPlaying) {
-        await _flutterTts.stop();
-        setState(() {
-          isPlaying = false;
-        });
+        await _voiceService.stop();
         print('Paused affirmation: ${currentAffirmation.text}');
       } else {
         print('🔊 Playing affirmation: ${currentAffirmation.text}');
-        await _flutterTts.speak(currentAffirmation.text);
+        final success = await _voiceService.speak(currentAffirmation.text);
+        if (!success) {
+          _showErrorSnackBar('Unable to play audio. Please check your device settings.');
+        }
       }
     } catch (e) {
-      print('❌ TTS Error: $e');
-      setState(() {
-        isPlaying = false;
-      });
+      print('❌ Voice Service Error: $e');
       _showErrorSnackBar('Unable to play audio. Please check your device settings.');
     }
   }
@@ -830,7 +822,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   void _nextAffirmation() async {
     final currentCategory = categories[selectedCategoryIndex];
     if (currentAffirmationIndex < currentCategory.affirmations.length - 1) {
-      await _flutterTts.stop();
+      await _voiceService.stop();
       setState(() {
         currentAffirmationIndex++;
         isPlaying = false;
@@ -840,7 +832,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
 
   void _previousAffirmation() async {
     if (currentAffirmationIndex > 0) {
-      await _flutterTts.stop();
+      await _voiceService.stop();
       setState(() {
         currentAffirmationIndex--;
         isPlaying = false;
@@ -1252,7 +1244,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           
           // If the deleted category was selected, switch to first category
           if (selectedCategoryIndex == categoryIndex) {
-            await _flutterTts.stop();
+            await _voiceService.stop();
             setState(() {
               selectedCategoryIndex = 0;
               currentAffirmationIndex = 0;

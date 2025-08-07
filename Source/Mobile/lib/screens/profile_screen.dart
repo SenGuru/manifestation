@@ -10,6 +10,7 @@ import '../services/theme_service.dart';
 import '../models/analytics_models.dart';
 import 'login_screen.dart';
 import 'session_stats_screen.dart';
+import 'account_settings_screen.dart';
 import '../widgets/stylish_loading.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -174,11 +175,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Profile info section
               _buildProfileInfo(),
               
-              SizedBox(height: 24.h),
-              
-              // Stats section
-              _buildStatsSection(),
-              
               SizedBox(height: 30.h),
               
               // Menu sections
@@ -302,7 +298,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Edit profile button
           GestureDetector(
             onTap: () {
-              // TODO: Navigate to edit profile
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => AccountSettingsScreen()),
+              );
             },
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
@@ -341,17 +340,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         children: [
           _buildMenuItem(
-            icon: Icons.person_outline,
-            title: 'Account Settings',
-            subtitle: 'Privacy, security, change password',
-            onTap: () {
-              // TODO: Navigate to account settings
-            },
-          ),
-          
-          _buildDivider(),
-          
-          _buildMenuItem(
             icon: Icons.notifications_outlined,
             title: 'Notifications',
             subtitle: 'Push notifications, reminders',
@@ -362,40 +350,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           
           _buildDivider(),
           
-          _buildThemeToggleItem(),
-          
-          _buildDivider(),
-          
           _buildMenuItem(
             icon: Icons.analytics_outlined,
             title: 'Progress & Stats',
             subtitle: 'View your manifestation journey',
             onTap: () {
-              // TODO: Navigate to stats
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SessionStatsScreen()),
+              );
             },
           ),
           
           _buildDivider(),
           
-          _buildMenuItem(
-            icon: Icons.backup_outlined,
-            title: 'Backup & Sync',
-            subtitle: 'Cloud backup, data export',
-            onTap: () {
-              // TODO: Navigate to backup settings
-            },
-          ),
-          
-          _buildDivider(),
-          
-          _buildMenuItem(
-            icon: Icons.help_outline,
-            title: 'Help & Support',
-            subtitle: 'FAQ, contact support',
-            onTap: () {
-              // TODO: Navigate to help
-            },
-          ),
+          _buildThemeToggleItem(),
           
           _buildDivider(),
           
