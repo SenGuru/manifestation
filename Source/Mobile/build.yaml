@@ -6,5 +6,6 @@ targets:
           input_folder: 'lib/api/generated/swaggers/'
           output_folder: 'lib/api/generated/code/'
           input_urls:
-            - url: "http://SpecialUser:SpecialPassword1@manifestation-qa-1.senthilguru.net/swagger/v1/swagger.json"
+            - url: "http://SpecialUser:SpecialPassword1@192.168.1.10:9009/swagger/v1/swagger.json"
               file_name: "manifestation.json"
+

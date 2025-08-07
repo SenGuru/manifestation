@@ -4,6 +4,9 @@ import '../constants/app_theme.dart';
 import '../services/unified_auth_service.dart';
 import '../services/user_service.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/universal_back_button.dart';
+import 'settings/preferences_settings_screen.dart';
+import 'settings/account_management_screen.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   @override
@@ -11,40 +14,62 @@ class AccountSettingsScreen extends StatefulWidget {
 }
 
 class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
-  final _formKey = GlobalKey<FormState>();
-  final _currentPasswordController = TextEditingController();
-  final _newPasswordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _fullNameController = TextEditingController();
-
   bool _isLoading = true;
-  bool _isChangingPassword = false;
-  bool _isUpdatingProfile = false;
-  bool _obscureCurrentPassword = true;
-  bool _obscureNewPassword = true;
-  bool _obscureConfirmPassword = true;
-  bool _pushNotifications = true;
-  bool _emailNotifications = true;
-  bool _dataBackup = true;
-
   String _currentEmail = '';
   String _currentFullName = '';
+  DateTime? _joinDate;
+  String _accountStatus = 'Active';
+  
+  // Edit mode state
+  bool _isEditMode = false;
+  bool _isUpdatingProfile = false;
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _fullNameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+  bool _showPasswordField = false;
+  
+  // Field error states
+  String? _nameError;
+  String? _emailError;
+  String? _passwordError;
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
-  }
-
-  @override
-  void dispose() {
-    _currentPasswordController.dispose();
-    _newPasswordController.dispose();
-    _confirmPasswordController.dispose();
-    _emailController.dispose();
-    _fullNameController.dispose();
-    super.dispose();
+    
+    // Add listeners for validation
+    _fullNameController.addListener(() {
+      _checkAndShowPasswordField();
+      setState(() {
+        _nameError = _fullNameController.text.trim().isEmpty ? 'Full name is required' : null;
+      });
+    });
+    
+    _emailController.addListener(() {
+      _checkAndShowPasswordField();
+      setState(() {
+        if (_emailController.text.trim().isEmpty) {
+          _emailError = 'Email is required';
+        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text.trim())) {
+          _emailError = 'Please enter a valid email address';
+        } else {
+          _emailError = null;
+        }
+      });
+    });
+    
+    _passwordController.addListener(() {
+      setState(() {
+        if (_passwordController.text.isEmpty) {
+          _passwordError = 'Current password is required';
+        } else {
+          _passwordError = null;
+        }
+      });
+    });
   }
 
   Future<void> _loadUserData() async {
@@ -54,10 +79,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       final email = userData?['model']?['email'] ?? '';
 
       setState(() {
-        _currentFullName = fullName;
-        _currentEmail = email;
-        _fullNameController.text = fullName;
-        _emailController.text = email;
+        _currentFullName = fullName.isNotEmpty ? fullName : 'User';
+        _currentEmail = email.isNotEmpty ? email : 'user@example.com';
+        _fullNameController.text = _currentFullName;
+        _emailController.text = _currentEmail;
+        _joinDate = DateTime.now().subtract(Duration(days: 90)); // Example join date
         _isLoading = false;
       });
     } catch (e) {
@@ -65,10 +91,37 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       setState(() {
         _currentFullName = 'User';
         _currentEmail = 'user@example.com';
-        _fullNameController.text = 'User';
-        _emailController.text = 'user@example.com';
+        _fullNameController.text = _currentFullName;
+        _emailController.text = _currentEmail;
+        _joinDate = DateTime.now().subtract(Duration(days: 90));
         _isLoading = false;
       });
+    }
+  }
+  
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _fullNameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+  
+  void _checkAndShowPasswordField() {
+    // Check if user has actually changed from original values
+    final bool nameChanged = _fullNameController.text.trim() != _currentFullName;
+    final bool emailChanged = _emailController.text.trim() != _currentEmail;
+    final bool hasChanges = nameChanged || emailChanged;
+    
+    if (hasChanges && !_showPasswordField) {
+      setState(() {
+        _showPasswordField = true;
+      });
+    } else if (!hasChanges && _showPasswordField) {
+      setState(() {
+        _showPasswordField = false;
+      });
+      _passwordController.clear();
     }
   }
 
@@ -80,10 +133,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              _buildHeader(),
+              _buildBackButtonWithHeader(),
               Expanded(
                 child: StylishLoading(
-                  message: 'Loading account settings...',
+                  message: 'Loading account information...',
                 ),
               ),
             ],
@@ -92,73 +145,208 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
-      body: SafeArea(
-        child: Column(
+    return GestureDetector(
+      onTap: () {
+        // Dismiss keyboard when tapping outside text fields
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.backgroundDark,
+        resizeToAvoidBottomInset: false, // Prevent widgets from moving when keyboard appears
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 16.h),
+                _buildBackButtonWithHeader(),
+                SizedBox(height: 24.h),
+                _isEditMode ? _buildEditProfileSection() : _buildAccountInfoSection(),
+                SizedBox(height: 32.h),
+                _buildSettingsNavigation(),
+                SizedBox(height: 40.h),
+                // Extra bottom padding for keyboard clearance when in edit mode
+                if (_isEditMode) SizedBox(height: 200.h),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBackButtonWithHeader() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        UniversalBackButton(),
+        SizedBox(width: 16.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Account Settings',
+                style: TextStyle(
+                  fontSize: 28.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textLight,
+                ),
+              ),
+              SizedBox(height: 4.h),
+              Text(
+                'Manage your account and preferences',
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: AppTheme.textMedium,
+                  height: 1.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAccountInfoSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildHeader(),
-            Expanded(
-              child: SingleChildScrollView(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 20.h),
-                      _buildProfileSection(),
-                      SizedBox(height: 32.h),
-                      _buildSecuritySection(),
-                      SizedBox(height: 32.h),
-                      _buildPreferencesSection(),
-                      SizedBox(height: 32.h),
-                      _buildDangerZoneSection(),
-                      SizedBox(height: 40.h),
-                    ],
+            Text(
+              'Account Information',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textLight,
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isEditMode = true;
+                });
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: AppTheme.socialGradient[0],
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(20.r),
+                ),
+                child: Text(
+                  'Edit',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.socialGradient[0],
                   ),
                 ),
               ),
             ),
           ],
         ),
-      ),
+        SizedBox(height: 16.h),
+        
+        // Account info cards
+        _buildInfoCard(
+          icon: Icons.person_outline,
+          title: 'Full Name',
+          subtitle: _currentFullName,
+        ),
+        
+        SizedBox(height: 12.h),
+        
+        _buildInfoCard(
+          icon: Icons.email_outlined,
+          title: 'Email Address',
+          subtitle: _currentEmail,
+        ),
+        
+        SizedBox(height: 12.h),
+        
+        _buildInfoCard(
+          icon: Icons.calendar_today_outlined,
+          title: 'Member Since',
+          subtitle: _joinDate != null 
+              ? '${_joinDate!.day}/${_joinDate!.month}/${_joinDate!.year}'
+              : 'Unknown',
+        ),
+        
+        SizedBox(height: 12.h),
+        
+        _buildInfoCard(
+          icon: Icons.verified_outlined,
+          title: 'Account Status',
+          subtitle: _accountStatus,
+          subtitleColor: _accountStatus == 'Active' ? Colors.green : Colors.orange,
+        ),
+      ],
     );
   }
 
-  Widget _buildHeader() {
-    return Padding(
-      padding: EdgeInsets.all(20.w),
+  Widget _buildInfoCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    Color? subtitleColor,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: AppTheme.textMedium.withOpacity(0.1),
+          width: 1,
+        ),
+      ),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.1),
-                  width: 2,
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
+          Container(
+            width: 40.w,
+            height: 40.h,
+            decoration: BoxDecoration(
+              color: AppTheme.socialGradient[0].withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            child: Icon(
+              icon,
+              color: AppTheme.socialGradient[0],
+              size: 20.sp,
             ),
           ),
           SizedBox(width: 16.w),
-          Text(
-            'Account Settings',
-            style: TextStyle(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppTheme.textMedium,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  subtitle,
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    color: subtitleColor ?? AppTheme.textLight,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -166,12 +354,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     );
   }
 
-  Widget _buildProfileSection() {
+  Widget _buildSettingsNavigation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Profile Information',
+          'Settings',
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
@@ -179,235 +367,222 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           ),
         ),
         SizedBox(height: 16.h),
-        _buildTextField(
-          controller: _fullNameController,
-          label: 'Full Name',
-          icon: Icons.person_outline,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Full name is required';
-            }
-            return null;
+        
+        
+        _buildNavigationButton(
+          icon: Icons.manage_accounts_outlined,
+          title: 'Account Management',
+          subtitle: 'Sign out, delete account and more',
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => AccountManagementScreen()),
+            );
           },
-        ),
-        SizedBox(height: 16.h),
-        _buildTextField(
-          controller: _emailController,
-          label: 'Email Address',
-          icon: Icons.email_outlined,
-          keyboardType: TextInputType.emailAddress,
-          validator: (value) {
-            if (value == null || value.trim().isEmpty) {
-              return 'Email is required';
-            }
-            if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
-              return 'Please enter a valid email address';
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 20.h),
-        _buildPrimaryButton(
-          text: 'Update Profile',
-          onPressed: _updateProfile,
-          isLoading: _isUpdatingProfile,
+          isDestructive: true,
         ),
       ],
     );
   }
 
-  Widget _buildSecuritySection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Security',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textLight,
-          ),
+  Widget _buildNavigationButton({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: isDestructive 
+              ? Colors.red.withOpacity(0.2)
+              : AppTheme.textMedium.withOpacity(0.1),
+          width: 1,
         ),
-        SizedBox(height: 16.h),
-        _buildTextField(
-          controller: _currentPasswordController,
-          label: 'Current Password',
-          icon: Icons.lock_outline,
-          isPassword: true,
-          obscureText: _obscureCurrentPassword,
-          suffixIcon: GestureDetector(
-            onTap: () {
-              setState(() {
-                _obscureCurrentPassword = !_obscureCurrentPassword;
-              });
-            },
-            child: Icon(
-              _obscureCurrentPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-              color: AppTheme.textMedium,
-              size: 20.sp,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Padding(
+            padding: EdgeInsets.all(16.w),
+            child: Row(
+              children: [
+                Container(
+                  width: 48.w,
+                  height: 48.h,
+                  decoration: BoxDecoration(
+                    color: isDestructive 
+                        ? Colors.red.withOpacity(0.1)
+                        : AppTheme.socialGradient[0].withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: isDestructive 
+                        ? Colors.red
+                        : AppTheme.socialGradient[0],
+                    size: 24.sp,
+                  ),
+                ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          color: isDestructive 
+                              ? Colors.red
+                              : AppTheme.textLight,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppTheme.textMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(
+                  Icons.chevron_right,
+                  color: AppTheme.textMedium.withOpacity(0.6),
+                  size: 20.sp,
+                ),
+              ],
             ),
           ),
-          validator: (value) {
-            if (_newPasswordController.text.isNotEmpty && (value == null || value.isEmpty)) {
-              return 'Current password is required';
-            }
-            return null;
-          },
         ),
-        SizedBox(height: 16.h),
-        _buildTextField(
-          controller: _newPasswordController,
-          label: 'New Password',
-          icon: Icons.lock_reset,
-          isPassword: true,
-          obscureText: _obscureNewPassword,
-          suffixIcon: GestureDetector(
-            onTap: () {
-              setState(() {
-                _obscureNewPassword = !_obscureNewPassword;
-              });
-            },
-            child: Icon(
-              _obscureNewPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-              color: AppTheme.textMedium,
-              size: 20.sp,
-            ),
-          ),
-          validator: (value) {
-            if (value != null && value.isNotEmpty && value.length < 6) {
-              return 'Password must be at least 6 characters';
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 16.h),
-        _buildTextField(
-          controller: _confirmPasswordController,
-          label: 'Confirm New Password',
-          icon: Icons.lock_outline,
-          isPassword: true,
-          obscureText: _obscureConfirmPassword,
-          suffixIcon: GestureDetector(
-            onTap: () {
-              setState(() {
-                _obscureConfirmPassword = !_obscureConfirmPassword;
-              });
-            },
-            child: Icon(
-              _obscureConfirmPassword ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-              color: AppTheme.textMedium,
-              size: 20.sp,
-            ),
-          ),
-          validator: (value) {
-            if (_newPasswordController.text.isNotEmpty) {
-              if (value == null || value.isEmpty) {
-                return 'Please confirm your new password';
-              }
-              if (value != _newPasswordController.text) {
-                return 'Passwords do not match';
-              }
-            }
-            return null;
-          },
-        ),
-        SizedBox(height: 20.h),
-        _buildPrimaryButton(
-          text: 'Change Password',
-          onPressed: _changePassword,
-          isLoading: _isChangingPassword,
-        ),
-      ],
+      ),
     );
   }
-
-  Widget _buildPreferencesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Preferences',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textLight,
+  
+  Widget _buildEditProfileSection() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Edit Profile',
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textLight,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  // Dismiss keyboard first
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    _isEditMode = false;
+                    _showPasswordField = false;
+                    _passwordController.clear();
+                    // Reset to original values
+                    _fullNameController.text = _currentFullName;
+                    _emailController.text = _currentEmail;
+                    _nameError = null;
+                    _emailError = null;
+                    _passwordError = null;
+                  });
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppTheme.textMedium,
+                      width: 2,
+                    ),
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textMedium,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ),
-        SizedBox(height: 16.h),
-        _buildSimpleSwitch(
-          title: 'Push Notifications',
-          subtitle: 'Receive meditation reminders',
-          value: _pushNotifications,
-          onChanged: (value) {
-            setState(() {
-              _pushNotifications = value;
-            });
-          },
-        ),
-        SizedBox(height: 16.h),
-        _buildSimpleSwitch(
-          title: 'Email Notifications',
-          subtitle: 'Get updates via email',
-          value: _emailNotifications,
-          onChanged: (value) {
-            setState(() {
-              _emailNotifications = value;
-            });
-          },
-        ),
-        SizedBox(height: 16.h),
-        _buildSimpleSwitch(
-          title: 'Data Backup',
-          subtitle: 'Sync your progress to cloud',
-          value: _dataBackup,
-          onChanged: (value) {
-            setState(() {
-              _dataBackup = value;
-            });
-          },
-        ),
-      ],
+          SizedBox(height: 24.h),
+          
+          // Name field
+          _buildTextField(
+            controller: _fullNameController,
+            label: 'Full Name',
+            hint: 'Enter your full name',
+            icon: Icons.person_outline,
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // Email field
+          _buildTextField(
+            controller: _emailController,
+            label: 'Email Address',
+            hint: 'Enter your email address',
+            icon: Icons.email_outlined,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          
+          SizedBox(height: 16.h),
+          
+          // Animated password field (shows when user starts typing)
+          AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            height: _showPasswordField ? null : 0,
+            curve: Curves.easeOut,
+            child: _showPasswordField
+                ? Column(
+                    children: [
+                      _buildTextField(
+                        controller: _passwordController,
+                        label: 'Current Password',
+                        hint: 'Enter your current password',
+                        icon: Icons.lock_outline,
+                        isPassword: true,
+                      ),
+                      SizedBox(height: 16.h),
+                    ],
+                  )
+                : SizedBox.shrink(),
+          ),
+          
+          SizedBox(height: 24.h),
+          
+          // Update button
+          _buildUpdateButton(),
+        ],
+      ),
     );
   }
-
-  Widget _buildDangerZoneSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Account Management',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textLight,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        _buildDangerButton(
-          text: 'Sign Out',
-          icon: Icons.logout,
-          onPressed: _signOut,
-        ),
-        SizedBox(height: 16.h),
-        _buildDangerButton(
-          text: 'Delete Account',
-          icon: Icons.delete_forever,
-          onPressed: _deleteAccount,
-          isDangerous: true,
-        ),
-      ],
-    );
-  }
-
+  
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
+    required String hint,
     required IconData icon,
-    String? Function(String?)? validator,
     TextInputType? keyboardType,
     bool isPassword = false,
-    bool obscureText = false,
-    Widget? suffixIcon,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -421,119 +596,159 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           ),
         ),
         SizedBox(height: 8.h),
-        TextFormField(
-          controller: controller,
-          validator: validator,
-          keyboardType: keyboardType,
-          obscureText: obscureText,
-          style: TextStyle(
-            color: AppTheme.textLight,
-            fontSize: 16.sp,
-          ),
-          decoration: InputDecoration(
-            prefixIcon: Icon(
-              icon,
-              color: AppTheme.textMedium,
-              size: 20.sp,
-            ),
-            suffixIcon: suffixIcon,
-            filled: true,
-            fillColor: AppTheme.cardBackground,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide.none,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppTheme.textMedium.withOpacity(0.1),
-                width: 2,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppTheme.accentLavender,
-                width: 2,
-              ),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppTheme.error,
-                width: 2,
-              ),
-            ),
-            focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16.r),
-              borderSide: BorderSide(
-                color: AppTheme.error,
-                width: 2,
-              ),
-            ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 16.h,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSimpleSwitch({
-    required String title,
-    required String subtitle,
-    required bool value,
-    required ValueChanged<bool> onChanged,
-  }) {
-    return Row(
-      children: [
-        Expanded(
+        
+        Container(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
+              TextFormField(
+                controller: controller,
+                validator: (value) => null, // Custom validation handled by listeners
+                obscureText: isPassword && !_isPasswordVisible,
+                keyboardType: keyboardType,
                 style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
                   color: AppTheme.textLight,
+                  fontSize: 16.sp,
+                ),
+                decoration: InputDecoration(
+                  hintText: hint,
+                  hintStyle: TextStyle(
+                    color: AppTheme.textMedium.withOpacity(0.6),
+                  ),
+                  prefixIcon: Icon(
+                    icon,
+                    color: AppTheme.textMedium,
+                    size: 20.sp,
+                  ),
+                  suffixIcon: isPassword
+                      ? GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isPasswordVisible = !_isPasswordVisible;
+                            });
+                          },
+                          child: Icon(
+                            _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                            color: AppTheme.textMedium,
+                            size: 20.sp,
+                          ),
+                        )
+                      : null,
+                  filled: true,
+                  fillColor: AppTheme.cardBackground,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: _getFieldError(controller) != null 
+                          ? Colors.red.withOpacity(0.5)
+                          : AppTheme.textMedium.withOpacity(0.1),
+                      width: 2,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: _getFieldError(controller) != null 
+                          ? Colors.red
+                          : AppTheme.socialGradient[0],
+                      width: 2,
+                    ),
+                  ),
+                  errorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  focusedErrorBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                    borderSide: BorderSide(
+                      color: Colors.red,
+                      width: 2,
+                    ),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                    vertical: 16.h,
+                  ),
                 ),
               ),
-              SizedBox(height: 4.h),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  color: AppTheme.textMedium,
-                ),
+              
+              Container(
+                height: 16.h,
+                margin: EdgeInsets.only(top: 2.h),
+                child: _buildFieldError(_getFieldError(controller)),
               ),
             ],
           ),
         ),
-        Switch.adaptive(
-          value: value,
-          onChanged: onChanged,
-          activeColor: AppTheme.accentLavender,
-          activeTrackColor: AppTheme.accentLavender.withOpacity(0.3),
-          inactiveThumbColor: AppTheme.textMedium,
-          inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
-        ),
       ],
     );
   }
-
-  Widget _buildPrimaryButton({
-    required String text,
-    required VoidCallback? onPressed,
-    bool isLoading = false,
-  }) {
+  
+  String? _getFieldError(TextEditingController controller) {
+    if (controller == _fullNameController) return _nameError;
+    if (controller == _emailController) return _emailError;
+    if (controller == _passwordController) return _passwordError;
+    return null;
+  }
+  
+  Widget _buildFieldError(String? errorText) {
+    return AnimatedOpacity(
+      opacity: errorText != null && errorText.isNotEmpty ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 200),
+      child: errorText != null && errorText.isNotEmpty
+          ? Row(
+              children: [
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 12.sp,
+                ),
+                SizedBox(width: 4.w),
+                Expanded(
+                  child: Text(
+                    errorText,
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 11.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            )
+          : SizedBox.shrink(),
+    );
+  }
+  
+  Widget _buildUpdateButton() {
+    // Check if user has made changes from original values
+    final bool nameChanged = _fullNameController.text.trim() != _currentFullName;
+    final bool emailChanged = _emailController.text.trim() != _currentEmail;
+    final bool hasChanges = nameChanged || emailChanged;
+    
+    // Check if form has errors
+    final bool hasErrors = _nameError != null || _emailError != null || _passwordError != null;
+    
+    // Button is enabled if user made changes, no validation errors, and password provided when needed
+    final bool isButtonEnabled = hasChanges && 
+                                !hasErrors && 
+                                (!_showPasswordField || _passwordController.text.trim().isNotEmpty) && 
+                                !_isUpdatingProfile;
+    
     return SizedBox(
       width: double.infinity,
-      height: 54.h,
+      height: 56.h,
       child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: isButtonEnabled ? _updateProfile : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
@@ -545,35 +760,33 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         ),
         child: Ink(
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppTheme.accentLavender, AppTheme.accentCoral],
-            ),
+            gradient: isButtonEnabled
+                ? LinearGradient(colors: AppTheme.socialGradient)
+                : null,
+            color: isButtonEnabled
+                ? null
+                : AppTheme.textMedium.withOpacity(0.3),
             borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
+            boxShadow: isButtonEnabled ? [
               BoxShadow(
-                color: AppTheme.accentLavender.withOpacity(0.3),
-                blurRadius: 12.r,
-                offset: Offset(0, 6.h),
+                color: AppTheme.socialGradient[0].withOpacity(0.4),
+                blurRadius: 20.r,
+                offset: Offset(0, 8.h),
+                spreadRadius: 2.r,
               ),
-            ],
+            ] : null,
           ),
           child: Container(
             alignment: Alignment.center,
-            child: isLoading
-                ? SizedBox(
-                    width: 20.w,
-                    height: 20.w,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                    ),
-                  )
+            child: _isUpdatingProfile
+                ? CompactStylishLoading(size: 20.w, color: AppTheme.white)
                 : Text(
-                    text,
+                    'Update Profile',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.white,
+                      letterSpacing: 0.5,
                     ),
                   ),
           ),
@@ -581,77 +794,111 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       ),
     );
   }
-
-  Widget _buildDangerButton({
-    required String text,
-    required IconData icon,
-    required VoidCallback onPressed,
-    bool isDangerous = false,
-  }) {
-    return Container(
-      width: double.infinity,
-      height: 50.h,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: isDangerous ? AppTheme.error : AppTheme.textMedium.withOpacity(0.3),
-          width: 1,
-        ),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onPressed,
-          borderRadius: BorderRadius.circular(12.r),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
-                  color: isDangerous ? AppTheme.error : AppTheme.textMedium,
-                  size: 18.sp,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  text,
-                  style: TextStyle(
-                    color: isDangerous ? AppTheme.error : AppTheme.textMedium,
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // Action methods
+  
   Future<void> _updateProfile() async {
-    if (!_formKey.currentState!.validate()) return;
+    // Dismiss keyboard first
+    FocusScope.of(context).unfocus();
+    
+    // Check for validation errors
+    if (_nameError != null || _emailError != null || _passwordError != null) {
+      return;
+    }
+
+    // Password is always required for any profile updates
+    if (_passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = 'Current password is required';
+      });
+      return;
+    }
 
     setState(() {
       _isUpdatingProfile = true;
     });
 
     try {
-      // Add your profile update logic here
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
+      final authService = UnifiedAuthService();
+      
+      // Parse the full name
+      final fullName = _fullNameController.text.trim();
+      final nameParts = fullName.split(' ');
+      final firstName = nameParts.isNotEmpty ? nameParts[0] : '';
+      final lastName = nameParts.length > 1 ? nameParts.skip(1).join(' ') : '';
+      
+      // Update local user data
+      await UserService.updateUserProfile(
+        firstName: firstName,
+        lastName: lastName,
+        userName: _emailController.text.trim(),
+      );
+      
+      // Verify password with a login call (this validates the current password)
+      final currentUserData = await UserService.getUserData();
+      final currentUserName = currentUserData?['model']?['userName'] ?? _emailController.text.trim();
+      
+      final loginResult = await authService.login(
+        username: currentUserName,
+        password: _passwordController.text.trim(),
+        rememberMe: true,
+      );
+      
+      if (!loginResult.isSuccess) {
+        throw Exception('Invalid current password');
+      }
+      
+      // Clear password field after successful update
+      _passwordController.clear();
+      
+      // Update current values to new values
+      setState(() {
+        _currentFullName = fullName;
+        _currentEmail = _emailController.text.trim();
+        _showPasswordField = false;
+        _isEditMode = false;
+      });
       
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Profile updated successfully'),
-          backgroundColor: AppTheme.success,
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Profile updated successfully'),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } catch (e) {
+      String errorMessage = 'Failed to update profile';
+      
+      if (e.toString().contains('Invalid current password')) {
+        errorMessage = 'Current password is incorrect';
+        setState(() {
+          _passwordError = 'Current password is incorrect';
+        });
+      } else if (e.toString().contains('network') || e.toString().contains('connection')) {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Failed to update profile'),
-          backgroundColor: AppTheme.error,
+          content: Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.white),
+              SizedBox(width: 8),
+              Expanded(child: Text(errorMessage)),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       );
     } finally {
@@ -659,161 +906,5 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         _isUpdatingProfile = false;
       });
     }
-  }
-
-  Future<void> _changePassword() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    if (_newPasswordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please enter a new password'),
-          backgroundColor: AppTheme.error,
-        ),
-      );
-      return;
-    }
-
-    setState(() {
-      _isChangingPassword = true;
-    });
-
-    try {
-      // Add your password change logic here
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
-      
-      // Clear password fields
-      _currentPasswordController.clear();
-      _newPasswordController.clear();
-      _confirmPasswordController.clear();
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password changed successfully'),
-          backgroundColor: AppTheme.success,
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to change password'),
-          backgroundColor: AppTheme.error,
-        ),
-      );
-    } finally {
-      setState(() {
-        _isChangingPassword = false;
-      });
-    }
-  }
-
-  Future<void> _signOut() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => _buildConfirmDialog(
-        title: 'Sign Out',
-        message: 'Are you sure you want to sign out?',
-        confirmText: 'Sign Out',
-      ),
-    );
-
-    if (confirmed == true) {
-      try {
-        await UnifiedAuthService().logout();
-        Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to sign out'),
-            backgroundColor: AppTheme.error,
-          ),
-        );
-      }
-    }
-  }
-
-  Future<void> _deleteAccount() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => _buildConfirmDialog(
-        title: 'Delete Account',
-        message: 'This action cannot be undone. All your data will be permanently deleted.',
-        confirmText: 'Delete',
-        isDangerous: true,
-      ),
-    );
-
-    if (confirmed == true) {
-      try {
-        // Add your account deletion logic here
-        await Future.delayed(Duration(seconds: 2)); // Simulate API call
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Account deletion initiated'),
-            backgroundColor: AppTheme.success,
-          ),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to delete account'),
-            backgroundColor: AppTheme.error,
-          ),
-        );
-      }
-    }
-  }
-
-  Widget _buildConfirmDialog({
-    required String title,
-    required String message,
-    required String confirmText,
-    bool isDangerous = false,
-  }) {
-    return AlertDialog(
-      backgroundColor: AppTheme.cardBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20.r),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          color: AppTheme.textLight,
-          fontSize: 20.sp,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      content: Text(
-        message,
-        style: TextStyle(
-          color: AppTheme.textMedium,
-          fontSize: 16.sp,
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(false),
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-              color: AppTheme.textMedium,
-              fontSize: 16.sp,
-            ),
-          ),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(true),
-          child: Text(
-            confirmText,
-            style: TextStyle(
-              color: isDangerous ? AppTheme.error : AppTheme.accentLavender,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }

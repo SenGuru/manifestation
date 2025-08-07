@@ -11,6 +11,7 @@ import '../models/analytics_models.dart';
 import 'login_screen.dart';
 import 'session_stats_screen.dart';
 import 'account_settings_screen.dart';
+import 'settings/security_settings_screen.dart';
 import '../widgets/stylish_loading.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -365,6 +366,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildDivider(),
           
           _buildThemeToggleItem(),
+          
+          _buildDivider(),
+          
+          _buildMenuItem(
+            icon: Icons.security_outlined,
+            title: 'Security',
+            subtitle: 'Password, authentication and privacy',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SecuritySettingsScreen()),
+              );
+            },
+          ),
           
           _buildDivider(),
           
