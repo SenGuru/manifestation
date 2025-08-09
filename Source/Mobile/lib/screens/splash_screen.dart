@@ -379,7 +379,7 @@ class _SplashScreenState extends State<SplashScreen>
                               stops: [0.0, 0.5, 1.0],
                             ).createShader(bounds),
                             child: Text(
-                              'Manifestation',
+                              'Mistel',
                               style: TextStyle(
                                 fontSize: 36.sp,
                                 fontWeight: FontWeight.w800,

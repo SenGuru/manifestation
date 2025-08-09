@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import 'package:mistel/constants/colors.dart';
 import '../constants/app_theme.dart';
-import 'package:fun/widgets/stylish_loading.dart';
+import 'package:mistel/widgets/stylish_loading.dart';
 import 'dart:math' as math;
 
 class MindfulnessMoment extends StatefulWidget {

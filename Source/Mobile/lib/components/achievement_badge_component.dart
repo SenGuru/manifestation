@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
-import 'package:fun/models/social_models.dart';
+import 'package:mistel/models/social_models.dart';
 
 class AchievementBadge extends StatefulWidget {
   final Achievement achievement;

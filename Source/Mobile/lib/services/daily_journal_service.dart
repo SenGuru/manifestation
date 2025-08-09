@@ -1,5 +1,5 @@
 import 'package:chopper/chopper.dart';
-import 'package:fun/services/unified_auth_service.dart';
+import 'package:mistel/services/unified_auth_service.dart';
 import 'dart:async';
 import '../api/generated/code/manifestation.swagger.dart';
 

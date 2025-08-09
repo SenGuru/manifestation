@@ -163,7 +163,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                 SizedBox(height: 16.h),
                 _buildBackButtonWithHeader(),
                 SizedBox(height: 24.h),
-                _isEditMode ? _buildEditProfileSection() : _buildAccountInfoSection(),
+                _buildMorphingAccountSection(),
                 SizedBox(height: 32.h),
                 _buildSettingsNavigation(),
                 SizedBox(height: 40.h),
@@ -211,84 +211,375 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     );
   }
 
-  Widget _buildAccountInfoSection() {
+  Widget _buildMorphingAccountSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header with animated title and button
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Account Information',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
+            AnimatedSwitcher(
+              duration: Duration(milliseconds: 300),
+              child: Text(
+                _isEditMode ? 'Edit Profile' : 'Account Information',
+                key: ValueKey(_isEditMode),
+                style: TextStyle(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textLight,
+                ),
               ),
             ),
             GestureDetector(
               onTap: () {
-                setState(() {
-                  _isEditMode = true;
-                });
+                if (_isEditMode) {
+                  // Cancel edit mode
+                  FocusScope.of(context).unfocus();
+                  setState(() {
+                    _isEditMode = false;
+                    _showPasswordField = false;
+                    _passwordController.clear();
+                    _fullNameController.text = _currentFullName;
+                    _emailController.text = _currentEmail;
+                    _nameError = null;
+                    _emailError = null;
+                    _passwordError = null;
+                  });
+                } else {
+                  // Enter edit mode
+                  setState(() {
+                    _isEditMode = true;
+                  });
+                }
               },
-              child: Container(
+              child: AnimatedContainer(
+                duration: Duration(milliseconds: 300),
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: AppTheme.socialGradient[0],
+                    color: _isEditMode ? AppTheme.textMedium : AppTheme.socialGradient[0],
                     width: 2,
                   ),
                   borderRadius: BorderRadius.circular(20.r),
                 ),
-                child: Text(
-                  'Edit',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.socialGradient[0],
+                child: AnimatedSwitcher(
+                  duration: Duration(milliseconds: 300),
+                  child: Text(
+                    _isEditMode ? 'Cancel' : 'Edit',
+                    key: ValueKey(_isEditMode),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: _isEditMode ? AppTheme.textMedium : AppTheme.socialGradient[0],
+                    ),
                   ),
                 ),
               ),
             ),
           ],
         ),
+        
         SizedBox(height: 16.h),
         
-        // Account info cards
-        _buildInfoCard(
+        // Name card that morphs
+        _buildMorphingCard(
+          isEditable: true,
           icon: Icons.person_outline,
           title: 'Full Name',
-          subtitle: _currentFullName,
+          controller: _fullNameController,
+          hint: 'Enter your full name',
         ),
         
         SizedBox(height: 12.h),
         
-        _buildInfoCard(
+        // Email card that morphs  
+        _buildMorphingCard(
+          isEditable: true,
           icon: Icons.email_outlined,
           title: 'Email Address',
-          subtitle: _currentEmail,
+          controller: _emailController,
+          hint: 'Enter your email address',
+          keyboardType: TextInputType.emailAddress,
         ),
         
-        SizedBox(height: 12.h),
-        
-        _buildInfoCard(
-          icon: Icons.calendar_today_outlined,
-          title: 'Member Since',
-          subtitle: _joinDate != null 
-              ? '${_joinDate!.day}/${_joinDate!.month}/${_joinDate!.year}'
-              : 'Unknown',
+        // Animated password field that slides down when needed
+        ClipRect(
+          child: AnimatedAlign(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            heightFactor: _showPasswordField ? 1.0 : 0.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 12.h),
+                _buildMorphingCard(
+                  isEditable: true,
+                  icon: Icons.lock_outline,
+                  title: 'Current Password',
+                  controller: _passwordController,
+                  hint: 'Enter your current password',
+                  isPassword: true,
+                ),
+              ],
+            ),
+          ),
         ),
         
-        SizedBox(height: 12.h),
+        // Static cards that fade out in edit mode
+        AnimatedOpacity(
+          duration: Duration(milliseconds: 400),
+          opacity: _isEditMode ? 0.0 : 1.0,
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 400),
+            height: _isEditMode ? 0 : null,
+            curve: Curves.easeOutCubic,
+            child: Column(
+              children: [
+                SizedBox(height: 12.h),
+                _buildInfoCard(
+                  icon: Icons.calendar_today_outlined,
+                  title: 'Member Since',
+                  subtitle: _joinDate != null 
+                      ? '${_joinDate!.day}/${_joinDate!.month}/${_joinDate!.year}'
+                      : 'Unknown',
+                ),
+                SizedBox(height: 12.h),
+                _buildInfoCard(
+                  icon: Icons.verified_outlined,
+                  title: 'Account Status',
+                  subtitle: _accountStatus,
+                  subtitleColor: _accountStatus == 'Active' ? Colors.green : Colors.orange,
+                ),
+              ],
+            ),
+          ),
+        ),
         
-        _buildInfoCard(
-          icon: Icons.verified_outlined,
-          title: 'Account Status',
-          subtitle: _accountStatus,
-          subtitleColor: _accountStatus == 'Active' ? Colors.green : Colors.orange,
+        // Update button that slides up in edit mode
+        ClipRect(
+          child: AnimatedAlign(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeOutCubic,
+            alignment: Alignment.topCenter,
+            heightFactor: _isEditMode ? 1.0 : 0.0,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 24.h),
+                _buildUpdateButton(),
+              ],
+            ),
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildMorphingCard({
+    required bool isEditable,
+    required IconData icon,
+    required String title,
+    required TextEditingController controller,
+    required String hint,
+    TextInputType? keyboardType,
+    bool isPassword = false,
+  }) {
+    final hasError = _getFieldError(controller) != null;
+    
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.all(16.w),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: _isEditMode && hasError
+              ? Colors.red.withOpacity(0.5)
+              : AppTheme.textMedium.withOpacity(0.1),
+          width: _isEditMode && hasError ? 2 : 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header row with icon and title
+          Row(
+            children: [
+              Container(
+                width: 40.w,
+                height: 40.h,
+                decoration: BoxDecoration(
+                  color: _isEditMode && hasError
+                      ? Colors.red.withOpacity(0.1)
+                      : (icon == Icons.lock_outline && _isEditMode)
+                          ? Colors.red.withOpacity(0.1)
+                          : AppTheme.socialGradient[0].withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  icon,
+                  color: _isEditMode && hasError
+                      ? Colors.red
+                      : (icon == Icons.lock_outline && _isEditMode)
+                          ? Colors.red[400]
+                          : AppTheme.socialGradient[0],
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    color: AppTheme.textMedium,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          
+          // Morphing content area
+          _isEditMode
+              ? _buildEditField(controller, hint, keyboardType, isPassword)
+              : _buildDisplayValue(controller.text),
+          
+          // Error message area
+          if (_isEditMode)
+            AnimatedContainer(
+              duration: Duration(milliseconds: 200),
+              height: hasError ? 20.h : 0,
+              child: hasError
+                  ? Row(
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 12.sp,
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            _getFieldError(controller) ?? '',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 11.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink(),
+            ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildEditField(TextEditingController controller, String hint, TextInputType? keyboardType, bool isPassword) {
+    final hasError = _getFieldError(controller) != null;
+    
+    return Padding(
+      padding: EdgeInsets.only(top: 8.h),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword && !_isPasswordVisible,
+        keyboardType: keyboardType,
+        style: TextStyle(
+          color: AppTheme.textLight,
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+        ),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: TextStyle(
+            color: AppTheme.textMedium.withOpacity(0.6),
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w400,
+          ),
+          suffixIcon: isPassword
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                  child: Icon(
+                    _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                    color: AppTheme.textMedium,
+                    size: 20.sp,
+                  ),
+                )
+              : null,
+          filled: true,
+          fillColor: AppTheme.backgroundDark.withOpacity(0.3),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(
+              color: hasError 
+                  ? Colors.red.withOpacity(0.4)
+                  : AppTheme.textMedium.withOpacity(0.2),
+              width: 1.5,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(
+              color: hasError 
+                  ? Colors.red.withOpacity(0.4)
+                  : AppTheme.textMedium.withOpacity(0.2),
+              width: 1.5,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(
+              color: hasError 
+                  ? Colors.red
+                  : AppTheme.socialGradient[0],
+              width: 2.0,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(
+              color: Colors.red.withOpacity(0.4),
+              width: 1.5,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 2.0,
+            ),
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildDisplayValue(String value) {
+    return Padding(
+      padding: EdgeInsets.only(top: 4.h),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          value.isNotEmpty ? value : 'Not set',
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: value.isNotEmpty ? AppTheme.textLight : AppTheme.textMedium,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
     );
   }
 
@@ -355,34 +646,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }
 
   Widget _buildSettingsNavigation() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Settings',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textLight,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        
-        
-        _buildNavigationButton(
-          icon: Icons.manage_accounts_outlined,
-          title: 'Account Management',
-          subtitle: 'Sign out, delete account and more',
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => AccountManagementScreen()),
-            );
-          },
-          isDestructive: true,
-        ),
-      ],
-    );
+    return SizedBox.shrink();
   }
 
   Widget _buildNavigationButton({
@@ -473,6 +737,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     return Form(
       key: _formKey,
       child: Column(
+        key: ValueKey('edit_profile'),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(

@@ -52,74 +52,27 @@ class _GratitudeSectionState extends State<GratitudeSection> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Header with subtle gradient
-        Container(
-          padding: EdgeInsets.all(24.w),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppTheme.cardBackground,
-                AppTheme.cardBackground.withOpacity(0.95),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20.r),
-            border: Border.all(
-              color: AppTheme.journalGradient[0].withOpacity(0.2),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.journalGradient[0].withOpacity(0.1),
-                blurRadius: 8.r,
-                offset: Offset(0, 2.h),
-              ),
-            ],
+        // Simple header like mood screen
+        Text(
+          'Daily Gratitudes',
+          style: TextStyle(
+            fontSize: 24.sp,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
           ),
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: AppTheme.journalGradient[0],
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  Icons.favorite_outline,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
-              ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Daily Gratitudes',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
-                      ),
-                    ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      'What are you grateful for today?',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: AppTheme.textMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+        ),
+        SizedBox(height: 8.h),
+        Text(
+          'What are you grateful for today?',
+          style: TextStyle(
+            fontSize: 16.sp,
+            color: AppTheme.textSecondary,
           ),
         ),
         
-        SizedBox(height: 24.h),
+        SizedBox(height: 32.h),
         
         // Gratitude items
         Expanded(
@@ -270,7 +223,6 @@ class _GratitudeSectionState extends State<GratitudeSection> {
                   color: AppTheme.textSecondary,
                   fontSize: 16.sp,
                   height: 1.6,
-                  fontStyle: FontStyle.italic,
                 ),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.all(20.w),

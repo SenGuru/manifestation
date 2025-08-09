@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
-import 'package:fun/models/affirmations.dart';
-import 'package:fun/utils/color_utils.dart';
-import 'package:fun/services/session_manager.dart';
-import 'package:fun/services/user_service.dart';
-import 'package:fun/constants/category_icons.dart';
-import 'package:fun/widgets/stylish_loading.dart';
+import 'package:mistel/models/affirmations.dart';
+import 'package:mistel/utils/color_utils.dart';
+import 'package:mistel/services/session_manager.dart';
+import 'package:mistel/services/user_service.dart';
+import 'package:mistel/constants/category_icons.dart';
+import 'package:mistel/widgets/stylish_loading.dart';
 import 'package:uuid/uuid.dart';
 
 class AddCategoryDialog extends StatefulWidget {

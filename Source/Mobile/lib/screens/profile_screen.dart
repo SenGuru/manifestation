@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/services/unified_auth_service.dart';
+import 'package:mistel/services/unified_auth_service.dart';
+import 'package:mistel/services/unified_auth_service.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import '../widgets/universal_back_button.dart';
@@ -11,6 +12,7 @@ import '../models/analytics_models.dart';
 import 'login_screen.dart';
 import 'session_stats_screen.dart';
 import 'account_settings_screen.dart';
+import 'about_screen.dart';
 import 'settings/security_settings_screen.dart';
 import '../widgets/stylish_loading.dart';
 

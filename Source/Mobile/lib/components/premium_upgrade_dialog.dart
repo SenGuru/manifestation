@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
-import '../services/in_app_purchase_service.dart';
 
 class PremiumUpgradeDialog extends StatefulWidget {
   final String feature;
@@ -28,10 +27,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
   late Animation<double> _scaleAnimation;
   late Animation<double> _shimmerAnimation;
   
-  final InAppPurchaseService _iapService = InAppPurchaseService();
   bool _showPricing = false;
-  bool _isPurchasing = false;
-  String _selectedPlan = 'yearly'; // Default to yearly for better value
 
   @override
   void initState() {
@@ -67,7 +63,6 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
     
     
     _scaleController.forward();
-    _iapService.initialize();
   }
 
   @override
@@ -85,7 +80,8 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          margin: EdgeInsets.all(20.w),
+          width: MediaQuery.of(context).size.width * 0.98, // Even wider - 98% of screen width
+          margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 20.h), // Extremely minimal horizontal margin
           decoration: BoxDecoration(
             color: AppTheme.cardBackground,
             borderRadius: BorderRadius.circular(24.r),
@@ -117,7 +113,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
               Flexible(
                 child: Container(
                   constraints: BoxConstraints(
-                    maxHeight: 480.h, // Reduced height to prevent overflow
+                    maxHeight: 400.h, // Made shorter - reduced from 480h to 420h
                   ),
                   child: Stack(
                     children: [
@@ -155,7 +151,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
                         curve: Curves.easeInOut,
                         child: Container(
                           constraints: BoxConstraints(
-                            maxHeight: 440.h, // Reduced pricing content height
+                            maxHeight: 380.h, // Made shorter - reduced from 440h to 380h
                           ),
                           child: SingleChildScrollView(
                             child: _buildPricingContent(),
@@ -423,7 +419,6 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
           
           // Monthly Plan
           _buildPricingOption(
-            'monthly',
             'Monthly Plan',
             '\$4.99',
             'per month',
@@ -434,7 +429,6 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
           
           // Yearly Plan (Best Value)
           _buildPricingOption(
-            'yearly',
             'Yearly Plan',
             '\$49.99',
             'per year',
@@ -463,122 +457,84 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
   }
 
 Widget _buildPricingOption(
-    String planId,
     String title,
     String price,
     String period,
     bool isPopular, {
     String? savings,
   }) {
-    final isSelected = _selectedPlan == planId;
-
-    return GestureDetector(
-      onTap: () => setState(() => _selectedPlan = planId),
-      // The outer margin is no longer needed as the new layout prevents the badge from being cut off.
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppTheme.accentGold.withOpacity(0.1)
-              : AppTheme.cardBackground,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: isSelected
-                ? AppTheme.accentGold
-                : AppTheme.textSecondary.withOpacity(0.1),
-            width: isSelected ? 2 : 1.5,
-          ),
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: AppTheme.accentGold.withOpacity(0.3),
+          width: 1.5,
         ),
-        child: Row(
-          children: [
-            // Selection indicator (no changes here)
-            Container(
-              width: 24.w,
-              height: 24.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected
-                      ? AppTheme.accentGold
-                      : AppTheme.textSecondary.withOpacity(0.3),
-                  width: 2,
+      ),
+      child: Row(
+        children: [
+          // Title and Period
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
                 ),
-                color: isSelected ? AppTheme.accentGold : Colors.transparent,
               ),
-              child: isSelected
-                  ? Icon(
-                      Icons.check,
-                      color: AppTheme.white,
-                      size: 16.sp,
-                    )
-                  : null,
-            ),
-
-            SizedBox(width: 16.w),
-
-            // Title and Period - The `Expanded` widget has been removed to prevent wrapping.
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
+              SizedBox(height: 4.h),
+              Text(
+                period,
+                style: TextStyle(
+                  fontSize: 13.sp,
+                  color: AppTheme.textSecondary,
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  period,
-                  style: TextStyle(
-                    fontSize: 13.sp,
-                    color: AppTheme.textSecondary,
+              ),
+            ],
+          ),
+
+          // Spacer pushes the price and badge to the end of the row
+          Spacer(),
+
+          // Price and Badge grouped together
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (isPopular)
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                  decoration: BoxDecoration(
+                    color: AppTheme.accentGold,
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
-                ),
-              ],
-            ),
-
-            // Spacer pushes the price and badge to the end of the row.
-            Spacer(),
-
-            // Price and Badge are now grouped together in a Column for proper alignment.
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (isPopular)
-                  Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                    decoration: BoxDecoration(
-                      color: AppTheme.accentGold,
-                      borderRadius: BorderRadius.circular(6.r),
-                    ),
-                    child: Text(
-                      savings ?? 'BEST VALUE',
-                      style: TextStyle(
-                        fontSize: 9.sp, // Slightly larger for readability
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.black,
-                      ),
+                  child: Text(
+                    savings ?? 'BEST VALUE',
+                    style: TextStyle(
+                      fontSize: 9.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.black,
                     ),
                   ),
-                if (isPopular) SizedBox(height: 6.h), // Spacing between badge and price
-                Text(
-                  price,
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textPrimary,
-                  ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              if (isPopular) SizedBox(height: 6.h),
+              Text(
+                price,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -591,7 +547,7 @@ Widget _buildPricingOption(
           width: double.infinity,
           height: 48.h,
           child: ElevatedButton(
-            onPressed: _isPurchasing ? null : _handlePurchase,
+            onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.accentGold,
               foregroundColor: AppTheme.black,
@@ -601,48 +557,25 @@ Widget _buildPricingOption(
               elevation: 0,
               shadowColor: Colors.transparent,
             ),
-            child: _isPurchasing
-                ? Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 20.w,
-                        height: 20.h,
-                        child: CircularProgressIndicator(
-                          color: AppTheme.black,
-                          strokeWidth: 2,
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'Processing...',
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.black,
-                        ),
-                      ),
-                    ],
-                  )
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.diamond_rounded,
-                        size: 20.sp,
-                        color: AppTheme.black,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        'Subscribe Now',
-                        style: TextStyle(
-                          fontSize: 15.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppTheme.black,
-                        ),
-                      ),
-                    ],
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.diamond_rounded,
+                  size: 20.sp,
+                  color: AppTheme.black,
+                ),
+                SizedBox(width: 8.w),
+                Text(
+                  'Subscribe Now',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.black,
                   ),
+                ),
+              ],
+            ),
           ),
         ),
         
@@ -670,47 +603,5 @@ Widget _buildPricingOption(
     );
   }
 
-  Future<void> _handlePurchase() async {
-    setState(() {
-      _isPurchasing = true;
-    });
-
-    try {
-      bool success = false;
-      
-      if (_selectedPlan == 'monthly') {
-        success = await _iapService.purchaseMonthlySubscription();
-      } else if (_selectedPlan == 'yearly') {
-        success = await _iapService.purchaseYearlySubscription();
-      }
-
-      if (success) {
-        // Close dialog on successful purchase initiation
-        Navigator.pop(context);
-        
-        if (widget.onUpgrade != null) {
-          widget.onUpgrade!();
-        }
-      }
-
-    } catch (e) {
-      // Show error but keep dialog open
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Purchase failed: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          margin: EdgeInsets.all(16.w),
-        ),
-      );
-    } finally {
-      setState(() {
-        _isPurchasing = false;
-      });
-    }
-  }
 
 }

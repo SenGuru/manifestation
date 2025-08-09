@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/services/user_service.dart';
+import 'package:mistel/services/user_service.dart';
 import '../constants/app_theme.dart';
 import '../models/goals.dart';
 import '../components/progress_update_dialog.dart';

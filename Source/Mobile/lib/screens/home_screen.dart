@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/screens/session_stats_screen.dart';  
+import 'package:mistel/screens/session_stats_screen.dart';  
 import 'daily_affirmations.dart';
 import '../components/daily_inspiration.dart';
 import '../components/feature_card.dart';
@@ -19,7 +19,6 @@ import 'login_screen.dart';
 import 'profile_screen.dart';
 import '../services/subscription_service.dart';
 import '../components/premium_upgrade_dialog.dart';
-import 'premium_purchase_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -91,12 +90,16 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _handlePremiumUpgrade() {
-    print('🚀 Premium upgrade requested - navigating to purchase screen');
+    print('🚀 Premium upgrade requested - showing dialog');
     
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => PremiumPurchaseScreen(),
+    showDialog(
+      context: context,
+      builder: (context) => PremiumUpgradeDialog(
+        feature: 'Premium Features',
+        customMessage: 'Unlock all premium features to enhance your manifestation journey',
+        onUpgrade: () {
+          print('Premium upgrade completed');
+        },
       ),
     );
   }

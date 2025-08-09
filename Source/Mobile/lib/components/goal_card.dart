@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
-import 'package:fun/constants/app_theme.dart';
-import 'package:fun/models/goals.dart';
+import 'package:mistel/constants/colors.dart';
+import 'package:mistel/constants/app_theme.dart';
+import 'package:mistel/models/goals.dart';
 
 class GoalCard extends StatefulWidget {
   final Goal goal;

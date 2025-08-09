@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/models/vision_board.dart';
+import 'package:mistel/models/vision_board.dart';
 import '../constants/app_theme.dart';
 
 class VisionBoardToolbar extends StatelessWidget {

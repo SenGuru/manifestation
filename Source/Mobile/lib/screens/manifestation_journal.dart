@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fun/components/gratitude_selection.dart';
-import 'package:fun/models/journey_entry.dart';
-import 'package:fun/constants/colors.dart';
-import 'package:fun/constants/app_theme.dart';
-import 'package:fun/models/mood_selector.dart';
-import 'package:fun/screens/calendar_view_screen.dart';
-import 'package:fun/services/daily_journal_service.dart';
-import 'package:fun/services/guided_tour_service.dart';
-import 'package:fun/widgets/stylish_loading.dart';
-import 'package:fun/widgets/keyboard_dismissal_wrapper.dart';
+import 'package:mistel/components/gratitude_selection.dart';
+import 'package:mistel/models/journey_entry.dart';
+import 'package:mistel/constants/colors.dart';
+import 'package:mistel/constants/app_theme.dart';
+import 'package:mistel/models/mood_selector.dart';
+import 'package:mistel/screens/calendar_view_screen.dart';
+import 'package:mistel/services/daily_journal_service.dart';
+import 'package:mistel/services/guided_tour_service.dart';
+import 'package:mistel/widgets/stylish_loading.dart';
+import 'package:mistel/widgets/keyboard_dismissal_wrapper.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
   // Enhanced with manual draft saving functionality - debug exit dialog
@@ -424,7 +424,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     color: AppTheme.textSecondary,
                     fontSize: 16.sp,
                     height: 1.6,
-                    fontStyle: FontStyle.italic,
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(20.w),
@@ -499,7 +498,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     color: AppTheme.textSecondary,
                     fontSize: 16.sp,
                     height: 1.6,
-                    fontStyle: FontStyle.italic,
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(20.w),

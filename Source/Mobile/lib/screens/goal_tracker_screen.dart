@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/services/unified_auth_service.dart';
+import 'package:mistel/services/unified_auth_service.dart';
 import '../components/add_goal_sheet.dart';
 import '../components/edit_goal_sheet.dart';
 import '../components/goal_card.dart';
