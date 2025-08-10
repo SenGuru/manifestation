@@ -2845,6 +2845,9 @@ export class VisionBoardPictureModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumnailLocation : string = '';
+    thumnailFileName : string = '';
+    thumnailFileSize : number = 0;
     userId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
@@ -2854,6 +2857,8 @@ export class VisionBoardPictureModel {
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumnailLocation__size : number = 1024;
+    static thumnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureModel,adjustDateToUTC : boolean = false) : VisionBoardPictureModel {
       let obj = new VisionBoardPictureModel();
@@ -2885,6 +2890,12 @@ export class VisionBoardPictureModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumnailLocation'))
+        obj.thumnailLocation = self.thumnailLocation;
+      if (self.hasOwnProperty('thumnailFileName'))
+        obj.thumnailFileName = self.thumnailFileName;
+      if (self.hasOwnProperty('thumnailFileSize'))
+        obj.thumnailFileSize = self.thumnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       if (self.hasOwnProperty('isDeleted'))
@@ -2906,6 +2917,9 @@ export class VisionBoardPictureModel {
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
+      obj.thumnailLocation = self.thumnailLocation;
+      obj.thumnailFileName = self.thumnailFileName;
+      obj.thumnailFileSize = self.thumnailFileSize;
       obj.userId = self.userId;
       return obj;
     }
@@ -7477,10 +7491,15 @@ export class VisionBoardPictureCreateWithFileFormModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumnailLocation : string = '';
+    thumnailFileName : string = '';
+    thumnailFileSize : number = 0;
     userId : number = 0;
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumnailLocation__size : number = 1024;
+    static thumnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureCreateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateWithFileFormModel {
@@ -7495,6 +7514,12 @@ export class VisionBoardPictureCreateWithFileFormModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumnailLocation'))
+        obj.thumnailLocation = self.thumnailLocation;
+      if (self.hasOwnProperty('thumnailFileName'))
+        obj.thumnailFileName = self.thumnailFileName;
+      if (self.hasOwnProperty('thumnailFileSize'))
+        obj.thumnailFileSize = self.thumnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7519,10 +7544,15 @@ export class VisionBoardPictureUpdateWithFileFormModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumnailLocation : string = '';
+    thumnailFileName : string = '';
+    thumnailFileSize : number = 0;
     userId : number = 0;
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumnailLocation__size : number = 1024;
+    static thumnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureUpdateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateWithFileFormModel {
@@ -7539,6 +7569,12 @@ export class VisionBoardPictureUpdateWithFileFormModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumnailLocation'))
+        obj.thumnailLocation = self.thumnailLocation;
+      if (self.hasOwnProperty('thumnailFileName'))
+        obj.thumnailFileName = self.thumnailFileName;
+      if (self.hasOwnProperty('thumnailFileSize'))
+        obj.thumnailFileSize = self.thumnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -15903,10 +15939,15 @@ export class VisionBoardPictureCreateModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumnailLocation : string = '';
+    thumnailFileName : string = '';
+    thumnailFileSize : number = 0;
     userId : number = 0;
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumnailLocation__size : number = 1024;
+    static thumnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
       let obj = new VisionBoardPictureCreateModel();
@@ -15918,6 +15959,12 @@ export class VisionBoardPictureCreateModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumnailLocation'))
+        obj.thumnailLocation = self.thumnailLocation;
+      if (self.hasOwnProperty('thumnailFileName'))
+        obj.thumnailFileName = self.thumnailFileName;
+      if (self.hasOwnProperty('thumnailFileSize'))
+        obj.thumnailFileSize = self.thumnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;

@@ -8655,6 +8655,9 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_Location = "Location";
         public const string COLUMN_FileName = "FileName";
         public const string COLUMN_FileSize = "FileSize";
+        public const string COLUMN_ThumnailLocation = "ThumnailLocation";
+        public const string COLUMN_ThumnailFileName = "ThumnailFileName";
+        public const string COLUMN_ThumnailFileSize = "ThumnailFileSize";
         public const string COLUMN_UserId = "UserId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
@@ -8667,6 +8670,8 @@ namespace Manifest.Common.Models.DB
         public const int COLUMN_SIZE_Title = 100;
         public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
+        public const int COLUMN_SIZE_ThumnailLocation = 1024;
+        public const int COLUMN_SIZE_ThumnailFileName = 255;
         #endregion
 
         #region ColumnNull
@@ -8675,6 +8680,9 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_Location = true;
         public const bool COLUMN_NULLABLE_FileName = false;
         public const bool COLUMN_NULLABLE_FileSize = false;
+        public const bool COLUMN_NULLABLE_ThumnailLocation = true;
+        public const bool COLUMN_NULLABLE_ThumnailFileName = false;
+        public const bool COLUMN_NULLABLE_ThumnailFileSize = false;
         public const bool COLUMN_NULLABLE_UserId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
@@ -8706,6 +8714,19 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long FileSize { get; set; }
         
+        [Column("ThumnailLocation")]
+        [StringLength(1024)]
+        public string ThumnailLocation { get; set; }
+        
+        [Column("ThumnailFileName")]
+        [NotNull]
+        [StringLength(255)]
+        public string ThumnailFileName { get; set; }
+        
+        [Column("ThumnailFileSize")]
+        [NotNull]
+        public long ThumnailFileSize { get; set; }
+        
         [Column("UserId")]
         [NotNull]
         public long UserId { get; set; }
@@ -8736,6 +8757,9 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"Location = {Location} , ");
             sb.AppendLine($"FileName = {FileName} , ");
             sb.AppendLine($"FileSize = {FileSize} , ");
+            sb.AppendLine($"ThumnailLocation = {ThumnailLocation} , ");
+            sb.AppendLine($"ThumnailFileName = {ThumnailFileName} , ");
+            sb.AppendLine($"ThumnailFileSize = {ThumnailFileSize} , ");
             sb.AppendLine($"UserId = {UserId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
@@ -8757,6 +8781,9 @@ namespace Manifest.Common.Models.DB
             Location = item.Location,
             FileName = item.FileName,
             FileSize = item.FileSize,
+            ThumnailLocation = item.ThumnailLocation,
+            ThumnailFileName = item.ThumnailFileName,
+            ThumnailFileSize = item.ThumnailFileSize,
             UserId = item.UserId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,

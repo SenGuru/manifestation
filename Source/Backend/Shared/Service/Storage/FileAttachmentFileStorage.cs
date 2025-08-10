@@ -25,5 +25,10 @@ namespace Manifest.Service.Storage
         {
             return $"{userStoragePrefix}/{userId}/VisionBoard/{visionBoardPictureId}/{filename}";
         }
+
+        public string VisionBoardThumbnailFilePath(string userId, string visionBoardPictureId, string filename)
+        {
+            return $"{userStoragePrefix}/{userId}/VisionBoard/{visionBoardPictureId}/Thumbnail/{filename}";
+        }
     }
 }
