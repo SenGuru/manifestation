@@ -84,14 +84,6 @@ class VisionBoardToolbar extends StatelessWidget {
               ),
             ),
             
-            // Move tool
-            _buildToolButton(
-              icon: Icons.open_in_full_rounded,
-              label: 'Move',
-              isSelected: selectedTool == VisionBoardTool.move,
-              onTap: () => onToolSelected(VisionBoardTool.move),
-            ),
-            
             // Resize tool
             _buildToolButton(
               icon: Icons.aspect_ratio_rounded,

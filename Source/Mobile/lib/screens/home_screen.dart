@@ -13,6 +13,7 @@ import 'manifestation_journal.dart';
 import '../components/energy_meter.dart';
 import 'vision_board_home.dart';
 import 'social_feed_screen.dart';
+import '../utils/navigation_utils.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import 'login_screen.dart';
@@ -322,11 +323,9 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         break;
       case 'vision_board':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => VisionBoardHome(),
-          ),
+          VisionBoardHome(),
         );
         break;
       case 'journal':

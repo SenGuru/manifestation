@@ -85,6 +85,11 @@ class VisionBoardService {
     try {
       print('📤 Creating vision board "${visionBoard.title}" on server...');
       
+      // Debug title before processing
+      print('🔍 DEBUG: Raw title: "${visionBoard.title}"');
+      print('🔍 DEBUG: Title length: ${visionBoard.title.length}');
+      print('🔍 DEBUG: Title bytes: ${utf8.encode(visionBoard.title).length}');
+      
       if (_apiClient == null || _authService == null) {
         return VisionBoardResult.failure(message: 'Service not initialized');
       }
@@ -136,6 +141,13 @@ class VisionBoardService {
       request.fields['FileName'] = 'visionboard_${visionBoard.id}.xml';
       request.fields['FileSize'] = xmlBytes.length.toString();
       request.fields['UserId'] = userId.toString();
+      
+      // Add Title field - API might be expecting this as a separate field
+      final cleanTitle = visionBoard.title.trim();
+      final truncatedTitle = cleanTitle.length > 100 ? cleanTitle.substring(0, 100) : cleanTitle;
+      request.fields['Title'] = truncatedTitle;
+      
+      print('🔍 DEBUG: Form field Title: "$truncatedTitle" (${truncatedTitle.length} chars)');
       
       // Add file
       request.files.add(http.MultipartFile.fromBytes(
@@ -249,6 +261,13 @@ class VisionBoardService {
       request.fields['FileSize'] = xmlBytes.length.toString();
       request.fields['UserId'] = userId.toString();
       
+      // Add Title field - API might be expecting this as a separate field
+      final cleanTitle = visionBoard.title.trim();
+      final truncatedTitle = cleanTitle.length > 100 ? cleanTitle.substring(0, 100) : cleanTitle;
+      request.fields['Title'] = truncatedTitle;
+      
+      print('🔍 DEBUG: Update Title: "$truncatedTitle" (${truncatedTitle.length} chars)');
+      
       // Add file
       request.files.add(http.MultipartFile.fromBytes(
         'UploadedFile',
@@ -333,18 +352,28 @@ class VisionBoardService {
       
       print('📋 Found ${pictures.length} vision board files');
       
-      // Create lightweight VisionBoard objects from metadata (no XML content)
+      // Create VisionBoard objects with actual titles from XML content
       for (final picture in pictures) {
         if (picture.fileName?.endsWith('.xml') == true && picture.isDeleted != true) {
           try {
-            final visionBoard = _createVisionBoardFromMetadata(picture);
+            final visionBoard = await _createVisionBoardWithTitle(picture);
             if (visionBoard != null) {
               visionBoards.add(visionBoard);
-              print('📝 Added vision board: ${visionBoard.id} (Picture ID: ${picture.visionBoardPictureId})');
+              print('📝 Added vision board: "${visionBoard.title}" (ID: ${visionBoard.id})');
             }
           } catch (e) {
-            print('⚠️ Failed to create vision board from metadata ${picture.visionBoardPictureId}: $e');
-            continue;
+            print('⚠️ Failed to create vision board from picture ${picture.visionBoardPictureId}: $e');
+            // Fallback to metadata-only version
+            try {
+              final fallbackBoard = _createVisionBoardFromMetadata(picture);
+              if (fallbackBoard != null) {
+                visionBoards.add(fallbackBoard);
+                print('📝 Added fallback vision board: ${fallbackBoard.id}');
+              }
+            } catch (e2) {
+              print('❌ Complete failure for picture ${picture.visionBoardPictureId}: $e2');
+              continue;
+            }
           }
         }
       }
@@ -550,6 +579,57 @@ class VisionBoardService {
   }
   
   
+  /// Create VisionBoard with actual title by fetching XML content
+  Future<VisionBoard?> _createVisionBoardWithTitle(dynamic metadata) async {
+    try {
+      final pictureId = metadata.visionBoardPictureId;
+      if (pictureId == null) return null;
+      
+      // Download the XML content to extract the real title and elements
+      final xmlContent = await _downloadVisionBoardXML(pictureId);
+      if (xmlContent != null) {
+        // Parse the XML to create a complete VisionBoard
+        return await _parseVisionBoardXML(xmlContent);
+      } else {
+        print('⚠️ Could not download XML for picture $pictureId, using metadata fallback');
+        return _createVisionBoardFromMetadata(metadata);
+      }
+    } catch (e) {
+      print('❌ Error in _createVisionBoardWithTitle: $e');
+      return _createVisionBoardFromMetadata(metadata);
+    }
+  }
+
+  /// Download XML content for a vision board picture
+  Future<String?> _downloadVisionBoardXML(int pictureId) async {
+    try {
+      print('⬇️ Downloading XML content for picture ID: $pictureId');
+      
+      // Download the actual XML content using the correct endpoint
+      final response = await _apiClient!.apiV1ManifestDownloadvisionboardpicturefileGet(
+        visionBoardPictureId: pictureId,
+      );
+      
+      if (!response.isSuccessful) {
+        print('❌ Failed to download vision board file: ${response.statusCode}');
+        return null;
+      }
+      
+      // Get the XML content from the response
+      final xmlContent = response.bodyString;
+      if (xmlContent.trim().isEmpty) {
+        print('❌ Empty response from download endpoint');
+        return null;
+      }
+      
+      print('✅ Downloaded XML content: ${xmlContent.length} characters');
+      return xmlContent;
+    } catch (e) {
+      print('❌ Error downloading XML for picture $pictureId: $e');
+      return null;
+    }
+  }
+
   /// Create VisionBoard from metadata when XML is not available
   VisionBoard? _createVisionBoardFromMetadata(dynamic metadata) {
     try {
@@ -565,10 +645,26 @@ class VisionBoardService {
       final modifiedAt = DateTime.tryParse(metadata.modifiedDate?.toString() ?? '') ?? DateTime.now();
       
       print('🔧 Creating VisionBoard from metadata: ID=$boardId, Created=$createdAt');
+      print('📋 Available metadata fields: ${metadata.toString()}');
+      
+      // Try to extract title from metadata or use a better default
+      String boardTitle = 'Vision Board'; // Default fallback
+      
+      // Check if the server metadata contains a title field
+      if (metadata.title != null && metadata.title.toString().isNotEmpty) {
+        boardTitle = metadata.title.toString();
+        print('✅ Found title in metadata: $boardTitle');
+      } else {
+        // Generate a more meaningful default title based on date
+        final dateStr = createdAt.day.toString().padLeft(2, '0') + '/' + 
+                       createdAt.month.toString().padLeft(2, '0');
+        boardTitle = 'Vision Board $dateStr';
+        print('📝 Using date-based title: $boardTitle');
+      }
       
       return VisionBoard(
         id: boardId,
-        title: 'Vision Board', // Default title, could be enhanced
+        title: boardTitle,
         elements: [], // Empty elements since we can't parse XML
         backgroundColor: const Color(0xFFFFFFFF), // White color
         createdAt: createdAt,
@@ -591,7 +687,15 @@ class VisionBoardService {
       
       builder.element('VisionBoard', nest: () {
         builder.attribute('id', visionBoard.id);
-        builder.attribute('title', visionBoard.title);
+        // Ensure title is clean and within limits
+        final cleanTitle = visionBoard.title.trim();
+        final truncatedTitle = cleanTitle.length > 100 ? cleanTitle.substring(0, 100) : cleanTitle;
+        builder.attribute('title', truncatedTitle);
+        
+        if (cleanTitle.length > 100) {
+          print('⚠️ Title truncated from ${cleanTitle.length} to 100 characters');
+        }
+        print('📝 Using title: "$truncatedTitle" (${truncatedTitle.length} chars)');
         builder.attribute('backgroundColor', '#${visionBoard.backgroundColor.toARGB32().toRadixString(16).padLeft(8, '0').substring(2)}');
         builder.attribute('createdAt', visionBoard.createdAt.toUtc().toIso8601String());
         builder.attribute('updatedAt', visionBoard.updatedAt.toUtc().toIso8601String());

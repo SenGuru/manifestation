@@ -6070,12 +6070,12 @@
                     "type": "string"
                   },
                   "FileAttachmentFileLocation": {
-                    "maxLength": 512,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
                   "FileAttachmentPreviewFileLocation": {
-                    "maxLength": 512,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
@@ -19452,8 +19452,13 @@
                     "type": "string",
                     "format": "binary"
                   },
+                  "Title": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
                   "Location": {
-                    "maxLength": 255,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
@@ -19474,6 +19479,9 @@
               },
               "encoding": {
                 "UploadedFile": {
+                  "style": "form"
+                },
+                "Title": {
                   "style": "form"
                 },
                 "Location": {
@@ -19591,8 +19599,13 @@
                     "type": "integer",
                     "format": "int64"
                   },
+                  "Title": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
                   "Location": {
-                    "maxLength": 255,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
@@ -19616,6 +19629,9 @@
                   "style": "form"
                 },
                 "VisionBoardPictureId": {
+                  "style": "form"
+                },
+                "Title": {
                   "style": "form"
                 },
                 "Location": {
@@ -38073,7 +38089,7 @@
             "format": "int64"
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38109,7 +38125,7 @@
             "format": "int64"
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38285,7 +38301,7 @@
             "format": "int64"
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38306,8 +38322,14 @@
       "DefaultVisionBoardPictureCreateModel": {
         "type": "object",
         "properties": {
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38332,8 +38354,14 @@
             "type": "integer",
             "format": "int64"
           },
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38494,8 +38522,14 @@
             "type": "integer",
             "format": "int64"
           },
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -39947,13 +39981,13 @@
             "nullable": true
           },
           "fileAttachmentFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "fileAttachmentPreviewFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -40133,13 +40167,13 @@
             "nullable": true
           },
           "fileAttachmentFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "fileAttachmentPreviewFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -44592,7 +44626,7 @@
             "nullable": true
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -44632,7 +44666,7 @@
             "nullable": true
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -44816,7 +44850,7 @@
             "nullable": true
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -51290,8 +51324,14 @@
       "VisionBoardPictureCreateModel": {
         "type": "object",
         "properties": {
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -51320,8 +51360,14 @@
             "type": "integer",
             "format": "int64"
           },
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true

@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/app_theme.dart';
 import '../../services/user_service.dart';
 import '../../services/unified_auth_service.dart';
-import '../../api/generated/code/manifestation.swagger.dart';
 import '../../widgets/stylish_loading.dart';
 import '../../widgets/universal_back_button.dart';
 

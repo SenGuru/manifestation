@@ -664,13 +664,13 @@ class _LoginScreenState extends State<LoginScreen>
           message: 'You\'ve successfully signed in. Ready to continue your manifestation journey?',
           actionText: 'Let\'s Go',
           onAction: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HomeScreen()),
             );
           },
           onDismiss: () {
-            Navigator.pushReplacement(
+            Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => HomeScreen()),
             );

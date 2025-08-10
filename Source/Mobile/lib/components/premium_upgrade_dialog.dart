@@ -28,6 +28,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
   late Animation<double> _shimmerAnimation;
   
   bool _showPricing = false;
+  String _selectedPlan = 'yearly'; // Default to yearly (best value)
 
   @override
   void initState() {
@@ -419,6 +420,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
           
           // Monthly Plan
           _buildPricingOption(
+            'monthly',
             'Monthly Plan',
             '\$4.99',
             'per month',
@@ -429,6 +431,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
           
           // Yearly Plan (Best Value)
           _buildPricingOption(
+            'yearly',
             'Yearly Plan',
             '\$49.99',
             'per year',
@@ -457,84 +460,130 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
   }
 
 Widget _buildPricingOption(
+    String planId,
     String title,
     String price,
     String period,
     bool isPopular, {
     String? savings,
   }) {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: AppTheme.accentGold.withOpacity(0.3),
-          width: 1.5,
-        ),
-      ),
-      child: Row(
-        children: [
-          // Title and Period
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-              SizedBox(height: 4.h),
-              Text(
-                period,
-                style: TextStyle(
-                  fontSize: 13.sp,
-                  color: AppTheme.textSecondary,
-                ),
-              ),
-            ],
+    final bool isSelected = _selectedPlan == planId;
+    
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedPlan = planId;
+        });
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 16.w),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.accentGold.withValues(alpha: 0.1) : AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isSelected ? AppTheme.accentGold : AppTheme.accentGold.withValues(alpha: 0.3),
+            width: isSelected ? 2.0 : 1.5,
           ),
-
-          // Spacer pushes the price and badge to the end of the row
-          Spacer(),
-
-          // Price and Badge grouped together
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (isPopular)
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                  decoration: BoxDecoration(
-                    color: AppTheme.accentGold,
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                  child: Text(
-                    savings ?? 'BEST VALUE',
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: AppTheme.accentGold.withValues(alpha: 0.2),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
+            ),
+          ] : null,
+        ),
+        child: Row(
+          children: [
+            // Radio button
+            Container(
+              width: 24.w,
+              height: 24.h,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isSelected ? AppTheme.accentGold : AppTheme.textTertiary,
+                  width: 2,
+                ),
+                color: isSelected ? AppTheme.accentGold : Colors.transparent,
+              ),
+              child: isSelected
+                  ? Center(
+                      child: Container(
+                        width: 8.w,
+                        height: 8.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    )
+                  : null,
+            ),
+            
+            SizedBox(width: 12.w),
+            
+            // Title and Period
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
                     style: TextStyle(
-                      fontSize: 9.sp,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.black,
+                      color: isSelected ? AppTheme.accentGold : AppTheme.textPrimary,
                     ),
                   ),
-                ),
-              if (isPopular) SizedBox(height: 6.h),
-              Text(
-                price,
-                style: TextStyle(
-                  fontSize: 18.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textPrimary,
-                ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    period,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: AppTheme.textSecondary,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+
+            // Price and Badge grouped together
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (isPopular)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppTheme.accentGold,
+                      borderRadius: BorderRadius.circular(6.r),
+                    ),
+                    child: Text(
+                      savings ?? 'BEST VALUE',
+                      style: TextStyle(
+                        fontSize: 9.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.black,
+                      ),
+                    ),
+                  ),
+                if (isPopular) SizedBox(height: 6.h),
+                Text(
+                  price,
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: isSelected ? AppTheme.accentGold : AppTheme.textPrimary,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -567,7 +616,7 @@ Widget _buildPricingOption(
                 ),
                 SizedBox(width: 8.w),
                 Text(
-                  'Subscribe Now',
+                  'Subscribe ${_selectedPlan == 'yearly' ? 'Yearly' : 'Monthly'}',
                   style: TextStyle(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.bold,

@@ -15,6 +15,7 @@ class AddAffirmationDialog extends StatefulWidget {
     this.affirmationToEdit,
   }) : super(key: key);
 
+
   @override
   _AddAffirmationDialogState createState() => _AddAffirmationDialogState();
 }
