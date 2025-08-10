@@ -2761,27 +2761,6 @@ export class VisionBoardSessionModel {
         obj.modifiedByUserId = self.modifiedByUserId;
       return obj;
     }
-
-    static getAsCreateModel(self : VisionBoardSessionModel) : VisionBoardSessionCreateModel {
-      let obj = new VisionBoardSessionCreateModel();
-      obj.visionBoardSessionDate = self.visionBoardSessionDate;
-      obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
-      obj.userId = self.userId;
-      obj.addedToFeed = self.addedToFeed;
-      obj.addedToFeedDate = self.addedToFeedDate;
-      return obj;
-    }
-
-    static getAsUpdateModel(self : VisionBoardSessionModel):VisionBoardSessionUpdateModel {
-      let obj = new VisionBoardSessionUpdateModel();
-      obj.visionBoardSessionId = self.visionBoardSessionId;
-      obj.visionBoardSessionDate = self.visionBoardSessionDate;
-      obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
-      obj.userId = self.userId;
-      obj.addedToFeed = self.addedToFeed;
-      obj.addedToFeedDate = self.addedToFeedDate;
-      return obj;
-    }
 }
 
 export class VisionBoardSessionByVisionBoardSessionPictureIdSearchCriteria extends BaseSearchCriteria{
@@ -2845,9 +2824,9 @@ export class VisionBoardPictureModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    thumnailLocation : string = '';
-    thumnailFileName : string = '';
-    thumnailFileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
@@ -2857,8 +2836,8 @@ export class VisionBoardPictureModel {
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
-    static thumnailLocation__size : number = 1024;
-    static thumnailFileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureModel,adjustDateToUTC : boolean = false) : VisionBoardPictureModel {
       let obj = new VisionBoardPictureModel();
@@ -2890,12 +2869,12 @@ export class VisionBoardPictureModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
-      if (self.hasOwnProperty('thumnailLocation'))
-        obj.thumnailLocation = self.thumnailLocation;
-      if (self.hasOwnProperty('thumnailFileName'))
-        obj.thumnailFileName = self.thumnailFileName;
-      if (self.hasOwnProperty('thumnailFileSize'))
-        obj.thumnailFileSize = self.thumnailFileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       if (self.hasOwnProperty('isDeleted'))
@@ -2917,9 +2896,9 @@ export class VisionBoardPictureModel {
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
-      obj.thumnailLocation = self.thumnailLocation;
-      obj.thumnailFileName = self.thumnailFileName;
-      obj.thumnailFileSize = self.thumnailFileSize;
+      obj.thumbnailLocation = self.thumbnailLocation;
+      obj.thumbnailFileName = self.thumbnailFileName;
+      obj.thumbnailFileSize = self.thumbnailFileSize;
       obj.userId = self.userId;
       return obj;
     }
@@ -7491,15 +7470,15 @@ export class VisionBoardPictureCreateWithFileFormModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    thumnailLocation : string = '';
-    thumnailFileName : string = '';
-    thumnailFileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
-    static thumnailLocation__size : number = 1024;
-    static thumnailFileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureCreateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateWithFileFormModel {
@@ -7514,12 +7493,12 @@ export class VisionBoardPictureCreateWithFileFormModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
-      if (self.hasOwnProperty('thumnailLocation'))
-        obj.thumnailLocation = self.thumnailLocation;
-      if (self.hasOwnProperty('thumnailFileName'))
-        obj.thumnailFileName = self.thumnailFileName;
-      if (self.hasOwnProperty('thumnailFileSize'))
-        obj.thumnailFileSize = self.thumnailFileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7544,15 +7523,15 @@ export class VisionBoardPictureUpdateWithFileFormModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    thumnailLocation : string = '';
-    thumnailFileName : string = '';
-    thumnailFileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
-    static thumnailLocation__size : number = 1024;
-    static thumnailFileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureUpdateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateWithFileFormModel {
@@ -7569,12 +7548,12 @@ export class VisionBoardPictureUpdateWithFileFormModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
-      if (self.hasOwnProperty('thumnailLocation'))
-        obj.thumnailLocation = self.thumnailLocation;
-      if (self.hasOwnProperty('thumnailFileName'))
-        obj.thumnailFileName = self.thumnailFileName;
-      if (self.hasOwnProperty('thumnailFileSize'))
-        obj.thumnailFileSize = self.thumnailFileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7627,140 +7606,16 @@ export class UserByVisionBoardPictureIdSearchCriteria extends BaseSearchCriteria
     }
 }
 
-export class VisionBoardSessionSearchCriteria extends BaseSearchCriteria{
-    showDeleted : boolean = false;
-    userId : number | null = null;
-    createdByUserId : number | null = null;
-    modifiedByUserId : number | null = null;
+export class VisionBoardPictureThumbnailWithFileFormModel {
+    visionBoardPictureId : number = 0;
+    uploadedFile : File | null = null;
 
-    static getCopy(self : VisionBoardSessionSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionSearchCriteria {
-      let obj = new VisionBoardSessionSearchCriteria();
-      if (self.hasOwnProperty('showDeleted'))
-        obj.showDeleted = self.showDeleted;
-      if (self.hasOwnProperty('userId'))
-        obj.userId = self.userId;
-      if (self.hasOwnProperty('createdByUserId'))
-        obj.createdByUserId = self.createdByUserId;
-      if (self.hasOwnProperty('modifiedByUserId'))
-        obj.modifiedByUserId = self.modifiedByUserId;
-      if (self.hasOwnProperty('selectedId'))
-        obj.selectedId = self.selectedId;
-      if (self.hasOwnProperty('page'))
-        obj.page = self.page;
-      if (self.hasOwnProperty('pageSize'))
-        obj.pageSize = self.pageSize;
-      if (self.hasOwnProperty('keyword'))
-        obj.keyword = self.keyword;
-      if (self.hasOwnProperty('sortBy'))
-        obj.sortBy = self.sortBy;
-      if (self.hasOwnProperty('sortAscending'))
-        obj.sortAscending = self.sortAscending;
-      return obj;
-    }
-}
-
-export class VisionBoardSessionCreateModel {
-    visionBoardSessionDate : Date = new Date();
-    visionBoardSessionTimeSpentInSeconds : number | null = null;
-    userId : number = 0;
-    addedToFeed : boolean | null = false;
-    addedToFeedDate : Date | null = null;
-
-    static getCopy(self : VisionBoardSessionCreateModel,adjustDateToUTC : boolean = false) : VisionBoardSessionCreateModel {
-      let obj = new VisionBoardSessionCreateModel();
-      if (self.hasOwnProperty('visionBoardSessionDate'))
-        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : DateUtils.parseAsUTC(self.visionBoardSessionDate));
-      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
-        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
-      if (self.hasOwnProperty('userId'))
-        obj.userId = self.userId;
-      if (self.hasOwnProperty('addedToFeed'))
-        obj.addedToFeed = self.addedToFeed;
-      if (self.hasOwnProperty('addedToFeedDate'))
-        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
-      return obj;
-    }
-}
-
-export class MultipleVisionBoardSessionCreateModel {
-    newVisionBoardSessions : VisionBoardSessionCreateModel[] | null = null;
-
-    static getCopy(self : MultipleVisionBoardSessionCreateModel,adjustDateToUTC : boolean = false) : MultipleVisionBoardSessionCreateModel {
-      let obj = new MultipleVisionBoardSessionCreateModel();
-      if (self.hasOwnProperty('newVisionBoardSessions'))
-        obj.newVisionBoardSessions = self.newVisionBoardSessions;
-      return obj;
-    }
-}
-
-export class VisionBoardSessionUpdateModel {
-    visionBoardSessionId : number = 0;
-    visionBoardSessionDate : Date = new Date();
-    visionBoardSessionTimeSpentInSeconds : number | null = null;
-    userId : number = 0;
-    addedToFeed : boolean | null = false;
-    addedToFeedDate : Date | null = null;
-
-    static getCopy(self : VisionBoardSessionUpdateModel,adjustDateToUTC : boolean = false) : VisionBoardSessionUpdateModel {
-      let obj = new VisionBoardSessionUpdateModel();
-      if (self.hasOwnProperty('visionBoardSessionId'))
-        obj.visionBoardSessionId = self.visionBoardSessionId;
-      if (self.hasOwnProperty('visionBoardSessionDate'))
-        obj.visionBoardSessionDate = self.visionBoardSessionDate ?? (!adjustDateToUTC ? self.visionBoardSessionDate : DateUtils.parseAsUTC(self.visionBoardSessionDate));
-      if (self.hasOwnProperty('visionBoardSessionTimeSpentInSeconds'))
-        obj.visionBoardSessionTimeSpentInSeconds = self.visionBoardSessionTimeSpentInSeconds;
-      if (self.hasOwnProperty('userId'))
-        obj.userId = self.userId;
-      if (self.hasOwnProperty('addedToFeed'))
-        obj.addedToFeed = self.addedToFeed;
-      if (self.hasOwnProperty('addedToFeedDate'))
-        obj.addedToFeedDate = self.addedToFeedDate ?? (!adjustDateToUTC ? self.addedToFeedDate : (self.addedToFeedDate !== null ? DateUtils.parseAsUTC(self.addedToFeedDate) : self.addedToFeedDate ));
-      return obj;
-    }
-}
-
-export class VisionBoardSessionByUserIdSearchCriteria extends BaseSearchCriteria{
-    userId : number = 0;
-
-    static getCopy(self : VisionBoardSessionByUserIdSearchCriteria,adjustDateToUTC : boolean = false) : VisionBoardSessionByUserIdSearchCriteria {
-      let obj = new VisionBoardSessionByUserIdSearchCriteria();
-      if (self.hasOwnProperty('userId'))
-        obj.userId = self.userId;
-      if (self.hasOwnProperty('selectedId'))
-        obj.selectedId = self.selectedId;
-      if (self.hasOwnProperty('page'))
-        obj.page = self.page;
-      if (self.hasOwnProperty('pageSize'))
-        obj.pageSize = self.pageSize;
-      if (self.hasOwnProperty('keyword'))
-        obj.keyword = self.keyword;
-      if (self.hasOwnProperty('sortBy'))
-        obj.sortBy = self.sortBy;
-      if (self.hasOwnProperty('sortAscending'))
-        obj.sortAscending = self.sortAscending;
-      return obj;
-    }
-}
-
-export class UserByVisionBoardSessionIdSearchCriteria extends BaseSearchCriteria{
-    visionBoardSessionId : number = 0;
-
-    static getCopy(self : UserByVisionBoardSessionIdSearchCriteria,adjustDateToUTC : boolean = false) : UserByVisionBoardSessionIdSearchCriteria {
-      let obj = new UserByVisionBoardSessionIdSearchCriteria();
-      if (self.hasOwnProperty('visionBoardSessionId'))
-        obj.visionBoardSessionId = self.visionBoardSessionId;
-      if (self.hasOwnProperty('selectedId'))
-        obj.selectedId = self.selectedId;
-      if (self.hasOwnProperty('page'))
-        obj.page = self.page;
-      if (self.hasOwnProperty('pageSize'))
-        obj.pageSize = self.pageSize;
-      if (self.hasOwnProperty('keyword'))
-        obj.keyword = self.keyword;
-      if (self.hasOwnProperty('sortBy'))
-        obj.sortBy = self.sortBy;
-      if (self.hasOwnProperty('sortAscending'))
-        obj.sortAscending = self.sortAscending;
+    static getCopy(self : VisionBoardPictureThumbnailWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureThumbnailWithFileFormModel {
+      let obj = new VisionBoardPictureThumbnailWithFileFormModel();
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('uploadedFile'))
+        obj.uploadedFile = self.uploadedFile;
       return obj;
     }
 }
@@ -15939,15 +15794,15 @@ export class VisionBoardPictureCreateModel {
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    thumnailLocation : string = '';
-    thumnailFileName : string = '';
-    thumnailFileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
     static title__size : number = 100;
     static location__size : number = 1024;
     static fileName__size : number = 255;
-    static thumnailLocation__size : number = 1024;
-    static thumnailFileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
       let obj = new VisionBoardPictureCreateModel();
@@ -15959,12 +15814,12 @@ export class VisionBoardPictureCreateModel {
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
-      if (self.hasOwnProperty('thumnailLocation'))
-        obj.thumnailLocation = self.thumnailLocation;
-      if (self.hasOwnProperty('thumnailFileName'))
-        obj.thumnailFileName = self.thumnailFileName;
-      if (self.hasOwnProperty('thumnailFileSize'))
-        obj.thumnailFileSize = self.thumnailFileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;

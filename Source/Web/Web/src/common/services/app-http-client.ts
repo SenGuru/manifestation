@@ -2102,69 +2102,27 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
-    public getVisionBoardSessions(search: models.VisionBoardSessionSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    public isVisionBoardPictureThumbnailValid(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessions', search, headers);
+        return this.frameworkHttpClientService.getWithParams('manifest/isvisionboardpicturethumbnailvalid', {visionBoardPictureId}, headers);
     }
 
     // tslint:disable-next-line:max-line-length
-    public getVisionBoardSession(id: number, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionModel>> {
+    public downloadVisionBoardPictureThumbnailUrl(visionBoardPictureId: number, accessToken ?: string): string {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getWithParams('manifest/getvisionboardsession', {id}, headers);
+        return this.frameworkHttpClientService.getUrlWithParams('manifest/downloadvisionboardpicturethumbnail', {visionBoardPictureId},accessToken);
     }
 
     // tslint:disable-next-line:max-line-length
-    public createVisionBoardSession(visionBoardSessionModel: models.VisionBoardSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionModel>> {
+    public uploadVisionBoardPictureThumbnail(model: models.VisionBoardPictureThumbnailWithFileFormModel, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('manifest/createvisionboardsession', visionBoardSessionModel, headers);
+        return this.frameworkHttpClientService.postWithUploadWithModel('manifest/uploadvisionboardpicturethumbnail', model, headers);
     }
 
     // tslint:disable-next-line:max-line-length
-    public createMultipleVisionBoardSession(visionBoardSessionModels: models.MultipleVisionBoardSessionCreateModel, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
+    public clearVisionBoardPictureThumbnail(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
     // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postListWithModel('manifest/createmultiplevisionboardsession', visionBoardSessionModels, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public updateVisionBoardSession(visionBoardSessionModel: models.VisionBoardSessionUpdateModel, headers ?: HttpHeaders): Observable<ReturnModel<models.VisionBoardSessionModel>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('manifest/updatevisionboardsession', visionBoardSessionModel, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public markVisionBoardSessionAsDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.deleteWithParams('manifest/markvisionboardsessionasdeleted', {id}, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public markVisionBoardSessionAsNotDeleted(id: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.postWithModel('manifest/markvisionboardsessionasnotdeleted', {id}, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public getVisionBoardSessionByUserId(userId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyuserid', {userId}, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public getVisionBoardSessionByUserIdSearch(search: models.VisionBoardSessionByUserIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessionbyuseridsearch', search, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public getUserByVisionBoardSessionId(visionBoardSessionId: number, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionid', {visionBoardSessionId}, headers);
-    }
-
-    // tslint:disable-next-line:max-line-length
-    public getUserByVisionBoardSessionIdSearch(search: models.UserByVisionBoardSessionIdSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserModel>> {
-    // tslint:disable-next-line:max-line-length
-        return this.frameworkHttpClientService.getListWithParams('manifest/getuserbyvisionboardsessionidsearch', search, headers);
+        return this.frameworkHttpClientService.deleteWithParams('manifest/clearvisionboardpicturethumbnail', {visionBoardPictureId}, headers);
     }
 
     // tslint:disable-next-line:max-line-length

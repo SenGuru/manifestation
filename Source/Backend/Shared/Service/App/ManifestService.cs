@@ -25641,7 +25641,7 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<FileStreamModel>($"Unable to find the Vision Board Picture", new { visionBoardPictureId });
                 }
 
-                var fileName = view.Model.ThumnailLocation;
+                var fileName = view.Model.ThumbnailLocation;
 
                 if (fileName.IsTrimmedStringNullOrEmpty())
                 {
@@ -25653,7 +25653,7 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<FileStreamModel>($"System error: thumbnail is not available.");
                 }
 
-                var actualFileName = view.Model.ThumnailFileName.IsTrimmedStringNullOrEmpty() ? $"VisionBoardPictureThumbnail" : view.Model.ThumnailFileName;
+                var actualFileName = view.Model.ThumbnailFileName.IsTrimmedStringNullOrEmpty() ? $"VisionBoardPictureThumbnail" : view.Model.ThumbnailFileName;
 
                 var result = new FileStreamModel
                 {
@@ -25746,7 +25746,7 @@ namespace Manifest.Service.App
                 using (var trx = await transactionManager.BeginTransactionAsync())
                 {
                     await manifestRepository.ClearVisionBoardPictureThumbnailLocationAsync(visionBoardPicture.Model.VisionBoardPictureId, await currentSessionService.GetCurrentUserIdAsync());
-                    await fileAttachmentFileStorage.DeleteAsync(visionBoardPicture.Model.UserId, visionBoardPicture.Model.ThumnailLocation);
+                    await fileAttachmentFileStorage.DeleteAsync(visionBoardPicture.Model.UserId, visionBoardPicture.Model.ThumbnailLocation);
                 }
 
                 return ReturnModel<bool>.Success(true);

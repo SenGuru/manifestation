@@ -4718,54 +4718,6 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("modifiedByUserId")]
         public Int64? ModifiedByUserId {set; get;}
 
-        public VisionBoardSessionCreateModel GetAsCreateModel()
-        {
-            var obj = new VisionBoardSessionCreateModel();
-            obj.VisionBoardSessionDate = VisionBoardSessionDate;
-            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
-            obj.UserId = UserId;
-            obj.AddedToFeed = AddedToFeed;
-            obj.AddedToFeedDate = AddedToFeedDate;
-            return obj;
-        }
-
-        public bool IsSameAsCreateModel(VisionBoardSessionCreateModel obj)
-        {
-            var result = true;
-            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
-            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
-            result = result && (obj.UserId == UserId);
-            result = result && (obj.AddedToFeed == AddedToFeed);
-            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
-            return result;
-        }
-
-
-        public VisionBoardSessionUpdateModel GetAsUpdateModel()
-        {
-            var obj = new VisionBoardSessionUpdateModel();
-            obj.VisionBoardSessionId = VisionBoardSessionId;
-            obj.VisionBoardSessionDate = VisionBoardSessionDate;
-            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
-            obj.UserId = UserId;
-            obj.AddedToFeed = AddedToFeed;
-            obj.AddedToFeedDate = AddedToFeedDate;
-            return obj;
-        }
-
-        public bool IsSameAsUpdateModel(VisionBoardSessionUpdateModel obj)
-        {
-            var result = true;
-            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
-            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
-            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
-            result = result && (obj.UserId == UserId);
-            result = result && (obj.AddedToFeed == AddedToFeed);
-            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
-            return result;
-        }
-
-
         public VisionBoardSessionModel GetCopy()
         {
             var obj = new VisionBoardSessionModel();
@@ -4916,13 +4868,11 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public VisionBoardPictureModel(Int64 visionBoardPictureId,String fileName,Int64 fileSize,String thumnailFileName,Int64 thumnailFileSize,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public VisionBoardPictureModel(Int64 visionBoardPictureId,String fileName,Int64 fileSize,Int64 userId,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             VisionBoardPictureId = visionBoardPictureId;
             FileName = fileName;
             FileSize = fileSize;
-            ThumnailFileName = thumnailFileName;
-            ThumnailFileSize = thumnailFileSize;
             UserId = userId;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
@@ -4957,12 +4907,12 @@ namespace Manifest.Tests.Common
         public String FileName {set; get;}
         [JsonPropertyName("fileSize")]
         public Int64 FileSize {set; get;}
-        [JsonPropertyName("thumnailLocation")]
-        public String ThumnailLocation {set; get;}
-        [JsonPropertyName("thumnailFileName")]
-        public String ThumnailFileName {set; get;}
-        [JsonPropertyName("thumnailFileSize")]
-        public Int64 ThumnailFileSize {set; get;}
+        [JsonPropertyName("thumbnailLocation")]
+        public String ThumbnailLocation {set; get;}
+        [JsonPropertyName("thumbnailFileName")]
+        public String ThumbnailFileName {set; get;}
+        [JsonPropertyName("thumbnailFileSize")]
+        public Int64? ThumbnailFileSize {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
         [JsonPropertyName("isDeleted")]
@@ -4983,9 +4933,9 @@ namespace Manifest.Tests.Common
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
-            obj.ThumnailLocation = ThumnailLocation;
-            obj.ThumnailFileName = ThumnailFileName;
-            obj.ThumnailFileSize = ThumnailFileSize;
+            obj.ThumbnailLocation = ThumbnailLocation;
+            obj.ThumbnailFileName = ThumbnailFileName;
+            obj.ThumbnailFileSize = ThumbnailFileSize;
             obj.UserId = UserId;
             return obj;
         }
@@ -4997,9 +4947,9 @@ namespace Manifest.Tests.Common
             result = result && (obj.Location == Location);
             result = result && (obj.FileName == FileName);
             result = result && (obj.FileSize == FileSize);
-            result = result && (obj.ThumnailLocation == ThumnailLocation);
-            result = result && (obj.ThumnailFileName == ThumnailFileName);
-            result = result && (obj.ThumnailFileSize == ThumnailFileSize);
+            result = result && (obj.ThumbnailLocation == ThumbnailLocation);
+            result = result && (obj.ThumbnailFileName == ThumbnailFileName);
+            result = result && (obj.ThumbnailFileSize == ThumbnailFileSize);
             result = result && (obj.UserId == UserId);
             return result;
         }
@@ -5013,9 +4963,9 @@ namespace Manifest.Tests.Common
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
-            obj.ThumnailLocation = ThumnailLocation;
-            obj.ThumnailFileName = ThumnailFileName;
-            obj.ThumnailFileSize = ThumnailFileSize;
+            obj.ThumbnailLocation = ThumbnailLocation;
+            obj.ThumbnailFileName = ThumbnailFileName;
+            obj.ThumbnailFileSize = ThumbnailFileSize;
             obj.UserId = UserId;
             return obj;
         }
@@ -5028,9 +4978,9 @@ namespace Manifest.Tests.Common
             result = result && (obj.Location == Location);
             result = result && (obj.FileName == FileName);
             result = result && (obj.FileSize == FileSize);
-            result = result && (obj.ThumnailLocation == ThumnailLocation);
-            result = result && (obj.ThumnailFileName == ThumnailFileName);
-            result = result && (obj.ThumnailFileSize == ThumnailFileSize);
+            result = result && (obj.ThumbnailLocation == ThumbnailLocation);
+            result = result && (obj.ThumbnailFileName == ThumbnailFileName);
+            result = result && (obj.ThumbnailFileSize == ThumbnailFileSize);
             result = result && (obj.UserId == UserId);
             return result;
         }
@@ -5053,9 +5003,9 @@ namespace Manifest.Tests.Common
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
-            obj.ThumnailLocation = ThumnailLocation;
-            obj.ThumnailFileName = ThumnailFileName;
-            obj.ThumnailFileSize = ThumnailFileSize;
+            obj.ThumbnailLocation = ThumbnailLocation;
+            obj.ThumbnailFileName = ThumbnailFileName;
+            obj.ThumbnailFileSize = ThumbnailFileSize;
             obj.UserId = UserId;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
@@ -5080,9 +5030,9 @@ namespace Manifest.Tests.Common
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
-        public const string ThumnailLocation__Name = "ThumnailLocation";
-        public const string ThumnailFileName__Name = "ThumnailFileName";
-        public const string ThumnailFileSize__Name = "ThumnailFileSize";
+        public const string ThumbnailLocation__Name = "ThumbnailLocation";
+        public const string ThumbnailFileName__Name = "ThumbnailFileName";
+        public const string ThumbnailFileSize__Name = "ThumbnailFileSize";
         public const string UserId__Name = "UserId";
         public const string IsDeleted__Name = "IsDeleted";
         public const string CreatedDate__Name = "CreatedDate";
@@ -5093,8 +5043,8 @@ namespace Manifest.Tests.Common
         public const int Title__Size = 100;
         public const int Location__Size = 1024;
         public const int FileName__Size = 255;
-        public const int ThumnailLocation__Size = 1024;
-        public const int ThumnailFileName__Size = 255;
+        public const int ThumbnailLocation__Size = 1024;
+        public const int ThumbnailFileName__Size = 255;
     }
 
     public class VisionBoardPictureByVisionBoardSessionPictureIdSearchCriteria
@@ -13411,13 +13361,11 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public VisionBoardPictureCreateWithFileFormModel(FileStreamModel uploadedFile,String fileName,Int64 fileSize,String thumnailFileName,Int64 thumnailFileSize,Int64 userId)
+        public VisionBoardPictureCreateWithFileFormModel(FileStreamModel uploadedFile,String fileName,Int64 fileSize,Int64 userId)
         {
             UploadedFile = uploadedFile;
             FileName = fileName;
             FileSize = fileSize;
-            ThumnailFileName = thumnailFileName;
-            ThumnailFileSize = thumnailFileSize;
             UserId = userId;
         }
 
@@ -13431,12 +13379,12 @@ namespace Manifest.Tests.Common
         public String FileName {set; get;}
         [JsonPropertyName("fileSize")]
         public Int64 FileSize {set; get;}
-        [JsonPropertyName("thumnailLocation")]
-        public String ThumnailLocation {set; get;}
-        [JsonPropertyName("thumnailFileName")]
-        public String ThumnailFileName {set; get;}
-        [JsonPropertyName("thumnailFileSize")]
-        public Int64 ThumnailFileSize {set; get;}
+        [JsonPropertyName("thumbnailLocation")]
+        public String ThumbnailLocation {set; get;}
+        [JsonPropertyName("thumbnailFileName")]
+        public String ThumbnailFileName {set; get;}
+        [JsonPropertyName("thumbnailFileSize")]
+        public Int64? ThumbnailFileSize {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 
@@ -13448,9 +13396,9 @@ namespace Manifest.Tests.Common
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
-            obj.ThumnailLocation = ThumnailLocation;
-            obj.ThumnailFileName = ThumnailFileName;
-            obj.ThumnailFileSize = ThumnailFileSize;
+            obj.ThumbnailLocation = ThumbnailLocation;
+            obj.ThumbnailFileName = ThumbnailFileName;
+            obj.ThumbnailFileSize = ThumbnailFileSize;
             obj.UserId = UserId;
             return obj;
         }
@@ -13461,16 +13409,16 @@ namespace Manifest.Tests.Common
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
-        public const string ThumnailLocation__Name = "ThumnailLocation";
-        public const string ThumnailFileName__Name = "ThumnailFileName";
-        public const string ThumnailFileSize__Name = "ThumnailFileSize";
+        public const string ThumbnailLocation__Name = "ThumbnailLocation";
+        public const string ThumbnailFileName__Name = "ThumbnailFileName";
+        public const string ThumbnailFileSize__Name = "ThumbnailFileSize";
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int Title__Size = 100;
         public const int Location__Size = 1024;
         public const int FileName__Size = 255;
-        public const int ThumnailLocation__Size = 1024;
-        public const int ThumnailFileName__Size = 255;
+        public const int ThumbnailLocation__Size = 1024;
+        public const int ThumbnailFileName__Size = 255;
     }
 
     public class MultipleVisionBoardPictureCreateModel
@@ -13500,14 +13448,12 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public VisionBoardPictureUpdateWithFileFormModel(FileStreamModel uploadedFile,Int64 visionBoardPictureId,String fileName,Int64 fileSize,String thumnailFileName,Int64 thumnailFileSize,Int64 userId)
+        public VisionBoardPictureUpdateWithFileFormModel(FileStreamModel uploadedFile,Int64 visionBoardPictureId,String fileName,Int64 fileSize,Int64 userId)
         {
             UploadedFile = uploadedFile;
             VisionBoardPictureId = visionBoardPictureId;
             FileName = fileName;
             FileSize = fileSize;
-            ThumnailFileName = thumnailFileName;
-            ThumnailFileSize = thumnailFileSize;
             UserId = userId;
         }
 
@@ -13523,12 +13469,12 @@ namespace Manifest.Tests.Common
         public String FileName {set; get;}
         [JsonPropertyName("fileSize")]
         public Int64 FileSize {set; get;}
-        [JsonPropertyName("thumnailLocation")]
-        public String ThumnailLocation {set; get;}
-        [JsonPropertyName("thumnailFileName")]
-        public String ThumnailFileName {set; get;}
-        [JsonPropertyName("thumnailFileSize")]
-        public Int64 ThumnailFileSize {set; get;}
+        [JsonPropertyName("thumbnailLocation")]
+        public String ThumbnailLocation {set; get;}
+        [JsonPropertyName("thumbnailFileName")]
+        public String ThumbnailFileName {set; get;}
+        [JsonPropertyName("thumbnailFileSize")]
+        public Int64? ThumbnailFileSize {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 
@@ -13541,9 +13487,9 @@ namespace Manifest.Tests.Common
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
-            obj.ThumnailLocation = ThumnailLocation;
-            obj.ThumnailFileName = ThumnailFileName;
-            obj.ThumnailFileSize = ThumnailFileSize;
+            obj.ThumbnailLocation = ThumbnailLocation;
+            obj.ThumbnailFileName = ThumbnailFileName;
+            obj.ThumbnailFileSize = ThumbnailFileSize;
             obj.UserId = UserId;
             return obj;
         }
@@ -13555,16 +13501,16 @@ namespace Manifest.Tests.Common
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
-        public const string ThumnailLocation__Name = "ThumnailLocation";
-        public const string ThumnailFileName__Name = "ThumnailFileName";
-        public const string ThumnailFileSize__Name = "ThumnailFileSize";
+        public const string ThumbnailLocation__Name = "ThumbnailLocation";
+        public const string ThumbnailFileName__Name = "ThumbnailFileName";
+        public const string ThumbnailFileSize__Name = "ThumbnailFileSize";
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int Title__Size = 100;
         public const int Location__Size = 1024;
         public const int FileName__Size = 255;
-        public const int ThumnailLocation__Size = 1024;
-        public const int ThumnailFileName__Size = 255;
+        public const int ThumbnailLocation__Size = 1024;
+        public const int ThumbnailFileName__Size = 255;
     }
 
     public class VisionBoardPictureByUserIdSearchCriteria
@@ -13661,268 +13607,28 @@ namespace Manifest.Tests.Common
         public const string NumericPageCount__Name = "NumericPageCount";
     }
 
-    public class VisionBoardSessionSearchCriteria
+    public class VisionBoardPictureThumbnailWithFileFormModel
     {
 
-        public VisionBoardSessionSearchCriteria()
+        public VisionBoardPictureThumbnailWithFileFormModel()
         {
         }
-        [JsonPropertyName("showDeleted")]
-        public Boolean ShowDeleted {set; get;}
-        [JsonPropertyName("userId")]
-        public Int64? UserId {set; get;}
-        [JsonPropertyName("createdByUserId")]
-        public Int64? CreatedByUserId {set; get;}
-        [JsonPropertyName("modifiedByUserId")]
-        public Int64? ModifiedByUserId {set; get;}
-        [JsonPropertyName("selectedId")]
-        public Int64? SelectedId {set; get;}
-        [JsonPropertyName("page")]
-        public Int32 Page {set; get;}
-        [JsonPropertyName("pageSize")]
-        public Int32 PageSize {set; get;}
-        [JsonPropertyName("keyword")]
-        public String Keyword {set; get;}
-        [JsonPropertyName("sortBy")]
-        public String SortBy {set; get;}
-        [JsonPropertyName("sortAscending")]
-        public Boolean SortAscending {set; get;}
+        [JsonPropertyName("visionBoardPictureId")]
+        public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("uploadedFile")]
+        public FileStreamModel UploadedFile {set; get;}
 
-        public VisionBoardSessionSearchCriteria GetCopy()
+        public VisionBoardPictureThumbnailWithFileFormModel GetCopy()
         {
-            var obj = new VisionBoardSessionSearchCriteria();
-            obj.ShowDeleted = ShowDeleted;
-            obj.UserId = UserId;
-            obj.CreatedByUserId = CreatedByUserId;
-            obj.ModifiedByUserId = ModifiedByUserId;
-            obj.SelectedId = SelectedId;
-            obj.Page = Page;
-            obj.PageSize = PageSize;
-            obj.Keyword = Keyword;
-            obj.SortBy = SortBy;
-            obj.SortAscending = SortAscending;
+            var obj = new VisionBoardPictureThumbnailWithFileFormModel();
+            obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.UploadedFile = UploadedFile;
             return obj;
         }
 
         // Property Names
-        public const string ShowDeleted__Name = "ShowDeleted";
-        public const string UserId__Name = "UserId";
-        public const string CreatedByUserId__Name = "CreatedByUserId";
-        public const string ModifiedByUserId__Name = "ModifiedByUserId";
-        public const string SelectedId__Name = "SelectedId";
-        public const string Page__Name = "Page";
-        public const string PageSize__Name = "PageSize";
-        public const string Keyword__Name = "Keyword";
-        public const string SortBy__Name = "SortBy";
-        public const string SortAscending__Name = "SortAscending";
-        public const string CurrentRows__Name = "CurrentRows";
-        public const string TotalRowCount__Name = "TotalRowCount";
-        public const string NumericPageCount__Name = "NumericPageCount";
-    }
-
-    public class VisionBoardSessionCreateModel
-    {
-
-        public VisionBoardSessionCreateModel()
-        {
-        }
-
-        public VisionBoardSessionCreateModel(DateTime visionBoardSessionDate,Int64 userId)
-        {
-            VisionBoardSessionDate = visionBoardSessionDate;
-            UserId = userId;
-        }
-
-        [JsonPropertyName("visionBoardSessionDate")]
-        public DateTime VisionBoardSessionDate {set; get;}
-        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
-        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
-        [JsonPropertyName("userId")]
-        public Int64 UserId {set; get;}
-        [JsonPropertyName("addedToFeed")]
-        public Boolean? AddedToFeed {set; get;}
-        [JsonPropertyName("addedToFeedDate")]
-        public DateTime? AddedToFeedDate {set; get;}
-
-        public VisionBoardSessionCreateModel GetCopy()
-        {
-            var obj = new VisionBoardSessionCreateModel();
-            obj.VisionBoardSessionDate = VisionBoardSessionDate;
-            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
-            obj.UserId = UserId;
-            obj.AddedToFeed = AddedToFeed;
-            obj.AddedToFeedDate = AddedToFeedDate;
-            return obj;
-        }
-
-        // Property Names
-        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
-        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
-        public const string UserId__Name = "UserId";
-        public const string AddedToFeed__Name = "AddedToFeed";
-        public const string AddedToFeedDate__Name = "AddedToFeedDate";
-    }
-
-    public class MultipleVisionBoardSessionCreateModel
-    {
-
-        public MultipleVisionBoardSessionCreateModel()
-        {
-        }
-        [JsonPropertyName("newVisionBoardSessions")]
-        public List<VisionBoardSessionCreateModel> NewVisionBoardSessions {set; get;}
-
-        public MultipleVisionBoardSessionCreateModel GetCopy()
-        {
-            var obj = new MultipleVisionBoardSessionCreateModel();
-            obj.NewVisionBoardSessions = NewVisionBoardSessions;
-            return obj;
-        }
-
-        // Property Names
-        public const string NewVisionBoardSessions__Name = "NewVisionBoardSessions";
-    }
-
-    public class VisionBoardSessionUpdateModel
-    {
-
-        public VisionBoardSessionUpdateModel()
-        {
-        }
-
-        public VisionBoardSessionUpdateModel(Int64 visionBoardSessionId,DateTime visionBoardSessionDate,Int64 userId)
-        {
-            VisionBoardSessionId = visionBoardSessionId;
-            VisionBoardSessionDate = visionBoardSessionDate;
-            UserId = userId;
-        }
-
-        [JsonPropertyName("visionBoardSessionId")]
-        public Int64 VisionBoardSessionId {set; get;}
-        [JsonPropertyName("visionBoardSessionDate")]
-        public DateTime VisionBoardSessionDate {set; get;}
-        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
-        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
-        [JsonPropertyName("userId")]
-        public Int64 UserId {set; get;}
-        [JsonPropertyName("addedToFeed")]
-        public Boolean? AddedToFeed {set; get;}
-        [JsonPropertyName("addedToFeedDate")]
-        public DateTime? AddedToFeedDate {set; get;}
-
-        public VisionBoardSessionUpdateModel GetCopy()
-        {
-            var obj = new VisionBoardSessionUpdateModel();
-            obj.VisionBoardSessionId = VisionBoardSessionId;
-            obj.VisionBoardSessionDate = VisionBoardSessionDate;
-            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
-            obj.UserId = UserId;
-            obj.AddedToFeed = AddedToFeed;
-            obj.AddedToFeedDate = AddedToFeedDate;
-            return obj;
-        }
-
-        // Property Names
-        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
-        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
-        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
-        public const string UserId__Name = "UserId";
-        public const string AddedToFeed__Name = "AddedToFeed";
-        public const string AddedToFeedDate__Name = "AddedToFeedDate";
-    }
-
-    public class VisionBoardSessionByUserIdSearchCriteria
-    {
-
-        public VisionBoardSessionByUserIdSearchCriteria()
-        {
-        }
-        [JsonPropertyName("userId")]
-        public Int64 UserId {set; get;}
-        [JsonPropertyName("selectedId")]
-        public Int64? SelectedId {set; get;}
-        [JsonPropertyName("page")]
-        public Int32 Page {set; get;}
-        [JsonPropertyName("pageSize")]
-        public Int32 PageSize {set; get;}
-        [JsonPropertyName("keyword")]
-        public String Keyword {set; get;}
-        [JsonPropertyName("sortBy")]
-        public String SortBy {set; get;}
-        [JsonPropertyName("sortAscending")]
-        public Boolean SortAscending {set; get;}
-
-        public VisionBoardSessionByUserIdSearchCriteria GetCopy()
-        {
-            var obj = new VisionBoardSessionByUserIdSearchCriteria();
-            obj.UserId = UserId;
-            obj.SelectedId = SelectedId;
-            obj.Page = Page;
-            obj.PageSize = PageSize;
-            obj.Keyword = Keyword;
-            obj.SortBy = SortBy;
-            obj.SortAscending = SortAscending;
-            return obj;
-        }
-
-        // Property Names
-        public const string UserId__Name = "UserId";
-        public const string SelectedId__Name = "SelectedId";
-        public const string Page__Name = "Page";
-        public const string PageSize__Name = "PageSize";
-        public const string Keyword__Name = "Keyword";
-        public const string SortBy__Name = "SortBy";
-        public const string SortAscending__Name = "SortAscending";
-        public const string CurrentRows__Name = "CurrentRows";
-        public const string TotalRowCount__Name = "TotalRowCount";
-        public const string NumericPageCount__Name = "NumericPageCount";
-    }
-
-    public class UserByVisionBoardSessionIdSearchCriteria
-    {
-
-        public UserByVisionBoardSessionIdSearchCriteria()
-        {
-        }
-        [JsonPropertyName("visionBoardSessionId")]
-        public Int64 VisionBoardSessionId {set; get;}
-        [JsonPropertyName("selectedId")]
-        public Int64? SelectedId {set; get;}
-        [JsonPropertyName("page")]
-        public Int32 Page {set; get;}
-        [JsonPropertyName("pageSize")]
-        public Int32 PageSize {set; get;}
-        [JsonPropertyName("keyword")]
-        public String Keyword {set; get;}
-        [JsonPropertyName("sortBy")]
-        public String SortBy {set; get;}
-        [JsonPropertyName("sortAscending")]
-        public Boolean SortAscending {set; get;}
-
-        public UserByVisionBoardSessionIdSearchCriteria GetCopy()
-        {
-            var obj = new UserByVisionBoardSessionIdSearchCriteria();
-            obj.VisionBoardSessionId = VisionBoardSessionId;
-            obj.SelectedId = SelectedId;
-            obj.Page = Page;
-            obj.PageSize = PageSize;
-            obj.Keyword = Keyword;
-            obj.SortBy = SortBy;
-            obj.SortAscending = SortAscending;
-            return obj;
-        }
-
-        // Property Names
-        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
-        public const string SelectedId__Name = "SelectedId";
-        public const string Page__Name = "Page";
-        public const string PageSize__Name = "PageSize";
-        public const string Keyword__Name = "Keyword";
-        public const string SortBy__Name = "SortBy";
-        public const string SortAscending__Name = "SortAscending";
-        public const string CurrentRows__Name = "CurrentRows";
-        public const string TotalRowCount__Name = "TotalRowCount";
-        public const string NumericPageCount__Name = "NumericPageCount";
+        public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string UploadedFile__Name = "UploadedFile";
     }
 
     public class DailyJournalModel
@@ -27379,12 +27085,10 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public VisionBoardPictureCreateModel(String fileName,Int64 fileSize,String thumnailFileName,Int64 thumnailFileSize,Int64 userId)
+        public VisionBoardPictureCreateModel(String fileName,Int64 fileSize,Int64 userId)
         {
             FileName = fileName;
             FileSize = fileSize;
-            ThumnailFileName = thumnailFileName;
-            ThumnailFileSize = thumnailFileSize;
             UserId = userId;
         }
 
@@ -27396,12 +27100,12 @@ namespace Manifest.Tests.Common
         public String FileName {set; get;}
         [JsonPropertyName("fileSize")]
         public Int64 FileSize {set; get;}
-        [JsonPropertyName("thumnailLocation")]
-        public String ThumnailLocation {set; get;}
-        [JsonPropertyName("thumnailFileName")]
-        public String ThumnailFileName {set; get;}
-        [JsonPropertyName("thumnailFileSize")]
-        public Int64 ThumnailFileSize {set; get;}
+        [JsonPropertyName("thumbnailLocation")]
+        public String ThumbnailLocation {set; get;}
+        [JsonPropertyName("thumbnailFileName")]
+        public String ThumbnailFileName {set; get;}
+        [JsonPropertyName("thumbnailFileSize")]
+        public Int64? ThumbnailFileSize {set; get;}
         [JsonPropertyName("userId")]
         public Int64 UserId {set; get;}
 
@@ -27412,9 +27116,9 @@ namespace Manifest.Tests.Common
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
-            obj.ThumnailLocation = ThumnailLocation;
-            obj.ThumnailFileName = ThumnailFileName;
-            obj.ThumnailFileSize = ThumnailFileSize;
+            obj.ThumbnailLocation = ThumbnailLocation;
+            obj.ThumbnailFileName = ThumbnailFileName;
+            obj.ThumbnailFileSize = ThumbnailFileSize;
             obj.UserId = UserId;
             return obj;
         }
@@ -27424,16 +27128,16 @@ namespace Manifest.Tests.Common
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
-        public const string ThumnailLocation__Name = "ThumnailLocation";
-        public const string ThumnailFileName__Name = "ThumnailFileName";
-        public const string ThumnailFileSize__Name = "ThumnailFileSize";
+        public const string ThumbnailLocation__Name = "ThumbnailLocation";
+        public const string ThumbnailFileName__Name = "ThumbnailFileName";
+        public const string ThumbnailFileSize__Name = "ThumbnailFileSize";
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int Title__Size = 100;
         public const int Location__Size = 1024;
         public const int FileName__Size = 255;
-        public const int ThumnailLocation__Size = 1024;
-        public const int ThumnailFileName__Size = 255;
+        public const int ThumbnailLocation__Size = 1024;
+        public const int ThumbnailFileName__Size = 255;
     }
 
     public class LogSettings

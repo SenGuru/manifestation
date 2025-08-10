@@ -8655,9 +8655,9 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_Location = "Location";
         public const string COLUMN_FileName = "FileName";
         public const string COLUMN_FileSize = "FileSize";
-        public const string COLUMN_ThumnailLocation = "ThumnailLocation";
-        public const string COLUMN_ThumnailFileName = "ThumnailFileName";
-        public const string COLUMN_ThumnailFileSize = "ThumnailFileSize";
+        public const string COLUMN_ThumbnailLocation = "ThumbnailLocation";
+        public const string COLUMN_ThumbnailFileName = "ThumbnailFileName";
+        public const string COLUMN_ThumbnailFileSize = "ThumbnailFileSize";
         public const string COLUMN_UserId = "UserId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
@@ -8670,8 +8670,8 @@ namespace Manifest.Common.Models.DB
         public const int COLUMN_SIZE_Title = 100;
         public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
-        public const int COLUMN_SIZE_ThumnailLocation = 1024;
-        public const int COLUMN_SIZE_ThumnailFileName = 255;
+        public const int COLUMN_SIZE_ThumbnailLocation = 1024;
+        public const int COLUMN_SIZE_ThumbnailFileName = 255;
         #endregion
 
         #region ColumnNull
@@ -8680,9 +8680,9 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_Location = true;
         public const bool COLUMN_NULLABLE_FileName = false;
         public const bool COLUMN_NULLABLE_FileSize = false;
-        public const bool COLUMN_NULLABLE_ThumnailLocation = true;
-        public const bool COLUMN_NULLABLE_ThumnailFileName = false;
-        public const bool COLUMN_NULLABLE_ThumnailFileSize = false;
+        public const bool COLUMN_NULLABLE_ThumbnailLocation = true;
+        public const bool COLUMN_NULLABLE_ThumbnailFileName = true;
+        public const bool COLUMN_NULLABLE_ThumbnailFileSize = true;
         public const bool COLUMN_NULLABLE_UserId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
@@ -8714,18 +8714,16 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long FileSize { get; set; }
         
-        [Column("ThumnailLocation")]
+        [Column("ThumbnailLocation")]
         [StringLength(1024)]
-        public string ThumnailLocation { get; set; }
+        public string ThumbnailLocation { get; set; }
         
-        [Column("ThumnailFileName")]
-        [NotNull]
+        [Column("ThumbnailFileName")]
         [StringLength(255)]
-        public string ThumnailFileName { get; set; }
+        public string ThumbnailFileName { get; set; }
         
-        [Column("ThumnailFileSize")]
-        [NotNull]
-        public long ThumnailFileSize { get; set; }
+        [Column("ThumbnailFileSize")]
+        public long? ThumbnailFileSize { get; set; }
         
         [Column("UserId")]
         [NotNull]
@@ -8757,9 +8755,9 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"Location = {Location} , ");
             sb.AppendLine($"FileName = {FileName} , ");
             sb.AppendLine($"FileSize = {FileSize} , ");
-            sb.AppendLine($"ThumnailLocation = {ThumnailLocation} , ");
-            sb.AppendLine($"ThumnailFileName = {ThumnailFileName} , ");
-            sb.AppendLine($"ThumnailFileSize = {ThumnailFileSize} , ");
+            sb.AppendLine($"ThumbnailLocation = {ThumbnailLocation} , ");
+            sb.AppendLine($"ThumbnailFileName = {ThumbnailFileName} , ");
+            sb.AppendLine($"ThumbnailFileSize = {ThumbnailFileSize} , ");
             sb.AppendLine($"UserId = {UserId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
@@ -8781,9 +8779,9 @@ namespace Manifest.Common.Models.DB
             Location = item.Location,
             FileName = item.FileName,
             FileSize = item.FileSize,
-            ThumnailLocation = item.ThumnailLocation,
-            ThumnailFileName = item.ThumnailFileName,
-            ThumnailFileSize = item.ThumnailFileSize,
+            ThumbnailLocation = item.ThumbnailLocation,
+            ThumbnailFileName = item.ThumbnailFileName,
+            ThumbnailFileSize = item.ThumbnailFileSize,
             UserId = item.UserId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
