@@ -3951,8 +3951,8 @@ namespace Manifest.Tests.Common
         public const string ModifiedByUserId__Name = "ModifiedByUserId";
         // String Column Sizes
         public const int FileAttachmentFileName__Size = 128;
-        public const int FileAttachmentFileLocation__Size = 512;
-        public const int FileAttachmentPreviewFileLocation__Size = 512;
+        public const int FileAttachmentFileLocation__Size = 1024;
+        public const int FileAttachmentPreviewFileLocation__Size = 1024;
         public const int Description__Size = 200;
     }
 
@@ -4201,8 +4201,8 @@ namespace Manifest.Tests.Common
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int FileAttachmentFileName__Size = 128;
-        public const int FileAttachmentFileLocation__Size = 512;
-        public const int FileAttachmentPreviewFileLocation__Size = 512;
+        public const int FileAttachmentFileLocation__Size = 1024;
+        public const int FileAttachmentPreviewFileLocation__Size = 1024;
         public const int Description__Size = 200;
     }
 
@@ -4269,8 +4269,8 @@ namespace Manifest.Tests.Common
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int FileAttachmentFileName__Size = 128;
-        public const int FileAttachmentFileLocation__Size = 512;
-        public const int FileAttachmentPreviewFileLocation__Size = 512;
+        public const int FileAttachmentFileLocation__Size = 1024;
+        public const int FileAttachmentPreviewFileLocation__Size = 1024;
         public const int Description__Size = 200;
     }
 
@@ -4947,6 +4947,8 @@ namespace Manifest.Tests.Common
         public String ModifiedBy {set; get;}
         [JsonPropertyName("visionBoardPictureId")]
         public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -4969,6 +4971,7 @@ namespace Manifest.Tests.Common
         public VisionBoardPictureCreateModel GetAsCreateModel()
         {
             var obj = new VisionBoardPictureCreateModel();
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -4979,6 +4982,7 @@ namespace Manifest.Tests.Common
         public bool IsSameAsCreateModel(VisionBoardPictureCreateModel obj)
         {
             var result = true;
+            result = result && (obj.Title == Title);
             result = result && (obj.Location == Location);
             result = result && (obj.FileName == FileName);
             result = result && (obj.FileSize == FileSize);
@@ -4991,6 +4995,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new VisionBoardPictureUpdateWithFileFormModel();
             obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -5002,6 +5007,7 @@ namespace Manifest.Tests.Common
         {
             var result = true;
             result = result && (obj.VisionBoardPictureId == VisionBoardPictureId);
+            result = result && (obj.Title == Title);
             result = result && (obj.Location == Location);
             result = result && (obj.FileName == FileName);
             result = result && (obj.FileSize == FileSize);
@@ -5023,6 +5029,7 @@ namespace Manifest.Tests.Common
             obj.CreatedBy = CreatedBy;
             obj.ModifiedBy = ModifiedBy;
             obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -5046,6 +5053,7 @@ namespace Manifest.Tests.Common
         public const string CreatedBy__Name = "CreatedBy";
         public const string ModifiedBy__Name = "ModifiedBy";
         public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
@@ -5056,7 +5064,8 @@ namespace Manifest.Tests.Common
         public const string ModifiedDate__Name = "ModifiedDate";
         public const string ModifiedByUserId__Name = "ModifiedByUserId";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -8854,7 +8863,7 @@ namespace Manifest.Tests.Common
         public const string ModifiedByUserId__Name = "ModifiedByUserId";
         // String Column Sizes
         public const int DefaultMeditationFileName__Size = 255;
-        public const int Location__Size = 255;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -8962,7 +8971,7 @@ namespace Manifest.Tests.Common
         public const string FileSize__Name = "FileSize";
         // String Column Sizes
         public const int DefaultMeditationFileName__Size = 255;
-        public const int Location__Size = 255;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -9036,7 +9045,7 @@ namespace Manifest.Tests.Common
         public const string FileSize__Name = "FileSize";
         // String Column Sizes
         public const int DefaultMeditationFileName__Size = 255;
-        public const int Location__Size = 255;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -9075,6 +9084,8 @@ namespace Manifest.Tests.Common
         public String ModifiedBy {set; get;}
         [JsonPropertyName("defaultVisionBoardPictureId")]
         public Int64 DefaultVisionBoardPictureId {set; get;}
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -9095,6 +9106,7 @@ namespace Manifest.Tests.Common
         public DefaultVisionBoardPictureCreateModel GetAsCreateModel()
         {
             var obj = new DefaultVisionBoardPictureCreateModel();
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -9104,6 +9116,7 @@ namespace Manifest.Tests.Common
         public bool IsSameAsCreateModel(DefaultVisionBoardPictureCreateModel obj)
         {
             var result = true;
+            result = result && (obj.Title == Title);
             result = result && (obj.Location == Location);
             result = result && (obj.FileName == FileName);
             result = result && (obj.FileSize == FileSize);
@@ -9115,6 +9128,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new DefaultVisionBoardPictureUpdateModel();
             obj.DefaultVisionBoardPictureId = DefaultVisionBoardPictureId;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -9125,6 +9139,7 @@ namespace Manifest.Tests.Common
         {
             var result = true;
             result = result && (obj.DefaultVisionBoardPictureId == DefaultVisionBoardPictureId);
+            result = result && (obj.Title == Title);
             result = result && (obj.Location == Location);
             result = result && (obj.FileName == FileName);
             result = result && (obj.FileSize == FileSize);
@@ -9144,6 +9159,7 @@ namespace Manifest.Tests.Common
             obj.CreatedBy = CreatedBy;
             obj.ModifiedBy = ModifiedBy;
             obj.DefaultVisionBoardPictureId = DefaultVisionBoardPictureId;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -9165,6 +9181,7 @@ namespace Manifest.Tests.Common
         public const string CreatedBy__Name = "CreatedBy";
         public const string ModifiedBy__Name = "ModifiedBy";
         public const string DefaultVisionBoardPictureId__Name = "DefaultVisionBoardPictureId";
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
@@ -9174,7 +9191,8 @@ namespace Manifest.Tests.Common
         public const string ModifiedDate__Name = "ModifiedDate";
         public const string ModifiedByUserId__Name = "ModifiedByUserId";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -9246,6 +9264,8 @@ namespace Manifest.Tests.Common
             FileSize = fileSize;
         }
 
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -9256,6 +9276,7 @@ namespace Manifest.Tests.Common
         public DefaultVisionBoardPictureCreateModel GetCopy()
         {
             var obj = new DefaultVisionBoardPictureCreateModel();
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -9263,11 +9284,13 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -9307,6 +9330,8 @@ namespace Manifest.Tests.Common
 
         [JsonPropertyName("defaultVisionBoardPictureId")]
         public Int64 DefaultVisionBoardPictureId {set; get;}
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -9318,6 +9343,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new DefaultVisionBoardPictureUpdateModel();
             obj.DefaultVisionBoardPictureId = DefaultVisionBoardPictureId;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -9326,11 +9352,13 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string DefaultVisionBoardPictureId__Name = "DefaultVisionBoardPictureId";
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -12623,7 +12651,7 @@ namespace Manifest.Tests.Common
         public const string ModifiedByUserId__Name = "ModifiedByUserId";
         // String Column Sizes
         public const int MeditationFileName__Size = 255;
-        public const int Location__Size = 255;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -12740,7 +12768,7 @@ namespace Manifest.Tests.Common
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int MeditationFileName__Size = 255;
-        public const int Location__Size = 255;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -12819,7 +12847,7 @@ namespace Manifest.Tests.Common
         public const string UserId__Name = "UserId";
         // String Column Sizes
         public const int MeditationFileName__Size = 255;
-        public const int Location__Size = 255;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -13365,6 +13393,8 @@ namespace Manifest.Tests.Common
 
         [Required][JsonPropertyName("uploadedFile")]
         public FileStreamModel UploadedFile {set; get;}
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -13378,6 +13408,7 @@ namespace Manifest.Tests.Common
         {
             var obj = new VisionBoardPictureCreateWithFileFormModel();
             obj.UploadedFile = UploadedFile;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -13387,12 +13418,14 @@ namespace Manifest.Tests.Common
 
         // Property Names
         public const string UploadedFile__Name = "UploadedFile";
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
         public const string UserId__Name = "UserId";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -13436,6 +13469,8 @@ namespace Manifest.Tests.Common
         public FileStreamModel UploadedFile {set; get;}
         [JsonPropertyName("visionBoardPictureId")]
         public Int64 VisionBoardPictureId {set; get;}
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -13450,6 +13485,7 @@ namespace Manifest.Tests.Common
             var obj = new VisionBoardPictureUpdateWithFileFormModel();
             obj.UploadedFile = UploadedFile;
             obj.VisionBoardPictureId = VisionBoardPictureId;
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -13460,12 +13496,14 @@ namespace Manifest.Tests.Common
         // Property Names
         public const string UploadedFile__Name = "UploadedFile";
         public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
         public const string UserId__Name = "UserId";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 
@@ -27288,6 +27326,8 @@ namespace Manifest.Tests.Common
             UserId = userId;
         }
 
+        [JsonPropertyName("title")]
+        public String Title {set; get;}
         [JsonPropertyName("location")]
         public String Location {set; get;}
         [JsonPropertyName("fileName")]
@@ -27300,6 +27340,7 @@ namespace Manifest.Tests.Common
         public VisionBoardPictureCreateModel GetCopy()
         {
             var obj = new VisionBoardPictureCreateModel();
+            obj.Title = Title;
             obj.Location = Location;
             obj.FileName = FileName;
             obj.FileSize = FileSize;
@@ -27308,12 +27349,14 @@ namespace Manifest.Tests.Common
         }
 
         // Property Names
+        public const string Title__Name = "Title";
         public const string Location__Name = "Location";
         public const string FileName__Name = "FileName";
         public const string FileSize__Name = "FileSize";
         public const string UserId__Name = "UserId";
         // String Column Sizes
-        public const int Location__Size = 255;
+        public const int Title__Size = 100;
+        public const int Location__Size = 1024;
         public const int FileName__Size = 255;
     }
 

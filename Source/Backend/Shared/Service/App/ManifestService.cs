@@ -25178,6 +25178,11 @@ namespace Manifest.Service.App
                 return result;
             }
 
+            if (visionBoardPictureModel.Title == null || visionBoardPictureModel.Title.Length > VisionBoardPictureModel.COLUMN_SIZE_Title)
+            {
+                result.Add(new ReturnErrorItem("Title", $"Title size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_Title}"));
+            }
+
             if (visionBoardPictureModel.Location != null && visionBoardPictureModel.Location.Length > VisionBoardPictureModel.COLUMN_SIZE_Location)
             {
                 result.Add(new ReturnErrorItem("Location", $"Location size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_Location}"));

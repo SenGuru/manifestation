@@ -781,7 +781,7 @@ namespace Manifest.Repository.Common
                        ModifiedByUserFirstName = mu.FirstName,
                        ModifiedByUserLastName = mu.LastName,
                        ModifiedByUserEmail = mu.Email,
-                       UserName = c.UserName,
+                       UserName = c.UserName,                       
                        VisionBoardSessionPictureId = item.VisionBoardSessionPictureId,
                        VisionBoardSessionId = item.VisionBoardSessionId,
                        VisionBoardSessionPictureDate = item.VisionBoardSessionPictureDate,
@@ -4150,6 +4150,7 @@ ModifiedByUserId = item.ModifiedByUserId,
                    from mu in muTemp.DefaultIfEmpty()
                    select new DefaultVisionBoardPictureView
                    {
+                       Title = item.Title,                       
                        CreatedByUserFirstName = cu.FirstName,
                        CreatedByUserLastName = cu.LastName,
                        CreatedByUserEmail = cu.Email,
@@ -6877,9 +6878,8 @@ ModifiedByUserId = item.ModifiedByUserId,
                        ModifiedByUserFirstName = mu.FirstName,
                        ModifiedByUserLastName = mu.LastName,
                        ModifiedByUserEmail = mu.Email,
-
                        UserName = a.UserName,
-
+                       Title = item.Title,                       
                        VisionBoardPictureId = item.VisionBoardPictureId,
                        Location = item.Location,
                        FileName = item.FileName,

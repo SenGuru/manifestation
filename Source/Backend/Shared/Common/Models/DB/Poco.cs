@@ -2426,7 +2426,7 @@ namespace Manifest.Common.Models.DB
 
         #region ColumnSize
         public const int COLUMN_SIZE_DefaultMeditationFileName = 255;
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
@@ -2460,7 +2460,7 @@ namespace Manifest.Common.Models.DB
         public long PredefinedMeditationTypeId { get; set; }
         
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -2647,6 +2647,7 @@ namespace Manifest.Common.Models.DB
 
         #region Columns
         public const string COLUMN_DefaultVisionBoardPictureId = "DefaultVisionBoardPictureId";
+        public const string COLUMN_Title = "Title";
         public const string COLUMN_Location = "Location";
         public const string COLUMN_FileName = "FileName";
         public const string COLUMN_FileSize = "FileSize";
@@ -2658,12 +2659,14 @@ namespace Manifest.Common.Models.DB
         #endregion
 
         #region ColumnSize
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Title = 100;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
         #region ColumnNull
         public const bool COLUMN_NULLABLE_DefaultVisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_Title = true;
         public const bool COLUMN_NULLABLE_Location = true;
         public const bool COLUMN_NULLABLE_FileName = false;
         public const bool COLUMN_NULLABLE_FileSize = false;
@@ -2680,8 +2683,12 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long DefaultVisionBoardPictureId { get; set; }
         
+        [Column("Title")]
+        [StringLength(100)]
+        public string Title { get; set; }
+        
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -2715,6 +2722,7 @@ namespace Manifest.Common.Models.DB
         {
             var sb = new StringBuilder();
             sb.AppendLine($"DefaultVisionBoardPictureId = {DefaultVisionBoardPictureId} , ");
+            sb.AppendLine($"Title = {Title} , ");
             sb.AppendLine($"Location = {Location} , ");
             sb.AppendLine($"FileName = {FileName} , ");
             sb.AppendLine($"FileSize = {FileSize} , ");
@@ -2734,6 +2742,7 @@ namespace Manifest.Common.Models.DB
             return new DefaultVisionBoardPicture
             {
             DefaultVisionBoardPictureId = item.DefaultVisionBoardPictureId,
+            Title = item.Title,
             Location = item.Location,
             FileName = item.FileName,
             FileSize = item.FileSize,
@@ -3258,8 +3267,8 @@ namespace Manifest.Common.Models.DB
 
         #region ColumnSize
         public const int COLUMN_SIZE_FileAttachmentFileName = 128;
-        public const int COLUMN_SIZE_FileAttachmentFileLocation = 512;
-        public const int COLUMN_SIZE_FileAttachmentPreviewFileLocation = 512;
+        public const int COLUMN_SIZE_FileAttachmentFileLocation = 1024;
+        public const int COLUMN_SIZE_FileAttachmentPreviewFileLocation = 1024;
         public const int COLUMN_SIZE_Description = 200;
         #endregion
 
@@ -3296,11 +3305,11 @@ namespace Manifest.Common.Models.DB
         
         [Column("FileAttachmentFileLocation")]
         [NotNull]
-        [StringLength(512)]
+        [StringLength(1024)]
         public string FileAttachmentFileLocation { get; set; }
         
         [Column("FileAttachmentPreviewFileLocation")]
-        [StringLength(512)]
+        [StringLength(1024)]
         public string FileAttachmentPreviewFileLocation { get; set; }
         
         [Column("FileAttachmentHasPreview")]
@@ -5324,7 +5333,7 @@ namespace Manifest.Common.Models.DB
 
         #region ColumnSize
         public const int COLUMN_SIZE_MeditationFileName = 255;
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
@@ -5359,7 +5368,7 @@ namespace Manifest.Common.Models.DB
         public string MeditationFileName { get; set; }
         
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -8642,6 +8651,7 @@ namespace Manifest.Common.Models.DB
 
         #region Columns
         public const string COLUMN_VisionBoardPictureId = "VisionBoardPictureId";
+        public const string COLUMN_Title = "Title";
         public const string COLUMN_Location = "Location";
         public const string COLUMN_FileName = "FileName";
         public const string COLUMN_FileSize = "FileSize";
@@ -8654,12 +8664,14 @@ namespace Manifest.Common.Models.DB
         #endregion
 
         #region ColumnSize
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Title = 100;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
         #region ColumnNull
         public const bool COLUMN_NULLABLE_VisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_Title = true;
         public const bool COLUMN_NULLABLE_Location = true;
         public const bool COLUMN_NULLABLE_FileName = false;
         public const bool COLUMN_NULLABLE_FileSize = false;
@@ -8677,8 +8689,12 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long VisionBoardPictureId { get; set; }
         
+        [Column("Title")]
+        [StringLength(100)]
+        public string Title { get; set; }
+        
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -8716,6 +8732,7 @@ namespace Manifest.Common.Models.DB
         {
             var sb = new StringBuilder();
             sb.AppendLine($"VisionBoardPictureId = {VisionBoardPictureId} , ");
+            sb.AppendLine($"Title = {Title} , ");
             sb.AppendLine($"Location = {Location} , ");
             sb.AppendLine($"FileName = {FileName} , ");
             sb.AppendLine($"FileSize = {FileSize} , ");
@@ -8736,6 +8753,7 @@ namespace Manifest.Common.Models.DB
             return new VisionBoardPicture
             {
             VisionBoardPictureId = item.VisionBoardPictureId,
+            Title = item.Title,
             Location = item.Location,
             FileName = item.FileName,
             FileSize = item.FileSize,
