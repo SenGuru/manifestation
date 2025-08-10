@@ -112,53 +112,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_isLoading) {
       return Scaffold(
         backgroundColor: AppTheme.backgroundPrimary,
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Simple header with back button for loading state
-              Padding(
-                padding: EdgeInsets.all(20.w),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        width: 44.w,
-                        height: 44.h,
-                        decoration: BoxDecoration(
-                          color: AppTheme.cardBackground,
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: AppTheme.textSecondary.withValues(alpha: 0.1),
-                          ),
-                        ),
-                        child: Icon(
-                          Icons.arrow_back,
-                          color: AppTheme.textPrimary,
-                          size: 20.sp,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    Text(
-                      'Profile',
-                      style: TextStyle(
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              
-              // Loading content
-              Expanded(
-                child: StylishLoading(
-                  message: 'Loading your profile...',
-                ),
-              ),
-            ],
+        body: Center(
+          child: StylishLoading(
+            message: 'Loading your profile...',
           ),
         ),
       );

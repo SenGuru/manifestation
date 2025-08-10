@@ -10,6 +10,7 @@ import 'services/vision_board_service.dart';
 import 'services/theme_service.dart';
 import 'services/subscription_service.dart';
 import 'widgets/session_activity_tracker.dart';
+import 'widgets/animated_theme_transition.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -199,33 +199,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               ],
             ),
           ),
-          // Save Draft button
-          GestureDetector(
-            onTap: _hasUnsavedChanges() ? () async => await _saveDraftProgress(true) : null,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: _hasUnsavedChanges() 
-                    ? AppTheme.journalGradient[0].withOpacity(0.1)
-                    : AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: _hasUnsavedChanges() 
-                      ? AppTheme.journalGradient[0].withOpacity(0.3)
-                      : AppTheme.textMedium.withOpacity(0.1),
-                ),
-              ),
-              child: Icon(
-                Icons.save_outlined,
-                color: _hasUnsavedChanges() 
-                    ? AppTheme.journalGradient[0]
-                    : AppTheme.textMedium.withOpacity(0.5),
-                size: 20.sp,
-              ),
-            ),
-          ),
-          SizedBox(width: 12.w),
           GestureDetector(
             onTap: _showCalendarView,
             child: Container(
@@ -743,7 +716,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           Expanded(
             flex: currentPage == 0 ? 1 : 1,
             child: GestureDetector(
-              onTap: isSaving ? null : (currentPage < 4 ? _nextPage : _saveEntry),
+              onTap: isSaving ? null : (currentPage < 4 ? _nextPage : _completeJournal),
               child: Container(
                 height: 44.h,
                 decoration: BoxDecoration(
@@ -763,7 +736,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              isEditingExistingEntry ? 'Updating...' : 'Saving...',
+                              'Completing...',
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w600,
@@ -773,7 +746,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                           ],
                         )
                       : Text(
-                          currentPage < 4 ? 'Next' : (isEditingExistingEntry ? 'Update Entry' : 'Save Entry'),
+                          currentPage < 4 ? 'Next' : (isEditingExistingEntry ? 'Complete' : 'Complete'),
                           style: TextStyle(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
@@ -807,7 +780,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     }
   }
 
-  Future<void> _saveEntry() async {
+  Future<void> _completeJournal() async {
     setState(() {
       isSaving = true;
     });
@@ -1279,116 +1252,213 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppTheme.cardBackground,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          title: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: AppTheme.journalGradient,
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
+            decoration: BoxDecoration(
+              color: AppTheme.cardBackground,
+              borderRadius: BorderRadius.circular(24.r),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.shadow,
+                  blurRadius: 20.r,
+                  offset: Offset(0, 10.h),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header with icon
+                  Container(
+                    width: 64.w,
+                    height: 64.h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: AppTheme.journalGradient,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.edit_note_rounded,
+                      color: Colors.white,
+                      size: 32.sp,
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                child: Icon(
-                  Icons.save_outlined,
-                  color: Colors.white,
-                  size: 20.sp,
-                ),
-              ),
-              SizedBox(width: 12.w),
-              Expanded(
-                child: Text(
-                  'Save Your Progress?',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                  
+                  SizedBox(height: 20.h),
+                  
+                  // Title
+                  Text(
+                    'Unsaved Changes',
+                    style: TextStyle(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
+                    ),
                   ),
-                ),
-              ),
-            ],
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'You have unsaved changes in your journal entry:',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppTheme.textMedium,
-                  height: 1.4,
-                ),
-              ),
-              SizedBox(height: 16.h),
-              ..._buildUnsavedChangesSummary(),
-              SizedBox(height: 16.h),
-              Text(
-                'What would you like to do?',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppTheme.textLight,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            // Cancel button
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                  color: AppTheme.textMedium,
-                  fontSize: 16.sp,
-                ),
+                  
+                  SizedBox(height: 12.h),
+                  
+                  // Description
+                  Text(
+                    'You have progress in your journal that hasn\'t been saved yet.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: AppTheme.textSecondary,
+                      height: 1.5,
+                    ),
+                  ),
+                  
+                  SizedBox(height: 24.h),
+                  
+                  // Changes summary in a card
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(16.r),
+                      border: Border.all(
+                        color: AppTheme.borderSecondary,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.pending_actions,
+                              color: AppTheme.journalGradient[0],
+                              size: 18.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'Your Progress',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        ..._buildUnsavedChangesSummary(),
+                      ],
+                    ),
+                  ),
+                  
+                  SizedBox(height: 32.h),
+                  
+                  // Action buttons
+                  Column(
+                    children: [
+                      // Save as Draft button (primary action)
+                      Container(
+                        width: double.infinity,
+                        height: 48.h,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await _saveDraftProgress();
+                            Navigator.of(context).pop(true);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.journalGradient[0],
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.r),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.save_rounded,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Save as Draft',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      SizedBox(height: 12.h),
+                      
+                      // Secondary actions row
+                      Row(
+                        children: [
+                          // Cancel button
+                          Expanded(
+                            child: Container(
+                              height: 44.h,
+                              child: TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: AppTheme.backgroundSecondary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          
+                          SizedBox(width: 12.w),
+                          
+                          // Discard button
+                          Expanded(
+                            child: Container(
+                              height: 44.h,
+                              child: TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Discard',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            // Discard button
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                'Discard',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            // Save as Draft button
-            Container(
-              margin: EdgeInsets.only(left: 8.w),
-              child: ElevatedButton(
-                onPressed: () async {
-                  // Save draft directly without showing another dialog
-                  await _saveDraftProgress();
-                  Navigator.of(context).pop(true); // Close dialog and allow navigation
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.journalGradient[0],
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
-                ),
-                child: Text(
-                  'Save as Draft',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         );
       },
     );
