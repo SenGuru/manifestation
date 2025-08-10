@@ -2407,6 +2407,105 @@ public void ClearVisionBoardPictureThumbnail_WithValidInvalidToken_ReturnsUnAuth
 {
     
 }
+public void GetVisionBoardSessions_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionSearchCriteria();
+    var r = GetVisionBoardSessions();
+}
+public void GetVisionBoardSessions_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSession();
+}
+public void GetVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionCreateModel();
+    var r = CreateVisionBoardSession();
+}
+public void CreateVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleVisionBoardSessionCreateModel();
+    var r = CreateMultipleVisionBoardSession();
+}
+public void CreateMultipleVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateVisionBoardSession_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionUpdateModel();
+    var r = UpdateVisionBoardSession();
+}
+public void UpdateVisionBoardSession_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardSessionAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardSessionAsDeleted();
+}
+public void MarkVisionBoardSessionAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVisionBoardSessionAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVisionBoardSessionAsNotDeleted();
+}
+public void MarkVisionBoardSessionAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByUserId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVisionBoardSessionByUserId();
+}
+public void GetVisionBoardSessionByUserId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVisionBoardSessionByUserIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardSessionByUserIdSearchCriteria();
+    var r = GetVisionBoardSessionByUserIdSearch();
+}
+public void GetVisionBoardSessionByUserIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardSessionId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserByVisionBoardSessionId();
+}
+public void GetUserByVisionBoardSessionId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserByVisionBoardSessionIdSearch_WithValidData_ReturnsValidData()
+{
+    var model = new UserByVisionBoardSessionIdSearchCriteria();
+    var r = GetUserByVisionBoardSessionIdSearch();
+}
+public void GetUserByVisionBoardSessionIdSearch_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
 public void GetDailyJournals_WithValidData_ReturnsValidData()
 {
     var model = new DailyJournalSearchCriteria();

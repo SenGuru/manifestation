@@ -24978,6 +24978,10 @@ namespace Manifest.Service.App
                     visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
                 }
 
+                visionBoardPicture.ThumbnailFileName = existingVisionBoardPictureModel.Model.ThumbnailFileName;
+                visionBoardPicture.ThumbnailLocation = existingVisionBoardPictureModel.Model.ThumbnailLocation;
+                visionBoardPicture.ThumbnailFileSize = existingVisionBoardPictureModel.Model.ThumbnailFileSize;
+
                 visionBoardPicture.CreatedByUserId = existingVisionBoardPictureModel.Model.CreatedByUserId;
                 visionBoardPicture.CreatedDate = existingVisionBoardPictureModel.Model.CreatedDate;
                 visionBoardPicture.IsDeleted = existingVisionBoardPictureModel.Model.IsDeleted;
@@ -25181,6 +25185,21 @@ namespace Manifest.Service.App
             if (visionBoardPictureModel.Title == null || visionBoardPictureModel.Title.Length > VisionBoardPictureModel.COLUMN_SIZE_Title)
             {
                 result.Add(new ReturnErrorItem("Title", $"Title size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_Title}"));
+            }
+
+            if (visionBoardPictureModel.ThumbnailLocation != null && visionBoardPictureModel.ThumbnailLocation.Length > VisionBoardPictureModel.COLUMN_SIZE_ThumbnailLocation)
+            {
+                result.Add(new ReturnErrorItem("ThumbnailLocation", $"Thumbnail Location size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_ThumbnailLocation}"));
+            }
+
+            if (visionBoardPictureModel.ThumbnailFileName != null && visionBoardPictureModel.ThumbnailFileName.Length > VisionBoardPictureModel.COLUMN_SIZE_ThumbnailFileName)
+            {
+                result.Add(new ReturnErrorItem("ThumbnailFileName", $"Thumbnail FileName size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_ThumbnailFileName}"));
+            }
+
+            if (visionBoardPictureModel.ThumbnailFileName == null)
+            {
+                result.Add(new ReturnErrorItem("ThumbnailFileName", "Thumbnail FileName is required "));
             }
 
             if (visionBoardPictureModel.Location != null && visionBoardPictureModel.Location.Length > VisionBoardPictureModel.COLUMN_SIZE_Location)

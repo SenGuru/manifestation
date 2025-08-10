@@ -1793,6 +1793,61 @@ namespace Manifest.Tests.Common
            return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/clearvisionboardpicturethumbnail"),new { visionBoardPictureId },appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessions(VisionBoardSessionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessions"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionModel> result)> GetVisionBoardSession(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsession"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionModel> result)> CreateVisionBoardSession(VisionBoardSessionCreateModel visionBoardSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionModel>,VisionBoardSessionCreateModel>(token,Url("/api/v1/manifest/createvisionboardsession"),visionBoardSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> CreateMultipleVisionBoardSession(MultipleVisionBoardSessionCreateModel visionBoardSessionModels, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,MultipleVisionBoardSessionCreateModel>(token,Url("/api/v1/manifest/createmultiplevisionboardsession"),visionBoardSessionModels,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<VisionBoardSessionModel> result)> UpdateVisionBoardSession(VisionBoardSessionUpdateModel visionBoardSessionModel, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<VisionBoardSessionModel>,VisionBoardSessionUpdateModel>(token,Url("/api/v1/manifest/updatevisionboardsession"),visionBoardSessionModel,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardSessionAsDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/markvisionboardsessionasdeleted"),new { id },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> MarkVisionBoardSessionAsNotDeleted(Int64 id, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/manifest/markvisionboardsessionasnotdeleted"),id,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByUserId(Int64 userId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,Object>(token,Url("/api/v1/manifest/getvisionboardsessionbyuserid"),new { userId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessionByUserIdSearch(VisionBoardSessionByUserIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionByUserIdSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessionbyuseridsearch"),search,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionId(Int64 visionBoardSessionId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,Object>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionid"),new { visionBoardSessionId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnListModel<UserModel> result)> GetUserByVisionBoardSessionIdSearch(UserByVisionBoardSessionIdSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserModel>,UserByVisionBoardSessionIdSearchCriteria>(token,Url("/api/v1/manifest/getuserbyvisionboardsessionidsearch"),search,appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<DailyJournalModel> result)> GetDailyJournals(DailyJournalSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<DailyJournalModel>,DailyJournalSearchCriteria>(token,Url("/api/v1/manifest/getdailyjournals"),search,appHeader);

@@ -4718,6 +4718,54 @@ namespace Manifest.Tests.Common
         [JsonPropertyName("modifiedByUserId")]
         public Int64? ModifiedByUserId {set; get;}
 
+        public VisionBoardSessionCreateModel GetAsCreateModel()
+        {
+            var obj = new VisionBoardSessionCreateModel();
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsCreateModel(VisionBoardSessionCreateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
+            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
+        public VisionBoardSessionUpdateModel GetAsUpdateModel()
+        {
+            var obj = new VisionBoardSessionUpdateModel();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        public bool IsSameAsUpdateModel(VisionBoardSessionUpdateModel obj)
+        {
+            var result = true;
+            result = result && (obj.VisionBoardSessionId == VisionBoardSessionId);
+            result = result && (obj.VisionBoardSessionDate == VisionBoardSessionDate);
+            result = result && (obj.VisionBoardSessionTimeSpentInSeconds == VisionBoardSessionTimeSpentInSeconds);
+            result = result && (obj.UserId == UserId);
+            result = result && (obj.AddedToFeed == AddedToFeed);
+            result = result && (obj.AddedToFeedDate == AddedToFeedDate);
+            return result;
+        }
+
+
         public VisionBoardSessionModel GetCopy()
         {
             var obj = new VisionBoardSessionModel();
@@ -13629,6 +13677,270 @@ namespace Manifest.Tests.Common
         // Property Names
         public const string VisionBoardPictureId__Name = "VisionBoardPictureId";
         public const string UploadedFile__Name = "UploadedFile";
+    }
+
+    public class VisionBoardSessionSearchCriteria
+    {
+
+        public VisionBoardSessionSearchCriteria()
+        {
+        }
+        [JsonPropertyName("showDeleted")]
+        public Boolean ShowDeleted {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("createdByUserId")]
+        public Int64? CreatedByUserId {set; get;}
+        [JsonPropertyName("modifiedByUserId")]
+        public Int64? ModifiedByUserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionSearchCriteria();
+            obj.ShowDeleted = ShowDeleted;
+            obj.UserId = UserId;
+            obj.CreatedByUserId = CreatedByUserId;
+            obj.ModifiedByUserId = ModifiedByUserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string ShowDeleted__Name = "ShowDeleted";
+        public const string UserId__Name = "UserId";
+        public const string CreatedByUserId__Name = "CreatedByUserId";
+        public const string ModifiedByUserId__Name = "ModifiedByUserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class VisionBoardSessionCreateModel
+    {
+
+        public VisionBoardSessionCreateModel()
+        {
+        }
+
+        public VisionBoardSessionCreateModel(DateTime visionBoardSessionDate,Int64 userId)
+        {
+            VisionBoardSessionDate = visionBoardSessionDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public VisionBoardSessionCreateModel GetCopy()
+        {
+            var obj = new VisionBoardSessionCreateModel();
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class MultipleVisionBoardSessionCreateModel
+    {
+
+        public MultipleVisionBoardSessionCreateModel()
+        {
+        }
+        [JsonPropertyName("newVisionBoardSessions")]
+        public List<VisionBoardSessionCreateModel> NewVisionBoardSessions {set; get;}
+
+        public MultipleVisionBoardSessionCreateModel GetCopy()
+        {
+            var obj = new MultipleVisionBoardSessionCreateModel();
+            obj.NewVisionBoardSessions = NewVisionBoardSessions;
+            return obj;
+        }
+
+        // Property Names
+        public const string NewVisionBoardSessions__Name = "NewVisionBoardSessions";
+    }
+
+    public class VisionBoardSessionUpdateModel
+    {
+
+        public VisionBoardSessionUpdateModel()
+        {
+        }
+
+        public VisionBoardSessionUpdateModel(Int64 visionBoardSessionId,DateTime visionBoardSessionDate,Int64 userId)
+        {
+            VisionBoardSessionId = visionBoardSessionId;
+            VisionBoardSessionDate = visionBoardSessionDate;
+            UserId = userId;
+        }
+
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("visionBoardSessionDate")]
+        public DateTime VisionBoardSessionDate {set; get;}
+        [JsonPropertyName("visionBoardSessionTimeSpentInSeconds")]
+        public Int64? VisionBoardSessionTimeSpentInSeconds {set; get;}
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("addedToFeed")]
+        public Boolean? AddedToFeed {set; get;}
+        [JsonPropertyName("addedToFeedDate")]
+        public DateTime? AddedToFeedDate {set; get;}
+
+        public VisionBoardSessionUpdateModel GetCopy()
+        {
+            var obj = new VisionBoardSessionUpdateModel();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.VisionBoardSessionDate = VisionBoardSessionDate;
+            obj.VisionBoardSessionTimeSpentInSeconds = VisionBoardSessionTimeSpentInSeconds;
+            obj.UserId = UserId;
+            obj.AddedToFeed = AddedToFeed;
+            obj.AddedToFeedDate = AddedToFeedDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string VisionBoardSessionDate__Name = "VisionBoardSessionDate";
+        public const string VisionBoardSessionTimeSpentInSeconds__Name = "VisionBoardSessionTimeSpentInSeconds";
+        public const string UserId__Name = "UserId";
+        public const string AddedToFeed__Name = "AddedToFeed";
+        public const string AddedToFeedDate__Name = "AddedToFeedDate";
+    }
+
+    public class VisionBoardSessionByUserIdSearchCriteria
+    {
+
+        public VisionBoardSessionByUserIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public VisionBoardSessionByUserIdSearchCriteria GetCopy()
+        {
+            var obj = new VisionBoardSessionByUserIdSearchCriteria();
+            obj.UserId = UserId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
+    }
+
+    public class UserByVisionBoardSessionIdSearchCriteria
+    {
+
+        public UserByVisionBoardSessionIdSearchCriteria()
+        {
+        }
+        [JsonPropertyName("visionBoardSessionId")]
+        public Int64 VisionBoardSessionId {set; get;}
+        [JsonPropertyName("selectedId")]
+        public Int64? SelectedId {set; get;}
+        [JsonPropertyName("page")]
+        public Int32 Page {set; get;}
+        [JsonPropertyName("pageSize")]
+        public Int32 PageSize {set; get;}
+        [JsonPropertyName("keyword")]
+        public String Keyword {set; get;}
+        [JsonPropertyName("sortBy")]
+        public String SortBy {set; get;}
+        [JsonPropertyName("sortAscending")]
+        public Boolean SortAscending {set; get;}
+
+        public UserByVisionBoardSessionIdSearchCriteria GetCopy()
+        {
+            var obj = new UserByVisionBoardSessionIdSearchCriteria();
+            obj.VisionBoardSessionId = VisionBoardSessionId;
+            obj.SelectedId = SelectedId;
+            obj.Page = Page;
+            obj.PageSize = PageSize;
+            obj.Keyword = Keyword;
+            obj.SortBy = SortBy;
+            obj.SortAscending = SortAscending;
+            return obj;
+        }
+
+        // Property Names
+        public const string VisionBoardSessionId__Name = "VisionBoardSessionId";
+        public const string SelectedId__Name = "SelectedId";
+        public const string Page__Name = "Page";
+        public const string PageSize__Name = "PageSize";
+        public const string Keyword__Name = "Keyword";
+        public const string SortBy__Name = "SortBy";
+        public const string SortAscending__Name = "SortAscending";
+        public const string CurrentRows__Name = "CurrentRows";
+        public const string TotalRowCount__Name = "TotalRowCount";
+        public const string NumericPageCount__Name = "NumericPageCount";
     }
 
     public class DailyJournalModel

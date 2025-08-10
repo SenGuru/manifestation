@@ -4822,6 +4822,7 @@ namespace Manifest.Api.All.Controllers
 
             return Json(result);
         }
+        */
         #endregion
 
         #region VisionBoardSession
@@ -4903,9 +4904,6 @@ namespace Manifest.Api.All.Controllers
         {
             return manifestService.GetUserByVisionBoardSessionIdAsync(search);
         }
-
-
-
         /*
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
