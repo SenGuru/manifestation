@@ -73,6 +73,17 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundDark,
+        body: Center(
+          child: StylishLoading(
+            message: 'Loading your statistics...',
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
@@ -80,13 +91,9 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           children: [
             _buildHeader(),
             Expanded(
-              child: _isLoading
-                  ? StylishLoading(
-                      message: 'Loading your statistics...',
-                    )
-                  : _errorMessage.isNotEmpty
-                      ? _buildErrorState()
-                      : _buildStatsContent(),
+              child: _errorMessage.isNotEmpty
+                  ? _buildErrorState()
+                  : _buildStatsContent(),
             ),
           ],
         ),
@@ -126,25 +133,6 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
                 color: AppTheme.textLight,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: _loadStats,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                ),
-              ),
-              child: Icon(
-                Icons.refresh,
-                color: AppTheme.textLight,
-                size: 20.sp,
               ),
             ),
           ),
