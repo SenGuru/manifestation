@@ -20,6 +20,7 @@ using Manifest.Common.Models.ViewModels;
 using Manifest.Common.Models.ViewModels;
 using Manifest.Common.Models.ViewModels.ImportExportModels;
 using Manifest.Service.App;
+using Manifest.Service.Config;
 using Manifest.Service.Storage;
 using Manifest.Web.Filters;
 using Manifest.Web.Models;
@@ -40,12 +41,14 @@ namespace Manifest.Api.All.Controllers
         private readonly ManifestService manifestService;
         private readonly DummyDataGenerationService dummyDataGenerationService;
         private readonly CompanyService companyService;
-        public ManifestController(CompanyService companyService, ManifestService manifestService, DummyDataGenerationService dummyDataGenerationService, ILog log)
+        private readonly AppConfigurationFile appConfigurationFile;
+        public ManifestController(CompanyService companyService, ManifestService manifestService, DummyDataGenerationService dummyDataGenerationService, AppConfigurationFile appConfigurationFile, ILog log)
             : base(log)
         {
             this.companyService = companyService;
             this.manifestService = manifestService;
             this.dummyDataGenerationService = dummyDataGenerationService;
+            this.appConfigurationFile = appConfigurationFile;
         }
 
         #region FileAttachmentFolder
@@ -5276,13 +5279,13 @@ namespace Manifest.Api.All.Controllers
                     return BadRequest("Text cannot be empty");
                 }
 
-                var cwd = Directory.GetCurrentDirectory();
+                var cwd = appConfigurationFile.GetConfigFileFolder();
                 var piperPath = Path.Join(cwd, "piper");
                 
                 // Ensure Piper is downloaded
                 if (!Directory.Exists(piperPath))
                 {
-                    await PiperSharp.PiperDownloader.DownloadPiper().ExtractPiper(cwd);
+                    await PiperSharp.PiperDownloader.DownloadPiper("2023.11.14-2").ExtractPiper(cwd);
                 }
 
                 // Get a default English model if no model exists
