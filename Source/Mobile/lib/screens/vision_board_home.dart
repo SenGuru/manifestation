@@ -456,74 +456,22 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.dashboard,
-            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
-            size: 40.sp,
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'Vision Board',
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppTheme.textSecondary.withValues(alpha: 0.6),
-            ),
-          ),
-        ],
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
       ),
+      child: Container(), // Completely empty - shows nothing
     );
   }
 
   Widget _buildVisionBoardPreview(VisionBoard board) {
-    if (board.elements.isEmpty) {
-      return _buildPlaceholderThumbnail();
+    // Check if we have a thumbnail URL from the server
+    if (board.thumbnailUrl != null && board.thumbnailUrl!.isNotEmpty) {
+      return _buildThumbnailFromUrl(board.thumbnailUrl!);
     }
     
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        child: Stack(
-          children: [
-            // Background
-            Container(
-              color: board.backgroundColor,
-            ),
-            
-            // Preview elements in miniature
-            ...board.elements.take(6).map((element) { // Limit to first 6 elements
-              return _buildPreviewElement(element, board);
-            }).toList(),
-            
-            // Overlay for more elements indicator
-            if (board.elements.length > 6)
-              Positioned(
-                bottom: 8.h,
-                right: 8.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                  decoration: BoxDecoration(
-                    color: AppTheme.black.withValues(alpha: 0.6),
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Text(
-                    '+${board.elements.length - 6}',
-                    style: TextStyle(
-                      color: AppTheme.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
+    // If no thumbnail, just show empty placeholder - don't try to render elements
+    return _buildPlaceholderThumbnail();
   }
   
   Widget _buildPreviewElement(VisionBoardElement element, VisionBoard board) {
@@ -607,6 +555,39 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     }
     
     return SizedBox.shrink();
+  }
+
+  Widget _buildThumbnailFromUrl(String thumbnailUrl) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: ClipRRect(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        child: Image.network(
+          thumbnailUrl,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppTheme.visionBoardGradient[0],
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            print('❌ Failed to load thumbnail: $error');
+            // Fallback to placeholder if thumbnail fails to load
+            return _buildPlaceholderThumbnail();
+          },
+        ),
+      ),
+    );
   }
 
   Widget _buildTemplatesSection() {

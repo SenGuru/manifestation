@@ -13845,6 +13845,9 @@ VisionBoardPictureCreateModel _$VisionBoardPictureCreateModelFromJson(
   location: json['location'] as String?,
   fileName: json['fileName'] as String?,
   fileSize: (json['fileSize'] as num?)?.toInt(),
+  thumbnailLocation: json['thumbnailLocation'] as String?,
+  thumbnailFileName: json['thumbnailFileName'] as String?,
+  thumbnailFileSize: (json['thumbnailFileSize'] as num?)?.toInt(),
   userId: (json['userId'] as num?)?.toInt(),
 );
 
@@ -13855,6 +13858,9 @@ Map<String, dynamic> _$VisionBoardPictureCreateModelToJson(
   'location': instance.location,
   'fileName': instance.fileName,
   'fileSize': instance.fileSize,
+  'thumbnailLocation': instance.thumbnailLocation,
+  'thumbnailFileName': instance.thumbnailFileName,
+  'thumbnailFileSize': instance.thumbnailFileSize,
   'userId': instance.userId,
 };
 
@@ -13866,6 +13872,9 @@ VisionBoardPictureModel _$VisionBoardPictureModelFromJson(
   location: json['location'] as String?,
   fileName: json['fileName'] as String?,
   fileSize: (json['fileSize'] as num?)?.toInt(),
+  thumbnailLocation: json['thumbnailLocation'] as String?,
+  thumbnailFileName: json['thumbnailFileName'] as String?,
+  thumbnailFileSize: (json['thumbnailFileSize'] as num?)?.toInt(),
   userId: (json['userId'] as num?)?.toInt(),
   isDeleted: json['isDeleted'] as bool?,
   createdDate: json['createdDate'] == null
@@ -13895,6 +13904,9 @@ Map<String, dynamic> _$VisionBoardPictureModelToJson(
   'location': instance.location,
   'fileName': instance.fileName,
   'fileSize': instance.fileSize,
+  'thumbnailLocation': instance.thumbnailLocation,
+  'thumbnailFileName': instance.thumbnailFileName,
+  'thumbnailFileSize': instance.thumbnailFileSize,
   'userId': instance.userId,
   'isDeleted': instance.isDeleted,
   'createdDate': instance.createdDate?.toIso8601String(),
@@ -15179,6 +15191,9 @@ _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyFromJson(
   location: json['Location'] as String?,
   fileName: json['FileName'] as String?,
   fileSize: (json['FileSize'] as num?)?.toInt(),
+  thumbnailLocation: json['ThumbnailLocation'] as String?,
+  thumbnailFileName: json['ThumbnailFileName'] as String?,
+  thumbnailFileSize: (json['ThumbnailFileSize'] as num?)?.toInt(),
   userId: (json['UserId'] as num?)?.toInt(),
 );
 
@@ -15191,6 +15206,9 @@ _$ApiV1ManifestCreatevisionboardpicturePost$RequestBodyToJson(
   'Location': instance.location,
   'FileName': instance.fileName,
   'FileSize': instance.fileSize,
+  'ThumbnailLocation': instance.thumbnailLocation,
+  'ThumbnailFileName': instance.thumbnailFileName,
+  'ThumbnailFileSize': instance.thumbnailFileSize,
   'UserId': instance.userId,
 };
 
@@ -15204,6 +15222,9 @@ _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyFromJson(
   location: json['Location'] as String?,
   fileName: json['FileName'] as String?,
   fileSize: (json['FileSize'] as num?)?.toInt(),
+  thumbnailLocation: json['ThumbnailLocation'] as String?,
+  thumbnailFileName: json['ThumbnailFileName'] as String?,
+  thumbnailFileSize: (json['ThumbnailFileSize'] as num?)?.toInt(),
   userId: (json['UserId'] as num?)?.toInt(),
 );
 
@@ -15217,7 +15238,26 @@ _$ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyToJson(
   'Location': instance.location,
   'FileName': instance.fileName,
   'FileSize': instance.fileSize,
+  'ThumbnailLocation': instance.thumbnailLocation,
+  'ThumbnailFileName': instance.thumbnailFileName,
+  'ThumbnailFileSize': instance.thumbnailFileSize,
   'UserId': instance.userId,
+};
+
+ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody
+_$ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyFromJson(
+  Map<String, dynamic> json,
+) => ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody(
+  visionBoardPictureId: (json['VisionBoardPictureId'] as num?)?.toInt(),
+  uploadedFile: json['UploadedFile'] as String?,
+);
+
+Map<String, dynamic>
+_$ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyToJson(
+  ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody instance,
+) => <String, dynamic>{
+  'VisionBoardPictureId': instance.visionBoardPictureId,
+  'UploadedFile': instance.uploadedFile,
 };
 
 ApiV1TwilioHandlegatherPost$RequestBody

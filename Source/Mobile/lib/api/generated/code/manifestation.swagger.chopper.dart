@@ -6531,6 +6531,9 @@ final class _$Manifestation extends Manifestation {
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     final Uri $url = Uri.parse('/api/v1/manifest/createvisionboardpicture');
@@ -6539,6 +6542,9 @@ final class _$Manifestation extends Manifestation {
       PartValue<String?>('Location', location),
       PartValue<String?>('FileName', fileName),
       PartValue<int?>('FileSize', fileSize),
+      PartValue<String?>('ThumbnailLocation', thumbnailLocation),
+      PartValue<String?>('ThumbnailFileName', thumbnailFileName),
+      PartValue<int?>('ThumbnailFileSize', thumbnailFileSize),
       PartValue<int?>('UserId', userId),
       PartValueFile<List<int>>('UploadedFile', UploadedFile),
     ];
@@ -6580,6 +6586,9 @@ final class _$Manifestation extends Manifestation {
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     final Uri $url = Uri.parse('/api/v1/manifest/updatevisionboardpicture');
@@ -6589,6 +6598,9 @@ final class _$Manifestation extends Manifestation {
       PartValue<String?>('Location', location),
       PartValue<String?>('FileName', fileName),
       PartValue<int?>('FileSize', fileSize),
+      PartValue<String?>('ThumbnailLocation', thumbnailLocation),
+      PartValue<String?>('ThumbnailFileName', thumbnailFileName),
+      PartValue<int?>('ThumbnailFileSize', thumbnailFileSize),
       PartValue<int?>('UserId', userId),
       PartValueFile<List<int>>('UploadedFile', UploadedFile),
     ];
@@ -6737,6 +6749,89 @@ final class _$Manifestation extends Manifestation {
       parameters: $params,
     );
     return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<BooleanReturnModel>>
+  _apiV1ManifestIsvisionboardpicturethumbnailvalidGet({
+    int? visionBoardPictureId,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/isvisionboardpicturethumbnailvalid',
+    );
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
+  }
+
+  @override
+  Future<Response<dynamic>>
+  _apiV1ManifestDownloadvisionboardpicturethumbnailGet({
+    int? visionBoardPictureId,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/downloadvisionboardpicturethumbnail',
+    );
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<BooleanReturnModel>>
+  _apiV1ManifestUploadvisionboardpicturethumbnailPost({
+    int? visionBoardPictureId,
+    List<int>? UploadedFile,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/uploadvisionboardpicturethumbnail',
+    );
+    final List<PartValue> $parts = <PartValue>[
+      PartValue<int?>('VisionBoardPictureId', visionBoardPictureId),
+      PartValueFile<List<int>?>('UploadedFile', UploadedFile),
+    ];
+    final Request $request = Request(
+      'POST',
+      $url,
+      client.baseUrl,
+      parts: $parts,
+      multipart: true,
+    );
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
+  }
+
+  @override
+  Future<Response<BooleanReturnModel>>
+  _apiV1ManifestClearvisionboardpicturethumbnailDelete({
+    int? visionBoardPictureId,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/clearvisionboardpicturethumbnail',
+    );
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId,
+    };
+    final Request $request = Request(
+      'DELETE',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
   }
 
   @override
@@ -7139,6 +7234,16 @@ final class _$Manifestation extends Manifestation {
     return client.send<UserModelReturnListModel, UserModelReturnListModel>(
       $request,
     );
+  }
+
+  @override
+  Future<Response<dynamic>> _apiV1ManifestConverttexttoaudioPost({
+    required String? body,
+  }) {
+    final Uri $url = Uri.parse('/api/v1/manifest/converttexttoaudio');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override

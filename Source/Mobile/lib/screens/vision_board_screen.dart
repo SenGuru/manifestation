@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../constants/app_theme.dart';
@@ -55,6 +58,9 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   // Session tracking with UsageAnalyticsService
   final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
   bool _sessionStarted = false;
+  
+  // GlobalKey for capturing canvas as image
+  final GlobalKey _canvasKey = GlobalKey();
 
   @override
   void initState() {
@@ -257,23 +263,26 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.r),
-        child: Stack(
-          children: [
-            // Canvas with padding to prevent cutoff
-            Positioned.fill(
-              child: Padding(
-                padding: EdgeInsets.all(12.w),
-                child: VisionBoardCanvas(
-                  board: currentBoard,
-                  selectedTool: selectedTool,
-                  onBoardChanged: _onBoardChanged,
-                  onDeselectTool: _deselectTool,
+        child: RepaintBoundary(
+          key: _canvasKey,
+          child: Stack(
+            children: [
+              // Canvas with padding to prevent cutoff
+              Positioned.fill(
+                child: Padding(
+                  padding: EdgeInsets.all(12.w),
+                  child: VisionBoardCanvas(
+                    board: currentBoard,
+                    selectedTool: selectedTool,
+                    onBoardChanged: _onBoardChanged,
+                    onDeselectTool: _deselectTool,
+                  ),
                 ),
               ),
-            ),
-            
-            // Canvas overlay removed - cleaner interface
-          ],
+              
+              // Canvas overlay removed - cleaner interface
+            ],
+          ),
         ),
       ),
     );
@@ -1450,6 +1459,67 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     _saveToUndoStack();
   }
 
+  Future<Uint8List?> _captureThumbnail() async {
+    try {
+      print('📸 Capturing vision board thumbnail...');
+      
+      // Find the RenderRepaintBoundary
+      RenderRepaintBoundary? boundary = _canvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      
+      if (boundary == null) {
+        print('❌ Failed to find RenderRepaintBoundary');
+        return null;
+      }
+      
+      // Capture the image at a lower resolution for thumbnail
+      // Using scale 0.3 to create a smaller thumbnail
+      ui.Image image = await boundary.toImage(pixelRatio: 0.3);
+      
+      // Convert to byte data
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      
+      if (byteData == null) {
+        print('❌ Failed to convert image to byte data');
+        return null;
+      }
+      
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      print('✅ Thumbnail captured successfully (${pngBytes.length} bytes)');
+      
+      return pngBytes;
+    } catch (e) {
+      print('❌ Error capturing thumbnail: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> _saveThumbnailToFile(Uint8List thumbnailBytes) async {
+    try {
+      // Get temporary directory
+      final directory = await getTemporaryDirectory();
+      
+      // Generate filename
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = 'vision_board_thumbnail_$timestamp.png';
+      final filePath = '${directory.path}/$fileName';
+      
+      // Write to file
+      final file = File(filePath);
+      await file.writeAsBytes(thumbnailBytes);
+      
+      print('✅ Thumbnail saved to: $filePath');
+      
+      return {
+        'fileName': fileName,
+        'filePath': filePath,
+        'fileSize': thumbnailBytes.length,
+      };
+    } catch (e) {
+      print('❌ Error saving thumbnail to file: $e');
+      return null;
+    }
+  }
+
   Future<void> _saveBoard() async {
     try {
       print('🎯 Saving vision board to server...');
@@ -1491,10 +1561,23 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         
         print('🔍 DEBUG: isNewBoard: $isNewBoard (based on serverPictureId == null)');
         
+        // Capture thumbnail before saving
+        Map<String, dynamic>? thumbnailInfo;
+        final thumbnailBytes = await _captureThumbnail();
+        if (thumbnailBytes != null) {
+          thumbnailInfo = await _saveThumbnailToFile(thumbnailBytes);
+          print('🔍 DEBUG: Thumbnail info: $thumbnailInfo');
+        } else {
+          print('⚠️ Warning: Could not capture thumbnail');
+        }
+        
         if (isNewBoard) {
           // Create new vision board on server
-          print('🔍 DEBUG: Calling createVisionBoard...');
-          final result = await visionBoardService.createVisionBoard(currentBoard);
+          print('🔍 DEBUG: Calling createVisionBoard with thumbnail...');
+          final result = await visionBoardService.createVisionBoard(
+            currentBoard,
+            thumbnailInfo: thumbnailInfo,
+          );
           print('🔍 DEBUG: createVisionBoard result: isSuccess=${result.isSuccess}, message=${result.message}, data=${result.data}');
           
           // Hide saving dialog
@@ -1526,7 +1609,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           }
         } else {
           // Update existing vision board on server using stored picture ID
-          final result = await visionBoardService.updateVisionBoard(currentBoard, pictureId: serverPictureId);
+          final result = await visionBoardService.updateVisionBoard(
+            currentBoard, 
+            pictureId: serverPictureId,
+            thumbnailInfo: thumbnailInfo,
+          );
           
           // Hide saving dialog
           Navigator.of(context).pop();

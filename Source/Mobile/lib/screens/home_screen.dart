@@ -20,6 +20,7 @@ import 'login_screen.dart';
 import 'profile_screen.dart';
 import '../services/subscription_service.dart';
 import '../components/premium_upgrade_dialog.dart';
+import '../services/unified_auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int currentStreak = 7;
-  String userName = 'Alex';
+  String userName = 'User';
 
   @override
   void initState() {
@@ -43,12 +44,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _loadUserName() async {
     try {
-      // Hardcoded user name placeholder
-      final firstName = 'Alex';
+      final authService = UnifiedAuthService();
+      
+      // Try to get user data from the auth service
+      final currentUser = authService.currentUser;
+      String firstName = '';
+      
+      if (currentUser != null && currentUser.firstName != null) {
+        firstName = currentUser.firstName!;
+        print('Loaded firstName from currentUser: $firstName');
+      } else {
+        // Fallback to getting user data from storage
+        final userData = await authService.getUserData();
+        if (userData != null) {
+          firstName = userData['firstName'] ?? '';
+          print('Loaded firstName from userData: $firstName');
+        }
+      }
+      
       setState(() {
         userName = firstName.isNotEmpty ? firstName : 'User';
       });
-      print('Loaded user name: $userName');
+      print('Set user name to: $userName');
     } catch (e) {
       print('Error loading user name: $e');
       setState(() {

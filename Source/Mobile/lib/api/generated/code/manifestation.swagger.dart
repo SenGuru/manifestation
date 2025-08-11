@@ -9574,6 +9574,9 @@ abstract class Manifestation extends ChopperService {
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     generatedMapping.putIfAbsent(
@@ -9587,6 +9590,9 @@ abstract class Manifestation extends ChopperService {
       location: location,
       fileName: fileName,
       fileSize: fileSize,
+      thumbnailLocation: thumbnailLocation,
+      thumbnailFileName: thumbnailFileName,
+      thumbnailFileSize: thumbnailFileSize,
       userId: userId,
     );
   }
@@ -9601,6 +9607,9 @@ abstract class Manifestation extends ChopperService {
     @Part('Location') String? location,
     @Part('FileName') String? fileName,
     @Part('FileSize') int? fileSize,
+    @Part('ThumbnailLocation') String? thumbnailLocation,
+    @Part('ThumbnailFileName') String? thumbnailFileName,
+    @Part('ThumbnailFileSize') int? thumbnailFileSize,
     @Part('UserId') int? userId,
   });
 
@@ -9636,6 +9645,9 @@ abstract class Manifestation extends ChopperService {
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     generatedMapping.putIfAbsent(
@@ -9650,6 +9662,9 @@ abstract class Manifestation extends ChopperService {
       location: location,
       fileName: fileName,
       fileSize: fileSize,
+      thumbnailLocation: thumbnailLocation,
+      thumbnailFileName: thumbnailFileName,
+      thumbnailFileSize: thumbnailFileSize,
       userId: userId,
     );
   }
@@ -9665,6 +9680,9 @@ abstract class Manifestation extends ChopperService {
     @Part('Location') String? location,
     @Part('FileName') String? fileName,
     @Part('FileSize') int? fileSize,
+    @Part('ThumbnailLocation') String? thumbnailLocation,
+    @Part('ThumbnailFileName') String? thumbnailFileName,
+    @Part('ThumbnailFileSize') int? thumbnailFileSize,
     @Part('UserId') int? userId,
   });
 
@@ -9825,6 +9843,101 @@ abstract class Manifestation extends ChopperService {
   ///@param visionBoardPictureId
   @GET(path: '/api/v1/manifest/downloadvisionboardpicturefile')
   Future<chopper.Response> _apiV1ManifestDownloadvisionboardpicturefileGet({
+    @Query('visionBoardPictureId') int? visionBoardPictureId,
+  });
+
+  ///
+  ///@param visionBoardPictureId
+  Future<chopper.Response<BooleanReturnModel>>
+  apiV1ManifestIsvisionboardpicturethumbnailvalidGet({
+    int? visionBoardPictureId,
+  }) {
+    generatedMapping.putIfAbsent(
+      BooleanReturnModel,
+      () => BooleanReturnModel.fromJsonFactory,
+    );
+
+    return _apiV1ManifestIsvisionboardpicturethumbnailvalidGet(
+      visionBoardPictureId: visionBoardPictureId,
+    );
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @GET(path: '/api/v1/manifest/isvisionboardpicturethumbnailvalid')
+  Future<chopper.Response<BooleanReturnModel>>
+  _apiV1ManifestIsvisionboardpicturethumbnailvalidGet({
+    @Query('visionBoardPictureId') int? visionBoardPictureId,
+  });
+
+  ///
+  ///@param visionBoardPictureId
+  Future<chopper.Response> apiV1ManifestDownloadvisionboardpicturethumbnailGet({
+    int? visionBoardPictureId,
+  }) {
+    return _apiV1ManifestDownloadvisionboardpicturethumbnailGet(
+      visionBoardPictureId: visionBoardPictureId,
+    );
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @GET(path: '/api/v1/manifest/downloadvisionboardpicturethumbnail')
+  Future<chopper.Response>
+  _apiV1ManifestDownloadvisionboardpicturethumbnailGet({
+    @Query('visionBoardPictureId') int? visionBoardPictureId,
+  });
+
+  ///
+  Future<chopper.Response<BooleanReturnModel>>
+  apiV1ManifestUploadvisionboardpicturethumbnailPost({
+    int? visionBoardPictureId,
+    List<int>? UploadedFile,
+  }) {
+    generatedMapping.putIfAbsent(
+      BooleanReturnModel,
+      () => BooleanReturnModel.fromJsonFactory,
+    );
+
+    return _apiV1ManifestUploadvisionboardpicturethumbnailPost(
+      visionBoardPictureId: visionBoardPictureId,
+      UploadedFile: UploadedFile,
+    );
+  }
+
+  ///
+  @POST(
+    path: '/api/v1/manifest/uploadvisionboardpicturethumbnail',
+    optionalBody: true,
+  )
+  @Multipart()
+  Future<chopper.Response<BooleanReturnModel>>
+  _apiV1ManifestUploadvisionboardpicturethumbnailPost({
+    @Part('VisionBoardPictureId') int? visionBoardPictureId,
+    @PartFile() List<int>? UploadedFile,
+  });
+
+  ///
+  ///@param visionBoardPictureId
+  Future<chopper.Response<BooleanReturnModel>>
+  apiV1ManifestClearvisionboardpicturethumbnailDelete({
+    int? visionBoardPictureId,
+  }) {
+    generatedMapping.putIfAbsent(
+      BooleanReturnModel,
+      () => BooleanReturnModel.fromJsonFactory,
+    );
+
+    return _apiV1ManifestClearvisionboardpicturethumbnailDelete(
+      visionBoardPictureId: visionBoardPictureId,
+    );
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @DELETE(path: '/api/v1/manifest/clearvisionboardpicturethumbnail')
+  Future<chopper.Response<BooleanReturnModel>>
+  _apiV1ManifestClearvisionboardpicturethumbnailDelete({
     @Query('visionBoardPictureId') int? visionBoardPictureId,
   });
 
@@ -10406,6 +10519,19 @@ abstract class Manifestation extends ChopperService {
   Future<chopper.Response<UserModelReturnListModel>>
   _apiV1ManifestGetuserbydailyjournalidsearchGet({
     @Body() required UserByDailyJournalIdSearchCriteria? body,
+  });
+
+  ///
+  Future<chopper.Response> apiV1ManifestConverttexttoaudioPost({
+    required String? body,
+  }) {
+    return _apiV1ManifestConverttexttoaudioPost(body: body);
+  }
+
+  ///
+  @POST(path: '/api/v1/manifest/converttexttoaudio', optionalBody: true)
+  Future<chopper.Response> _apiV1ManifestConverttexttoaudioPost({
+    @Body() required String? body,
   });
 
   ///
@@ -86770,6 +86896,9 @@ class VisionBoardPictureCreateModel {
     this.location,
     this.fileName,
     this.fileSize,
+    this.thumbnailLocation,
+    this.thumbnailFileName,
+    this.thumbnailFileSize,
     this.userId,
   });
 
@@ -86787,6 +86916,12 @@ class VisionBoardPictureCreateModel {
   final String? fileName;
   @JsonKey(name: 'fileSize')
   final int? fileSize;
+  @JsonKey(name: 'thumbnailLocation')
+  final String? thumbnailLocation;
+  @JsonKey(name: 'thumbnailFileName')
+  final String? thumbnailFileName;
+  @JsonKey(name: 'thumbnailFileSize')
+  final int? thumbnailFileSize;
   @JsonKey(name: 'userId')
   final int? userId;
   static const fromJsonFactory = _$VisionBoardPictureCreateModelFromJson;
@@ -86812,6 +86947,21 @@ class VisionBoardPictureCreateModel {
                   other.fileSize,
                   fileSize,
                 )) &&
+            (identical(other.thumbnailLocation, thumbnailLocation) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailLocation,
+                  thumbnailLocation,
+                )) &&
+            (identical(other.thumbnailFileName, thumbnailFileName) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileName,
+                  thumbnailFileName,
+                )) &&
+            (identical(other.thumbnailFileSize, thumbnailFileSize) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileSize,
+                  thumbnailFileSize,
+                )) &&
             (identical(other.userId, userId) ||
                 const DeepCollectionEquality().equals(other.userId, userId)));
   }
@@ -86825,6 +86975,9 @@ class VisionBoardPictureCreateModel {
       const DeepCollectionEquality().hash(location) ^
       const DeepCollectionEquality().hash(fileName) ^
       const DeepCollectionEquality().hash(fileSize) ^
+      const DeepCollectionEquality().hash(thumbnailLocation) ^
+      const DeepCollectionEquality().hash(thumbnailFileName) ^
+      const DeepCollectionEquality().hash(thumbnailFileSize) ^
       const DeepCollectionEquality().hash(userId) ^
       runtimeType.hashCode;
 }
@@ -86836,6 +86989,9 @@ extension $VisionBoardPictureCreateModelExtension
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     return VisionBoardPictureCreateModel(
@@ -86843,6 +86999,9 @@ extension $VisionBoardPictureCreateModelExtension
       location: location ?? this.location,
       fileName: fileName ?? this.fileName,
       fileSize: fileSize ?? this.fileSize,
+      thumbnailLocation: thumbnailLocation ?? this.thumbnailLocation,
+      thumbnailFileName: thumbnailFileName ?? this.thumbnailFileName,
+      thumbnailFileSize: thumbnailFileSize ?? this.thumbnailFileSize,
       userId: userId ?? this.userId,
     );
   }
@@ -86852,6 +87011,9 @@ extension $VisionBoardPictureCreateModelExtension
     Wrapped<String?>? location,
     Wrapped<String?>? fileName,
     Wrapped<int?>? fileSize,
+    Wrapped<String?>? thumbnailLocation,
+    Wrapped<String?>? thumbnailFileName,
+    Wrapped<int?>? thumbnailFileSize,
     Wrapped<int?>? userId,
   }) {
     return VisionBoardPictureCreateModel(
@@ -86859,6 +87021,15 @@ extension $VisionBoardPictureCreateModelExtension
       location: (location != null ? location.value : this.location),
       fileName: (fileName != null ? fileName.value : this.fileName),
       fileSize: (fileSize != null ? fileSize.value : this.fileSize),
+      thumbnailLocation: (thumbnailLocation != null
+          ? thumbnailLocation.value
+          : this.thumbnailLocation),
+      thumbnailFileName: (thumbnailFileName != null
+          ? thumbnailFileName.value
+          : this.thumbnailFileName),
+      thumbnailFileSize: (thumbnailFileSize != null
+          ? thumbnailFileSize.value
+          : this.thumbnailFileSize),
       userId: (userId != null ? userId.value : this.userId),
     );
   }
@@ -86872,6 +87043,9 @@ class VisionBoardPictureModel {
     this.location,
     this.fileName,
     this.fileSize,
+    this.thumbnailLocation,
+    this.thumbnailFileName,
+    this.thumbnailFileSize,
     this.userId,
     this.isDeleted,
     this.createdDate,
@@ -86905,6 +87079,12 @@ class VisionBoardPictureModel {
   final String? fileName;
   @JsonKey(name: 'fileSize')
   final int? fileSize;
+  @JsonKey(name: 'thumbnailLocation')
+  final String? thumbnailLocation;
+  @JsonKey(name: 'thumbnailFileName')
+  final String? thumbnailFileName;
+  @JsonKey(name: 'thumbnailFileSize')
+  final int? thumbnailFileSize;
   @JsonKey(name: 'userId')
   final int? userId;
   @JsonKey(name: 'isDeleted')
@@ -86962,6 +87142,21 @@ class VisionBoardPictureModel {
                 const DeepCollectionEquality().equals(
                   other.fileSize,
                   fileSize,
+                )) &&
+            (identical(other.thumbnailLocation, thumbnailLocation) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailLocation,
+                  thumbnailLocation,
+                )) &&
+            (identical(other.thumbnailFileName, thumbnailFileName) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileName,
+                  thumbnailFileName,
+                )) &&
+            (identical(other.thumbnailFileSize, thumbnailFileSize) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileSize,
+                  thumbnailFileSize,
                 )) &&
             (identical(other.userId, userId) ||
                 const DeepCollectionEquality().equals(other.userId, userId)) &&
@@ -87050,6 +87245,9 @@ class VisionBoardPictureModel {
       const DeepCollectionEquality().hash(location) ^
       const DeepCollectionEquality().hash(fileName) ^
       const DeepCollectionEquality().hash(fileSize) ^
+      const DeepCollectionEquality().hash(thumbnailLocation) ^
+      const DeepCollectionEquality().hash(thumbnailFileName) ^
+      const DeepCollectionEquality().hash(thumbnailFileSize) ^
       const DeepCollectionEquality().hash(userId) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       const DeepCollectionEquality().hash(createdDate) ^
@@ -87075,6 +87273,9 @@ extension $VisionBoardPictureModelExtension on VisionBoardPictureModel {
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
     bool? isDeleted,
     DateTime? createdDate,
@@ -87097,6 +87298,9 @@ extension $VisionBoardPictureModelExtension on VisionBoardPictureModel {
       location: location ?? this.location,
       fileName: fileName ?? this.fileName,
       fileSize: fileSize ?? this.fileSize,
+      thumbnailLocation: thumbnailLocation ?? this.thumbnailLocation,
+      thumbnailFileName: thumbnailFileName ?? this.thumbnailFileName,
+      thumbnailFileSize: thumbnailFileSize ?? this.thumbnailFileSize,
       userId: userId ?? this.userId,
       isDeleted: isDeleted ?? this.isDeleted,
       createdDate: createdDate ?? this.createdDate,
@@ -87125,6 +87329,9 @@ extension $VisionBoardPictureModelExtension on VisionBoardPictureModel {
     Wrapped<String?>? location,
     Wrapped<String?>? fileName,
     Wrapped<int?>? fileSize,
+    Wrapped<String?>? thumbnailLocation,
+    Wrapped<String?>? thumbnailFileName,
+    Wrapped<int?>? thumbnailFileSize,
     Wrapped<int?>? userId,
     Wrapped<bool?>? isDeleted,
     Wrapped<DateTime?>? createdDate,
@@ -87149,6 +87356,15 @@ extension $VisionBoardPictureModelExtension on VisionBoardPictureModel {
       location: (location != null ? location.value : this.location),
       fileName: (fileName != null ? fileName.value : this.fileName),
       fileSize: (fileSize != null ? fileSize.value : this.fileSize),
+      thumbnailLocation: (thumbnailLocation != null
+          ? thumbnailLocation.value
+          : this.thumbnailLocation),
+      thumbnailFileName: (thumbnailFileName != null
+          ? thumbnailFileName.value
+          : this.thumbnailFileName),
+      thumbnailFileSize: (thumbnailFileSize != null
+          ? thumbnailFileSize.value
+          : this.thumbnailFileSize),
       userId: (userId != null ? userId.value : this.userId),
       isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
       createdDate: (createdDate != null ? createdDate.value : this.createdDate),
@@ -93775,6 +93991,9 @@ class ApiV1ManifestCreatevisionboardpicturePost$RequestBody {
     this.location,
     this.fileName,
     this.fileSize,
+    this.thumbnailLocation,
+    this.thumbnailFileName,
+    this.thumbnailFileSize,
     this.userId,
   });
 
@@ -93797,6 +94016,12 @@ class ApiV1ManifestCreatevisionboardpicturePost$RequestBody {
   final String? fileName;
   @JsonKey(name: 'FileSize')
   final int? fileSize;
+  @JsonKey(name: 'ThumbnailLocation')
+  final String? thumbnailLocation;
+  @JsonKey(name: 'ThumbnailFileName')
+  final String? thumbnailFileName;
+  @JsonKey(name: 'ThumbnailFileSize')
+  final int? thumbnailFileSize;
   @JsonKey(name: 'UserId')
   final int? userId;
   static const fromJsonFactory =
@@ -93828,6 +94053,21 @@ class ApiV1ManifestCreatevisionboardpicturePost$RequestBody {
                   other.fileSize,
                   fileSize,
                 )) &&
+            (identical(other.thumbnailLocation, thumbnailLocation) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailLocation,
+                  thumbnailLocation,
+                )) &&
+            (identical(other.thumbnailFileName, thumbnailFileName) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileName,
+                  thumbnailFileName,
+                )) &&
+            (identical(other.thumbnailFileSize, thumbnailFileSize) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileSize,
+                  thumbnailFileSize,
+                )) &&
             (identical(other.userId, userId) ||
                 const DeepCollectionEquality().equals(other.userId, userId)));
   }
@@ -93842,6 +94082,9 @@ class ApiV1ManifestCreatevisionboardpicturePost$RequestBody {
       const DeepCollectionEquality().hash(location) ^
       const DeepCollectionEquality().hash(fileName) ^
       const DeepCollectionEquality().hash(fileSize) ^
+      const DeepCollectionEquality().hash(thumbnailLocation) ^
+      const DeepCollectionEquality().hash(thumbnailFileName) ^
+      const DeepCollectionEquality().hash(thumbnailFileSize) ^
       const DeepCollectionEquality().hash(userId) ^
       runtimeType.hashCode;
 }
@@ -93854,6 +94097,9 @@ extension $ApiV1ManifestCreatevisionboardpicturePost$RequestBodyExtension
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     return ApiV1ManifestCreatevisionboardpicturePost$RequestBody(
@@ -93862,6 +94108,9 @@ extension $ApiV1ManifestCreatevisionboardpicturePost$RequestBodyExtension
       location: location ?? this.location,
       fileName: fileName ?? this.fileName,
       fileSize: fileSize ?? this.fileSize,
+      thumbnailLocation: thumbnailLocation ?? this.thumbnailLocation,
+      thumbnailFileName: thumbnailFileName ?? this.thumbnailFileName,
+      thumbnailFileSize: thumbnailFileSize ?? this.thumbnailFileSize,
       userId: userId ?? this.userId,
     );
   }
@@ -93872,6 +94121,9 @@ extension $ApiV1ManifestCreatevisionboardpicturePost$RequestBodyExtension
     Wrapped<String?>? location,
     Wrapped<String?>? fileName,
     Wrapped<int?>? fileSize,
+    Wrapped<String?>? thumbnailLocation,
+    Wrapped<String?>? thumbnailFileName,
+    Wrapped<int?>? thumbnailFileSize,
     Wrapped<int?>? userId,
   }) {
     return ApiV1ManifestCreatevisionboardpicturePost$RequestBody(
@@ -93882,6 +94134,15 @@ extension $ApiV1ManifestCreatevisionboardpicturePost$RequestBodyExtension
       location: (location != null ? location.value : this.location),
       fileName: (fileName != null ? fileName.value : this.fileName),
       fileSize: (fileSize != null ? fileSize.value : this.fileSize),
+      thumbnailLocation: (thumbnailLocation != null
+          ? thumbnailLocation.value
+          : this.thumbnailLocation),
+      thumbnailFileName: (thumbnailFileName != null
+          ? thumbnailFileName.value
+          : this.thumbnailFileName),
+      thumbnailFileSize: (thumbnailFileSize != null
+          ? thumbnailFileSize.value
+          : this.thumbnailFileSize),
       userId: (userId != null ? userId.value : this.userId),
     );
   }
@@ -93896,6 +94157,9 @@ class ApiV1ManifestUpdatevisionboardpicturePost$RequestBody {
     this.location,
     this.fileName,
     this.fileSize,
+    this.thumbnailLocation,
+    this.thumbnailFileName,
+    this.thumbnailFileSize,
     this.userId,
   });
 
@@ -93920,6 +94184,12 @@ class ApiV1ManifestUpdatevisionboardpicturePost$RequestBody {
   final String? fileName;
   @JsonKey(name: 'FileSize')
   final int? fileSize;
+  @JsonKey(name: 'ThumbnailLocation')
+  final String? thumbnailLocation;
+  @JsonKey(name: 'ThumbnailFileName')
+  final String? thumbnailFileName;
+  @JsonKey(name: 'ThumbnailFileSize')
+  final int? thumbnailFileSize;
   @JsonKey(name: 'UserId')
   final int? userId;
   static const fromJsonFactory =
@@ -93956,6 +94226,21 @@ class ApiV1ManifestUpdatevisionboardpicturePost$RequestBody {
                   other.fileSize,
                   fileSize,
                 )) &&
+            (identical(other.thumbnailLocation, thumbnailLocation) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailLocation,
+                  thumbnailLocation,
+                )) &&
+            (identical(other.thumbnailFileName, thumbnailFileName) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileName,
+                  thumbnailFileName,
+                )) &&
+            (identical(other.thumbnailFileSize, thumbnailFileSize) ||
+                const DeepCollectionEquality().equals(
+                  other.thumbnailFileSize,
+                  thumbnailFileSize,
+                )) &&
             (identical(other.userId, userId) ||
                 const DeepCollectionEquality().equals(other.userId, userId)));
   }
@@ -93971,6 +94256,9 @@ class ApiV1ManifestUpdatevisionboardpicturePost$RequestBody {
       const DeepCollectionEquality().hash(location) ^
       const DeepCollectionEquality().hash(fileName) ^
       const DeepCollectionEquality().hash(fileSize) ^
+      const DeepCollectionEquality().hash(thumbnailLocation) ^
+      const DeepCollectionEquality().hash(thumbnailFileName) ^
+      const DeepCollectionEquality().hash(thumbnailFileSize) ^
       const DeepCollectionEquality().hash(userId) ^
       runtimeType.hashCode;
 }
@@ -93984,6 +94272,9 @@ extension $ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyExtension
     String? location,
     String? fileName,
     int? fileSize,
+    String? thumbnailLocation,
+    String? thumbnailFileName,
+    int? thumbnailFileSize,
     int? userId,
   }) {
     return ApiV1ManifestUpdatevisionboardpicturePost$RequestBody(
@@ -93993,6 +94284,9 @@ extension $ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyExtension
       location: location ?? this.location,
       fileName: fileName ?? this.fileName,
       fileSize: fileSize ?? this.fileSize,
+      thumbnailLocation: thumbnailLocation ?? this.thumbnailLocation,
+      thumbnailFileName: thumbnailFileName ?? this.thumbnailFileName,
+      thumbnailFileSize: thumbnailFileSize ?? this.thumbnailFileSize,
       userId: userId ?? this.userId,
     );
   }
@@ -94004,6 +94298,9 @@ extension $ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyExtension
     Wrapped<String?>? location,
     Wrapped<String?>? fileName,
     Wrapped<int?>? fileSize,
+    Wrapped<String?>? thumbnailLocation,
+    Wrapped<String?>? thumbnailFileName,
+    Wrapped<int?>? thumbnailFileSize,
     Wrapped<int?>? userId,
   }) {
     return ApiV1ManifestUpdatevisionboardpicturePost$RequestBody(
@@ -94017,7 +94314,98 @@ extension $ApiV1ManifestUpdatevisionboardpicturePost$RequestBodyExtension
       location: (location != null ? location.value : this.location),
       fileName: (fileName != null ? fileName.value : this.fileName),
       fileSize: (fileSize != null ? fileSize.value : this.fileSize),
+      thumbnailLocation: (thumbnailLocation != null
+          ? thumbnailLocation.value
+          : this.thumbnailLocation),
+      thumbnailFileName: (thumbnailFileName != null
+          ? thumbnailFileName.value
+          : this.thumbnailFileName),
+      thumbnailFileSize: (thumbnailFileSize != null
+          ? thumbnailFileSize.value
+          : this.thumbnailFileSize),
       userId: (userId != null ? userId.value : this.userId),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody {
+  const ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody({
+    this.visionBoardPictureId,
+    this.uploadedFile,
+  });
+
+  factory ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody.fromJson(
+    Map<String, dynamic> json,
+  ) => _$ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyFromJson(
+    json,
+  );
+
+  static const toJsonFactory =
+      _$ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyToJson(
+        this,
+      );
+
+  @JsonKey(name: 'VisionBoardPictureId')
+  final int? visionBoardPictureId;
+  @JsonKey(name: 'UploadedFile')
+  final String? uploadedFile;
+  static const fromJsonFactory =
+      _$ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other
+                is ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody &&
+            (identical(other.visionBoardPictureId, visionBoardPictureId) ||
+                const DeepCollectionEquality().equals(
+                  other.visionBoardPictureId,
+                  visionBoardPictureId,
+                )) &&
+            (identical(other.uploadedFile, uploadedFile) ||
+                const DeepCollectionEquality().equals(
+                  other.uploadedFile,
+                  uploadedFile,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(visionBoardPictureId) ^
+      const DeepCollectionEquality().hash(uploadedFile) ^
+      runtimeType.hashCode;
+}
+
+extension $ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBodyExtension
+    on ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody {
+  ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody copyWith({
+    int? visionBoardPictureId,
+    String? uploadedFile,
+  }) {
+    return ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody(
+      visionBoardPictureId: visionBoardPictureId ?? this.visionBoardPictureId,
+      uploadedFile: uploadedFile ?? this.uploadedFile,
+    );
+  }
+
+  ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody
+  copyWithWrapped({
+    Wrapped<int?>? visionBoardPictureId,
+    Wrapped<String?>? uploadedFile,
+  }) {
+    return ApiV1ManifestUploadvisionboardpicturethumbnailPost$RequestBody(
+      visionBoardPictureId: (visionBoardPictureId != null
+          ? visionBoardPictureId.value
+          : this.visionBoardPictureId),
+      uploadedFile: (uploadedFile != null
+          ? uploadedFile.value
+          : this.uploadedFile),
     );
   }
 }

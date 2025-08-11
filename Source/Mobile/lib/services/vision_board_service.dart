@@ -81,7 +81,7 @@ class VisionBoardService {
   // ========================= CREATE VISION BOARD =========================
   
   /// Create a new vision board on server
-  Future<VisionBoardResult<int?>> createVisionBoard(VisionBoard visionBoard) async {
+  Future<VisionBoardResult<int?>> createVisionBoard(VisionBoard visionBoard, {Map<String, dynamic>? thumbnailInfo}) async {
     try {
       print('📤 Creating vision board "${visionBoard.title}" on server...');
       
@@ -144,10 +144,36 @@ class VisionBoardService {
       
       // Add Title field - API might be expecting this as a separate field
       final cleanTitle = visionBoard.title.trim();
-      final truncatedTitle = cleanTitle.length > 100 ? cleanTitle.substring(0, 100) : cleanTitle;
+      final finalTitle = cleanTitle.isEmpty ? 'Untitled Vision Board' : cleanTitle;
+      final truncatedTitle = finalTitle.length > 100 ? finalTitle.substring(0, 100) : finalTitle;
       request.fields['Title'] = truncatedTitle;
       
       print('🔍 DEBUG: Form field Title: "$truncatedTitle" (${truncatedTitle.length} chars)');
+      
+      // Add thumbnail metadata and file if provided (required by server)
+      if (thumbnailInfo != null) {
+        request.fields['ThumbnailFileName'] = thumbnailInfo['fileName'] ?? 'thumbnail.png';
+        request.fields['ThumbnailFileSize'] = thumbnailInfo['fileSize'].toString();
+        
+        // Also try to include the thumbnail file in the same request
+        if (thumbnailInfo['filePath'] != null) {
+          final thumbnailFile = File(thumbnailInfo['filePath']);
+          if (await thumbnailFile.exists()) {
+            final thumbnailBytes = await thumbnailFile.readAsBytes();
+            
+            // Add thumbnail file to the same request (as a second file)
+            request.files.add(http.MultipartFile.fromBytes(
+              'Thumbnail', // Try this field name
+              thumbnailBytes,
+              filename: thumbnailInfo['fileName'] ?? 'thumbnail.png',
+            ));
+            
+            print('📸 Added thumbnail metadata + file: ${thumbnailInfo['fileName']} (${thumbnailBytes.length} bytes)');
+          } else {
+            print('⚠️ Thumbnail file not found at path: ${thumbnailInfo['filePath']}');
+          }
+        }
+      }
       
       // Add file
       request.files.add(http.MultipartFile.fromBytes(
@@ -174,6 +200,9 @@ class VisionBoardService {
       if (response.isSuccessful && response.body['isSuccess'] == true) {
         final pictureId = response.body['model']?['visionBoardPictureId'];
         print('✅ Vision board created successfully with ID: $pictureId');
+        
+        // Thumbnail should now be included in the main request above
+        
         return VisionBoardResult.success(
           data: pictureId,
           message: 'Vision board created successfully'
@@ -201,7 +230,7 @@ class VisionBoardService {
   // ========================= UPDATE VISION BOARD =========================
   
   /// Update existing vision board on server
-  Future<VisionBoardResult<bool>> updateVisionBoard(VisionBoard visionBoard, {int? pictureId}) async {
+  Future<VisionBoardResult<bool>> updateVisionBoard(VisionBoard visionBoard, {int? pictureId, Map<String, dynamic>? thumbnailInfo}) async {
     try {
       if (_apiClient == null || _authService == null) {
         return VisionBoardResult.failure(message: 'Service not initialized');
@@ -263,10 +292,36 @@ class VisionBoardService {
       
       // Add Title field - API might be expecting this as a separate field
       final cleanTitle = visionBoard.title.trim();
-      final truncatedTitle = cleanTitle.length > 100 ? cleanTitle.substring(0, 100) : cleanTitle;
+      final finalTitle = cleanTitle.isEmpty ? 'Untitled Vision Board' : cleanTitle;
+      final truncatedTitle = finalTitle.length > 100 ? finalTitle.substring(0, 100) : finalTitle;
       request.fields['Title'] = truncatedTitle;
       
       print('🔍 DEBUG: Update Title: "$truncatedTitle" (${truncatedTitle.length} chars)');
+      
+      // Add thumbnail metadata and file if provided (required by server)
+      if (thumbnailInfo != null) {
+        request.fields['ThumbnailFileName'] = thumbnailInfo['fileName'] ?? 'thumbnail.png';
+        request.fields['ThumbnailFileSize'] = thumbnailInfo['fileSize'].toString();
+        
+        // Also try to include the thumbnail file in the same request
+        if (thumbnailInfo['filePath'] != null) {
+          final thumbnailFile = File(thumbnailInfo['filePath']);
+          if (await thumbnailFile.exists()) {
+            final thumbnailBytes = await thumbnailFile.readAsBytes();
+            
+            // Add thumbnail file to the same request (as a second file)
+            request.files.add(http.MultipartFile.fromBytes(
+              'Thumbnail', // Try this field name
+              thumbnailBytes,
+              filename: thumbnailInfo['fileName'] ?? 'thumbnail.png',
+            ));
+            
+            print('📸 Added thumbnail metadata + file to update: ${thumbnailInfo['fileName']} (${thumbnailBytes.length} bytes)');
+          } else {
+            print('⚠️ Thumbnail file not found at path: ${thumbnailInfo['filePath']}');
+          }
+        }
+      }
       
       // Add file
       request.files.add(http.MultipartFile.fromBytes(
@@ -295,6 +350,8 @@ class VisionBoardService {
         
         // Clear cache for this vision board since it was updated
         clearCacheForBoard(visionBoard.id, userId);
+        
+        // Thumbnail should now be included in the main request above
         
         return VisionBoardResult.success(
           data: true,
@@ -352,28 +409,18 @@ class VisionBoardService {
       
       print('📋 Found ${pictures.length} vision board files');
       
-      // Create VisionBoard objects with actual titles from XML content
+      // Create VisionBoard objects directly from metadata only - no XML downloading
       for (final picture in pictures) {
         if (picture.fileName?.endsWith('.xml') == true && picture.isDeleted != true) {
           try {
-            final visionBoard = await _createVisionBoardWithTitle(picture);
+            final visionBoard = _createVisionBoardFromMetadata(picture);
             if (visionBoard != null) {
               visionBoards.add(visionBoard);
               print('📝 Added vision board: "${visionBoard.title}" (ID: ${visionBoard.id})');
             }
           } catch (e) {
-            print('⚠️ Failed to create vision board from picture ${picture.visionBoardPictureId}: $e');
-            // Fallback to metadata-only version
-            try {
-              final fallbackBoard = _createVisionBoardFromMetadata(picture);
-              if (fallbackBoard != null) {
-                visionBoards.add(fallbackBoard);
-                print('📝 Added fallback vision board: ${fallbackBoard.id}');
-              }
-            } catch (e2) {
-              print('❌ Complete failure for picture ${picture.visionBoardPictureId}: $e2');
-              continue;
-            }
+            print('❌ Failed to create vision board from picture ${picture.visionBoardPictureId}: $e');
+            continue;
           }
         }
       }
@@ -585,11 +632,25 @@ class VisionBoardService {
       final pictureId = metadata.visionBoardPictureId;
       if (pictureId == null) return null;
       
+      // Build thumbnail URL if available
+      String? thumbnailUrl;
+      if (metadata.thumbnailLocation != null && metadata.thumbnailFileName != null) {
+        // Use the correct thumbnail download endpoint
+        final baseUrl = _apiClient!.client.baseUrl;
+        thumbnailUrl = '$baseUrl/api/v1/manifest/downloadvisionboardpicturethumbnail?id=${metadata.visionBoardPictureId}';
+        print('📸 Thumbnail URL: $thumbnailUrl');
+      }
+      
       // Download the XML content to extract the real title and elements
       final xmlContent = await _downloadVisionBoardXML(pictureId);
       if (xmlContent != null) {
         // Parse the XML to create a complete VisionBoard
-        return await _parseVisionBoardXML(xmlContent);
+        final board = await _parseVisionBoardXML(xmlContent);
+        if (board != null && thumbnailUrl != null) {
+          // Add thumbnail URL to the parsed board
+          return board.copyWith(thumbnailUrl: thumbnailUrl);
+        }
+        return board;
       } else {
         print('⚠️ Could not download XML for picture $pictureId, using metadata fallback');
         return _createVisionBoardFromMetadata(metadata);
@@ -662,6 +723,15 @@ class VisionBoardService {
         print('📝 Using date-based title: $boardTitle');
       }
       
+      // Build thumbnail URL if available
+      String? thumbnailUrl;
+      if (metadata.thumbnailLocation != null && metadata.thumbnailFileName != null) {
+        // Use the correct thumbnail download endpoint
+        final baseUrl = _apiClient!.client.baseUrl;
+        thumbnailUrl = '$baseUrl/api/v1/manifest/downloadvisionboardpicturethumbnail?id=${metadata.visionBoardPictureId}';
+        print('📸 Thumbnail URL: $thumbnailUrl');
+      }
+      
       return VisionBoard(
         id: boardId,
         title: boardTitle,
@@ -669,6 +739,7 @@ class VisionBoardService {
         backgroundColor: const Color(0xFFFFFFFF), // White color
         createdAt: createdAt,
         updatedAt: modifiedAt,
+        thumbnailUrl: thumbnailUrl,
       );
     } catch (e) {
       print('❌ Error creating VisionBoard from metadata: $e');
@@ -895,6 +966,67 @@ class VisionBoardService {
       ),
       alignment: textAlign,
     );
+  }
+
+  /// Upload thumbnail for a vision board picture
+  Future<bool> _uploadThumbnail(int visionBoardPictureId, Map<String, dynamic> thumbnailInfo) async {
+    try {
+      print('📸 Uploading thumbnail for vision board picture ID: $visionBoardPictureId');
+      
+      // Read thumbnail file
+      final thumbnailFile = File(thumbnailInfo['filePath']);
+      if (!await thumbnailFile.exists()) {
+        print('❌ Thumbnail file not found at path: ${thumbnailInfo['filePath']}');
+        return false;
+      }
+      
+      final thumbnailBytes = await thumbnailFile.readAsBytes();
+      print('📸 Read thumbnail: ${thumbnailBytes.length} bytes');
+      
+      // Use manual HTTP for thumbnail upload
+      final client = _apiClient!.client;
+      final authService = UnifiedAuthService();
+      final token = authService.authToken;
+      
+      final uri = Uri.parse('${client.baseUrl}/api/v1/manifest/uploadvisionboardpicturethumbnail');
+      final request = http.MultipartRequest('POST', uri);
+      
+      // Add headers
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+      
+      // Add form fields
+      request.fields['VisionBoardPictureId'] = visionBoardPictureId.toString();
+      
+      // Add thumbnail file
+      request.files.add(http.MultipartFile.fromBytes(
+        'UploadedFile',
+        thumbnailBytes,
+        filename: thumbnailInfo['fileName'] ?? 'thumbnail.png',
+      ));
+      
+      print('📸 Thumbnail upload request:');
+      print('  - VisionBoardPictureId: $visionBoardPictureId');
+      print('  - File: ${thumbnailInfo['fileName']} (${thumbnailBytes.length} bytes)');
+      
+      final streamedResponse = await request.send();
+      final responseString = await streamedResponse.stream.bytesToString();
+      
+      if (streamedResponse.statusCode >= 200 && streamedResponse.statusCode < 300) {
+        print('✅ Thumbnail uploaded successfully');
+        return true;
+      } else {
+        print('❌ Thumbnail upload failed:');
+        print('  - Status Code: ${streamedResponse.statusCode}');
+        print('  - Response: $responseString');
+        return false;
+      }
+      
+    } catch (e) {
+      print('❌ Error uploading thumbnail: $e');
+      return false;
+    }
   }
 }
 
