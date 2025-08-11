@@ -10,6 +10,7 @@ import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/keyboard_dismissal_wrapper.dart';
 import '../components/error_popup.dart';
+import '../utils/navigation_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -664,15 +665,15 @@ class _LoginScreenState extends State<LoginScreen>
           message: 'You\'ve successfully signed in. Ready to continue your manifestation journey?',
           actionText: 'Let\'s Go',
           onAction: () {
-            Navigator.push(
+            pushWithoutSwipe(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              HomeScreen(),
             );
           },
           onDismiss: () {
-            Navigator.push(
+            pushWithoutSwipe(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              HomeScreen(),
             );
           },
         );
@@ -709,6 +710,13 @@ class _LoginScreenState extends State<LoginScreen>
 
 
   void _navigateToSignUp() {
+    pushWithoutSwipe(
+      context,
+      SignUpScreen(),
+    );
+  }
+  
+  void _navigateToSignUpOld() {
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -734,9 +742,9 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _navigateToForgotPassword() {
-    Navigator.push(
+    pushWithoutSwipe(
       context,
-      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+      ForgotPasswordScreen(),
     );
   }
 

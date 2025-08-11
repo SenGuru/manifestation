@@ -6,6 +6,7 @@ import '../models/goals.dart';
 import '../components/progress_update_dialog.dart';
 import '../components/edit_goal_sheet.dart';
 import '../components/milestone_dialog.dart';
+import '../components/sophisticated_milestone_timeline.dart';
 import '../widgets/universal_back_button.dart';
 import '../models/api_milestone.dart';
 import '../services/goal_tracker_service.dart';
@@ -398,142 +399,111 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
 
   Widget _buildMilestonesCard() {
     return Container(
-      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Milestones',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
+          // Header with add button
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Milestones Timeline',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    '${currentGoal.completedMilestones}/${currentGoal.milestones.length}',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: currentGoal.category.color,
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  GestureDetector(
-                    onTap: _showAddMilestone,
-                    child: Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: BoxDecoration(
-                        color: currentGoal.category.color.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: currentGoal.category.color,
-                        size: 16.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Milestones list or empty state
-          if (currentGoal.milestones.isNotEmpty)
-            ...currentGoal.milestones.asMap().entries.map((entry) {
-            final index = entry.key;
-            final milestone = entry.value;
-            
-            return Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => _toggleMilestone(index),
-                    child: Container(
-                      width: 20.w,
-                      height: 20.h,
-                      decoration: BoxDecoration(
-                        color: milestone.isCompleted 
-                            ? currentGoal.category.color
-                            : Colors.transparent,
-                        border: Border.all(
-                          color: milestone.isCompleted 
-                              ? currentGoal.category.color
-                              : AppTheme.textSecondary,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: milestone.isCompleted
-                          ? Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 12.sp,
-                            )
-                          : null,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Text(
-                      milestone.title,
+                Row(
+                  children: [
+                    Text(
+                      '${currentGoal.completedMilestones}/${currentGoal.milestones.length}',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: milestone.isCompleted 
-                            ? AppTheme.textSecondary
-                            : AppTheme.textPrimary,
-                        decoration: milestone.isCompleted 
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
+                        fontWeight: FontWeight.w600,
+                        color: currentGoal.category.color,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }).toList()
+                    SizedBox(width: 8.w),
+                    GestureDetector(
+                      onTap: _showAddMilestone,
+                      child: Container(
+                        padding: EdgeInsets.all(6.w),
+                        decoration: BoxDecoration(
+                          color: currentGoal.category.color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: currentGoal.category.color,
+                          size: 16.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           
-          // Empty state
+          // Sophisticated timeline or empty state
+          if (currentGoal.milestones.isNotEmpty)
+            SophisticatedMilestoneTimeline(
+              milestones: currentGoal.milestones,
+              accentColor: currentGoal.category.color,
+            )
           else
-            Container(
+            Padding(
               padding: EdgeInsets.all(20.w),
               child: Column(
                 children: [
                   Icon(
-                    Icons.flag_outlined,
+                    Icons.timeline,
                     color: AppTheme.textSecondary,
-                    size: 32.sp,
+                    size: 48.sp,
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 16.h),
                   Text(
                     'No milestones yet',
                     style: TextStyle(
-                      fontSize: 14.sp,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
                       color: AppTheme.textSecondary,
                     ),
                   ),
                   SizedBox(height: 8.h),
+                  Text(
+                    'Create milestones to track your progress with detailed timelines',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: AppTheme.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 16.h),
                   GestureDetector(
                     onTap: _showAddMilestone,
-                    child: Text(
-                      'Add your first milestone',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: currentGoal.category.color,
-                        fontWeight: FontWeight.w600,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                      decoration: BoxDecoration(
+                        color: currentGoal.category.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(25.r),
+                        border: Border.all(
+                          color: currentGoal.category.color.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        'Add Your First Milestone',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: currentGoal.category.color,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

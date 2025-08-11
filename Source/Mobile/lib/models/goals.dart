@@ -131,22 +131,30 @@ class Goal {
           title: 'Complete business plan',
           isCompleted: true,
           completedAt: DateTime.now().subtract(Duration(days: 20)),
+          createdAt: DateTime.now().subtract(Duration(days: 35)),
+          targetDate: DateTime.now().subtract(Duration(days: 15)),
         ),
         Milestone(
           id: 'm2',
           title: 'Secure initial funding',
           isCompleted: true,
           completedAt: DateTime.now().subtract(Duration(days: 10)),
+          createdAt: DateTime.now().subtract(Duration(days: 30)),
+          targetDate: DateTime.now().subtract(Duration(days: 5)),
         ),
         Milestone(
           id: 'm3',
           title: 'Develop first product line',
           isCompleted: false,
+          createdAt: DateTime.now().subtract(Duration(days: 25)),
+          targetDate: DateTime.now().add(Duration(days: 30)),
         ),
         Milestone(
           id: 'm4',
           title: 'Launch website and marketing',
           isCompleted: false,
+          createdAt: DateTime.now().subtract(Duration(days: 20)),
+          targetDate: DateTime.now().add(Duration(days: 60)),
         ),
       ],
       currentProgress: 35.0,
@@ -169,22 +177,30 @@ class Goal {
           title: 'Work on self-love and confidence',
           isCompleted: true,
           completedAt: DateTime.now().subtract(Duration(days: 30)),
+          createdAt: DateTime.now().subtract(Duration(days: 50)),
+          targetDate: DateTime.now().subtract(Duration(days: 25)),
         ),
         Milestone(
           id: 'm6',
           title: 'Join social activities and dating apps',
           isCompleted: true,
           completedAt: DateTime.now().subtract(Duration(days: 15)),
+          createdAt: DateTime.now().subtract(Duration(days: 40)),
+          targetDate: DateTime.now().subtract(Duration(days: 10)),
         ),
         Milestone(
           id: 'm7',
           title: 'Go on regular dates',
           isCompleted: false,
+          createdAt: DateTime.now().subtract(Duration(days: 30)),
+          targetDate: DateTime.now().add(Duration(days: 45)),
         ),
         Milestone(
           id: 'm8',
           title: 'Build meaningful connection',
           isCompleted: false,
+          createdAt: DateTime.now().subtract(Duration(days: 25)),
+          targetDate: DateTime.now().add(Duration(days: 120)),
         ),
       ],
       currentProgress: 25.0,
@@ -207,22 +223,30 @@ class Goal {
           title: 'Create detailed budget plan',
           isCompleted: true,
           completedAt: DateTime.now().subtract(Duration(days: 50)),
+          createdAt: DateTime.now().subtract(Duration(days: 65)),
+          targetDate: DateTime.now().subtract(Duration(days: 45)),
         ),
         Milestone(
           id: 'm10',
           title: 'Build emergency fund (6 months)',
           isCompleted: true,
           completedAt: DateTime.now().subtract(Duration(days: 20)),
+          createdAt: DateTime.now().subtract(Duration(days: 55)),
+          targetDate: DateTime.now().subtract(Duration(days: 15)),
         ),
         Milestone(
           id: 'm11',
           title: 'Start investing in index funds',
           isCompleted: false,
+          createdAt: DateTime.now().subtract(Duration(days: 40)),
+          targetDate: DateTime.now().add(Duration(days: 30)),
         ),
         Milestone(
           id: 'm12',
           title: 'Develop multiple income streams',
           isCompleted: false,
+          createdAt: DateTime.now().subtract(Duration(days: 35)),
+          targetDate: DateTime.now().add(Duration(days: 180)),
         ),
       ],
       currentProgress: 40.0,
@@ -238,15 +262,17 @@ class Milestone {
   final bool isCompleted;
   final DateTime? completedAt;
   final DateTime? targetDate;
+  final DateTime createdAt;
 
-  const Milestone({
+  Milestone({
     required this.id,
     required this.title,
     this.description,
     required this.isCompleted,
     this.completedAt,
     this.targetDate,
-  });
+    DateTime? createdAt,
+  }) : createdAt = createdAt ?? DateTime.now();
 
   Milestone copyWith({
     String? id,
@@ -255,6 +281,7 @@ class Milestone {
     bool? isCompleted,
     DateTime? completedAt,
     DateTime? targetDate,
+    DateTime? createdAt,
   }) {
     return Milestone(
       id: id ?? this.id,
@@ -263,6 +290,7 @@ class Milestone {
       isCompleted: isCompleted ?? this.isCompleted,
       completedAt: completedAt ?? this.completedAt,
       targetDate: targetDate ?? this.targetDate,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -274,6 +302,7 @@ class Milestone {
       'isCompleted': isCompleted,
       'completedAt': completedAt?.toIso8601String(),
       'targetDate': targetDate?.toIso8601String(),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -289,6 +318,9 @@ class Milestone {
       targetDate: json['targetDate'] != null 
           ? DateTime.parse(json['targetDate'])
           : null,
+      createdAt: json['createdAt'] != null 
+          ? DateTime.parse(json['createdAt'])
+          : DateTime.now(),
     );
   }
 }

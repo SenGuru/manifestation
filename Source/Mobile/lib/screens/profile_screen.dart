@@ -15,6 +15,7 @@ import 'account_settings_screen.dart';
 import 'about_screen.dart';
 import 'settings/security_settings_screen.dart';
 import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -257,9 +258,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Edit profile button
           GestureDetector(
             onTap: () {
-              Navigator.push(
+              pushWithoutSwipe(
                 context,
-                MaterialPageRoute(builder: (context) => AccountSettingsScreen()),
+                AccountSettingsScreen(),
               );
             },
             child: Container(
@@ -314,9 +315,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Progress & Stats',
             subtitle: 'View your manifestation journey',
             onTap: () {
-              Navigator.push(
+              pushWithoutSwipe(
                 context,
-                MaterialPageRoute(builder: (context) => SessionStatsScreen()),
+                SessionStatsScreen(),
               );
             },
           ),
@@ -332,9 +333,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'Security',
             subtitle: 'Password, authentication and privacy',
             onTap: () {
-              Navigator.push(
+              pushWithoutSwipe(
                 context,
-                MaterialPageRoute(builder: (context) => SecuritySettingsScreen()),
+                SecuritySettingsScreen(),
               );
             },
           ),
@@ -585,9 +586,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildStatsSection() {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(builder: (context) => SessionStatsScreen()),
+          SessionStatsScreen(),
         );
       },
       child: Container(

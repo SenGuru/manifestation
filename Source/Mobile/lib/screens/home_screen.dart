@@ -190,9 +190,9 @@ class _HomeScreenState extends State<HomeScreen> {
         // Profile button
         GestureDetector(
           onTap: () {
-            Navigator.push(
+            pushWithoutSwipe(
               context,
-              MaterialPageRoute(builder: (context) => ProfileScreen()),
+              ProfileScreen(),
             );
           },
           child: Container(
@@ -315,11 +315,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void _navigateToFeature(String feature) {
     switch (feature) {
       case 'affirmations':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => DailyAffirmationsScreen(),
-          ),
+          DailyAffirmationsScreen(),
         );
         break;
       case 'vision_board':
@@ -329,51 +327,39 @@ class _HomeScreenState extends State<HomeScreen> {
         );
         break;
       case 'journal':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => ManifestationJournalScreen(),
-          ),
+          ManifestationJournalScreen(),
         );
         break;
       case 'candle_meditation':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => VisualMeditationScreen(),
-          ),
+          VisualMeditationScreen(),
         );
         break;
       case 'goal_tracker':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => GoalTrackerScreen(),
-          ),
+          GoalTrackerScreen(),
         );
         break;
       case 'moon_phases':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => PremiumMeditationScreen(),
-          ),
+          PremiumMeditationScreen(),
         );
         break;
       case 'social':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => SocialFeedScreen(),
-          ),
+          SocialFeedScreen(),
         );
         break;
       case 'stats':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => SessionStatsScreen(),
-          ),
+          SessionStatsScreen(),
         );
         break;
       default:

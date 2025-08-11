@@ -16,6 +16,7 @@ import '../services/subscription_service.dart';
 import '../components/premium_upgrade_dialog.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
 import 'goal_detail_screen_redesigned.dart';
 
 class GoalTrackerScreen extends StatefulWidget {
@@ -62,6 +63,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     );
     
     print('📊 Starting initial goal load...');
+    // Start loading immediately like vision board does
     _loadGoals();
     _fabAnimationController.forward();
     
@@ -94,6 +96,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         ),
       );
     }
+
 
     final filteredGoals = _filterGoals();
     
@@ -619,9 +622,10 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         
         print('🔄 Converting ${apiGoals.length} API goals to UI goals...');
         
-        // Load all user milestones once (much faster than per-goal API calls)
-        print('📋 Loading all user milestones in one API call...');
-        final allUserMilestones = await _loadAllUserMilestones();
+        // Skip loading milestones initially for faster load
+        // Milestones will be loaded when clicking on individual goals
+        print('⚡ Skipping milestone load for faster initial display...');
+        final List<GoalTrackerMileStoneModel> allUserMilestones = [];
         
         for (int i = 0; i < apiGoals.length; i++) {
           final apiGoal = apiGoals[i];
@@ -677,8 +681,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             print('🔍 No categories found via either method');
           }
           
-          // Get milestones for this specific goal from the loaded data
-          final milestones = _getMilestonesForGoal(apiGoal, allUserMilestones);
+          // Skip milestone loading initially - will be loaded when goal is clicked
+          final milestones = <Milestone>[];
           
           // Determine category from actualCategories (either from existingCategorys or separate API)
           final goalCategory = _getGoalCategoryFromActualCategories(actualCategories, apiGoal.goalTrackerName ?? '', apiGoal.goalTrackerId);
@@ -686,8 +690,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           // Determine priority from API data
           final goalPriority = _goalTrackerService.mapApiPriorityToUiPriority(apiGoal.predefinedGoalPriorityTypeId);
           
-          // Calculate progress based on completed milestones
-          final progress = _calculateGoalProgress(milestones);
+          // Progress will be calculated when goal details are loaded
+          final progress = 0.0;
           
           print('🏷️  Goal "${apiGoal.goalTrackerName}" FINAL categorized as: ${goalCategory.displayName}');
           print('🔥 Goal priority mapped: API ID ${apiGoal.predefinedGoalPriorityTypeId} → ${goalPriority.displayName}');
@@ -706,6 +710,9 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             tags: [goalCategory.displayName.toLowerCase()],
           ));
         }
+        
+        // Sort goals by creation date - newest first (top to bottom)
+        convertedGoals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         
         setState(() {
           goals = convertedGoals;
@@ -1099,6 +1106,9 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           tags: ['money', 'savings'],
         ),
       ];
+      
+      // Sort hardcoded goals by creation date - newest first (top to bottom)
+      hardcodedGoals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       
       setState(() {
         goals = hardcodedGoals;
@@ -1494,88 +1504,16 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   void _showGoalDetails(Goal goal) async {
     print('👁️  Opening goal details for: ${goal.title}');
-    print('🎯 Fetching fresh goal data from API...');
+    print('🎯 Fetching detailed goal data with milestones...');
     
-    // Show loading indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: CircularProgressIndicator(),
+    // Navigate immediately to loading screen
+    pushWithoutSwipe(
+      context,
+      _GoalLoadingScreen(
+        goalId: goal.id,
+        goalTitle: goal.title,
       ),
     );
-    
-    try {
-      // Parse goal ID to int
-      final goalId = int.tryParse(goal.id);
-      if (goalId == null) {
-        print('❌ Invalid goal ID: ${goal.id}');
-        Navigator.pop(context); // Close loading dialog
-        return;
-      }
-      
-      // Fetch fresh goal data from API
-      final result = await _goalTrackerService.getSingleGoalTracker(goalId);
-      
-      // Close loading dialog
-      Navigator.pop(context);
-      
-      if (result.isSuccess && result.data != null) {
-        print('✅ Fresh goal data loaded, opening details screen');
-        
-        // Convert API goal to UI Goal with fresh data
-        final freshGoal = await _convertApiGoalToUiGoal(result.data!);
-        
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GoalDetailScreenRedesigned(
-              goal: freshGoal,
-          onGoalUpdated: (updatedGoal) async {
-            print('🔄 Goal updated from details screen:');
-            print('   Original: ${goal.title}');
-            print('   Updated: ${updatedGoal.title}');
-            
-            // Update goal using the service
-            await _updateGoalWithService(
-              goalId: updatedGoal.id,
-              title: updatedGoal.title,
-              targetDate: updatedGoal.targetDate,
-            );
-          },
-          onGoalDeleted: (deletedGoal) async {
-            print('🗑️  Goal deleted from details screen: ${deletedGoal.title}');
-            
-            // Delete goal using the service
-            await _deleteGoalWithService(deletedGoal.id);
-          },
-        ),
-      ),
-    );
-      } else {
-        print('❌ Failed to load fresh goal data: ${result.message}');
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load goal details: ${result.message}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      // Close loading dialog if still open
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
-      }
-      
-      print('❌ Exception while loading goal details: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error loading goal details'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   /// Convert a single API goal to UI Goal object (used when fetching fresh goal details)
@@ -1936,5 +1874,245 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     } catch (e) {
       print('❌ Test error: $e');
     }
+  }
+}
+
+// Loading screen that fetches detailed goal data
+class _GoalLoadingScreen extends StatefulWidget {
+  final String goalId;
+  final String goalTitle;
+  
+  const _GoalLoadingScreen({
+    Key? key,
+    required this.goalId,
+    required this.goalTitle,
+  }) : super(key: key);
+  
+  @override
+  _GoalLoadingScreenState createState() => _GoalLoadingScreenState();
+}
+
+class _GoalLoadingScreenState extends State<_GoalLoadingScreen> {
+  final GoalTrackerService _goalTrackerService = GoalTrackerService();
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadDetailedGoalData();
+  }
+  
+  Future<void> _loadDetailedGoalData() async {
+    try {
+      print('🔄 Loading detailed data for goal: ${widget.goalTitle}');
+      
+      // Parse goal ID to int
+      final goalId = int.tryParse(widget.goalId);
+      if (goalId == null) {
+        print('❌ Invalid goal ID: ${widget.goalId}');
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid goal ID'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      
+      // Initialize service
+      _goalTrackerService.initialize();
+      
+      // Fetch detailed goal data from API
+      final result = await _goalTrackerService.getSingleGoalTracker(goalId);
+      
+      if (result.isSuccess && result.data != null) {
+        print('✅ Detailed goal data loaded');
+        
+        // Load milestones for this goal
+        print('📋 Loading milestones for goal...');
+        final milestonesResult = await _goalTrackerService.getMilestonesByGoalTracker(goalId);
+        final milestonesData = milestonesResult.data ?? [];
+        
+        // Convert API goal to UI Goal with full data
+        final apiGoal = result.data!;
+        
+        // Convert milestones
+        final milestones = milestonesData.map((apiMilestone) => Milestone(
+          id: apiMilestone.goalTrackerMileStoneId?.toString() ?? '',
+          title: apiMilestone.goalTrackerMileStoneName ?? '',
+          description: '', // API doesn't have description field
+          isCompleted: apiMilestone.predefinedGoalStatusTypeId == 4, // Status 4 is completed
+          completedAt: apiMilestone.goalTrackerMileStoneCompletedDate,
+          targetDate: apiMilestone.goalTrackerMileStoneEndDate,
+        )).toList();
+        
+        // Determine category from API data
+        // Use existingCategorys from the detailed goal data
+        final actualCategories = apiGoal.existingCategorys;
+        
+        // Debug category data
+        print('🔍 Category Debug for goal: ${apiGoal.goalTrackerName}');
+        print('   existingCategorys: $actualCategories');
+        print('   existingCategorys type: ${actualCategories.runtimeType}');
+        print('   existingCategorys length: ${actualCategories?.length ?? 0}');
+        if (actualCategories != null && actualCategories.isNotEmpty) {
+          print('   First category: ${actualCategories.first}');
+          print('   First category type: ${actualCategories.first.runtimeType}');
+        }
+        
+        final goalCategory = _getGoalCategoryFromActualCategories(actualCategories);
+        print('   Final determined category: ${goalCategory.displayName}');
+        
+        // Determine priority
+        final goalPriority = _mapApiPriorityToUiPriority(apiGoal.predefinedGoalPriorityTypeId);
+        
+        // Calculate progress based on milestones
+        final progress = _calculateProgress(milestones);
+        
+        // Create full Goal object
+        final detailedGoal = Goal(
+          id: apiGoal.goalTrackerId?.toString() ?? '',
+          title: apiGoal.goalTrackerName ?? '',
+          description: '', // API doesn't have description
+          category: goalCategory,
+          priority: goalPriority,
+          targetDate: apiGoal.goalTrackerEndDate ?? DateTime.now().add(Duration(days: 30)),
+          createdAt: apiGoal.goalTrackerStartDate ?? DateTime.now(),
+          milestones: milestones,
+          currentProgress: progress,
+          tags: [goalCategory.displayName.toLowerCase()],
+        );
+        
+        print('✅ Goal details fully loaded with ${milestones.length} milestones');
+        
+        // Replace current route with goal detail screen without animation
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => GoalDetailScreenRedesigned(
+              goal: detailedGoal,
+              onGoalUpdated: (updatedGoal) async {
+                print('🔄 Goal updated from details screen');
+                Navigator.pop(context);
+              },
+              onGoalDeleted: (deletedGoal) async {
+                print('🗑️ Goal deleted from details screen');
+                Navigator.pop(context);
+              },
+            ),
+            transitionDuration: Duration.zero, // No animation
+            reverseTransitionDuration: Duration.zero, // No animation on back
+          ),
+        );
+      } else {
+        print('❌ Failed to load detailed goal data: ${result.message}');
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load goal details'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Exception loading detailed goal data: $e');
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading goal details'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+  
+  // Helper methods
+  GoalCategory _getGoalCategoryFromActualCategories(List<dynamic>? actualCategories) {
+    print('🔍 _getGoalCategoryFromActualCategories called');
+    print('   actualCategories: $actualCategories');
+    
+    if (actualCategories != null && actualCategories.isNotEmpty) {
+      // Get the first category
+      final category = actualCategories.first;
+      print('   Processing category: $category');
+      print('   Category type: ${category.runtimeType}');
+      
+      // Try to get category name from the category object
+      String? categoryName;
+      if (category is CategoryModel) {
+        categoryName = category.categoryName;
+        print('   CategoryModel.categoryName: $categoryName');
+      } else if (category is Map) {
+        categoryName = category['categoryName'];
+        print('   Map[categoryName]: $categoryName');
+      } else {
+        print('   Unknown category type, trying toString: ${category.toString()}');
+      }
+      
+      if (categoryName != null) {
+        final lowerName = categoryName.toLowerCase();
+        print('   Checking categoryName: "$categoryName" (lowercase: "$lowerName")');
+        
+        // Map category names to GoalCategory enum
+        if (lowerName.contains('career') || lowerName.contains('work')) {
+          print('   → Mapped to GoalCategory.career');
+          return GoalCategory.career;
+        } else if (lowerName.contains('health') || lowerName.contains('fitness')) {
+          print('   → Mapped to GoalCategory.health');
+          return GoalCategory.health;
+        } else if (lowerName.contains('love') || lowerName.contains('relationship')) {
+          print('   → Mapped to GoalCategory.relationships');
+          return GoalCategory.relationships;
+        } else if (lowerName.contains('money') || lowerName.contains('finance')) {
+          print('   → Mapped to GoalCategory.financial');
+          return GoalCategory.financial;
+        } else if (lowerName.contains('personal')) {
+          print('   → Mapped to GoalCategory.personal');
+          return GoalCategory.personal;
+        } else if (lowerName.contains('spiritual')) {
+          print('   → Mapped to GoalCategory.spiritual');
+          return GoalCategory.spiritual;
+        } else {
+          print('   → No category match found for "$categoryName"');
+        }
+      } else {
+        print('   → No categoryName found in category object');
+      }
+    } else {
+      print('   → actualCategories is null or empty');
+    }
+    
+    // Default fallback
+    print('   → Falling back to GoalCategory.personal');
+    return GoalCategory.personal;
+  }
+  
+  GoalPriority _mapApiPriorityToUiPriority(int? apiPriorityId) {
+    switch (apiPriorityId) {
+      case 1:
+        return GoalPriority.high;
+      case 2:
+        return GoalPriority.medium;
+      case 3:
+        return GoalPriority.low;
+      default:
+        return GoalPriority.medium;
+    }
+  }
+  
+  double _calculateProgress(List<Milestone> milestones) {
+    if (milestones.isEmpty) return 0.0;
+    final completed = milestones.where((m) => m.isCompleted).length;
+    return (completed / milestones.length) * 100;
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundPrimary,
+      body: StylishLoading(
+        message: 'Loading goal details...',
+      ),
+    );
   }
 }
