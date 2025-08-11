@@ -1773,6 +1773,26 @@ namespace Manifest.Tests.Common
            return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/manifest/downloadvisionboardpicturefile"),new { visionBoardPictureId },appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> IsVisionBoardPictureThumbnailValid(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Object>(token,Url("/api/v1/manifest/isvisionboardpicturethumbnailvalid"),new { visionBoardPictureId },appHeader);
+        }
+
+        public virtual Task<HttpResponseMessage> DownloadVisionBoardPictureThumbnail(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.GetWithNewTokenClientAsync<Object>(token,Url("/api/v1/manifest/downloadvisionboardpicturethumbnail"),new { visionBoardPictureId },appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> UploadVisionBoardPictureThumbnail(VisionBoardPictureThumbnailWithFileFormModel model, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAsFormAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,VisionBoardPictureThumbnailWithFileFormModel>(token,Url("/api/v1/manifest/uploadvisionboardpicturethumbnail"),model,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> ClearVisionBoardPictureThumbnail(Int64 visionBoardPictureId, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.DeleteAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>>(token,Url("/api/v1/manifest/clearvisionboardpicturethumbnail"),new { visionBoardPictureId },appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<VisionBoardSessionModel> result)> GetVisionBoardSessions(VisionBoardSessionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<VisionBoardSessionModel>,VisionBoardSessionSearchCriteria>(token,Url("/api/v1/manifest/getvisionboardsessions"),search,appHeader);

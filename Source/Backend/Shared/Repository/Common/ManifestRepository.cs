@@ -781,7 +781,7 @@ namespace Manifest.Repository.Common
                        ModifiedByUserFirstName = mu.FirstName,
                        ModifiedByUserLastName = mu.LastName,
                        ModifiedByUserEmail = mu.Email,
-                       UserName = c.UserName,
+                       UserName = c.UserName,                       
                        VisionBoardSessionPictureId = item.VisionBoardSessionPictureId,
                        VisionBoardSessionId = item.VisionBoardSessionId,
                        VisionBoardSessionPictureDate = item.VisionBoardSessionPictureDate,
@@ -4150,6 +4150,7 @@ ModifiedByUserId = item.ModifiedByUserId,
                    from mu in muTemp.DefaultIfEmpty()
                    select new DefaultVisionBoardPictureView
                    {
+                       Title = item.Title,                       
                        CreatedByUserFirstName = cu.FirstName,
                        CreatedByUserLastName = cu.LastName,
                        CreatedByUserEmail = cu.Email,
@@ -6877,9 +6878,8 @@ ModifiedByUserId = item.ModifiedByUserId,
                        ModifiedByUserFirstName = mu.FirstName,
                        ModifiedByUserLastName = mu.LastName,
                        ModifiedByUserEmail = mu.Email,
-
                        UserName = a.UserName,
-
+                       Title = item.Title,                       
                        VisionBoardPictureId = item.VisionBoardPictureId,
                        Location = item.Location,
                        FileName = item.FileName,
@@ -7012,6 +7012,21 @@ ModifiedByUserId = item.ModifiedByUserId,
         public async Task<bool> UpdateVisionBoardPictureFileLocationAsync(long visionBoardPictureId, string fileLocation, string fileName, long? modifiedBy)
         {
             return await appDBManager.GetTable<VisionBoardPicture>().Where(x => x.VisionBoardPictureId == visionBoardPictureId).Set(x => x.Location, fileLocation).Set(x => x.FileName, fileName).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> UpdateVisionBoardPictureThumbnailLocationAsync(long visionBoardPictureId, string thumbnailLocation, string thumbnailFileName, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<VisionBoardPicture>().Where(x => x.VisionBoardPictureId == visionBoardPictureId).Set(x => x.ThumbnailLocation, thumbnailLocation).Set(x => x.ThumbnailFileName, thumbnailFileName).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> ClearVisionBoardPictureThumbnailLocationAsync(long visionBoardPictureId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<VisionBoardPicture>().Where(x => x.VisionBoardPictureId == visionBoardPictureId).Set(x => x.ThumbnailLocation, (string)null).Set(x => x.ThumbnailFileName, (string)null).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> ClearVisionBoardPictureFileLocationAsync(long visionBoardPictureId, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<VisionBoardPicture>().Where(x => x.VisionBoardPictureId == visionBoardPictureId).Set(x => x.Location, (string)null).Set(x => x.FileName, (string)null).UpdateWithAuditAsync(modifiedBy) > 0;
         }
 
         public async Task<VisionBoardPicture> CreateVisionBoardPictureAsync(VisionBoardPicture visionBoardPicture, long? createdBy)

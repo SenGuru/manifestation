@@ -2380,6 +2380,33 @@ public void IsVisionBoardPictureFileValid_WithValidInvalidToken_ReturnsUnAuthori
 {
     
 }
+public void IsVisionBoardPictureThumbnailValid_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = IsVisionBoardPictureThumbnailValid();
+}
+public void IsVisionBoardPictureThumbnailValid_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UploadVisionBoardPictureThumbnail_WithValidData_ReturnsValidData()
+{
+    var model = new VisionBoardPictureThumbnailWithFileFormModel();
+    var r = UploadVisionBoardPictureThumbnail();
+}
+public void UploadVisionBoardPictureThumbnail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ClearVisionBoardPictureThumbnail_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = ClearVisionBoardPictureThumbnail();
+}
+public void ClearVisionBoardPictureThumbnail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
 public void GetVisionBoardSessions_WithValidData_ReturnsValidData()
 {
     var model = new VisionBoardSessionSearchCriteria();

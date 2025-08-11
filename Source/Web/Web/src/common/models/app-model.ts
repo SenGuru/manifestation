@@ -2214,8 +2214,8 @@ export class FileAttachmentModel {
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
     static fileAttachmentFileName__size : number = 128;
-    static fileAttachmentFileLocation__size : number = 512;
-    static fileAttachmentPreviewFileLocation__size : number = 512;
+    static fileAttachmentFileLocation__size : number = 1024;
+    static fileAttachmentPreviewFileLocation__size : number = 1024;
     static description__size : number = 200;
 
     static getCopy(self : FileAttachmentModel,adjustDateToUTC : boolean = false) : FileAttachmentModel {
@@ -2418,8 +2418,8 @@ export class FileAttachmentCreateWithFileFormModel {
     description : string = '';
     userId : number = 0;
     static fileAttachmentFileName__size : number = 128;
-    static fileAttachmentFileLocation__size : number = 512;
-    static fileAttachmentPreviewFileLocation__size : number = 512;
+    static fileAttachmentFileLocation__size : number = 1024;
+    static fileAttachmentPreviewFileLocation__size : number = 1024;
     static description__size : number = 200;
 
     static getCopy(self : FileAttachmentCreateWithFileFormModel,adjustDateToUTC : boolean = false) : FileAttachmentCreateWithFileFormModel {
@@ -2457,8 +2457,8 @@ export class FileAttachmentUpdateModel {
     description : string = '';
     userId : number = 0;
     static fileAttachmentFileName__size : number = 128;
-    static fileAttachmentFileLocation__size : number = 512;
-    static fileAttachmentPreviewFileLocation__size : number = 512;
+    static fileAttachmentFileLocation__size : number = 1024;
+    static fileAttachmentPreviewFileLocation__size : number = 1024;
     static description__size : number = 200;
 
     static getCopy(self : FileAttachmentUpdateModel,adjustDateToUTC : boolean = false) : FileAttachmentUpdateModel {
@@ -2841,17 +2841,24 @@ export class VisionBoardPictureModel {
     createdBy : string = '';
     modifiedBy : string = '';
     visionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureModel,adjustDateToUTC : boolean = false) : VisionBoardPictureModel {
       let obj = new VisionBoardPictureModel();
@@ -2875,12 +2882,20 @@ export class VisionBoardPictureModel {
         obj.modifiedBy = self.modifiedBy;
       if (self.hasOwnProperty('visionBoardPictureId'))
         obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       if (self.hasOwnProperty('isDeleted'))
@@ -2898,9 +2913,13 @@ export class VisionBoardPictureModel {
 
     static getAsCreateModel(self : VisionBoardPictureModel) : VisionBoardPictureCreateModel {
       let obj = new VisionBoardPictureCreateModel();
+      obj.title = self.title;
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
+      obj.thumbnailLocation = self.thumbnailLocation;
+      obj.thumbnailFileName = self.thumbnailFileName;
+      obj.thumbnailFileSize = self.thumbnailFileSize;
       obj.userId = self.userId;
       return obj;
     }
@@ -4845,7 +4864,7 @@ export class DefaultMeditationFileModel {
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
     static defaultMeditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultMeditationFileModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileModel {
@@ -4954,7 +4973,7 @@ export class DefaultMeditationFileCreateModel {
     fileName : string = '';
     fileSize : number = 0;
     static defaultMeditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultMeditationFileCreateModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileCreateModel {
@@ -4992,7 +5011,7 @@ export class DefaultMeditationFileUpdateModel {
     fileName : string = '';
     fileSize : number = 0;
     static defaultMeditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultMeditationFileUpdateModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileUpdateModel {
@@ -5023,6 +5042,7 @@ export class DefaultVisionBoardPictureModel {
     createdBy : string = '';
     modifiedBy : string = '';
     defaultVisionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
@@ -5031,7 +5051,8 @@ export class DefaultVisionBoardPictureModel {
     createdByUserId : number | null = null;
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultVisionBoardPictureModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureModel {
@@ -5054,6 +5075,8 @@ export class DefaultVisionBoardPictureModel {
         obj.modifiedBy = self.modifiedBy;
       if (self.hasOwnProperty('defaultVisionBoardPictureId'))
         obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -5075,6 +5098,7 @@ export class DefaultVisionBoardPictureModel {
 
     static getAsCreateModel(self : DefaultVisionBoardPictureModel) : DefaultVisionBoardPictureCreateModel {
       let obj = new DefaultVisionBoardPictureCreateModel();
+      obj.title = self.title;
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
@@ -5084,6 +5108,7 @@ export class DefaultVisionBoardPictureModel {
     static getAsUpdateModel(self : DefaultVisionBoardPictureModel):DefaultVisionBoardPictureUpdateModel {
       let obj = new DefaultVisionBoardPictureUpdateModel();
       obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      obj.title = self.title;
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
@@ -5121,14 +5146,18 @@ export class DefaultVisionBoardPictureSearchCriteria extends BaseSearchCriteria{
 }
 
 export class DefaultVisionBoardPictureCreateModel {
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultVisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureCreateModel {
       let obj = new DefaultVisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -5152,16 +5181,20 @@ export class MultipleDefaultVisionBoardPictureCreateModel {
 
 export class DefaultVisionBoardPictureUpdateModel {
     defaultVisionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultVisionBoardPictureUpdateModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureUpdateModel {
       let obj = new DefaultVisionBoardPictureUpdateModel();
       if (self.hasOwnProperty('defaultVisionBoardPictureId'))
         obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -6998,7 +7031,7 @@ export class MeditationFileModel {
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
     static meditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : MeditationFileModel,adjustDateToUTC : boolean = false) : MeditationFileModel {
@@ -7117,7 +7150,7 @@ export class MeditationFileCreateModel {
     fileSize : number = 0;
     userId : number = 0;
     static meditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : MeditationFileCreateModel,adjustDateToUTC : boolean = false) : MeditationFileCreateModel {
@@ -7158,7 +7191,7 @@ export class MeditationFileUpdateModel {
     fileSize : number = 0;
     userId : number = 0;
     static meditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : MeditationFileUpdateModel,adjustDateToUTC : boolean = false) : MeditationFileUpdateModel {
@@ -7454,24 +7487,39 @@ export class VisionBoardPictureSearchCriteria extends BaseSearchCriteria{
 
 export class VisionBoardPictureCreateWithFileFormModel {
     uploadedFile : File | null = null;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureCreateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateWithFileFormModel {
       let obj = new VisionBoardPictureCreateWithFileFormModel();
       if (self.hasOwnProperty('uploadedFile'))
         obj.uploadedFile = self.uploadedFile;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7492,12 +7540,19 @@ export class MultipleVisionBoardPictureCreateModel {
 export class VisionBoardPictureUpdateWithFileFormModel {
     uploadedFile : File | null = null;
     visionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureUpdateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateWithFileFormModel {
@@ -7506,12 +7561,20 @@ export class VisionBoardPictureUpdateWithFileFormModel {
         obj.uploadedFile = self.uploadedFile;
       if (self.hasOwnProperty('visionBoardPictureId'))
         obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7560,6 +7623,20 @@ export class UserByVisionBoardPictureIdSearchCriteria extends BaseSearchCriteria
         obj.sortBy = self.sortBy;
       if (self.hasOwnProperty('sortAscending'))
         obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureThumbnailWithFileFormModel {
+    visionBoardPictureId : number = 0;
+    uploadedFile : File | null = null;
+
+    static getCopy(self : VisionBoardPictureThumbnailWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureThumbnailWithFileFormModel {
+      let obj = new VisionBoardPictureThumbnailWithFileFormModel();
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('uploadedFile'))
+        obj.uploadedFile = self.uploadedFile;
       return obj;
     }
 }
@@ -15872,21 +15949,36 @@ export class IFormFile {
 }
 
 export class VisionBoardPictureCreateModel {
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
       let obj = new VisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;

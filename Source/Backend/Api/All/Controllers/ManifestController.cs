@@ -20,12 +20,15 @@ using Manifest.Common.Models.ViewModels;
 using Manifest.Common.Models.ViewModels;
 using Manifest.Common.Models.ViewModels.ImportExportModels;
 using Manifest.Service.App;
+using Manifest.Service.Config;
 using Manifest.Service.Storage;
 using Manifest.Web.Filters;
 using Manifest.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PiperSharp;
+using PiperSharp.Models;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Manifest.Api.All.Controllers
@@ -38,12 +41,14 @@ namespace Manifest.Api.All.Controllers
         private readonly ManifestService manifestService;
         private readonly DummyDataGenerationService dummyDataGenerationService;
         private readonly CompanyService companyService;
-        public ManifestController(CompanyService companyService, ManifestService manifestService, DummyDataGenerationService dummyDataGenerationService, ILog log)
+        private readonly AppConfigurationFile appConfigurationFile;
+        public ManifestController(CompanyService companyService, ManifestService manifestService, DummyDataGenerationService dummyDataGenerationService, AppConfigurationFile appConfigurationFile, ILog log)
             : base(log)
         {
             this.companyService = companyService;
             this.manifestService = manifestService;
             this.dummyDataGenerationService = dummyDataGenerationService;
+            this.appConfigurationFile = appConfigurationFile;
         }
 
         #region FileAttachmentFolder
@@ -4658,9 +4663,7 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
-
-        /*
-
+/*
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadVisionBoardPictureFile([FromForm] VisionBoardPictureFileWithFileFormModel model)
@@ -4676,16 +4679,59 @@ namespace Manifest.Api.All.Controllers
                 };
             }
 
-            return productService.UploadVisionBoardPictureFileAsync(model.VisionBoardPictureId, streamModel);
+            return manifestService.UploadVisionBoardPictureFileAsync(model.VisionBoardPictureId, streamModel);
         }
 
         [HttpDelete]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
-        public Task<ReturnModel<bool>> ClearVisionBoardPictureFile([FromQuery] long movieId)
+        public Task<ReturnModel<bool>> ClearVisionBoardPictureFile([FromQuery] long visionBoardPictureId)
         {
-            return productService.ClearVisionBoardPictureFileAsync(movieId);
+            return manifestService.ClearVisionBoardPictureFileAsync(visionBoardPictureId);
+        }
+*/
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> IsVisionBoardPictureThumbnailValid([FromQuery] long visionBoardPictureId)
+        {
+            return manifestService.IsVisionBoardPictureThumbnailValidAsync(visionBoardPictureId);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public async Task<IActionResult> DownloadVisionBoardPictureThumbnail([FromQuery] long visionBoardPictureId)
+        {
+            var result = await manifestService.GetVisionBoardPictureThumbnailAsync(visionBoardPictureId);
+            if (!result.IsSuccess)
+                return new NotFoundResult();
+            return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> UploadVisionBoardPictureThumbnail([FromForm] VisionBoardPictureThumbnailWithFileFormModel model)
+        {
+            FileStreamModel streamModel = null;
+            if (model.UploadedFile != null)
+            {
+                streamModel = new FileStreamModel
+                {
+                    FileData = model.UploadedFile.OpenReadStream(),
+                    ContentType = model.UploadedFile.ContentType,
+                    FileName = model.UploadedFile.FileName
+                };
+            }
+
+            return manifestService.UploadVisionBoardPictureThumbnailAsync(model.VisionBoardPictureId, streamModel);
+        }
+
+        [HttpDelete]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<ReturnModel<bool>> ClearVisionBoardPictureThumbnail([FromQuery] long visionBoardPictureId)
+        {
+            return manifestService.ClearVisionBoardPictureThumbnailAsync(visionBoardPictureId);
+        }
+
+ /*
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> IsVisionBoardPictureSourceWordFileValid([FromQuery] long visionBoardPictureId)
@@ -4861,9 +4907,6 @@ namespace Manifest.Api.All.Controllers
         {
             return manifestService.GetUserByVisionBoardSessionIdAsync(search);
         }
-
-
-
         /*
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
@@ -5222,6 +5265,59 @@ namespace Manifest.Api.All.Controllers
             return Json(result);
         }
         */
+        #endregion
+
+        #region TextToAudio
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "TextToAudio" })]
+        public async Task<IActionResult> ConvertTextToAudio([FromBody] string text)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(text))
+                {
+                    return BadRequest("Text cannot be empty");
+                }
+
+                var cwd = appConfigurationFile.GetConfigFileFolder();
+                var piperPath = Path.Join(cwd, "piper");
+                
+                // Ensure Piper is downloaded
+                if (!Directory.Exists(piperPath))
+                {
+                    await PiperSharp.PiperDownloader.DownloadPiper("2023.11.14-2").ExtractPiper(cwd);
+                }
+
+                // Get a default English model if no model exists
+                var modelPath = Path.Join(piperPath, "model");
+                VoiceModel model;
+                
+                if (!Directory.Exists(modelPath))
+                {
+                    model = await PiperSharp.PiperDownloader.DownloadModelByKey("en_US-lessac-medium");
+                }
+                else
+                {
+                    model = await VoiceModel.LoadModel(modelPath);
+                }
+
+                var piperProvider = new PiperSharp.PiperProvider(new PiperConfiguration()
+                {
+                    ExecutableLocation = Path.Join(piperPath, "piper.exe"),
+                    WorkingDirectory = piperPath,
+                    Model = model
+                });
+
+                var audioResult = await piperProvider.InferAsync(text, AudioOutputType.Wav);
+                
+                return File(audioResult, "audio/wav", "audio.wav");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex);
+                return StatusCode(500, "Internal server error while converting text to audio");
+            }
+        }
         #endregion
 
     }

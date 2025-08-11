@@ -93,6 +93,7 @@
     <PackageReference Include="MassTransit" Version="8.3.0" />
 	  <PackageReference Include="MassTransit.ActiveMQ" Version="8.3.0" />
 	  <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1" />
+	  <PackageReference Include="PiperSharp" Version="1.0.5" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Release'">

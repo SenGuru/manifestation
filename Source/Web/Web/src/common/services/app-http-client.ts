@@ -2102,6 +2102,30 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public isVisionBoardPictureThumbnailValid(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getWithParams('manifest/isvisionboardpicturethumbnailvalid', {visionBoardPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public downloadVisionBoardPictureThumbnailUrl(visionBoardPictureId: number, accessToken ?: string): string {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.getUrlWithParams('manifest/downloadvisionboardpicturethumbnail', {visionBoardPictureId},accessToken);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public uploadVisionBoardPictureThumbnail(model: models.VisionBoardPictureThumbnailWithFileFormModel, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithUploadWithModel('manifest/uploadvisionboardpicturethumbnail', model, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public clearVisionBoardPictureThumbnail(visionBoardPictureId: number, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.deleteWithParams('manifest/clearvisionboardpicturethumbnail', {visionBoardPictureId}, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getVisionBoardSessions(search: models.VisionBoardSessionSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.VisionBoardSessionModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('manifest/getvisionboardsessions', search, headers);
