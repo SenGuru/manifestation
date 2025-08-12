@@ -422,6 +422,18 @@ export class HttpService {
     }
 
     // tslint:disable-next-line:max-line-length
+    public updateMinimalUserProfileForCurrentUser(user: models.MinimalUserProfileModel, headers ?: HttpHeaders): Observable<ReturnModel<models.UserProfileModel>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('company/updateminimaluserprofileforcurrentuser', user, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
+    public enablePremiumFeature(model: models.EnablePremiumFeatureModel, headers ?: HttpHeaders): Observable<ReturnModel<boolean>> {
+    // tslint:disable-next-line:max-line-length
+        return this.frameworkHttpClientService.postWithModel('company/enablepremiumfeature', model, headers);
+    }
+
+    // tslint:disable-next-line:max-line-length
     public getUserPermissions(search: models.UserPermissionSearchCriteria, headers ?: HttpHeaders): Observable<ReturnListModel<models.UserPermissionModel>> {
     // tslint:disable-next-line:max-line-length
         return this.frameworkHttpClientService.getListWithParams('company/getuserpermissions', search, headers);

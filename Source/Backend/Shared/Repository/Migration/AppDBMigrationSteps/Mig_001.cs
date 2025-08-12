@@ -930,6 +930,8 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ProfileImageGuid").AsGuid().Nullable()
                 .WithColumn("ProfileImageLocation").AsString(1024).Nullable()
                 .WithColumn("ProfileImageActualFileName").AsString(125).Nullable()
+                .WithColumn("HasUserPurchasedPremiumFeature").AsBoolean().NotNullable()
+                .WithColumn("PremiumFeatureValidUntil").AsDateTime().Nullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedByUserId").AsInt64().Nullable()
@@ -969,6 +971,19 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "UserPermission", "UserPermissionId", 1000);
+            Create.Table("UserPurchaseHistory")
+                .WithColumn("UserPurchaseHistoryId").AsInt64().PrimaryKey("PK_UserPurchaseHistory").Identity().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsAPurchase").AsBoolean().NotNullable()
+                .WithColumn("PurchaseOrDisableDate").AsDateTime().NotNullable()
+                .WithColumn("ValidUntil").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "UserPurchaseHistory", "UserPurchaseHistoryId", 1000);
             Create.Table("VisionBoardPicture")
                 .WithColumn("VisionBoardPictureId").AsInt64().PrimaryKey("PK_VisionBoardPicture").Identity().NotNullable()
                 .WithColumn("Title").AsString(100).Nullable()
@@ -1920,6 +1935,10 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("CreatedByUserId")
             
             ;
+            Create.Index("IX_User_HasUserPurchasedPremiumFeature").OnTable("User")
+                .OnColumn("HasUserPurchasedPremiumFeature")
+            
+            ;
             Create.Index("IX_User_ModifiedByUserId").OnTable("User")
                 .OnColumn("ModifiedByUserId")
             
@@ -1965,6 +1984,18 @@ namespace Manifest.Repository.Migration.Application
             
             ;
             Create.Index("IX_UserPermission_UserId").OnTable("UserPermission")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_UserPurchaseHistory_CreatedByUserId").OnTable("UserPurchaseHistory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_UserPurchaseHistory_ModifiedByUserId").OnTable("UserPurchaseHistory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_UserPurchaseHistory_UserId").OnTable("UserPurchaseHistory")
                 .OnColumn("UserId")
             
             ;
@@ -2483,6 +2514,12 @@ namespace Manifest.Repository.Migration.Application
             Create.ForeignKey("FK_UserPermission_PredefinedUserPermissionTypeId").FromTable("UserPermission").ForeignColumns("PredefinedUserPermissionTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_UserPermission_UserId").FromTable("UserPermission").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPurchaseHistory_CreatedByUserId").FromTable("UserPurchaseHistory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPurchaseHistory_ModifiedByUserId").FromTable("UserPurchaseHistory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPurchaseHistory_UserId").FromTable("UserPurchaseHistory").ForeignColumns("UserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_VisionBoardPicture_CreatedByUserId").FromTable("VisionBoardPicture").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");

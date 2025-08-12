@@ -373,6 +373,16 @@ namespace Manifest.Tests.Common
            return env.PostAsStringAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,Int64>(token,Url("/api/v1/company/markuserasnotdeleted"),id,appHeader);
         }
 
+        public virtual Task<(HttpResponseMessage response, ReturnModel<UserProfileModel> result)> UpdateMinimalUserProfileForCurrentUser(MinimalUserProfileModel user, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<UserProfileModel>,MinimalUserProfileModel>(token,Url("/api/v1/company/updateminimaluserprofileforcurrentuser"),user,appHeader);
+        }
+
+        public virtual Task<(HttpResponseMessage response, ReturnModel<Boolean> result)> EnablePremiumFeature(EnablePremiumFeatureModel model, string token = null, AppHeaderModel appHeader = null)
+        {
+           return env.PostAndReadAsJsonWithNewTokenClientAsync<ReturnModel<Boolean>,EnablePremiumFeatureModel>(token,Url("/api/v1/company/enablepremiumfeature"),model,appHeader);
+        }
+
         public virtual Task<(HttpResponseMessage response, ReturnListModel<UserPermissionModel> result)> GetUserPermissions(UserPermissionSearchCriteria search, string token = null, AppHeaderModel appHeader = null)
         {
            return env.GetAndReadAsJsonWithNewTokenClientAsync<ReturnListModel<UserPermissionModel>,UserPermissionSearchCriteria>(token,Url("/api/v1/company/getuserpermissions"),search,appHeader);

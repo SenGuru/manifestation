@@ -1417,7 +1417,6 @@ export class UserPictureWithFileFormModel {
 export class UserModel {
     existingPermissionTypeIds : number[] | null = null;
     predefinedUserTypeName : string = '';
-    companyCode : string = '';
     modifiedByUserFirstName : string = '';
     modifiedByUserLastName : string = '';
     modifiedByUserEmail : string = '';
@@ -1437,6 +1436,8 @@ export class UserModel {
     accountLockedUntil : Date | null = null;
     profileImageGuid : string | null = null;
     profileImageActualFileName : string = '';
+    hasUserPurchasedPremiumFeature : boolean = false;
+    premiumFeatureValidUntil : Date | null = null;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -1457,8 +1458,6 @@ export class UserModel {
         obj.existingPermissionTypeIds = self.existingPermissionTypeIds;
       if (self.hasOwnProperty('predefinedUserTypeName'))
         obj.predefinedUserTypeName = self.predefinedUserTypeName;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
       if (self.hasOwnProperty('modifiedByUserFirstName'))
         obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
       if (self.hasOwnProperty('modifiedByUserLastName'))
@@ -1497,6 +1496,10 @@ export class UserModel {
         obj.profileImageGuid = self.profileImageGuid;
       if (self.hasOwnProperty('profileImageActualFileName'))
         obj.profileImageActualFileName = self.profileImageActualFileName;
+      if (self.hasOwnProperty('hasUserPurchasedPremiumFeature'))
+        obj.hasUserPurchasedPremiumFeature = self.hasUserPurchasedPremiumFeature;
+      if (self.hasOwnProperty('premiumFeatureValidUntil'))
+        obj.premiumFeatureValidUntil = self.premiumFeatureValidUntil ?? (!adjustDateToUTC ? self.premiumFeatureValidUntil : (self.premiumFeatureValidUntil !== null ? DateUtils.parseAsUTC(self.premiumFeatureValidUntil) : self.premiumFeatureValidUntil ));
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -1545,7 +1548,6 @@ export class UserCreateWithFileFormModel {
     captchaCode : string = '';
     newPermissionTypeIds : number[] | null = null;
     initialPassword : string = '';
-    companyCode : string = '';
     modifiedByUserFirstName : string = '';
     modifiedByUserLastName : string = '';
     modifiedByUserEmail : string = '';
@@ -1564,6 +1566,8 @@ export class UserCreateWithFileFormModel {
     accountLockedUntil : Date | null = null;
     profileImageGuid : string | null = null;
     profileImageActualFileName : string = '';
+    hasUserPurchasedPremiumFeature : boolean = false;
+    premiumFeatureValidUntil : Date | null = null;
     isDeleted : boolean = false;
     static userName__size : number = 50;
     static email__size : number = 100;
@@ -1584,8 +1588,6 @@ export class UserCreateWithFileFormModel {
         obj.newPermissionTypeIds = self.newPermissionTypeIds;
       if (self.hasOwnProperty('initialPassword'))
         obj.initialPassword = self.initialPassword;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
       if (self.hasOwnProperty('modifiedByUserFirstName'))
         obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
       if (self.hasOwnProperty('modifiedByUserLastName'))
@@ -1622,6 +1624,10 @@ export class UserCreateWithFileFormModel {
         obj.profileImageGuid = self.profileImageGuid;
       if (self.hasOwnProperty('profileImageActualFileName'))
         obj.profileImageActualFileName = self.profileImageActualFileName;
+      if (self.hasOwnProperty('hasUserPurchasedPremiumFeature'))
+        obj.hasUserPurchasedPremiumFeature = self.hasUserPurchasedPremiumFeature;
+      if (self.hasOwnProperty('premiumFeatureValidUntil'))
+        obj.premiumFeatureValidUntil = self.premiumFeatureValidUntil ?? (!adjustDateToUTC ? self.premiumFeatureValidUntil : (self.premiumFeatureValidUntil !== null ? DateUtils.parseAsUTC(self.premiumFeatureValidUntil) : self.premiumFeatureValidUntil ));
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       return obj;
@@ -1632,7 +1638,6 @@ export class UserUpdateWithFileFormModel {
     uploadedFile : File | null = null;
     existingPermissionTypeIds : number[] | null = null;
     predefinedUserTypeName : string = '';
-    companyCode : string = '';
     modifiedByUserFirstName : string = '';
     modifiedByUserLastName : string = '';
     modifiedByUserEmail : string = '';
@@ -1652,6 +1657,8 @@ export class UserUpdateWithFileFormModel {
     accountLockedUntil : Date | null = null;
     profileImageGuid : string | null = null;
     profileImageActualFileName : string = '';
+    hasUserPurchasedPremiumFeature : boolean = false;
+    premiumFeatureValidUntil : Date | null = null;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -1674,8 +1681,6 @@ export class UserUpdateWithFileFormModel {
         obj.existingPermissionTypeIds = self.existingPermissionTypeIds;
       if (self.hasOwnProperty('predefinedUserTypeName'))
         obj.predefinedUserTypeName = self.predefinedUserTypeName;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
       if (self.hasOwnProperty('modifiedByUserFirstName'))
         obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
       if (self.hasOwnProperty('modifiedByUserLastName'))
@@ -1714,6 +1719,10 @@ export class UserUpdateWithFileFormModel {
         obj.profileImageGuid = self.profileImageGuid;
       if (self.hasOwnProperty('profileImageActualFileName'))
         obj.profileImageActualFileName = self.profileImageActualFileName;
+      if (self.hasOwnProperty('hasUserPurchasedPremiumFeature'))
+        obj.hasUserPurchasedPremiumFeature = self.hasUserPurchasedPremiumFeature;
+      if (self.hasOwnProperty('premiumFeatureValidUntil'))
+        obj.premiumFeatureValidUntil = self.premiumFeatureValidUntil ?? (!adjustDateToUTC ? self.premiumFeatureValidUntil : (self.premiumFeatureValidUntil !== null ? DateUtils.parseAsUTC(self.premiumFeatureValidUntil) : self.premiumFeatureValidUntil ));
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -1724,6 +1733,96 @@ export class UserUpdateWithFileFormModel {
         obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
       if (self.hasOwnProperty('modifiedByUserId'))
         obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+}
+
+export class UserProfileModel {
+    userId : number = 0;
+    isPrivate : boolean = false;
+    userName : string = '';
+    firstName : string = '';
+    lastName : string = '';
+    email : string = '';
+    workPhone : string = '';
+    cellPhone : string = '';
+    billingAddress1 : string = '';
+    billingAddress2 : string = '';
+    locationCity : string = '';
+    locationState : string = '';
+    locationZip : string = '';
+    locationCountry : string = '';
+    countryGuid : number | null = null;
+    stateGuid : number | null = null;
+
+    static getCopy(self : UserProfileModel,adjustDateToUTC : boolean = false) : UserProfileModel {
+      let obj = new UserProfileModel();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isPrivate'))
+        obj.isPrivate = self.isPrivate;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('firstName'))
+        obj.firstName = self.firstName;
+      if (self.hasOwnProperty('lastName'))
+        obj.lastName = self.lastName;
+      if (self.hasOwnProperty('email'))
+        obj.email = self.email;
+      if (self.hasOwnProperty('workPhone'))
+        obj.workPhone = self.workPhone;
+      if (self.hasOwnProperty('cellPhone'))
+        obj.cellPhone = self.cellPhone;
+      if (self.hasOwnProperty('billingAddress1'))
+        obj.billingAddress1 = self.billingAddress1;
+      if (self.hasOwnProperty('billingAddress2'))
+        obj.billingAddress2 = self.billingAddress2;
+      if (self.hasOwnProperty('locationCity'))
+        obj.locationCity = self.locationCity;
+      if (self.hasOwnProperty('locationState'))
+        obj.locationState = self.locationState;
+      if (self.hasOwnProperty('locationZip'))
+        obj.locationZip = self.locationZip;
+      if (self.hasOwnProperty('locationCountry'))
+        obj.locationCountry = self.locationCountry;
+      if (self.hasOwnProperty('countryGuid'))
+        obj.countryGuid = self.countryGuid;
+      if (self.hasOwnProperty('stateGuid'))
+        obj.stateGuid = self.stateGuid;
+      return obj;
+    }
+}
+
+export class MinimalUserProfileModel {
+    userId : number | null = null;
+    email : string = '';
+    firstName : string = '';
+    lastName : string = '';
+
+    static getCopy(self : MinimalUserProfileModel,adjustDateToUTC : boolean = false) : MinimalUserProfileModel {
+      let obj = new MinimalUserProfileModel();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('email'))
+        obj.email = self.email;
+      if (self.hasOwnProperty('firstName'))
+        obj.firstName = self.firstName;
+      if (self.hasOwnProperty('lastName'))
+        obj.lastName = self.lastName;
+      return obj;
+    }
+}
+
+export class EnablePremiumFeatureModel {
+    password : string = '';
+    validityYears : number = 0;
+
+    static getCopy(self : EnablePremiumFeatureModel,adjustDateToUTC : boolean = false) : EnablePremiumFeatureModel {
+      let obj = new EnablePremiumFeatureModel();
+      if (self.hasOwnProperty('password'))
+        obj.password = self.password;
+      if (self.hasOwnProperty('validityYears'))
+        obj.validityYears = self.validityYears;
       return obj;
     }
 }
