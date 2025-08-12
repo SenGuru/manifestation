@@ -128,7 +128,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           SizedBox(width: 16.w),
           Expanded(
             child: Text(
-              'Session Statistics',
+              'Progress & Stats',
               style: TextStyle(
                 color: AppTheme.textLight,
                 fontSize: 20.sp,

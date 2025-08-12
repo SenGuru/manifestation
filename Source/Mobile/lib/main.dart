@@ -60,8 +60,10 @@ class _ManifestationAppState extends State<ManifestationApp> {
   }
   
   void _onThemeChanged() {
+    print('🎨 Main app received theme change notification');
     setState(() {
       // Rebuild with new theme
+      print('🎨 Main app calling setState');
     });
   }
 
@@ -83,7 +85,11 @@ class _ManifestationAppState extends State<ManifestationApp> {
       splitScreenMode: true,
       builder: (context, child) {
         return SessionActivityTracker(
-          child: MaterialApp(
+          child: ListenableBuilder(
+            listenable: _themeService,
+            builder: (context, child) {
+              print('🎨 ListenableBuilder rebuilding with theme: ${_themeService.isDarkMode ? "dark" : "light"}');
+              return MaterialApp(
           title: 'Manifestation App',
           debugShowCheckedModeBanner: false,
           theme: AppTheme.themeData.copyWith(
@@ -237,6 +243,8 @@ class _ManifestationAppState extends State<ManifestationApp> {
           ),
           // Start with the welcome screen
           home: SplashScreen(),
+              );
+            },
           ),
         );
       },

@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
+import 'dart:typed_data';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/unified_auth_service.dart';
 import 'vision_board_screen.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../utils/navigation_utils.dart';
+import 'package:http/http.dart' as http;
 
 class VisionBoardHome extends StatefulWidget {
   const VisionBoardHome({super.key});
@@ -465,13 +468,93 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
 
   Widget _buildVisionBoardPreview(VisionBoard board) {
-    // Check if we have a thumbnail URL from the server
-    if (board.thumbnailUrl != null && board.thumbnailUrl!.isNotEmpty) {
-      return _buildThumbnailFromUrl(board.thumbnailUrl!);
-    }
+    // For now, always show a simple preview with the first letter of the title
+    // This avoids the 404 errors from the server thumbnail endpoint
+    return _buildSimpleThumbnail(board);
+  }
+  
+  Widget _buildSimpleThumbnail(VisionBoard board) {
+    final displayTitle = board.title.isEmpty ? 'Vision Board' : board.title;
+    final firstLetter = displayTitle.substring(0, 1).toUpperCase();
+    final boardDate = _formatDate(board.updatedAt);
     
-    // If no thumbnail, just show empty placeholder - don't try to render elements
-    return _buildPlaceholderThumbnail();
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+            AppTheme.visionBoardGradient[1].withValues(alpha: 0.2),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      child: Stack(
+        children: [
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _GridPatternPainter(
+                color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
+              ),
+            ),
+          ),
+          // Center content
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 60.w,
+                  height: 60.h,
+                  decoration: BoxDecoration(
+                    color: AppTheme.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+                        blurRadius: 20.r,
+                        offset: Offset(0, 10.h),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      firstLetter,
+                      style: TextStyle(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.visionBoardGradient[0],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                if (board.elements.isNotEmpty)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppTheme.white.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      '${board.elements.length} items',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
   
   Widget _buildPreviewElement(VisionBoardElement element, VisionBoard board) {
@@ -557,31 +640,66 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     return SizedBox.shrink();
   }
 
+  Future<Uint8List?> _fetchThumbnailWithAuth(String thumbnailUrl) async {
+    try {
+      final authService = UnifiedAuthService();
+      final token = authService.authToken;
+      
+      if (token == null) {
+        print('❌ No auth token available for thumbnail fetch');
+        return null;
+      }
+      
+      final response = await http.get(
+        Uri.parse(thumbnailUrl),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        print('✅ Thumbnail fetched successfully');
+        return response.bodyBytes;
+      } else {
+        print('❌ Failed to fetch thumbnail: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('❌ Error fetching thumbnail: $e');
+      return null;
+    }
+  }
+
   Widget _buildThumbnailFromUrl(String thumbnailUrl) {
     return Container(
       width: double.infinity,
       height: double.infinity,
       child: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        child: Image.network(
-          thumbnailUrl,
-          fit: BoxFit.cover,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Center(
-              child: CircularProgressIndicator(
-                value: loadingProgress.expectedTotalBytes != null
-                    ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                    : null,
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  AppTheme.visionBoardGradient[0],
+        child: FutureBuilder<Uint8List?>(
+          future: _fetchThumbnailWithAuth(thumbnailUrl),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppTheme.visionBoardGradient[0],
+                  ),
                 ),
-              ),
-            );
-          },
-          errorBuilder: (context, error, stackTrace) {
-            print('❌ Failed to load thumbnail: $error');
+              );
+            }
+            
+            if (snapshot.hasData && snapshot.data != null) {
+              return Image.memory(
+                snapshot.data!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  print('❌ Failed to display thumbnail: $error');
+                  return _buildPlaceholderThumbnail();
+                },
+              );
+            }
+            
             // Fallback to placeholder if thumbnail fails to load
             return _buildPlaceholderThumbnail();
           },
@@ -1229,4 +1347,41 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     // TODO: Implement settings
     print('Show settings');
   }
+}
+
+class _GridPatternPainter extends CustomPainter {
+  final Color color;
+
+  _GridPatternPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 0.5
+      ..style = PaintingStyle.stroke;
+
+    const spacing = 20.0;
+    
+    // Draw vertical lines
+    for (double x = 0; x <= size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        paint,
+      );
+    }
+    
+    // Draw horizontal lines
+    for (double y = 0; y <= size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

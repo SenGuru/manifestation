@@ -31,11 +31,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int _meditationMinutes = 0;
   int _journalEntries = 0;
   int _goalsAchieved = 0;
+  final ThemeService _themeService = ThemeService();
 
   @override
   void initState() {
     super.initState();
     _loadUserData();
+    _themeService.addListener(_onThemeChanged);
+  }
+
+  @override
+  void dispose() {
+    _themeService.removeListener(_onThemeChanged);
+    super.dispose();
+  }
+
+  void _onThemeChanged() {
+    print('🎨 Profile screen received theme change notification');
+    if (mounted) {
+      print('🎨 Profile screen calling setState');
+      setState(() {
+        // Rebuild with new theme colors
+      });
+    }
   }
 
   Future<void> _loadUserData() async {
@@ -125,29 +143,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              // Header with back button
-              _buildHeader(),
-              
-              // Profile info section
-              _buildProfileInfo(),
-              
-              SizedBox(height: 30.h),
-              
-              // Menu sections
-              _buildMenuSection(),
-              
-              SizedBox(height: 30.h),
-              
-              // Logout button
-              _buildLogoutButton(),
-              
-              SizedBox(height: 40.h),
-            ],
-          ),
+        child: Column(
+          children: [
+            // Header with back button
+            _buildHeader(),
+            
+            // Profile info section
+            _buildProfileInfo(),
+            
+            SizedBox(height: 20.h),
+            
+            // Menu sections
+            _buildMenuSection(),
+            
+            Spacer(),
+            
+            // Logout button
+            _buildLogoutButton(),
+            
+            SizedBox(height: 20.h),
+          ],
         ),
       ),
     );
@@ -194,20 +209,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildProfileInfo() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20.w),
-      padding: EdgeInsets.all(24.w),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(20.r),
+        gradient: LinearGradient(
+          colors: [
+            AppTheme.affirmationGradient[0].withOpacity(0.1),
+            AppTheme.affirmationGradient[1].withOpacity(0.05),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(24.r),
         border: Border.all(
-          color: AppTheme.borderSecondary,
+          color: AppTheme.affirmationGradient[0].withOpacity(0.2),
         ),
       ),
-      child: Column(
+      child: Row(
         children: [
           // Profile picture
           Container(
-            width: 100.w,
-            height: 100.h,
+            width: 65.w,
+            height: 65.h,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: AppTheme.affirmationGradient,
@@ -217,45 +239,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                  blurRadius: 20.r,
-                  offset: Offset(0, 10.h),
+                  color: AppTheme.affirmationGradient[0].withOpacity(0.4),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
                 ),
               ],
             ),
             child: Icon(
-              Icons.person,
+              Icons.person_rounded,
               color: AppTheme.white,
-              size: 50.sp,
+              size: 32.sp,
             ),
           ),
           
-          SizedBox(height: 20.h),
+          SizedBox(width: 16.w),
           
-          // Name
-          Text(
-            userName,
-            style: TextStyle(
-              fontSize: 28.sp,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textPrimary,
+          // Name and email
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userName,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  userEmail,
+                  style: TextStyle(
+                    fontSize: 13.sp,
+                    color: AppTheme.textSecondary,
+                  ),
+                ),
+              ],
             ),
           ),
           
-          SizedBox(height: 8.h),
-          
-          // Email
-          Text(
-            userEmail,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppTheme.textSecondary,
-            ),
-          ),
-          
-          SizedBox(height: 20.h),
-          
-          // Edit profile button
+          // Edit button
           GestureDetector(
             onTap: () {
               pushWithoutSwipe(
@@ -264,21 +288,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               );
             },
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+              padding: EdgeInsets.all(10.w),
               decoration: BoxDecoration(
-                border: Border.all(
-                  color: AppTheme.affirmationGradient[0],
-                  width: 2,
-                ),
-                borderRadius: BorderRadius.circular(25.r),
+                color: AppTheme.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(12.r),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.affirmationGradient[0].withOpacity(0.1),
+                    blurRadius: 8.r,
+                    offset: Offset(0, 2.h),
+                  ),
+                ],
               ),
-              child: Text(
-                'Edit Profile',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.affirmationGradient[0],
-                ),
+              child: Icon(
+                Icons.edit_rounded,
+                color: AppTheme.affirmationGradient[0],
+                size: 20.sp,
               ),
             ),
           ),
@@ -299,17 +324,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(
         children: [
-          _buildMenuItem(
-            icon: Icons.notifications_outlined,
-            title: 'Notifications',
-            subtitle: 'Push notifications, reminders',
-            onTap: () {
-              // TODO: Navigate to notifications
-            },
-          ),
-          
-          _buildDivider(),
-          
           _buildMenuItem(
             icon: Icons.analytics_outlined,
             title: 'Progress & Stats',
@@ -347,7 +361,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             title: 'About',
             subtitle: 'Version, terms, privacy policy',
             onTap: () {
-              // TODO: Navigate to about
+              pushWithoutSwipe(
+                context,
+                AboutScreen(),
+              );
             },
           ),
         ],
@@ -361,41 +378,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
     required String subtitle,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      onTap: onTap,
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-      leading: Container(
-        width: 44.w,
-        height: 44.h,
-        decoration: BoxDecoration(
-          color: AppTheme.backgroundSecondary,
-          borderRadius: BorderRadius.circular(12.r),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.zero,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+          child: Row(
+            children: [
+              Container(
+                width: 42.w,
+                height: 42.h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.affirmationGradient[0].withOpacity(0.1),
+                      AppTheme.affirmationGradient[1].withOpacity(0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  icon,
+                  color: AppTheme.affirmationGradient[0],
+                  size: 22.sp,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      subtitle,
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                color: AppTheme.textTertiary,
+                size: 16.sp,
+              ),
+            ],
+          ),
         ),
-        child: Icon(
-          icon,
-          color: AppTheme.textSecondary,
-          size: 22.sp,
-        ),
-      ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
-        ),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: TextStyle(
-          fontSize: 14.sp,
-          color: AppTheme.textSecondary,
-        ),
-      ),
-      trailing: Icon(
-        Icons.chevron_right,
-        color: AppTheme.textTertiary,
-        size: 20.sp,
       ),
     );
   }
@@ -730,84 +773,107 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildThemeToggleItem() {
-    final themeService = ThemeService();
-    
-    return ListTile(
-      onTap: () async {
-        await themeService.toggleTheme();
-        setState(() {
-          // Refresh UI with new theme
-        });
-      },
-      contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
-      leading: Container(
-        width: 44.w,
-        height: 44.h,
-        decoration: BoxDecoration(
-          color: AppTheme.backgroundSecondary,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        child: Icon(
-          AppTheme.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-          color: AppTheme.textSecondary,
-          size: 22.sp,
-        ),
-      ),
-      title: Text(
-        'Appearance',
-        style: TextStyle(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
-          color: AppTheme.textPrimary,
-        ),
-      ),
-      subtitle: Text(
-        AppTheme.isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode',
-        style: TextStyle(
-          fontSize: 14.sp,
-          color: AppTheme.textSecondary,
-        ),
-      ),
-      trailing: Container(
-        width: 50.w,
-        height: 28.h,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14.r),
-          color: AppTheme.isDarkMode 
-              ? AppTheme.affirmationGradient[0].withOpacity(0.2)
-              : AppTheme.textTertiary.withOpacity(0.2),
-        ),
-        child: Stack(
-          children: [
-            AnimatedPositioned(
-              duration: Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              left: AppTheme.isDarkMode ? 24.w : 2.w,
-              top: 2.h,
-              child: Container(
-                width: 24.w,
-                height: 24.h,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () async {
+          print('🎨 Theme toggle tapped');
+          await _themeService.toggleTheme(animate: false);
+          print('🎨 Theme toggle completed');
+        },
+        borderRadius: BorderRadius.zero,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+          child: Row(
+            children: [
+              Container(
+                width: 42.w,
+                height: 42.h,
                 decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppTheme.isDarkMode 
-                      ? AppTheme.affirmationGradient[0]
-                      : AppTheme.textTertiary,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.shadow,
-                      blurRadius: 4.r,
-                      offset: Offset(0, 2.h),
+                  gradient: LinearGradient(
+                    colors: [
+                      AppTheme.affirmationGradient[0].withOpacity(0.1),
+                      AppTheme.affirmationGradient[1].withOpacity(0.05),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                child: Icon(
+                  AppTheme.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                  color: AppTheme.affirmationGradient[0],
+                  size: 22.sp,
+                ),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Appearance',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 2.h),
+                    Text(
+                      AppTheme.isDarkMode ? 'Dark Mode' : 'Light Mode',
+                      style: TextStyle(
+                        fontSize: 13.sp,
+                        color: AppTheme.textSecondary,
+                      ),
                     ),
                   ],
                 ),
-                child: Icon(
-                  AppTheme.isDarkMode ? Icons.nightlight_round : Icons.wb_sunny_rounded,
-                  color: AppTheme.white,
-                  size: 14.sp,
+              ),
+              Container(
+                width: 50.w,
+                height: 26.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(13.r),
+                  color: AppTheme.isDarkMode 
+                      ? AppTheme.affirmationGradient[0].withOpacity(0.2)
+                      : AppTheme.textTertiary.withOpacity(0.15),
+                ),
+                child: Stack(
+                  children: [
+                    AnimatedPositioned(
+                      duration: Duration(milliseconds: 200),
+                      curve: Curves.easeInOut,
+                      left: AppTheme.isDarkMode ? 26.w : 2.w,
+                      top: 2.h,
+                      child: Container(
+                        width: 22.w,
+                        height: 22.h,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppTheme.isDarkMode 
+                              ? AppTheme.affirmationGradient[0]
+                              : AppTheme.textTertiary.withOpacity(0.8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.shadow,
+                              blurRadius: 4.r,
+                              offset: Offset(0, 2.h),
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          AppTheme.isDarkMode ? Icons.nightlight_round : Icons.wb_sunny_rounded,
+                          color: AppTheme.white,
+                          size: 13.sp,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
