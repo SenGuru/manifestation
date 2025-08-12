@@ -3674,9 +3674,6 @@
                   "InitialPassword": {
                     "type": "string"
                   },
-                  "CompanyCode": {
-                    "type": "string"
-                  },
                   "ModifiedByUserFirstName": {
                     "type": "string"
                   },
@@ -3785,6 +3782,13 @@
                     "minLength": 0,
                     "type": "string"
                   },
+                  "HasUserPurchasedPremiumFeature": {
+                    "type": "boolean"
+                  },
+                  "PremiumFeatureValidUntil": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
                   "IsDeleted": {
                     "type": "boolean"
                   }
@@ -3801,9 +3805,6 @@
                   "style": "form"
                 },
                 "InitialPassword": {
-                  "style": "form"
-                },
-                "CompanyCode": {
                   "style": "form"
                 },
                 "ModifiedByUserFirstName": {
@@ -3882,6 +3883,12 @@
                   "style": "form"
                 },
                 "ProfileImageActualFileName": {
+                  "style": "form"
+                },
+                "HasUserPurchasedPremiumFeature": {
+                  "style": "form"
+                },
+                "PremiumFeatureValidUntil": {
                   "style": "form"
                 },
                 "IsDeleted": {
@@ -3975,9 +3982,6 @@
                       "type": "integer",
                       "format": "int64"
                     }
-                  },
-                  "CompanyCode": {
-                    "type": "string"
                   },
                   "ModifiedByUserFirstName": {
                     "type": "string"
@@ -4091,6 +4095,13 @@
                     "minLength": 0,
                     "type": "string"
                   },
+                  "HasUserPurchasedPremiumFeature": {
+                    "type": "boolean"
+                  },
+                  "PremiumFeatureValidUntil": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
                   "IsDeleted": {
                     "type": "boolean"
                   }
@@ -4101,9 +4112,6 @@
                   "style": "form"
                 },
                 "ExistingPermissionTypeIds": {
-                  "style": "form"
-                },
-                "CompanyCode": {
                   "style": "form"
                 },
                 "ModifiedByUserFirstName": {
@@ -4185,6 +4193,12 @@
                   "style": "form"
                 },
                 "ProfileImageActualFileName": {
+                  "style": "form"
+                },
+                "HasUserPurchasedPremiumFeature": {
+                  "style": "form"
+                },
+                "PremiumFeatureValidUntil": {
                   "style": "form"
                 },
                 "IsDeleted": {
@@ -4364,6 +4378,112 @@
               "schema": {
                 "type": "integer",
                 "format": "int64"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/company/updateminimaluserprofileforcurrentuser": {
+      "post": {
+        "tags": [
+          "Company"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MinimalUserProfileModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MinimalUserProfileModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/MinimalUserProfileModel"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/MinimalUserProfileModel"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileModelReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileModelReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfileModelReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/company/enablepremiumfeature": {
+      "post": {
+        "tags": [
+          "Company"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnablePremiumFeatureModel"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnablePremiumFeatureModel"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/EnablePremiumFeatureModel"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "$ref": "#/components/schemas/EnablePremiumFeatureModel"
               }
             }
           }
@@ -38785,6 +38905,20 @@
         },
         "additionalProperties": false
       },
+      "EnablePremiumFeatureModel": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "validityYears": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "EnumGroupCreateModel": {
         "type": "object",
         "properties": {
@@ -46156,6 +46290,29 @@
         },
         "additionalProperties": false
       },
+      "MinimalUserProfileModel": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MultipleCategoryCreateModel": {
         "type": "object",
         "properties": {
@@ -51164,6 +51321,14 @@
             "type": "string",
             "nullable": true
           },
+          "hasUserPurchasedPremiumFeature": {
+            "type": "boolean"
+          },
+          "premiumFeatureValidUntil": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
           "isDeleted": {
             "type": "boolean"
           },
@@ -51186,10 +51351,6 @@
             "nullable": true
           },
           "predefinedUserTypeName": {
-            "type": "string",
-            "nullable": true
-          },
-          "companyCode": {
             "type": "string",
             "nullable": true
           },
@@ -51487,6 +51648,112 @@
           "predefinedUserPermissionTypeId": {
             "type": "integer",
             "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProfileModel": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isPrivate": {
+            "type": "boolean"
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "workPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "cellPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddress1": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingAddress2": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationState": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationZip": {
+            "type": "string",
+            "nullable": true
+          },
+          "locationCountry": {
+            "type": "string",
+            "nullable": true
+          },
+          "countryGuid": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "stateGuid": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserProfileModelReturnModel": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/UserProfileModel"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorHolder": {
+            "$ref": "#/components/schemas/ReturnError"
+          },
+          "activityId": {
+            "type": "string",
+            "nullable": true
+          },
+          "activityDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "server": {
+            "type": "string",
+            "nullable": true
+          },
+          "processId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

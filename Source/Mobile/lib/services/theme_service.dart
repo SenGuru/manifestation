@@ -5,13 +5,8 @@ enum AppThemeMode { light, dark }
 
 class ThemeService extends ChangeNotifier {
   static final ThemeService _instance = ThemeService._internal();
-  factory ThemeService() {
-    print('🎨 ThemeService factory called, returning instance: ${_instance.hashCode}');
-    return _instance;
-  }
-  ThemeService._internal() {
-    print('🎨 ThemeService._internal() called, creating instance: ${this.hashCode}');
-  }
+  factory ThemeService() => _instance;
+  ThemeService._internal();
 
   static const String _themeKey = 'app_theme_mode';
   AppThemeMode _currentTheme = AppThemeMode.dark; // Default to dark mode
@@ -49,12 +44,8 @@ class ThemeService extends ChangeNotifier {
 
   /// Toggle between light and dark mode with animation
   Future<void> toggleTheme({bool animate = true}) async {
-    print('🎨 Toggle theme called - current: ${_currentTheme.name}');
-    print('🎨 _isAnimating before toggle: $_isAnimating');
-    
     // Force reset animation flag if it's stuck
     if (_isAnimating && !animate) {
-      print('🎨 Resetting stuck animation flag');
       _isAnimating = false;
     }
     
@@ -67,42 +58,33 @@ class ThemeService extends ChangeNotifier {
 
   /// Set specific theme mode with optional animation
   Future<void> setTheme(AppThemeMode theme, {bool animate = true}) async {
-    print('🎨 setTheme called - current: ${_currentTheme.name}, new: ${theme.name}');
-    print('🎨 _isAnimating: $_isAnimating, same theme: ${_currentTheme == theme}');
     if (_currentTheme == theme) {
-      print('🎨 setTheme cancelled - same theme');
       return;
     }
     if (_isAnimating) {
-      print('🎨 setTheme cancelled - currently animating');
       return;
     }
     
     if (animate) {
       _isAnimating = true;
-      print('🎨 Starting animation, notifying listeners');
       notifyListeners();
       
       // Delay theme change to allow animation to start
       await Future.delayed(const Duration(milliseconds: 50));
     }
     
-    print('🎨 Changing theme from ${_currentTheme.name} to ${theme.name}');
     _currentTheme = theme;
-    print('🎨 Theme changed, notifying listeners');
     notifyListeners();
     
     // Reset animation flag
     if (animate) {
       await Future.delayed(const Duration(milliseconds: 100));
       _isAnimating = false;
-      print('🎨 Animation completed, flag reset');
     }
     
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_themeKey, theme.toString());
-      print('🎨 Theme saved to preferences: ${theme.name} mode');
     } catch (e) {
       print('Error saving theme preference: $e');
     }

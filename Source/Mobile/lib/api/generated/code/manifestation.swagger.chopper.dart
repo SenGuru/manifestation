@@ -1137,7 +1137,6 @@ final class _$Manifestation extends Manifestation {
     String? captchaCode,
     List<dynamic>? newPermissionTypeIds,
     String? initialPassword,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -1164,6 +1163,8 @@ final class _$Manifestation extends Manifestation {
     String? profileImageGuid,
     String? profileImageLocation,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
   }) {
     final Uri $url = Uri.parse('/api/v1/company/createuser');
@@ -1171,7 +1172,6 @@ final class _$Manifestation extends Manifestation {
       PartValue<String?>('CaptchaCode', captchaCode),
       PartValue<List<dynamic>?>('NewPermissionTypeIds', newPermissionTypeIds),
       PartValue<String?>('InitialPassword', initialPassword),
-      PartValue<String?>('CompanyCode', companyCode),
       PartValue<String?>('ModifiedByUserFirstName', modifiedByUserFirstName),
       PartValue<String?>('ModifiedByUserLastName', modifiedByUserLastName),
       PartValue<String?>('ModifiedByUserEmail', modifiedByUserEmail),
@@ -1204,6 +1204,14 @@ final class _$Manifestation extends Manifestation {
         'ProfileImageActualFileName',
         profileImageActualFileName,
       ),
+      PartValue<bool?>(
+        'HasUserPurchasedPremiumFeature',
+        hasUserPurchasedPremiumFeature,
+      ),
+      PartValue<DateTime?>(
+        'PremiumFeatureValidUntil',
+        premiumFeatureValidUntil,
+      ),
       PartValue<bool?>('IsDeleted', isDeleted),
       PartValueFile<List<int>?>('UploadedFile', UploadedFile),
     ];
@@ -1234,7 +1242,6 @@ final class _$Manifestation extends Manifestation {
   Future<Response<UserModelReturnModel>> _apiV1CompanyUpdateuserbyadminPost({
     List<int>? UploadedFile,
     List<dynamic>? existingPermissionTypeIds,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -1262,6 +1269,8 @@ final class _$Manifestation extends Manifestation {
     String? profileImageGuid,
     String? profileImageLocation,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
   }) {
     final Uri $url = Uri.parse('/api/v1/company/updateuserbyadmin');
@@ -1270,7 +1279,6 @@ final class _$Manifestation extends Manifestation {
         'ExistingPermissionTypeIds',
         existingPermissionTypeIds,
       ),
-      PartValue<String?>('CompanyCode', companyCode),
       PartValue<String?>('ModifiedByUserFirstName', modifiedByUserFirstName),
       PartValue<String?>('ModifiedByUserLastName', modifiedByUserLastName),
       PartValue<String?>('ModifiedByUserEmail', modifiedByUserEmail),
@@ -1303,6 +1311,14 @@ final class _$Manifestation extends Manifestation {
       PartValue<String?>(
         'ProfileImageActualFileName',
         profileImageActualFileName,
+      ),
+      PartValue<bool?>(
+        'HasUserPurchasedPremiumFeature',
+        hasUserPurchasedPremiumFeature,
+      ),
+      PartValue<DateTime?>(
+        'PremiumFeatureValidUntil',
+        premiumFeatureValidUntil,
       ),
       PartValue<bool?>('IsDeleted', isDeleted),
       PartValueFile<List<int>?>('UploadedFile', UploadedFile),
@@ -1367,6 +1383,32 @@ final class _$Manifestation extends Manifestation {
     required int? body,
   }) {
     final Uri $url = Uri.parse('/api/v1/company/markuserasnotdeleted');
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<BooleanReturnModel, BooleanReturnModel>($request);
+  }
+
+  @override
+  Future<Response<UserProfileModelReturnModel>>
+  _apiV1CompanyUpdateminimaluserprofileforcurrentuserPost({
+    required MinimalUserProfileModel? body,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/company/updateminimaluserprofileforcurrentuser',
+    );
+    final $body = body;
+    final Request $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client
+        .send<UserProfileModelReturnModel, UserProfileModelReturnModel>(
+          $request,
+        );
+  }
+
+  @override
+  Future<Response<BooleanReturnModel>> _apiV1CompanyEnablepremiumfeaturePost({
+    required EnablePremiumFeatureModel? body,
+  }) {
+    final Uri $url = Uri.parse('/api/v1/company/enablepremiumfeature');
     final $body = body;
     final Request $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<BooleanReturnModel, BooleanReturnModel>($request);

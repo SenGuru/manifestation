@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/generated/code/manifestation.swagger.dart';
+import '../services/daily_affirmations_service.dart';
 
 /// Unified authentication service that combines login, session management, and user data
 class UnifiedAuthService {
@@ -263,6 +264,14 @@ class UnifiedAuthService {
           );
           
           print('✅ Account creation successful for: ${_currentUser!.userName}');
+          
+          // Create hidden categories in background (don't await to avoid blocking)
+          _createHiddenCategoriesForNewUser().then((_) {
+            print('✅ Hidden categories created in background');
+          }).catchError((e) {
+            print('❌ Failed to create hidden categories in background: $e');
+          });
+          
           print('🔐=== ACCOUNT CREATION DEBUG END (SUCCESS) ===');
           return AuthResult.success(
             user: _currentUser!,
@@ -592,6 +601,19 @@ class UnifiedAuthService {
       state: _currentState,
       lastActivityTime: _lastActivityTime,
     );
+  }
+
+  /// Create hidden categories for a new user account
+  Future<void> _createHiddenCategoriesForNewUser() async {
+    try {
+      print('🔧 Creating hidden categories for new user...');
+      final affirmationService = DailyAffirmationsService();
+      await affirmationService.createHiddenCategoriesForNewUser();
+      print('✅ Hidden categories created successfully');
+    } catch (e) {
+      print('❌ Error creating hidden categories for new user: $e');
+      // Don't throw error - this is optional functionality that shouldn't block account creation
+    }
   }
 }
 

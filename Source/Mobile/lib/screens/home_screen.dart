@@ -30,16 +30,59 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentStreak = 7;
   String userName = 'User';
+  bool _isPremium = false;
 
   @override
   void initState() {
     super.initState();
     _loadUserName();
+    _loadPremiumStatus();
     
     // Show premium upgrade dialog for non-premium users after a short delay
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkAndShowPremiumUpgrade();
     });
+  }
+
+  void _loadPremiumStatus() async {
+    try {
+      final subscriptionService = SubscriptionService();
+      await subscriptionService.initialize();
+      setState(() {
+        _isPremium = subscriptionService.isPremium;
+      });
+    } catch (e) {
+      print('Error loading premium status: $e');
+    }
+  }
+
+  void _togglePremiumStatus() async {
+    try {
+      final subscriptionService = SubscriptionService();
+      final newPremiumStatus = !_isPremium;
+      await subscriptionService.setMockPremiumStatus(newPremiumStatus);
+      
+      setState(() {
+        _isPremium = newPremiumStatus;
+      });
+      
+      // Show feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            newPremiumStatus 
+                ? '✨ Premium Mode ON (Testing)' 
+                : '📱 Premium Mode OFF',
+          ),
+          backgroundColor: newPremiumStatus ? AppTheme.success : AppTheme.info,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      print('Error toggling premium status: $e');
+    }
   }
 
   void _loadUserName() async {
@@ -192,11 +235,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                'Ready to Manifest?',
+                'Ready to manifest?',
                 style: TextStyle(
-                  fontSize: 32.sp,
-                  color: AppTheme.textPrimary,
+                  fontSize: 28.sp,
                   fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ],
@@ -242,9 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   
   Widget _buildFeaturesGrid() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         Text(
           'Your Practice',
           style: TextStyle(
@@ -314,7 +358,8 @@ class _HomeScreenState extends State<HomeScreen> {
         
         SizedBox(height: 16.h),
         
-      ],
+        ],
+      ),
     );
   }
   

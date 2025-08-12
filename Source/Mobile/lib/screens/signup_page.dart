@@ -8,6 +8,7 @@ import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/keyboard_dismissal_wrapper.dart';
 import '../widgets/universal_back_button.dart';
+import '../widgets/account_creation_companion.dart';
 import '../components/error_popup.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -872,18 +873,34 @@ class _SignUpScreenState extends State<SignUpScreen>
       return;
     }
     
-    if (!_agreeToTerms) {
-      print('📱 STOPPING: User did not agree to terms');
-      setState(() {
-        _validationError = 'Please agree to the Terms of Service and Privacy Policy';
-      });
-      return;
-    }
-
-    setState(() {
-      _isLoading = true;
-    });
-
+    // Extract first name for personalized greeting
+    String firstName = _nameController.text.trim().split(' ').first;
+    
+    // Navigate to companion screen IMMEDIATELY
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AccountCreationCompanion(
+          userName: firstName,
+          onComplete: () {
+            // After animation completes, navigate to onboarding
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PostSignupOnboardingScreen(),
+              ),
+              (route) => false,
+            );
+          },
+        ),
+      ),
+    );
+    
+    // NOW create the account in the background while companion is showing
+    _createAccountInBackground();
+  }
+  
+  void _createAccountInBackground() async {
     try {
       // Parse the full name into first and last name
       final nameParts = _nameController.text.trim().split(' ');
@@ -933,26 +950,8 @@ class _SignUpScreenState extends State<SignUpScreen>
       }
 
       if (result.isSuccess) {
-        print('📱 SUCCESS: Showing success popup and navigating');
-        // Show success popup before navigation
-        SuccessPopup.show(
-          context,
-          title: 'Account Created!',
-          message: 'Welcome to our manifestation community! Let\'s get you started on your journey.',
-          actionText: 'Begin Journey',
-          onAction: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
-            );
-          },
-          onDismiss: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
-            );
-          },
-        );
+        print('📱 SUCCESS: Account created successfully');
+        // Navigation is already handled by the companion onComplete callback
       } else {
         print('📱 FAILURE: Showing error popup');
         print('📱 Original error message: "${result.message}"');
@@ -1009,12 +1008,8 @@ class _SignUpScreenState extends State<SignUpScreen>
         actionText: 'Retry',
         onAction: () => _handleSignUp(),
       );
-    } finally {
-      print('📱 Setting loading to false');
-      setState(() {
-        _isLoading = false;
-      });
-      print('📱=== SIGNUP UI DEBUG END ===');
+    } catch (e) {
+      print('📱 Background account creation error: $e');
     }
   }
 

@@ -4519,6 +4519,20 @@ Map<String, dynamic> _$DefaultVisionBoardPictureUpdateModelToJson(
   'fileSize': instance.fileSize,
 };
 
+EnablePremiumFeatureModel _$EnablePremiumFeatureModelFromJson(
+  Map<String, dynamic> json,
+) => EnablePremiumFeatureModel(
+  password: json['password'] as String?,
+  validityYears: (json['validityYears'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$EnablePremiumFeatureModelToJson(
+  EnablePremiumFeatureModel instance,
+) => <String, dynamic>{
+  'password': instance.password,
+  'validityYears': instance.validityYears,
+};
+
 EnumGroupCreateModel _$EnumGroupCreateModelFromJson(
   Map<String, dynamic> json,
 ) => EnumGroupCreateModel(enumGroupName: json['enumGroupName'] as String?);
@@ -9742,6 +9756,24 @@ Map<String, dynamic> _$MessageToSendModelReturnModelToJson(
   'processId': instance.processId,
 };
 
+MinimalUserProfileModel _$MinimalUserProfileModelFromJson(
+  Map<String, dynamic> json,
+) => MinimalUserProfileModel(
+  userId: (json['userId'] as num?)?.toInt(),
+  email: json['email'] as String?,
+  firstName: json['firstName'] as String?,
+  lastName: json['lastName'] as String?,
+);
+
+Map<String, dynamic> _$MinimalUserProfileModelToJson(
+  MinimalUserProfileModel instance,
+) => <String, dynamic>{
+  'userId': instance.userId,
+  'email': instance.email,
+  'firstName': instance.firstName,
+  'lastName': instance.lastName,
+};
+
 MultipleCategoryCreateModel _$MultipleCategoryCreateModelFromJson(
   Map<String, dynamic> json,
 ) => MultipleCategoryCreateModel(
@@ -13509,6 +13541,11 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       : DateTime.parse(json['accountLockedUntil'] as String),
   profileImageGuid: json['profileImageGuid'] as String?,
   profileImageActualFileName: json['profileImageActualFileName'] as String?,
+  hasUserPurchasedPremiumFeature:
+      json['hasUserPurchasedPremiumFeature'] as bool?,
+  premiumFeatureValidUntil: json['premiumFeatureValidUntil'] == null
+      ? null
+      : DateTime.parse(json['premiumFeatureValidUntil'] as String),
   isDeleted: json['isDeleted'] as bool?,
   createdDate: json['createdDate'] == null
       ? null
@@ -13519,7 +13556,6 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       : DateTime.parse(json['modifiedDate'] as String),
   modifiedByUserId: (json['modifiedByUserId'] as num?)?.toInt(),
   predefinedUserTypeName: json['predefinedUserTypeName'] as String?,
-  companyCode: json['companyCode'] as String?,
   modifiedByUserFirstName: json['modifiedByUserFirstName'] as String?,
   modifiedByUserLastName: json['modifiedByUserLastName'] as String?,
   modifiedByUserEmail: json['modifiedByUserEmail'] as String?,
@@ -13547,13 +13583,15 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
   'accountLockedUntil': instance.accountLockedUntil?.toIso8601String(),
   'profileImageGuid': instance.profileImageGuid,
   'profileImageActualFileName': instance.profileImageActualFileName,
+  'hasUserPurchasedPremiumFeature': instance.hasUserPurchasedPremiumFeature,
+  'premiumFeatureValidUntil': instance.premiumFeatureValidUntil
+      ?.toIso8601String(),
   'isDeleted': instance.isDeleted,
   'createdDate': instance.createdDate?.toIso8601String(),
   'createdByUserId': instance.createdByUserId,
   'modifiedDate': instance.modifiedDate?.toIso8601String(),
   'modifiedByUserId': instance.modifiedByUserId,
   'predefinedUserTypeName': instance.predefinedUserTypeName,
-  'companyCode': instance.companyCode,
   'modifiedByUserFirstName': instance.modifiedByUserFirstName,
   'modifiedByUserLastName': instance.modifiedByUserLastName,
   'modifiedByUserEmail': instance.modifiedByUserEmail,
@@ -13785,6 +13823,78 @@ Map<String, dynamic> _$UserPermissionUpdateModelToJson(
   'userPermissionId': instance.userPermissionId,
   'userId': instance.userId,
   'predefinedUserPermissionTypeId': instance.predefinedUserPermissionTypeId,
+};
+
+UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
+    UserProfileModel(
+      userId: (json['userId'] as num?)?.toInt(),
+      isPrivate: json['isPrivate'] as bool?,
+      userName: json['userName'] as String?,
+      firstName: json['firstName'] as String?,
+      lastName: json['lastName'] as String?,
+      email: json['email'] as String?,
+      workPhone: json['workPhone'] as String?,
+      cellPhone: json['cellPhone'] as String?,
+      billingAddress1: json['billingAddress1'] as String?,
+      billingAddress2: json['billingAddress2'] as String?,
+      locationCity: json['locationCity'] as String?,
+      locationState: json['locationState'] as String?,
+      locationZip: json['locationZip'] as String?,
+      locationCountry: json['locationCountry'] as String?,
+      countryGuid: (json['countryGuid'] as num?)?.toInt(),
+      stateGuid: (json['stateGuid'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$UserProfileModelToJson(UserProfileModel instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'isPrivate': instance.isPrivate,
+      'userName': instance.userName,
+      'firstName': instance.firstName,
+      'lastName': instance.lastName,
+      'email': instance.email,
+      'workPhone': instance.workPhone,
+      'cellPhone': instance.cellPhone,
+      'billingAddress1': instance.billingAddress1,
+      'billingAddress2': instance.billingAddress2,
+      'locationCity': instance.locationCity,
+      'locationState': instance.locationState,
+      'locationZip': instance.locationZip,
+      'locationCountry': instance.locationCountry,
+      'countryGuid': instance.countryGuid,
+      'stateGuid': instance.stateGuid,
+    };
+
+UserProfileModelReturnModel _$UserProfileModelReturnModelFromJson(
+  Map<String, dynamic> json,
+) => UserProfileModelReturnModel(
+  model: json['model'] == null
+      ? null
+      : UserProfileModel.fromJson(json['model'] as Map<String, dynamic>),
+  isSuccess: json['isSuccess'] as bool?,
+  successMessage: json['successMessage'] as String?,
+  errorHolder: json['errorHolder'] == null
+      ? null
+      : ReturnError.fromJson(json['errorHolder'] as Map<String, dynamic>),
+  activityId: json['activityId'] as String?,
+  activityDateTime: json['activityDateTime'] == null
+      ? null
+      : DateTime.parse(json['activityDateTime'] as String),
+  server: json['server'] as String?,
+  processId: (json['processId'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$UserProfileModelReturnModelToJson(
+  UserProfileModelReturnModel instance,
+) => <String, dynamic>{
+  'model': instance.model?.toJson(),
+  'isSuccess': instance.isSuccess,
+  'successMessage': instance.successMessage,
+  'errorHolder': instance.errorHolder?.toJson(),
+  'activityId': instance.activityId,
+  'activityDateTime': instance.activityDateTime?.toIso8601String(),
+  'server': instance.server,
+  'processId': instance.processId,
 };
 
 VisionBoardPictureByUserIdSearchCriteria
@@ -14988,7 +15098,6 @@ _$ApiV1CompanyCreateuserPost$RequestBodyFromJson(Map<String, dynamic> json) =>
               .toList() ??
           [],
       initialPassword: json['InitialPassword'] as String?,
-      companyCode: json['CompanyCode'] as String?,
       modifiedByUserFirstName: json['ModifiedByUserFirstName'] as String?,
       modifiedByUserLastName: json['ModifiedByUserLastName'] as String?,
       modifiedByUserEmail: json['ModifiedByUserEmail'] as String?,
@@ -15023,6 +15132,11 @@ _$ApiV1CompanyCreateuserPost$RequestBodyFromJson(Map<String, dynamic> json) =>
       profileImageGuid: json['ProfileImageGuid'] as String?,
       profileImageLocation: json['ProfileImageLocation'] as String?,
       profileImageActualFileName: json['ProfileImageActualFileName'] as String?,
+      hasUserPurchasedPremiumFeature:
+          json['HasUserPurchasedPremiumFeature'] as bool?,
+      premiumFeatureValidUntil: json['PremiumFeatureValidUntil'] == null
+          ? null
+          : DateTime.parse(json['PremiumFeatureValidUntil'] as String),
       isDeleted: json['IsDeleted'] as bool?,
     );
 
@@ -15033,7 +15147,6 @@ Map<String, dynamic> _$ApiV1CompanyCreateuserPost$RequestBodyToJson(
   'CaptchaCode': instance.captchaCode,
   'NewPermissionTypeIds': instance.newPermissionTypeIds,
   'InitialPassword': instance.initialPassword,
-  'CompanyCode': instance.companyCode,
   'ModifiedByUserFirstName': instance.modifiedByUserFirstName,
   'ModifiedByUserLastName': instance.modifiedByUserLastName,
   'ModifiedByUserEmail': instance.modifiedByUserEmail,
@@ -15061,6 +15174,9 @@ Map<String, dynamic> _$ApiV1CompanyCreateuserPost$RequestBodyToJson(
   'ProfileImageGuid': instance.profileImageGuid,
   'ProfileImageLocation': instance.profileImageLocation,
   'ProfileImageActualFileName': instance.profileImageActualFileName,
+  'HasUserPurchasedPremiumFeature': instance.hasUserPurchasedPremiumFeature,
+  'PremiumFeatureValidUntil': instance.premiumFeatureValidUntil
+      ?.toIso8601String(),
   'IsDeleted': instance.isDeleted,
 };
 
@@ -15074,7 +15190,6 @@ _$ApiV1CompanyUpdateuserbyadminPost$RequestBodyFromJson(
           ?.map((e) => (e as num).toInt())
           .toList() ??
       [],
-  companyCode: json['CompanyCode'] as String?,
   modifiedByUserFirstName: json['ModifiedByUserFirstName'] as String?,
   modifiedByUserLastName: json['ModifiedByUserLastName'] as String?,
   modifiedByUserEmail: json['ModifiedByUserEmail'] as String?,
@@ -15110,6 +15225,11 @@ _$ApiV1CompanyUpdateuserbyadminPost$RequestBodyFromJson(
   profileImageGuid: json['ProfileImageGuid'] as String?,
   profileImageLocation: json['ProfileImageLocation'] as String?,
   profileImageActualFileName: json['ProfileImageActualFileName'] as String?,
+  hasUserPurchasedPremiumFeature:
+      json['HasUserPurchasedPremiumFeature'] as bool?,
+  premiumFeatureValidUntil: json['PremiumFeatureValidUntil'] == null
+      ? null
+      : DateTime.parse(json['PremiumFeatureValidUntil'] as String),
   isDeleted: json['IsDeleted'] as bool?,
 );
 
@@ -15118,7 +15238,6 @@ Map<String, dynamic> _$ApiV1CompanyUpdateuserbyadminPost$RequestBodyToJson(
 ) => <String, dynamic>{
   'UploadedFile': instance.uploadedFile,
   'ExistingPermissionTypeIds': instance.existingPermissionTypeIds,
-  'CompanyCode': instance.companyCode,
   'ModifiedByUserFirstName': instance.modifiedByUserFirstName,
   'ModifiedByUserLastName': instance.modifiedByUserLastName,
   'ModifiedByUserEmail': instance.modifiedByUserEmail,
@@ -15147,6 +15266,9 @@ Map<String, dynamic> _$ApiV1CompanyUpdateuserbyadminPost$RequestBodyToJson(
   'ProfileImageGuid': instance.profileImageGuid,
   'ProfileImageLocation': instance.profileImageLocation,
   'ProfileImageActualFileName': instance.profileImageActualFileName,
+  'HasUserPurchasedPremiumFeature': instance.hasUserPurchasedPremiumFeature,
+  'PremiumFeatureValidUntil': instance.premiumFeatureValidUntil
+      ?.toIso8601String(),
   'IsDeleted': instance.isDeleted,
 };
 

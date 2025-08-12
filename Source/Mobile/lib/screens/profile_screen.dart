@@ -47,9 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _onThemeChanged() {
-    print('🎨 Profile screen received theme change notification');
     if (mounted) {
-      print('🎨 Profile screen calling setState');
       setState(() {
         // Rebuild with new theme colors
       });
@@ -777,9 +775,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () async {
-          print('🎨 Theme toggle tapped');
           await _themeService.toggleTheme(animate: false);
-          print('🎨 Theme toggle completed');
         },
         borderRadius: BorderRadius.zero,
         child: Container(

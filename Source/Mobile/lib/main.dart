@@ -60,10 +60,8 @@ class _ManifestationAppState extends State<ManifestationApp> {
   }
   
   void _onThemeChanged() {
-    print('🎨 Main app received theme change notification');
     setState(() {
       // Rebuild with new theme
-      print('🎨 Main app calling setState');
     });
   }
 
@@ -88,7 +86,6 @@ class _ManifestationAppState extends State<ManifestationApp> {
           child: ListenableBuilder(
             listenable: _themeService,
             builder: (context, child) {
-              print('🎨 ListenableBuilder rebuilding with theme: ${_themeService.isDarkMode ? "dark" : "light"}');
               return MaterialApp(
           title: 'Manifestation App',
           debugShowCheckedModeBanner: false,

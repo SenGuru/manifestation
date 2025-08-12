@@ -347,29 +347,124 @@ class DailyAffirmationsService {
     return await _loadFreshCategories();
   }
 
+  /// Create hidden categories for default category names - call during account creation
+  Future<void> createHiddenCategoriesForNewUser() async {
+    try {
+      print('🔍 Checking for hidden categories...');
+      
+      // Get existing user categories to check if hidden ones exist
+      final userCategoriesResult = await getUserCategories();
+      if (!userCategoriesResult.isSuccess || userCategoriesResult.data == null) {
+        print('❌ Could not load user categories, skipping hidden category creation');
+        return;
+      }
+      
+      final existingCategories = userCategoriesResult.data!;
+      final List<String> hiddenNames = [
+        'Love(custom_made)',
+        'Abundance(custom_made)', 
+        'Success(custom_made)',
+        'Health(custom_made)',
+        'Confidence(custom_made)'
+      ];
+      
+      // Check which hidden categories don't exist
+      final missingCategories = <String>[];
+      for (final hiddenName in hiddenNames) {
+        final exists = existingCategories.any((cat) => 
+          cat.categoryName?.toLowerCase() == hiddenName.toLowerCase());
+        if (!exists) {
+          missingCategories.add(hiddenName);
+        }
+      }
+      
+      if (missingCategories.isEmpty) {
+        print('✅ All hidden categories already exist');
+        return;
+      }
+      
+      print('🔧 Creating ${missingCategories.length} missing hidden categories: ${missingCategories.join(', ')}');
+      
+      // Create missing hidden categories with simple default values
+      for (final categoryName in missingCategories) {
+        await createHiddenCategory(categoryName);
+      }
+      
+    } catch (e) {
+      print('❌ Error ensuring hidden categories: $e');
+      // Don't throw error - this is optional functionality
+    }
+  }
+
+  /// Create a single hidden category with default values
+  Future<void> createHiddenCategory(String categoryName) async {
+    try {
+      // Use simple default values for color and icon
+      const int defaultColor = 0xFF9C27B0; // Purple color as integer
+      const int defaultIconId = 3600001; // Flower icon (first available)
+      
+      final result = await createCategory(
+        categoryName: categoryName,
+        colorAsInteger: defaultColor,
+        predefinedIconTypeId: defaultIconId,
+      );
+      
+      if (result.isSuccess) {
+        print('✅ Created hidden category: $categoryName');
+      } else {
+        print('❌ Failed to create hidden category $categoryName: ${result.message}');
+      }
+    } catch (e) {
+      print('❌ Error creating hidden category $categoryName: $e');
+    }
+  }
+
   /// Get all affirmations properly structured: default categories + user categories
   Future<AffirmationResult<List<AffirmationCategoryData>>> _loadFreshCategories() async {
     try {
       List<AffirmationCategoryData> allCategories = [];
 
-      // 1. Get server default categories and add them with local affirmations
+      // 1. Get server default categories and add them with local affirmations + hidden category affirmations
       final defaultCategoriesResult = await getSupportedDefaultCategories();
       if (defaultCategoriesResult.isSuccess && defaultCategoriesResult.data != null) {
         for (final serverCategory in defaultCategoriesResult.data!) {
           final categoryName = serverCategory.defaultCategoryName ?? '';
           final affirmationTexts = _defaultAffirmations[categoryName] ?? [];
           
-          print('🏷️ Processing server category: $categoryName with ${affirmationTexts.length} affirmations');
+          // Get the hidden category ID for this default category
+          final hiddenCategoryId = await _getHiddenCategoryId(categoryName);
+          final categoryId = hiddenCategoryId?.toString() ?? serverCategory.defaultCategoryId?.toString() ?? '0';
           
-          final affirmations = affirmationTexts.map((text) => AffirmationItem(
+          print('🏷️ Processing server category: $categoryName with ${affirmationTexts.length} default affirmations (Hidden ID: $hiddenCategoryId)');
+          
+          // Start with default affirmations
+          final affirmations = <AffirmationItem>[];
+          affirmations.addAll(affirmationTexts.map((text) => AffirmationItem(
             id: 'default_${categoryName}_${affirmationTexts.indexOf(text)}',
             text: text,
             isDefault: true,
             categoryName: categoryName,
-          )).toList();
+          )));
+
+          // Add user affirmations from the hidden category if it exists
+          if (hiddenCategoryId != null) {
+            final userAffirmationsResult = await getUserAffirmationTextsByCategory(hiddenCategoryId);
+            if (userAffirmationsResult.isSuccess && userAffirmationsResult.data != null) {
+              final userAffirmations = userAffirmationsResult.data!.map((affirmationText) => 
+                AffirmationItem(
+                  id: affirmationText.dailyAffirmationTextId?.toString() ?? '',
+                  text: affirmationText.dailyAffirmationTextValue ?? '',
+                  isDefault: false,
+                  categoryName: categoryName,
+                )
+              );
+              affirmations.addAll(userAffirmations);
+              print('   + Added ${userAffirmations.length} user affirmations to $categoryName from hidden category');
+            }
+          }
 
           allCategories.add(AffirmationCategoryData(
-            id: serverCategory.defaultCategoryId?.toString() ?? 'default_${categoryName}',
+            id: categoryId,
             name: categoryName,
             isDefault: true,
             affirmations: affirmations,
@@ -406,6 +501,12 @@ class DailyAffirmationsService {
             if (isDefaultCategoryName) {
               print('⚠️ Skipping user category that matches default: $categoryName');
               continue; // Skip this category to avoid duplicates
+            }
+            
+            // THIRD: Skip hidden categories from display (but they'll still exist for API calls)
+            if (categoryName.endsWith('(custom_made)')) {
+              print('🔒 Skipping hidden category from display: $categoryName');
+              continue; // Don't show hidden categories in the UI
             }
             
             // Get affirmations for this user category
@@ -456,6 +557,26 @@ class DailyAffirmationsService {
   }
 
   // ========================= HELPER METHODS =========================
+
+  /// Get the hidden category ID for a default category name, if it exists
+  Future<int?> _getHiddenCategoryId(String defaultCategoryName) async {
+    try {
+      final hiddenName = '${defaultCategoryName}(custom_made)';
+      final userCategoriesResult = await getUserCategories();
+      
+      if (userCategoriesResult.isSuccess && userCategoriesResult.data != null) {
+        final hiddenCategory = userCategoriesResult.data!.firstWhere(
+          (cat) => cat.categoryName?.toLowerCase() == hiddenName.toLowerCase(),
+          orElse: () => CategoryModel(), // Return empty if not found
+        );
+        
+        return hiddenCategory.categoryId;
+      }
+    } catch (e) {
+      print('❌ Error getting hidden category ID for $defaultCategoryName: $e');
+    }
+    return null;
+  }
 
   String _getCategoryDisplayName(String categoryKey) {
     // Server already provides proper display names, just return as-is

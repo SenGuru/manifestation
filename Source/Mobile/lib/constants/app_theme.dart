@@ -5,11 +5,7 @@ class AppTheme {
   static final ThemeService _themeService = ThemeService();
   
   // Get current theme mode
-  static bool get isDarkMode {
-    final isDark = _themeService.isDarkMode;
-    print('🎨 AppTheme.isDarkMode called, returning: $isDark');
-    return isDark;
-  }
+  static bool get isDarkMode => _themeService.isDarkMode;
   static bool get isLightMode => _themeService.isLightMode;
   
   // =================== BACKGROUND COLORS ===================
@@ -109,7 +105,7 @@ class AppTheme {
   
   static List<Color> get goalTrackerGradient => [
     const Color(0xFF3B82F6),
-    const Color(0xFF6366F1),
+    const Color(0xFF1E90FF),
   ];
   
   static List<Color> get analyticsGradient => [

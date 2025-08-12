@@ -76,6 +76,28 @@ class SubscriptionService {
   /// Get subscription expiry date
   DateTime? get subscriptionExpiry => _subscriptionExpiry;
   
+  /// Set mock premium status for testing (only for development/testing)
+  Future<void> setMockPremiumStatus(bool isPremium) async {
+    try {
+      _isPremium = isPremium;
+      
+      if (isPremium) {
+        // Set expiry to 1 year from now for mock premium
+        _subscriptionExpiry = DateTime.now().add(Duration(days: 365));
+      } else {
+        _subscriptionExpiry = null;
+      }
+      
+      await _saveSubscriptionStatus();
+      
+      print('🧪 Mock Premium Status Updated:');
+      print('   Is Premium: $_isPremium');
+      print('   Mock Expiry: $_subscriptionExpiry');
+    } catch (e) {
+      print('❌ Error setting mock premium status: $e');
+    }
+  }
+  
   /// Activate premium subscription
   Future<void> activatePremium({DateTime? expiryDate}) async {
     _isPremium = true;

@@ -1830,7 +1830,6 @@ abstract class Manifestation extends ChopperService {
     String? captchaCode,
     List? newPermissionTypeIds,
     String? initialPassword,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -1857,6 +1856,8 @@ abstract class Manifestation extends ChopperService {
     String? profileImageGuid,
     String? profileImageLocation,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
   }) {
     generatedMapping.putIfAbsent(
@@ -1869,7 +1870,6 @@ abstract class Manifestation extends ChopperService {
       captchaCode: captchaCode,
       newPermissionTypeIds: newPermissionTypeIds,
       initialPassword: initialPassword,
-      companyCode: companyCode,
       modifiedByUserFirstName: modifiedByUserFirstName,
       modifiedByUserLastName: modifiedByUserLastName,
       modifiedByUserEmail: modifiedByUserEmail,
@@ -1896,6 +1896,8 @@ abstract class Manifestation extends ChopperService {
       profileImageGuid: profileImageGuid,
       profileImageLocation: profileImageLocation,
       profileImageActualFileName: profileImageActualFileName,
+      hasUserPurchasedPremiumFeature: hasUserPurchasedPremiumFeature,
+      premiumFeatureValidUntil: premiumFeatureValidUntil,
       isDeleted: isDeleted,
     );
   }
@@ -1908,7 +1910,6 @@ abstract class Manifestation extends ChopperService {
     @Part('CaptchaCode') String? captchaCode,
     @Part('NewPermissionTypeIds') List? newPermissionTypeIds,
     @Part('InitialPassword') String? initialPassword,
-    @Part('CompanyCode') String? companyCode,
     @Part('ModifiedByUserFirstName') String? modifiedByUserFirstName,
     @Part('ModifiedByUserLastName') String? modifiedByUserLastName,
     @Part('ModifiedByUserEmail') String? modifiedByUserEmail,
@@ -1936,6 +1937,9 @@ abstract class Manifestation extends ChopperService {
     @Part('ProfileImageGuid') String? profileImageGuid,
     @Part('ProfileImageLocation') String? profileImageLocation,
     @Part('ProfileImageActualFileName') String? profileImageActualFileName,
+    @Part('HasUserPurchasedPremiumFeature')
+    bool? hasUserPurchasedPremiumFeature,
+    @Part('PremiumFeatureValidUntil') DateTime? premiumFeatureValidUntil,
     @Part('IsDeleted') bool? isDeleted,
   });
 
@@ -1964,7 +1968,6 @@ abstract class Manifestation extends ChopperService {
   apiV1CompanyUpdateuserbyadminPost({
     List<int>? UploadedFile,
     List? existingPermissionTypeIds,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -1992,6 +1995,8 @@ abstract class Manifestation extends ChopperService {
     String? profileImageGuid,
     String? profileImageLocation,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
   }) {
     generatedMapping.putIfAbsent(
@@ -2002,7 +2007,6 @@ abstract class Manifestation extends ChopperService {
     return _apiV1CompanyUpdateuserbyadminPost(
       UploadedFile: UploadedFile,
       existingPermissionTypeIds: existingPermissionTypeIds,
-      companyCode: companyCode,
       modifiedByUserFirstName: modifiedByUserFirstName,
       modifiedByUserLastName: modifiedByUserLastName,
       modifiedByUserEmail: modifiedByUserEmail,
@@ -2030,6 +2034,8 @@ abstract class Manifestation extends ChopperService {
       profileImageGuid: profileImageGuid,
       profileImageLocation: profileImageLocation,
       profileImageActualFileName: profileImageActualFileName,
+      hasUserPurchasedPremiumFeature: hasUserPurchasedPremiumFeature,
+      premiumFeatureValidUntil: premiumFeatureValidUntil,
       isDeleted: isDeleted,
     );
   }
@@ -2041,7 +2047,6 @@ abstract class Manifestation extends ChopperService {
   _apiV1CompanyUpdateuserbyadminPost({
     @PartFile() List<int>? UploadedFile,
     @Part('ExistingPermissionTypeIds') List? existingPermissionTypeIds,
-    @Part('CompanyCode') String? companyCode,
     @Part('ModifiedByUserFirstName') String? modifiedByUserFirstName,
     @Part('ModifiedByUserLastName') String? modifiedByUserLastName,
     @Part('ModifiedByUserEmail') String? modifiedByUserEmail,
@@ -2070,6 +2075,9 @@ abstract class Manifestation extends ChopperService {
     @Part('ProfileImageGuid') String? profileImageGuid,
     @Part('ProfileImageLocation') String? profileImageLocation,
     @Part('ProfileImageActualFileName') String? profileImageActualFileName,
+    @Part('HasUserPurchasedPremiumFeature')
+    bool? hasUserPurchasedPremiumFeature,
+    @Part('PremiumFeatureValidUntil') DateTime? premiumFeatureValidUntil,
     @Part('IsDeleted') bool? isDeleted,
   });
 
@@ -2146,6 +2154,49 @@ abstract class Manifestation extends ChopperService {
   @POST(path: '/api/v1/company/markuserasnotdeleted', optionalBody: true)
   Future<chopper.Response<BooleanReturnModel>>
   _apiV1CompanyMarkuserasnotdeletedPost({@Body() required int? body});
+
+  ///
+  Future<chopper.Response<UserProfileModelReturnModel>>
+  apiV1CompanyUpdateminimaluserprofileforcurrentuserPost({
+    required MinimalUserProfileModel? body,
+  }) {
+    generatedMapping.putIfAbsent(
+      UserProfileModelReturnModel,
+      () => UserProfileModelReturnModel.fromJsonFactory,
+    );
+
+    return _apiV1CompanyUpdateminimaluserprofileforcurrentuserPost(body: body);
+  }
+
+  ///
+  @POST(
+    path: '/api/v1/company/updateminimaluserprofileforcurrentuser',
+    optionalBody: true,
+  )
+  Future<chopper.Response<UserProfileModelReturnModel>>
+  _apiV1CompanyUpdateminimaluserprofileforcurrentuserPost({
+    @Body() required MinimalUserProfileModel? body,
+  });
+
+  ///
+  Future<chopper.Response<BooleanReturnModel>>
+  apiV1CompanyEnablepremiumfeaturePost({
+    required EnablePremiumFeatureModel? body,
+  }) {
+    generatedMapping.putIfAbsent(
+      BooleanReturnModel,
+      () => BooleanReturnModel.fromJsonFactory,
+    );
+
+    return _apiV1CompanyEnablepremiumfeaturePost(body: body);
+  }
+
+  ///
+  @POST(path: '/api/v1/company/enablepremiumfeature', optionalBody: true)
+  Future<chopper.Response<BooleanReturnModel>>
+  _apiV1CompanyEnablepremiumfeaturePost({
+    @Body() required EnablePremiumFeatureModel? body,
+  });
 
   ///
   ///@param ShowDeleted
@@ -39185,6 +39236,69 @@ extension $DefaultVisionBoardPictureUpdateModelExtension
 }
 
 @JsonSerializable(explicitToJson: true)
+class EnablePremiumFeatureModel {
+  const EnablePremiumFeatureModel({this.password, this.validityYears});
+
+  factory EnablePremiumFeatureModel.fromJson(Map<String, dynamic> json) =>
+      _$EnablePremiumFeatureModelFromJson(json);
+
+  static const toJsonFactory = _$EnablePremiumFeatureModelToJson;
+  Map<String, dynamic> toJson() => _$EnablePremiumFeatureModelToJson(this);
+
+  @JsonKey(name: 'password')
+  final String? password;
+  @JsonKey(name: 'validityYears')
+  final int? validityYears;
+  static const fromJsonFactory = _$EnablePremiumFeatureModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is EnablePremiumFeatureModel &&
+            (identical(other.password, password) ||
+                const DeepCollectionEquality().equals(
+                  other.password,
+                  password,
+                )) &&
+            (identical(other.validityYears, validityYears) ||
+                const DeepCollectionEquality().equals(
+                  other.validityYears,
+                  validityYears,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(password) ^
+      const DeepCollectionEquality().hash(validityYears) ^
+      runtimeType.hashCode;
+}
+
+extension $EnablePremiumFeatureModelExtension on EnablePremiumFeatureModel {
+  EnablePremiumFeatureModel copyWith({String? password, int? validityYears}) {
+    return EnablePremiumFeatureModel(
+      password: password ?? this.password,
+      validityYears: validityYears ?? this.validityYears,
+    );
+  }
+
+  EnablePremiumFeatureModel copyWithWrapped({
+    Wrapped<String?>? password,
+    Wrapped<int?>? validityYears,
+  }) {
+    return EnablePremiumFeatureModel(
+      password: (password != null ? password.value : this.password),
+      validityYears: (validityYears != null
+          ? validityYears.value
+          : this.validityYears),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class EnumGroupCreateModel {
   const EnumGroupCreateModel({this.enumGroupName});
 
@@ -66629,6 +66743,93 @@ extension $MessageToSendModelReturnModelExtension
 }
 
 @JsonSerializable(explicitToJson: true)
+class MinimalUserProfileModel {
+  const MinimalUserProfileModel({
+    this.userId,
+    this.email,
+    this.firstName,
+    this.lastName,
+  });
+
+  factory MinimalUserProfileModel.fromJson(Map<String, dynamic> json) =>
+      _$MinimalUserProfileModelFromJson(json);
+
+  static const toJsonFactory = _$MinimalUserProfileModelToJson;
+  Map<String, dynamic> toJson() => _$MinimalUserProfileModelToJson(this);
+
+  @JsonKey(name: 'userId')
+  final int? userId;
+  @JsonKey(name: 'email')
+  final String? email;
+  @JsonKey(name: 'firstName')
+  final String? firstName;
+  @JsonKey(name: 'lastName')
+  final String? lastName;
+  static const fromJsonFactory = _$MinimalUserProfileModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is MinimalUserProfileModel &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)) &&
+            (identical(other.firstName, firstName) ||
+                const DeepCollectionEquality().equals(
+                  other.firstName,
+                  firstName,
+                )) &&
+            (identical(other.lastName, lastName) ||
+                const DeepCollectionEquality().equals(
+                  other.lastName,
+                  lastName,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(email) ^
+      const DeepCollectionEquality().hash(firstName) ^
+      const DeepCollectionEquality().hash(lastName) ^
+      runtimeType.hashCode;
+}
+
+extension $MinimalUserProfileModelExtension on MinimalUserProfileModel {
+  MinimalUserProfileModel copyWith({
+    int? userId,
+    String? email,
+    String? firstName,
+    String? lastName,
+  }) {
+    return MinimalUserProfileModel(
+      userId: userId ?? this.userId,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+    );
+  }
+
+  MinimalUserProfileModel copyWithWrapped({
+    Wrapped<int?>? userId,
+    Wrapped<String?>? email,
+    Wrapped<String?>? firstName,
+    Wrapped<String?>? lastName,
+  }) {
+    return MinimalUserProfileModel(
+      userId: (userId != null ? userId.value : this.userId),
+      email: (email != null ? email.value : this.email),
+      firstName: (firstName != null ? firstName.value : this.firstName),
+      lastName: (lastName != null ? lastName.value : this.lastName),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class MultipleCategoryCreateModel {
   const MultipleCategoryCreateModel({this.newCategorys});
 
@@ -85109,13 +85310,14 @@ class UserModel {
     this.accountLockedUntil,
     this.profileImageGuid,
     this.profileImageActualFileName,
+    this.hasUserPurchasedPremiumFeature,
+    this.premiumFeatureValidUntil,
     this.isDeleted,
     this.createdDate,
     this.createdByUserId,
     this.modifiedDate,
     this.modifiedByUserId,
     this.predefinedUserTypeName,
-    this.companyCode,
     this.modifiedByUserFirstName,
     this.modifiedByUserLastName,
     this.modifiedByUserEmail,
@@ -85160,6 +85362,10 @@ class UserModel {
   final String? profileImageGuid;
   @JsonKey(name: 'profileImageActualFileName')
   final String? profileImageActualFileName;
+  @JsonKey(name: 'hasUserPurchasedPremiumFeature')
+  final bool? hasUserPurchasedPremiumFeature;
+  @JsonKey(name: 'premiumFeatureValidUntil')
+  final DateTime? premiumFeatureValidUntil;
   @JsonKey(name: 'isDeleted')
   final bool? isDeleted;
   @JsonKey(name: 'createdDate')
@@ -85172,8 +85378,6 @@ class UserModel {
   final int? modifiedByUserId;
   @JsonKey(name: 'predefinedUserTypeName')
   final String? predefinedUserTypeName;
-  @JsonKey(name: 'companyCode')
-  final String? companyCode;
   @JsonKey(name: 'modifiedByUserFirstName')
   final String? modifiedByUserFirstName;
   @JsonKey(name: 'modifiedByUserLastName')
@@ -85265,6 +85469,22 @@ class UserModel {
                   other.profileImageActualFileName,
                   profileImageActualFileName,
                 )) &&
+            (identical(
+                  other.hasUserPurchasedPremiumFeature,
+                  hasUserPurchasedPremiumFeature,
+                ) ||
+                const DeepCollectionEquality().equals(
+                  other.hasUserPurchasedPremiumFeature,
+                  hasUserPurchasedPremiumFeature,
+                )) &&
+            (identical(
+                  other.premiumFeatureValidUntil,
+                  premiumFeatureValidUntil,
+                ) ||
+                const DeepCollectionEquality().equals(
+                  other.premiumFeatureValidUntil,
+                  premiumFeatureValidUntil,
+                )) &&
             (identical(other.isDeleted, isDeleted) ||
                 const DeepCollectionEquality().equals(
                   other.isDeleted,
@@ -85294,11 +85514,6 @@ class UserModel {
                 const DeepCollectionEquality().equals(
                   other.predefinedUserTypeName,
                   predefinedUserTypeName,
-                )) &&
-            (identical(other.companyCode, companyCode) ||
-                const DeepCollectionEquality().equals(
-                  other.companyCode,
-                  companyCode,
                 )) &&
             (identical(
                   other.modifiedByUserFirstName,
@@ -85349,13 +85564,14 @@ class UserModel {
       const DeepCollectionEquality().hash(accountLockedUntil) ^
       const DeepCollectionEquality().hash(profileImageGuid) ^
       const DeepCollectionEquality().hash(profileImageActualFileName) ^
+      const DeepCollectionEquality().hash(hasUserPurchasedPremiumFeature) ^
+      const DeepCollectionEquality().hash(premiumFeatureValidUntil) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       const DeepCollectionEquality().hash(createdDate) ^
       const DeepCollectionEquality().hash(createdByUserId) ^
       const DeepCollectionEquality().hash(modifiedDate) ^
       const DeepCollectionEquality().hash(modifiedByUserId) ^
       const DeepCollectionEquality().hash(predefinedUserTypeName) ^
-      const DeepCollectionEquality().hash(companyCode) ^
       const DeepCollectionEquality().hash(modifiedByUserFirstName) ^
       const DeepCollectionEquality().hash(modifiedByUserLastName) ^
       const DeepCollectionEquality().hash(modifiedByUserEmail) ^
@@ -85381,13 +85597,14 @@ extension $UserModelExtension on UserModel {
     DateTime? accountLockedUntil,
     String? profileImageGuid,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
     DateTime? createdDate,
     int? createdByUserId,
     DateTime? modifiedDate,
     int? modifiedByUserId,
     String? predefinedUserTypeName,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -85412,6 +85629,10 @@ extension $UserModelExtension on UserModel {
       profileImageGuid: profileImageGuid ?? this.profileImageGuid,
       profileImageActualFileName:
           profileImageActualFileName ?? this.profileImageActualFileName,
+      hasUserPurchasedPremiumFeature:
+          hasUserPurchasedPremiumFeature ?? this.hasUserPurchasedPremiumFeature,
+      premiumFeatureValidUntil:
+          premiumFeatureValidUntil ?? this.premiumFeatureValidUntil,
       isDeleted: isDeleted ?? this.isDeleted,
       createdDate: createdDate ?? this.createdDate,
       createdByUserId: createdByUserId ?? this.createdByUserId,
@@ -85419,7 +85640,6 @@ extension $UserModelExtension on UserModel {
       modifiedByUserId: modifiedByUserId ?? this.modifiedByUserId,
       predefinedUserTypeName:
           predefinedUserTypeName ?? this.predefinedUserTypeName,
-      companyCode: companyCode ?? this.companyCode,
       modifiedByUserFirstName:
           modifiedByUserFirstName ?? this.modifiedByUserFirstName,
       modifiedByUserLastName:
@@ -85447,13 +85667,14 @@ extension $UserModelExtension on UserModel {
     Wrapped<DateTime?>? accountLockedUntil,
     Wrapped<String?>? profileImageGuid,
     Wrapped<String?>? profileImageActualFileName,
+    Wrapped<bool?>? hasUserPurchasedPremiumFeature,
+    Wrapped<DateTime?>? premiumFeatureValidUntil,
     Wrapped<bool?>? isDeleted,
     Wrapped<DateTime?>? createdDate,
     Wrapped<int?>? createdByUserId,
     Wrapped<DateTime?>? modifiedDate,
     Wrapped<int?>? modifiedByUserId,
     Wrapped<String?>? predefinedUserTypeName,
-    Wrapped<String?>? companyCode,
     Wrapped<String?>? modifiedByUserFirstName,
     Wrapped<String?>? modifiedByUserLastName,
     Wrapped<String?>? modifiedByUserEmail,
@@ -85490,6 +85711,12 @@ extension $UserModelExtension on UserModel {
       profileImageActualFileName: (profileImageActualFileName != null
           ? profileImageActualFileName.value
           : this.profileImageActualFileName),
+      hasUserPurchasedPremiumFeature: (hasUserPurchasedPremiumFeature != null
+          ? hasUserPurchasedPremiumFeature.value
+          : this.hasUserPurchasedPremiumFeature),
+      premiumFeatureValidUntil: (premiumFeatureValidUntil != null
+          ? premiumFeatureValidUntil.value
+          : this.premiumFeatureValidUntil),
       isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
       createdDate: (createdDate != null ? createdDate.value : this.createdDate),
       createdByUserId: (createdByUserId != null
@@ -85504,7 +85731,6 @@ extension $UserModelExtension on UserModel {
       predefinedUserTypeName: (predefinedUserTypeName != null
           ? predefinedUserTypeName.value
           : this.predefinedUserTypeName),
-      companyCode: (companyCode != null ? companyCode.value : this.companyCode),
       modifiedByUserFirstName: (modifiedByUserFirstName != null
           ? modifiedByUserFirstName.value
           : this.modifiedByUserFirstName),
@@ -86611,6 +86837,402 @@ extension $UserPermissionUpdateModelExtension on UserPermissionUpdateModel {
       predefinedUserPermissionTypeId: (predefinedUserPermissionTypeId != null
           ? predefinedUserPermissionTypeId.value
           : this.predefinedUserPermissionTypeId),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserProfileModel {
+  const UserProfileModel({
+    this.userId,
+    this.isPrivate,
+    this.userName,
+    this.firstName,
+    this.lastName,
+    this.email,
+    this.workPhone,
+    this.cellPhone,
+    this.billingAddress1,
+    this.billingAddress2,
+    this.locationCity,
+    this.locationState,
+    this.locationZip,
+    this.locationCountry,
+    this.countryGuid,
+    this.stateGuid,
+  });
+
+  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileModelFromJson(json);
+
+  static const toJsonFactory = _$UserProfileModelToJson;
+  Map<String, dynamic> toJson() => _$UserProfileModelToJson(this);
+
+  @JsonKey(name: 'userId')
+  final int? userId;
+  @JsonKey(name: 'isPrivate')
+  final bool? isPrivate;
+  @JsonKey(name: 'userName')
+  final String? userName;
+  @JsonKey(name: 'firstName')
+  final String? firstName;
+  @JsonKey(name: 'lastName')
+  final String? lastName;
+  @JsonKey(name: 'email')
+  final String? email;
+  @JsonKey(name: 'workPhone')
+  final String? workPhone;
+  @JsonKey(name: 'cellPhone')
+  final String? cellPhone;
+  @JsonKey(name: 'billingAddress1')
+  final String? billingAddress1;
+  @JsonKey(name: 'billingAddress2')
+  final String? billingAddress2;
+  @JsonKey(name: 'locationCity')
+  final String? locationCity;
+  @JsonKey(name: 'locationState')
+  final String? locationState;
+  @JsonKey(name: 'locationZip')
+  final String? locationZip;
+  @JsonKey(name: 'locationCountry')
+  final String? locationCountry;
+  @JsonKey(name: 'countryGuid')
+  final int? countryGuid;
+  @JsonKey(name: 'stateGuid')
+  final int? stateGuid;
+  static const fromJsonFactory = _$UserProfileModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is UserProfileModel &&
+            (identical(other.userId, userId) ||
+                const DeepCollectionEquality().equals(other.userId, userId)) &&
+            (identical(other.isPrivate, isPrivate) ||
+                const DeepCollectionEquality().equals(
+                  other.isPrivate,
+                  isPrivate,
+                )) &&
+            (identical(other.userName, userName) ||
+                const DeepCollectionEquality().equals(
+                  other.userName,
+                  userName,
+                )) &&
+            (identical(other.firstName, firstName) ||
+                const DeepCollectionEquality().equals(
+                  other.firstName,
+                  firstName,
+                )) &&
+            (identical(other.lastName, lastName) ||
+                const DeepCollectionEquality().equals(
+                  other.lastName,
+                  lastName,
+                )) &&
+            (identical(other.email, email) ||
+                const DeepCollectionEquality().equals(other.email, email)) &&
+            (identical(other.workPhone, workPhone) ||
+                const DeepCollectionEquality().equals(
+                  other.workPhone,
+                  workPhone,
+                )) &&
+            (identical(other.cellPhone, cellPhone) ||
+                const DeepCollectionEquality().equals(
+                  other.cellPhone,
+                  cellPhone,
+                )) &&
+            (identical(other.billingAddress1, billingAddress1) ||
+                const DeepCollectionEquality().equals(
+                  other.billingAddress1,
+                  billingAddress1,
+                )) &&
+            (identical(other.billingAddress2, billingAddress2) ||
+                const DeepCollectionEquality().equals(
+                  other.billingAddress2,
+                  billingAddress2,
+                )) &&
+            (identical(other.locationCity, locationCity) ||
+                const DeepCollectionEquality().equals(
+                  other.locationCity,
+                  locationCity,
+                )) &&
+            (identical(other.locationState, locationState) ||
+                const DeepCollectionEquality().equals(
+                  other.locationState,
+                  locationState,
+                )) &&
+            (identical(other.locationZip, locationZip) ||
+                const DeepCollectionEquality().equals(
+                  other.locationZip,
+                  locationZip,
+                )) &&
+            (identical(other.locationCountry, locationCountry) ||
+                const DeepCollectionEquality().equals(
+                  other.locationCountry,
+                  locationCountry,
+                )) &&
+            (identical(other.countryGuid, countryGuid) ||
+                const DeepCollectionEquality().equals(
+                  other.countryGuid,
+                  countryGuid,
+                )) &&
+            (identical(other.stateGuid, stateGuid) ||
+                const DeepCollectionEquality().equals(
+                  other.stateGuid,
+                  stateGuid,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(userId) ^
+      const DeepCollectionEquality().hash(isPrivate) ^
+      const DeepCollectionEquality().hash(userName) ^
+      const DeepCollectionEquality().hash(firstName) ^
+      const DeepCollectionEquality().hash(lastName) ^
+      const DeepCollectionEquality().hash(email) ^
+      const DeepCollectionEquality().hash(workPhone) ^
+      const DeepCollectionEquality().hash(cellPhone) ^
+      const DeepCollectionEquality().hash(billingAddress1) ^
+      const DeepCollectionEquality().hash(billingAddress2) ^
+      const DeepCollectionEquality().hash(locationCity) ^
+      const DeepCollectionEquality().hash(locationState) ^
+      const DeepCollectionEquality().hash(locationZip) ^
+      const DeepCollectionEquality().hash(locationCountry) ^
+      const DeepCollectionEquality().hash(countryGuid) ^
+      const DeepCollectionEquality().hash(stateGuid) ^
+      runtimeType.hashCode;
+}
+
+extension $UserProfileModelExtension on UserProfileModel {
+  UserProfileModel copyWith({
+    int? userId,
+    bool? isPrivate,
+    String? userName,
+    String? firstName,
+    String? lastName,
+    String? email,
+    String? workPhone,
+    String? cellPhone,
+    String? billingAddress1,
+    String? billingAddress2,
+    String? locationCity,
+    String? locationState,
+    String? locationZip,
+    String? locationCountry,
+    int? countryGuid,
+    int? stateGuid,
+  }) {
+    return UserProfileModel(
+      userId: userId ?? this.userId,
+      isPrivate: isPrivate ?? this.isPrivate,
+      userName: userName ?? this.userName,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      email: email ?? this.email,
+      workPhone: workPhone ?? this.workPhone,
+      cellPhone: cellPhone ?? this.cellPhone,
+      billingAddress1: billingAddress1 ?? this.billingAddress1,
+      billingAddress2: billingAddress2 ?? this.billingAddress2,
+      locationCity: locationCity ?? this.locationCity,
+      locationState: locationState ?? this.locationState,
+      locationZip: locationZip ?? this.locationZip,
+      locationCountry: locationCountry ?? this.locationCountry,
+      countryGuid: countryGuid ?? this.countryGuid,
+      stateGuid: stateGuid ?? this.stateGuid,
+    );
+  }
+
+  UserProfileModel copyWithWrapped({
+    Wrapped<int?>? userId,
+    Wrapped<bool?>? isPrivate,
+    Wrapped<String?>? userName,
+    Wrapped<String?>? firstName,
+    Wrapped<String?>? lastName,
+    Wrapped<String?>? email,
+    Wrapped<String?>? workPhone,
+    Wrapped<String?>? cellPhone,
+    Wrapped<String?>? billingAddress1,
+    Wrapped<String?>? billingAddress2,
+    Wrapped<String?>? locationCity,
+    Wrapped<String?>? locationState,
+    Wrapped<String?>? locationZip,
+    Wrapped<String?>? locationCountry,
+    Wrapped<int?>? countryGuid,
+    Wrapped<int?>? stateGuid,
+  }) {
+    return UserProfileModel(
+      userId: (userId != null ? userId.value : this.userId),
+      isPrivate: (isPrivate != null ? isPrivate.value : this.isPrivate),
+      userName: (userName != null ? userName.value : this.userName),
+      firstName: (firstName != null ? firstName.value : this.firstName),
+      lastName: (lastName != null ? lastName.value : this.lastName),
+      email: (email != null ? email.value : this.email),
+      workPhone: (workPhone != null ? workPhone.value : this.workPhone),
+      cellPhone: (cellPhone != null ? cellPhone.value : this.cellPhone),
+      billingAddress1: (billingAddress1 != null
+          ? billingAddress1.value
+          : this.billingAddress1),
+      billingAddress2: (billingAddress2 != null
+          ? billingAddress2.value
+          : this.billingAddress2),
+      locationCity: (locationCity != null
+          ? locationCity.value
+          : this.locationCity),
+      locationState: (locationState != null
+          ? locationState.value
+          : this.locationState),
+      locationZip: (locationZip != null ? locationZip.value : this.locationZip),
+      locationCountry: (locationCountry != null
+          ? locationCountry.value
+          : this.locationCountry),
+      countryGuid: (countryGuid != null ? countryGuid.value : this.countryGuid),
+      stateGuid: (stateGuid != null ? stateGuid.value : this.stateGuid),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserProfileModelReturnModel {
+  const UserProfileModelReturnModel({
+    this.model,
+    this.isSuccess,
+    this.successMessage,
+    this.errorHolder,
+    this.activityId,
+    this.activityDateTime,
+    this.server,
+    this.processId,
+  });
+
+  factory UserProfileModelReturnModel.fromJson(Map<String, dynamic> json) =>
+      _$UserProfileModelReturnModelFromJson(json);
+
+  static const toJsonFactory = _$UserProfileModelReturnModelToJson;
+  Map<String, dynamic> toJson() => _$UserProfileModelReturnModelToJson(this);
+
+  @JsonKey(name: 'model')
+  final UserProfileModel? model;
+  @JsonKey(name: 'isSuccess')
+  final bool? isSuccess;
+  @JsonKey(name: 'successMessage')
+  final String? successMessage;
+  @JsonKey(name: 'errorHolder')
+  final ReturnError? errorHolder;
+  @JsonKey(name: 'activityId')
+  final String? activityId;
+  @JsonKey(name: 'activityDateTime')
+  final DateTime? activityDateTime;
+  @JsonKey(name: 'server')
+  final String? server;
+  @JsonKey(name: 'processId')
+  final int? processId;
+  static const fromJsonFactory = _$UserProfileModelReturnModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is UserProfileModelReturnModel &&
+            (identical(other.model, model) ||
+                const DeepCollectionEquality().equals(other.model, model)) &&
+            (identical(other.isSuccess, isSuccess) ||
+                const DeepCollectionEquality().equals(
+                  other.isSuccess,
+                  isSuccess,
+                )) &&
+            (identical(other.successMessage, successMessage) ||
+                const DeepCollectionEquality().equals(
+                  other.successMessage,
+                  successMessage,
+                )) &&
+            (identical(other.errorHolder, errorHolder) ||
+                const DeepCollectionEquality().equals(
+                  other.errorHolder,
+                  errorHolder,
+                )) &&
+            (identical(other.activityId, activityId) ||
+                const DeepCollectionEquality().equals(
+                  other.activityId,
+                  activityId,
+                )) &&
+            (identical(other.activityDateTime, activityDateTime) ||
+                const DeepCollectionEquality().equals(
+                  other.activityDateTime,
+                  activityDateTime,
+                )) &&
+            (identical(other.server, server) ||
+                const DeepCollectionEquality().equals(other.server, server)) &&
+            (identical(other.processId, processId) ||
+                const DeepCollectionEquality().equals(
+                  other.processId,
+                  processId,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(model) ^
+      const DeepCollectionEquality().hash(isSuccess) ^
+      const DeepCollectionEquality().hash(successMessage) ^
+      const DeepCollectionEquality().hash(errorHolder) ^
+      const DeepCollectionEquality().hash(activityId) ^
+      const DeepCollectionEquality().hash(activityDateTime) ^
+      const DeepCollectionEquality().hash(server) ^
+      const DeepCollectionEquality().hash(processId) ^
+      runtimeType.hashCode;
+}
+
+extension $UserProfileModelReturnModelExtension on UserProfileModelReturnModel {
+  UserProfileModelReturnModel copyWith({
+    UserProfileModel? model,
+    bool? isSuccess,
+    String? successMessage,
+    ReturnError? errorHolder,
+    String? activityId,
+    DateTime? activityDateTime,
+    String? server,
+    int? processId,
+  }) {
+    return UserProfileModelReturnModel(
+      model: model ?? this.model,
+      isSuccess: isSuccess ?? this.isSuccess,
+      successMessage: successMessage ?? this.successMessage,
+      errorHolder: errorHolder ?? this.errorHolder,
+      activityId: activityId ?? this.activityId,
+      activityDateTime: activityDateTime ?? this.activityDateTime,
+      server: server ?? this.server,
+      processId: processId ?? this.processId,
+    );
+  }
+
+  UserProfileModelReturnModel copyWithWrapped({
+    Wrapped<UserProfileModel?>? model,
+    Wrapped<bool?>? isSuccess,
+    Wrapped<String?>? successMessage,
+    Wrapped<ReturnError?>? errorHolder,
+    Wrapped<String?>? activityId,
+    Wrapped<DateTime?>? activityDateTime,
+    Wrapped<String?>? server,
+    Wrapped<int?>? processId,
+  }) {
+    return UserProfileModelReturnModel(
+      model: (model != null ? model.value : this.model),
+      isSuccess: (isSuccess != null ? isSuccess.value : this.isSuccess),
+      successMessage: (successMessage != null
+          ? successMessage.value
+          : this.successMessage),
+      errorHolder: (errorHolder != null ? errorHolder.value : this.errorHolder),
+      activityId: (activityId != null ? activityId.value : this.activityId),
+      activityDateTime: (activityDateTime != null
+          ? activityDateTime.value
+          : this.activityDateTime),
+      server: (server != null ? server.value : this.server),
+      processId: (processId != null ? processId.value : this.processId),
     );
   }
 }
@@ -92777,7 +93399,6 @@ class ApiV1CompanyCreateuserPost$RequestBody {
     this.captchaCode,
     this.newPermissionTypeIds,
     this.initialPassword,
-    this.companyCode,
     this.modifiedByUserFirstName,
     this.modifiedByUserLastName,
     this.modifiedByUserEmail,
@@ -92804,6 +93425,8 @@ class ApiV1CompanyCreateuserPost$RequestBody {
     this.profileImageGuid,
     this.profileImageLocation,
     this.profileImageActualFileName,
+    this.hasUserPurchasedPremiumFeature,
+    this.premiumFeatureValidUntil,
     this.isDeleted,
   });
 
@@ -92823,8 +93446,6 @@ class ApiV1CompanyCreateuserPost$RequestBody {
   final List<int>? newPermissionTypeIds;
   @JsonKey(name: 'InitialPassword')
   final String? initialPassword;
-  @JsonKey(name: 'CompanyCode')
-  final String? companyCode;
   @JsonKey(name: 'ModifiedByUserFirstName')
   final String? modifiedByUserFirstName;
   @JsonKey(name: 'ModifiedByUserLastName')
@@ -92877,6 +93498,10 @@ class ApiV1CompanyCreateuserPost$RequestBody {
   final String? profileImageLocation;
   @JsonKey(name: 'ProfileImageActualFileName')
   final String? profileImageActualFileName;
+  @JsonKey(name: 'HasUserPurchasedPremiumFeature')
+  final bool? hasUserPurchasedPremiumFeature;
+  @JsonKey(name: 'PremiumFeatureValidUntil')
+  final DateTime? premiumFeatureValidUntil;
   @JsonKey(name: 'IsDeleted')
   final bool? isDeleted;
   static const fromJsonFactory =
@@ -92905,11 +93530,6 @@ class ApiV1CompanyCreateuserPost$RequestBody {
                 const DeepCollectionEquality().equals(
                   other.initialPassword,
                   initialPassword,
-                )) &&
-            (identical(other.companyCode, companyCode) ||
-                const DeepCollectionEquality().equals(
-                  other.companyCode,
-                  companyCode,
                 )) &&
             (identical(
                   other.modifiedByUserFirstName,
@@ -93047,6 +93667,22 @@ class ApiV1CompanyCreateuserPost$RequestBody {
                   other.profileImageActualFileName,
                   profileImageActualFileName,
                 )) &&
+            (identical(
+                  other.hasUserPurchasedPremiumFeature,
+                  hasUserPurchasedPremiumFeature,
+                ) ||
+                const DeepCollectionEquality().equals(
+                  other.hasUserPurchasedPremiumFeature,
+                  hasUserPurchasedPremiumFeature,
+                )) &&
+            (identical(
+                  other.premiumFeatureValidUntil,
+                  premiumFeatureValidUntil,
+                ) ||
+                const DeepCollectionEquality().equals(
+                  other.premiumFeatureValidUntil,
+                  premiumFeatureValidUntil,
+                )) &&
             (identical(other.isDeleted, isDeleted) ||
                 const DeepCollectionEquality().equals(
                   other.isDeleted,
@@ -93063,7 +93699,6 @@ class ApiV1CompanyCreateuserPost$RequestBody {
       const DeepCollectionEquality().hash(captchaCode) ^
       const DeepCollectionEquality().hash(newPermissionTypeIds) ^
       const DeepCollectionEquality().hash(initialPassword) ^
-      const DeepCollectionEquality().hash(companyCode) ^
       const DeepCollectionEquality().hash(modifiedByUserFirstName) ^
       const DeepCollectionEquality().hash(modifiedByUserLastName) ^
       const DeepCollectionEquality().hash(modifiedByUserEmail) ^
@@ -93090,6 +93725,8 @@ class ApiV1CompanyCreateuserPost$RequestBody {
       const DeepCollectionEquality().hash(profileImageGuid) ^
       const DeepCollectionEquality().hash(profileImageLocation) ^
       const DeepCollectionEquality().hash(profileImageActualFileName) ^
+      const DeepCollectionEquality().hash(hasUserPurchasedPremiumFeature) ^
+      const DeepCollectionEquality().hash(premiumFeatureValidUntil) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       runtimeType.hashCode;
 }
@@ -93101,7 +93738,6 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
     String? captchaCode,
     List<int>? newPermissionTypeIds,
     String? initialPassword,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -93128,6 +93764,8 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
     String? profileImageGuid,
     String? profileImageLocation,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
   }) {
     return ApiV1CompanyCreateuserPost$RequestBody(
@@ -93135,7 +93773,6 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
       captchaCode: captchaCode ?? this.captchaCode,
       newPermissionTypeIds: newPermissionTypeIds ?? this.newPermissionTypeIds,
       initialPassword: initialPassword ?? this.initialPassword,
-      companyCode: companyCode ?? this.companyCode,
       modifiedByUserFirstName:
           modifiedByUserFirstName ?? this.modifiedByUserFirstName,
       modifiedByUserLastName:
@@ -93169,6 +93806,10 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
       profileImageLocation: profileImageLocation ?? this.profileImageLocation,
       profileImageActualFileName:
           profileImageActualFileName ?? this.profileImageActualFileName,
+      hasUserPurchasedPremiumFeature:
+          hasUserPurchasedPremiumFeature ?? this.hasUserPurchasedPremiumFeature,
+      premiumFeatureValidUntil:
+          premiumFeatureValidUntil ?? this.premiumFeatureValidUntil,
       isDeleted: isDeleted ?? this.isDeleted,
     );
   }
@@ -93178,7 +93819,6 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
     Wrapped<String?>? captchaCode,
     Wrapped<List<int>?>? newPermissionTypeIds,
     Wrapped<String?>? initialPassword,
-    Wrapped<String?>? companyCode,
     Wrapped<String?>? modifiedByUserFirstName,
     Wrapped<String?>? modifiedByUserLastName,
     Wrapped<String?>? modifiedByUserEmail,
@@ -93205,6 +93845,8 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
     Wrapped<String?>? profileImageGuid,
     Wrapped<String?>? profileImageLocation,
     Wrapped<String?>? profileImageActualFileName,
+    Wrapped<bool?>? hasUserPurchasedPremiumFeature,
+    Wrapped<DateTime?>? premiumFeatureValidUntil,
     Wrapped<bool?>? isDeleted,
   }) {
     return ApiV1CompanyCreateuserPost$RequestBody(
@@ -93218,7 +93860,6 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
       initialPassword: (initialPassword != null
           ? initialPassword.value
           : this.initialPassword),
-      companyCode: (companyCode != null ? companyCode.value : this.companyCode),
       modifiedByUserFirstName: (modifiedByUserFirstName != null
           ? modifiedByUserFirstName.value
           : this.modifiedByUserFirstName),
@@ -93281,6 +93922,12 @@ extension $ApiV1CompanyCreateuserPost$RequestBodyExtension
       profileImageActualFileName: (profileImageActualFileName != null
           ? profileImageActualFileName.value
           : this.profileImageActualFileName),
+      hasUserPurchasedPremiumFeature: (hasUserPurchasedPremiumFeature != null
+          ? hasUserPurchasedPremiumFeature.value
+          : this.hasUserPurchasedPremiumFeature),
+      premiumFeatureValidUntil: (premiumFeatureValidUntil != null
+          ? premiumFeatureValidUntil.value
+          : this.premiumFeatureValidUntil),
       isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
     );
   }
@@ -93291,7 +93938,6 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
   const ApiV1CompanyUpdateuserbyadminPost$RequestBody({
     this.uploadedFile,
     this.existingPermissionTypeIds,
-    this.companyCode,
     this.modifiedByUserFirstName,
     this.modifiedByUserLastName,
     this.modifiedByUserEmail,
@@ -93319,6 +93965,8 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
     this.profileImageGuid,
     this.profileImageLocation,
     this.profileImageActualFileName,
+    this.hasUserPurchasedPremiumFeature,
+    this.premiumFeatureValidUntil,
     this.isDeleted,
   });
 
@@ -93335,8 +93983,6 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
   final String? uploadedFile;
   @JsonKey(name: 'ExistingPermissionTypeIds', defaultValue: <int>[])
   final List<int>? existingPermissionTypeIds;
-  @JsonKey(name: 'CompanyCode')
-  final String? companyCode;
   @JsonKey(name: 'ModifiedByUserFirstName')
   final String? modifiedByUserFirstName;
   @JsonKey(name: 'ModifiedByUserLastName')
@@ -93391,6 +94037,10 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
   final String? profileImageLocation;
   @JsonKey(name: 'ProfileImageActualFileName')
   final String? profileImageActualFileName;
+  @JsonKey(name: 'HasUserPurchasedPremiumFeature')
+  final bool? hasUserPurchasedPremiumFeature;
+  @JsonKey(name: 'PremiumFeatureValidUntil')
+  final DateTime? premiumFeatureValidUntil;
   @JsonKey(name: 'IsDeleted')
   final bool? isDeleted;
   static const fromJsonFactory =
@@ -93412,11 +94062,6 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
                 const DeepCollectionEquality().equals(
                   other.existingPermissionTypeIds,
                   existingPermissionTypeIds,
-                )) &&
-            (identical(other.companyCode, companyCode) ||
-                const DeepCollectionEquality().equals(
-                  other.companyCode,
-                  companyCode,
                 )) &&
             (identical(
                   other.modifiedByUserFirstName,
@@ -93556,6 +94201,22 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
                   other.profileImageActualFileName,
                   profileImageActualFileName,
                 )) &&
+            (identical(
+                  other.hasUserPurchasedPremiumFeature,
+                  hasUserPurchasedPremiumFeature,
+                ) ||
+                const DeepCollectionEquality().equals(
+                  other.hasUserPurchasedPremiumFeature,
+                  hasUserPurchasedPremiumFeature,
+                )) &&
+            (identical(
+                  other.premiumFeatureValidUntil,
+                  premiumFeatureValidUntil,
+                ) ||
+                const DeepCollectionEquality().equals(
+                  other.premiumFeatureValidUntil,
+                  premiumFeatureValidUntil,
+                )) &&
             (identical(other.isDeleted, isDeleted) ||
                 const DeepCollectionEquality().equals(
                   other.isDeleted,
@@ -93570,7 +94231,6 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
   int get hashCode =>
       const DeepCollectionEquality().hash(uploadedFile) ^
       const DeepCollectionEquality().hash(existingPermissionTypeIds) ^
-      const DeepCollectionEquality().hash(companyCode) ^
       const DeepCollectionEquality().hash(modifiedByUserFirstName) ^
       const DeepCollectionEquality().hash(modifiedByUserLastName) ^
       const DeepCollectionEquality().hash(modifiedByUserEmail) ^
@@ -93598,6 +94258,8 @@ class ApiV1CompanyUpdateuserbyadminPost$RequestBody {
       const DeepCollectionEquality().hash(profileImageGuid) ^
       const DeepCollectionEquality().hash(profileImageLocation) ^
       const DeepCollectionEquality().hash(profileImageActualFileName) ^
+      const DeepCollectionEquality().hash(hasUserPurchasedPremiumFeature) ^
+      const DeepCollectionEquality().hash(premiumFeatureValidUntil) ^
       const DeepCollectionEquality().hash(isDeleted) ^
       runtimeType.hashCode;
 }
@@ -93607,7 +94269,6 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
   ApiV1CompanyUpdateuserbyadminPost$RequestBody copyWith({
     String? uploadedFile,
     List<int>? existingPermissionTypeIds,
-    String? companyCode,
     String? modifiedByUserFirstName,
     String? modifiedByUserLastName,
     String? modifiedByUserEmail,
@@ -93635,13 +94296,14 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
     String? profileImageGuid,
     String? profileImageLocation,
     String? profileImageActualFileName,
+    bool? hasUserPurchasedPremiumFeature,
+    DateTime? premiumFeatureValidUntil,
     bool? isDeleted,
   }) {
     return ApiV1CompanyUpdateuserbyadminPost$RequestBody(
       uploadedFile: uploadedFile ?? this.uploadedFile,
       existingPermissionTypeIds:
           existingPermissionTypeIds ?? this.existingPermissionTypeIds,
-      companyCode: companyCode ?? this.companyCode,
       modifiedByUserFirstName:
           modifiedByUserFirstName ?? this.modifiedByUserFirstName,
       modifiedByUserLastName:
@@ -93676,6 +94338,10 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
       profileImageLocation: profileImageLocation ?? this.profileImageLocation,
       profileImageActualFileName:
           profileImageActualFileName ?? this.profileImageActualFileName,
+      hasUserPurchasedPremiumFeature:
+          hasUserPurchasedPremiumFeature ?? this.hasUserPurchasedPremiumFeature,
+      premiumFeatureValidUntil:
+          premiumFeatureValidUntil ?? this.premiumFeatureValidUntil,
       isDeleted: isDeleted ?? this.isDeleted,
     );
   }
@@ -93683,7 +94349,6 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
   ApiV1CompanyUpdateuserbyadminPost$RequestBody copyWithWrapped({
     Wrapped<String?>? uploadedFile,
     Wrapped<List<int>?>? existingPermissionTypeIds,
-    Wrapped<String?>? companyCode,
     Wrapped<String?>? modifiedByUserFirstName,
     Wrapped<String?>? modifiedByUserLastName,
     Wrapped<String?>? modifiedByUserEmail,
@@ -93711,6 +94376,8 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
     Wrapped<String?>? profileImageGuid,
     Wrapped<String?>? profileImageLocation,
     Wrapped<String?>? profileImageActualFileName,
+    Wrapped<bool?>? hasUserPurchasedPremiumFeature,
+    Wrapped<DateTime?>? premiumFeatureValidUntil,
     Wrapped<bool?>? isDeleted,
   }) {
     return ApiV1CompanyUpdateuserbyadminPost$RequestBody(
@@ -93720,7 +94387,6 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
       existingPermissionTypeIds: (existingPermissionTypeIds != null
           ? existingPermissionTypeIds.value
           : this.existingPermissionTypeIds),
-      companyCode: (companyCode != null ? companyCode.value : this.companyCode),
       modifiedByUserFirstName: (modifiedByUserFirstName != null
           ? modifiedByUserFirstName.value
           : this.modifiedByUserFirstName),
@@ -93784,6 +94450,12 @@ extension $ApiV1CompanyUpdateuserbyadminPost$RequestBodyExtension
       profileImageActualFileName: (profileImageActualFileName != null
           ? profileImageActualFileName.value
           : this.profileImageActualFileName),
+      hasUserPurchasedPremiumFeature: (hasUserPurchasedPremiumFeature != null
+          ? hasUserPurchasedPremiumFeature.value
+          : this.hasUserPurchasedPremiumFeature),
+      premiumFeatureValidUntil: (premiumFeatureValidUntil != null
+          ? premiumFeatureValidUntil.value
+          : this.premiumFeatureValidUntil),
       isDeleted: (isDeleted != null ? isDeleted.value : this.isDeleted),
     );
   }
