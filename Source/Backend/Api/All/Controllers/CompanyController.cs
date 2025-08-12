@@ -165,6 +165,13 @@ namespace Manifest.Api.All.Controllers
             return companyService.EnablePremiumFeatureAsync(model);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "Company" })]
+        public Task<ReturnModel<IsPremiumFeatureEnabledModel>> IsPremiumFeatureEnabled()
+        {
+            return companyService.IsPremiumFeatureEnabledAsync();
+        }
+
         #endregion User
 
         #region UserPermission

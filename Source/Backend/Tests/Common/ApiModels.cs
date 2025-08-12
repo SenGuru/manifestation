@@ -3077,6 +3077,30 @@ namespace Manifest.Tests.Common
         public const string ValidityYears__Name = "ValidityYears";
     }
 
+    public class IsPremiumFeatureEnabledModel
+    {
+
+        public IsPremiumFeatureEnabledModel()
+        {
+        }
+        [JsonPropertyName("enabled")]
+        public Boolean Enabled {set; get;}
+        [JsonPropertyName("enabledUntilDate")]
+        public DateTime? EnabledUntilDate {set; get;}
+
+        public IsPremiumFeatureEnabledModel GetCopy()
+        {
+            var obj = new IsPremiumFeatureEnabledModel();
+            obj.Enabled = Enabled;
+            obj.EnabledUntilDate = EnabledUntilDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string Enabled__Name = "Enabled";
+        public const string EnabledUntilDate__Name = "EnabledUntilDate";
+    }
+
     public class UserPermissionModel
     {
 

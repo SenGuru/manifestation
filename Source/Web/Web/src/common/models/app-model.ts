@@ -1827,6 +1827,20 @@ export class EnablePremiumFeatureModel {
     }
 }
 
+export class IsPremiumFeatureEnabledModel {
+    enabled : boolean = false;
+    enabledUntilDate : Date | null = null;
+
+    static getCopy(self : IsPremiumFeatureEnabledModel,adjustDateToUTC : boolean = false) : IsPremiumFeatureEnabledModel {
+      let obj = new IsPremiumFeatureEnabledModel();
+      if (self.hasOwnProperty('enabled'))
+        obj.enabled = self.enabled;
+      if (self.hasOwnProperty('enabledUntilDate'))
+        obj.enabledUntilDate = self.enabledUntilDate ?? (!adjustDateToUTC ? self.enabledUntilDate : (self.enabledUntilDate !== null ? DateUtils.parseAsUTC(self.enabledUntilDate) : self.enabledUntilDate ));
+      return obj;
+    }
+}
+
 export class UserPermissionModel {
     userName : string = '';
     predefinedUserPermissionTypeName : string = '';

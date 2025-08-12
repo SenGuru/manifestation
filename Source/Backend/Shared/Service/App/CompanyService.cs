@@ -948,6 +948,31 @@ namespace Manifest.Service.App
             }
         }
 
+        public async Task<ReturnModel<IsPremiumFeatureEnabledModel>> IsPremiumFeatureEnabledAsync()
+        {
+            try
+            {
+                var currentUserId = await currentSessionService.GetCurrentUserIdAsync();
+                var existingUser = await companyRepository.GetUserByIdAsync(currentUserId ?? 0);
+                if (existingUser == null)
+                {
+                    return log.ErrorAndReturnModel<IsPremiumFeatureEnabledModel>("User not found");
+                }
+
+                var result = new IsPremiumFeatureEnabledModel
+                {
+                    Enabled = existingUser.HasUserPurchasedPremiumFeature,
+                    EnabledUntilDate = existingUser.PremiumFeatureValidUntil
+                };
+
+                return ReturnModel<IsPremiumFeatureEnabledModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<IsPremiumFeatureEnabledModel>("Unexpected error when checking premium feature status", ex);
+            }
+        }
+
         public Task<List<ReturnErrorItem>> IsMimimalUserProfileModelValidForAllAsync(MinimalUserProfileModel userModel)
         {
             List<ReturnErrorItem> result = new List<ReturnErrorItem>();

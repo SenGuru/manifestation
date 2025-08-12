@@ -106,6 +106,14 @@ public void EnablePremiumFeature_WithValidInvalidToken_ReturnsUnAuthorizedStatus
 {
     
 }
+public void IsPremiumFeatureEnabled_WithValidData_ReturnsValidData()
+{
+    var r = IsPremiumFeatureEnabled();
+}
+public void IsPremiumFeatureEnabled_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
 public void GetUserPermissions_WithValidData_ReturnsValidData()
 {
     var model = new UserPermissionSearchCriteria();
