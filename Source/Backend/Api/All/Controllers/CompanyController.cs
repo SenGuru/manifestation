@@ -1,26 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.IO;
+using Framework.Infrastructure.Interfaces.Helpers;
+using Framework.Infrastructure.Interfaces.Services;
+using Framework.Infrastructure.Logging;
+using Framework.Infrastructure.Models;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Models.Search;
+using Framework.Infrastructure.Utils;
 using Manifest.Common.Enums;
+using Manifest.Common.Interfaces.Repository.DbAccess;
 using Manifest.Common.Models.DBView;
 using Manifest.Common.Models.SearchCriteria;
 using Manifest.Common.Models.ViewModels;
-using Manifest.Web.Filters;
-using Framework.Infrastructure.Models.Result;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using Framework.Infrastructure.Models.Search;
-using Manifest.Common.Interfaces.Repository.DbAccess;
-using Framework.Infrastructure.Logging;
-using Swashbuckle.AspNetCore.Annotations;
-using Framework.Infrastructure.Models;
-using Framework.Infrastructure.Interfaces.Services;
-using Framework.Infrastructure.Interfaces.Helpers;
+using Manifest.Common.Models.ViewModels.UserProfile;
 using Manifest.Service.App;
+using Manifest.Web.Filters;
 using Manifest.Web.Models;
-using Framework.Infrastructure.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Manifest.Api.All.Controllers
 {
@@ -135,6 +136,7 @@ namespace Manifest.Api.All.Controllers
         {
             return companyService.DisableUserByIdAsync(userId);
         }
+
         [HttpDelete]
         [SwaggerOperation(Tags = new[] { "Company" })]
         public Task<ReturnModel<bool>> MarkUserAsDeleted([FromQuery] long id)
@@ -148,6 +150,28 @@ namespace Manifest.Api.All.Controllers
         {
             return companyService.MarkUserAsNotDeletedByIdAsync(id);
         }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "Company" })]
+        public Task<ReturnModel<UserProfileModel>> UpdateMinimalUserProfileForCurrentUser([FromBody]MinimalUserProfileModel user)
+        {
+            return companyService.UpdateMinimalUserProfileForCurrentUserAsync(user);
+        }
+
+        [HttpPost]
+        [SwaggerOperation(Tags = new[] { "Company" })]
+        public Task<ReturnModel<bool>> EnablePremiumFeature([FromBody]EnablePremiumFeatureModel model)
+        {
+            return companyService.EnablePremiumFeatureAsync(model);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "Company" })]
+        public Task<ReturnModel<IsPremiumFeatureEnabledModel>> IsPremiumFeatureEnabled()
+        {
+            return companyService.IsPremiumFeatureEnabledAsync();
+        }
+
         #endregion User
 
         #region UserPermission

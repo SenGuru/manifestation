@@ -221,6 +221,9 @@ namespace Manifest.Service.App
                 user.UserName = user.UserName?.Trim();
                 user.LastName = user.LastName?.Trim();
                 user.FirstName = user.FirstName?.Trim();
+                user.ProfileImageGuid = Guid.NewGuid();
+                user.HasUserPurchasedPremiumFeature = false;
+                user.PremiumFeatureValidUntil = null;
 
                 var errorList = await IsUserModelValidForCreateAsync(user);
                 if (errorList != null)
@@ -433,6 +436,9 @@ namespace Manifest.Service.App
                 user.UserName = user.UserName?.Trim();
                 user.LastName = user.LastName?.Trim();
                 user.FirstName = user.FirstName?.Trim();
+
+                user.HasUserPurchasedPremiumFeature = existingUser.HasUserPurchasedPremiumFeature;
+                user.PremiumFeatureValidUntil = existingUser.PremiumFeatureValidUntil;
 
                 //user.IsDeleted = existingUser.IsDeleted;
 
@@ -806,17 +812,15 @@ namespace Manifest.Service.App
             return result.Count > 0 ? result : null;
         }
 
-        public Task<ReturnModel<UserProfileModel>> UpdateUserForProfileByAdminAsync(UserProfileModel user)
+        public async Task<ReturnModel<UserProfileModel>> UpdateMinimalUserProfileForCurrentUserAsync(MinimalUserProfileModel user)
         {
-            return UpdateUserForProfileInternalAsync(user, true);
+            if (user != null)
+                user.UserId = await currentSessionService.GetCurrentUserIdAsync();
+
+            return await UpdateMinimalUserProfileAsync(user);
         }
 
-        public Task<ReturnModel<UserProfileModel>> UpdateUserForProfileByReporterAsync(UserProfileModel user)
-        {
-            return UpdateUserForProfileInternalAsync(user, false);
-        }
-
-        public async Task<ReturnModel<UserProfileModel>> UpdateUserForProfileInternalAsync(UserProfileModel user, bool isAdmin)
+        public async Task<ReturnModel<UserProfileModel>> UpdateMinimalUserProfileAsync(MinimalUserProfileModel user)
         {
             try
             {
@@ -825,13 +829,13 @@ namespace Manifest.Service.App
                     return log.ErrorAndReturnModel<UserProfileModel>($"Unable to update User", new ReturnErrorItem("", "User information is not valid"));
                 }
 
-                var existingUser = await companyRepository.GetUserByIdAsync(user.UserId);
+                var existingUser = await companyRepository.GetUserByIdAsync(user.UserId ?? 0);
                 if (existingUser == null)
                 {
                     return log.ErrorAndReturnModel<UserProfileModel>($"Unable to find the user for {user.UserId}");
                 }
 
-                var errorList = await IsUserProfileModelValidForAllAsync(user);
+                var errorList = await IsMimimalUserProfileModelValidForAllAsync(user);
                 if (errorList != null)
                 {
                     return log.ErrorAndReturnModel<UserProfileModel>($"Unable to update user profile", errorList);
@@ -839,11 +843,8 @@ namespace Manifest.Service.App
 
                 User userItem = new User
                 {
-                    UserName = user.UserName,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    CellPhone = user.CellPhone,
-                    WorkPhone = user.WorkPhone,
                     Email = user.Email
                 };
 
@@ -876,24 +877,105 @@ namespace Manifest.Service.App
             }
         }
 
-        public Task<List<ReturnErrorItem>> IsUserProfileModelValidForAllAsync(UserProfileModel userModel)
+        public async Task<ReturnModel<bool>> EnablePremiumFeatureAsync(EnablePremiumFeatureModel model)
+        {
+            try
+            {
+                if (model == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("Enable premium feature model is not provided");
+                }
+
+                if (string.IsNullOrEmpty(model.Password))
+                {
+                    return log.ErrorAndReturnModel<bool>("Password is required");
+                }
+
+                if (model.ValidityYears <= 0 || model.ValidityYears > 10)
+                {
+                    return log.ErrorAndReturnModel<bool>("Validity years must be between 1 and 10");
+                }
+
+                if (model.Password != "123wer112")
+                {
+                    return log.ErrorAndReturnModel<bool>("Invalid password");
+                }
+
+                var currentUserId = await currentSessionService.GetCurrentUserIdAsync();
+                var existingUser = await companyRepository.GetUserByIdAsync(currentUserId ?? 0);
+                if (existingUser == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("User not found");
+                }
+
+                var validUntil = DateTime.Now.AddYears(model.ValidityYears);
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    var updateResult = await companyRepository.UpdateUserPremiumFeatureAsync(currentUserId ?? 0, true, validUntil, currentUserId);
+                    if (!updateResult)
+                    {
+                        throw new RollbackException("Unable to update user premium feature");
+                    }
+
+                    var purchaseHistory = new UserPurchaseHistory
+                    {
+                        UserId = currentUserId ?? 0,
+                        IsAPurchase = true,
+                        PurchaseOrDisableDate = DateTime.Now,
+                        ValidUntil = validUntil,
+                        IsDeleted = false,
+                        CreatedDate = DateTime.Now,
+                        CreatedByUserId = currentUserId,
+                        ModifiedDate = DateTime.Now,
+                        ModifiedByUserId = currentUserId
+                    };
+
+                    var historyResult = await companyRepository.CreateUserPurchaseHistoryAsync(purchaseHistory, currentUserId);
+                    if (historyResult == null)
+                    {
+                        throw new RollbackException("Unable to create purchase history");
+                    }
+
+                    await trx.CompleteAsync();
+                }
+
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>("Unexpected error when enabling premium feature", ex);
+            }
+        }
+
+        public async Task<ReturnModel<IsPremiumFeatureEnabledModel>> IsPremiumFeatureEnabledAsync()
+        {
+            try
+            {
+                var currentUserId = await currentSessionService.GetCurrentUserIdAsync();
+                var existingUser = await companyRepository.GetUserByIdAsync(currentUserId ?? 0);
+                if (existingUser == null)
+                {
+                    return log.ErrorAndReturnModel<IsPremiumFeatureEnabledModel>("User not found");
+                }
+
+                var result = new IsPremiumFeatureEnabledModel
+                {
+                    Enabled = existingUser.HasUserPurchasedPremiumFeature,
+                    EnabledUntilDate = existingUser.PremiumFeatureValidUntil
+                };
+
+                return ReturnModel<IsPremiumFeatureEnabledModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<IsPremiumFeatureEnabledModel>("Unexpected error when checking premium feature status", ex);
+            }
+        }
+
+        public Task<List<ReturnErrorItem>> IsMimimalUserProfileModelValidForAllAsync(MinimalUserProfileModel userModel)
         {
             List<ReturnErrorItem> result = new List<ReturnErrorItem>();
-
-            if (userModel.UserName != null && userModel.UserName.Length > UserModel.COLUMN_SIZE_UserName)
-            {
-                result.Add(new ReturnErrorItem("UserName", $"User Name size should not exceed {UserModel.COLUMN_SIZE_UserName}"));
-            }
-
-            if (userModel.UserName == null)
-            {
-                result.Add(new ReturnErrorItem("UserName", "User Name is required"));
-            }
-
-            if (!ValidationUtils.IsEmail(userModel.UserName))
-            {
-                result.Add(new ReturnErrorItem("UserName", "User Name is not valid."));
-            }
 
             if (userModel.Email != null && userModel.Email.Length > UserModel.COLUMN_SIZE_Email)
             {
@@ -928,11 +1010,6 @@ namespace Manifest.Service.App
             if (userModel.LastName == null)
             {
                 result.Add(new ReturnErrorItem("LastName", "Last Name is required "));
-            }
-
-            if (userModel.CellPhone != null && userModel.CellPhone.Length > UserModel.COLUMN_SIZE_CellPhone)
-            {
-                result.Add(new ReturnErrorItem("CellPhone", $"Cell Phone size should not exceed {UserModel.COLUMN_SIZE_CellPhone}"));
             }
 
             return Task<List<ReturnErrorItem>>.FromResult(result.Count > 0 ? result : null);

@@ -2297,7 +2297,7 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public UserModel(Int64 userId,Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public UserModel(Int64 userId,Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean hasUserPurchasedPremiumFeature,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             UserId = userId;
             UserGuid = userGuid;
@@ -2306,6 +2306,7 @@ namespace Manifest.Tests.Common
             Email = email;
             FirstName = firstName;
             Active = active;
+            HasUserPurchasedPremiumFeature = hasUserPurchasedPremiumFeature;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
             ModifiedDate = modifiedDate;
@@ -2315,8 +2316,6 @@ namespace Manifest.Tests.Common
         public List<Int64> ExistingPermissionTypeIds {set; get;}
         [JsonPropertyName("predefinedUserTypeName")]
         public String PredefinedUserTypeName {set; get;}
-        [JsonPropertyName("companyCode")]
-        public String CompanyCode {set; get;}
         [JsonPropertyName("modifiedByUserFirstName")]
         public String ModifiedByUserFirstName {set; get;}
         [JsonPropertyName("modifiedByUserLastName")]
@@ -2355,6 +2354,10 @@ namespace Manifest.Tests.Common
         public Guid? ProfileImageGuid {set; get;}
         [JsonPropertyName("profileImageActualFileName")]
         public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("hasUserPurchasedPremiumFeature")]
+        public Boolean HasUserPurchasedPremiumFeature {set; get;}
+        [JsonPropertyName("premiumFeatureValidUntil")]
+        public DateTime? PremiumFeatureValidUntil {set; get;}
         [JsonPropertyName("isDeleted")]
         public Boolean IsDeleted {set; get;}
         [JsonPropertyName("createdDate")]
@@ -2369,7 +2372,6 @@ namespace Manifest.Tests.Common
         public UserCreateWithFileFormModel GetAsCreateModel()
         {
             var obj = new UserCreateWithFileFormModel();
-            obj.CompanyCode = CompanyCode;
             obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
             obj.ModifiedByUserLastName = ModifiedByUserLastName;
             obj.ModifiedByUserEmail = ModifiedByUserEmail;
@@ -2388,6 +2390,8 @@ namespace Manifest.Tests.Common
             obj.AccountLockedUntil = AccountLockedUntil;
             obj.ProfileImageGuid = ProfileImageGuid;
             obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.HasUserPurchasedPremiumFeature = HasUserPurchasedPremiumFeature;
+            obj.PremiumFeatureValidUntil = PremiumFeatureValidUntil;
             obj.IsDeleted = IsDeleted;
             return obj;
         }
@@ -2395,7 +2399,6 @@ namespace Manifest.Tests.Common
         public bool IsSameAsCreateModel(UserCreateWithFileFormModel obj)
         {
             var result = true;
-            result = result && (obj.CompanyCode == CompanyCode);
             result = result && (obj.ModifiedByUserFirstName == ModifiedByUserFirstName);
             result = result && (obj.ModifiedByUserLastName == ModifiedByUserLastName);
             result = result && (obj.ModifiedByUserEmail == ModifiedByUserEmail);
@@ -2414,6 +2417,8 @@ namespace Manifest.Tests.Common
             result = result && (obj.AccountLockedUntil == AccountLockedUntil);
             result = result && (obj.ProfileImageGuid == ProfileImageGuid);
             result = result && (obj.ProfileImageActualFileName == ProfileImageActualFileName);
+            result = result && (obj.HasUserPurchasedPremiumFeature == HasUserPurchasedPremiumFeature);
+            result = result && (obj.PremiumFeatureValidUntil == PremiumFeatureValidUntil);
             result = result && (obj.IsDeleted == IsDeleted);
             return result;
         }
@@ -2424,7 +2429,6 @@ namespace Manifest.Tests.Common
             var obj = new UserUpdateWithFileFormModel();
             obj.ExistingPermissionTypeIds = ExistingPermissionTypeIds;
             obj.PredefinedUserTypeName = PredefinedUserTypeName;
-            obj.CompanyCode = CompanyCode;
             obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
             obj.ModifiedByUserLastName = ModifiedByUserLastName;
             obj.ModifiedByUserEmail = ModifiedByUserEmail;
@@ -2444,6 +2448,8 @@ namespace Manifest.Tests.Common
             obj.AccountLockedUntil = AccountLockedUntil;
             obj.ProfileImageGuid = ProfileImageGuid;
             obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.HasUserPurchasedPremiumFeature = HasUserPurchasedPremiumFeature;
+            obj.PremiumFeatureValidUntil = PremiumFeatureValidUntil;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
             obj.CreatedByUserId = CreatedByUserId;
@@ -2457,7 +2463,6 @@ namespace Manifest.Tests.Common
             var result = true;
             result = result && (obj.ExistingPermissionTypeIds == ExistingPermissionTypeIds);
             result = result && (obj.PredefinedUserTypeName == PredefinedUserTypeName);
-            result = result && (obj.CompanyCode == CompanyCode);
             result = result && (obj.ModifiedByUserFirstName == ModifiedByUserFirstName);
             result = result && (obj.ModifiedByUserLastName == ModifiedByUserLastName);
             result = result && (obj.ModifiedByUserEmail == ModifiedByUserEmail);
@@ -2477,6 +2482,8 @@ namespace Manifest.Tests.Common
             result = result && (obj.AccountLockedUntil == AccountLockedUntil);
             result = result && (obj.ProfileImageGuid == ProfileImageGuid);
             result = result && (obj.ProfileImageActualFileName == ProfileImageActualFileName);
+            result = result && (obj.HasUserPurchasedPremiumFeature == HasUserPurchasedPremiumFeature);
+            result = result && (obj.PremiumFeatureValidUntil == PremiumFeatureValidUntil);
             result = result && (obj.IsDeleted == IsDeleted);
             result = result && (obj.CreatedDate == CreatedDate);
             result = result && (obj.CreatedByUserId == CreatedByUserId);
@@ -2491,7 +2498,6 @@ namespace Manifest.Tests.Common
             var obj = new UserModel();
             obj.ExistingPermissionTypeIds = ExistingPermissionTypeIds;
             obj.PredefinedUserTypeName = PredefinedUserTypeName;
-            obj.CompanyCode = CompanyCode;
             obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
             obj.ModifiedByUserLastName = ModifiedByUserLastName;
             obj.ModifiedByUserEmail = ModifiedByUserEmail;
@@ -2511,6 +2517,8 @@ namespace Manifest.Tests.Common
             obj.AccountLockedUntil = AccountLockedUntil;
             obj.ProfileImageGuid = ProfileImageGuid;
             obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.HasUserPurchasedPremiumFeature = HasUserPurchasedPremiumFeature;
+            obj.PremiumFeatureValidUntil = PremiumFeatureValidUntil;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
             obj.CreatedByUserId = CreatedByUserId;
@@ -2522,7 +2530,6 @@ namespace Manifest.Tests.Common
         // Property Names
         public const string ExistingPermissionTypeIds__Name = "ExistingPermissionTypeIds";
         public const string PredefinedUserTypeName__Name = "PredefinedUserTypeName";
-        public const string CompanyCode__Name = "CompanyCode";
         public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
         public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
         public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
@@ -2550,6 +2557,8 @@ namespace Manifest.Tests.Common
         public const string ProfileImageGuid__Name = "ProfileImageGuid";
         public const string ProfileImageLocation__Name = "ProfileImageLocation";
         public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string HasUserPurchasedPremiumFeature__Name = "HasUserPurchasedPremiumFeature";
+        public const string PremiumFeatureValidUntil__Name = "PremiumFeatureValidUntil";
         public const string IsDeleted__Name = "IsDeleted";
         public const string CreatedDate__Name = "CreatedDate";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -2628,7 +2637,7 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public UserCreateWithFileFormModel(Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted)
+        public UserCreateWithFileFormModel(Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean hasUserPurchasedPremiumFeature,Boolean isDeleted)
         {
             UserGuid = userGuid;
             UserName = userName;
@@ -2636,6 +2645,7 @@ namespace Manifest.Tests.Common
             Email = email;
             FirstName = firstName;
             Active = active;
+            HasUserPurchasedPremiumFeature = hasUserPurchasedPremiumFeature;
             IsDeleted = isDeleted;
         }
 
@@ -2647,8 +2657,6 @@ namespace Manifest.Tests.Common
         public List<Int64> NewPermissionTypeIds {set; get;}
         [JsonPropertyName("initialPassword")]
         public String InitialPassword {set; get;}
-        [JsonPropertyName("companyCode")]
-        public String CompanyCode {set; get;}
         [JsonPropertyName("modifiedByUserFirstName")]
         public String ModifiedByUserFirstName {set; get;}
         [JsonPropertyName("modifiedByUserLastName")]
@@ -2685,6 +2693,10 @@ namespace Manifest.Tests.Common
         public Guid? ProfileImageGuid {set; get;}
         [JsonPropertyName("profileImageActualFileName")]
         public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("hasUserPurchasedPremiumFeature")]
+        public Boolean HasUserPurchasedPremiumFeature {set; get;}
+        [JsonPropertyName("premiumFeatureValidUntil")]
+        public DateTime? PremiumFeatureValidUntil {set; get;}
         [JsonPropertyName("isDeleted")]
         public Boolean IsDeleted {set; get;}
 
@@ -2695,7 +2707,6 @@ namespace Manifest.Tests.Common
             obj.CaptchaCode = CaptchaCode;
             obj.NewPermissionTypeIds = NewPermissionTypeIds;
             obj.InitialPassword = InitialPassword;
-            obj.CompanyCode = CompanyCode;
             obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
             obj.ModifiedByUserLastName = ModifiedByUserLastName;
             obj.ModifiedByUserEmail = ModifiedByUserEmail;
@@ -2714,6 +2725,8 @@ namespace Manifest.Tests.Common
             obj.AccountLockedUntil = AccountLockedUntil;
             obj.ProfileImageGuid = ProfileImageGuid;
             obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.HasUserPurchasedPremiumFeature = HasUserPurchasedPremiumFeature;
+            obj.PremiumFeatureValidUntil = PremiumFeatureValidUntil;
             obj.IsDeleted = IsDeleted;
             return obj;
         }
@@ -2723,7 +2736,6 @@ namespace Manifest.Tests.Common
         public const string CaptchaCode__Name = "CaptchaCode";
         public const string NewPermissionTypeIds__Name = "NewPermissionTypeIds";
         public const string InitialPassword__Name = "InitialPassword";
-        public const string CompanyCode__Name = "CompanyCode";
         public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
         public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
         public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
@@ -2750,6 +2762,8 @@ namespace Manifest.Tests.Common
         public const string ProfileImageGuid__Name = "ProfileImageGuid";
         public const string ProfileImageLocation__Name = "ProfileImageLocation";
         public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string HasUserPurchasedPremiumFeature__Name = "HasUserPurchasedPremiumFeature";
+        public const string PremiumFeatureValidUntil__Name = "PremiumFeatureValidUntil";
         public const string IsDeleted__Name = "IsDeleted";
         // String Column Sizes
         public const int UserName__Size = 50;
@@ -2769,7 +2783,7 @@ namespace Manifest.Tests.Common
         {
         }
 
-        public UserUpdateWithFileFormModel(Int64 userId,Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
+        public UserUpdateWithFileFormModel(Int64 userId,Guid userGuid,String userName,Int64 predefinedUserTypeId,String email,String firstName,Boolean active,Boolean hasUserPurchasedPremiumFeature,Boolean isDeleted,DateTime createdDate,DateTime modifiedDate)
         {
             UserId = userId;
             UserGuid = userGuid;
@@ -2778,6 +2792,7 @@ namespace Manifest.Tests.Common
             Email = email;
             FirstName = firstName;
             Active = active;
+            HasUserPurchasedPremiumFeature = hasUserPurchasedPremiumFeature;
             IsDeleted = isDeleted;
             CreatedDate = createdDate;
             ModifiedDate = modifiedDate;
@@ -2789,8 +2804,6 @@ namespace Manifest.Tests.Common
         public List<Int64> ExistingPermissionTypeIds {set; get;}
         [JsonPropertyName("predefinedUserTypeName")]
         public String PredefinedUserTypeName {set; get;}
-        [JsonPropertyName("companyCode")]
-        public String CompanyCode {set; get;}
         [JsonPropertyName("modifiedByUserFirstName")]
         public String ModifiedByUserFirstName {set; get;}
         [JsonPropertyName("modifiedByUserLastName")]
@@ -2829,6 +2842,10 @@ namespace Manifest.Tests.Common
         public Guid? ProfileImageGuid {set; get;}
         [JsonPropertyName("profileImageActualFileName")]
         public String ProfileImageActualFileName {set; get;}
+        [JsonPropertyName("hasUserPurchasedPremiumFeature")]
+        public Boolean HasUserPurchasedPremiumFeature {set; get;}
+        [JsonPropertyName("premiumFeatureValidUntil")]
+        public DateTime? PremiumFeatureValidUntil {set; get;}
         [JsonPropertyName("isDeleted")]
         public Boolean IsDeleted {set; get;}
         [JsonPropertyName("createdDate")]
@@ -2846,7 +2863,6 @@ namespace Manifest.Tests.Common
             obj.UploadedFile = UploadedFile;
             obj.ExistingPermissionTypeIds = ExistingPermissionTypeIds;
             obj.PredefinedUserTypeName = PredefinedUserTypeName;
-            obj.CompanyCode = CompanyCode;
             obj.ModifiedByUserFirstName = ModifiedByUserFirstName;
             obj.ModifiedByUserLastName = ModifiedByUserLastName;
             obj.ModifiedByUserEmail = ModifiedByUserEmail;
@@ -2866,6 +2882,8 @@ namespace Manifest.Tests.Common
             obj.AccountLockedUntil = AccountLockedUntil;
             obj.ProfileImageGuid = ProfileImageGuid;
             obj.ProfileImageActualFileName = ProfileImageActualFileName;
+            obj.HasUserPurchasedPremiumFeature = HasUserPurchasedPremiumFeature;
+            obj.PremiumFeatureValidUntil = PremiumFeatureValidUntil;
             obj.IsDeleted = IsDeleted;
             obj.CreatedDate = CreatedDate;
             obj.CreatedByUserId = CreatedByUserId;
@@ -2878,7 +2896,6 @@ namespace Manifest.Tests.Common
         public const string UploadedFile__Name = "UploadedFile";
         public const string ExistingPermissionTypeIds__Name = "ExistingPermissionTypeIds";
         public const string PredefinedUserTypeName__Name = "PredefinedUserTypeName";
-        public const string CompanyCode__Name = "CompanyCode";
         public const string ModifiedByUserFirstName__Name = "ModifiedByUserFirstName";
         public const string ModifiedByUserLastName__Name = "ModifiedByUserLastName";
         public const string ModifiedByUserEmail__Name = "ModifiedByUserEmail";
@@ -2906,6 +2923,8 @@ namespace Manifest.Tests.Common
         public const string ProfileImageGuid__Name = "ProfileImageGuid";
         public const string ProfileImageLocation__Name = "ProfileImageLocation";
         public const string ProfileImageActualFileName__Name = "ProfileImageActualFileName";
+        public const string HasUserPurchasedPremiumFeature__Name = "HasUserPurchasedPremiumFeature";
+        public const string PremiumFeatureValidUntil__Name = "PremiumFeatureValidUntil";
         public const string IsDeleted__Name = "IsDeleted";
         public const string CreatedDate__Name = "CreatedDate";
         public const string CreatedByUserId__Name = "CreatedByUserId";
@@ -2920,6 +2939,166 @@ namespace Manifest.Tests.Common
         public const int WorkPhoneExt__Size = 10;
         public const int CellPhone__Size = 20;
         public const int ProfileImageActualFileName__Size = 125;
+    }
+
+    public class UserProfileModel
+    {
+
+        public UserProfileModel()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64 UserId {set; get;}
+        [JsonPropertyName("isPrivate")]
+        public Boolean IsPrivate {set; get;}
+        [JsonPropertyName("userName")]
+        public String UserName {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("workPhone")]
+        public String WorkPhone {set; get;}
+        [JsonPropertyName("cellPhone")]
+        public String CellPhone {set; get;}
+        [JsonPropertyName("billingAddress1")]
+        public String BillingAddress1 {set; get;}
+        [JsonPropertyName("billingAddress2")]
+        public String BillingAddress2 {set; get;}
+        [JsonPropertyName("locationCity")]
+        public String LocationCity {set; get;}
+        [JsonPropertyName("locationState")]
+        public String LocationState {set; get;}
+        [JsonPropertyName("locationZip")]
+        public String LocationZip {set; get;}
+        [JsonPropertyName("locationCountry")]
+        public String LocationCountry {set; get;}
+        [JsonPropertyName("countryGuid")]
+        public Int64? CountryGuid {set; get;}
+        [JsonPropertyName("stateGuid")]
+        public Int64? StateGuid {set; get;}
+
+        public UserProfileModel GetCopy()
+        {
+            var obj = new UserProfileModel();
+            obj.UserId = UserId;
+            obj.IsPrivate = IsPrivate;
+            obj.UserName = UserName;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            obj.Email = Email;
+            obj.WorkPhone = WorkPhone;
+            obj.CellPhone = CellPhone;
+            obj.BillingAddress1 = BillingAddress1;
+            obj.BillingAddress2 = BillingAddress2;
+            obj.LocationCity = LocationCity;
+            obj.LocationState = LocationState;
+            obj.LocationZip = LocationZip;
+            obj.LocationCountry = LocationCountry;
+            obj.CountryGuid = CountryGuid;
+            obj.StateGuid = StateGuid;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string IsPrivate__Name = "IsPrivate";
+        public const string UserName__Name = "UserName";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+        public const string Email__Name = "Email";
+        public const string WorkPhone__Name = "WorkPhone";
+        public const string CellPhone__Name = "CellPhone";
+        public const string BillingAddress1__Name = "BillingAddress1";
+        public const string BillingAddress2__Name = "BillingAddress2";
+        public const string LocationCity__Name = "LocationCity";
+        public const string LocationState__Name = "LocationState";
+        public const string LocationZip__Name = "LocationZip";
+        public const string LocationCountry__Name = "LocationCountry";
+        public const string CountryGuid__Name = "CountryGuid";
+        public const string StateGuid__Name = "StateGuid";
+    }
+
+    public class MinimalUserProfileModel
+    {
+
+        public MinimalUserProfileModel()
+        {
+        }
+        [JsonPropertyName("userId")]
+        public Int64? UserId {set; get;}
+        [JsonPropertyName("email")]
+        public String Email {set; get;}
+        [JsonPropertyName("firstName")]
+        public String FirstName {set; get;}
+        [JsonPropertyName("lastName")]
+        public String LastName {set; get;}
+
+        public MinimalUserProfileModel GetCopy()
+        {
+            var obj = new MinimalUserProfileModel();
+            obj.UserId = UserId;
+            obj.Email = Email;
+            obj.FirstName = FirstName;
+            obj.LastName = LastName;
+            return obj;
+        }
+
+        // Property Names
+        public const string UserId__Name = "UserId";
+        public const string Email__Name = "Email";
+        public const string FirstName__Name = "FirstName";
+        public const string LastName__Name = "LastName";
+    }
+
+    public class EnablePremiumFeatureModel
+    {
+
+        public EnablePremiumFeatureModel()
+        {
+        }
+        [JsonPropertyName("password")]
+        public String Password {set; get;}
+        [JsonPropertyName("validityYears")]
+        public Int32 ValidityYears {set; get;}
+
+        public EnablePremiumFeatureModel GetCopy()
+        {
+            var obj = new EnablePremiumFeatureModel();
+            obj.Password = Password;
+            obj.ValidityYears = ValidityYears;
+            return obj;
+        }
+
+        // Property Names
+        public const string Password__Name = "Password";
+        public const string ValidityYears__Name = "ValidityYears";
+    }
+
+    public class IsPremiumFeatureEnabledModel
+    {
+
+        public IsPremiumFeatureEnabledModel()
+        {
+        }
+        [JsonPropertyName("enabled")]
+        public Boolean Enabled {set; get;}
+        [JsonPropertyName("enabledUntilDate")]
+        public DateTime? EnabledUntilDate {set; get;}
+
+        public IsPremiumFeatureEnabledModel GetCopy()
+        {
+            var obj = new IsPremiumFeatureEnabledModel();
+            obj.Enabled = Enabled;
+            obj.EnabledUntilDate = EnabledUntilDate;
+            return obj;
+        }
+
+        // Property Names
+        public const string Enabled__Name = "Enabled";
+        public const string EnabledUntilDate__Name = "EnabledUntilDate";
     }
 
     public class UserPermissionModel

@@ -88,6 +88,32 @@ public void MarkUserAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus
 {
     
 }
+public void UpdateMinimalUserProfileForCurrentUser_WithValidData_ReturnsValidData()
+{
+    var model = new MinimalUserProfileModel();
+    var r = UpdateMinimalUserProfileForCurrentUser();
+}
+public void UpdateMinimalUserProfileForCurrentUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void EnablePremiumFeature_WithValidData_ReturnsValidData()
+{
+    var model = new EnablePremiumFeatureModel();
+    var r = EnablePremiumFeature();
+}
+public void EnablePremiumFeature_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsPremiumFeatureEnabled_WithValidData_ReturnsValidData()
+{
+    var r = IsPremiumFeatureEnabled();
+}
+public void IsPremiumFeatureEnabled_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
 public void GetUserPermissions_WithValidData_ReturnsValidData()
 {
     var model = new UserPermissionSearchCriteria();

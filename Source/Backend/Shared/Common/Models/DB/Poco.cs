@@ -8089,6 +8089,8 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_ProfileImageGuid = "ProfileImageGuid";
         public const string COLUMN_ProfileImageLocation = "ProfileImageLocation";
         public const string COLUMN_ProfileImageActualFileName = "ProfileImageActualFileName";
+        public const string COLUMN_HasUserPurchasedPremiumFeature = "HasUserPurchasedPremiumFeature";
+        public const string COLUMN_PremiumFeatureValidUntil = "PremiumFeatureValidUntil";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
         public const string COLUMN_CreatedByUserId = "CreatedByUserId";
@@ -8134,6 +8136,8 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_ProfileImageGuid = true;
         public const bool COLUMN_NULLABLE_ProfileImageLocation = true;
         public const bool COLUMN_NULLABLE_ProfileImageActualFileName = true;
+        public const bool COLUMN_NULLABLE_HasUserPurchasedPremiumFeature = false;
+        public const bool COLUMN_NULLABLE_PremiumFeatureValidUntil = true;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
         public const bool COLUMN_NULLABLE_CreatedByUserId = true;
@@ -8240,6 +8244,13 @@ namespace Manifest.Common.Models.DB
         [StringLength(125)]
         public string ProfileImageActualFileName { get; set; }
         
+        [Column("HasUserPurchasedPremiumFeature")]
+        [NotNull]
+        public bool HasUserPurchasedPremiumFeature { get; set; }
+        
+        [Column("PremiumFeatureValidUntil")]
+        public DateTime? PremiumFeatureValidUntil { get; set; }
+        
         [Column("IsDeleted")]
         [NotNull]
         public bool IsDeleted { get; set; }
@@ -8285,6 +8296,8 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"ProfileImageGuid = {ProfileImageGuid} , ");
             sb.AppendLine($"ProfileImageLocation = {ProfileImageLocation} , ");
             sb.AppendLine($"ProfileImageActualFileName = {ProfileImageActualFileName} , ");
+            sb.AppendLine($"HasUserPurchasedPremiumFeature = {HasUserPurchasedPremiumFeature} , ");
+            sb.AppendLine($"PremiumFeatureValidUntil = {PremiumFeatureValidUntil} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
             sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
@@ -8324,6 +8337,8 @@ namespace Manifest.Common.Models.DB
             ProfileImageGuid = item.ProfileImageGuid,
             ProfileImageLocation = item.ProfileImageLocation,
             ProfileImageActualFileName = item.ProfileImageActualFileName,
+            HasUserPurchasedPremiumFeature = item.HasUserPurchasedPremiumFeature,
+            PremiumFeatureValidUntil = item.PremiumFeatureValidUntil,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
             CreatedByUserId = item.CreatedByUserId,
@@ -8636,6 +8651,124 @@ namespace Manifest.Common.Models.DB
         }
 
         public UserPermission NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
+    [Table("UserPurchaseHistory")]
+    [Serializable]
+    public partial class UserPurchaseHistory : IAuditableModel, INewObject<UserPurchaseHistory>
+    {
+        public const string TABLE_NAME = "UserPurchaseHistory";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_UserPurchaseHistoryId = "UserPurchaseHistoryId";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsAPurchase = "IsAPurchase";
+        public const string COLUMN_PurchaseOrDisableDate = "PurchaseOrDisableDate";
+        public const string COLUMN_ValidUntil = "ValidUntil";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_UserPurchaseHistoryId = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsAPurchase = false;
+        public const bool COLUMN_NULLABLE_PurchaseOrDisableDate = false;
+        public const bool COLUMN_NULLABLE_ValidUntil = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("UserPurchaseHistoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long UserPurchaseHistoryId { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsAPurchase")]
+        [NotNull]
+        public bool IsAPurchase { get; set; }
+        
+        [Column("PurchaseOrDisableDate")]
+        [NotNull]
+        public DateTime PurchaseOrDisableDate { get; set; }
+        
+        [Column("ValidUntil")]
+        public DateTime? ValidUntil { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"UserPurchaseHistoryId = {UserPurchaseHistoryId} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsAPurchase = {IsAPurchase} , ");
+            sb.AppendLine($"PurchaseOrDisableDate = {PurchaseOrDisableDate} , ");
+            sb.AppendLine($"ValidUntil = {ValidUntil} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public UserPurchaseHistory New(UserPurchaseHistory item)
+        {
+            if (item == null)
+                return null;
+
+            return new UserPurchaseHistory
+            {
+            UserPurchaseHistoryId = item.UserPurchaseHistoryId,
+            UserId = item.UserId,
+            IsAPurchase = item.IsAPurchase,
+            PurchaseOrDisableDate = item.PurchaseOrDisableDate,
+            ValidUntil = item.ValidUntil,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public UserPurchaseHistory NewFromObject()
         {
             return New(this);
         }
