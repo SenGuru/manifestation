@@ -9,12 +9,14 @@ class VisionBoardCanvas extends StatefulWidget {
   final VisionBoard board;
   final VisionBoardTool selectedTool;
   final Function(VisionBoard) onBoardChanged;
+  final VoidCallback? onDeselectTool;
 
   const VisionBoardCanvas({
     Key? key,
     required this.board,
     required this.selectedTool,
     required this.onBoardChanged,
+    this.onDeselectTool,
   }) : super(key: key);
 
   @override
@@ -42,11 +44,15 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          // Clear selection when tapping empty space
-          if (selectedElementId != null) {
+          // Clear selection when tapping empty space and deselect active tools
+          if (selectedElementId != null || widget.selectedTool != VisionBoardTool.select) {
             setState(() {
               selectedElementId = null;
             });
+            // Call parent to reset tool selection to select/default mode
+            if (widget.selectedTool != VisionBoardTool.select && widget.onDeselectTool != null) {
+              widget.onDeselectTool!();
+            }
           }
         },
         child: Stack(
@@ -174,9 +180,11 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   Widget _buildImageWidget(VisionBoardImageElement element) {
-    print('🖼️ Building image widget for element ${element.id}');
-    print('🖼️ ImagePath: "${element.imagePath}"');
-    print('🖼️ ImageUrl: "${element.imageUrl ?? 'null'}"');
+    // Remove excessive logging that's causing performance issues
+    // Only log once when image widget is first created
+    if (element.imagePath.isNotEmpty || (element.imageUrl != null && element.imageUrl!.isNotEmpty)) {
+      // Image source available
+    }
     
     // Try to load from URL first, then local path, then placeholder
     if (element.imageUrl != null && element.imageUrl!.isNotEmpty) {
@@ -195,19 +203,15 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           );
         },
         errorBuilder: (context, error, stackTrace) {
-          print('🌐 Network image failed, trying local: $error');
           // Fallback to local image
           if (element.imagePath.isNotEmpty) {
             final imageFile = File(element.imagePath);
-            print('📁 Checking local file: ${element.imagePath}');
-            print('📁 File exists: ${imageFile.existsSync()}');
             return Image.file(
               imageFile,
               fit: element.fit,
               width: double.infinity,
               height: double.infinity,
               errorBuilder: (context, error, stackTrace) {
-                print('❌ Local image failed too: $error');
                 return _buildImagePlaceholder();
               },
             );
@@ -217,15 +221,12 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       );
     } else if (element.imagePath.isNotEmpty) {
       final imageFile = File(element.imagePath);
-      print('📁 Loading image from path: ${element.imagePath}');
-      print('📁 File exists: ${imageFile.existsSync()}');
       return Image.file(
         imageFile,
         fit: element.fit,
         width: double.infinity,
         height: double.infinity,
         errorBuilder: (context, error, stackTrace) {
-          print('❌ Local image load failed: $error');
           return _buildImagePlaceholder();
         },
       );
@@ -694,9 +695,19 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   void _onElementPanStart(VisionBoardElement element, DragStartDetails details) {
-    // Only allow dragging with move tool or when element is selected
-    if (widget.selectedTool == VisionBoardTool.move || 
-        (widget.selectedTool == VisionBoardTool.select && selectedElementId == element.id)) {
+    // Movement is always available - just don't start drag for delete/resize tools
+    // unless the element is already selected
+    bool canStartDrag = true;
+    
+    if (widget.selectedTool == VisionBoardTool.delete) {
+      // Don't allow dragging when delete tool is active
+      canStartDrag = false;
+    } else if (widget.selectedTool == VisionBoardTool.resize && selectedElementId != element.id) {
+      // Don't allow dragging unselected elements when resize tool is active
+      canStartDrag = false;
+    }
+    
+    if (canStartDrag) {
       setState(() {
         isDragging = true;
         draggingElementId = element.id;

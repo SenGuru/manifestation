@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import '../screens/daily_energy_screen.dart';
+import '../utils/navigation_utils.dart';
 import 'dart:math' as math;
 
 class EnergyMeter extends StatefulWidget {
@@ -84,11 +85,9 @@ class _EnergyMeterState extends State<EnergyMeter>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => DailyEnergyScreen(),
-          ),
+          DailyEnergyScreen(),
         );
       },
       child: Container(

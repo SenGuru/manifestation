@@ -5,7 +5,11 @@ class AppTheme {
   static final ThemeService _themeService = ThemeService();
   
   // Get current theme mode
-  static bool get isDarkMode => _themeService.isDarkMode;
+  static bool get isDarkMode {
+    final isDark = _themeService.isDarkMode;
+    print('🎨 AppTheme.isDarkMode called, returning: $isDark');
+    return isDark;
+  }
   static bool get isLightMode => _themeService.isLightMode;
   
   // =================== BACKGROUND COLORS ===================

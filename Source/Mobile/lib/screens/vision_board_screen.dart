@@ -1,5 +1,8 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'dart:ui' as ui;
+import 'dart:typed_data';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../constants/app_theme.dart';
@@ -13,8 +16,9 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
-import '../constants/colors.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/saving_vision_board_dialog.dart';
+import 'vision_board_home.dart';
 
 class VisionBoardScreen extends StatefulWidget {
   final VisionBoard? existingBoard;        
@@ -54,6 +58,9 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   // Session tracking with UsageAnalyticsService
   final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
   bool _sessionStarted = false;
+  
+  // GlobalKey for capturing canvas as image
+  final GlobalKey _canvasKey = GlobalKey();
 
   @override
   void initState() {
@@ -231,24 +238,24 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         gradient: LinearGradient(
           colors: [
             currentBoard.backgroundColor,
-            currentBoard.backgroundColor.withOpacity(0.98),
+            currentBoard.backgroundColor.withValues(alpha: 0.98),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
         borderRadius: BorderRadius.circular(28.r),
         border: Border.all(
-          color: AppTheme.textMedium.withOpacity(0.08),
+          color: AppTheme.textMedium.withValues(alpha: 0.08),
           width: 1.w,
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.black.withOpacity(0.08),
+            color: AppTheme.black.withValues(alpha: 0.08),
             blurRadius: 25.r,
             offset: Offset(0, 12.h),
           ),
           BoxShadow(
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.05),
+            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.05),
             blurRadius: 40.r,
             offset: Offset(0, 20.h),
           ),
@@ -256,22 +263,26 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.r),
-        child: Stack(
-          children: [
-            // Canvas with padding to prevent cutoff
-            Positioned.fill(
-              child: Padding(
-                padding: EdgeInsets.all(12.w),
-                child: VisionBoardCanvas(
-                  board: currentBoard,
-                  selectedTool: selectedTool,
-                  onBoardChanged: _onBoardChanged,
+        child: RepaintBoundary(
+          key: _canvasKey,
+          child: Stack(
+            children: [
+              // Canvas with padding to prevent cutoff
+              Positioned.fill(
+                child: Padding(
+                  padding: EdgeInsets.all(12.w),
+                  child: VisionBoardCanvas(
+                    board: currentBoard,
+                    selectedTool: selectedTool,
+                    onBoardChanged: _onBoardChanged,
+                    onDeselectTool: _deselectTool,
+                  ),
                 ),
               ),
-            ),
-            
-            // Canvas overlay removed - cleaner interface
-          ],
+              
+              // Canvas overlay removed - cleaner interface
+            ],
+          ),
         ),
       ),
     );
@@ -293,7 +304,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   color: AppTheme.cardBackground,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
-                    color: AppTheme.textMedium.withOpacity(0.1),
+                    color: AppTheme.textMedium.withValues(alpha: 0.1),
                   ),
                 ),
                 child: Icon(
@@ -317,7 +328,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     color: AppTheme.cardBackground,
                     borderRadius: BorderRadius.circular(16.r),
                     border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
+                      color: AppTheme.textMedium.withValues(alpha: 0.1),
                     ),
                   ),
                   child: Row(
@@ -366,7 +377,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   borderRadius: BorderRadius.circular(16.r),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
+                      color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
                       blurRadius: 8.r,
                       offset: Offset(0, 4.h),
                     ),
@@ -446,10 +457,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         width: 48.w,
         height: 48.h,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
+          color: color.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
           ),
         ),
         child: Icon(
@@ -473,6 +484,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     
     // Auto-save disabled for server-only mode
     _autoSaveToServer();
+  }
+  
+  void _deselectTool() {
+    setState(() {
+      selectedTool = VisionBoardTool.select;
+    });
   }
   
   Timer? _autoSaveTimer;
@@ -524,7 +541,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             height: 4.h,
             margin: EdgeInsets.only(top: 12.h),
             decoration: BoxDecoration(
-              color: AppTheme.textMedium.withOpacity(0.3),
+              color: AppTheme.textMedium.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -555,7 +572,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     subtitle: 'Upload from your device photos',
                     color: AppTheme.visionBoardGradient[0],
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, currentBoard);
                       _addImageFromGallery();
                     },
                   ),
@@ -569,7 +586,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     subtitle: 'Paste an image URL from the internet',
                     color: AppTheme.journalGradient[0],
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, currentBoard);
                       _addImageFromURL();
                     },
                   ),
@@ -580,10 +597,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   Container(
                     padding: EdgeInsets.all(16.w),
                     decoration: BoxDecoration(
-                      color: AppTheme.backgroundMedium.withOpacity(0.5),
+                      color: AppTheme.backgroundMedium.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12.r),
                       border: Border.all(
-                        color: AppTheme.textMedium.withOpacity(0.1),
+                        color: AppTheme.textMedium.withValues(alpha: 0.1),
                       ),
                     ),
                     child: Row(
@@ -632,7 +649,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           color: AppTheme.backgroundMedium,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textMedium.withValues(alpha: 0.1),
           ),
         ),
         child: Column(
@@ -642,7 +659,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               width: 60.w,
               height: 60.h,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(20.r),
               ),
               child: Icon(
@@ -691,19 +708,19 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           gradient: LinearGradient(
             colors: [
               AppTheme.cardBackground,
-              AppTheme.cardBackground.withOpacity(0.8),
+              AppTheme.cardBackground.withValues(alpha: 0.8),
             ],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: color.withOpacity(0.2),
+            color: color.withValues(alpha: 0.2),
             width: 1.5,
           ),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               blurRadius: 20.r,
               offset: Offset(0, 8.h),
             ),
@@ -717,14 +734,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               height: 64.h,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [color, color.withOpacity(0.8)],
+                  colors: [color, color.withValues(alpha: 0.8)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(18.r),
                 boxShadow: [
                   BoxShadow(
-                    color: color.withOpacity(0.3),
+                    color: color.withValues(alpha: 0.3),
                     blurRadius: 12.r,
                     offset: Offset(0, 6.h),
                   ),
@@ -770,7 +787,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               width: 40.w,
               height: 40.h,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
@@ -799,24 +816,24 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             gradient: LinearGradient(
               colors: [
                 AppTheme.cardBackground,
-                AppTheme.cardBackground.withOpacity(0.95),
+                AppTheme.cardBackground.withValues(alpha: 0.95),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
             borderRadius: BorderRadius.circular(28.r),
             border: Border.all(
-              color: Color(0xFF6C63FF).withOpacity(0.2),
+              color: Color(0xFF6C63FF).withValues(alpha: 0.2),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Color(0xFF6C63FF).withOpacity(0.15),
+                color: Color(0xFF6C63FF).withValues(alpha: 0.15),
                 blurRadius: 30.r,
                 offset: Offset(0, 15.h),
               ),
               BoxShadow(
-                color: AppTheme.black.withOpacity(0.1),
+                color: AppTheme.black.withValues(alpha: 0.1),
                 blurRadius: 20.r,
                 offset: Offset(0, 8.h),
               ),
@@ -853,7 +870,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
-                          color: Color(0xFF6C63FF).withOpacity(0.3),
+                          color: Color(0xFF6C63FF).withValues(alpha: 0.3),
                           blurRadius: 12.r,
                           offset: Offset(0, 6.h),
                         ),
@@ -866,7 +883,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                           width: 24.w,
                           height: 18.h,
                           decoration: BoxDecoration(
-                            color: AppTheme.white.withOpacity(0.2),
+                            color: AppTheme.white.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(4.r),
                           ),
                         ),
@@ -916,7 +933,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       width: 40.w,
                       height: 40.h,
                       decoration: BoxDecoration(
-                        color: AppTheme.textMedium.withOpacity(0.1),
+                        color: AppTheme.textMedium.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Icon(
@@ -952,11 +969,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       decoration: InputDecoration(
                         hintText: 'Type your inspirational message...',
                         hintStyle: TextStyle(
-                          color: AppTheme.textMedium.withOpacity(0.6),
+                          color: AppTheme.textMedium.withValues(alpha: 0.6),
                           fontSize: 16.sp,
                         ),
                         filled: true,
-                        fillColor: AppTheme.backgroundMedium.withOpacity(0.3),
+                        fillColor: AppTheme.backgroundMedium.withValues(alpha: 0.3),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(16.r),
                           borderSide: BorderSide.none,
@@ -989,7 +1006,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                           decoration: BoxDecoration(
-                            color: Color(0xFF6C63FF).withOpacity(0.1),
+                            color: Color(0xFF6C63FF).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8.r),
                           ),
                           child: Text(
@@ -1007,9 +1024,9 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         activeTrackColor: Color(0xFF6C63FF),
-                        inactiveTrackColor: AppTheme.textMedium.withOpacity(0.2),
+                        inactiveTrackColor: AppTheme.textMedium.withValues(alpha: 0.2),
                         thumbColor: Color(0xFF6C63FF),
-                        overlayColor: Color(0xFF6C63FF).withOpacity(0.2),
+                        overlayColor: Color(0xFF6C63FF).withValues(alpha: 0.2),
                         trackHeight: 4.h,
                       ),
                       child: Slider(
@@ -1055,7 +1072,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       child: Container(
                         height: 56.h,
                         decoration: BoxDecoration(
-                          color: AppTheme.textMedium.withOpacity(0.1),
+                          color: AppTheme.textMedium.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16.r),
                         ),
                         child: Center(
@@ -1081,7 +1098,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       onTap: () {
                         if (_textController.text.trim().isNotEmpty) {
                           _addTextToBoard();
-                          Navigator.pop(context);
+                          Navigator.pop(context, currentBoard);
                         }
                       },
                       child: Container(
@@ -1093,7 +1110,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                           borderRadius: BorderRadius.circular(16.r),
                           boxShadow: [
                             BoxShadow(
-                              color: Color(0xFF6C63FF).withOpacity(0.4),
+                              color: Color(0xFF6C63FF).withValues(alpha: 0.4),
                               blurRadius: 16.r,
                               offset: Offset(0, 8.h),
                             ),
@@ -1149,12 +1166,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           color: color,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected ? AppTheme.textLight : AppTheme.textMedium.withOpacity(0.2),
+            color: isSelected ? AppTheme.textLight : AppTheme.textMedium.withValues(alpha: 0.2),
             width: isSelected ? 3 : 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 4.r,
               offset: Offset(0, 2.h),
             ),
@@ -1190,14 +1207,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           color: color,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: isSelected ? Color(0xFF6C63FF) : AppTheme.textMedium.withOpacity(0.2),
+            color: isSelected ? Color(0xFF6C63FF) : AppTheme.textMedium.withValues(alpha: 0.2),
             width: isSelected ? 3 : 1,
           ),
           boxShadow: [
             BoxShadow(
               color: isSelected 
-                  ? Color(0xFF6C63FF).withOpacity(0.3)
-                  : Colors.black.withOpacity(0.1),
+                  ? Color(0xFF6C63FF).withValues(alpha: 0.3)
+                  : Colors.black.withValues(alpha: 0.1),
               blurRadius: isSelected ? 8.r : 4.r,
               offset: Offset(0, isSelected ? 4.h : 2.h),
             ),
@@ -1254,10 +1271,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               width: 32.w,
               height: 48.h,
               decoration: BoxDecoration(
-                color: Color(0xFF6C63FF).withOpacity(0.1),
+                color: Color(0xFF6C63FF).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: Color(0xFF6C63FF).withOpacity(0.2),
+                  color: Color(0xFF6C63FF).withValues(alpha: 0.2),
                 ),
               ),
               child: Icon(
@@ -1297,10 +1314,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               width: 32.w,
               height: 48.h,
               decoration: BoxDecoration(
-                color: Color(0xFF6C63FF).withOpacity(0.1),
+                color: Color(0xFF6C63FF).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.r),
                 border: Border.all(
-                  color: Color(0xFF6C63FF).withOpacity(0.2),
+                  color: Color(0xFF6C63FF).withValues(alpha: 0.2),
                 ),
               ),
               child: Icon(
@@ -1400,7 +1417,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             hintText: 'Enter board title',
             hintStyle: TextStyle(color: AppTheme.textMedium),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: AppTheme.textMedium.withOpacity(0.3)),
+              borderSide: BorderSide(color: AppTheme.textMedium.withValues(alpha: 0.3)),
             ),
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: AppTheme.visionBoardGradient[0]),
@@ -1408,7 +1425,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           ),
           onSubmitted: (newTitle) {
             _updateBoardTitle(newTitle.trim());
-            Navigator.pop(context);
+            Navigator.pop(context, currentBoard);
           },
         ),
         actions: [
@@ -1422,7 +1439,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           TextButton(
             onPressed: () {
               _updateBoardTitle(titleController.text.trim());
-              Navigator.pop(context);
+              Navigator.pop(context, currentBoard);
             },
             child: Text(
               'Save',
@@ -1440,6 +1457,67 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       hasUnsavedChanges = _hasChangesFromLastSave();
     });
     _saveToUndoStack();
+  }
+
+  Future<Uint8List?> _captureThumbnail() async {
+    try {
+      print('📸 Capturing vision board thumbnail...');
+      
+      // Find the RenderRepaintBoundary
+      RenderRepaintBoundary? boundary = _canvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      
+      if (boundary == null) {
+        print('❌ Failed to find RenderRepaintBoundary');
+        return null;
+      }
+      
+      // Capture the image at a lower resolution for thumbnail
+      // Using scale 0.3 to create a smaller thumbnail
+      ui.Image image = await boundary.toImage(pixelRatio: 0.3);
+      
+      // Convert to byte data
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      
+      if (byteData == null) {
+        print('❌ Failed to convert image to byte data');
+        return null;
+      }
+      
+      Uint8List pngBytes = byteData.buffer.asUint8List();
+      print('✅ Thumbnail captured successfully (${pngBytes.length} bytes)');
+      
+      return pngBytes;
+    } catch (e) {
+      print('❌ Error capturing thumbnail: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> _saveThumbnailToFile(Uint8List thumbnailBytes) async {
+    try {
+      // Get temporary directory
+      final directory = await getTemporaryDirectory();
+      
+      // Generate filename
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final fileName = 'vision_board_thumbnail_$timestamp.png';
+      final filePath = '${directory.path}/$fileName';
+      
+      // Write to file
+      final file = File(filePath);
+      await file.writeAsBytes(thumbnailBytes);
+      
+      print('✅ Thumbnail saved to: $filePath');
+      
+      return {
+        'fileName': fileName,
+        'filePath': filePath,
+        'fileSize': thumbnailBytes.length,
+      };
+    } catch (e) {
+      print('❌ Error saving thumbnail to file: $e');
+      return null;
+    }
   }
 
   Future<void> _saveBoard() async {
@@ -1460,69 +1538,119 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         print('🔍 DEBUG: Generated new board ID: ${currentBoard.id}');
       }
       
-      // Initialize service
-      final visionBoardService = VisionBoardService();
-      print('🔍 DEBUG: Initializing vi3sion board service...');
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
-      print('🔍 DEBUG: Service initialized successfully');
-      
       // Determine if this is a new board or existing board
-      // A board is new if it doesn't have a serverPictureId yet
       final isNewBoard = serverPictureId == null;
-      print('🔍 DEBUG: isNewBoard: $isNewBoard (based on serverPictureId == null)');
+      final boardDisplayName = currentBoard.title.isEmpty ? 'Untitled Vision Board' : currentBoard.title;
       
-      if (isNewBoard) {
-        // Create new vision board on server
-        print('🔍 DEBUG: Calling createVisionBoard...');
-        final result = await visionBoardService.createVisionBoard(currentBoard);
-        print('🔍 DEBUG: createVisionBoard result: isSuccess=${result.isSuccess}, message=${result.message}, data=${result.data}');
+      // Show saving dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => SavingVisionBoardDialog(
+          message: isNewBoard ? 'Creating Vision Board...' : 'Updating Vision Board...',
+          boardName: boardDisplayName,
+        ),
+      );
+      
+      try {
+        // Initialize service
+        final visionBoardService = VisionBoardService();
+        print('🔍 DEBUG: Initializing vision board service...');
+        await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+        print('🔍 DEBUG: Service initialized successfully');
         
-        if (result.isSuccess) {
-          print('✅ Vision board created on server with picture ID: ${result.data}');
-          serverPictureId = result.data; // Store the server picture ID
-          print('🔍 DEBUG: Stored serverPictureId: $serverPictureId');
-          lastSavedState = currentBoard.copyWith();
-          hasUnsavedChanges = false;
-          hasBeenSavedToServer = true; // Mark as saved to server
+        print('🔍 DEBUG: isNewBoard: $isNewBoard (based on serverPictureId == null)');
+        
+        // Capture thumbnail before saving
+        Map<String, dynamic>? thumbnailInfo;
+        final thumbnailBytes = await _captureThumbnail();
+        if (thumbnailBytes != null) {
+          thumbnailInfo = await _saveThumbnailToFile(thumbnailBytes);
+          print('🔍 DEBUG: Thumbnail info: $thumbnailInfo');
+        } else {
+          print('⚠️ Warning: Could not capture thumbnail');
+        }
+        
+        if (isNewBoard) {
+          // Create new vision board on server
+          print('🔍 DEBUG: Calling createVisionBoard with thumbnail...');
+          final result = await visionBoardService.createVisionBoard(
+            currentBoard,
+            thumbnailInfo: thumbnailInfo,
+          );
+          print('🔍 DEBUG: createVisionBoard result: isSuccess=${result.isSuccess}, message=${result.message}, data=${result.data}');
           
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Vision board created successfully!'),
-              backgroundColor: AppTheme.accentMint,
-              duration: Duration(seconds: 1),
-            ),
+          // Hide saving dialog
+          Navigator.of(context).pop();
+          
+          if (result.isSuccess) {
+            print('✅ Vision board created on server with picture ID: ${result.data}');
+            serverPictureId = result.data; // Store the server picture ID
+            print('🔍 DEBUG: Stored serverPictureId: $serverPictureId');
+            lastSavedState = currentBoard.copyWith();
+            hasUnsavedChanges = false;
+            hasBeenSavedToServer = true; // Mark as saved to server
+            
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Vision board created successfully!'),
+                backgroundColor: AppTheme.accentMint,
+                duration: Duration(seconds: 1),
+              ),
+            );
+            
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => VisionBoardHome()),
+            );
+          } else {
+            print('🔍 DEBUG: Create failed - showing error: ${result.message}');
+            _showErrorSnackBar('Failed to create vision board: ${result.message}');
+          }
+        } else {
+          // Update existing vision board on server using stored picture ID
+          final result = await visionBoardService.updateVisionBoard(
+            currentBoard, 
+            pictureId: serverPictureId,
+            thumbnailInfo: thumbnailInfo,
           );
           
-          Navigator.pop(context, currentBoard);
-        } else {
-          print('🔍 DEBUG: Create failed - showing error: ${result.message}');
-          _showErrorSnackBar('Failed to create vision board: ${result.message}');
-        }
-      } else {
-        // Update existing vision board on server using stored picture ID
-        final result = await visionBoardService.updateVisionBoard(currentBoard, pictureId: serverPictureId);
-        
-        if (result.isSuccess) {
-          print('✅ Vision board updated on server');
-          lastSavedState = currentBoard.copyWith();
-          hasUnsavedChanges = false;
+          // Hide saving dialog
+          Navigator.of(context).pop();
           
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Vision board updated successfully!'),
-              backgroundColor: AppTheme.accentMint,
-              duration: Duration(seconds: 1),
-            ),
-          );
-          
-          Navigator.pop(context, currentBoard);
-        } else {
-          _showErrorSnackBar('Failed to update vision board: ${result.message}');
+          if (result.isSuccess) {
+            print('✅ Vision board updated on server');
+            lastSavedState = currentBoard.copyWith();
+            hasUnsavedChanges = false;
+            
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Vision board updated successfully!'),
+                backgroundColor: AppTheme.accentMint,
+                duration: Duration(seconds: 1),
+              ),
+            );
+            
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => VisionBoardHome()),
+            );
+          } else {
+            _showErrorSnackBar('Failed to update vision board: ${result.message}');
+          }
         }
+      } catch (e) {
+        // Make sure to hide the dialog even if there's an error
+        Navigator.of(context).pop();
+        throw e; // Re-throw the error to be handled by the outer catch
       }
       
     } catch (e) {
       print('❌ Save board error: $e');
+      // Ensure dialog is hidden in case of any error
+      if (Navigator.canPop(context)) {
+        Navigator.of(context).pop();
+      }
       _showErrorSnackBar('Failed to save vision board: $e');
     }
   }
@@ -1635,7 +1763,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             height: 4.h,
             margin: EdgeInsets.only(top: 12.h),
             decoration: BoxDecoration(
-              color: AppTheme.textMedium.withOpacity(0.3),
+              color: AppTheme.textMedium.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(2.r),
             ),
           ),
@@ -1693,7 +1821,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   return GestureDetector(
                     onTap: () {
                       _updateBackgroundColor(color);
-                      Navigator.pop(context);
+                      Navigator.pop(context, currentBoard);
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -1702,12 +1830,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                         border: Border.all(
                           color: isSelected 
                               ? AppTheme.visionBoardGradient[0] 
-                              : AppTheme.textMedium.withOpacity(0.2),
+                              : AppTheme.textMedium.withValues(alpha: 0.2),
                           width: isSelected ? 3 : 1,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
+                            color: Colors.black.withValues(alpha: 0.1),
                             blurRadius: 4.r,
                             offset: Offset(0, 2.h),
                           ),
@@ -1764,7 +1892,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     if (hasUnsavedChanges) {
       _showExitDialog();
     } else {
-      Navigator.pop(context, currentBoard); // Return the current board state
+      Navigator.pop(context, currentBoard);
     }
   }
   
@@ -1794,8 +1922,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         actions: [
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context, widget.existingBoard); // Return original board if discarding
+              Navigator.pop(context, currentBoard);
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => VisionBoardHome()),
+              );
             },
             child: Text(
               'Discard',
@@ -1811,9 +1942,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, currentBoard);
               _saveBoard().then((_) {
-                Navigator.pop(context, currentBoard); // Return updated board after saving
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => VisionBoardHome()),
+                );
               });
             },
             child: Text(
@@ -1869,24 +2003,24 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             gradient: LinearGradient(
               colors: [
                 AppTheme.cardBackground,
-                AppTheme.cardBackground.withOpacity(0.95),
+                AppTheme.cardBackground.withValues(alpha: 0.95),
               ],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
             borderRadius: BorderRadius.circular(28.r),
             border: Border.all(
-              color: AppTheme.journalGradient[0].withOpacity(0.2),
+              color: AppTheme.journalGradient[0].withValues(alpha: 0.2),
               width: 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.journalGradient[0].withOpacity(0.15),
+                color: AppTheme.journalGradient[0].withValues(alpha: 0.15),
                 blurRadius: 30.r,
                 offset: Offset(0, 15.h),
               ),
               BoxShadow(
-                color: AppTheme.black.withOpacity(0.1),
+                color: AppTheme.black.withValues(alpha: 0.1),
                 blurRadius: 20.r,
                 offset: Offset(0, 8.h),
               ),
@@ -1923,7 +2057,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       borderRadius: BorderRadius.circular(16.r),
                       boxShadow: [
                         BoxShadow(
-                          color: AppTheme.journalGradient[0].withOpacity(0.3),
+                          color: AppTheme.journalGradient[0].withValues(alpha: 0.3),
                           blurRadius: 12.r,
                           offset: Offset(0, 6.h),
                         ),
@@ -1970,7 +2104,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       width: 40.w,
                       height: 40.h,
                       decoration: BoxDecoration(
-                        color: AppTheme.textMedium.withOpacity(0.1),
+                        color: AppTheme.textMedium.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12.r),
                       ),
                       child: Icon(
@@ -1989,12 +2123,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               padding: EdgeInsets.symmetric(horizontal: 24.w),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundMedium.withOpacity(0.5),
+                  color: AppTheme.backgroundMedium.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
                     color: _isValidUrl 
-                        ? AppTheme.accentMint.withOpacity(0.5)
-                        : AppTheme.journalGradient[0].withOpacity(0.2),
+                        ? AppTheme.accentMint.withValues(alpha: 0.5)
+                        : AppTheme.journalGradient[0].withValues(alpha: 0.2),
                     width: _isValidUrl ? 2 : 1,
                   ),
                 ),
@@ -2007,7 +2141,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   decoration: InputDecoration(
                     hintText: 'https://example.com/image.jpg',
                     hintStyle: TextStyle(
-                      color: AppTheme.textMedium.withOpacity(0.6),
+                      color: AppTheme.textMedium.withValues(alpha: 0.6),
                       fontSize: 16.sp,
                     ),
                     prefixIcon: Icon(
@@ -2044,10 +2178,10 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: AppTheme.backgroundMedium.withOpacity(0.3),
+                    color: AppTheme.backgroundMedium.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(20.r),
                     border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
+                      color: AppTheme.textMedium.withValues(alpha: 0.1),
                     ),
                   ),
                   child: _previewUrl != null
@@ -2087,7 +2221,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                 children: [
                                   Icon(
                                     Icons.error_outline_rounded,
-                                    color: Colors.red.withOpacity(0.6),
+                                    color: Colors.red.withValues(alpha: 0.6),
                                     size: 48.sp,
                                   ),
                                   SizedBox(height: 16.h),
@@ -2096,7 +2230,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                     style: TextStyle(
                                       fontSize: 16.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.red.withOpacity(0.8),
+                                      color: Colors.red.withValues(alpha: 0.8),
                                     ),
                                   ),
                                   SizedBox(height: 8.h),
@@ -2104,7 +2238,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                     'Please check the URL and try again',
                                     style: TextStyle(
                                       fontSize: 14.sp,
-                                      color: AppTheme.textMedium.withOpacity(0.6),
+                                      color: AppTheme.textMedium.withValues(alpha: 0.6),
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
@@ -2118,7 +2252,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                           children: [
                             Icon(
                               Icons.image_outlined,
-                              color: AppTheme.textMedium.withOpacity(0.6),
+                              color: AppTheme.textMedium.withValues(alpha: 0.6),
                               size: 64.sp,
                             ),
                             SizedBox(height: 16.h),
@@ -2127,7 +2261,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                               style: TextStyle(
                                 fontSize: 18.sp,
                                 fontWeight: FontWeight.w600,
-                                color: AppTheme.textMedium.withOpacity(0.8),
+                                color: AppTheme.textMedium.withValues(alpha: 0.8),
                               ),
                             ),
                             SizedBox(height: 8.h),
@@ -2135,7 +2269,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                               'Copy an image URL from the web and paste it here to add to your vision board',
                               style: TextStyle(
                                 fontSize: 14.sp,
-                                color: AppTheme.textMedium.withOpacity(0.6),
+                                color: AppTheme.textMedium.withValues(alpha: 0.6),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -2157,7 +2291,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       child: Container(
                         height: 56.h,
                         decoration: BoxDecoration(
-                          color: AppTheme.textMedium.withOpacity(0.1),
+                          color: AppTheme.textMedium.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(16.r),
                         ),
                         child: Center(
@@ -2183,7 +2317,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                       onTap: _isValidUrl
                           ? () {
                               _addImageFromUrlToBoard(_urlController.text.trim());
-                              Navigator.pop(context);
+                              Navigator.pop(context, currentBoard);
                             }
                           : null,
                       child: Container(
@@ -2192,12 +2326,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                           gradient: _isValidUrl
                               ? LinearGradient(colors: AppTheme.journalGradient)
                               : null,
-                          color: _isValidUrl ? null : AppTheme.textMedium.withOpacity(0.3),
+                          color: _isValidUrl ? null : AppTheme.textMedium.withValues(alpha: 0.3),
                           borderRadius: BorderRadius.circular(16.r),
                           boxShadow: _isValidUrl
                               ? [
                                   BoxShadow(
-                                    color: AppTheme.journalGradient[0].withOpacity(0.4),
+                                    color: AppTheme.journalGradient[0].withValues(alpha: 0.4),
                                     blurRadius: 16.r,
                                     offset: Offset(0, 8.h),
                                   ),
@@ -2210,7 +2344,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                             children: [
                               Icon(
                                 Icons.add_rounded,
-                                color: _isValidUrl ? AppTheme.white : AppTheme.textMedium.withOpacity(0.6),
+                                color: _isValidUrl ? AppTheme.white : AppTheme.textMedium.withValues(alpha: 0.6),
                                 size: 20.sp,
                               ),
                               SizedBox(width: 8.w),
@@ -2219,7 +2353,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.bold,
-                                  color: _isValidUrl ? AppTheme.white : AppTheme.textMedium.withOpacity(0.6),
+                                  color: _isValidUrl ? AppTheme.white : AppTheme.textMedium.withValues(alpha: 0.6),
                                 ),
                               ),
                             ],
@@ -2317,7 +2451,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textMedium.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -2350,7 +2484,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                   final image = defaultImages[index];
                   return GestureDetector(
                     onTap: () {
-                      Navigator.pop(context);
+                      Navigator.pop(context, currentBoard);
                       _addDefaultImageToBoard(image);
                     },
                     child: Container(
@@ -2358,7 +2492,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                         color: AppTheme.backgroundMedium,
                         borderRadius: BorderRadius.circular(16.r),
                         border: Border.all(
-                          color: AppTheme.textMedium.withOpacity(0.2),
+                          color: AppTheme.textMedium.withValues(alpha: 0.2),
                         ),
                       ),
                       child: ClipRRect(
@@ -2390,7 +2524,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
                                     end: Alignment.bottomCenter,
                                     colors: [
                                       Colors.transparent,
-                                      Colors.black.withOpacity(0.7),
+                                      Colors.black.withValues(alpha: 0.7),
                                     ],
                                   ),
                                 ),

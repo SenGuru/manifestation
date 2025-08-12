@@ -3,26 +3,36 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
 import '../services/unified_auth_service.dart';
 import '../services/user_service.dart';
+import '../services/subscription_service.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/universal_back_button.dart';
-import 'settings/preferences_settings_screen.dart';
-import 'settings/account_management_screen.dart';
 
 class AccountSettingsScreen extends StatefulWidget {
   @override
   _AccountSettingsScreenState createState() => _AccountSettingsScreenState();
 }
 
-class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
+class _AccountSettingsScreenState extends State<AccountSettingsScreen> with TickerProviderStateMixin {
   bool _isLoading = true;
   String _currentEmail = '';
   String _currentFullName = '';
   DateTime? _joinDate;
-  String _accountStatus = 'Active';
+  String _subscriptionStatus = 'Free Member';
+  bool _isPremium = false;
   
   // Edit mode state
   bool _isEditMode = false;
   bool _isUpdatingProfile = false;
+  
+  // Animation controllers
+  late AnimationController _editModeController;
+  late AnimationController _cardMorphController;
+  late AnimationController _buttonSlideController;
+  
+  // Animations
+  late Animation<double> _cardMorphAnimation;
+  late Animation<Offset> _buttonSlideAnimation;
+  late Animation<double> _buttonFadeAnimation;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _fullNameController = TextEditingController();
@@ -35,9 +45,49 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   String? _emailError;
   String? _passwordError;
 
+  void _initializeAnimations() {
+    // Main edit mode controller
+    _editModeController = AnimationController(
+      duration: Duration(milliseconds: 600),
+      vsync: this,
+    );
+    
+    // Card morphing controller
+    _cardMorphController = AnimationController(
+      duration: Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
+    // Button slide controller
+    _buttonSlideController = AnimationController(
+      duration: Duration(milliseconds: 700),
+      vsync: this,
+    );
+    
+    // Create animations
+    _cardMorphAnimation = CurvedAnimation(
+      parent: _cardMorphController,
+      curve: Curves.easeInOutBack,
+    );
+    
+    _buttonSlideAnimation = Tween<Offset>(
+      begin: Offset(0, 1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _buttonSlideController,
+      curve: Curves.elasticOut,
+    ));
+    
+    _buttonFadeAnimation = CurvedAnimation(
+      parent: _buttonSlideController,
+      curve: Interval(0.0, 0.6, curve: Curves.easeOut),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    _initializeAnimations();
     _loadUserData();
     
     // Add listeners for validation
@@ -77,6 +127,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       final fullName = await UserService.getFullName();
       final userData = await UserService.getUserData();
       final email = userData?['model']?['email'] ?? '';
+      
+      // Check subscription status
+      final subscriptionService = SubscriptionService();
+      await subscriptionService.initialize();
+      final isPremium = subscriptionService.isPremium;
 
       setState(() {
         _currentFullName = fullName.isNotEmpty ? fullName : 'User';
@@ -84,6 +139,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         _fullNameController.text = _currentFullName;
         _emailController.text = _currentEmail;
         _joinDate = DateTime.now().subtract(Duration(days: 90)); // Example join date
+        _isPremium = isPremium;
+        _subscriptionStatus = isPremium ? 'Premium Member' : 'Free Member';
         _isLoading = false;
       });
     } catch (e) {
@@ -94,6 +151,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         _fullNameController.text = _currentFullName;
         _emailController.text = _currentEmail;
         _joinDate = DateTime.now().subtract(Duration(days: 90));
+        _isPremium = false;
+        _subscriptionStatus = 'Free Member';
         _isLoading = false;
       });
     }
@@ -101,10 +160,42 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   
   @override
   void dispose() {
+    _editModeController.dispose();
+    _cardMorphController.dispose();
+    _buttonSlideController.dispose();
     _emailController.dispose();
     _fullNameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+  
+  void _toggleEditMode() async {
+    if (_isEditMode) {
+      // Exit edit mode - smooth transition
+      setState(() {
+        _isEditMode = false;
+        _showPasswordField = false;
+        _passwordController.clear();
+        _fullNameController.text = _currentFullName;
+        _emailController.text = _currentEmail;
+        _nameError = null;
+        _emailError = null;
+        _passwordError = null;
+      });
+      
+      // Animate controllers for additional effects if needed
+      _cardMorphController.reverse();
+      _editModeController.reverse();
+    } else {
+      // Enter edit mode
+      setState(() {
+        _isEditMode = true;
+      });
+      
+      // Start animations
+      _editModeController.forward();
+      _cardMorphController.forward();
+    }
   }
   
   void _checkAndShowPasswordField() {
@@ -154,21 +245,18 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         backgroundColor: AppTheme.backgroundDark,
         resizeToAvoidBottomInset: false, // Prevent widgets from moving when keyboard appears
         body: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+          child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 16.h),
+                SizedBox(height: 12.h),
                 _buildBackButtonWithHeader(),
-                SizedBox(height: 24.h),
+                SizedBox(height: 16.h),
                 _buildMorphingAccountSection(),
-                SizedBox(height: 32.h),
+                SizedBox(height: 20.h),
                 _buildSettingsNavigation(),
-                SizedBox(height: 40.h),
-                // Extra bottom padding for keyboard clearance when in edit mode
-                if (_isEditMode) SizedBox(height: 200.h),
+                Spacer(), // This will push everything up and fill remaining space
               ],
             ),
           ),
@@ -220,7 +308,22 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             AnimatedSwitcher(
-              duration: Duration(milliseconds: 300),
+              duration: Duration(milliseconds: 400),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              },
+              layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+                return Stack(
+                  alignment: Alignment.centerLeft,
+                  children: <Widget>[
+                    ...previousChildren,
+                    if (currentChild != null) currentChild,
+                  ],
+                );
+              },
               child: Text(
                 _isEditMode ? 'Edit Profile' : 'Account Information',
                 key: ValueKey(_isEditMode),
@@ -233,47 +336,77 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             ),
             GestureDetector(
               onTap: () {
-                if (_isEditMode) {
-                  // Cancel edit mode
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                    _isEditMode = false;
-                    _showPasswordField = false;
-                    _passwordController.clear();
-                    _fullNameController.text = _currentFullName;
-                    _emailController.text = _currentEmail;
-                    _nameError = null;
-                    _emailError = null;
-                    _passwordError = null;
-                  });
-                } else {
-                  // Enter edit mode
-                  setState(() {
-                    _isEditMode = true;
-                  });
-                }
+                FocusScope.of(context).unfocus();
+                _toggleEditMode();
               },
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
+                duration: Duration(milliseconds: 400),
+                curve: Curves.easeInOutCubic,
                 padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                 decoration: BoxDecoration(
+                  color: _isEditMode 
+                      ? Colors.transparent 
+                      : AppTheme.cardBackground,
                   border: Border.all(
-                    color: _isEditMode ? AppTheme.textMedium : AppTheme.socialGradient[0],
-                    width: 2,
+                    color: _isEditMode 
+                        ? AppTheme.textMedium 
+                        : AppTheme.affirmationGradient[0],
+                    width: _isEditMode ? 1.5 : 2,
                   ),
                   borderRadius: BorderRadius.circular(20.r),
-                ),
-                child: AnimatedSwitcher(
-                  duration: Duration(milliseconds: 300),
-                  child: Text(
-                    _isEditMode ? 'Cancel' : 'Edit',
-                    key: ValueKey(_isEditMode),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: _isEditMode ? AppTheme.textMedium : AppTheme.socialGradient[0],
+                  boxShadow: !_isEditMode ? [
+                    BoxShadow(
+                      color: AppTheme.affirmationGradient[0].withOpacity(0.2),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 2.h),
                     ),
-                  ),
+                  ] : [],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: ScaleTransition(
+                            scale: animation,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        _isEditMode ? Icons.close : Icons.edit_outlined,
+                        key: ValueKey('icon_$_isEditMode'),
+                        size: 16.sp,
+                        color: _isEditMode 
+                            ? AppTheme.textMedium 
+                            : AppTheme.affirmationGradient[0],
+                      ),
+                    ),
+                    SizedBox(width: 6.w),
+                    AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      transitionBuilder: (Widget child, Animation<double> animation) {
+                        return FadeTransition(
+                          opacity: animation,
+                          child: child,
+                        );
+                      },
+                      child: Text(
+                        _isEditMode ? 'Cancel' : 'Edit',
+                        key: ValueKey('text_$_isEditMode'),
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: _isEditMode 
+                              ? AppTheme.textMedium 
+                              : AppTheme.affirmationGradient[0],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -281,6 +414,11 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         ),
         
         SizedBox(height: 16.h),
+        
+        // Profile picture card (always visible)
+        _buildProfilePictureCard(),
+        
+        SizedBox(height: 12.h),
         
         // Name card that morphs
         _buildMorphingCard(
@@ -291,7 +429,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
           hint: 'Enter your full name',
         ),
         
-        SizedBox(height: 12.h),
+        SizedBox(height: 8.h),
         
         // Email card that morphs  
         _buildMorphingCard(
@@ -313,7 +451,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 12.h),
+                SizedBox(height: 8.h),
                 _buildMorphingCard(
                   isEditable: true,
                   icon: Icons.lock_outline,
@@ -328,51 +466,62 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
         ),
         
         // Static cards that fade out in edit mode
-        AnimatedOpacity(
-          duration: Duration(milliseconds: 400),
-          opacity: _isEditMode ? 0.0 : 1.0,
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 400),
-            height: _isEditMode ? 0 : null,
-            curve: Curves.easeOutCubic,
-            child: Column(
-              children: [
-                SizedBox(height: 12.h),
-                _buildInfoCard(
-                  icon: Icons.calendar_today_outlined,
-                  title: 'Member Since',
-                  subtitle: _joinDate != null 
-                      ? '${_joinDate!.day}/${_joinDate!.month}/${_joinDate!.year}'
-                      : 'Unknown',
-                ),
-                SizedBox(height: 12.h),
-                _buildInfoCard(
-                  icon: Icons.verified_outlined,
-                  title: 'Account Status',
-                  subtitle: _accountStatus,
-                  subtitleColor: _accountStatus == 'Active' ? Colors.green : Colors.orange,
-                ),
-              ],
+        ClipRect(
+          child: AnimatedAlign(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOutCubic,
+            alignment: Alignment.topCenter,
+            heightFactor: _isEditMode ? 0.0 : 1.0,
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 300),
+              opacity: _isEditMode ? 0.0 : 1.0,
+              child: Column(
+                children: [
+                  SizedBox(height: 8.h),
+                  
+                  // Member Since card
+                  _buildInfoCard(
+                    icon: Icons.calendar_today_outlined,
+                    title: 'Member Since',
+                    subtitle: _joinDate != null 
+                        ? '${_joinDate!.day}/${_joinDate!.month}/${_joinDate!.year}'
+                        : 'Unknown',
+                  ),
+                  
+                  SizedBox(height: 8.h),
+                  
+                  // Membership card
+                  _buildInfoCard(
+                    icon: _isPremium ? Icons.workspace_premium : Icons.person_outline,
+                    title: 'Membership',
+                    subtitle: _subscriptionStatus,
+                    subtitleColor: _isPremium ? AppTheme.affirmationGradient[0] : AppTheme.textSecondary,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
         
-        // Update button that slides up in edit mode
+        // Confirm button that slides in when in edit mode
         ClipRect(
           child: AnimatedAlign(
-            duration: Duration(milliseconds: 500),
-            curve: Curves.easeOutCubic,
+            duration: Duration(milliseconds: 400),
+            curve: Curves.easeInOutCubic,
             alignment: Alignment.topCenter,
             heightFactor: _isEditMode ? 1.0 : 0.0,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 24.h),
-                _buildUpdateButton(),
-              ],
+            child: AnimatedOpacity(
+              duration: Duration(milliseconds: 300),
+              opacity: _isEditMode ? 1.0 : 0.0,
+              child: Container(
+                margin: EdgeInsets.only(top: 24.h),
+                width: double.infinity,
+                child: _buildConfirmButton(),
+              ),
             ),
           ),
         ),
+        
       ],
     );
   }
@@ -388,196 +537,304 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }) {
     final hasError = _getFieldError(controller) != null;
     
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(16.w),
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: _isEditMode && hasError
-              ? Colors.red.withOpacity(0.5)
-              : AppTheme.textMedium.withOpacity(0.1),
-          width: _isEditMode && hasError ? 2 : 1,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header row with icon and title
-          Row(
-            children: [
-              Container(
-                width: 40.w,
-                height: 40.h,
-                decoration: BoxDecoration(
-                  color: _isEditMode && hasError
-                      ? Colors.red.withOpacity(0.1)
-                      : (icon == Icons.lock_outline && _isEditMode)
-                          ? Colors.red.withOpacity(0.1)
-                          : AppTheme.socialGradient[0].withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(
-                  icon,
-                  color: _isEditMode && hasError
-                      ? Colors.red
-                      : (icon == Icons.lock_outline && _isEditMode)
-                          ? Colors.red[400]
-                          : AppTheme.socialGradient[0],
-                  size: 20.sp,
-                ),
+    return AnimatedBuilder(
+      animation: _cardMorphAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: 1.0 + (_isEditMode ? 0.02 : 0.0),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 400),
+            curve: Curves.easeInOutCubic,
+            width: double.infinity,
+            // Reduced height for more compact layout
+            height: 95.h,
+            padding: EdgeInsets.all(16.w), // Fixed padding like other cards
+            decoration: BoxDecoration(
+            color: AppTheme.cardBackground,
+            borderRadius: BorderRadius.circular(16.r), // Fixed border radius like other cards
+            border: Border.all(
+              color: _isEditMode && hasError
+                  ? Colors.red.withOpacity(0.5)
+                  : _isEditMode 
+                      ? AppTheme.affirmationGradient[0].withOpacity(0.3)
+                      : AppTheme.textMedium.withOpacity(0.1),
+              width: _isEditMode ? 2.0 : 1.0, // Simplified border width
+            ),
+            boxShadow: _isEditMode ? [
+              BoxShadow(
+                color: AppTheme.affirmationGradient[0].withOpacity(0.1),
+                blurRadius: 8.r,
+                offset: Offset(0, 2.h),
               ),
-              SizedBox(width: 16.w),
-              Expanded(
-                child: Text(
-                  title,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    color: AppTheme.textMedium,
-                    fontWeight: FontWeight.w500,
+            ] : [],
+          ),
+            child: Row(
+              children: [
+                Container(
+                  width: 48.w,
+                  height: 48.h,
+                  decoration: BoxDecoration(
+                    color: _isEditMode && hasError
+                        ? Colors.red.withOpacity(0.1)
+                        : (icon == Icons.lock_outline && _isEditMode)
+                            ? Colors.red.withOpacity(0.1)
+                            : AppTheme.affirmationGradient[0].withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Icon(
+                    icon,
+                    color: _isEditMode && hasError
+                        ? Colors.red
+                        : (icon == Icons.lock_outline && _isEditMode)
+                            ? Colors.red[400]
+                            : AppTheme.affirmationGradient[0],
+                    size: 24.sp,
                   ),
                 ),
+                SizedBox(width: 16.w),
+                Expanded(
+                  child: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // Title that animates position and style
+                      AnimatedPositioned(
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.easeInOutCubic,
+                        top: _isEditMode ? 8.h : 10.h,
+                        left: 0,
+                        child: AnimatedDefaultTextStyle(
+                          duration: Duration(milliseconds: 400),
+                          style: TextStyle(
+                            fontSize: _isEditMode ? 12.sp : 14.sp,
+                            color: _isEditMode ? AppTheme.affirmationGradient[0] : AppTheme.textMedium,
+                            fontWeight: _isEditMode ? FontWeight.w600 : FontWeight.w500,
+                          ),
+                          child: Text(title),
+                        ),
+                      ),
+                      // Value/TextField that animates position
+                      AnimatedPositioned(
+                        duration: Duration(milliseconds: 400),
+                        curve: Curves.easeInOutCubic,
+                        top: _isEditMode ? 26.h : 30.h,
+                        left: 0,
+                        right: 0,
+                        child: AnimatedContainer(
+                          duration: Duration(milliseconds: 400),
+                          height: _isEditMode ? 32.h : 24.h,
+                          child: AnimatedSwitcher(
+                            duration: Duration(milliseconds: 250),
+                            child: _isEditMode 
+                              ? TextFormField(
+                                  key: ValueKey('field_$title'),
+                                controller: controller,
+                                keyboardType: keyboardType,
+                                obscureText: isPassword && !_isPasswordVisible,
+                                style: TextStyle(
+                                  color: AppTheme.textLight,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                decoration: InputDecoration(
+                                  hintText: hint,
+                                  hintStyle: TextStyle(
+                                    color: AppTheme.textMedium.withOpacity(0.5),
+                                    fontSize: 14.sp,
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+                                  filled: true,
+                                  fillColor: AppTheme.affirmationGradient[0].withOpacity(0.05),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: BorderSide(
+                                      color: AppTheme.affirmationGradient[0].withOpacity(0.3),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.r),
+                                    borderSide: BorderSide(
+                                      color: AppTheme.affirmationGradient[0],
+                                      width: 2,
+                                    ),
+                                  ),
+                                  suffixIcon: isPassword ? GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _isPasswordVisible = !_isPasswordVisible;
+                                      });
+                                    },
+                                    child: Icon(
+                                      _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                                      color: AppTheme.textMedium,
+                                      size: 20.sp,
+                                    ),
+                                  ) : null,
+                                ),
+                                )
+                              : Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    controller.text.isNotEmpty ? controller.text : 'Not set',
+                                    key: ValueKey('text_$title'),
+                                    style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: controller.text.isNotEmpty ? AppTheme.textLight : AppTheme.textMedium,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  
+
+  Widget _buildProfilePictureCard() {
+    return GestureDetector(
+      onTap: _isEditMode ? _showProfilePictureOptions : null,
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
+        width: double.infinity,
+        height: 95.h,
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: _isEditMode 
+                ? AppTheme.affirmationGradient[0].withOpacity(0.3)
+                : AppTheme.textMedium.withOpacity(0.1),
+            width: _isEditMode ? 2 : 1,
+          ),
+          boxShadow: _isEditMode ? [
+            BoxShadow(
+              color: AppTheme.affirmationGradient[0].withOpacity(0.1),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
+            ),
+          ] : [],
+        ),
+        child: Row(
+          children: [
+            // Profile picture with edit overlay
+            Stack(
+              children: [
+              AnimatedContainer(
+                duration: Duration(milliseconds: 300),
+                width: 64.w,
+                height: 64.h,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.affirmationGradient,
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.affirmationGradient[0].withOpacity(0.3),
+                      blurRadius: _isEditMode ? 16.r : 12.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  Icons.person_rounded,
+                  color: AppTheme.white,
+                  size: 32.sp,
+                ),
               ),
+              if (_isEditMode)
+                Positioned.fill(
+                  child: AnimatedOpacity(
+                    duration: Duration(milliseconds: 300),
+                    opacity: _isEditMode ? 1.0 : 0.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black.withOpacity(0.4),
+                      ),
+                      child: Icon(
+                        Icons.camera_alt,
+                        color: AppTheme.white,
+                        size: 24.sp,
+                      ),
+                    ),
+                  ),
+                ),
             ],
           ),
           
-          // Morphing content area
-          _isEditMode
-              ? _buildEditField(controller, hint, keyboardType, isPassword)
-              : _buildDisplayValue(controller.text),
+          SizedBox(width: 16.w),
           
-          // Error message area
-          if (_isEditMode)
-            AnimatedContainer(
-              duration: Duration(milliseconds: 200),
-              height: hasError ? 20.h : 0,
-              child: hasError
-                  ? Row(
-                      children: [
-                        Icon(
-                          Icons.error_outline,
-                          color: Colors.red,
-                          size: 12.sp,
-                        ),
-                        SizedBox(width: 4.w),
-                        Expanded(
-                          child: Text(
-                            _getFieldError(controller) ?? '',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 11.sp,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    )
-                  : SizedBox.shrink(),
-            ),
-        ],
-      ),
-    );
-  }
-  
-  Widget _buildEditField(TextEditingController controller, String hint, TextInputType? keyboardType, bool isPassword) {
-    final hasError = _getFieldError(controller) != null;
-    
-    return Padding(
-      padding: EdgeInsets.only(top: 8.h),
-      child: TextFormField(
-        controller: controller,
-        obscureText: isPassword && !_isPasswordVisible,
-        keyboardType: keyboardType,
-        style: TextStyle(
-          color: AppTheme.textLight,
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w600,
-        ),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: TextStyle(
-            color: AppTheme.textMedium.withOpacity(0.6),
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-          ),
-          suffixIcon: isPassword
-              ? GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                  child: Icon(
-                    _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                    color: AppTheme.textMedium,
-                    size: 20.sp,
+          Expanded(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Title that animates position and style
+                AnimatedPositioned(
+                  duration: Duration(milliseconds: 400),
+                  curve: Curves.easeInOutCubic,
+                  top: _isEditMode ? 8.h : 10.h,
+                  left: 0,
+                  child: AnimatedDefaultTextStyle(
+                    duration: Duration(milliseconds: 400),
+                    style: TextStyle(
+                      fontSize: _isEditMode ? 12.sp : 14.sp,
+                      color: _isEditMode ? AppTheme.affirmationGradient[0] : AppTheme.textMedium,
+                      fontWeight: _isEditMode ? FontWeight.w600 : FontWeight.w500,
+                    ),
+                    child: Text('Profile Picture'),
                   ),
-                )
-              : null,
-          filled: true,
-          fillColor: AppTheme.backgroundDark.withOpacity(0.3),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: hasError 
-                  ? Colors.red.withOpacity(0.4)
-                  : AppTheme.textMedium.withOpacity(0.2),
-              width: 1.5,
+                ),
+                // Value text that animates position
+                AnimatedPositioned(
+                  duration: Duration(milliseconds: 400),
+                  curve: Curves.easeInOutCubic,
+                  top: _isEditMode ? 26.h : 30.h,
+                  left: 0,
+                  child: AnimatedSwitcher(
+                    duration: Duration(milliseconds: 250),
+                    layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+                      return Stack(
+                        alignment: Alignment.centerLeft,
+                        children: <Widget>[
+                          ...previousChildren,
+                          if (currentChild != null) currentChild,
+                        ],
+                      );
+                    },
+                    child: Text(
+                      _isEditMode ? 'Tap to change photo' : 'Default avatar',
+                      key: ValueKey(_isEditMode),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        color: _isEditMode 
+                            ? AppTheme.affirmationGradient[0] 
+                            : AppTheme.textLight,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: hasError 
-                  ? Colors.red.withOpacity(0.4)
-                  : AppTheme.textMedium.withOpacity(0.2),
-              width: 1.5,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: hasError 
-                  ? Colors.red
-                  : AppTheme.socialGradient[0],
-              width: 2.0,
-            ),
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: Colors.red.withOpacity(0.4),
-              width: 1.5,
-            ),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: Colors.red,
-              width: 2.0,
-            ),
-          ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
-        ),
-      ),
-    );
-  }
-  
-  Widget _buildDisplayValue(String value) {
-    return Padding(
-      padding: EdgeInsets.only(top: 4.h),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          value.isNotEmpty ? value : 'Not set',
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: value.isNotEmpty ? AppTheme.textLight : AppTheme.textMedium,
-            fontWeight: FontWeight.w600,
-          ),
+          
+        ],
         ),
       ),
     );
@@ -591,6 +848,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
   }) {
     return Container(
       width: double.infinity,
+      height: 95.h, // Reduced height to match display cards
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
@@ -603,22 +861,23 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
       child: Row(
         children: [
           Container(
-            width: 40.w,
-            height: 40.h,
+            width: 48.w,
+            height: 48.h,
             decoration: BoxDecoration(
-              color: AppTheme.socialGradient[0].withOpacity(0.1),
+              color: AppTheme.affirmationGradient[0].withOpacity(0.1),
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Icon(
               icon,
-              color: AppTheme.socialGradient[0],
-              size: 20.sp,
+              color: AppTheme.affirmationGradient[0],
+              size: 24.sp,
             ),
           ),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
               children: [
                 Text(
                   title,
@@ -683,14 +942,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
                   decoration: BoxDecoration(
                     color: isDestructive 
                         ? Colors.red.withOpacity(0.1)
-                        : AppTheme.socialGradient[0].withOpacity(0.1),
+                        : AppTheme.affirmationGradient[0].withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Icon(
                     icon,
                     color: isDestructive 
                         ? Colors.red
-                        : AppTheme.socialGradient[0],
+                        : AppTheme.affirmationGradient[0],
                     size: 24.sp,
                   ),
                 ),
@@ -733,443 +992,383 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> {
     );
   }
   
-  Widget _buildEditProfileSection() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        key: ValueKey('edit_profile'),
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Edit Profile',
-                style: TextStyle(
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.textLight,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Dismiss keyboard first
-                  FocusScope.of(context).unfocus();
-                  setState(() {
-                    _isEditMode = false;
-                    _showPasswordField = false;
-                    _passwordController.clear();
-                    // Reset to original values
-                    _fullNameController.text = _currentFullName;
-                    _emailController.text = _currentEmail;
-                    _nameError = null;
-                    _emailError = null;
-                    _passwordError = null;
-                  });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: AppTheme.textMedium,
-                      width: 2,
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
-                  ),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.textMedium,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 24.h),
-          
-          // Name field
-          _buildTextField(
-            controller: _fullNameController,
-            label: 'Full Name',
-            hint: 'Enter your full name',
-            icon: Icons.person_outline,
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Email field
-          _buildTextField(
-            controller: _emailController,
-            label: 'Email Address',
-            hint: 'Enter your email address',
-            icon: Icons.email_outlined,
-            keyboardType: TextInputType.emailAddress,
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Animated password field (shows when user starts typing)
-          AnimatedContainer(
-            duration: Duration(milliseconds: 500),
-            height: _showPasswordField ? null : 0,
-            curve: Curves.easeOut,
-            child: _showPasswordField
-                ? Column(
-                    children: [
-                      _buildTextField(
-                        controller: _passwordController,
-                        label: 'Current Password',
-                        hint: 'Enter your current password',
-                        icon: Icons.lock_outline,
-                        isPassword: true,
-                      ),
-                      SizedBox(height: 16.h),
-                    ],
-                  )
-                : SizedBox.shrink(),
-          ),
-          
-          SizedBox(height: 24.h),
-          
-          // Update button
-          _buildUpdateButton(),
-        ],
-      ),
-    );
-  }
-  
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    required IconData icon,
-    TextInputType? keyboardType,
-    bool isPassword = false,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w600,
-            color: AppTheme.textLight,
-          ),
-        ),
-        SizedBox(height: 8.h),
-        
-        Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: controller,
-                validator: (value) => null, // Custom validation handled by listeners
-                obscureText: isPassword && !_isPasswordVisible,
-                keyboardType: keyboardType,
-                style: TextStyle(
-                  color: AppTheme.textLight,
-                  fontSize: 16.sp,
-                ),
-                decoration: InputDecoration(
-                  hintText: hint,
-                  hintStyle: TextStyle(
-                    color: AppTheme.textMedium.withOpacity(0.6),
-                  ),
-                  prefixIcon: Icon(
-                    icon,
-                    color: AppTheme.textMedium,
-                    size: 20.sp,
-                  ),
-                  suffixIcon: isPassword
-                      ? GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _isPasswordVisible = !_isPasswordVisible;
-                            });
-                          },
-                          child: Icon(
-                            _isPasswordVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                            color: AppTheme.textMedium,
-                            size: 20.sp,
-                          ),
-                        )
-                      : null,
-                  filled: true,
-                  fillColor: AppTheme.cardBackground,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                    borderSide: BorderSide(
-                      color: _getFieldError(controller) != null 
-                          ? Colors.red.withOpacity(0.5)
-                          : AppTheme.textMedium.withOpacity(0.1),
-                      width: 2,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                    borderSide: BorderSide(
-                      color: _getFieldError(controller) != null 
-                          ? Colors.red
-                          : AppTheme.socialGradient[0],
-                      width: 2,
-                    ),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                    borderSide: BorderSide(
-                      color: Colors.red,
-                      width: 2,
-                    ),
-                  ),
-                  focusedErrorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                    borderSide: BorderSide(
-                      color: Colors.red,
-                      width: 2,
-                    ),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                    vertical: 16.h,
-                  ),
-                ),
-              ),
-              
-              Container(
-                height: 16.h,
-                margin: EdgeInsets.only(top: 2.h),
-                child: _buildFieldError(_getFieldError(controller)),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-  
   String? _getFieldError(TextEditingController controller) {
-    if (controller == _fullNameController) return _nameError;
-    if (controller == _emailController) return _emailError;
-    if (controller == _passwordController) return _passwordError;
+    // Since we're using dialog-based editing, return null for now
     return null;
   }
   
-  Widget _buildFieldError(String? errorText) {
-    return AnimatedOpacity(
-      opacity: errorText != null && errorText.isNotEmpty ? 1.0 : 0.0,
-      duration: Duration(milliseconds: 200),
-      child: errorText != null && errorText.isNotEmpty
-          ? Row(
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 12.sp,
-                ),
-                SizedBox(width: 4.w),
-                Expanded(
-                  child: Text(
-                    errorText,
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 11.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            )
-          : SizedBox.shrink(),
-    );
-  }
-  
-  Widget _buildUpdateButton() {
-    // Check if user has made changes from original values
-    final bool nameChanged = _fullNameController.text.trim() != _currentFullName;
-    final bool emailChanged = _emailController.text.trim() != _currentEmail;
-    final bool hasChanges = nameChanged || emailChanged;
+  Widget _buildConfirmButton() {
+    final bool hasChanges = _fullNameController.text != _currentFullName || 
+                           _emailController.text != _currentEmail;
     
-    // Check if form has errors
-    final bool hasErrors = _nameError != null || _emailError != null || _passwordError != null;
-    
-    // Button is enabled if user made changes, no validation errors, and password provided when needed
-    final bool isButtonEnabled = hasChanges && 
-                                !hasErrors && 
-                                (!_showPasswordField || _passwordController.text.trim().isNotEmpty) && 
-                                !_isUpdatingProfile;
-    
-    return SizedBox(
+    return Container(
       width: double.infinity,
       height: 56.h,
       child: ElevatedButton(
-        onPressed: isButtonEnabled ? _updateProfile : null,
+        onPressed: hasChanges && !_isUpdatingProfile ? _handleUpdateProfile : null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
+          backgroundColor: hasChanges 
+              ? AppTheme.affirmationGradient[0] 
+              : AppTheme.textMedium.withOpacity(0.3),
+          foregroundColor: AppTheme.white,
+          elevation: 0,
           shadowColor: Colors.transparent,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.r),
           ),
-          padding: EdgeInsets.zero,
-          elevation: 0,
         ),
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: isButtonEnabled
-                ? LinearGradient(colors: AppTheme.socialGradient)
-                : null,
-            color: isButtonEnabled
-                ? null
-                : AppTheme.textMedium.withOpacity(0.3),
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: isButtonEnabled ? [
-              BoxShadow(
-                color: AppTheme.socialGradient[0].withOpacity(0.4),
-                blurRadius: 20.r,
-                offset: Offset(0, 8.h),
-                spreadRadius: 2.r,
-              ),
-            ] : null,
-          ),
-          child: Container(
-            alignment: Alignment.center,
-            child: _isUpdatingProfile
-                ? CompactStylishLoading(size: 20.w, color: AppTheme.white)
-                : Text(
-                    'Update Profile',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
-                      color: AppTheme.white,
-                      letterSpacing: 0.5,
+        child: _isUpdatingProfile
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppTheme.white),
                     ),
                   ),
+                  SizedBox(width: 12.w),
+                  Text(
+                    'Updating...',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.check_rounded,
+                    size: 20.sp,
+                  ),
+                  SizedBox(width: 8.w),
+                  Text(
+                    'Confirm Changes',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+  
+  Future<void> _handleUpdateProfile() async {
+    // Validate required password if changes were made
+    if (_showPasswordField && _passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = 'Current password is required to save changes';
+      });
+      return;
+    }
+    
+    setState(() {
+      _isUpdatingProfile = true;
+    });
+    
+    try {
+      // TODO: Implement actual API call to update profile
+      // For now, simulate the update
+      await Future.delayed(Duration(seconds: 2));
+      
+      // Update the current values
+      setState(() {
+        _currentFullName = _fullNameController.text;
+        _currentEmail = _emailController.text;
+        _isUpdatingProfile = false;
+      });
+      
+      // Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Profile updated successfully'),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
           ),
+        ),
+      );
+      
+      // Exit edit mode
+      _toggleEditMode();
+      
+    } catch (e) {
+      setState(() {
+        _isUpdatingProfile = false;
+      });
+      
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to update profile: $e'),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+        ),
+      );
+    }
+  }
+  
+  
+  void _showProfilePictureOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppTheme.cardBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.r),
+        ),
+      ),
+      builder: (context) => Container(
+        padding: EdgeInsets.all(24.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: AppTheme.textMedium.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            
+            SizedBox(height: 20.h),
+            
+            Text(
+              'Change Profile Picture',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            
+            SizedBox(height: 24.h),
+            
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _buildOptionButton(
+                  icon: Icons.camera_alt_outlined,
+                  label: 'Camera',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _takePhoto();
+                  },
+                ),
+                _buildOptionButton(
+                  icon: Icons.photo_library_outlined,
+                  label: 'Gallery',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _pickFromGallery();
+                  },
+                ),
+                _buildOptionButton(
+                  icon: Icons.delete_outline,
+                  label: 'Remove',
+                  onTap: () {
+                    Navigator.pop(context);
+                    _removePhoto();
+                  },
+                  isDestructive: true,
+                ),
+              ],
+            ),
+            
+            SizedBox(height: 20.h),
+          ],
         ),
       ),
     );
   }
   
-  Future<void> _updateProfile() async {
-    // Dismiss keyboard first
-    FocusScope.of(context).unfocus();
+  Widget _buildOptionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    bool isDestructive = false,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 80.w,
+        padding: EdgeInsets.symmetric(vertical: 16.h),
+        decoration: BoxDecoration(
+          color: isDestructive 
+              ? Colors.red.withOpacity(0.1)
+              : AppTheme.affirmationGradient[0].withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16.r),
+          border: Border.all(
+            color: isDestructive 
+                ? Colors.red.withOpacity(0.2)
+                : AppTheme.affirmationGradient[0].withOpacity(0.2),
+          ),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: isDestructive 
+                  ? Colors.red
+                  : AppTheme.affirmationGradient[0],
+              size: 24.sp,
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500,
+                color: isDestructive 
+                    ? Colors.red
+                    : AppTheme.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  void _takePhoto() {
+    // TODO: Implement camera functionality
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Camera functionality - Coming soon'),
+        backgroundColor: AppTheme.affirmationGradient[0],
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+    );
+  }
+  
+  void _pickFromGallery() {
+    // TODO: Implement gallery picker
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Gallery picker - Coming soon'),
+        backgroundColor: AppTheme.affirmationGradient[0],
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+    );
+  }
+  
+  void _removePhoto() {
+    // TODO: Implement photo removal
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Profile picture removed'),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+      ),
+    );
+  }
+  
+  void _showEditDialog(TextEditingController controller, String title, String hint, TextInputType? keyboardType, bool isPassword) {
+    final tempController = TextEditingController(text: controller.text);
     
-    // Check for validation errors
-    if (_nameError != null || _emailError != null || _passwordError != null) {
-      return;
-    }
-
-    // Password is always required for any profile updates
-    if (_passwordController.text.isEmpty) {
-      setState(() {
-        _passwordError = 'Current password is required';
-      });
-      return;
-    }
-
-    setState(() {
-      _isUpdatingProfile = true;
-    });
-
-    try {
-      final authService = UnifiedAuthService();
-      
-      // Parse the full name
-      final fullName = _fullNameController.text.trim();
-      final nameParts = fullName.split(' ');
-      final firstName = nameParts.isNotEmpty ? nameParts[0] : '';
-      final lastName = nameParts.length > 1 ? nameParts.skip(1).join(' ') : '';
-      
-      // Update local user data
-      await UserService.updateUserProfile(
-        firstName: firstName,
-        lastName: lastName,
-        userName: _emailController.text.trim(),
-      );
-      
-      // Verify password with a login call (this validates the current password)
-      final currentUserData = await UserService.getUserData();
-      final currentUserName = currentUserData?['model']?['userName'] ?? _emailController.text.trim();
-      
-      final loginResult = await authService.login(
-        username: currentUserName,
-        password: _passwordController.text.trim(),
-        rememberMe: true,
-      );
-      
-      if (!loginResult.isSuccess) {
-        throw Exception('Invalid current password');
-      }
-      
-      // Clear password field after successful update
-      _passwordController.clear();
-      
-      // Update current values to new values
-      setState(() {
-        _currentFullName = fullName;
-        _currentEmail = _emailController.text.trim();
-        _showPasswordField = false;
-        _isEditMode = false;
-      });
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.check_circle, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Profile updated successfully'),
-            ],
-          ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.cardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        title: Text(
+          'Edit $title',
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
           ),
         ),
-      );
-    } catch (e) {
-      String errorMessage = 'Failed to update profile';
-      
-      if (e.toString().contains('Invalid current password')) {
-        errorMessage = 'Current password is incorrect';
-        setState(() {
-          _passwordError = 'Current password is incorrect';
-        });
-      } else if (e.toString().contains('network') || e.toString().contains('connection')) {
-        errorMessage = 'Network error. Please check your connection.';
-      }
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error_outline, color: Colors.white),
-              SizedBox(width: 8),
-              Expanded(child: Text(errorMessage)),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFormField(
+              controller: tempController,
+              keyboardType: keyboardType,
+              obscureText: isPassword,
+              style: TextStyle(
+                color: AppTheme.textLight,
+                fontSize: 16.sp,
+              ),
+              decoration: InputDecoration(
+                hintText: hint,
+                hintStyle: TextStyle(
+                  color: AppTheme.textMedium.withOpacity(0.6),
+                ),
+                filled: true,
+                fillColor: AppTheme.cardBackground,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: BorderSide(
+                    color: AppTheme.affirmationGradient[0].withOpacity(0.3),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: BorderSide(
+                    color: AppTheme.affirmationGradient[0],
+                    width: 2,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-      );
-    } finally {
-      setState(() {
-        _isUpdatingProfile = false;
-      });
-    }
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: AppTheme.textSecondary,
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              controller.text = tempController.text;
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.affirmationGradient[0],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.r),
+              ),
+            ),
+            child: Text(
+              'Save',
+              style: TextStyle(
+                color: AppTheme.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

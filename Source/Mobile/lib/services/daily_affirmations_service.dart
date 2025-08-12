@@ -1,7 +1,7 @@
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
+import 'package:mistel/api/generated/code/manifestation.swagger.dart';
 import 'dart:async';
-import '../api/generated/code/manifestation.swagger.dart';
 import '../models/affirmation_item.dart';
 import '../constants/goal_constants.dart';
 import 'unified_auth_service.dart';

@@ -6070,12 +6070,12 @@
                     "type": "string"
                   },
                   "FileAttachmentFileLocation": {
-                    "maxLength": 512,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
                   "FileAttachmentPreviewFileLocation": {
-                    "maxLength": 512,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
@@ -19452,8 +19452,13 @@
                     "type": "string",
                     "format": "binary"
                   },
+                  "Title": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
                   "Location": {
-                    "maxLength": 255,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
@@ -19463,6 +19468,20 @@
                     "type": "string"
                   },
                   "FileSize": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "ThumbnailLocation": {
+                    "maxLength": 1024,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "ThumbnailFileName": {
+                    "maxLength": 255,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "ThumbnailFileSize": {
                     "type": "integer",
                     "format": "int64"
                   },
@@ -19476,6 +19495,9 @@
                 "UploadedFile": {
                   "style": "form"
                 },
+                "Title": {
+                  "style": "form"
+                },
                 "Location": {
                   "style": "form"
                 },
@@ -19483,6 +19505,15 @@
                   "style": "form"
                 },
                 "FileSize": {
+                  "style": "form"
+                },
+                "ThumbnailLocation": {
+                  "style": "form"
+                },
+                "ThumbnailFileName": {
+                  "style": "form"
+                },
+                "ThumbnailFileSize": {
                   "style": "form"
                 },
                 "UserId": {
@@ -19591,8 +19622,13 @@
                     "type": "integer",
                     "format": "int64"
                   },
+                  "Title": {
+                    "maxLength": 100,
+                    "minLength": 0,
+                    "type": "string"
+                  },
                   "Location": {
-                    "maxLength": 255,
+                    "maxLength": 1024,
                     "minLength": 0,
                     "type": "string"
                   },
@@ -19602,6 +19638,20 @@
                     "type": "string"
                   },
                   "FileSize": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "ThumbnailLocation": {
+                    "maxLength": 1024,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "ThumbnailFileName": {
+                    "maxLength": 255,
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "ThumbnailFileSize": {
                     "type": "integer",
                     "format": "int64"
                   },
@@ -19618,6 +19668,9 @@
                 "VisionBoardPictureId": {
                   "style": "form"
                 },
+                "Title": {
+                  "style": "form"
+                },
                 "Location": {
                   "style": "form"
                 },
@@ -19625,6 +19678,15 @@
                   "style": "form"
                 },
                 "FileSize": {
+                  "style": "form"
+                },
+                "ThumbnailLocation": {
+                  "style": "form"
+                },
+                "ThumbnailFileName": {
+                  "style": "form"
+                },
+                "ThumbnailFileSize": {
                   "style": "form"
                 },
                 "UserId": {
@@ -19995,6 +20057,162 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/isvisionboardpicturethumbnailvalid": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/downloadvisionboardpicturethumbnail": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/uploadvisionboardpicturethumbnail": {
+      "post": {
+        "tags": [
+          "ToTest"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "VisionBoardPictureId": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "UploadedFile": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "VisionBoardPictureId": {
+                  "style": "form"
+                },
+                "UploadedFile": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/clearvisionboardpicturethumbnail": {
+      "delete": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanReturnModel"
+                }
+              }
+            }
           }
         }
       }
@@ -21240,6 +21458,42 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/converttexttoaudio": {
+      "post": {
+        "tags": [
+          "TextToAudio"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/plain": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -38073,7 +38327,7 @@
             "format": "int64"
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38109,7 +38363,7 @@
             "format": "int64"
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38285,7 +38539,7 @@
             "format": "int64"
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38306,8 +38560,14 @@
       "DefaultVisionBoardPictureCreateModel": {
         "type": "object",
         "properties": {
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38332,8 +38592,14 @@
             "type": "integer",
             "format": "int64"
           },
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -38494,8 +38760,14 @@
             "type": "integer",
             "format": "int64"
           },
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -39947,13 +40219,13 @@
             "nullable": true
           },
           "fileAttachmentFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "fileAttachmentPreviewFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -40133,13 +40405,13 @@
             "nullable": true
           },
           "fileAttachmentFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
           },
           "fileAttachmentPreviewFileLocation": {
-            "maxLength": 512,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -44592,7 +44864,7 @@
             "nullable": true
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -44632,7 +44904,7 @@
             "nullable": true
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -44816,7 +45088,7 @@
             "nullable": true
           },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -51290,8 +51562,14 @@
       "VisionBoardPictureCreateModel": {
         "type": "object",
         "properties": {
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -51305,6 +51583,23 @@
           "fileSize": {
             "type": "integer",
             "format": "int64"
+          },
+          "thumbnailLocation": {
+            "maxLength": 1024,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnailFileName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnailFileSize": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "userId": {
             "type": "integer",
@@ -51320,8 +51615,14 @@
             "type": "integer",
             "format": "int64"
           },
+          "title": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
           "location": {
-            "maxLength": 255,
+            "maxLength": 1024,
             "minLength": 0,
             "type": "string",
             "nullable": true
@@ -51335,6 +51636,23 @@
           "fileSize": {
             "type": "integer",
             "format": "int64"
+          },
+          "thumbnailLocation": {
+            "maxLength": 1024,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnailFileName": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnailFileSize": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "userId": {
             "type": "integer",

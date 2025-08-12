@@ -7,6 +7,7 @@ import '../models/mood_selector.dart';
 import '../constants/app_theme.dart';
 import '../services/daily_journal_service.dart';
 import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
 
 class CalendarViewScreen extends StatefulWidget {
   @override
@@ -849,20 +850,16 @@ class _CalendarViewScreenState extends State<CalendarViewScreen> {
 
   void _viewEntry(JournalEntry entry) {
     // Navigate to detailed view
-    Navigator.push(
+    pushWithoutSwipe(
       context,
-      MaterialPageRoute(
-        builder: (context) => JournalEntryDetailScreen(entry: entry),
-      ),
+      JournalEntryDetailScreen(entry: entry),
     );
   }
 
   void _showStatsView() {
-    Navigator.push(
+    pushWithoutSwipe(
       context,
-      MaterialPageRoute(
-        builder: (context) => JournalStatsScreen(entries: journalEntries),
-      ),
+      JournalStatsScreen(entries: journalEntries),
     );
   }
 

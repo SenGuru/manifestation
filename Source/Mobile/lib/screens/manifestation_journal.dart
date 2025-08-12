@@ -12,6 +12,7 @@ import 'package:mistel/services/daily_journal_service.dart';
 import 'package:mistel/services/guided_tour_service.dart';
 import 'package:mistel/widgets/stylish_loading.dart';
 import 'package:mistel/widgets/keyboard_dismissal_wrapper.dart';
+import 'package:mistel/utils/navigation_utils.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
   // Enhanced with manual draft saving functionality - debug exit dialog
@@ -22,6 +23,7 @@ class ManifestationJournalScreen extends StatefulWidget {
 class _ManifestationJournalScreenState extends State<ManifestationJournalScreen> {
   final PageController _pageController = PageController();
   final TextEditingController _reflectionController = TextEditingController();
+  final TextEditingController _intentionController = TextEditingController();
   final DailyJournalService _journalService = DailyJournalService();
   
   int currentPage = 0;
@@ -34,6 +36,22 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   JournalEntry? existingEntry;
   bool isLoading = false;
   bool isSaving = false;
+  
+  // Track what the user has actually changed during this session
+  bool _userHasInteracted = false;
+  bool _moodChanged = false;
+  bool _gratitudeChanged = false;
+  bool _reflectionChanged = false;
+  bool _intentionChanged = false;
+  
+  // Dynamic default state - updates after each save to become the new baseline
+  Mood _baselineMood = Mood.neutral;
+  List<String> _baselineGratitudes = ['', '', '', '', ''];
+  String _baselineReflection = '';
+  String _baselineIntention = '';
+  
+  // Track loaded state to differentiate between user changes and loaded values
+  bool _hasLoadedDraft = false;
   
   final List<String> journalPrompts = [
     "What am I most grateful for today?",
@@ -55,6 +73,28 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     
     // Add scroll listener to track partial scroll positions
     _pageController.addListener(_onPageScroll);
+    
+    // Add listeners to text controllers to sync with state
+    _reflectionController.addListener(() {
+      if (_reflectionController.text != reflection) {
+        setState(() {
+          reflection = _reflectionController.text;
+          _userHasInteracted = true;
+          _reflectionChanged = true;
+          print('📖 REFLECTION CHANGED: "${_reflectionController.text}", _userHasInteracted: $_userHasInteracted');
+        });
+      }
+    });
+    
+    _intentionController.addListener(() {
+      if (_intentionController.text != intention) {
+        setState(() {
+          intention = _intentionController.text;
+          _userHasInteracted = true;
+          _intentionChanged = true;
+        });
+      }
+    });
     
     // For debugging purposes - uncomment this line to run constraint debugging
     // _journalService.runConstraintDebugging();
@@ -98,6 +138,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     _pageController.removeListener(_onPageScroll);
     _pageController.dispose();
     _reflectionController.dispose();
+    _intentionController.dispose();
     super.dispose();
   }
 
@@ -313,6 +354,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               onMoodSelected: (mood) {
                 setState(() {
                   selectedMood = mood;
+                  _userHasInteracted = true;
+                  _moodChanged = true;
+                  print('📖 MOOD CHANGED: $mood, _userHasInteracted: $_userHasInteracted');
                 });
               },
             ),
@@ -334,6 +378,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               onGratitudeChanged: (index, value) {
                 setState(() {
                   gratitudeItems[index] = value;
+                  _userHasInteracted = true;
+                  _gratitudeChanged = true;
                 });
               },
             ),
@@ -383,6 +429,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 onChanged: (value) {
                   setState(() {
                     reflection = value;
+                    _userHasInteracted = true;
+                    _reflectionChanged = true;
                   });
                 },
                 style: TextStyle(
@@ -453,12 +501,11 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 onChanged: (value) {
                   setState(() {
                     intention = value;
+                    _userHasInteracted = true;
+                    _intentionChanged = true;
                   });
                 },
-                controller: TextEditingController(text: intention)
-                  ..selection = TextSelection.fromPosition(
-                    TextPosition(offset: intention.length),
-                  ),
+                controller: _intentionController,
                 style: TextStyle(
                   color: AppTheme.textPrimary,
                   fontSize: 16.sp,
@@ -830,6 +877,12 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
         if (result.isSuccess) {
           print('📖 Journal entry updated successfully!');
+          // Reset all interaction flags since entry is saved
+          _userHasInteracted = false;
+          _moodChanged = false;
+          _gratitudeChanged = false;
+          _reflectionChanged = false;
+          _intentionChanged = false;
           await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -858,6 +911,12 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
         if (result.isSuccess) {
           print('📖 Journal entry created successfully!');
+          // Reset all interaction flags since entry is saved
+          _userHasInteracted = false;
+          _moodChanged = false;
+          _gratitudeChanged = false;
+          _reflectionChanged = false;
+          _intentionChanged = false;
           await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -939,6 +998,14 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           reflection = journalEntry.reflection;
           intention = journalEntry.intention;
           _reflectionController.text = reflection;
+          _intentionController.text = intention;
+          
+          // Reset interaction flags when loading existing entry
+          _userHasInteracted = false;
+          _moodChanged = false;
+          _gratitudeChanged = false;
+          _reflectionChanged = false;
+          _intentionChanged = false;
         });
         
         print('📖 Loaded existing entry: ${journalEntry.gratitudes.length} gratitudes, mood: ${journalEntry.mood.displayName}');
@@ -975,11 +1042,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
 
   void _showCalendarView() async {
-    final result = await Navigator.push(
+    final result = await pushWithoutSwipe(
       context,
-      MaterialPageRoute(
-        builder: (context) => CalendarViewScreen(),
-      ),
+      CalendarViewScreen(),
     );
     
     if (result != null) {
@@ -1050,101 +1115,147 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     }
   }
 
-  // Check if user has unsaved changes
+  // Check if user has made changes AND values differ from baseline
   bool _hasUnsavedChanges() {
-    print('📖 Checking for unsaved changes...');
-    print('   isEditingExistingEntry: $isEditingExistingEntry');
-    print('   selectedMood: ${selectedMood.displayName}');
-    print('   gratitudeItems: ${gratitudeItems.where((item) => item.trim().isNotEmpty).toList()}');
-    print('   reflection: "${reflection.trim()}"');
-    print('   intention: "${intention.trim()}"');
+    print('🔍 _hasUnsavedChanges check:');
+    print('   _userHasInteracted: $_userHasInteracted');
+    print('   selectedMood: $selectedMood (baseline: $_baselineMood)');
+    print('   reflection: "$reflection" (baseline: "$_baselineReflection")');
+    print('   intention: "$intention" (baseline: "$_baselineIntention")');
     
-    // If we're editing an existing entry, compare with original values
-    if (isEditingExistingEntry && existingEntry != null) {
-      print('   Comparing with existing entry...');
-      // Check if mood changed
-      if (selectedMood != existingEntry!.mood) {
-        print('   → Mood changed: ${existingEntry!.mood.displayName} → ${selectedMood.displayName}');
-        return true;
-      }
-      
-      // Check if gratitudes changed
-      final originalGratitudes = List<String>.filled(5, '');
-      for (int i = 0; i < existingEntry!.gratitudes.length && i < 5; i++) {
-        originalGratitudes[i] = existingEntry!.gratitudes[i];
-      }
-      for (int i = 0; i < 5; i++) {
-        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) {
-          print('   → Gratitude $i changed: "${originalGratitudes[i]}" → "${gratitudeItems[i].trim()}"');
-          return true;
-        }
-      }
-      
-      // Check if reflection changed
-      if (reflection.trim() != existingEntry!.reflection.trim()) {
-        print('   → Reflection changed');
-        return true;
-      }
-      
-      // Check if intention changed
-      if (intention.trim() != existingEntry!.intention.trim()) {
-        print('   → Intention changed');
-        return true;
-      }
-      
-      print('   → No changes detected in existing entry');
-      return false;
-    } else {
-      print('   Checking new entry for changes...');
-      // For new entries, check if any data has been entered
-      // Check if mood is not neutral (default)
-      if (selectedMood != Mood.neutral) {
-        print('   → Mood is not neutral: ${selectedMood.displayName}');
-        return true;
-      }
-      
-      // Check if any gratitude items have content
-      if (gratitudeItems.any((item) => item.trim().isNotEmpty)) {
-        print('   → Has gratitude items');
-        return true;
-      }
-      
-      // Check if reflection has content
-      if (reflection.trim().isNotEmpty) {
-        print('   → Has reflection content');
-        return true;
-      }
-      
-      // Check if intention has content
-      if (intention.trim().isNotEmpty) {
-        print('   → Has intention content');
-        return true;
-      }
-      
-      print('   → No changes detected in new entry');
+    // Must have user interaction
+    if (!_userHasInteracted) {
+      print('   → No user interaction, returning false');
       return false;
     }
+    
+    // Check if current state is same as original defaults - if so, no need to save
+    bool isAtOriginalDefaults = (
+      selectedMood == Mood.neutral &&
+      gratitudeItems.every((item) => item.trim().isEmpty) &&
+      reflection.trim().isEmpty &&
+      intention.trim().isEmpty
+    );
+    
+    if (isAtOriginalDefaults) {
+      print('   → Current state matches original defaults, no need to save, returning false');
+      return false;
+    }
+    
+    // Check if any value differs from baseline
+    if (selectedMood != _baselineMood) {
+      print('   → Mood changed from baseline, returning true');
+      return true;
+    }
+    
+    // Check gratitudes
+    for (int i = 0; i < gratitudeItems.length; i++) {
+      if (gratitudeItems[i].trim() != _baselineGratitudes[i]) {
+        print('   → Gratitude $i changed from baseline: "${gratitudeItems[i]}" vs "${_baselineGratitudes[i]}", returning true');
+        return true;
+      }
+    }
+    
+    // Check text fields
+    if (reflection.trim() != _baselineReflection) {
+      print('   → Reflection changed from baseline, returning true');
+      return true;
+    }
+    if (intention.trim() != _baselineIntention) {
+      print('   → Intention changed from baseline, returning true');
+      return true;
+    }
+    
+    print('   → No changes detected from baseline, returning false');
+    return false;
+  }
+  
+  // Reset everything to original defaults (for complete reset)
+  void _revertToDefaults() {
+    setState(() {
+      selectedMood = Mood.neutral;
+      gratitudeItems = ['', '', '', '', ''];
+      reflection = '';
+      intention = '';
+      
+      // Update text controllers
+      _reflectionController.text = '';
+      _intentionController.text = '';
+      
+      // Reset baseline to original defaults
+      _baselineMood = Mood.neutral;
+      _baselineGratitudes = ['', '', '', '', ''];
+      _baselineReflection = '';
+      _baselineIntention = '';
+      
+      // Reset all flags
+      _userHasInteracted = false;
+      _moodChanged = false;
+      _gratitudeChanged = false;
+      _reflectionChanged = false;
+      _intentionChanged = false;
+      _hasLoadedDraft = false;
+    });
+    
+    // Clear any saved draft
+    _clearDraftProgress();
+  }
+  
+  // Revert to baseline (for discarding unsaved changes)
+  void _revertToBaseline() {
+    setState(() {
+      selectedMood = _baselineMood;
+      gratitudeItems = List.from(_baselineGratitudes);
+      reflection = _baselineReflection;
+      intention = _baselineIntention;
+      
+      // Update text controllers
+      _reflectionController.text = _baselineReflection;
+      _intentionController.text = _baselineIntention;
+      
+      // Reset interaction flags - we're back to the baseline state
+      _userHasInteracted = false;
+      _moodChanged = false;
+      _gratitudeChanged = false;
+      _reflectionChanged = false;
+      _intentionChanged = false;
+    });
   }
 
   // Handle will pop (back gesture or back button)
   Future<bool> _onWillPop() async {
+    print('🔍 _onWillPop called - currentPage: $currentPage, isSaving: $isSaving');
+    print('   Current values:');
+    print('     selectedMood: $selectedMood');
+    print('     gratitudeItems: $gratitudeItems');
+    print('     reflection: "$reflection"');
+    print('     intention: "$intention"');
+    print('   Baseline values:');
+    print('     _baselineMood: $_baselineMood');
+    print('     _baselineGratitudes: $_baselineGratitudes');
+    print('     _baselineReflection: "$_baselineReflection"');
+    print('     _baselineIntention: "$_baselineIntention"');
+    
     // If we're on the summary page or saving, allow normal back navigation
     if (currentPage == 4 || isSaving) {
+      print('   → Allowing navigation (summary page or saving)');
       return true;
     }
     
-    // If editing existing entry, allow normal back navigation without dialog
-    if (isEditingExistingEntry) {
-      return true;
-    }
-
     // Check if user has unsaved changes
-    if (!_hasUnsavedChanges()) {
+    final hasChanges = _hasUnsavedChanges();
+    print('   → _hasUnsavedChanges returned: $hasChanges');
+    
+    if (!hasChanges) {
+      print('   → No changes detected, returning TRUE to allow navigation');
       return true; // No changes, allow back navigation
     }
 
+    print('   → Changes detected, showing save dialog');
     // Show save progress dialog
-    return await _showSaveProgressDialog() ?? false;
+    final result = await _showSaveProgressDialog();
+    print('   → Save dialog result: $result');
+    return result ?? false;
   }
 
   // Show dialog asking user if they want to save as draft
@@ -1433,7 +1544,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                             child: Container(
                               height: 44.h,
                               child: TextButton(
-                                onPressed: () => Navigator.of(context).pop(true),
+                                onPressed: () {
+                                  _revertToBaseline();
+                                  Navigator.of(context).pop(true);
+                                },
                                 style: TextButton.styleFrom(
                                   backgroundColor: Colors.red.withOpacity(0.1),
                                   shape: RoundedRectangleBorder(
@@ -1464,89 +1578,51 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
-  // Build summary of unsaved changes for the dialog
+  // Build summary of unsaved changes (categories only, not details)
   List<Widget> _buildUnsavedChangesSummary() {
     List<Widget> changes = [];
     
-    if (isEditingExistingEntry && existingEntry != null) {
-      // For existing entries, show what changed
-      if (selectedMood != existingEntry!.mood) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.mood,
-          text: 'Mood updated to ${selectedMood.displayName}',
-          color: selectedMood.color,
-        ));
+    // Compare against baseline values (what was last saved), not original defaults
+    if (selectedMood != _baselineMood) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.mood,
+        text: 'Mood',
+        color: selectedMood.color,
+      ));
+    }
+    
+    // Check gratitude changes against baseline
+    bool gratitudesChanged = false;
+    for (int i = 0; i < 5; i++) {
+      if (gratitudeItems[i].trim() != _baselineGratitudes[i].trim()) {
+        gratitudesChanged = true;
+        break;
       }
-      
-      // Check gratitude changes
-      final originalGratitudes = List<String>.filled(5, '');
-      for (int i = 0; i < existingEntry!.gratitudes.length && i < 5; i++) {
-        originalGratitudes[i] = existingEntry!.gratitudes[i];
-      }
-      bool gratitudesChanged = false;
-      for (int i = 0; i < 5; i++) {
-        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) {
-          gratitudesChanged = true;
-          break;
-        }
-      }
-      if (gratitudesChanged) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.favorite,
-          text: 'Gratitude entries modified',
-          color: AppTheme.affirmationGradient[0],
-        ));
-      }
-      
-      if (reflection.trim() != existingEntry!.reflection.trim()) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.auto_stories,
-          text: reflection.trim().isEmpty ? 'Reflection removed' : 'Reflection updated',
-          color: AppTheme.accentGold,
-        ));
-      }
-      
-      if (intention.trim() != existingEntry!.intention.trim()) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.wb_sunny,
-          text: intention.trim().isEmpty ? 'Intention removed' : 'Tomorrow\'s intention updated',
-          color: AppTheme.goalTrackerGradient[0],
-        ));
-      }
-    } else {
-      // For new entries, show what's been entered
-      if (selectedMood != Mood.neutral) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.mood,
-          text: 'Mood: ${selectedMood.displayName}',
-          color: selectedMood.color,
-        ));
-      }
-      
-      final gratitudeCount = gratitudeItems.where((item) => item.trim().isNotEmpty).length;
-      if (gratitudeCount > 0) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.favorite,
-          text: '$gratitudeCount gratitude ${gratitudeCount == 1 ? 'entry' : 'entries'}',
-          color: AppTheme.affirmationGradient[0],
-        ));
-      }
-      
-      if (reflection.trim().isNotEmpty) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.auto_stories,
-          text: 'Daily reflection written',
-          color: AppTheme.accentGold,
-        ));
-      }
-      
-      if (intention.trim().isNotEmpty) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.wb_sunny,
-          text: 'Tomorrow\'s intention set',
-          color: AppTheme.goalTrackerGradient[0],
-        ));
-      }
+    }
+    if (gratitudesChanged) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.favorite,
+        text: 'Gratitudes',
+        color: AppTheme.affirmationGradient[0],
+      ));
+    }
+    
+    // Check reflection changes against baseline
+    if (reflection.trim() != _baselineReflection.trim()) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.auto_stories,
+        text: 'Daily Reflection',
+        color: AppTheme.accentGold,
+      ));
+    }
+    
+    // Check intention changes against baseline
+    if (intention.trim() != _baselineIntention.trim()) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.wb_sunny,
+        text: 'Tomorrow\'s Intention',
+        color: AppTheme.goalTrackerGradient[0],
+      ));
     }
     
     return changes;
@@ -1589,7 +1665,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       ),
     );
   }
-
 
   // Load existing draft progress
   Future<void> _loadDraftProgress() async {
@@ -1636,10 +1711,26 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           final draftIntention = draftData['intention'] as String?;
           if (draftIntention != null) {
             intention = draftIntention;
+            _intentionController.text = intention;
           }
         });
         
         print('📖 Draft progress loaded successfully');
+        
+        // Set loaded values as the baseline for change detection
+        _baselineMood = selectedMood;
+        _baselineGratitudes = List.from(gratitudeItems);
+        _baselineReflection = reflection.trim();
+        _baselineIntention = intention.trim();
+        
+        // Reset interaction flags when loading draft
+        _userHasInteracted = false;
+        _moodChanged = false;
+        _gratitudeChanged = false;
+        _reflectionChanged = false;
+        _intentionChanged = false;
+        _hasLoadedDraft = true;
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Row(
@@ -1702,6 +1793,30 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       print('   Gratitudes: ${draftData['gratitudes']}');
       print('   Has Reflection: ${reflection.trim().isNotEmpty}');
       print('   Has Intention: ${intention.trim().isNotEmpty}');
+      
+      // Update baseline and reset interaction flags
+      setState(() {
+        // Current state becomes the new baseline for future change detection
+        _baselineMood = selectedMood;
+        _baselineGratitudes = List.from(gratitudeItems);
+        _baselineReflection = reflection.trim();
+        _baselineIntention = intention.trim();
+        
+        print('📖 NEW BASELINE SET AFTER SAVE:');
+        print('   Baseline mood: $_baselineMood');
+        print('   Baseline gratitudes: $_baselineGratitudes');  
+        print('   Baseline reflection: "$_baselineReflection"');
+        print('   Baseline intention: "$_baselineIntention"');
+        
+        // Reset interaction flags after saving - current state is now the baseline
+        _userHasInteracted = false;
+        _moodChanged = false;
+        _gratitudeChanged = false;
+        _reflectionChanged = false;
+        _intentionChanged = false;
+        
+        print('📖 Flags reset after save - _userHasInteracted: $_userHasInteracted');
+      });
       
       // Show confirmation only if requested and context is valid
       if (showSnackBar && mounted) {

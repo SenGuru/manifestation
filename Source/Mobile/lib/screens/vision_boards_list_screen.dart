@@ -3,9 +3,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
 import 'vision_board_screen.dart';
-import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
 
 class VisionBoardsListScreen extends StatefulWidget {
   const VisionBoardsListScreen({super.key});
@@ -506,11 +506,9 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
   }
 
   void _openBoard(VisionBoard board) {
-    Navigator.push(
+    pushWithoutSwipe<VisionBoard>(
       context,
-      MaterialPageRoute(
-        builder: (context) => VisionBoardScreen(existingBoard: board),
-      ),
+      VisionBoardScreen(existingBoard: board),
     ).then((result) {
       if (result != null) {
         // Update the specific board in the list
