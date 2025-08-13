@@ -328,6 +328,27 @@ namespace Manifest.Api.All.Controllers
 
             return Json(result);
         }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadUserPermissionFileUrl([FromQuery] long userPermissionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadUserPermissionFile), new { userPermissionId , token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadUserPermissionSourceWordFileUrl([FromQuery] long userPermissionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadUserPermissionSourceWordFile), new { userPermissionId , token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportUserPermissionUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportUserPermission), new { token = Request.GetBearerToken() }));
+        }
         */
         #endregion
 
