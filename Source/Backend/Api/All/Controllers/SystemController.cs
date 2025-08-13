@@ -228,6 +228,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadConfigurationGroupFileUrl([FromQuery] long configurationGroupId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadConfigurationGroupFile), new { configurationGroupId , token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsConfigurationGroupSourceWordFileValid([FromQuery] long configurationGroupId)
         {
@@ -242,6 +249,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadConfigurationGroupSourceWordFileUrl([FromQuery] long configurationGroupId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadConfigurationGroupSourceWordFile), new { configurationGroupId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -298,6 +312,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleConfigurationGroupImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportConfigurationGroupUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportConfigurationGroup), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -401,11 +422,25 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadConfigurationItemFileUrl([FromQuery] long configurationItemId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadConfigurationItemFile), new { configurationItemId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "System" })]
         public Task<ReturnModel<bool>> EnableConfigurationItem([FromBody] long id)
         {
             return systemService.EnableConfigurationItemByIdAsync(id);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadConfigurationItemSourceWordFileUrl([FromQuery] long configurationItemId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadConfigurationItemSourceWordFile), new { configurationItemId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -455,6 +490,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleConfigurationItemImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportConfigurationItemUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportConfigurationItem), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -542,6 +584,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadEnumGroupFileUrl([FromQuery] long enumGroupId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadEnumGroupFile), new { enumGroupId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsEnumGroupSourceWordFileValid([FromQuery] long enumGroupId)
         {
@@ -556,6 +605,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadEnumGroupSourceWordFileUrl([FromQuery] long enumGroupId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadEnumGroupSourceWordFile), new { enumGroupId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -612,6 +668,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleEnumGroupImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportEnumGroupUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportEnumGroup), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -699,6 +762,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadEnumTypeFileUrl([FromQuery] long enumTypeId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadEnumTypeFile), new { enumTypeId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsEnumTypeSourceWordFileValid([FromQuery] long enumTypeId)
         {
@@ -713,6 +783,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadEnumTypeSourceWordFileUrl([FromQuery] long enumTypeId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadEnumTypeSourceWordFile), new { enumTypeId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -769,6 +846,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleEnumTypeImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportEnumTypeUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportEnumType), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -870,6 +954,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobFileUrl([FromQuery] long jobId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobFile), new { jobId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsJobSourceWordFileValid([FromQuery] long jobId)
         {
@@ -884,6 +975,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobSourceWordFileUrl([FromQuery] long jobId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobSourceWordFile), new { jobId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -940,6 +1038,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleJobImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportJobUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportJob), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1027,6 +1132,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobAttachmentFileUrl([FromQuery] long jobAttachmentId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobAttachmentFile), new { jobAttachmentId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsJobAttachmentSourceWordFileValid([FromQuery] long jobAttachmentId)
         {
@@ -1041,6 +1153,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobAttachmentSourceWordFileUrl([FromQuery] long jobAttachmentId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobAttachmentSourceWordFile), new { jobAttachmentId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1097,6 +1216,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleJobAttachmentImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportJobAttachmentUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportJobAttachment), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1184,6 +1310,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobNotificationEmailFileUrl([FromQuery] long jobNotificationEmailId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobNotificationEmailFile), new { jobNotificationEmailId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsJobNotificationEmailSourceWordFileValid([FromQuery] long jobNotificationEmailId)
         {
@@ -1198,6 +1331,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobNotificationEmailSourceWordFileUrl([FromQuery] long jobNotificationEmailId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobNotificationEmailSourceWordFile), new { jobNotificationEmailId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1254,6 +1394,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleJobNotificationEmailImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportJobNotificationEmailUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportJobNotificationEmail), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1341,6 +1488,20 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobTemplateCategoryFileUrl([FromQuery] long jobTemplateCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobTemplateCategoryFile), new { jobTemplateCategoryId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobTemplateCategorySourceWordFileUrl([FromQuery] long jobTemplateCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobTemplateCategorySourceWordFile), new { jobTemplateCategoryId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsJobTemplateCategorySourceWordFileValid([FromQuery] long jobTemplateCategoryId)
         {
@@ -1411,6 +1572,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleJobTemplateCategoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportJobTemplateCategoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportJobTemplateCategory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1498,6 +1666,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobTemplateFileUrl([FromQuery] long jobTemplateId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobTemplateFile), new { jobTemplateId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsJobTemplateSourceWordFileValid([FromQuery] long jobTemplateId)
         {
@@ -1512,6 +1687,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobTemplateSourceWordFileUrl([FromQuery] long jobTemplateId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobTemplateSourceWordFile), new { jobTemplateId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1568,6 +1750,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleJobTemplateImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportJobTemplateUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportJobTemplate), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1655,6 +1844,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobTemplateParameterFileUrl([FromQuery] long jobTemplateParameterId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobTemplateParameterFile), new { jobTemplateParameterId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsJobTemplateParameterSourceWordFileValid([FromQuery] long jobTemplateParameterId)
         {
@@ -1669,6 +1865,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadJobTemplateParameterSourceWordFileUrl([FromQuery] long jobTemplateParameterId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadJobTemplateParameterSourceWordFile), new { jobTemplateParameterId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1725,6 +1928,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleJobTemplateParameterImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportJobTemplateParameterUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportJobTemplateParameter), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1790,6 +2000,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMessageToSendFileUrl([FromQuery] long messageToSendId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMessageToSendFile), new { messageToSendId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsMessageToSendSourceWordFileValid([FromQuery] long messageToSendId)
         {
@@ -1804,6 +2021,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMessageToSendSourceWordFileUrl([FromQuery] long messageToSendId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMessageToSendSourceWordFile), new { messageToSendId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1860,6 +2084,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleMessageToSendImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportMessageToSendUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportMessageToSend), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1932,6 +2163,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadRealtimeMessageFileUrl([FromQuery] long realtimeMessageId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadRealtimeMessageFile), new { realtimeMessageId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsRealtimeMessageSourceWordFileValid([FromQuery] long realtimeMessageId)
         {
@@ -1946,6 +2184,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadRealtimeMessageSourceWordFileUrl([FromQuery] long realtimeMessageId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadRealtimeMessageSourceWordFile), new { realtimeMessageId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2002,6 +2247,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleRealtimeMessageImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportRealtimeMessageUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportRealtimeMessage), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2089,6 +2341,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSavedJobFileUrl([FromQuery] long savedJobId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSavedJobFile), new { savedJobId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsSavedJobSourceWordFileValid([FromQuery] long savedJobId)
         {
@@ -2103,6 +2362,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSavedJobSourceWordFileUrl([FromQuery] long savedJobId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSavedJobSourceWordFile), new { savedJobId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2159,6 +2425,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleSavedJobImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportSavedJobUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportSavedJob), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2246,6 +2519,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadScheduledJobFileUrl([FromQuery] long scheduledJobId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadScheduledJobFile), new { scheduledJobId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsScheduledJobSourceWordFileValid([FromQuery] long scheduledJobId)
         {
@@ -2260,6 +2540,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadScheduledJobSourceWordFileUrl([FromQuery] long scheduledJobId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadScheduledJobSourceWordFile), new { scheduledJobId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2316,6 +2603,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleScheduledJobImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportScheduledJobUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportScheduledJob), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2403,6 +2697,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadAuditOperationFileUrl([FromQuery] long auditOperationId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadAuditOperationFile), new { auditOperationId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsAuditOperationSourceWordFileValid([FromQuery] long auditOperationId)
         {
@@ -2417,6 +2718,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadAuditOperationSourceWordFileUrl([FromQuery] long auditOperationId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadAuditOperationSourceWordFile), new { auditOperationId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2473,6 +2781,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleAuditOperationImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportAuditOperationUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportAuditOperation), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2618,6 +2933,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSavedJobNotificationEmailFileUrl([FromQuery] long savedJobNotificationEmailId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSavedJobNotificationEmailFile), new { savedJobNotificationEmailId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsSavedJobNotificationEmailSourceWordFileValid([FromQuery] long savedJobNotificationEmailId)
         {
@@ -2634,8 +2956,16 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSavedJobNotificationEmailSourceWordFileUrl([FromQuery] long savedJobNotificationEmailId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSavedJobNotificationEmailSourceWordFile), new { savedJobNotificationEmailId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "System" })]
+        
         public Task<ReturnModel<bool>> EnableSavedJobNotificationEmail([FromBody] long id)
         {
             return systemService.EnableSavedJobNotificationEmailByIdAsync(id);
@@ -2688,6 +3018,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleSavedJobNotificationEmailImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportSavedJobNotificationEmailUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportSavedJobNotificationEmail), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2775,6 +3112,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadScheduledJobHistoryFileUrl([FromQuery] long scheduledJobHistoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadScheduledJobHistoryFile), new { scheduledJobHistoryId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsScheduledJobHistorySourceWordFileValid([FromQuery] long scheduledJobHistoryId)
         {
@@ -2791,8 +3135,16 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadScheduledJobHistorySourceWordFileUrl([FromQuery] long scheduledJobHistoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadScheduledJobHistorySourceWordFile), new { scheduledJobHistoryId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "System" })]
+        
         public Task<ReturnModel<bool>> EnableScheduledJobHistory([FromBody] long id)
         {
             return systemService.EnableScheduledJobHistoryByIdAsync(id);
@@ -2845,6 +3197,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleScheduledJobHistoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportScheduledJobHistoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportScheduledJobHistory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2932,6 +3291,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadScheduledJobNotificationEmailFileUrl([FromQuery] long scheduledJobNotificationEmailId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadScheduledJobNotificationEmailFile), new { scheduledJobNotificationEmailId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsScheduledJobNotificationEmailSourceWordFileValid([FromQuery] long scheduledJobNotificationEmailId)
         {
@@ -2948,8 +3314,16 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadScheduledJobNotificationEmailSourceWordFileUrl([FromQuery] long scheduledJobNotificationEmailId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadScheduledJobNotificationEmailSourceWordFile), new { scheduledJobNotificationEmailId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "System" })]
+        
         public Task<ReturnModel<bool>> EnableScheduledJobNotificationEmail([FromBody] long id)
         {
             return systemService.EnableScheduledJobNotificationEmailByIdAsync(id);
@@ -3002,6 +3376,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleScheduledJobNotificationEmailImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportScheduledJobNotificationEmailUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportScheduledJobNotificationEmail), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3126,6 +3507,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMailServerFileUrl([FromQuery] long mailServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMailServerFile), new { mailServerId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsMailServerSourceWordFileValid([FromQuery] long mailServerId)
         {
@@ -3142,8 +3530,16 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMailServerSourceWordFileUrl([FromQuery] long mailServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMailServerSourceWordFile), new { mailServerId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "System" })]
+        
         public Task<ReturnModel<bool>> EnableMailServer([FromBody] long id)
         {
             return systemService.EnableMailServerByIdAsync(id);
@@ -3196,6 +3592,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleMailServerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportMailServerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportMailServer), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3283,6 +3686,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSmsServerFileUrl([FromQuery] long smsServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSmsServerFile), new { smsServerId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsSmsServerSourceWordFileValid([FromQuery] long smsServerId)
         {
@@ -3299,8 +3709,16 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSmsServerSourceWordFileUrl([FromQuery] long smsServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSmsServerSourceWordFile), new { smsServerId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "System" })]
+        
         public Task<ReturnModel<bool>> EnableSmsServer([FromBody] long id)
         {
             return systemService.EnableSmsServerByIdAsync(id);
@@ -3353,6 +3771,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleSmsServerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportSmsServerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportSmsServer), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3440,6 +3865,13 @@ namespace Manifest.Api.All.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSingleSignOnServerFileUrl([FromQuery] long singleSignOnServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSingleSignOnServerFile), new { singleSignOnServerId, token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsSingleSignOnServerSourceWordFileValid([FromQuery] long singleSignOnServerId)
         {
@@ -3454,6 +3886,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSingleSignOnServerSourceWordFileUrl([FromQuery] long singleSignOnServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSingleSignOnServerSourceWordFile), new { singleSignOnServerId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -3510,6 +3949,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleSingleSignOnServerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportSingleSignOnServerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportSingleSignOnServer), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]

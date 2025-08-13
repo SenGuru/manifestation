@@ -2,7 +2,10 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
-      "Bash(dotnet build)"
+      "Bash(dotnet build)",
+      "Bash(grep:*)",
+      "Bash(rm:*)",
+      "Bash(awk:*)"
     ],
     "deny": []
   }

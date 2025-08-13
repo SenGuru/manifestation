@@ -843,6 +843,7 @@ namespace Manifest.Service.App
 
                 User userItem = new User
                 {
+                    UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Email = user.Email
@@ -973,7 +974,7 @@ namespace Manifest.Service.App
             }
         }
 
-        public Task<List<ReturnErrorItem>> IsMimimalUserProfileModelValidForAllAsync(MinimalUserProfileModel userModel)
+        public async Task<List<ReturnErrorItem>> IsMimimalUserProfileModelValidForAllAsync(MinimalUserProfileModel userModel)
         {
             List<ReturnErrorItem> result = new List<ReturnErrorItem>();
 
@@ -986,10 +987,22 @@ namespace Manifest.Service.App
             {
                 result.Add(new ReturnErrorItem("Email", "Email is required."));
             }
-
-            if (!ValidationUtils.IsEmail(userModel.Email))
+            else
             {
-                result.Add(new ReturnErrorItem("Email", "Email is not valid."));
+                if (await companyRepository.IsUserNameAlreadyExistsForOtherUserAsync(userModel.UserId ?? 0, userModel.Email))
+                {
+                    result.Add(new ReturnErrorItem("", "Another User already exists"));
+                }
+
+                if (userModel.UserId <= 0)
+                {
+                    result.Add(new ReturnErrorItem("", "User Unique Identifier is not valid"));
+                }
+
+                if (!ValidationUtils.IsEmail(userModel.Email))
+                {
+                    result.Add(new ReturnErrorItem("Email", "Email is not valid."));
+                }
             }
 
             if (userModel.FirstName != null && userModel.FirstName.Length > UserModel.COLUMN_SIZE_FirstName)
@@ -1012,7 +1025,7 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("LastName", "Last Name is required "));
             }
 
-            return Task<List<ReturnErrorItem>>.FromResult(result.Count > 0 ? result : null);
+            return result.Count > 0 ? result : null;
         }
 
         public async Task<ReturnListModel<ImportStatusModel>> ImportUserAsync(UserImportModel model, bool isTest)

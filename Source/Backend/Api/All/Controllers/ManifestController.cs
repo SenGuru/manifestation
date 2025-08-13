@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Net;
-using System.Threading.Tasks;
 using DocumentFormat.OpenXml.EMMA;
 using Framework.Infrastructure.Interfaces.Helpers;
 using Framework.Infrastructure.Interfaces.Services;
@@ -24,12 +20,17 @@ using Manifest.Service.Config;
 using Manifest.Service.Storage;
 using Manifest.Web.Filters;
 using Manifest.Web.Models;
+using Manifest.Web.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PiperSharp;
 using PiperSharp.Models;
 using Swashbuckle.AspNetCore.Annotations;
+using System;
+using System.IO;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Manifest.Api.All.Controllers
 {
@@ -119,6 +120,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadFileAttachmentFolderFileUrl([FromQuery] long fileAttachmentFolderId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadFileAttachmentFolderFile), new { fileAttachmentFolderId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadFileAttachmentFolderFile([FromForm] FileAttachmentFolderFileWithFileFormModel model)
@@ -159,6 +167,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadFileAttachmentFolderSourceWordFileUrl([FromQuery] long fileAttachmentFolderId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadFileAttachmentFolderSourceWordFile), new { fileAttachmentFolderId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -215,6 +230,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleFileAttachmentFolderImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportFileAttachmentFolderUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportFileAttachmentFolder), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -311,6 +333,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadFileAttachmentFileUrl([FromQuery] long fileAttachmentId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadFileAttachmentFile), new { fileAttachmentId , token = Request.GetBearerToken() }));
+        }
+
         /*
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
@@ -327,6 +356,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadFileAttachmentSourceWordFileUrl([FromQuery] long fileAttachmentId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadFileAttachmentSourceWordFile), new { fileAttachmentId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -383,6 +419,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleFileAttachmentImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportFileAttachmentUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportFileAttachment), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -566,6 +609,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardSessionPictureFileUrl([FromQuery] long visionBoardSessionPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardSessionPictureFile), new { visionBoardSessionPictureId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadVisionBoardSessionPictureFile([FromForm] VisionBoardSessionPictureFileWithFileFormModel model)
@@ -606,6 +656,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardSessionPictureSourceWordFileUrl([FromQuery] long visionBoardSessionPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardSessionPictureSourceWordFile), new { visionBoardSessionPictureId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -662,6 +719,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleVisionBoardSessionPictureImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportVisionBoardSessionPictureUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportVisionBoardSessionPicture), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -823,6 +887,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadCategoryFileUrl([FromQuery] long categoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadCategoryFile), new { categoryId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadCategoryFile([FromForm] CategoryFileWithFileFormModel model)
@@ -863,6 +934,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadCategorySourceWordFileUrl([FromQuery] long categoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadCategorySourceWordFile), new { categoryId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -919,6 +997,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleCategoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportCategoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportCategory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1044,6 +1129,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyAffirmationSessionFileUrl([FromQuery] long dailyAffirmationSessionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyAffirmationSessionFile), new { dailyAffirmationSessionId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDailyAffirmationSessionFile([FromForm] DailyAffirmationSessionFileWithFileFormModel model)
@@ -1084,6 +1176,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyAffirmationSessionSourceWordFileUrl([FromQuery] long dailyAffirmationSessionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyAffirmationSessionSourceWordFile), new { dailyAffirmationSessionId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1140,6 +1239,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDailyAffirmationSessionImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDailyAffirmationSessionUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDailyAffirmationSession), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1323,6 +1429,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyAffirmationSessionCategoryFileUrl([FromQuery] long dailyAffirmationSessionCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyAffirmationSessionCategoryFile), new { dailyAffirmationSessionCategoryId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDailyAffirmationSessionCategoryFile([FromForm] DailyAffirmationSessionCategoryFileWithFileFormModel model)
@@ -1363,6 +1476,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyAffirmationSessionCategorySourceWordFileUrl([FromQuery] long dailyAffirmationSessionCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyAffirmationSessionCategorySourceWordFile), new { dailyAffirmationSessionCategoryId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1419,6 +1539,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDailyAffirmationSessionCategoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDailyAffirmationSessionCategoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDailyAffirmationSessionCategory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1580,6 +1707,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyAffirmationTextFileUrl([FromQuery] long dailyAffirmationTextId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyAffirmationTextFile), new { dailyAffirmationTextId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDailyAffirmationTextFile([FromForm] DailyAffirmationTextFileWithFileFormModel model)
@@ -1620,6 +1754,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyAffirmationTextSourceWordFileUrl([FromQuery] long dailyAffirmationTextId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyAffirmationTextSourceWordFile), new { dailyAffirmationTextId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1676,6 +1817,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDailyAffirmationTextImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDailyAffirmationTextUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDailyAffirmationText), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1772,6 +1920,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultCategoryFileUrl([FromQuery] long defaultCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultCategoryFile), new { defaultCategoryId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDefaultCategoryFile([FromForm] DefaultCategoryFileWithFileFormModel model)
@@ -1812,6 +1967,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultCategorySourceWordFileUrl([FromQuery] long defaultCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultCategorySourceWordFile), new { defaultCategoryId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -1868,6 +2030,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDefaultCategoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDefaultCategoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDefaultCategory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -1993,6 +2162,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultDailyAffirmationTextFileUrl([FromQuery] long defaultDailyAffirmationTextId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultDailyAffirmationTextFile), new { defaultDailyAffirmationTextId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDefaultDailyAffirmationTextFile([FromForm] DefaultDailyAffirmationTextFileWithFileFormModel model)
@@ -2033,6 +2209,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultDailyAffirmationTextSourceWordFileUrl([FromQuery] long defaultDailyAffirmationTextId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultDailyAffirmationTextSourceWordFile), new { defaultDailyAffirmationTextId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2089,6 +2272,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDefaultDailyAffirmationTextImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDefaultDailyAffirmationTextUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDefaultDailyAffirmationText), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2185,6 +2375,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultGoalTrackerFileUrl([FromQuery] long defaultGoalTrackerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultGoalTrackerFile), new { defaultGoalTrackerId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDefaultGoalTrackerFile([FromForm] DefaultGoalTrackerFileWithFileFormModel model)
@@ -2225,6 +2422,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultGoalTrackerSourceWordFileUrl([FromQuery] long defaultGoalTrackerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultGoalTrackerSourceWordFile), new { defaultGoalTrackerId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2281,6 +2485,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDefaultGoalTrackerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDefaultGoalTrackerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDefaultGoalTracker), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2435,6 +2646,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultGoalTrackerCategoryFileUrl([FromQuery] long defaultGoalTrackerCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultGoalTrackerCategoryFile), new { defaultGoalTrackerCategoryId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDefaultGoalTrackerCategoryFile([FromForm] DefaultGoalTrackerCategoryFileWithFileFormModel model)
@@ -2475,6 +2693,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultGoalTrackerCategorySourceWordFileUrl([FromQuery] long defaultGoalTrackerCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultGoalTrackerCategorySourceWordFile), new { defaultGoalTrackerCategoryId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2531,6 +2756,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDefaultGoalTrackerCategoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDefaultGoalTrackerCategoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDefaultGoalTrackerCategory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2627,6 +2859,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultMeditationFileFileUrl([FromQuery] long defaultMeditationFileId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultMeditationFileFile), new { defaultMeditationFileId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDefaultMeditationFileFile([FromForm] DefaultMeditationFileFileWithFileFormModel model)
@@ -2667,6 +2906,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultMeditationFileSourceWordFileUrl([FromQuery] long defaultMeditationFileId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultMeditationFileSourceWordFile), new { defaultMeditationFileId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2723,6 +2969,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDefaultMeditationFileImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDefaultMeditationFileUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDefaultMeditationFile), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -2819,6 +3072,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultVisionBoardPictureFileUrl([FromQuery] long defaultVisionBoardPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultVisionBoardPictureFile), new { defaultVisionBoardPictureId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDefaultVisionBoardPictureFile([FromForm] DefaultVisionBoardPictureFileWithFileFormModel model)
@@ -2859,6 +3119,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDefaultVisionBoardPictureSourceWordFileUrl([FromQuery] long defaultVisionBoardPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDefaultVisionBoardPictureSourceWordFile), new { defaultVisionBoardPictureId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -2915,6 +3182,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDefaultVisionBoardPictureImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDefaultVisionBoardPictureUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDefaultVisionBoardPicture), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3185,6 +3459,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadFeedFileUrl([FromQuery] long feedId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadFeedFile), new { feedId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadFeedFile([FromForm] FeedFileWithFileFormModel model)
@@ -3225,6 +3506,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadFeedSourceWordFileUrl([FromQuery] long feedId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadFeedSourceWordFile), new { feedId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -3281,6 +3569,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleFeedImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportFeedUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportFeed), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3415,6 +3710,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadGoalTrackerFileUrl([FromQuery] long goalTrackerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadGoalTrackerFile), new { goalTrackerId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadGoalTrackerFile([FromForm] GoalTrackerFileWithFileFormModel model)
@@ -3455,6 +3757,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadGoalTrackerSourceWordFileUrl([FromQuery] long goalTrackerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadGoalTrackerSourceWordFile), new { goalTrackerId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -3511,6 +3820,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleGoalTrackerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportGoalTrackerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportGoalTracker), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3702,6 +4018,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadGoalTrackerCategoryFileUrl([FromQuery] long goalTrackerCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadGoalTrackerCategoryFile), new { goalTrackerCategoryId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadGoalTrackerCategoryFile([FromForm] GoalTrackerCategoryFileWithFileFormModel model)
@@ -3742,6 +4065,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadGoalTrackerCategorySourceWordFileUrl([FromQuery] long goalTrackerCategoryId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadGoalTrackerCategorySourceWordFile), new { goalTrackerCategoryId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -3798,6 +4128,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleGoalTrackerCategoryImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportGoalTrackerCategoryUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportGoalTrackerCategory), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -3952,6 +4289,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadGoalTrackerMileStoneFileUrl([FromQuery] long goalTrackerMileStoneId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadGoalTrackerMileStoneFile), new { goalTrackerMileStoneId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadGoalTrackerMileStoneFile([FromForm] GoalTrackerMileStoneFileWithFileFormModel model)
@@ -3992,6 +4336,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadGoalTrackerMileStoneSourceWordFileUrl([FromQuery] long goalTrackerMileStoneId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadGoalTrackerMileStoneSourceWordFile), new { goalTrackerMileStoneId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4048,6 +4399,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleGoalTrackerMileStoneImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportGoalTrackerMileStoneUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportGoalTrackerMileStone), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4173,6 +4531,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMeditationFileFileUrl([FromQuery] long meditationFileId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMeditationFileFile), new { meditationFileId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadMeditationFileFile([FromForm] MeditationFileFileWithFileFormModel model)
@@ -4213,6 +4578,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMeditationFileSourceWordFileUrl([FromQuery] long meditationFileId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMeditationFileSourceWordFile), new { meditationFileId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4269,6 +4641,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleMeditationFileImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportMeditationFileUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportMeditationFile), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4423,6 +4802,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMeditationSessionFileUrl([FromQuery] long meditationSessionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMeditationSessionFile), new { meditationSessionId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadMeditationSessionFile([FromForm] MeditationSessionFileWithFileFormModel model)
@@ -4463,6 +4849,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadMeditationSessionSourceWordFileUrl([FromQuery] long meditationSessionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMeditationSessionSourceWordFile), new { meditationSessionId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4519,6 +4912,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleMeditationSessionImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportMeditationSessionUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportMeditationSession), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4663,6 +5063,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardPictureFileUrl([FromQuery] long visionBoardPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardPictureFile), new { visionBoardPictureId, token = Request.GetBearerToken() }));
+        }
+
 /*
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
@@ -4706,6 +5113,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardPictureThumbnailUrl([FromQuery] long visionBoardPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardPictureThumbnail), new { visionBoardPictureId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadVisionBoardPictureThumbnail([FromForm] VisionBoardPictureThumbnailWithFileFormModel model)
@@ -4747,6 +5161,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardPictureSourceWordFileUrl([FromQuery] long visionBoardPictureId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardPictureSourceWordFile), new { visionBoardPictureId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4803,6 +5224,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleVisionBoardPictureImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportVisionBoardPictureUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportVisionBoardPicture), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4925,6 +5353,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardSessionFileUrl([FromQuery] long visionBoardSessionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardSessionFile), new { visionBoardSessionId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadVisionBoardSessionFile([FromForm] VisionBoardSessionFileWithFileFormModel model)
@@ -4965,6 +5400,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVisionBoardSessionSourceWordFileUrl([FromQuery] long visionBoardSessionId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVisionBoardSessionSourceWordFile), new { visionBoardSessionId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -5021,6 +5463,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleVisionBoardSessionImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportVisionBoardSessionUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportVisionBoardSession), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -5146,6 +5595,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyJournalFileUrl([FromQuery] long dailyJournalId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyJournalFile), new { dailyJournalId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadDailyJournalFile([FromForm] DailyJournalFileWithFileFormModel model)
@@ -5186,6 +5642,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadDailyJournalSourceWordFileUrl([FromQuery] long dailyJournalId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadDailyJournalSourceWordFile), new { dailyJournalId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -5242,6 +5705,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleDailyJournalImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportDailyJournalUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportDailyJournal), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
