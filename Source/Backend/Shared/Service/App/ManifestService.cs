@@ -25669,7 +25669,7 @@ namespace Manifest.Service.App
 
                 if (!await fileAttachmentFileStorage.ExistsAsync(view.Model.UserId, fileName))
                 {
-                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: thumbnail is not available.");
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: thumbnail does not exist.");
                 }
 
                 var actualFileName = view.Model.ThumbnailFileName.IsTrimmedStringNullOrEmpty() ? $"VisionBoardPictureThumbnail" : view.Model.ThumbnailFileName;
