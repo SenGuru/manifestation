@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../services/unified_auth_service.dart';
+import '../components/network_error_dialog.dart';
 import 'signup_page.dart';
 import 'home_screen.dart';
 import 'forgot_password_screen.dart';
@@ -705,12 +706,11 @@ class _LoginScreenState extends State<LoginScreen>
         );
       }
     } catch (e) {
-      ErrorPopup.show(
+      // Show beautiful network error dialog
+      showNetworkErrorDialog(
         context,
-        title: 'Connection Error',
-        message: 'Unable to connect to our servers. Please check your internet connection and try again.',
-        actionText: 'Retry',
-        onAction: () => _handleLogin(),
+        message: 'We\'re having trouble connecting to our servers. Please check your internet connection and try again in a moment.',
+        onRetry: () => _handleLogin(),
       );
     } finally {
       setState(() {

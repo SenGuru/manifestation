@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
 import '../services/unified_auth_service.dart';
+import '../components/network_error_dialog.dart';
 import '../widgets/stylish_loading.dart';
 import 'onboarding_screen.dart';
 import 'home_screen.dart';
@@ -130,14 +131,61 @@ class _SplashScreenState extends State<SplashScreen>
       
       // Check actual authentication state
       final authService = UnifiedAuthService();
-      final isLoggedIn = authService.isLoggedIn;
+      
+      // Start verification process while allowing animations to continue
+      setState(() {
+        _statusMessage = 'Verifying credentials...';
+      });
+      
+      // Poll for session state changes instead of blocking with delay
+      SessionState sessionState;
+      bool isLoggedIn;
+      int attempts = 0;
+      const maxAttempts = 15; // 3 seconds max (15 * 200ms)
+      
+      do {
+        await Future.delayed(Duration(milliseconds: 200)); // Short non-blocking delay
+        sessionState = authService.sessionState;
+        isLoggedIn = authService.isLoggedIn;
+        attempts++;
+        
+        // Update UI with progress indicators
+        if (attempts % 3 == 0) {
+          setState(() {
+            _statusMessage = attempts < 5 
+              ? 'Verifying credentials...' 
+              : 'Connecting to server...';
+          });
+        }
+        
+        // Break if we have a definitive state or max attempts reached
+        if (sessionState.toString() != 'SessionState.loggedOut' || attempts >= maxAttempts) {
+          break;
+        }
+      } while (attempts < maxAttempts);
       print('=== SPLASH SCREEN SESSION CHECK ===');
       print('Is logged in: $isLoggedIn');
-      print('Session state: ${authService.sessionState}');
+      print('Session state: $sessionState');
       print('Has current user: ${authService.currentUser != null}');
       print('Has auth token: ${authService.authToken != null}');
       
       await Future.delayed(Duration(milliseconds: 600));
+      
+      print('Final session state: $sessionState after $attempts attempts');
+      
+      // Handle network error state - show network error instead of login
+      if (sessionState.toString().contains('networkError')) {
+        print('🌐 Network error detected - showing connection error dialog');
+        setState(() {
+          _statusMessage = 'Connection issue detected...';
+        });
+        
+        await Future.delayed(Duration(milliseconds: 500));
+        
+        // Show network error dialog with retry functionality
+        _showNetworkErrorWithRetry();
+        return; // Don't continue with normal flow
+      }
       
       // Check if user has seen initial onboarding and post-signup onboarding
       final hasSeenOnboarding = await _hasSeenOnboarding();
@@ -174,6 +222,36 @@ class _SplashScreenState extends State<SplashScreen>
         _isInitializing = false;
       });
     }
+  }
+
+  /// Show network error dialog with retry functionality
+  void _showNetworkErrorWithRetry({int retryCount = 0}) {
+    showNetworkErrorDialog(
+      context,
+      message: retryCount == 0 
+        ? 'We\'re having trouble connecting to our servers. Please check your internet connection and try again.'
+        : 'Still having connection issues. Please check your network and try again.',
+      onRetry: () => _restartWithAnimation(),
+    );
+  }
+
+  /// Restart the splash screen with full animation sequence for retry
+  void _restartWithAnimation() {
+    print('🔄 Restarting splash screen with full animation sequence...');
+    
+    setState(() {
+      _isInitializing = true;
+      _statusMessage = 'Initializing...';
+    });
+    
+    // Reset all animation controllers to starting position
+    _logoController.reset();
+    _fadeController.reset();
+    _glowController.reset();
+    _textController.reset();
+    
+    // Start the initialization sequence again with animations
+    _startInitialization();
   }
 
   Future<bool> _hasSeenOnboarding() async {

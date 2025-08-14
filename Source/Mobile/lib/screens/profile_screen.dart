@@ -59,23 +59,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _loadUserData() async {
     try {
-      // Load only essential user info
-      final fullName = await UserService.getFullName();
-      final userData = await UserService.getUserData();
-      final userNameStr = await UserService.getUserName();
+      // Get user data from unified auth service for consistency
+      final authService = UnifiedAuthService();
+      final userData = await authService.getUserData();
       
-      setState(() {
-        userName = fullName.isNotEmpty ? fullName : 'User';
-        userEmail = userData?['model']?['email'] ?? userNameStr ?? 'user@example.com';
-        _isLoading = false;
-      });
+      String fullName = 'User';
+      String email = 'user@example.com';
+      
+      if (userData != null) {
+        final firstName = userData['firstName'] ?? '';
+        final lastName = userData['lastName'] ?? '';
+        
+        // Get email from userData 
+        if (userData['email'] != null && userData['email'].isNotEmpty) {
+          email = userData['email'];
+        } else {
+          // Try to find email in nested model structure
+          final model = userData['model'];
+          if (model != null && model['email'] != null) {
+            email = model['email'];
+          } else {
+            // Last resort: try to get email directly from storage
+            final storedEmail = await authService.getUserEmail();
+            if (storedEmail != null && storedEmail.isNotEmpty) {
+              email = storedEmail;
+            }
+          }
+        }
+        
+        // Construct full name
+        if (firstName.isNotEmpty || lastName.isNotEmpty) {
+          fullName = '$firstName $lastName'.trim();
+          if (fullName.isEmpty) fullName = 'User';
+        }
+        
+        print('📋 Profile - Loaded user data:');
+        print('  - fullName: $fullName');
+        print('  - email: $email');
+      }
+      
+      if (mounted) {
+        setState(() {
+          userName = fullName;
+          userEmail = email;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
       print('Error loading user data: $e');
-      setState(() {
-        userName = 'User';
-        userEmail = 'user@example.com';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          userName = 'User';
+          userEmail = 'user@example.com';
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -180,12 +218,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 });
               }
             },
-            onTap: () {
+            onTap: () async {
               HapticFeedback.lightImpact();
-              pushWithoutSwipe(
+              await pushWithoutSwipe(
                 context,
                 AccountSettingsScreen(cachedProfileImageUrl: _cachedProfileImageUrl),
               );
+              // Refresh user data when returning from account settings
+              _loadUserData();
             },
           ),
           
@@ -218,12 +258,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           
           // Edit button
           GestureDetector(
-            onTap: () {
+            onTap: () async {
               HapticFeedback.lightImpact();
-              pushWithoutSwipe(
+              await pushWithoutSwipe(
                 context,
                 AccountSettingsScreen(),
               );
+              // Refresh user data when returning from account settings
+              _loadUserData();
             },
             child: Container(
               padding: EdgeInsets.all(10.w),

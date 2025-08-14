@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../services/unified_auth_service.dart';
+import '../components/network_error_dialog.dart';
 import 'post_signup_onboarding.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
@@ -1001,12 +1002,11 @@ class _SignUpScreenState extends State<SignUpScreen>
       print('📱 Stack trace:');
       print(stackTrace);
       
-      ErrorPopup.show(
+      // Show beautiful network error dialog
+      showNetworkErrorDialog(
         context,
-        title: 'Connection Error',
-        message: 'Unable to create your account right now. Please check your internet connection and try again.\n\nError: $e',
-        actionText: 'Retry',
-        onAction: () => _handleSignUp(),
+        message: 'We\'re having trouble creating your account. Please check your internet connection and try again in a moment.',
+        onRetry: () => _handleSignUp(),
       );
     } catch (e) {
       print('📱 Background account creation error: $e');

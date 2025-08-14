@@ -29,7 +29,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int currentStreak = 7;
   String userName = 'User';
   bool _isPremium = false;
@@ -38,10 +38,32 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    // Add app lifecycle observer to refresh data when app comes back to foreground
+    WidgetsBinding.instance.addObserver(this);
     // Use post frame callback to prevent blocking initial render
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadInitialData();
     });
+  }
+  
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+  
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Refresh user data when app comes back to foreground
+    if (state == AppLifecycleState.resumed) {
+      _refreshUserData();
+    }
+  }
+  
+  /// Refresh user data when returning from other screens
+  Future<void> _refreshUserData() async {
+    await _loadUserName();
   }
 
   void _loadInitialData() async {
@@ -112,31 +134,37 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       final authService = UnifiedAuthService();
       
-      // Try to get user data from the auth service
-      final currentUser = authService.currentUser;
+      // Always try to get fresh user data from storage first
+      final userData = await authService.getUserData();
       String firstName = '';
       
-      if (currentUser != null && currentUser.firstName != null) {
-        firstName = currentUser.firstName!;
-        print('Loaded firstName from currentUser: $firstName');
-      } else {
-        // Fallback to getting user data from storage
-        final userData = await authService.getUserData();
-        if (userData != null) {
-          firstName = userData['firstName'] ?? '';
-          print('Loaded firstName from userData: $firstName');
+      if (userData != null) {
+        firstName = userData['firstName'] ?? '';
+        print('Loaded firstName from storage: $firstName');
+      }
+      
+      // If storage is empty, fallback to currentUser object
+      if (firstName.isEmpty) {
+        final currentUser = authService.currentUser;
+        if (currentUser != null && currentUser.firstName != null) {
+          firstName = currentUser.firstName!;
+          print('Loaded firstName from currentUser: $firstName');
         }
       }
       
-      setState(() {
-        userName = firstName.isNotEmpty ? firstName : 'User';
-      });
-      print('Set user name to: $userName');
+      if (mounted) {
+        setState(() {
+          userName = firstName.isNotEmpty ? firstName : 'User';
+        });
+        print('Set user name to: $userName');
+      }
     } catch (e) {
       print('Error loading user name: $e');
-      setState(() {
-        userName = 'User';
-      });
+      if (mounted) {
+        setState(() {
+          userName = 'User';
+        });
+      }
     }
   }
 
@@ -279,12 +307,14 @@ class _HomeScreenState extends State<HomeScreen> {
             // Cache the loaded image URL
             _cachedProfileImageUrl = imageUrl;
           },
-          onTap: () {
+          onTap: () async {
             HapticFeedback.lightImpact();
-            pushWithoutSwipe(
+            await pushWithoutSwipe(
               context,
               ProfileScreen(cachedProfileImageUrl: _cachedProfileImageUrl),
             );
+            // Refresh user data when returning from profile/settings
+            _refreshUserData();
           },
         ),
       ],

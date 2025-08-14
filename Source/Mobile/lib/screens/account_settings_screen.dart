@@ -6,6 +6,7 @@ import '../services/unified_auth_service.dart';
 import '../services/user_service.dart';
 import '../services/subscription_service.dart';
 import '../services/user_profile_service.dart';
+import '../components/network_error_dialog.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/universal_back_button.dart';
 import '../widgets/user_profile_picture.dart';
@@ -61,6 +62,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   final ImagePicker _imagePicker = ImagePicker();
   File? _selectedProfileImage;
   bool _isUploadingImage = false;
+  String? _cachedProfileImageUrl;
 
   void _initializeAnimations() {
     // Main edit mode controller
@@ -105,45 +107,90 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   void initState() {
     super.initState();
     _initializeAnimations();
+    _cachedProfileImageUrl = widget.cachedProfileImageUrl;
     _loadUserData();
     
-    // Add listeners for validation
+    // Add listeners for validation - but don't setState on every change
     _fullNameController.addListener(() {
       _checkAndShowPasswordField();
-      setState(() {
-        _nameError = _fullNameController.text.trim().isEmpty ? 'Full name is required' : null;
-      });
+      // Only update error state, don't trigger full rebuild
+      final newError = _fullNameController.text.trim().isEmpty ? 'Full name is required' : null;
+      if (newError != _nameError) {
+        setState(() {
+          _nameError = newError;
+        });
+      }
     });
     
     _emailController.addListener(() {
       _checkAndShowPasswordField();
-      setState(() {
-        if (_emailController.text.trim().isEmpty) {
-          _emailError = 'Email is required';
-        } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text.trim())) {
-          _emailError = 'Please enter a valid email address';
-        } else {
-          _emailError = null;
-        }
-      });
+      // Only update error state if it actually changed
+      String? newError;
+      if (_emailController.text.trim().isEmpty) {
+        newError = 'Email is required';
+      } else if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(_emailController.text.trim())) {
+        newError = 'Please enter a valid email address';
+      } else {
+        newError = null;
+      }
+      if (newError != _emailError) {
+        setState(() {
+          _emailError = newError;
+        });
+      }
     });
     
     _passwordController.addListener(() {
-      setState(() {
-        if (_passwordController.text.isEmpty) {
-          _passwordError = 'Current password is required';
-        } else {
-          _passwordError = null;
-        }
-      });
+      // Only update error state if it actually changed
+      final newError = _passwordController.text.isEmpty ? 'Current password is required' : null;
+      if (newError != _passwordError) {
+        setState(() {
+          _passwordError = newError;
+        });
+      }
     });
   }
 
   Future<void> _loadUserData() async {
     try {
-      final fullName = await UserService.getFullName();
-      final userData = await UserService.getUserData();
-      final email = userData?['model']?['email'] ?? '';
+      // Get user data from unified auth service for consistency
+      final authService = UnifiedAuthService();
+      final userData = await authService.getUserData();
+      
+      String fullName = 'User';
+      String email = 'user@example.com';
+      
+      if (userData != null) {
+        final firstName = userData['firstName'] ?? '';
+        final lastName = userData['lastName'] ?? '';
+        
+        // Get email from userData (LoggedInUserModel doesn't have email field)
+        if (userData['email'] != null && userData['email'].isNotEmpty) {
+          email = userData['email'];
+        } else {
+          // Try to find email in nested model structure
+          final model = userData['model'];
+          if (model != null && model['email'] != null) {
+            email = model['email'];
+          } else {
+            // Last resort: try to get email directly from storage
+            final storedEmail = await authService.getUserEmail();
+            if (storedEmail != null && storedEmail.isNotEmpty) {
+              email = storedEmail;
+            }
+          }
+        }
+        
+        // Construct full name
+        if (firstName.isNotEmpty || lastName.isNotEmpty) {
+          fullName = '$firstName $lastName'.trim();
+          if (fullName.isEmpty) fullName = 'User';
+        }
+        
+        print('📋 Loaded user data:');
+        print('  - fullName: $fullName');
+        print('  - email: $email');
+      }
       
       // Check subscription status
       final subscriptionService = SubscriptionService();
@@ -151,8 +198,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
       final isPremium = subscriptionService.isPremium;
 
       setState(() {
-        _currentFullName = fullName.isNotEmpty ? fullName : 'User';
-        _currentEmail = email.isNotEmpty ? email : 'user@example.com';
+        _currentFullName = fullName;
+        _currentEmail = email;
         _fullNameController.text = _currentFullName;
         _emailController.text = _currentEmail;
         _joinDate = DateTime.now().subtract(Duration(days: 90)); // Example join date
@@ -221,15 +268,14 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     final bool emailChanged = _emailController.text.trim() != _currentEmail;
     final bool hasChanges = nameChanged || emailChanged;
     
-    if (hasChanges && !_showPasswordField) {
+    // Only call setState if the password field visibility needs to change
+    if (hasChanges != _showPasswordField) {
       setState(() {
-        _showPasswordField = true;
+        _showPasswordField = hasChanges;
       });
-    } else if (!hasChanges && _showPasswordField) {
-      setState(() {
-        _showPasswordField = false;
-      });
-      _passwordController.clear();
+      if (!hasChanges) {
+        _passwordController.clear();
+      }
     }
   }
 
@@ -750,29 +796,33 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
             Stack(
               children: [
                 // Show selected image preview or cached profile picture
-                Container(
-                  width: 64.w,
-                  height: 64.h,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppTheme.cardBackground,
-                  ),
-                  child: _selectedProfileImage != null
-                      ? ClipOval(
-                          child: Image.file(
-                            _selectedProfileImage!,
-                            width: 64.w,
-                            height: 64.h,
-                            fit: BoxFit.cover,
+                RepaintBoundary(
+                  child: Container(
+                    width: 64.w,
+                    height: 64.h,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppTheme.cardBackground,
+                    ),
+                    child: _selectedProfileImage != null
+                        ? ClipOval(
+                            child: Image.file(
+                              _selectedProfileImage!,
+                              width: 64.w,
+                              height: 64.h,
+                              fit: BoxFit.cover,
+                              key: ValueKey('selected_image'),
+                            ),
+                          )
+                        : UserProfilePicture(
+                            key: const ValueKey('profile_picture_widget'),
+                            size: 64.0,
+                            borderColor: AppTheme.affirmationGradient[0],
+                            borderWidth: 0.0,
+                            showBorder: false,
+                            cachedImageUrl: widget.cachedProfileImageUrl ?? _cachedProfileImageUrl,
                           ),
-                        )
-                      : UserProfilePicture(
-                          size: 64.0,
-                          borderColor: AppTheme.affirmationGradient[0],
-                          borderWidth: 0.0,
-                          showBorder: false,
-                          cachedImageUrl: widget.cachedProfileImageUrl,
-                        ),
+                  ),
                 ),
                 if (_isEditMode || _isUploadingImage)
                   Positioned.fill(
@@ -1150,7 +1200,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
         }
       }
       
+      // Even if the server update fails for some fields, update our local storage with what the user entered
+      // Since we know these are the values they want
       if (updateResult.isSuccess && profilePictureUploadSuccess) {
+        // Update stored user data to sync with other parts of the app
+        await _updateStoredUserData();
+        
         // Update the current values
         setState(() {
           _currentFullName = _fullNameController.text;
@@ -1199,7 +1254,22 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
         _isUpdatingProfile = false;
       });
       
-      _showErrorSnackBar('Error updating profile: $e');
+      // Check if this is a network/connection error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('network') || 
+          errorMessage.contains('connection') || 
+          errorMessage.contains('socket') ||
+          errorMessage.contains('timeout') ||
+          errorMessage.contains('failed host lookup')) {
+        // Show beautiful network error dialog
+        showNetworkErrorDialog(
+          context,
+          message: 'We\'re having trouble updating your profile. Please check your internet connection and try again.',
+          onRetry: () => _handleUpdateProfile(),
+        );
+      } else {
+        _showErrorSnackBar('Error updating profile: $e');
+      }
     }
   }
   
@@ -1254,10 +1324,79 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
       setState(() {
         _isUploadingImage = false;
       });
-      _showErrorSnackBar('Error uploading profile picture: $e');
+      
+      // Check if this is a network/connection error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('network') || 
+          errorMessage.contains('connection') || 
+          errorMessage.contains('socket') ||
+          errorMessage.contains('timeout') ||
+          errorMessage.contains('failed host lookup')) {
+        // Show beautiful network error dialog
+        showNetworkErrorDialog(
+          context,
+          message: 'We\'re having trouble uploading your profile picture. Please check your internet connection and try again.',
+          onRetry: () => _uploadProfilePicture(),
+        );
+      } else {
+        _showErrorSnackBar('Error uploading profile picture: $e');
+      }
     }
   }
   
+  /// Update stored user data after profile changes
+  Future<void> _updateStoredUserData() async {
+    try {
+      print('🔄 Updating stored user data after profile change...');
+      
+      final authService = UnifiedAuthService();
+      
+      // Get current stored data
+      final currentData = await authService.getUserData();
+      if (currentData != null) {
+        // Split the full name
+        final nameParts = _fullNameController.text.trim().split(' ');
+        final firstName = nameParts.isNotEmpty ? nameParts.first : '';
+        final lastName = nameParts.length > 1 ? nameParts.skip(1).join(' ') : '';
+        
+        // Update the data structure
+        final updatedData = Map<String, dynamic>.from(currentData);
+        updatedData['firstName'] = firstName;
+        updatedData['lastName'] = lastName;
+        updatedData['email'] = _emailController.text.trim();
+        
+        // If there's a nested model structure, update it too
+        if (updatedData['model'] != null) {
+          final model = Map<String, dynamic>.from(updatedData['model']);
+          model['firstName'] = firstName;
+          model['lastName'] = lastName;
+          model['email'] = _emailController.text.trim();
+          updatedData['model'] = model;
+        }
+        
+        // Save the updated data using the auth service's public update method
+        await authService.updateUserData(updatedData);
+        
+        // Also update via UserService to ensure SharedPreferences are synced
+        await UserService.storeUserData(updatedData);
+        
+        // Force clear any cached values to ensure fresh data is loaded
+        await UserService.updateUserProfile(
+          firstName: firstName,
+          lastName: lastName,
+        );
+        
+        print('✅ Successfully updated stored user data');
+        print('   - firstName: $firstName');
+        print('   - lastName: $lastName');  
+        print('   - email: ${_emailController.text.trim()}');
+      }
+    } catch (e) {
+      print('❌ Error updating stored user data: $e');
+      // Don't throw error - this is supplementary functionality
+    }
+  }
+
   /// Show error message in snackbar
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
