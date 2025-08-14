@@ -112,6 +112,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatFileUrl([FromQuery] long chatId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatFile), new { chatId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadChatFile([FromForm] ChatFileWithFileFormModel model)
@@ -152,6 +159,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatSourceWordFileUrl([FromQuery] long chatId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatSourceWordFile), new { chatId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -208,6 +222,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleChatImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportChatUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportChat), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -301,6 +322,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatMessageFileUrl([FromQuery] long chatMessageId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatMessageFile), new { chatMessageId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadChatMessageFile([FromForm] ChatMessageFileWithFileFormModel model)
@@ -341,6 +369,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatMessageSourceWordFileUrl([FromQuery] long chatMessageId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatMessageSourceWordFile), new { chatMessageId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -397,6 +432,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleChatMessageImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportChatMessageUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportChatMessage), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -490,6 +532,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatMessageStatusFileUrl([FromQuery] long chatMessageStatusId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatMessageStatusFile), new { chatMessageStatusId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadChatMessageStatusFile([FromForm] ChatMessageStatusFileWithFileFormModel model)
@@ -530,6 +579,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatMessageStatusSourceWordFileUrl([FromQuery] long chatMessageStatusId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatMessageStatusSourceWordFile), new { chatMessageStatusId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -586,6 +642,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleChatMessageStatusImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportChatMessageStatusUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportChatMessageStatus), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -679,6 +742,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatUserFileUrl([FromQuery] long chatUserId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatUserFile), new { chatUserId, token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadChatUserFile([FromForm] ChatUserFileWithFileFormModel model)
@@ -719,6 +789,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadChatUserSourceWordFileUrl([FromQuery] long chatUserId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadChatUserSourceWordFile), new { chatUserId, token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -775,6 +852,13 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleChatUserImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadSampleImportChatUserUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportChatUser), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]

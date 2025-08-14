@@ -4049,6 +4049,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadPushNotificationServerFileUrl([FromQuery] long pushNotificationConfigurationId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadPushNotificationServerFile), new { pushNotificationConfigurationId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadPushNotificationServerFile([FromForm] PushNotificationServerFileWithFileFormModel model)
@@ -4089,6 +4096,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadPushNotificationServerSourceWordFileUrl([FromQuery] long pushNotificationConfigurationId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadPushNotificationServerSourceWordFile), new { pushNotificationConfigurationId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4145,6 +4159,12 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SamplePushNotificationServerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        public Task<string> DownloadSampleImportPushNotificationServerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportPushNotificationServer), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4238,6 +4258,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVoiceNotificationServerFileUrl([FromQuery] long voiceNotificationServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVoiceNotificationServerFile), new { voiceNotificationServerId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadVoiceNotificationServerFile([FromForm] VoiceNotificationServerFileWithFileFormModel model)
@@ -4278,6 +4305,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadVoiceNotificationServerSourceWordFileUrl([FromQuery] long voiceNotificationServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadVoiceNotificationServerSourceWordFile), new { voiceNotificationServerId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4334,6 +4368,12 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleVoiceNotificationServerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        public Task<string> DownloadSampleImportVoiceNotificationServerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportVoiceNotificationServer), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4427,6 +4467,13 @@ namespace Manifest.Api.All.Controllers
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
         }
 
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadWhatsAppNotificationServerFileUrl([FromQuery] long whatsAppNotificationServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadWhatsAppNotificationServerFile), new { whatsAppNotificationServerId , token = Request.GetBearerToken() }));
+        }
+
         [HttpPost]
         [SwaggerOperation(Tags = new[] { "ToTest" })]
         public Task<ReturnModel<bool>> UploadWhatsAppNotificationServerFile([FromForm] WhatsAppNotificationServerFileWithFileFormModel model)
@@ -4467,6 +4514,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "ToTest" })]
+        public Task<string> DownloadWhatsAppNotificationServerSourceWordFileUrl([FromQuery] long whatsAppNotificationServerId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadWhatsAppNotificationServerSourceWordFile), new { whatsAppNotificationServerId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4523,6 +4577,12 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleWhatsAppNotificationServerImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        public Task<string> DownloadSampleImportWhatsAppNotificationServerUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportWhatsAppNotificationServer), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
@@ -4611,6 +4671,13 @@ namespace Manifest.Api.All.Controllers
 
         [HttpGet]
         [SwaggerOperation(Tags = new[] { "Template" })]
+        public Task<string> DownloadMessageTemplateFileUrl([FromQuery] long messageTemplateId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMessageTemplateFile), new { messageTemplateId , token = Request.GetBearerToken() }));
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "Template" })]
         public Task<ReturnModel<bool>> IsMessageTemplateSourceWordFileValid([FromQuery] long messageTemplateId)
         {
             return systemService.IsMessageTemplateWordOrPdfFileValidAsync(messageTemplateId,isPdf: false);
@@ -4624,6 +4691,13 @@ namespace Manifest.Api.All.Controllers
             if (!result.IsSuccess)
                 return new NotFoundResult();
             return File(result.Model.FileData, result.Model.ContentType, result.Model.FileName, false);
+        }
+
+        [HttpGet]
+        [SwaggerOperation(Tags = new[] { "Template" })]
+        public Task<string> DownloadMessageTemplateSourceWordFileUrl([FromQuery] long messageTemplateId)
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadMessageTemplateSourceWordFile), new { messageTemplateId , token = Request.GetBearerToken() }));
         }
 
         [HttpPost]
@@ -4680,6 +4754,12 @@ namespace Manifest.Api.All.Controllers
             {
                 FileDownloadName = "SampleMessageTemplateImportFile.csv"
             };
+        }
+
+        [HttpGet]
+        public Task<string> DownloadSampleImportMessageTemplateUrl()
+        {            
+            return Task.FromResult(Url.Action(nameof(DownloadSampleImportMessageTemplate), new { token = Request.GetBearerToken() }));
         }
 
         [HttpGet]
