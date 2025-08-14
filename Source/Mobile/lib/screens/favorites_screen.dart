@@ -5,6 +5,7 @@ import '../models/affirmations.dart';
 import '../services/voice/human_tts_service.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/universal_back_button.dart';
 
 class FavoritesScreen extends StatefulWidget {
   @override
@@ -138,22 +139,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         children: [
           Row(
             children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 44.w,
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    color: AppTheme.cardBackground,
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: AppTheme.textLight,
-                    size: 20.sp,
-                  ),
-                ),
-              ),
+              UniversalBackButton(),
               SizedBox(width: 16.w),
               Expanded(
                 child: Column(

@@ -7,6 +7,7 @@ import '../components/progress_update_dialog.dart';
 import '../components/edit_goal_sheet.dart';
 import '../components/milestone_card.dart';
 import '../components/milestone_dialog.dart';
+import '../widgets/universal_back_button.dart';
 
 class GoalDetailScreen extends StatefulWidget {
   final Goal goal;
@@ -110,20 +111,9 @@ class _GoalDetailScreenState extends State<GoalDetailScreen>
                 pinned: true,
                 backgroundColor: AppTheme.backgroundDark,
                 elevation: 0,
-                leading: GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Container(
-                    margin: EdgeInsets.all(8.w),
-                    decoration: BoxDecoration(
-                      color: AppTheme.cardBackground,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: AppTheme.textLight,
-                      size: 20.sp,
-                    ),
-                  ),
+                leading: Container(
+                  margin: EdgeInsets.all(8.w),
+                  child: UniversalBackButton(),
                 ),
                 actions: [
                   GestureDetector(

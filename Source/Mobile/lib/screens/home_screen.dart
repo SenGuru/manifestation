@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mistel/screens/session_stats_screen.dart';  
 import 'daily_affirmations.dart';
@@ -21,6 +22,7 @@ import 'profile_screen.dart';
 import '../services/subscription_service.dart';
 import '../components/premium_upgrade_dialog.dart';
 import '../services/unified_auth_service.dart';
+import '../widgets/user_profile_picture.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -31,32 +33,53 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentStreak = 7;
   String userName = 'User';
   bool _isPremium = false;
+  String? _cachedProfileImageUrl;
 
   @override
   void initState() {
     super.initState();
-    _loadUserName();
-    _loadPremiumStatus();
-    
-    // Show premium upgrade dialog for non-premium users after a short delay
+    // Use post frame callback to prevent blocking initial render
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkAndShowPremiumUpgrade();
+      _loadInitialData();
     });
   }
 
-  void _loadPremiumStatus() async {
+  void _loadInitialData() async {
+    try {
+      // Load data in parallel to reduce wait time
+      final futures = [
+        _loadUserName(),
+        _loadPremiumStatusInternal(),
+      ];
+      
+      await Future.wait(futures);
+      
+      // Use single setState call to prevent multiple rebuilds
+      if (mounted) {
+        setState(() {
+          // State updates are already handled in individual methods
+        });
+        
+        // Only check premium upgrade after all data is loaded
+        _checkAndShowPremiumUpgrade();
+      }
+    } catch (e) {
+      debugPrint('Error loading initial data: $e');
+    }
+  }
+
+  Future<void> _loadPremiumStatusInternal() async {
     try {
       final subscriptionService = SubscriptionService();
-      await subscriptionService.initialize();
-      setState(() {
-        _isPremium = subscriptionService.isPremium;
-      });
+      await subscriptionService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      _isPremium = subscriptionService.isPremium;
     } catch (e) {
-      print('Error loading premium status: $e');
+      debugPrint('Error loading premium status: $e');
     }
   }
 
   void _togglePremiumStatus() async {
+    HapticFeedback.selectionClick();
     try {
       final subscriptionService = SubscriptionService();
       final newPremiumStatus = !_isPremium;
@@ -85,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _loadUserName() async {
+  Future<void> _loadUserName() async {
     try {
       final authService = UnifiedAuthService();
       
@@ -247,38 +270,22 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         
         
-        // Profile button
-        GestureDetector(
+        // Profile picture with API integration
+        UserProfilePicture(
+          size: 44.0,
+          borderColor: AppTheme.affirmationGradient[0],
+          borderWidth: 2.5,
+          onImageLoaded: (String? imageUrl) {
+            // Cache the loaded image URL
+            _cachedProfileImageUrl = imageUrl;
+          },
           onTap: () {
+            HapticFeedback.lightImpact();
             pushWithoutSwipe(
               context,
-              ProfileScreen(),
+              ProfileScreen(cachedProfileImageUrl: _cachedProfileImageUrl),
             );
           },
-          child: Container(
-            width: 44.w,
-            height: 44.h,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppTheme.affirmationGradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.affirmationGradient[0].withValues(alpha: 0.3),
-                  blurRadius: 8.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.person,
-              color: AppTheme.white,
-              size: 24.sp,
-            ),
-          ),
         ),
       ],
     );
@@ -375,6 +382,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   
   void _navigateToFeature(String feature) {
+    HapticFeedback.lightImpact();
     switch (feature) {
       case 'affirmations':
         pushWithoutSwipe(

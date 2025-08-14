@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../services/voice/hybrid_voice_service.dart';
 import '../models/affirmations.dart';
@@ -476,6 +477,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           
           return GestureDetector(
             onTap: () async {
+              HapticFeedback.selectionClick();
               await _voiceService.stop();
               setState(() {
                 selectedCategoryIndex = index;
@@ -483,7 +485,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 isPlaying = false;
               });
             },
-            onLongPress: () => _showCategoryOptions(category, index),
+            onLongPress: () {
+              HapticFeedback.heavyImpact();
+              _showCategoryOptions(category, index);
+            },
             child: Container(
               margin: EdgeInsets.only(right: 12.w),
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),

@@ -19,6 +19,7 @@ import 'dart:async';
 import '../widgets/stylish_loading.dart';
 import '../widgets/saving_vision_board_dialog.dart';
 import 'vision_board_home.dart';
+import '../widgets/universal_back_button.dart';
 
 class VisionBoardScreen extends StatefulWidget {
   final VisionBoard? existingBoard;        
@@ -61,6 +62,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   
   // GlobalKey for capturing canvas as image
   final GlobalKey _canvasKey = GlobalKey();
+  final GlobalKey _thumbnailCanvasKey = GlobalKey(); // Separate key for clean thumbnail capture
 
   @override
   void initState() {
@@ -263,26 +265,48 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.r),
-        child: RepaintBoundary(
-          key: _canvasKey,
-          child: Stack(
-            children: [
-              // Canvas with padding to prevent cutoff
-              Positioned.fill(
-                child: Padding(
-                  padding: EdgeInsets.all(12.w),
+        child: Stack(
+          children: [
+            // Main canvas for user interaction
+            RepaintBoundary(
+              key: _canvasKey,
+              child: Stack(
+                children: [
+                  // Canvas with padding to prevent cutoff
+                  Positioned.fill(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.w),
+                      child: VisionBoardCanvas(
+                        board: currentBoard,
+                        selectedTool: selectedTool,
+                        onBoardChanged: _onBoardChanged,
+                        onDeselectTool: _deselectTool,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            
+            // Hidden clean canvas for thumbnail capture (positioned off-screen)
+            Positioned(
+              left: -9999, // Move way off-screen so it's not visible
+              top: -9999,
+              child: RepaintBoundary(
+                key: _thumbnailCanvasKey,
+                child: Container(
+                  width: 400, // Fixed size for consistent thumbnails
+                  height: 300,
                   child: VisionBoardCanvas(
                     board: currentBoard,
-                    selectedTool: selectedTool,
-                    onBoardChanged: _onBoardChanged,
-                    onDeselectTool: _deselectTool,
+                    selectedTool: VisionBoardTool.select, // Always use select tool for clean capture
+                    onBoardChanged: (_) {}, // No-op callback since this is for capture only
+                    hideSelectionIndicators: true, // Hide all selection UI
                   ),
                 ),
               ),
-              
-              // Canvas overlay removed - cleaner interface
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -297,22 +321,7 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
             // Back button
             GestureDetector(
               onTap: () => _handleBackButton(),
-              child: Container(
-                width: 48.w,
-                height: 48.h,
-                decoration: BoxDecoration(
-                  color: AppTheme.cardBackground,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                    color: AppTheme.textMedium.withValues(alpha: 0.1),
-                  ),
-                ),
-                child: Icon(
-                  Icons.arrow_back,
-                  color: AppTheme.textLight,
-                  size: 20.sp,
-                ),
-              ),
+              child: UniversalBackButton(),
             ),
             
             SizedBox(width: 16.w),
@@ -1461,19 +1470,19 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
   Future<Uint8List?> _captureThumbnail() async {
     try {
-      print('📸 Capturing vision board thumbnail...');
+      print('📸 Capturing clean vision board thumbnail...');
       
-      // Find the RenderRepaintBoundary
-      RenderRepaintBoundary? boundary = _canvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      // Use the clean thumbnail canvas that has no selection indicators
+      RenderRepaintBoundary? boundary = _thumbnailCanvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       
       if (boundary == null) {
-        print('❌ Failed to find RenderRepaintBoundary');
+        print('❌ Failed to find clean thumbnail RenderRepaintBoundary');
         return null;
       }
       
       // Capture the image at a lower resolution for thumbnail
-      // Using scale 0.3 to create a smaller thumbnail
-      ui.Image image = await boundary.toImage(pixelRatio: 0.3);
+      // Using scale 0.5 to create a good quality but smaller thumbnail
+      ui.Image image = await boundary.toImage(pixelRatio: 0.5);
       
       // Convert to byte data
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
@@ -1484,11 +1493,11 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       }
       
       Uint8List pngBytes = byteData.buffer.asUint8List();
-      print('✅ Thumbnail captured successfully (${pngBytes.length} bytes)');
+      print('✅ Clean thumbnail captured successfully (${pngBytes.length} bytes) - no selection indicators');
       
       return pngBytes;
     } catch (e) {
-      print('❌ Error capturing thumbnail: $e');
+      print('❌ Error capturing clean thumbnail: $e');
       return null;
     }
   }

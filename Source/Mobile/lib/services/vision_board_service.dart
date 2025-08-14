@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:math' as math;
+import 'package:flutter/foundation.dart';
 import 'package:chopper/chopper.dart';
 import 'package:http/http.dart' as http;
 import '../models/vision_board.dart';
@@ -11,6 +11,83 @@ import 'unified_auth_service.dart';
 import 'package:xml/xml.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+
+/// Background image processing for isolates
+class ImageProcessingParams {
+  final String imagePath;
+  
+  ImageProcessingParams(this.imagePath);
+}
+
+/// Background function to process image encoding (must be top-level for compute())
+String processImageInBackground(ImageProcessingParams params) {
+  try {
+    final imageFile = File(params.imagePath);
+    if (imageFile.existsSync()) {
+      final imageBytes = imageFile.readAsBytesSync();
+      return base64Encode(imageBytes);
+    }
+    return '';
+  } catch (e) {
+    debugPrint('❌ Background image processing error: $e');
+    return '';
+  }
+}
+
+/// LRU Cache implementation to prevent unbounded memory growth
+class LRUCache<K, V> {
+  final int maxSize;
+  final Map<K, V> _cache = <K, V>{};
+  final List<K> _accessOrder = <K>[];
+  
+  LRUCache(this.maxSize);
+  
+  V? get(K key) {
+    if (_cache.containsKey(key)) {
+      // Move to end (most recently used)
+      _accessOrder.remove(key);
+      _accessOrder.add(key);
+      return _cache[key];
+    }
+    return null;
+  }
+  
+  void put(K key, V value) {
+    if (_cache.containsKey(key)) {
+      // Update existing key
+      _cache[key] = value;
+      _accessOrder.remove(key);
+      _accessOrder.add(key);
+    } else {
+      // Add new key
+      if (_cache.length >= maxSize) {
+        // Remove least recently used
+        final oldest = _accessOrder.removeAt(0);
+        _cache.remove(oldest);
+      }
+      _cache[key] = value;
+      _accessOrder.add(key);
+    }
+  }
+  
+  void remove(K key) {
+    _cache.remove(key);
+    _accessOrder.remove(key);
+  }
+  
+  void clear() {
+    _cache.clear();
+    _accessOrder.clear();
+  }
+  
+  int get length => _cache.length;
+  bool get isEmpty => _cache.isEmpty;
+  bool get isNotEmpty => _cache.isNotEmpty;
+  
+  // Add missing getters for compatibility
+  Iterable<V> get values => _cache.values;
+  Iterable<K> get keys => _cache.keys;
+}
 
 /// Clean Vision Board Service - Server Only
 /// 
@@ -26,15 +103,22 @@ class VisionBoardService {
   
   Manifestation? _apiClient;
   UnifiedAuthService? _authService;
+  bool _isInitialized = false;
   
-  // Memory cache for vision board XML content (cleared on app restart)
-  final Map<String, String> _memoryCache = {};
-  final Map<String, DateTime> _cacheTimestamps = {};
+  // LRU cache for vision board XML content (max 50 items, ~5MB estimated)
+  final LRUCache<String, String> _memoryCache = LRUCache<String, String>(50);
+  final LRUCache<String, DateTime> _cacheTimestamps = LRUCache<String, DateTime>(50);
+  
+  // LRU cache for picture metadata (max 100 items)
+  final LRUCache<int, List<dynamic>> _picturesCache = LRUCache<int, List<dynamic>>(100);
+  final LRUCache<int, DateTime> _picturesCacheTimestamps = LRUCache<int, DateTime>(100);
   
   /// Clear all cached vision board content
   void clearCache() {
     _memoryCache.clear();
     _cacheTimestamps.clear();
+    _picturesCache.clear();
+    _picturesCacheTimestamps.clear();
     print('🗑️ Cleared all vision board memory cache');
   }
   
@@ -44,6 +128,13 @@ class VisionBoardService {
     _memoryCache.remove(cacheKey);
     _cacheTimestamps.remove(cacheKey);
     print('🗑️ Cleared cache for vision board: $visionBoardId');
+  }
+  
+  /// Invalidate pictures cache for specific user (call when vision boards are modified)
+  void invalidatePicturesCache(int userId) {
+    _picturesCache.remove(userId);
+    _picturesCacheTimestamps.remove(userId);
+    print('🗑️ Invalidated pictures cache for user $userId');
   }
   
   /// Get cache statistics
@@ -64,7 +155,14 @@ class VisionBoardService {
   }
   
   Future<void> initialize({String? baseUrl}) async {
+    // Only initialize once to prevent multiple initialization
+    if (_isInitialized) {
+      print('📋 VisionBoardService already initialized, skipping...');
+      return;
+    }
+    
     if (baseUrl != null) {
+      print('📋 Initializing VisionBoardService...');
       final chopperClient = ChopperClient(
         baseUrl: Uri.parse(baseUrl),
         interceptors: [_AuthInterceptor()],
@@ -75,7 +173,10 @@ class VisionBoardService {
       _apiClient = chopperClient.getService<Manifestation>();
       _authService = UnifiedAuthService();
       await _authService!.initialize(baseUrl: baseUrl);
+      print('✅ VisionBoardService initialized successfully');
     }
+    
+    _isInitialized = true;
   }
   
   // ========================= CREATE VISION BOARD =========================
@@ -100,7 +201,7 @@ class VisionBoardService {
       }
       
       // Generate XML content
-      final xmlContent = _generateVisionBoardXML(visionBoard, userId);
+      final xmlContent = await _generateVisionBoardXML(visionBoard, userId);
       final xmlBytes = utf8.encode(xmlContent);
       
       print('Vision board details: ID=${visionBoard.id}, Title=${visionBoard.title}, Elements=${visionBoard.elements.length}');
@@ -150,16 +251,42 @@ class VisionBoardService {
       
       print('🔍 DEBUG: Form field Title: "$truncatedTitle" (${truncatedTitle.length} chars)');
       
-      // Note: Thumbnail will be uploaded separately after vision board creation
-      // This is because the server expects the thumbnail to be uploaded via the
-      // uploadvisionboardpicturethumbnail endpoint with the VisionBoardPictureId
+      // Add ThumbnailFileName field - API requires this
+      if (thumbnailInfo != null && thumbnailInfo['fileName'] != null) {
+        request.fields['ThumbnailFileName'] = thumbnailInfo['fileName'];
+        print('🔍 DEBUG: Form field ThumbnailFileName: "${thumbnailInfo['fileName']}"');
+      } else {
+        // Provide a default thumbnail filename if none provided
+        request.fields['ThumbnailFileName'] = 'thumbnail_${visionBoard.id}.png';
+        print('🔍 DEBUG: Form field ThumbnailFileName: "thumbnail_${visionBoard.id}.png" (default)');
+      }
       
-      // Add file
+      // Add XML file
       request.files.add(http.MultipartFile.fromBytes(
         'UploadedFile',
         xmlBytes,
         filename: 'visionboard_${visionBoard.id}.xml',
       ));
+      
+      // Add thumbnail file if provided
+      if (thumbnailInfo != null && thumbnailInfo['filePath'] != null) {
+        try {
+          final thumbnailFile = File(thumbnailInfo['filePath']);
+          if (await thumbnailFile.exists()) {
+            final thumbnailBytes = await thumbnailFile.readAsBytes();
+            request.files.add(http.MultipartFile.fromBytes(
+              'ThumbnailFile',
+              thumbnailBytes,
+              filename: thumbnailInfo['fileName'] ?? 'thumbnail.png',
+            ));
+            print('🔍 DEBUG: Added thumbnail file to request: ${thumbnailBytes.length} bytes');
+          } else {
+            print('⚠️ Thumbnail file not found at path: ${thumbnailInfo['filePath']}');
+          }
+        } catch (e) {
+          print('⚠️ Error adding thumbnail file: $e');
+        }
+      }
       
       print('Manual multipart request:');
       print('  - Fields: ${request.fields}');
@@ -236,7 +363,7 @@ class VisionBoardService {
       }
       
       // Generate updated XML content
-      final xmlContent = _generateVisionBoardXML(visionBoard, userId);
+      final xmlContent = await _generateVisionBoardXML(visionBoard, userId);
       final xmlBytes = utf8.encode(xmlContent);
       
       print('📤 Updating vision board "${visionBoard.title}" (Picture ID: $finalPictureId) on server...');
@@ -444,9 +571,10 @@ class VisionBoardService {
       
       // Check memory cache first
       final cacheKey = '${userId}_$visionBoardId';
-      if (_memoryCache.containsKey(cacheKey)) {
-        final cachedXml = _memoryCache[cacheKey]!;
-        final cacheTime = _cacheTimestamps[cacheKey]!;
+      final cachedXml = _memoryCache.get(cacheKey);
+      final cacheTime = _cacheTimestamps.get(cacheKey);
+      
+      if (cachedXml != null && cacheTime != null) {
         print('💾 Found cached XML content (${cachedXml.length} chars, cached at ${cacheTime.toIso8601String()})');
         
         // Parse cached XML content
@@ -499,8 +627,8 @@ class VisionBoardService {
       }
       
       // Cache the XML content in memory
-      _memoryCache[cacheKey] = xmlContent;
-      _cacheTimestamps[cacheKey] = DateTime.now();
+      _memoryCache.put(cacheKey, xmlContent);
+      _cacheTimestamps.put(cacheKey, DateTime.now());
       print('💾 Cached XML content for vision board $visionBoardId');
       
       // Parse the XML content to create VisionBoard object
@@ -578,34 +706,52 @@ class VisionBoardService {
     try {
       print('🔍 Looking for picture ID for vision board: $visionBoardId');
       
-      // Get all vision board pictures for user using correct endpoint
-      final response = await _apiClient!.apiV1ManifestGetvisionboardpicturesGet(
-        userId: userId,
-      );
+      // Check cache first (cache for 30 minutes or until explicit invalidation)
+      final cacheExpiry = DateTime.now().subtract(Duration(minutes: 30));
+      final cachedTimestamp = _picturesCacheTimestamps.get(userId);
       
-      if (response.isSuccessful && response.body?.isSuccess == true) {
-        final pictures = response.body?.model ?? [];
-        print('🔍 Found ${pictures.length} pictures, searching for match...');
-        
-        // Find the picture with matching location (vision board ID)
-        for (final picture in pictures) {
-          print('🔍 Checking picture: ID=${picture.visionBoardPictureId}, location=${picture.location}, fileName=${picture.fileName}');
-          
-          // Check multiple possible matches
-          if ((picture.location == visionBoardId || 
-               picture.fileName?.contains(visionBoardId) == true) && 
-              picture.fileName?.endsWith('.xml') == true &&
-              picture.isDeleted != true) {
-            print('✅ Found matching picture ID: ${picture.visionBoardPictureId}');
-            return picture.visionBoardPictureId;
-          }
-        }
-        
-        print('⚠️ No matching picture found for vision board: $visionBoardId');
+      List<dynamic> pictures;
+      
+      final cachedPictures = _picturesCache.get(userId);
+      if (cachedTimestamp != null && cachedTimestamp.isAfter(cacheExpiry) && cachedPictures != null) {
+        // Use cached data
+        pictures = cachedPictures;
+        print('📋 Using cached pictures list (${pictures.length} pictures)');
       } else {
-        print('❌ Failed to get pictures list: ${response.body?.errorHolder}');
+        // Fetch from API
+        final response = await _apiClient!.apiV1ManifestGetvisionboardpicturesGet(
+          userId: userId,
+        );
+        
+        if (response.isSuccessful && response.body?.isSuccess == true) {
+          pictures = response.body?.model ?? [];
+          
+          // Cache the results
+          _picturesCache.put(userId, pictures);
+          _picturesCacheTimestamps.put(userId, DateTime.now());
+          
+          print('🔍 Found ${pictures.length} pictures, cached for future use');
+        } else {
+          print('❌ Failed to get pictures list: ${response.body?.errorHolder}');
+          return null;
+        }
       }
       
+      // Find the picture with matching location (vision board ID)
+      for (final picture in pictures) {
+        print('🔍 Checking picture: ID=${picture.visionBoardPictureId}, location=${picture.location}, fileName=${picture.fileName}');
+        
+        // Check multiple possible matches
+        if ((picture.location == visionBoardId || 
+             picture.fileName?.contains(visionBoardId) == true) && 
+            picture.fileName?.endsWith('.xml') == true &&
+            picture.isDeleted != true) {
+          print('✅ Found matching picture ID: ${picture.visionBoardPictureId}');
+          return picture.visionBoardPictureId;
+        }
+      }
+      
+      print('⚠️ No matching picture found for vision board: $visionBoardId');
       return null;
     } catch (e) {
       print('❌ Error getting picture ID: $e');
@@ -736,7 +882,32 @@ class VisionBoardService {
   }
   
   /// Generate XML content for vision board
-  String _generateVisionBoardXML(VisionBoard visionBoard, int userId) {
+  Future<String> _generateVisionBoardXML(VisionBoard visionBoard, int userId) async {
+    // First, process all images in parallel using background isolates
+    final Map<String, String> imageDataMap = {};
+    final List<Future<void>> imageFutures = [];
+    
+    for (final element in visionBoard.elements) {
+      if (element is VisionBoardImageElement) {
+        imageFutures.add(
+          compute(processImageInBackground, ImageProcessingParams(element.imagePath))
+            .then((base64Image) {
+              if (base64Image.isNotEmpty) {
+                imageDataMap[element.id] = base64Image;
+                print('📷 Successfully processed image ${element.id}: ${base64Image.length} characters');
+              }
+            })
+            .catchError((e) {
+              print('❌ Error processing image ${element.id}: $e');
+            })
+        );
+      }
+    }
+    
+    // Wait for all images to be processed
+    await Future.wait(imageFutures);
+    
+    // Now build XML synchronously with processed image data
     final builder = XmlBuilder();
     builder.processing('xml', 'version="1.0" encoding="UTF-8"');
     builder.element('VisionBoards', nest: () {
@@ -772,29 +943,13 @@ class VisionBoardService {
                 builder.attribute('zIndex', element.zIndex.toString());
                 builder.attribute('fit', element.fit.name);
                 
-                // Convert image to base64 and embed in XML
-                print('🔄 Processing image element: ${element.id}');
-                print('🔄 Image path: ${element.imagePath}');
-                
-                try {
-                  final imageFile = File(element.imagePath);
-                  print('📁 Checking if image file exists: ${element.imagePath}');
-                  
-                  if (imageFile.existsSync()) {
-                    print('✅ Image file exists, reading bytes...');
-                    final imageBytes = imageFile.readAsBytesSync();
-                    print('✅ Read ${imageBytes.length} bytes from image');
-                    
-                    final base64Image = base64Encode(imageBytes);
-                    builder.attribute('imageData', base64Image);
-                    print('📷 Successfully embedded image as base64: ${base64Image.length} characters');
-                    print('🔍 Base64 preview: ${base64Image.substring(0, 50)}...');
-                  } else {
-                    print('❌ Image file not found at path: ${element.imagePath}');
-                  }
-                } catch (e) {
-                  print('❌ Error reading image file: $e');
-                  print('❌ Stack trace: $e');
+                // Use pre-processed image data if available
+                final base64Image = imageDataMap[element.id];
+                if (base64Image != null) {
+                  builder.attribute('imageData', base64Image);
+                  print('✅ Embedded processed image data for ${element.id}');
+                } else {
+                  print('❌ No processed image data for ${element.id}');
                 }
                 
                 // Keep legacy paths for fallback (but prioritize imageData)
@@ -956,6 +1111,51 @@ class VisionBoardService {
     );
   }
 
+  /// Download thumbnail for a vision board picture
+  Future<Uint8List?> downloadThumbnail(int visionBoardPictureId) async {
+    try {
+      print('📥 Downloading thumbnail for vision board picture ID: $visionBoardPictureId');
+      
+      if (_apiClient == null) {
+        print('❌ API client not initialized');
+        return null;
+      }
+      
+      // Use the swagger API to download thumbnail
+      final response = await _apiClient!.apiV1ManifestDownloadvisionboardpicturethumbnailGet(
+        visionBoardPictureId: visionBoardPictureId,
+      );
+      
+      if (response.isSuccessful) {
+        // The response body should contain the image data
+        // Check if it's base64 encoded or raw bytes
+        if (response.bodyBytes != null && response.bodyBytes!.isNotEmpty) {
+          print('✅ Thumbnail downloaded: ${response.bodyBytes!.length} bytes');
+          return response.bodyBytes;
+        } else if (response.bodyString != null && response.bodyString!.isNotEmpty) {
+          // Try to decode if it's base64
+          try {
+            final bytes = base64Decode(response.bodyString!);
+            print('✅ Thumbnail downloaded (base64): ${bytes.length} bytes');
+            return bytes;
+          } catch (e) {
+            print('⚠️ Could not decode base64, treating as raw bytes');
+            return Uint8List.fromList(response.bodyString!.codeUnits);
+          }
+        }
+      } else {
+        print('❌ Failed to download thumbnail:');
+        print('  - Status Code: ${response.statusCode}');
+        print('  - Response: ${response.bodyString}');
+      }
+      
+      return null;
+    } catch (e) {
+      print('❌ Error downloading thumbnail: $e');
+      return null;
+    }
+  }
+  
   /// Upload thumbnail for a vision board picture
   Future<bool> _uploadThumbnail(int visionBoardPictureId, Map<String, dynamic> thumbnailInfo) async {
     try {

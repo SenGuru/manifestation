@@ -14,12 +14,22 @@ class GoalTrackerService {
 
   late Manifestation _apiClient;
   final UnifiedAuthService _authService = UnifiedAuthService();
+  bool _isInitialized = false;
 
   void initialize({String? baseUrl}) {
+    // Only initialize once to prevent multiple initialization
+    if (_isInitialized) {
+      print('🎯 GoalTrackerService already initialized, skipping...');
+      return;
+    }
+    
+    print('🎯 Initializing GoalTrackerService...');
     _apiClient = Manifestation.create(
       baseUrl: Uri.parse(baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'),
       interceptors: [_AuthInterceptor()],
     );
+    _isInitialized = true;
+    print('✅ GoalTrackerService initialized successfully');
   }
 
   // ========================= LOCAL CATEGORIES =========================

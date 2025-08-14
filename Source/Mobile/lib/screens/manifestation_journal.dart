@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,7 @@ import 'package:mistel/services/guided_tour_service.dart';
 import 'package:mistel/widgets/stylish_loading.dart';
 import 'package:mistel/widgets/keyboard_dismissal_wrapper.dart';
 import 'package:mistel/utils/navigation_utils.dart';
+import 'package:mistel/widgets/universal_back_button.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
   // Enhanced with manual draft saving functionality - debug exit dialog
@@ -25,6 +27,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   final TextEditingController _reflectionController = TextEditingController();
   final TextEditingController _intentionController = TextEditingController();
   final DailyJournalService _journalService = DailyJournalService();
+  
+  // Debounce timers to prevent excessive setState calls during typing
+  Timer? _reflectionDebounceTimer;
+  Timer? _intentionDebounceTimer;
   
   int currentPage = 0;
   double scrollPosition = 0.0; // Track partial scroll position
@@ -74,24 +80,42 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     // Add scroll listener to track partial scroll positions
     _pageController.addListener(_onPageScroll);
     
-    // Add listeners to text controllers to sync with state
+    // Add debounced listeners to text controllers to sync with state
     _reflectionController.addListener(() {
       if (_reflectionController.text != reflection) {
-        setState(() {
-          reflection = _reflectionController.text;
-          _userHasInteracted = true;
-          _reflectionChanged = true;
-          print('📖 REFLECTION CHANGED: "${_reflectionController.text}", _userHasInteracted: $_userHasInteracted');
+        // Cancel previous timer
+        _reflectionDebounceTimer?.cancel();
+        
+        // Set new timer with 300ms delay
+        _reflectionDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+          if (mounted && _reflectionController.text != reflection) {
+            setState(() {
+              reflection = _reflectionController.text;
+              _userHasInteracted = true;
+              _reflectionChanged = true;
+              print('📖 REFLECTION CHANGED: "${_reflectionController.text}", _userHasInteracted: $_userHasInteracted');
+            });
+            _updateDraftProgress();
+          }
         });
       }
     });
     
     _intentionController.addListener(() {
       if (_intentionController.text != intention) {
-        setState(() {
-          intention = _intentionController.text;
-          _userHasInteracted = true;
-          _intentionChanged = true;
+        // Cancel previous timer
+        _intentionDebounceTimer?.cancel();
+        
+        // Set new timer with 300ms delay
+        _intentionDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+          if (mounted && _intentionController.text != intention) {
+            setState(() {
+              intention = _intentionController.text;
+              _userHasInteracted = true;
+              _intentionChanged = true;
+            });
+            _updateDraftProgress();
+          }
         });
       }
     });
@@ -135,6 +159,10 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
   @override
   void dispose() {
+    // Cancel debounce timers to prevent memory leaks
+    _reflectionDebounceTimer?.cancel();
+    _intentionDebounceTimer?.cancel();
+    
     _pageController.removeListener(_onPageScroll);
     _pageController.dispose();
     _reflectionController.dispose();
@@ -200,22 +228,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         children: [
           GestureDetector(
             onTap: _handleBackButton,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.1),
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
-            ),
+            child: UniversalBackButton(),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -1850,5 +1863,11 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       }
       return false;
     }
+  }
+
+  /// Update draft progress (debounced version for text input)
+  void _updateDraftProgress() {
+    // Call the existing save draft method without showing snackbar
+    _saveDraftProgress(false);
   }
 }

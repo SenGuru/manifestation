@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
@@ -6,6 +7,7 @@ import 'vision_board_screen.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../utils/navigation_utils.dart';
+import '../widgets/universal_back_button.dart';
 
 class VisionBoardsListScreen extends StatefulWidget {
   const VisionBoardsListScreen({super.key});
@@ -175,25 +177,7 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textSecondary.withValues(alpha: 0.1),
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textPrimary,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -364,8 +348,14 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
 
   Widget _buildVisionBoardListItem(VisionBoard board) {
     return GestureDetector(
-      onTap: () => _openBoard(board),
-      onLongPress: () => _showBoardOptions(board),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        _openBoard(board);
+      },
+      onLongPress: () {
+        HapticFeedback.heavyImpact();
+        _showBoardOptions(board);
+      },
       child: Container(
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(

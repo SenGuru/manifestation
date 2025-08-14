@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
+import '../services/subscription_service.dart';
 
 class PremiumUpgradeDialog extends StatefulWidget {
   final String feature;
@@ -29,6 +31,7 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
   
   bool _showPricing = false;
   String _selectedPlan = 'yearly'; // Default to yearly (best value)
+  bool _isProcessing = false;
 
   @override
   void initState() {
@@ -332,7 +335,10 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
             width: double.infinity,
             height: 56.h,
             child: ElevatedButton(
-              onPressed: _showPricingOptions,
+              onPressed: () {
+                HapticFeedback.mediumImpact();
+                _showPricingOptions();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.accentGold,
                 foregroundColor: AppTheme.black,
@@ -368,7 +374,10 @@ class _PremiumUpgradeDialogState extends State<PremiumUpgradeDialog>
           
           // Secondary "Not now" button
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              HapticFeedback.lightImpact();
+              Navigator.pop(context);
+            },
             style: TextButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 24.w),
               shape: RoundedRectangleBorder(
@@ -471,6 +480,7 @@ Widget _buildPricingOption(
     
     return GestureDetector(
       onTap: () {
+        HapticFeedback.selectionClick();
         setState(() {
           _selectedPlan = planId;
         });
@@ -596,7 +606,10 @@ Widget _buildPricingOption(
           width: double.infinity,
           height: 48.h,
           child: ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: _isProcessing ? null : () {
+              HapticFeedback.mediumImpact();
+              _handleSubscription();
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.accentGold,
               foregroundColor: AppTheme.black,
@@ -606,25 +619,34 @@ Widget _buildPricingOption(
               elevation: 0,
               shadowColor: Colors.transparent,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.diamond_rounded,
-                  size: 20.sp,
-                  color: AppTheme.black,
-                ),
-                SizedBox(width: 8.w),
-                Text(
-                  'Subscribe ${_selectedPlan == 'yearly' ? 'Yearly' : 'Monthly'}',
-                  style: TextStyle(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.black,
+            child: _isProcessing
+                ? SizedBox(
+                    width: 20.w,
+                    height: 20.h,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(AppTheme.black),
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.diamond_rounded,
+                        size: 20.sp,
+                        color: AppTheme.black,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Subscribe ${_selectedPlan == 'yearly' ? 'Yearly' : 'Monthly'}',
+                        style: TextStyle(
+                          fontSize: 15.sp,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.black,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
         ),
         
@@ -632,7 +654,10 @@ Widget _buildPricingOption(
         
         // Back button
         TextButton(
-          onPressed: _goBackToFeatures,
+          onPressed: () {
+            HapticFeedback.lightImpact();
+            _goBackToFeatures();
+          },
           style: TextButton.styleFrom(
             padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
             shape: RoundedRectangleBorder(
@@ -652,5 +677,127 @@ Widget _buildPricingOption(
     );
   }
 
+  Future<void> _handleSubscription() async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      print('🔄 Processing ${_selectedPlan} subscription...');
+      
+      // Initialize subscription service with API
+      final subscriptionService = SubscriptionService();
+      await subscriptionService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      // For now, we'll use a mock password for development
+      // In production, this would be replaced with actual payment processing
+      final validityYears = _selectedPlan == 'yearly' ? 1 : 1; // Both plans get 1 year for now
+      
+      final success = await subscriptionService.enablePremiumFeature(
+        password: 'premium_password', // Mock password - replace with payment processing
+        validityYears: validityYears,
+      );
+
+      if (success) {
+        print('✅ Premium subscription activated!');
+        
+        // Show success message
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: AppTheme.white, size: 20.sp),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      'Premium activated! Welcome to Premium 🎉',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: AppTheme.success,
+              duration: Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+            ),
+          );
+
+          // Call onUpgrade callback if provided
+          widget.onUpgrade?.call();
+
+          // Close dialog after short delay
+          await Future.delayed(Duration(milliseconds: 500));
+          Navigator.pop(context);
+        }
+      } else {
+        print('❌ Failed to activate premium subscription');
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.error_outline, color: AppTheme.white, size: 20.sp),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text(
+                      'Failed to activate premium. Please try again.',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      print('❌ Error processing subscription: $e');
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error_outline, color: AppTheme.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text(
+                    'Network error. Please check your connection and try again.',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    }
+  }
 
 }

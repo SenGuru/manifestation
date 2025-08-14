@@ -2199,6 +2199,22 @@ abstract class Manifestation extends ChopperService {
   });
 
   ///
+  Future<chopper.Response<IsPremiumFeatureEnabledModelReturnModel>>
+  apiV1CompanyIspremiumfeatureenabledGet() {
+    generatedMapping.putIfAbsent(
+      IsPremiumFeatureEnabledModelReturnModel,
+      () => IsPremiumFeatureEnabledModelReturnModel.fromJsonFactory,
+    );
+
+    return _apiV1CompanyIspremiumfeatureenabledGet();
+  }
+
+  ///
+  @GET(path: '/api/v1/company/ispremiumfeatureenabled')
+  Future<chopper.Response<IsPremiumFeatureEnabledModelReturnModel>>
+  _apiV1CompanyIspremiumfeatureenabledGet();
+
+  ///
   ///@param ShowDeleted
   ///@param UserId
   ///@param PredefinedUserPermissionTypeIds
@@ -3179,6 +3195,23 @@ abstract class Manifestation extends ChopperService {
   ///@param fileAttachmentId
   @GET(path: '/api/v1/manifest/downloadfileattachmentfile')
   Future<chopper.Response> _apiV1ManifestDownloadfileattachmentfileGet({
+    @Query('fileAttachmentId') int? fileAttachmentId,
+  });
+
+  ///
+  ///@param fileAttachmentId
+  Future<chopper.Response<String>>
+  apiV1ManifestDownloadfileattachmentfileurlGet({int? fileAttachmentId}) {
+    return _apiV1ManifestDownloadfileattachmentfileurlGet(
+      fileAttachmentId: fileAttachmentId,
+    );
+  }
+
+  ///
+  ///@param fileAttachmentId
+  @GET(path: '/api/v1/manifest/downloadfileattachmentfileurl')
+  Future<chopper.Response<String>>
+  _apiV1ManifestDownloadfileattachmentfileurlGet({
     @Query('fileAttachmentId') int? fileAttachmentId,
   });
 
@@ -9899,6 +9932,25 @@ abstract class Manifestation extends ChopperService {
 
   ///
   ///@param visionBoardPictureId
+  Future<chopper.Response<String>>
+  apiV1ManifestDownloadvisionboardpicturefileurlGet({
+    int? visionBoardPictureId,
+  }) {
+    return _apiV1ManifestDownloadvisionboardpicturefileurlGet(
+      visionBoardPictureId: visionBoardPictureId,
+    );
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @GET(path: '/api/v1/manifest/downloadvisionboardpicturefileurl')
+  Future<chopper.Response<String>>
+  _apiV1ManifestDownloadvisionboardpicturefileurlGet({
+    @Query('visionBoardPictureId') int? visionBoardPictureId,
+  });
+
+  ///
+  ///@param visionBoardPictureId
   Future<chopper.Response<BooleanReturnModel>>
   apiV1ManifestIsvisionboardpicturethumbnailvalidGet({
     int? visionBoardPictureId,
@@ -9936,6 +9988,25 @@ abstract class Manifestation extends ChopperService {
   @GET(path: '/api/v1/manifest/downloadvisionboardpicturethumbnail')
   Future<chopper.Response>
   _apiV1ManifestDownloadvisionboardpicturethumbnailGet({
+    @Query('visionBoardPictureId') int? visionBoardPictureId,
+  });
+
+  ///
+  ///@param visionBoardPictureId
+  Future<chopper.Response<String>>
+  apiV1ManifestDownloadvisionboardpicturethumbnailurlGet({
+    int? visionBoardPictureId,
+  }) {
+    return _apiV1ManifestDownloadvisionboardpicturethumbnailurlGet(
+      visionBoardPictureId: visionBoardPictureId,
+    );
+  }
+
+  ///
+  ///@param visionBoardPictureId
+  @GET(path: '/api/v1/manifest/downloadvisionboardpicturethumbnailurl')
+  Future<chopper.Response<String>>
+  _apiV1ManifestDownloadvisionboardpicturethumbnailurlGet({
     @Query('visionBoardPictureId') int? visionBoardPictureId,
   });
 
@@ -50964,6 +51035,220 @@ extension $GoalTrackerUpdateModelExtension on GoalTrackerUpdateModel {
           (existingGoalTrackerCategoryModels != null
           ? existingGoalTrackerCategoryModels.value
           : this.existingGoalTrackerCategoryModels),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class IsPremiumFeatureEnabledModel {
+  const IsPremiumFeatureEnabledModel({this.enabled, this.enabledUntilDate});
+
+  factory IsPremiumFeatureEnabledModel.fromJson(Map<String, dynamic> json) =>
+      _$IsPremiumFeatureEnabledModelFromJson(json);
+
+  static const toJsonFactory = _$IsPremiumFeatureEnabledModelToJson;
+  Map<String, dynamic> toJson() => _$IsPremiumFeatureEnabledModelToJson(this);
+
+  @JsonKey(name: 'enabled')
+  final bool? enabled;
+  @JsonKey(name: 'enabledUntilDate')
+  final DateTime? enabledUntilDate;
+  static const fromJsonFactory = _$IsPremiumFeatureEnabledModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is IsPremiumFeatureEnabledModel &&
+            (identical(other.enabled, enabled) ||
+                const DeepCollectionEquality().equals(
+                  other.enabled,
+                  enabled,
+                )) &&
+            (identical(other.enabledUntilDate, enabledUntilDate) ||
+                const DeepCollectionEquality().equals(
+                  other.enabledUntilDate,
+                  enabledUntilDate,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(enabled) ^
+      const DeepCollectionEquality().hash(enabledUntilDate) ^
+      runtimeType.hashCode;
+}
+
+extension $IsPremiumFeatureEnabledModelExtension
+    on IsPremiumFeatureEnabledModel {
+  IsPremiumFeatureEnabledModel copyWith({
+    bool? enabled,
+    DateTime? enabledUntilDate,
+  }) {
+    return IsPremiumFeatureEnabledModel(
+      enabled: enabled ?? this.enabled,
+      enabledUntilDate: enabledUntilDate ?? this.enabledUntilDate,
+    );
+  }
+
+  IsPremiumFeatureEnabledModel copyWithWrapped({
+    Wrapped<bool?>? enabled,
+    Wrapped<DateTime?>? enabledUntilDate,
+  }) {
+    return IsPremiumFeatureEnabledModel(
+      enabled: (enabled != null ? enabled.value : this.enabled),
+      enabledUntilDate: (enabledUntilDate != null
+          ? enabledUntilDate.value
+          : this.enabledUntilDate),
+    );
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class IsPremiumFeatureEnabledModelReturnModel {
+  const IsPremiumFeatureEnabledModelReturnModel({
+    this.model,
+    this.isSuccess,
+    this.successMessage,
+    this.errorHolder,
+    this.activityId,
+    this.activityDateTime,
+    this.server,
+    this.processId,
+  });
+
+  factory IsPremiumFeatureEnabledModelReturnModel.fromJson(
+    Map<String, dynamic> json,
+  ) => _$IsPremiumFeatureEnabledModelReturnModelFromJson(json);
+
+  static const toJsonFactory = _$IsPremiumFeatureEnabledModelReturnModelToJson;
+  Map<String, dynamic> toJson() =>
+      _$IsPremiumFeatureEnabledModelReturnModelToJson(this);
+
+  @JsonKey(name: 'model')
+  final IsPremiumFeatureEnabledModel? model;
+  @JsonKey(name: 'isSuccess')
+  final bool? isSuccess;
+  @JsonKey(name: 'successMessage')
+  final String? successMessage;
+  @JsonKey(name: 'errorHolder')
+  final ReturnError? errorHolder;
+  @JsonKey(name: 'activityId')
+  final String? activityId;
+  @JsonKey(name: 'activityDateTime')
+  final DateTime? activityDateTime;
+  @JsonKey(name: 'server')
+  final String? server;
+  @JsonKey(name: 'processId')
+  final int? processId;
+  static const fromJsonFactory =
+      _$IsPremiumFeatureEnabledModelReturnModelFromJson;
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other is IsPremiumFeatureEnabledModelReturnModel &&
+            (identical(other.model, model) ||
+                const DeepCollectionEquality().equals(other.model, model)) &&
+            (identical(other.isSuccess, isSuccess) ||
+                const DeepCollectionEquality().equals(
+                  other.isSuccess,
+                  isSuccess,
+                )) &&
+            (identical(other.successMessage, successMessage) ||
+                const DeepCollectionEquality().equals(
+                  other.successMessage,
+                  successMessage,
+                )) &&
+            (identical(other.errorHolder, errorHolder) ||
+                const DeepCollectionEquality().equals(
+                  other.errorHolder,
+                  errorHolder,
+                )) &&
+            (identical(other.activityId, activityId) ||
+                const DeepCollectionEquality().equals(
+                  other.activityId,
+                  activityId,
+                )) &&
+            (identical(other.activityDateTime, activityDateTime) ||
+                const DeepCollectionEquality().equals(
+                  other.activityDateTime,
+                  activityDateTime,
+                )) &&
+            (identical(other.server, server) ||
+                const DeepCollectionEquality().equals(other.server, server)) &&
+            (identical(other.processId, processId) ||
+                const DeepCollectionEquality().equals(
+                  other.processId,
+                  processId,
+                )));
+  }
+
+  @override
+  String toString() => jsonEncode(this);
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(model) ^
+      const DeepCollectionEquality().hash(isSuccess) ^
+      const DeepCollectionEquality().hash(successMessage) ^
+      const DeepCollectionEquality().hash(errorHolder) ^
+      const DeepCollectionEquality().hash(activityId) ^
+      const DeepCollectionEquality().hash(activityDateTime) ^
+      const DeepCollectionEquality().hash(server) ^
+      const DeepCollectionEquality().hash(processId) ^
+      runtimeType.hashCode;
+}
+
+extension $IsPremiumFeatureEnabledModelReturnModelExtension
+    on IsPremiumFeatureEnabledModelReturnModel {
+  IsPremiumFeatureEnabledModelReturnModel copyWith({
+    IsPremiumFeatureEnabledModel? model,
+    bool? isSuccess,
+    String? successMessage,
+    ReturnError? errorHolder,
+    String? activityId,
+    DateTime? activityDateTime,
+    String? server,
+    int? processId,
+  }) {
+    return IsPremiumFeatureEnabledModelReturnModel(
+      model: model ?? this.model,
+      isSuccess: isSuccess ?? this.isSuccess,
+      successMessage: successMessage ?? this.successMessage,
+      errorHolder: errorHolder ?? this.errorHolder,
+      activityId: activityId ?? this.activityId,
+      activityDateTime: activityDateTime ?? this.activityDateTime,
+      server: server ?? this.server,
+      processId: processId ?? this.processId,
+    );
+  }
+
+  IsPremiumFeatureEnabledModelReturnModel copyWithWrapped({
+    Wrapped<IsPremiumFeatureEnabledModel?>? model,
+    Wrapped<bool?>? isSuccess,
+    Wrapped<String?>? successMessage,
+    Wrapped<ReturnError?>? errorHolder,
+    Wrapped<String?>? activityId,
+    Wrapped<DateTime?>? activityDateTime,
+    Wrapped<String?>? server,
+    Wrapped<int?>? processId,
+  }) {
+    return IsPremiumFeatureEnabledModelReturnModel(
+      model: (model != null ? model.value : this.model),
+      isSuccess: (isSuccess != null ? isSuccess.value : this.isSuccess),
+      successMessage: (successMessage != null
+          ? successMessage.value
+          : this.successMessage),
+      errorHolder: (errorHolder != null ? errorHolder.value : this.errorHolder),
+      activityId: (activityId != null ? activityId.value : this.activityId),
+      activityDateTime: (activityDateTime != null
+          ? activityDateTime.value
+          : this.activityDateTime),
+      server: (server != null ? server.value : this.server),
+      processId: (processId != null ? processId.value : this.processId),
     );
   }
 }

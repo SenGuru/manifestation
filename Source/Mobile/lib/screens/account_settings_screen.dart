@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import '../constants/app_theme.dart';
 import '../services/unified_auth_service.dart';
 import '../services/user_service.dart';
 import '../services/subscription_service.dart';
+import '../services/user_profile_service.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/universal_back_button.dart';
+import '../widgets/user_profile_picture.dart';
+import 'dart:io';
 
 class AccountSettingsScreen extends StatefulWidget {
+  final String? cachedProfileImageUrl;
+
+  const AccountSettingsScreen({
+    Key? key,
+    this.cachedProfileImageUrl,
+  }) : super(key: key);
+
   @override
   _AccountSettingsScreenState createState() => _AccountSettingsScreenState();
 }
@@ -44,6 +55,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   String? _nameError;
   String? _emailError;
   String? _passwordError;
+  
+  // Profile service and image handling
+  final UserProfileService _profileService = UserProfileService();
+  final ImagePicker _imagePicker = ImagePicker();
+  File? _selectedProfileImage;
+  bool _isUploadingImage = false;
 
   void _initializeAnimations() {
     // Main edit mode controller
@@ -729,54 +746,63 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
         ),
         child: Row(
           children: [
-            // Profile picture with edit overlay
+            // Profile picture with edit overlay and preview support
             Stack(
               children: [
-              AnimatedContainer(
-                duration: Duration(milliseconds: 300),
-                width: 64.w,
-                height: 64.h,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: AppTheme.affirmationGradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                // Show selected image preview or cached profile picture
+                Container(
+                  width: 64.w,
+                  height: 64.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppTheme.cardBackground,
                   ),
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                      blurRadius: _isEditMode ? 16.r : 12.r,
-                      offset: Offset(0, 4.h),
-                    ),
-                  ],
+                  child: _selectedProfileImage != null
+                      ? ClipOval(
+                          child: Image.file(
+                            _selectedProfileImage!,
+                            width: 64.w,
+                            height: 64.h,
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                      : UserProfilePicture(
+                          size: 64.0,
+                          borderColor: AppTheme.affirmationGradient[0],
+                          borderWidth: 0.0,
+                          showBorder: false,
+                          cachedImageUrl: widget.cachedProfileImageUrl,
+                        ),
                 ),
-                child: Icon(
-                  Icons.person_rounded,
-                  color: AppTheme.white,
-                  size: 32.sp,
-                ),
-              ),
-              if (_isEditMode)
-                Positioned.fill(
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 300),
-                    opacity: _isEditMode ? 1.0 : 0.0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.black.withOpacity(0.4),
-                      ),
-                      child: Icon(
-                        Icons.camera_alt,
-                        color: AppTheme.white,
-                        size: 24.sp,
+                if (_isEditMode || _isUploadingImage)
+                  Positioned.fill(
+                    child: AnimatedOpacity(
+                      duration: Duration(milliseconds: 300),
+                      opacity: (_isEditMode || _isUploadingImage) ? 1.0 : 0.0,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black.withOpacity(_isUploadingImage ? 0.6 : 0.4),
+                        ),
+                        child: _isUploadingImage 
+                            ? SizedBox(
+                                width: 24.w,
+                                height: 24.h,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.white),
+                                ),
+                              )
+                            : Icon(
+                                Icons.camera_alt,
+                                color: AppTheme.white,
+                                size: 24.sp,
+                              ),
                       ),
                     ),
                   ),
-                ),
-            ],
-          ),
+              ],
+            ),
           
           SizedBox(width: 16.w),
           
@@ -1074,51 +1100,189 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     });
     
     try {
-      // TODO: Implement actual API call to update profile
-      // For now, simulate the update
-      await Future.delayed(Duration(seconds: 2));
+      // Initialize profile service
+      await _profileService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
       
-      // Update the current values
-      setState(() {
-        _currentFullName = _fullNameController.text;
-        _currentEmail = _emailController.text;
-        _isUpdatingProfile = false;
-      });
+      // Skip password verification since user is already authenticated with Bearer token
+      // The API should trust the authenticated user to update their profile
+      if (_showPasswordField && _passwordController.text.isEmpty) {
+        setState(() {
+          _passwordError = 'Current password is required for verification';
+          _isUpdatingProfile = false;
+        });
+        return;
+      }
       
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Profile updated successfully'),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-        ),
+      // Note: Password verification is skipped since the user is already authenticated
+      // If the server requires password verification, it can be implemented server-side
+      print('🔐 Skipping password verification - user already authenticated with Bearer token');
+      
+      // Get current user ID
+      final authService = UnifiedAuthService();
+      final userId = await authService.getUserId();
+      print('📝 Using User ID for profile update: $userId');
+      
+      // Split full name into first and last name
+      final nameMap = _profileService.splitFullName(_fullNameController.text.trim());
+      
+      // Update profile information first
+      final updateResult = await _profileService.updateProfile(
+        userId: userId,
+        email: _emailController.text.trim(),
+        firstName: nameMap['firstName'],
+        lastName: nameMap['lastName'],
       );
       
-      // Exit edit mode
-      _toggleEditMode();
+      // Upload profile picture if one was selected
+      bool profilePictureUploadSuccess = true;
+      if (_selectedProfileImage != null) {
+        print('📤 Uploading profile picture...');
+        final uploadResult = await _profileService.uploadProfilePicture(
+          _selectedProfileImage!,
+          userId: userId,
+        );
+        
+        if (uploadResult.isSuccess) {
+          print('✅ Profile picture uploaded successfully');
+        } else {
+          print('❌ Profile picture upload failed: ${uploadResult.errorMessage}');
+          profilePictureUploadSuccess = false;
+        }
+      }
+      
+      if (updateResult.isSuccess && profilePictureUploadSuccess) {
+        // Update the current values
+        setState(() {
+          _currentFullName = _fullNameController.text;
+          _currentEmail = _emailController.text;
+          _isUpdatingProfile = false;
+          // Clear the selected profile image since it's now uploaded
+          _selectedProfileImage = null;
+        });
+        
+        // Show success message
+        String successMessage = 'Profile updated successfully';
+        bool hadProfilePicture = _selectedProfileImage != null;
+        if (hadProfilePicture) {
+          successMessage = 'Profile and picture updated successfully';
+        }
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Expanded(child: Text(successMessage)),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+        
+        // Exit edit mode
+        _toggleEditMode();
+      } else {
+        setState(() {
+          _isUpdatingProfile = false;
+        });
+        
+        _showErrorSnackBar('Failed to update profile: ${updateResult.errorMessage}');
+      }
       
     } catch (e) {
       setState(() {
         _isUpdatingProfile = false;
       });
       
-      // Show error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to update profile: $e'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-        ),
-      );
+      _showErrorSnackBar('Error updating profile: $e');
     }
   }
   
+  /// Upload profile picture to server
+  Future<void> _uploadProfilePicture() async {
+    if (_selectedProfileImage == null) return;
+    
+    setState(() {
+      _isUploadingImage = true;
+    });
+    
+    try {
+      await _profileService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      
+      print('📤 Uploading profile picture...');
+      
+      // Get current user ID
+      final authService = UnifiedAuthService();
+      final userId = await authService.getUserId();
+      print('📤 Using User ID: $userId');
+      
+      final uploadResult = await _profileService.uploadProfilePicture(
+        _selectedProfileImage!,
+        userId: userId,
+      );
+      
+      setState(() {
+        _isUploadingImage = false;
+      });
+      
+      if (uploadResult.isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Profile picture updated successfully'),
+              ],
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+          ),
+        );
+      } else {
+        _showErrorSnackBar('Failed to upload profile picture: ${uploadResult.errorMessage}');
+      }
+    } catch (e) {
+      setState(() {
+        _isUploadingImage = false;
+      });
+      _showErrorSnackBar('Error uploading profile picture: $e');
+    }
+  }
+  
+  /// Show error message in snackbar
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.error_outline, color: Colors.white, size: 20.sp),
+            SizedBox(width: 8.w),
+            Expanded(
+              child: Text(
+                message,
+                style: TextStyle(fontSize: 14.sp),
+              ),
+            ),
+          ],
+        ),
+        backgroundColor: Colors.red,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        duration: Duration(seconds: 4),
+      ),
+    );
+  }
   
   void _showProfilePictureOptions() {
     showModalBottomSheet(
@@ -1243,40 +1407,67 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     );
   }
   
-  void _takePhoto() {
-    // TODO: Implement camera functionality
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Camera functionality - Coming soon'),
-        backgroundColor: AppTheme.affirmationGradient[0],
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-      ),
-    );
+  void _takePhoto() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.camera,
+        imageQuality: 80,
+      );
+      
+      if (image != null) {
+        setState(() {
+          _selectedProfileImage = File(image.path);
+        });
+        
+        // Show preview only - actual upload will happen when user saves changes
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Profile picture selected. Save changes to update.'),
+            backgroundColor: AppTheme.affirmationGradient[0],
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      _showErrorSnackBar('Failed to take photo: $e');
+    }
   }
   
-  void _pickFromGallery() {
-    // TODO: Implement gallery picker
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Gallery picker - Coming soon'),
-        backgroundColor: AppTheme.affirmationGradient[0],
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-      ),
-    );
+  void _pickFromGallery() async {
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
+      
+      if (image != null) {
+        setState(() {
+          _selectedProfileImage = File(image.path);
+        });
+        
+        // Show preview only - actual upload will happen when user saves changes
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Profile picture selected. Save changes to update.'),
+            backgroundColor: AppTheme.affirmationGradient[0],
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      _showErrorSnackBar('Failed to pick image: $e');
+    }
   }
   
   void _removePhoto() {
-    // TODO: Implement photo removal
+    setState(() {
+      _selectedProfileImage = null;
+    });
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Profile picture removed'),
-        backgroundColor: Colors.green,
+        content: Text('Profile picture removed locally'),
+        backgroundColor: Colors.orange,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),

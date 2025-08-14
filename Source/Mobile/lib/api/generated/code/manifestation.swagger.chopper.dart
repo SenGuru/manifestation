@@ -1415,6 +1415,17 @@ final class _$Manifestation extends Manifestation {
   }
 
   @override
+  Future<Response<IsPremiumFeatureEnabledModelReturnModel>>
+  _apiV1CompanyIspremiumfeatureenabledGet() {
+    final Uri $url = Uri.parse('/api/v1/company/ispremiumfeatureenabled');
+    final Request $request = Request('GET', $url, client.baseUrl);
+    return client.send<
+      IsPremiumFeatureEnabledModelReturnModel,
+      IsPremiumFeatureEnabledModelReturnModel
+    >($request);
+  }
+
+  @override
   Future<Response<UserPermissionModelReturnListModel>>
   _apiV1CompanyGetuserpermissionsGet({
     bool? showDeleted,
@@ -2028,6 +2039,25 @@ final class _$Manifestation extends Manifestation {
       parameters: $params,
     );
     return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<String>> _apiV1ManifestDownloadfileattachmentfileurlGet({
+    int? fileAttachmentId,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/downloadfileattachmentfileurl',
+    );
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'fileAttachmentId': fileAttachmentId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<String, String>($request);
   }
 
   @override
@@ -6794,6 +6824,25 @@ final class _$Manifestation extends Manifestation {
   }
 
   @override
+  Future<Response<String>> _apiV1ManifestDownloadvisionboardpicturefileurlGet({
+    int? visionBoardPictureId,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/downloadvisionboardpicturefileurl',
+    );
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<String, String>($request);
+  }
+
+  @override
   Future<Response<BooleanReturnModel>>
   _apiV1ManifestIsvisionboardpicturethumbnailvalidGet({
     int? visionBoardPictureId,
@@ -6831,6 +6880,26 @@ final class _$Manifestation extends Manifestation {
       parameters: $params,
     );
     return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<String>>
+  _apiV1ManifestDownloadvisionboardpicturethumbnailurlGet({
+    int? visionBoardPictureId,
+  }) {
+    final Uri $url = Uri.parse(
+      '/api/v1/manifest/downloadvisionboardpicturethumbnailurl',
+    );
+    final Map<String, dynamic> $params = <String, dynamic>{
+      'visionBoardPictureId': visionBoardPictureId,
+    };
+    final Request $request = Request(
+      'GET',
+      $url,
+      client.baseUrl,
+      parameters: $params,
+    );
+    return client.send<String, String>($request);
   }
 
   @override

@@ -201,6 +201,22 @@ class _MindfulnessMomentState extends State<MindfulnessMoment>
                 ),
               ),
             ),
+            // Refresh button
+            GestureDetector(
+              onTap: _refreshMoment,
+              child: Container(
+                padding: EdgeInsets.all(6.w),
+                decoration: BoxDecoration(
+                  color: AppTheme.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Icon(
+                  Icons.refresh_rounded,
+                  color: AppTheme.white,
+                  size: 16.sp,
+                ),
+              ),
+            ),
           ],
         ),
         

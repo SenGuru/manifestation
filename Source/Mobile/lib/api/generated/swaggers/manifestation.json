@@ -4512,6 +4512,35 @@
         }
       }
     },
+    "/api/v1/company/ispremiumfeatureenabled": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/IsPremiumFeatureEnabledModelReturnModel"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IsPremiumFeatureEnabledModelReturnModel"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IsPremiumFeatureEnabledModelReturnModel"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/company/getuserpermissions": {
       "get": {
         "tags": [
@@ -6479,6 +6508,45 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/downloadfileattachmentfileurl": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "fileAttachmentId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -20181,6 +20249,45 @@
         }
       }
     },
+    "/api/v1/manifest/downloadvisionboardpicturefileurl": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/manifest/isvisionboardpicturethumbnailvalid": {
       "get": {
         "tags": [
@@ -20238,6 +20345,45 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/manifest/downloadvisionboardpicturethumbnailurl": {
+      "get": {
+        "tags": [
+          "ToTest"
+        ],
+        "parameters": [
+          {
+            "name": "visionBoardPictureId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -41966,6 +42112,55 @@
               "$ref": "#/components/schemas/GoalTrackerCategoryUpdateModel"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IsPremiumFeatureEnabledModel": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "enabledUntilDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "IsPremiumFeatureEnabledModelReturnModel": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "$ref": "#/components/schemas/IsPremiumFeatureEnabledModel"
+          },
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "successMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorHolder": {
+            "$ref": "#/components/schemas/ReturnError"
+          },
+          "activityId": {
+            "type": "string",
+            "nullable": true
+          },
+          "activityDateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "server": {
+            "type": "string",
+            "nullable": true
+          },
+          "processId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

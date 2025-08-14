@@ -5,6 +5,7 @@ import '../constants/app_theme.dart';
 import '../services/usage_analytics_service.dart';
 import '../models/analytics_models.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/universal_back_button.dart';
 
 class SessionStatsScreen extends StatefulWidget {
   @override
@@ -106,25 +107,7 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Text(

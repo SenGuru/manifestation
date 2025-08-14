@@ -10,6 +10,7 @@ class VisionBoardCanvas extends StatefulWidget {
   final VisionBoardTool selectedTool;
   final Function(VisionBoard) onBoardChanged;
   final VoidCallback? onDeselectTool;
+  final bool hideSelectionIndicators; // New parameter to hide selection UI during thumbnail capture
 
   const VisionBoardCanvas({
     Key? key,
@@ -17,6 +18,7 @@ class VisionBoardCanvas extends StatefulWidget {
     required this.selectedTool,
     required this.onBoardChanged,
     this.onDeselectTool,
+    this.hideSelectionIndicators = false, // Default to showing selection indicators
   }) : super(key: key);
 
   @override
@@ -57,15 +59,18 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
         },
         child: Stack(
           children: [
-            // Background grid
-            if (widget.selectedTool != VisionBoardTool.select)
+            // Background grid (hide when capturing thumbnail)
+            if (widget.selectedTool != VisionBoardTool.select && !widget.hideSelectionIndicators)
               _buildGrid(),
             
-            // Board elements
+            // Board elements with proper keys for efficient updates
             ...widget.board.elements.asMap().entries.map((entry) {
               final index = entry.key;
               final element = entry.value;
-              return _buildElement(element, index);
+              return RepaintBoundary(
+                key: ValueKey(element.id), // Unique key for efficient updates
+                child: _buildElement(element, index),
+              );
             }),
             
             // Selection overlay with resize handles
@@ -186,13 +191,19 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       // Image source available
     }
     
+    // Calculate optimal image dimensions based on element size to reduce memory usage
+    final displayWidth = element.size.width.clamp(50.0, 800.0);
+    final displayHeight = element.size.height.clamp(50.0, 800.0);
+    
     // Try to load from URL first, then local path, then placeholder
     if (element.imageUrl != null && element.imageUrl!.isNotEmpty) {
       return Image.network(
         element.imageUrl!,
         fit: element.fit,
-        width: double.infinity,
-        height: double.infinity,
+        width: displayWidth,
+        height: displayHeight,
+        cacheWidth: displayWidth.toInt(),
+        cacheHeight: displayHeight.toInt(),
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Center(
@@ -203,14 +214,16 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           );
         },
         errorBuilder: (context, error, stackTrace) {
-          // Fallback to local image
+          // Fallback to local image with optimized dimensions
           if (element.imagePath.isNotEmpty) {
             final imageFile = File(element.imagePath);
             return Image.file(
               imageFile,
               fit: element.fit,
-              width: double.infinity,
-              height: double.infinity,
+              width: displayWidth,
+              height: displayHeight,
+              cacheWidth: displayWidth.toInt(),
+              cacheHeight: displayHeight.toInt(),
               errorBuilder: (context, error, stackTrace) {
                 return _buildImagePlaceholder();
               },
@@ -224,8 +237,10 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       return Image.file(
         imageFile,
         fit: element.fit,
-        width: double.infinity,
-        height: double.infinity,
+        width: displayWidth,
+        height: displayHeight,
+        cacheWidth: displayWidth.toInt(),
+        cacheHeight: displayHeight.toInt(),
         errorBuilder: (context, error, stackTrace) {
           return _buildImagePlaceholder();
         },
@@ -357,6 +372,9 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   // Visual feedback methods
   bool _shouldShowElementBorder(VisionBoardElement element) {
+    // Hide all borders when capturing thumbnail
+    if (widget.hideSelectionIndicators) return false;
+    
     return selectedElementId == element.id || 
            draggingElementId == element.id ||
            widget.selectedTool == VisionBoardTool.delete;
@@ -388,6 +406,17 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     // No shadows for text elements - keep them completely clean
     if (element is VisionBoardTextElement) {
       return [];
+    }
+    
+    // Hide all selection shadows when capturing thumbnail, but keep subtle base shadow
+    if (widget.hideSelectionIndicators) {
+      return [
+        BoxShadow(
+          color: AppTheme.black.withOpacity(0.05),
+          blurRadius: 4.r,
+          offset: Offset(0, 2.h),
+        ),
+      ];
     }
     
     // Only apply shadows to image elements
@@ -431,6 +460,9 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   bool _shouldShowToolCursor(VisionBoardElement element) {
+    // Hide tool cursor when capturing thumbnail
+    if (widget.hideSelectionIndicators) return false;
+    
     return widget.selectedTool == VisionBoardTool.delete && 
            selectedElementId != element.id; // Don't show on selected element
   }
@@ -466,7 +498,8 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   // Selection overlay with resize handles
   Widget _buildSelectionOverlay() {
-    if (selectedElementId == null || widget.board.elements.isEmpty) {
+    // Hide selection overlay when capturing thumbnail
+    if (widget.hideSelectionIndicators || selectedElementId == null || widget.board.elements.isEmpty) {
       return SizedBox.shrink();
     }
     

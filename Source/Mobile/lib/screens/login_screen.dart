@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../services/unified_auth_service.dart';
@@ -267,6 +268,7 @@ class _LoginScreenState extends State<LoginScreen>
             children: [
               GestureDetector(
                 onTap: () {
+                  HapticFeedback.selectionClick();
                   setState(() {
                     _rememberMe = !_rememberMe;
                   });
@@ -312,7 +314,10 @@ class _LoginScreenState extends State<LoginScreen>
               Spacer(),
               
               GestureDetector(
-                onTap: _navigateToForgotPassword,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  _navigateToForgotPassword();
+                },
                 child: Text(
                   'Forgot Password?',
                   style: TextStyle(
@@ -390,6 +395,7 @@ class _LoginScreenState extends State<LoginScreen>
                   suffixIcon: isPassword
                       ? GestureDetector(
                           onTap: () {
+                            HapticFeedback.selectionClick();
                             setState(() {
                               _isPasswordVisible = !_isPasswordVisible;
                             });
@@ -553,7 +559,10 @@ class _LoginScreenState extends State<LoginScreen>
             width: double.infinity,
             height: 56.h,
             child: ElevatedButton(
-              onPressed: _isLoading ? null : _handleLogin,
+              onPressed: _isLoading ? null : () {
+                HapticFeedback.mediumImpact();
+                _handleLogin();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
@@ -610,7 +619,10 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _buildSignUpLink() {
     return Center(
       child: GestureDetector(
-        onTap: _navigateToSignUp,
+        onTap: () {
+          HapticFeedback.lightImpact();
+          _navigateToSignUp();
+        },
         child: RichText(
           text: TextSpan(
             style: TextStyle(

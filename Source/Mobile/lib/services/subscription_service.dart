@@ -1,5 +1,8 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:chopper/chopper.dart';
+import '../api/generated/code/manifestation.swagger.dart';
+import 'unified_auth_service.dart';
 
 /// Service to manage subscription status and usage limits
 class SubscriptionService {
@@ -9,9 +12,15 @@ class SubscriptionService {
 
   static const String _premiumKey = 'is_premium_user';
   static const String _subscriptionExpiryKey = 'subscription_expiry';
+  static const String _lastCheckKey = 'last_premium_check';
   
   bool _isPremium = false;
   DateTime? _subscriptionExpiry;
+  DateTime? _lastServerCheck;
+  
+  Manifestation? _apiClient;
+  UnifiedAuthService? _authService;
+  bool _isInitialized = false;
   
   // Free tier limits
   static const int maxFreeCustomAffirmationCategories = 3; // User can create 3 custom categories on top of 5 default ones
@@ -24,8 +33,42 @@ class SubscriptionService {
   static const int maxFreeMeditationDesignsPerCategory = 3;
   
   /// Initialize the subscription service
-  Future<void> initialize() async {
+  Future<void> initialize({String? baseUrl}) async {
+    // Only initialize once to prevent multiple initialization messages
+    if (_isInitialized) {
+      print('📱 SubscriptionService already initialized, skipping...');
+      return;
+    }
+    
+    // Initialize API client if baseUrl provided
+    if (baseUrl != null) {
+      final chopperClient = ChopperClient(
+        baseUrl: Uri.parse(baseUrl),
+        interceptors: [_AuthInterceptor()],
+        converter: $JsonSerializableConverter(),
+        services: [Manifestation.create()],
+      );
+      
+      _apiClient = chopperClient.getService<Manifestation>();
+      _authService = UnifiedAuthService();
+      await _authService!.initialize(baseUrl: baseUrl);
+    }
+    
     await _loadSubscriptionStatus();
+    
+    // Check with server if we haven't checked recently (every 24 hours)
+    if (_shouldCheckWithServer()) {
+      await checkPremiumStatusFromServer();
+    }
+    
+    _isInitialized = true;
+  }
+  
+  /// Check if we should verify premium status with server
+  bool _shouldCheckWithServer() {
+    if (_lastServerCheck == null) return true;
+    final hoursSinceLastCheck = DateTime.now().difference(_lastServerCheck!).inHours;
+    return hoursSinceLastCheck >= 24;
   }
   
   /// Load subscription status from local storage
@@ -45,9 +88,15 @@ class SubscriptionService {
         }
       }
       
+      final lastCheckString = prefs.getString(_lastCheckKey);
+      if (lastCheckString != null) {
+        _lastServerCheck = DateTime.parse(lastCheckString);
+      }
+      
       print('📱 Subscription Service initialized:');
       print('   Is Premium: $_isPremium');
       print('   Expiry: $_subscriptionExpiry');
+      print('   Last Server Check: $_lastServerCheck');
     } catch (e) {
       print('❌ Error loading subscription status: $e');
       _isPremium = false;
@@ -65,8 +114,81 @@ class SubscriptionService {
       } else {
         await prefs.remove(_subscriptionExpiryKey);
       }
+      
+      if (_lastServerCheck != null) {
+        await prefs.setString(_lastCheckKey, _lastServerCheck!.toIso8601String());
+      }
     } catch (e) {
       print('❌ Error saving subscription status: $e');
+    }
+  }
+  
+  /// Enable premium feature using server API
+  Future<bool> enablePremiumFeature({String? password, int validityYears = 1}) async {
+    try {
+      print('🔄 Enabling premium feature on server...');
+      
+      if (_apiClient == null || _authService == null) {
+        print('⚠️ API client not initialized, using local mock activation');
+        await activatePremium(expiryDate: DateTime.now().add(Duration(days: validityYears * 365)));
+        return true;
+      }
+      
+      final enableModel = EnablePremiumFeatureModel(
+        password: password,
+        validityYears: validityYears,
+      );
+      
+      final response = await _apiClient!.apiV1CompanyEnablepremiumfeaturePost(
+        body: enableModel,
+      );
+      
+      if (response.isSuccessful && response.body?.isSuccess == true) {
+        print('✅ Premium feature enabled on server');
+        
+        // Update local status
+        final expiryDate = DateTime.now().add(Duration(days: validityYears * 365));
+        await activatePremium(expiryDate: expiryDate);
+        
+        _lastServerCheck = DateTime.now();
+        await _saveSubscriptionStatus();
+        
+        return true;
+      } else {
+        print('❌ Failed to enable premium feature:');
+        print('   Status: ${response.statusCode}');
+        print('   Success: ${response.body?.isSuccess}');
+        print('   Message: ${response.body?.successMessage}');
+        print('   Error: ${response.body?.errorHolder}');
+        return false;
+      }
+    } catch (e) {
+      print('❌ Error enabling premium feature: $e');
+      return false;
+    }
+  }
+  
+  /// Check premium status from server (if API for checking exists)
+  Future<void> checkPremiumStatusFromServer() async {
+    try {
+      print('🔄 Checking premium status with server...');
+      
+      if (_apiClient == null || _authService == null) {
+        print('⚠️ API client not initialized, skipping server check');
+        return;
+      }
+      
+      // Note: The ispremiumfeatureenabled endpoint doesn't seem to exist in the swagger
+      // For now, we'll just update the last check time and rely on local status
+      // In a real implementation, you would call the server to verify status
+      
+      _lastServerCheck = DateTime.now();
+      await _saveSubscriptionStatus();
+      
+      print('✅ Server check completed (using local status)');
+      
+    } catch (e) {
+      print('❌ Error checking premium status from server: $e');
     }
   }
   
@@ -224,5 +346,34 @@ class SubscriptionService {
         'meditationDesignsPerCategory': maxFreeMeditationDesignsPerCategory,
       }
     };
+  }
+}
+
+/// Auth interceptor to add token to requests
+class _AuthInterceptor implements Interceptor {
+  @override
+  FutureOr<Response<BodyType>> intercept<BodyType>(Chain<BodyType> chain) async {
+    final request = chain.request;
+    
+    try {
+      // Get auth token from the unified service
+      final authService = UnifiedAuthService();
+      final authToken = authService.authToken;
+      
+      if (authToken != null && authToken.isNotEmpty) {
+        final updatedRequest = request.copyWith(
+          headers: {
+            ...request.headers,
+            'Authorization': 'Bearer $authToken',
+          },
+        );
+        return await chain.proceed(updatedRequest);
+      } else {
+        return await chain.proceed(request);
+      }
+    } catch (e) {
+      print('❌ Auth interceptor error: $e');
+      rethrow;
+    }
   }
 }

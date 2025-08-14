@@ -543,5 +543,10 @@ class BreathingPatternPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant BreathingPatternPainter oldDelegate) {
+    // Only repaint if progress, pattern, or color changed
+    return oldDelegate.progress != progress ||
+           oldDelegate.pattern != pattern ||
+           oldDelegate.color != color;
+  }
 }

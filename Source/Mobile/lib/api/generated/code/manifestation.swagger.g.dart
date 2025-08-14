@@ -6852,6 +6852,56 @@ Map<String, dynamic> _$GoalTrackerUpdateModelToJson(
       .toList(),
 };
 
+IsPremiumFeatureEnabledModel _$IsPremiumFeatureEnabledModelFromJson(
+  Map<String, dynamic> json,
+) => IsPremiumFeatureEnabledModel(
+  enabled: json['enabled'] as bool?,
+  enabledUntilDate: json['enabledUntilDate'] == null
+      ? null
+      : DateTime.parse(json['enabledUntilDate'] as String),
+);
+
+Map<String, dynamic> _$IsPremiumFeatureEnabledModelToJson(
+  IsPremiumFeatureEnabledModel instance,
+) => <String, dynamic>{
+  'enabled': instance.enabled,
+  'enabledUntilDate': instance.enabledUntilDate?.toIso8601String(),
+};
+
+IsPremiumFeatureEnabledModelReturnModel
+_$IsPremiumFeatureEnabledModelReturnModelFromJson(Map<String, dynamic> json) =>
+    IsPremiumFeatureEnabledModelReturnModel(
+      model: json['model'] == null
+          ? null
+          : IsPremiumFeatureEnabledModel.fromJson(
+              json['model'] as Map<String, dynamic>,
+            ),
+      isSuccess: json['isSuccess'] as bool?,
+      successMessage: json['successMessage'] as String?,
+      errorHolder: json['errorHolder'] == null
+          ? null
+          : ReturnError.fromJson(json['errorHolder'] as Map<String, dynamic>),
+      activityId: json['activityId'] as String?,
+      activityDateTime: json['activityDateTime'] == null
+          ? null
+          : DateTime.parse(json['activityDateTime'] as String),
+      server: json['server'] as String?,
+      processId: (json['processId'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$IsPremiumFeatureEnabledModelReturnModelToJson(
+  IsPremiumFeatureEnabledModelReturnModel instance,
+) => <String, dynamic>{
+  'model': instance.model?.toJson(),
+  'isSuccess': instance.isSuccess,
+  'successMessage': instance.successMessage,
+  'errorHolder': instance.errorHolder?.toJson(),
+  'activityId': instance.activityId,
+  'activityDateTime': instance.activityDateTime?.toIso8601String(),
+  'server': instance.server,
+  'processId': instance.processId,
+};
+
 JobAttachmentCreateModel _$JobAttachmentCreateModelFromJson(
   Map<String, dynamic> json,
 ) => JobAttachmentCreateModel(

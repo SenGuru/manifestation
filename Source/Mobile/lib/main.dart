@@ -86,9 +86,10 @@ class _ManifestationAppState extends State<ManifestationApp> {
           child: ListenableBuilder(
             listenable: _themeService,
             builder: (context, child) {
-              return MaterialApp(
-          title: 'Manifestation App',
-          debugShowCheckedModeBanner: false,
+              return RepaintBoundary(
+                child: MaterialApp(
+                  title: 'Manifestation App',
+                  debugShowCheckedModeBanner: false,
           theme: AppTheme.themeData.copyWith(
             textTheme: GoogleFonts.poppinsTextTheme(
               TextTheme(
@@ -239,7 +240,8 @@ class _ManifestationAppState extends State<ManifestationApp> {
             ),
           ),
           // Start with the welcome screen
-          home: SplashScreen(),
+                  home: SplashScreen(),
+                ),
               );
             },
           ),

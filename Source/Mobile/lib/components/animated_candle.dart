@@ -114,9 +114,24 @@ class _AnimatedCandleState extends State<AnimatedCandle>
 
   @override
   void dispose() {
-    _flameController.dispose();
-    _flickerController.dispose();
-    _glowController.dispose();
+    try {
+      _flameController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing flame controller: $e');
+    }
+    
+    try {
+      _flickerController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing flicker controller: $e');
+    }
+    
+    try {
+      _glowController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing glow controller: $e');
+    }
+    
     super.dispose();
   }
 
@@ -132,26 +147,30 @@ class _AnimatedCandleState extends State<AnimatedCandle>
     return SizedBox(
       width: widget.size.w,
       height: containerHeight.h,
-      child: AnimatedBuilder(
-        animation: Listenable.merge([
-          _flameController,
-          _flickerController,
-          _glowController,
-        ]),
-        builder: (context, child) {
-          return CustomPaint(
-            size: Size(widget.size.w, containerHeight.h),
-            painter: CandlePainter(
-              color: widget.color,
-              intensity: widget.intensity,
-              flameHeight: _flameHeight.value,
-              flameWidth: _flameWidth.value,
-              flickerOffset: _flickerOffset.value,
-              glowIntensity: _glowIntensity.value,
-              isPreview: isPreview,
-            ),
-          );
-        },
+      child: RepaintBoundary(
+        child: AnimatedBuilder(
+          animation: Listenable.merge([
+            _flameController,
+            _flickerController,
+            _glowController,
+          ]),
+          builder: (context, child) {
+            return CustomPaint(
+              size: Size(widget.size.w, containerHeight.h),
+              painter: CandlePainter(
+                color: widget.color,
+                intensity: widget.intensity,
+                flameHeight: _flameHeight.value,
+                flameWidth: _flameWidth.value,
+                flickerOffset: _flickerOffset.value,
+                glowIntensity: _glowIntensity.value,
+                isPreview: isPreview,
+              ),
+              child: child, // Cache static child content
+            );
+          },
+          child: const SizedBox(), // Static cached child
+        ),
       ),
     );
   }
@@ -549,5 +568,14 @@ class CandlePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CandlePainter oldDelegate) {
+    // Only repaint if animation values actually changed
+    return oldDelegate.flameHeight != flameHeight ||
+           oldDelegate.flameWidth != flameWidth ||
+           oldDelegate.flickerOffset != flickerOffset ||
+           oldDelegate.glowIntensity != glowIntensity ||
+           oldDelegate.intensity != intensity ||
+           oldDelegate.color != color ||
+           oldDelegate.isPreview != isPreview;
+  }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
 
@@ -207,7 +208,10 @@ class _DualFeatureCardState extends State<DualFeatureCard>
     required bool isLeft,
   }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        onTap();
+      },
       child: _gradientController != null 
         ? AnimatedBuilder(
             animation: _gradientController!,

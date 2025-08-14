@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../widgets/universal_back_button.dart';
 import 'dart:io';
 import 'dart:typed_data';
 import '../models/vision_board.dart';
@@ -10,7 +12,7 @@ import 'vision_board_screen.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../utils/navigation_utils.dart';
-import 'package:http/http.dart' as http;
+import 'vision_board_gallery_screen.dart';
 
 class VisionBoardHome extends StatefulWidget {
   const VisionBoardHome({super.key});
@@ -118,25 +120,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         children: [
           Row(
             children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 44.w,
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    color: AppTheme.cardBackground,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: AppTheme.textSecondary.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: AppTheme.textPrimary,
-                    size: 20.sp,
-                  ),
-                ),
-              ),
+              UniversalBackButton(),
               SizedBox(width: 16.w),
               Expanded(
                 child: Column(
@@ -309,6 +293,9 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
 
   Widget _buildVisionBoardGrid() {
+    // Show only first 4 vision boards for quick access
+    final displayedBoards = visionBoards.take(4).toList();
+    
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -325,12 +312,19 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               mainAxisSpacing: 16.h,
               childAspectRatio: 0.75,
             ),
-            itemCount: visionBoards.length,
+            itemCount: displayedBoards.length,
             itemBuilder: (context, index) {
-              final board = visionBoards[index];
+              final board = displayedBoards[index];
               return _buildVisionBoardCard(board);
             },
           ),
+          
+          // Show "View All" button if there are more than 4 boards
+          if (visionBoards.length > 4) ...[
+            SizedBox(height: 16.h),
+            _buildViewAllButton(),
+          ],
+          
           SizedBox(height: 32.h),
           _buildTemplatesSection(),
           SizedBox(height: 100.h), // Space for FAB
@@ -353,7 +347,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         ),
         GestureDetector(
           onTap: () {
-            // TODO: Navigate to all boards
+            _navigateToVisionBoardGallery();
           },
           child: Text(
             action,
@@ -370,8 +364,14 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
 
   Widget _buildVisionBoardCard(VisionBoard board) {
     return GestureDetector(
-      onTap: () => _openBoard(board),
-      onLongPress: () => _showBoardOptions(board),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        _openBoard(board);
+      },
+      onLongPress: () {
+        HapticFeedback.heavyImpact();
+        _showBoardOptions(board);
+      },
       child: Container(
         decoration: BoxDecoration(
           color: AppTheme.cardBackground,
@@ -468,9 +468,85 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
 
   Widget _buildVisionBoardPreview(VisionBoard board) {
-    // For now, always show a simple preview with the first letter of the title
-    // This avoids the 404 errors from the server thumbnail endpoint
-    return _buildSimpleThumbnail(board);
+    // Try to download the thumbnail from the server
+    return FutureBuilder<Uint8List?>(
+      future: _fetchBoardThumbnail(board),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show loading state
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
+                  AppTheme.visionBoardGradient[1].withValues(alpha: 0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppTheme.visionBoardGradient[0].withValues(alpha: 0.5),
+                ),
+                strokeWidth: 2,
+              ),
+            ),
+          );
+        }
+        
+        if (snapshot.hasData && snapshot.data != null) {
+          // Display the downloaded thumbnail
+          return ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            child: Image.memory(
+              snapshot.data!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (context, error, stackTrace) {
+                print('❌ Error displaying thumbnail: $error');
+                return _buildSimpleThumbnail(board);
+              },
+            ),
+          );
+        }
+        
+        // Fallback to simple thumbnail if no server thumbnail
+        return _buildSimpleThumbnail(board);
+      },
+    );
+  }
+
+  Future<Uint8List?> _fetchBoardThumbnail(VisionBoard board) async {
+    try {
+      final visionBoardService = VisionBoardService();
+      
+      // First, get the picture ID for this vision board
+      final pictureId = await visionBoardService.getPictureIdForBoard(board.id);
+      if (pictureId == null) {
+        print('⚠️ No picture ID found for board: ${board.id}');
+        return null;
+      }
+      
+      print('📥 Fetching thumbnail for board ${board.id} with picture ID: $pictureId');
+      
+      // Download the thumbnail using the picture ID
+      final thumbnailBytes = await visionBoardService.downloadThumbnail(pictureId);
+      
+      if (thumbnailBytes != null) {
+        print('✅ Thumbnail fetched successfully: ${thumbnailBytes.length} bytes');
+      } else {
+        print('⚠️ No thumbnail available for board: ${board.id}');
+      }
+      
+      return thumbnailBytes;
+    } catch (e) {
+      print('❌ Error fetching thumbnail for board ${board.id}: $e');
+      return null;
+    }
   }
   
   Widget _buildSimpleThumbnail(VisionBoard board) {
@@ -640,73 +716,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     return SizedBox.shrink();
   }
 
-  Future<Uint8List?> _fetchThumbnailWithAuth(String thumbnailUrl) async {
-    try {
-      final authService = UnifiedAuthService();
-      final token = authService.authToken;
-      
-      if (token == null) {
-        print('❌ No auth token available for thumbnail fetch');
-        return null;
-      }
-      
-      final response = await http.get(
-        Uri.parse(thumbnailUrl),
-        headers: {
-          'Authorization': 'Bearer $token',
-        },
-      );
-      
-      if (response.statusCode == 200) {
-        print('✅ Thumbnail fetched successfully');
-        return response.bodyBytes;
-      } else {
-        print('❌ Failed to fetch thumbnail: ${response.statusCode}');
-        return null;
-      }
-    } catch (e) {
-      print('❌ Error fetching thumbnail: $e');
-      return null;
-    }
-  }
-
-  Widget _buildThumbnailFromUrl(String thumbnailUrl) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
-        child: FutureBuilder<Uint8List?>(
-          future: _fetchThumbnailWithAuth(thumbnailUrl),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    AppTheme.visionBoardGradient[0],
-                  ),
-                ),
-              );
-            }
-            
-            if (snapshot.hasData && snapshot.data != null) {
-              return Image.memory(
-                snapshot.data!,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  print('❌ Failed to display thumbnail: $error');
-                  return _buildPlaceholderThumbnail();
-                },
-              );
-            }
-            
-            // Fallback to placeholder if thumbnail fails to load
-            return _buildPlaceholderThumbnail();
-          },
-        ),
-      ),
-    );
-  }
 
   Widget _buildTemplatesSection() {
     return Column(
@@ -815,6 +824,47 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             Icons.add,
             color: AppTheme.white,
             size: 28.sp,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildViewAllButton() {
+    return Container(
+      width: double.infinity,
+      height: 50.h,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _navigateToVisionBoardGallery,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.grid_view_rounded,
+                color: AppTheme.visionBoardGradient[0],
+                size: 20.sp,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                'View All ${visionBoards.length} Vision Boards',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.visionBoardGradient[0],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -1346,6 +1396,17 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   void _showSettings() {
     // TODO: Implement settings
     print('Show settings');
+  }
+
+  void _navigateToVisionBoardGallery() {
+    HapticFeedback.lightImpact();
+    pushWithoutSwipe(
+      context,
+      VisionBoardGalleryScreen(initialVisionBoards: visionBoards),
+    ).then((_) {
+      // Refresh vision boards when returning from gallery
+      _loadVisionBoards();
+    });
   }
 }
 

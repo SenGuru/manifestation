@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
 
@@ -134,7 +135,10 @@ class _FeatureCardState extends State<FeatureCard>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: () {
+        HapticFeedback.lightImpact();
+        widget.onTap();
+      },
       child: AnimatedBuilder(
         animation: _gradientAnimation,
         builder: (context, child) {

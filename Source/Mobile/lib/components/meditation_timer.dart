@@ -213,7 +213,12 @@ class CircularProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CircularProgressPainter oldDelegate) {
+    // Only repaint if progress, color, or stroke width changed
+    return oldDelegate.progress != progress ||
+           oldDelegate.color != color ||
+           oldDelegate.strokeWidth != strokeWidth;
+  }
 }
 
 // Enhanced timer with session phases

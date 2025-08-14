@@ -272,7 +272,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             icon: Icons.person_outline,
           ),
           
-          SizedBox(height: 12.h),
+          SizedBox(height: 8.h), // Reduced spacing
           
           // Email field
           _buildTextField(
@@ -283,42 +283,44 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
             keyboardType: TextInputType.emailAddress,
           ),
           
-          SizedBox(height: 12.h),
+          SizedBox(height: 8.h), // Reduced spacing
           
           // Animated password field (shows when user starts typing)
           AnimatedBuilder(
             animation: _passwordFieldAnimation,
             builder: (context, child) {
-              return AnimatedContainer(
-                duration: Duration(milliseconds: 500),
-                height: _showPasswordField ? null : 0,
-                curve: Curves.easeOut,
-                child: _showPasswordField
-                    ? FadeTransition(
-                        opacity: _passwordFieldAnimation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: Offset(0, -0.3),
-                            end: Offset.zero,
-                          ).animate(CurvedAnimation(
-                            parent: _passwordFieldController,
-                            curve: Curves.easeOut,
-                          )),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 12.h),
-                              _buildTextField(
-                                controller: _passwordController,
-                                label: 'Current Password',
-                                hint: 'Enter your current password',
-                                icon: Icons.lock_outline,
-                                isPassword: true,
-                              ),
-                            ],
+              return ClipRect(
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 500),
+                  height: _showPasswordField ? 84.h : 0, // Compact height to match reduced spacing
+                  curve: Curves.easeOut,
+                  child: _showPasswordField
+                      ? FadeTransition(
+                          opacity: _passwordFieldAnimation,
+                          child: SlideTransition(
+                            position: Tween<Offset>(
+                              begin: Offset(0, -0.3),
+                              end: Offset.zero,
+                            ).animate(CurvedAnimation(
+                              parent: _passwordFieldController,
+                              curve: Curves.easeOut,
+                            )),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 8.h), // Reduced spacing to match other fields
+                                _buildTextField(
+                                  controller: _passwordController,
+                                  label: 'Current Password',
+                                  hint: 'Enter your current password',
+                                  icon: Icons.lock_outline,
+                                  isPassword: true,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    : SizedBox.shrink(),
+                        )
+                      : SizedBox.shrink(),
+                ),
               );
             },
           ),
@@ -438,7 +440,7 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen>
               ),
               
               Container(
-                height: 16.h,
+                height: 14.h, // Reduced from 16.h to make fields more compact
                 margin: EdgeInsets.only(top: 2.h),
                 child: _buildFieldError(_getFieldError(controller)),
               ),

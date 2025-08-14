@@ -18,6 +18,7 @@ import '../api/generated/code/manifestation.swagger.dart';
 import '../widgets/stylish_loading.dart';
 import '../utils/navigation_utils.dart';
 import 'goal_detail_screen_redesigned.dart';
+import '../widgets/universal_back_button.dart';
 
 class GoalTrackerScreen extends StatefulWidget {
   @override
@@ -72,7 +73,11 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   @override
   void dispose() {
-    _fabAnimationController.dispose();
+    try {
+      _fabAnimationController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing FAB animation controller: $e');
+    }
     super.dispose();
   }
 
@@ -154,25 +159,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                      color: AppTheme.textSecondary.withValues(alpha: 0.1),
-                    ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textPrimary,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -426,9 +413,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     return ListView.builder(
       padding: EdgeInsets.all(20.w),
       itemCount: filteredGoals.length,
+      // Removed itemExtent to allow dynamic height for expandable cards
+      cacheExtent: 500, // Cache off-screen items for smooth scrolling
       itemBuilder: (context, index) {
         final goal = filteredGoals[index];
         return Container(
+          key: ValueKey(goal.id), // Unique key for efficient updates
           margin: EdgeInsets.only(bottom: 16.h),
           child: GoalCard(
             goal: goal,

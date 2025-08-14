@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../constants/colors.dart';
@@ -16,6 +17,7 @@ import '../components/animated_moon.dart';
 import '../components/animated_nature.dart';
 import '../components/animated_geometric.dart';
 import '../components/animated_minimal.dart';
+import '../widgets/universal_back_button.dart';
 
 class VisualMeditationScreen extends StatefulWidget {
   @override
@@ -535,25 +537,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -1172,6 +1156,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                   ),
                   child: GestureDetector(
                     onTap: () {
+                      HapticFeedback.mediumImpact();
                       // Simple pause/resume toggle
                       if (isPlaying) {
                         _pauseSession();
@@ -1180,6 +1165,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
                       }
                     },
                     onLongPress: () {
+                      HapticFeedback.heavyImpact();
                       // Long press to show options
                       _showSessionOptions();
                     },
