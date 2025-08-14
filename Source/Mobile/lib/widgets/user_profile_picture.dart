@@ -42,6 +42,11 @@ class _UserProfilePictureState extends State<UserProfilePicture> {
 
   // Getter to access the current image URL
   String? get currentImageUrl => _imageUrl;
+  
+  // Method to force refresh the profile picture
+  void refreshProfilePicture() {
+    _loadProfilePicture();
+  }
 
   // Helper method to determine if the image data is raw bytes
   bool _isRawImageData(String imageData) {

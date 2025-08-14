@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'dart:convert';
+import 'dart:async';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/app_theme.dart';
 import '../../widgets/stylish_loading.dart';
 import '../../widgets/universal_back_button.dart';
+import '../../api/generated/code/manifestation.swagger.dart';
+import 'package:chopper/chopper.dart';
+import '../../services/unified_auth_service.dart';
 
 class SecuritySettingsScreen extends StatefulWidget {
   @override
@@ -24,10 +30,16 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   String? _currentPasswordError;
   String? _newPasswordError;
   String? _confirmPasswordError;
+  
+  // API client
+  late Manifestation _apiClient;
 
   @override
   void initState() {
     super.initState();
+    
+    // Initialize API client with auth interceptor
+    _initializeApiClient();
     
     // Add listeners for validation
     _currentPasswordController.addListener(() {
@@ -74,6 +86,13 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
         }
       });
     });
+  }
+
+  void _initializeApiClient() {
+    _apiClient = Manifestation.create(
+      baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+      interceptors: [_AuthInterceptor()],
+    );
   }
 
   @override
@@ -429,11 +448,18 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
   }
 
   Future<void> _changePassword() async {
+    print('🔐 === PASSWORD CHANGE INITIATED ===');
+    
     if (_currentPasswordError != null || _newPasswordError != null || _confirmPasswordError != null) {
+      print('❌ Validation errors present:');
+      print('   Current password error: $_currentPasswordError');
+      print('   New password error: $_newPasswordError');
+      print('   Confirm password error: $_confirmPasswordError');
       return;
     }
 
     if (_newPasswordController.text.isEmpty) {
+      print('❌ New password is empty');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Please enter a new password'),
@@ -443,35 +469,317 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       return;
     }
 
+    if (_currentPasswordController.text.isEmpty) {
+      print('❌ Current password is empty');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please enter your current password'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    print('✅ Validation passed');
+    print('📝 Current password length: ${_currentPasswordController.text.length}');
+    print('📝 New password length: ${_newPasswordController.text.length}');
+    print('📝 Passwords match: ${_newPasswordController.text == _confirmPasswordController.text}');
+
     setState(() {
       _isChangingPassword = true;
     });
 
     try {
-      await Future.delayed(Duration(seconds: 2)); // Simulate API call
-      
-      // Clear password fields
-      _currentPasswordController.clear();
-      _newPasswordController.clear();
-      _confirmPasswordController.clear();
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Password changed successfully'),
-          backgroundColor: Colors.green,
-        ),
+      // Create the password change request model
+      final changePasswordModel = ChangePasswordModel(
+        currentPassword: _currentPasswordController.text,
+        password: _newPasswordController.text,
+        retypedPassword: _confirmPasswordController.text,
       );
+      
+      print('📤 === SENDING PASSWORD CHANGE REQUEST ===');
+      print('   Endpoint: POST /api/v1/account/changecurrentpassword');
+      print('   Base URL: http://manifestation-qa-1.senthilguru.net');
+      print('   Full URL: http://manifestation-qa-1.senthilguru.net/api/v1/account/changecurrentpassword');
+      
+      // Show request payload (with passwords partially hidden for security)
+      print('   📋 Request Body (JSON):');
+      print('   {');
+      print('     "currentPassword": "${_currentPasswordController.text.isNotEmpty ? _currentPasswordController.text.substring(0, 1) + '*' * (_currentPasswordController.text.length - 1) : "[empty]"}",');
+      print('     "password": "${_newPasswordController.text.isNotEmpty ? _newPasswordController.text.substring(0, 1) + '*' * (_newPasswordController.text.length - 1) : "[empty]"}",');
+      print('     "retypedPassword": "${_confirmPasswordController.text.isNotEmpty ? _confirmPasswordController.text.substring(0, 1) + '*' * (_confirmPasswordController.text.length - 1) : "[empty]"}"');
+      print('   }');
+      
+      // Show actual JSON that will be sent (for debugging - remove in production)
+      final requestJson = changePasswordModel.toJson();
+      print('   🔍 Actual Request JSON structure:');
+      print('   ${requestJson.keys.toList()}');
+      
+      // Call the API to change password
+      print('   ⏳ Sending request...');
+      final response = await _apiClient.apiV1AccountChangecurrentpasswordPost(
+        body: changePasswordModel,
+      );
+      
+      print('📥 === API RESPONSE RECEIVED ===');
+      print('   Status Code: ${response.statusCode}');
+      print('   HTTP Is Successful: ${response.isSuccessful}');
+      print('   Has Body: ${response.body != null}');
+      
+      // Print full response body structure
+      if (response.body != null) {
+        print('   📋 Response Body Structure:');
+        print('   {');
+        print('     "isSuccess": ${response.body?.isSuccess},');
+        print('     "successMessage": ${response.body?.successMessage},');
+        print('     "activityId": ${response.body?.activityId},');
+        print('     "server": ${response.body?.server},');
+        print('     "processId": ${response.body?.processId},');
+        
+        if (response.body?.model != null) {
+          print('     "model": {');
+          print('       "userId": ${response.body?.model?.userId},');
+          print('       "userName": ${response.body?.model?.userName},');
+          print('       "firstName": ${response.body?.model?.firstName},');
+          print('       "lastName": ${response.body?.model?.lastName},');
+          print('       "token": ${response.body?.model?.token != null ? "[TOKEN PRESENT - ${response.body!.model!.token!.length} chars]" : "null"},');
+          print('     },');
+        } else {
+          print('     "model": null,');
+        }
+        
+        if (response.body?.errorHolder != null) {
+          print('     "errorHolder": {');
+          print('       "friendlyMessage": "${response.body?.errorHolder?.friendlyMessage}",');
+          print('       "internalErrorMessage": "${response.body?.errorHolder?.internalErrorMessage}",');
+          if (response.body?.errorHolder?.errorItemList != null && response.body!.errorHolder!.errorItemList!.isNotEmpty) {
+            print('       "errorItemList": [');
+            for (var error in response.body!.errorHolder!.errorItemList!) {
+              print('         { "key": "${error.key}", "value": "${error.$value}" },');
+            }
+            print('       ]');
+          }
+          print('     }');
+        } else {
+          print('     "errorHolder": null');
+        }
+        print('   }');
+      } else if (response.error != null) {
+        print('   ❌ Response Error: ${response.error}');
+      }
+      
+      // Check both HTTP success AND the actual API response success flag
+      if (response.isSuccessful && response.body != null && response.body?.isSuccess == true) {
+        // Password changed successfully
+        print('✅ === PASSWORD CHANGE SUCCESSFUL ===');
+        
+        // Clear password fields
+        _currentPasswordController.clear();
+        _newPasswordController.clear();
+        _confirmPasswordController.clear();
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Password changed successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+        
+        // Update the stored auth token if returned in the response
+        if (response.body?.model?.token != null) {
+          print('🔑 New auth token received, updating stored token...');
+          // Store the new token after password change
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('auth_token', response.body!.model!.token!);
+          print('✅ Auth token updated successfully');
+        } else {
+          print('ℹ️ No new auth token in response');
+        }
+      } else {
+        // Handle API error - either HTTP error or business logic error
+        print('❌ === PASSWORD CHANGE FAILED ===');
+        print('   Status Code: ${response.statusCode}');
+        print('   HTTP Successful: ${response.isSuccessful}');
+        print('   API isSuccess: ${response.body?.isSuccess}');
+        print('   Error Body: ${response.error}');
+        print('   Response Body: ${response.body}');
+        
+        String errorMessage = 'Failed to change password';
+        
+        // First check if we have an error in the response body (business logic error)
+        if (response.body?.errorHolder != null) {
+          // Use friendlyMessage or internalErrorMessage from ReturnError
+          errorMessage = response.body?.errorHolder?.friendlyMessage ?? 
+                       response.body?.errorHolder?.internalErrorMessage ?? 
+                       errorMessage;
+          print('   Error from errorHolder: $errorMessage');
+          
+          // Check for specific error messages
+          if (errorMessage.toLowerCase().contains('password') && 
+              (errorMessage.toLowerCase().contains('incorrect') || 
+               errorMessage.toLowerCase().contains('wrong') || 
+               errorMessage.toLowerCase().contains('invalid'))) {
+            errorMessage = 'Current password is incorrect';
+          }
+        }
+        // Otherwise try to extract error message from response error (HTTP error)
+        else if (response.error != null) {
+          try {
+            final errorBody = response.error as Map<String, dynamic>;
+            errorMessage = errorBody['message'] ?? errorMessage;
+            print('   Extracted error message: $errorMessage');
+          } catch (e) {
+            print('   Could not extract error message: $e');
+          }
+        }
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(errorMessage),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to change password'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      print('❌ === EXCEPTION IN PASSWORD CHANGE ===');
+      print('   Exception type: ${e.runtimeType}');
+      print('   Exception details: $e');
+      
+      if (e is Response) {
+        print('   Response status: ${e.statusCode}');
+        print('   Response body: ${e.body}');
+        print('   Response error: ${e.error}');
+      }
+      
+      String errorMessage = 'Failed to change password';
+      
+      // Handle specific error types
+      if (e.toString().contains('401') || e.toString().contains('Unauthorized')) {
+        errorMessage = 'Current password is incorrect';
+      } else if (e.toString().contains('400') || e.toString().contains('Bad Request')) {
+        errorMessage = 'Invalid password format or requirements not met';
+      } else if (e.toString().contains('SocketException') || e.toString().contains('Failed host lookup')) {
+        errorMessage = 'No internet connection. Please check your network.';
+      }
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
-      setState(() {
-        _isChangingPassword = false;
-      });
+      print('🏁 === PASSWORD CHANGE PROCESS COMPLETED ===');
+      print('   Clearing loading state...');
+      
+      if (mounted) {
+        setState(() {
+          _isChangingPassword = false;
+        });
+      }
+      
+      print('✅ Ready for next operation');
+    }
+  }
+}
+
+// Auth interceptor to add authentication headers
+class _AuthInterceptor implements Interceptor {
+  @override
+  FutureOr<Response<BodyType>> intercept<BodyType>(Chain<BodyType> chain) async {
+    final request = chain.request;
+    
+    print('🔒 === AUTH INTERCEPTOR ===');
+    print('   Request URL: ${request.url}');
+    print('   Request Method: ${request.method}');
+    print('   Request Headers (before auth): ${request.headers}');
+    
+    try {
+      // Get auth token from the unified service
+      final authService = UnifiedAuthService();
+      final authToken = authService.authToken;
+      
+      if (authToken != null && authToken.isNotEmpty) {
+        print('   ✅ Using Bearer token authentication');
+        print('   Token length: ${authToken.length}');
+        print('   Token preview: ${authToken.substring(0, 10)}...${authToken.substring(authToken.length - 10)}');
+        
+        final updatedRequest = request.copyWith(
+          headers: {
+            ...request.headers,
+            'Authorization': 'Bearer $authToken',
+          },
+        );
+        
+        print('   📤 Final Request Headers:');
+        updatedRequest.headers.forEach((key, value) {
+          if (key.toLowerCase() == 'authorization') {
+            print('     $key: Bearer [${authToken.length} chars]');
+          } else {
+            print('     $key: $value');
+          }
+        });
+        
+        print('   ⏳ Sending HTTP request...');
+        final response = await chain.proceed(updatedRequest);
+        
+        print('   📥 HTTP Response:');
+        print('     Status: ${response.statusCode}');
+        print('     Headers: ${response.base.headers}');
+        
+        return response;
+      } else {
+        print('   ⚠️ No auth token available, using basic auth');
+        print('   Basic auth credentials: SpecialUser:SpecialPassword1');
+        
+        // Add basic auth if no token
+        final basicAuth = 'Basic ${base64Encode(utf8.encode('SpecialUser:SpecialPassword1'))}';
+        final updatedRequest = request.copyWith(
+          headers: {
+            ...request.headers,
+            'Authorization': basicAuth,
+          },
+        );
+        
+        print('   📤 Final Request Headers:');
+        updatedRequest.headers.forEach((key, value) {
+          if (key.toLowerCase() == 'authorization') {
+            print('     $key: Basic [encoded SpecialUser:SpecialPassword1]');
+          } else {
+            print('     $key: $value');
+          }
+        });
+        
+        print('   ⏳ Sending HTTP request...');
+        final response = await chain.proceed(updatedRequest);
+        
+        print('   📥 HTTP Response:');
+        print('     Status: ${response.statusCode}');
+        print('     Headers: ${response.base.headers}');
+        
+        return response;
+      }
+    } catch (e) {
+      print('   ❌ Error in auth interceptor: $e');
+      print('   Using basic auth as fallback');
+      // Return request with basic auth as fallback
+      final basicAuth = 'Basic ${base64Encode(utf8.encode('SpecialUser:SpecialPassword1'))}';
+      final updatedRequest = request.copyWith(
+        headers: {
+          ...request.headers,
+          'Authorization': basicAuth,
+        },
+      );
+      
+      final response = await chain.proceed(updatedRequest);
+      print('   Fallback response status: ${response.statusCode}');
+      return response;
     }
   }
 }

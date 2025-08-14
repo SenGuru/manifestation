@@ -231,8 +231,86 @@ class _SplashScreenState extends State<SplashScreen>
       message: retryCount == 0 
         ? 'We\'re having trouble connecting to our servers. Please check your internet connection and try again.'
         : 'Still having connection issues. Please check your network and try again.',
-      onRetry: () => _restartWithAnimation(),
+      onRetry: () => _forceRetryWithValidation(),
     );
+  }
+
+  /// Force retry with explicit session validation
+  void _forceRetryWithValidation() async {
+    print('🔄 Forcing session validation retry...');
+    
+    // Reset animations first
+    setState(() {
+      _isInitializing = true;
+      _statusMessage = 'Retrying connection...';
+    });
+    
+    // Reset all animation controllers
+    _logoController.reset();
+    _fadeController.reset();
+    _glowController.reset();
+    _textController.reset();
+    
+    // Start animations
+    _logoController.forward();
+    _glowController.repeat(reverse: true);
+    
+    await Future.delayed(Duration(milliseconds: 600));
+    _fadeController.forward();
+    
+    await Future.delayed(Duration(milliseconds: 400));
+    _textController.forward();
+    
+    // Force the auth service to retry validation immediately
+    final authService = UnifiedAuthService();
+    
+    setState(() {
+      _statusMessage = 'Reconnecting to server...';
+    });
+    
+    // Explicitly call retry on the auth service
+    final retrySuccess = await authService.retrySessionValidation();
+    
+    await Future.delayed(Duration(milliseconds: 600));
+    
+    if (retrySuccess) {
+      print('✅ Retry successful - proceeding to app');
+      setState(() {
+        _statusMessage = 'Connection restored!';
+      });
+      
+      await Future.delayed(Duration(milliseconds: 800));
+      
+      // Check onboarding and navigate appropriately
+      final hasCompletedPostSignupOnboarding = await _hasCompletedPostSignupOnboarding();
+      if (!hasCompletedPostSignupOnboarding) {
+        _navigateToPostSignupOnboarding();
+      } else {
+        _navigateToHome();
+      }
+    } else {
+      // Still failing - check if it's still a network error or auth failure
+      final sessionState = authService.sessionState;
+      print('❌ Retry failed - session state: $sessionState');
+      
+      if (sessionState.toString().contains('networkError')) {
+        // Still network issues
+        setState(() {
+          _statusMessage = 'Still having connection issues...';
+        });
+        
+        await Future.delayed(Duration(milliseconds: 1000));
+        _showNetworkErrorWithRetry(retryCount: 1);
+      } else {
+        // Auth failure - go to login
+        setState(() {
+          _statusMessage = 'Session expired...';
+        });
+        
+        await Future.delayed(Duration(milliseconds: 1000));
+        _navigateToLogin();
+      }
+    }
   }
 
   /// Restart the splash screen with full animation sequence for retry

@@ -220,10 +220,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
             onTap: () async {
               HapticFeedback.lightImpact();
-              await pushWithoutSwipe(
+              final result = await pushWithoutSwipe(
                 context,
                 AccountSettingsScreen(cachedProfileImageUrl: _cachedProfileImageUrl),
               );
+              // Update cached image URL if one was returned
+              if (result != null && result is String) {
+                setState(() {
+                  _cachedProfileImageUrl = result;
+                });
+              }
               // Refresh user data when returning from account settings
               _loadUserData();
             },
@@ -260,10 +266,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           GestureDetector(
             onTap: () async {
               HapticFeedback.lightImpact();
-              await pushWithoutSwipe(
+              final result = await pushWithoutSwipe(
                 context,
-                AccountSettingsScreen(),
+                AccountSettingsScreen(cachedProfileImageUrl: _cachedProfileImageUrl),
               );
+              // Update cached image URL if one was returned
+              if (result != null && result is String) {
+                setState(() {
+                  _cachedProfileImageUrl = result;
+                });
+              }
               // Refresh user data when returning from account settings
               _loadUserData();
             },

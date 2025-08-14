@@ -43,8 +43,6 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   
   // Animations
   late Animation<double> _cardMorphAnimation;
-  late Animation<Offset> _buttonSlideAnimation;
-  late Animation<double> _buttonFadeAnimation;
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _fullNameController = TextEditingController();
@@ -89,18 +87,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
       curve: Curves.easeInOutBack,
     );
     
-    _buttonSlideAnimation = Tween<Offset>(
-      begin: Offset(0, 1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _buttonSlideController,
-      curve: Curves.elasticOut,
-    ));
-    
-    _buttonFadeAnimation = CurvedAnimation(
-      parent: _buttonSlideController,
-      curve: Interval(0.0, 0.6, curve: Curves.easeOut),
-    );
+    // Animations removed as they were unused
   }
 
   @override
@@ -266,7 +253,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     // Check if user has actually changed from original values
     final bool nameChanged = _fullNameController.text.trim() != _currentFullName;
     final bool emailChanged = _emailController.text.trim() != _currentEmail;
-    final bool hasChanges = nameChanged || emailChanged;
+    final bool profilePictureChanged = _selectedProfileImage != null;
+    final bool hasChanges = nameChanged || emailChanged || profilePictureChanged;
     
     // Only call setState if the password field visibility needs to change
     if (hasChanges != _showPasswordField) {
@@ -281,33 +269,37 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
-        body: SafeArea(
-          child: Column(
-            children: [
-              _buildBackButtonWithHeader(),
-              Expanded(
-                child: StylishLoading(
-                  message: 'Loading account information...',
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    return GestureDetector(
-      onTap: () {
-        // Dismiss keyboard when tapping outside text fields
-        FocusScope.of(context).unfocus();
+    return WillPopScope(
+      onWillPop: () async {
+        // Return cached image URL when system back button is pressed
+        Navigator.pop(context, _cachedProfileImageUrl);
+        return false; // We handle the pop manually
       },
-      child: Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
-        resizeToAvoidBottomInset: false, // Prevent widgets from moving when keyboard appears
-        body: SafeArea(
+      child: _isLoading 
+        ? Scaffold(
+            backgroundColor: AppTheme.backgroundDark,
+            body: SafeArea(
+              child: Column(
+                children: [
+                  _buildBackButtonWithHeader(),
+                  Expanded(
+                    child: StylishLoading(
+                      message: 'Loading account information...',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+        : GestureDetector(
+            onTap: () {
+              // Dismiss keyboard when tapping outside text fields
+              FocusScope.of(context).unfocus();
+            },
+            child: Scaffold(
+              backgroundColor: AppTheme.backgroundDark,
+              resizeToAvoidBottomInset: false, // Prevent widgets from moving when keyboard appears
+              body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24.w),
             child: Column(
@@ -321,18 +313,24 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
                 _buildSettingsNavigation(),
                 Spacer(), // This will push everything up and fill remaining space
               ],
-            ),
-          ),
-        ),
-      ),
-    );
+            ), // Column
+          ), // Padding  
+        ), // SafeArea
+      ), // Scaffold
+    ), // GestureDetector
+    ); // WillPopScope
   }
 
   Widget _buildBackButtonWithHeader() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        UniversalBackButton(),
+        UniversalBackButton(
+          onPressed: () {
+            // Return the updated cached image URL when going back
+            Navigator.pop(context, _cachedProfileImageUrl);
+          },
+        ),
         SizedBox(width: 16.w),
         Expanded(
           child: Column(
@@ -576,9 +574,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
             child: AnimatedOpacity(
               duration: Duration(milliseconds: 300),
               opacity: _isEditMode ? 1.0 : 0.0,
-              child: Container(
-                margin: EdgeInsets.only(top: 24.h),
-                width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.only(top: 24.h),
                 child: _buildConfirmButton(),
               ),
             ),
@@ -815,12 +812,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
                             ),
                           )
                         : UserProfilePicture(
-                            key: const ValueKey('profile_picture_widget'),
+                            key: const ValueKey('account_settings_profile_picture'),
                             size: 64.0,
                             borderColor: AppTheme.affirmationGradient[0],
                             borderWidth: 0.0,
                             showBorder: false,
-                            cachedImageUrl: widget.cachedProfileImageUrl ?? _cachedProfileImageUrl,
+                            cachedImageUrl: _cachedProfileImageUrl ?? widget.cachedProfileImageUrl,
                           ),
                   ),
                 ),
@@ -984,89 +981,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     return SizedBox.shrink();
   }
 
-  Widget _buildNavigationButton({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-    bool isDestructive = false,
-  }) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppTheme.cardBackground,
-        borderRadius: BorderRadius.circular(16.r),
-        border: Border.all(
-          color: isDestructive 
-              ? Colors.red.withOpacity(0.2)
-              : AppTheme.textMedium.withOpacity(0.1),
-          width: 1,
-        ),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(16.r),
-          child: Padding(
-            padding: EdgeInsets.all(16.w),
-            child: Row(
-              children: [
-                Container(
-                  width: 48.w,
-                  height: 48.h,
-                  decoration: BoxDecoration(
-                    color: isDestructive 
-                        ? Colors.red.withOpacity(0.1)
-                        : AppTheme.affirmationGradient[0].withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12.r),
-                  ),
-                  child: Icon(
-                    icon,
-                    color: isDestructive 
-                        ? Colors.red
-                        : AppTheme.affirmationGradient[0],
-                    size: 24.sp,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          color: isDestructive 
-                              ? Colors.red
-                              : AppTheme.textLight,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        subtitle,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: AppTheme.textMedium,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Icon(
-                  Icons.chevron_right,
-                  color: AppTheme.textMedium.withOpacity(0.6),
-                  size: 20.sp,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  // _buildNavigationButton method removed - not used
   
   String? _getFieldError(TextEditingController controller) {
     // Since we're using dialog-based editing, return null for now
@@ -1075,9 +990,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   
   Widget _buildConfirmButton() {
     final bool hasChanges = _fullNameController.text != _currentFullName || 
-                           _emailController.text != _currentEmail;
+                           _emailController.text != _currentEmail ||
+                           _selectedProfileImage != null;
     
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 56.h,
       child: ElevatedButton(
@@ -1194,6 +1110,10 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
         
         if (uploadResult.isSuccess) {
           print('✅ Profile picture uploaded successfully');
+          // Clear cached profile image URL to force reload from server
+          setState(() {
+            _cachedProfileImageUrl = null; // This will force the UserProfilePicture widget to reload from API
+          });
         } else {
           print('❌ Profile picture upload failed: ${uploadResult.errorMessage}');
           profilePictureUploadSuccess = false;
@@ -1273,76 +1193,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     }
   }
   
-  /// Upload profile picture to server
-  Future<void> _uploadProfilePicture() async {
-    if (_selectedProfileImage == null) return;
-    
-    setState(() {
-      _isUploadingImage = true;
-    });
-    
-    try {
-      await _profileService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
-      
-      print('📤 Uploading profile picture...');
-      
-      // Get current user ID
-      final authService = UnifiedAuthService();
-      final userId = await authService.getUserId();
-      print('📤 Using User ID: $userId');
-      
-      final uploadResult = await _profileService.uploadProfilePicture(
-        _selectedProfileImage!,
-        userId: userId,
-      );
-      
-      setState(() {
-        _isUploadingImage = false;
-      });
-      
-      if (uploadResult.isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Row(
-              children: [
-                Icon(Icons.check_circle, color: Colors.white, size: 20.sp),
-                SizedBox(width: 8.w),
-                Text('Profile picture updated successfully'),
-              ],
-            ),
-            backgroundColor: Colors.green,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
-            ),
-          ),
-        );
-      } else {
-        _showErrorSnackBar('Failed to upload profile picture: ${uploadResult.errorMessage}');
-      }
-    } catch (e) {
-      setState(() {
-        _isUploadingImage = false;
-      });
-      
-      // Check if this is a network/connection error
-      final errorMessage = e.toString().toLowerCase();
-      if (errorMessage.contains('network') || 
-          errorMessage.contains('connection') || 
-          errorMessage.contains('socket') ||
-          errorMessage.contains('timeout') ||
-          errorMessage.contains('failed host lookup')) {
-        // Show beautiful network error dialog
-        showNetworkErrorDialog(
-          context,
-          message: 'We\'re having trouble uploading your profile picture. Please check your internet connection and try again.',
-          onRetry: () => _uploadProfilePicture(),
-        );
-      } else {
-        _showErrorSnackBar('Error uploading profile picture: $e');
-      }
-    }
-  }
+  // _uploadProfilePicture method removed - upload now handled in _handleUpdateProfile
   
   /// Update stored user data after profile changes
   Future<void> _updateStoredUserData() async {
@@ -1558,6 +1409,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
           _selectedProfileImage = File(image.path);
         });
         
+        // Trigger password field check since profile picture changed
+        _checkAndShowPasswordField();
+        
         // Show preview only - actual upload will happen when user saves changes
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1584,6 +1438,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
           _selectedProfileImage = File(image.path);
         });
         
+        // Trigger password field check since profile picture changed
+        _checkAndShowPasswordField();
+        
         // Show preview only - actual upload will happen when user saves changes
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -1603,6 +1460,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
       _selectedProfileImage = null;
     });
     
+    // Trigger password field check since profile picture changed
+    _checkAndShowPasswordField();
+    
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Profile picture removed locally'),
@@ -1615,90 +1475,5 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     );
   }
   
-  void _showEditDialog(TextEditingController controller, String title, String hint, TextInputType? keyboardType, bool isPassword) {
-    final tempController = TextEditingController(text: controller.text);
-    
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.cardBackground,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        title: Text(
-          'Edit $title',
-          style: TextStyle(
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
-            color: AppTheme.textPrimary,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFormField(
-              controller: tempController,
-              keyboardType: keyboardType,
-              obscureText: isPassword,
-              style: TextStyle(
-                color: AppTheme.textLight,
-                fontSize: 16.sp,
-              ),
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: TextStyle(
-                  color: AppTheme.textMedium.withOpacity(0.6),
-                ),
-                filled: true,
-                fillColor: AppTheme.cardBackground,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(
-                    color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(
-                    color: AppTheme.affirmationGradient[0],
-                    width: 2,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(
-                color: AppTheme.textSecondary,
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              controller.text = tempController.text;
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppTheme.affirmationGradient[0],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-            ),
-            child: Text(
-              'Save',
-              style: TextStyle(
-                color: AppTheme.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // _showEditDialog method removed - not used
 }

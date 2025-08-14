@@ -580,9 +580,13 @@ class UnifiedAuthService {
   /// Retry session validation (for when network is restored)
   Future<bool> retrySessionValidation() async {
     print('🔄 Retrying session validation...');
+    print('🔄 Current state before retry: $_currentState');
+    print('🔄 Has auth token: ${_authToken != null}');
+    print('🔄 Has current user: ${_currentUser != null}');
     
     try {
       final validationResult = await _validateSessionWithServer();
+      print('🔄 Validation result: $validationResult');
       
       if (validationResult == true) {
         print('✅ Session validation retry successful - restoring logged in state');
