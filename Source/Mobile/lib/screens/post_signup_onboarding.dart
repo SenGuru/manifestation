@@ -13,13 +13,14 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
     with TickerProviderStateMixin {
   
   late PageController _pageController;
-  late AnimationController _fadeController;
-  late AnimationController _slideController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
+  late AnimationController _pulseController;
+  late AnimationController _iconFadeController;
+  late Animation<double> _pulseAnimation;
+  late Animation<double> _iconFadeAnimation;
   
   int _currentPage = 0;
   final int _totalPages = 5;
+  bool _isAnimating = false;
 
   @override
   void initState() {
@@ -27,63 +28,88 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
     
     _pageController = PageController();
     
-    _fadeController = AnimationController(
-      duration: Duration(milliseconds: 800),
+    // Continuous pulse animation - NEVER stops or resets
+    _pulseController = AnimationController(
+      duration: Duration(milliseconds: 2000),
       vsync: this,
     );
     
-    _slideController = AnimationController(
-      duration: Duration(milliseconds: 600),
+    // Separate fade animation for icon changes
+    _iconFadeController = AnimationController(
+      duration: Duration(milliseconds: 300),
       vsync: this,
     );
     
-    _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+    _pulseAnimation = Tween<double>(
+      begin: 0.95,
+      end: 1.05,
     ).animate(CurvedAnimation(
-      parent: _fadeController,
+      parent: _pulseController,
       curve: Curves.easeInOut,
     ));
     
-    _slideAnimation = Tween<Offset>(
-      begin: Offset(0, 0.3),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
+    _iconFadeAnimation = CurvedAnimation(
+      parent: _iconFadeController,
+      curve: Curves.easeInOut,
+    );
     
-    // Start animations
-    _fadeController.forward();
-    _slideController.forward();
+    // Start continuous pulse and never stop it
+    _pulseController.repeat(reverse: true);
+    _iconFadeController.forward();
   }
 
   @override
   void dispose() {
     _pageController.dispose();
-    _fadeController.dispose();
-    _slideController.dispose();
+    _pulseController.dispose();
+    _iconFadeController.dispose();
     super.dispose();
   }
 
-  void _nextPage() {
+  void _nextPage() async {
+    if (_isAnimating) return;
+    
     if (_currentPage < _totalPages - 1) {
-      _pageController.nextPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+      setState(() => _isAnimating = true);
+      
+      // Fade out icon
+      await _iconFadeController.reverse();
+      
+      // Change page
+      await _pageController.animateToPage(
+        _currentPage + 1,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeOut,
       );
+      
+      // Fade in new icon
+      await _iconFadeController.forward();
+      
+      setState(() => _isAnimating = false);
     } else {
       _completeOnboarding();
     }
   }
 
-  void _previousPage() {
-    if (_currentPage > 0) {
-      _pageController.previousPage(
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
+  void _previousPage() async {
+    if (_isAnimating || _currentPage == 0) return;
+    
+    setState(() => _isAnimating = true);
+    
+    // Fade out icon
+    await _iconFadeController.reverse();
+    
+    // Change page
+    await _pageController.animateToPage(
+      _currentPage - 1,
+      duration: Duration(milliseconds: 200),
+      curve: Curves.easeOut,
+    );
+    
+    // Fade in new icon
+    await _iconFadeController.forward();
+    
+    setState(() => _isAnimating = false);
   }
 
   void _skipOnboarding() {
@@ -91,11 +117,9 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
   }
 
   Future<void> _completeOnboarding() async {
-    // Mark onboarding as completed
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('post_signup_onboarding_completed', true);
     
-    // Navigate to home screen
     Navigator.pushReplacement(
       context,
       PageRouteBuilder(
@@ -103,7 +127,7 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },
-        transitionDuration: Duration(milliseconds: 500),
+        transitionDuration: Duration(milliseconds: 400),
       ),
     );
   }
@@ -113,270 +137,302 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: Column(
-              children: [
-                // Header with skip button
-                _buildHeader(),
-                
-                // Page content
-                Expanded(
-                  child: PageView(
-                    controller: _pageController,
-                    onPageChanged: (page) {
-                      setState(() {
-                        _currentPage = page;
-                      });
-                    },
-                    children: [
-                      _buildWelcomePage(),
-                      _buildAffirmationsPage(),
-                      _buildVisionBoardPage(),
-                      _buildJournalPage(),
-                      _buildGetStartedPage(),
-                    ],
+        child: Column(
+          children: [
+            // Header
+            _buildHeader(),
+            
+            // FIXED LAYOUT - circle always in same spot
+            Expanded(
+              child: Stack(
+                children: [
+                  // Fixed position pulsing circle - NEVER moves
+                  Positioned(
+                    top: 80.h, // Fixed position from top
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: AnimatedBuilder(
+                        animation: _pulseAnimation,
+                        builder: (context, child) {
+                          return Transform.scale(
+                            scale: _pulseAnimation.value,
+                            child: _buildCurrentIcon(),
+                          );
+                        },
+                      ),
+                    ),
                   ),
-                ),
-                
-                // Navigation controls
-                _buildNavigationControls(),
-                
-                SizedBox(height: 40.h),
-              ],
+                  
+                  // Text content below circle
+                  Positioned(
+                    top: 240.h, // Fixed position for text
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: PageView(
+                      controller: _pageController,
+                      physics: NeverScrollableScrollPhysics(),
+                      onPageChanged: (page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
+                      children: [
+                        _buildTextContent(
+                          'Welcome to Your Journey!',
+                          'You\'ve taken the first step towards manifesting your dreams. Let\'s explore what awaits you.',
+                        ),
+                        _buildTextContent(
+                          'Daily Affirmations',
+                          'Start each day with powerful affirmations tailored to your goals. Rewire your mindset for success.',
+                        ),
+                        _buildTextContent(
+                          'Vision Boards',
+                          'Create visual representations of your dreams. See it, believe it, achieve it.',
+                        ),
+                        _buildTextContent(
+                          'Manifestation Journal',
+                          'Track your thoughts, gratitude, and progress. Document your transformation journey.',
+                        ),
+                        _buildFinalContent(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+            
+            // Navigation controls
+            _buildNavigationControls(),
+            SizedBox(height: 30.h),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildCurrentIcon() {
+    IconData icon;
+    List<Color> gradient;
+    
+    switch (_currentPage) {
+      case 0:
+        icon = Icons.celebration;
+        gradient = AppTheme.affirmationGradient;
+        break;
+      case 1:
+        icon = Icons.favorite;
+        gradient = AppTheme.affirmationGradient;
+        break;
+      case 2:
+        icon = Icons.dashboard;
+        gradient = AppTheme.visionBoardGradient;
+        break;
+      case 3:
+        icon = Icons.book;
+        gradient = AppTheme.journalGradient;
+        break;
+      case 4:
+        icon = Icons.rocket_launch;
+        gradient = AppTheme.affirmationGradient;
+        break;
+      default:
+        icon = Icons.celebration;
+        gradient = AppTheme.affirmationGradient;
+    }
+    
+    return FadeTransition(
+      opacity: _iconFadeAnimation,
+      child: Container(
+        width: 120.w,
+        height: 120.h,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(colors: gradient),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: gradient[0].withOpacity(0.3),
+              blurRadius: 25.r,
+              offset: Offset(0, 8.h),
+            ),
+          ],
+        ),
+        child: Icon(
+          icon,
+          color: AppTheme.white,
+          size: 60.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextContent(String title, String description) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 20.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Column(
         children: [
-          // Progress indicator
-          Row(
-            children: List.generate(_totalPages, (index) {
-              return Container(
-                margin: EdgeInsets.only(right: 8.w),
-                width: index == _currentPage ? 24.w : 8.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: index == _currentPage 
-                      ? AppTheme.affirmationGradient[0]
-                      : AppTheme.textMedium.withOpacity(0.3),
-                  borderRadius: BorderRadius.circular(2.r),
+          // Title with consistent height
+          SizedBox(
+            height: 60.h,
+            child: Center(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textLight,
                 ),
-              );
-            }),
+                textAlign: TextAlign.center,
+                maxLines: 2,
+              ),
+            ),
           ),
           
-          // Skip button area (always present to prevent layout shift)
+          SizedBox(height: 16.h),
+          
+          // Description with consistent height
           SizedBox(
-            width: 40.w,
-            child: _currentPage < _totalPages - 1
-                ? GestureDetector(
-                    onTap: _skipOnboarding,
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        color: AppTheme.textMedium,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  )
-                : SizedBox(), // Empty space to maintain layout
+            height: 80.h,
+            child: Center(
+              child: Text(
+                description,
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: AppTheme.textMedium,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 4,
+              ),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildWelcomePage() {
-    return _buildOnboardingPage(
-      icon: Icons.auto_awesome,
-      gradient: AppTheme.affirmationGradient,
-      title: 'Welcome to Manifestation!',
-      subtitle: 'Your journey to transform dreams into reality begins now',
-      description: 'We\'re excited to guide you through the powerful tools that will help you manifest your deepest desires and create the life you\'ve always dreamed of.',
-    );
-  }
-
-  Widget _buildAffirmationsPage() {
-    return _buildOnboardingPage(
-      icon: Icons.favorite,
-      gradient: AppTheme.affirmationGradient,
-      title: 'Daily Affirmations',
-      subtitle: 'Rewire your mindset with powerful words',
-      description: 'Start each day with personalized affirmations that align your thoughts with your goals. Watch as positive thinking becomes your natural state.',
-    );
-  }
-
-  Widget _buildVisionBoardPage() {
-    return _buildOnboardingPage(
-      icon: Icons.dashboard,
-      gradient: AppTheme.visionBoardGradient,
-      title: 'Vision Boards',
-      subtitle: 'Visualize your dreams into existence',
-      description: 'Create beautiful vision boards with images and words that represent your goals. What you can see, you can achieve.',
-    );
-  }
-
-  Widget _buildJournalPage() {
-    return _buildOnboardingPage(
-      icon: Icons.book,
-      gradient: AppTheme.journalGradient,
-      title: 'Manifestation Journal',
-      subtitle: 'Track your thoughts and progress',
-      description: 'Document your manifestation journey, reflect on your growth, and celebrate your wins along the way.',
-    );
-  }
-
-
-  Widget _buildGetStartedPage() {
-    return _buildOnboardingPage(
-      icon: Icons.rocket_launch,
-      gradient: AppTheme.affirmationGradient,
-      title: 'You\'re All Set!',
-      subtitle: 'Ready to manifest your dreams',
-      description: 'Everything is in place for your transformation. Take a deep breath and step into your new reality with confidence.',
-      isLastPage: true,
-    );
-  }
-
-  Widget _buildOnboardingPage({
-    required IconData icon,
-    required List<Color> gradient,
-    required String title,
-    required String subtitle,
-    required String description,
-    bool isLastPage = false,
-  }) {
+  Widget _buildFinalContent() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 32.w),
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Animated icon
-          TweenAnimationBuilder(
-            duration: Duration(milliseconds: 800),
-            tween: Tween<double>(begin: 0.0, end: 1.0),
-            builder: (context, double value, child) {
-              return Transform.scale(
-                scale: value,
-                child: Container(
-                  width: 120.w,
-                  height: 120.h,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: gradient),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: gradient[0].withOpacity(0.4),
-                        blurRadius: 30.r,
-                        offset: Offset(0, 15.h),
-                      ),
-                    ],
-                  ),
-                  child: Icon(
-                    icon,
-                    color: AppTheme.white,
-                    size: 60.sp,
-                  ),
+          // Title with same height as others
+          SizedBox(
+            height: 60.h,
+            child: Center(
+              child: Text(
+                'You\'re All Set!',
+                style: TextStyle(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textLight,
                 ),
-              );
-            },
-          ),
-          
-          SizedBox(height: 60.h),
-          
-          // Title
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 32.sp,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
+                textAlign: TextAlign.center,
+              ),
             ),
-            textAlign: TextAlign.center,
           ),
           
           SizedBox(height: 16.h),
           
-          // Subtitle
-          Text(
-            subtitle,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontWeight: FontWeight.w600,
-              color: gradient[0],
+          // Description with same height
+          SizedBox(
+            height: 80.h,
+            child: Center(
+              child: Text(
+                'Your manifestation journey begins now. Let\'s make your dreams a reality together.',
+                style: TextStyle(
+                  fontSize: 15.sp,
+                  color: AppTheme.textMedium,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+                maxLines: 4,
+              ),
             ),
-            textAlign: TextAlign.center,
           ),
           
-          SizedBox(height: 24.h),
+          SizedBox(height: 30.h),
           
-          // Description
-          Text(
-            description,
-            style: TextStyle(
-              fontSize: 16.sp,
-              color: AppTheme.textMedium,
-              height: 1.5,
+          // Button
+          Container(
+            width: double.infinity,
+            height: 50.h,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: AppTheme.affirmationGradient),
+              borderRadius: BorderRadius.circular(25.r),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.affirmationGradient[0].withOpacity(0.25),
+                  blurRadius: 15.r,
+                  offset: Offset(0, 8.h),
+                ),
+              ],
             ),
-            textAlign: TextAlign.center,
-          ),
-          
-          if (isLastPage) ...[
-            SizedBox(height: 40.h),
-            
-            // Motivational quote
-            Container(
-              padding: EdgeInsets.all(20.w),
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(
-                  color: gradient[0].withOpacity(0.3),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _completeOnboarding,
+                borderRadius: BorderRadius.circular(25.r),
+                child: Center(
+                  child: Text(
+                    'Start Manifesting',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.white,
+                    ),
+                  ),
                 ),
               ),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.format_quote,
-                    color: gradient[0],
-                    size: 24.sp,
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    '"The universe is not outside of you. Look inside yourself; everything that you want, you already are."',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppTheme.textMedium,
-                      fontStyle: FontStyle.italic,
-                      height: 1.4,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    '- Rumi',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      color: gradient[0],
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Row(
+              children: List.generate(_totalPages, (index) {
+                return AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  margin: EdgeInsets.only(right: 6.w),
+                  width: index == _currentPage ? 28.w : 8.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: index <= _currentPage 
+                        ? AppTheme.affirmationGradient[0]
+                        : AppTheme.textMedium.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                );
+              }),
+            ),
+          ),
+          SizedBox(
+            width: 50.w,
+            child: _currentPage < _totalPages - 1
+                ? GestureDetector(
+                    onTap: _skipOnboarding,
+                    child: Text(
+                      'Skip',
+                      style: TextStyle(
+                        fontSize: 15.sp,
+                        color: AppTheme.textMedium,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.end,
+                    ),
+                  )
+                : SizedBox(),
+          ),
         ],
       ),
     );
@@ -386,97 +442,53 @@ class _PostSignupOnboardingScreenState extends State<PostSignupOnboardingScreen>
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Previous button
-          if (_currentPage > 0)
-            Expanded(
-              child: Container(
-                height: 56.h,
-                child: ElevatedButton(
-                  onPressed: _previousPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.cardBackground,
-                    shadowColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.r),
+          Container(
+            width: 50.w,
+            height: 50.h,
+            child: _currentPage > 0
+                ? Material(
+                    color: AppTheme.cardBackground,
+                    borderRadius: BorderRadius.circular(12.r),
+                    child: InkWell(
+                      onTap: _previousPage,
+                      borderRadius: BorderRadius.circular(12.r),
+                      child: Icon(Icons.arrow_back, color: AppTheme.textLight, size: 20.sp),
                     ),
-                    side: BorderSide(
-                      color: AppTheme.textMedium.withOpacity(0.2),
-                      width: 1,
-                    ),
-                  ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      'Previous',
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: AppTheme.textLight,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          
-          if (_currentPage > 0) SizedBox(width: 16.w),
-          
-          // Next/Get Started button
-          Expanded(
-            flex: _currentPage > 0 ? 1 : 1,
-            child: Container(
-              height: 56.h,
-              child: ElevatedButton(
-                onPressed: _nextPage,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  padding: EdgeInsets.zero,
-                ).copyWith(
-                  backgroundColor: MaterialStateProperty.all(Colors.transparent),
-                ),
-                child: Ink(
+                  )
+                : SizedBox(),
+          ),
+          if (_currentPage < _totalPages - 1)
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _nextPage,
+                borderRadius: BorderRadius.circular(25.r),
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 28.w, vertical: 12.h),
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: AppTheme.affirmationGradient,
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16.r),
+                    gradient: LinearGradient(colors: AppTheme.affirmationGradient),
+                    borderRadius: BorderRadius.circular(25.r),
                     boxShadow: [
                       BoxShadow(
-                        color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                        blurRadius: 12.r,
-                        offset: Offset(0, 6.h),
+                        color: AppTheme.affirmationGradient[0].withOpacity(0.25),
+                        blurRadius: 10.r,
+                        offset: Offset(0, 4.h),
                       ),
                     ],
                   ),
-                  child: Container(
-                    alignment: Alignment.center,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        _currentPage == _totalPages - 1 ? 'Get Started!' : 'Next',
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppTheme.white,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Continue', style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600, color: AppTheme.white)),
+                      SizedBox(width: 6.w),
+                      Icon(Icons.arrow_forward, color: AppTheme.white, size: 18.sp),
+                    ],
                   ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );

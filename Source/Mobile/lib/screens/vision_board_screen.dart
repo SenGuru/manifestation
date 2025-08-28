@@ -1472,32 +1472,57 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
     try {
       print('📸 Capturing clean vision board thumbnail...');
       
+      // Wait a frame for UI to settle
+      await Future.delayed(Duration(milliseconds: 100));
+      
       // Use the clean thumbnail canvas that has no selection indicators
       RenderRepaintBoundary? boundary = _thumbnailCanvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
       
       if (boundary == null) {
         print('❌ Failed to find clean thumbnail RenderRepaintBoundary');
-        return null;
+        
+        // Try to use main canvas as fallback
+        boundary = _canvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+        if (boundary == null) {
+          print('❌ Failed to find main canvas RenderRepaintBoundary as fallback');
+          return null;
+        }
+        print('⚠️ Using main canvas as fallback for thumbnail');
+      }
+      
+      // Wait for render boundary to be ready
+      if (!boundary.debugNeedsPaint) {
+        // Boundary is clean, safe to capture
+        print('✅ Boundary is ready for capture');
+      } else {
+        print('⚠️ Boundary needs paint, waiting...');
+        await Future.delayed(Duration(milliseconds: 200));
       }
       
       // Capture the image at a lower resolution for thumbnail
-      // Using scale 0.5 to create a good quality but smaller thumbnail
-      ui.Image image = await boundary.toImage(pixelRatio: 0.5);
+      // Using scale 0.7 for better quality thumbnail
+      ui.Image image = await boundary.toImage(pixelRatio: 0.7);
+      print('📸 Image captured: ${image.width}x${image.height}');
       
       // Convert to byte data
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       
       if (byteData == null) {
         print('❌ Failed to convert image to byte data');
+        image.dispose();
         return null;
       }
       
       Uint8List pngBytes = byteData.buffer.asUint8List();
       print('✅ Clean thumbnail captured successfully (${pngBytes.length} bytes) - no selection indicators');
       
+      // Dispose the image to free memory
+      image.dispose();
+      
       return pngBytes;
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('❌ Error capturing clean thumbnail: $e');
+      print('❌ Stack trace: $stackTrace');
       return null;
     }
   }

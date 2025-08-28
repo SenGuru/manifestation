@@ -23,6 +23,10 @@ class VisionBoardGalleryScreen extends StatefulWidget {
   _VisionBoardGalleryScreenState createState() => _VisionBoardGalleryScreenState();
 }
 
+// Enums for filter options
+enum DateFilter { all, today, thisWeek, thisMonth, lastMonth }
+enum SortOrder { newest, oldest, nameAsc, nameDesc }
+
 class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
   List<VisionBoard> visionBoards = [];
   bool isLoading = false;
@@ -36,6 +40,11 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
   String _searchQuery = '';
   List<VisionBoard> _filteredBoards = [];
   List<VisionBoard> _allAvailableBoards = []; // Cache all boards from API
+  
+  // Enhanced filtering options
+  DateFilter _selectedDateFilter = DateFilter.all;
+  SortOrder _selectedSortOrder = SortOrder.newest;
+  bool _showEmptyBoardsOnly = false;
 
   @override
   void initState() {
@@ -74,14 +83,51 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
   }
 
   void _filterBoards() {
-    if (_searchQuery.isEmpty) {
-      _filteredBoards = visionBoards;
-    } else {
-      _filteredBoards = visionBoards.where((board) {
+    List<VisionBoard> filtered = visionBoards;
+    
+    // Apply search filter
+    if (_searchQuery.isNotEmpty) {
+      filtered = filtered.where((board) {
         final title = board.title.toLowerCase();
         return title.contains(_searchQuery);
       }).toList();
     }
+    
+    // Apply date filter
+    if (_selectedDateFilter != DateFilter.all) {
+      final now = DateTime.now();
+      filtered = filtered.where((board) {
+        switch (_selectedDateFilter) {
+          case DateFilter.today:
+            return _isSameDay(board.updatedAt, now);
+          case DateFilter.thisWeek:
+            final weekStart = now.subtract(Duration(days: now.weekday - 1));
+            return board.updatedAt.isAfter(weekStart);
+          case DateFilter.thisMonth:
+            return board.updatedAt.month == now.month && board.updatedAt.year == now.year;
+          case DateFilter.lastMonth:
+            final lastMonth = DateTime(now.year, now.month - 1);
+            return board.updatedAt.month == lastMonth.month && board.updatedAt.year == lastMonth.year;
+          case DateFilter.all:
+            return true;
+        }
+      }).toList();
+    }
+    
+    // Apply empty boards filter
+    if (_showEmptyBoardsOnly) {
+      filtered = filtered.where((board) => board.elements.isEmpty).toList();
+    }
+    
+    setState(() {
+      _filteredBoards = filtered;
+    });
+  }
+  
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+           date1.month == date2.month &&
+           date1.day == date2.day;
   }
 
   Future<void> _loadAllVisionBoards() async {
@@ -229,7 +275,13 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
               ],
             ),
           ),
-          _buildSortButton(),
+          Row(
+            children: [
+              _buildFilterButton(),
+              SizedBox(width: 8.w),
+              _buildSortButton(),
+            ],
+          ),
         ],
       ),
     );
@@ -252,6 +304,51 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
           Icons.sort_rounded,
           color: AppTheme.textPrimary,
           size: 20.sp,
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildFilterButton() {
+    // Check if any filters are applied
+    bool hasActiveFilters = _selectedDateFilter != DateFilter.all || _showEmptyBoardsOnly;
+    
+    return GestureDetector(
+      onTap: _showFilterOptions,
+      child: Container(
+        width: 44.w,
+        height: 44.h,
+        decoration: BoxDecoration(
+          color: hasActiveFilters ? AppTheme.visionBoardGradient[0].withOpacity(0.1) : AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: hasActiveFilters ? AppTheme.visionBoardGradient[0] : AppTheme.textSecondary.withValues(alpha: 0.1),
+            width: hasActiveFilters ? 2.w : 1.w,
+          ),
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Icon(
+                Icons.filter_list_rounded,
+                color: hasActiveFilters ? AppTheme.visionBoardGradient[0] : AppTheme.textPrimary,
+                size: 20.sp,
+              ),
+            ),
+            if (hasActiveFilters)
+              Positioned(
+                top: 6.h,
+                right: 6.w,
+                child: Container(
+                  width: 8.w,
+                  height: 8.w,
+                  decoration: BoxDecoration(
+                    color: AppTheme.visionBoardGradient[0],
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -744,6 +841,243 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
               style: TextStyle(
                 fontSize: 16.sp,
                 color: isDestructive ? Colors.red : AppTheme.textPrimary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showFilterOptions() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Container(
+        margin: EdgeInsets.all(20.w),
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.7,
+        ),
+        decoration: BoxDecoration(
+          color: AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle
+            Container(
+              width: 40.w,
+              height: 4.h,
+              margin: EdgeInsets.only(top: 12.h),
+              decoration: BoxDecoration(
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            
+            Flexible(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.all(24.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Filter Vision Boards',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    SizedBox(height: 24.h),
+                    
+                    // Date Filter Section
+                    _buildFilterSection(
+                      'Date Range',
+                      Icons.date_range_rounded,
+                      [
+                        _buildFilterChip('All Time', _selectedDateFilter == DateFilter.all, () {
+                          setState(() {
+                            _selectedDateFilter = DateFilter.all;
+                            _filterBoards();
+                          });
+                        }),
+                        _buildFilterChip('Today', _selectedDateFilter == DateFilter.today, () {
+                          setState(() {
+                            _selectedDateFilter = DateFilter.today;
+                            _filterBoards();
+                          });
+                        }),
+                        _buildFilterChip('This Week', _selectedDateFilter == DateFilter.thisWeek, () {
+                          setState(() {
+                            _selectedDateFilter = DateFilter.thisWeek;
+                            _filterBoards();
+                          });
+                        }),
+                        _buildFilterChip('This Month', _selectedDateFilter == DateFilter.thisMonth, () {
+                          setState(() {
+                            _selectedDateFilter = DateFilter.thisMonth;
+                            _filterBoards();
+                          });
+                        }),
+                        _buildFilterChip('Last Month', _selectedDateFilter == DateFilter.lastMonth, () {
+                          setState(() {
+                            _selectedDateFilter = DateFilter.lastMonth;
+                            _filterBoards();
+                          });
+                        }),
+                      ],
+                    ),
+                    
+                    SizedBox(height: 24.h),
+                    
+                    // Content Filter Section
+                    _buildFilterSection(
+                      'Board Content',
+                      Icons.dashboard_rounded,
+                      [
+                        _buildToggleFilterChip(
+                          'Empty Boards Only',
+                          _showEmptyBoardsOnly,
+                          (value) {
+                            setState(() {
+                              _showEmptyBoardsOnly = value;
+                              _filterBoards();
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    
+                    SizedBox(height: 32.h),
+                    
+                    // Clear Filters Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedDateFilter = DateFilter.all;
+                            _showEmptyBoardsOnly = false;
+                            _filterBoards();
+                          });
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('All filters cleared'),
+                              backgroundColor: AppTheme.visionBoardGradient[0],
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.textSecondary.withOpacity(0.1),
+                          foregroundColor: AppTheme.textSecondary,
+                          elevation: 0,
+                          padding: EdgeInsets.symmetric(vertical: 16.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        child: Text(
+                          'Clear All Filters',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildFilterSection(String title, IconData icon, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(icon, size: 20.sp, color: AppTheme.textPrimary),
+            SizedBox(width: 8.w),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        Wrap(
+          spacing: 8.w,
+          runSpacing: 8.h,
+          children: children,
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.visionBoardGradient[0] : AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(
+            color: isSelected ? AppTheme.visionBoardGradient[0] : AppTheme.textSecondary.withOpacity(0.2),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: isSelected ? AppTheme.white : AppTheme.textPrimary,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildToggleFilterChip(String label, bool isSelected, Function(bool) onChanged) {
+    return GestureDetector(
+      onTap: () => onChanged(!isSelected),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.visionBoardGradient[0].withOpacity(0.1) : AppTheme.cardBackground,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: isSelected ? AppTheme.visionBoardGradient[0] : AppTheme.textSecondary.withOpacity(0.2),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              isSelected ? Icons.check_box_rounded : Icons.check_box_outline_blank_rounded,
+              size: 20.sp,
+              color: isSelected ? AppTheme.visionBoardGradient[0] : AppTheme.textSecondary,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: isSelected ? AppTheme.visionBoardGradient[0] : AppTheme.textPrimary,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],

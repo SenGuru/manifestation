@@ -27,14 +27,21 @@ class MeditationAudioService {
         await initialize();
       }
 
+      // Re-initialize if player was disposed
       if (_audioPlayer == null) {
-        print('❌ Audio player not initialized properly');
-        return false;
+        print('🔄 Re-initializing audio player');
+        _audioPlayer = AudioPlayer();
+        _isInitialized = true;
       }
 
       // Stop any currently playing audio first
-      if (_audioPlayer!.playing) {
-        await _audioPlayer!.stop();
+      try {
+        if (_audioPlayer!.playing) {
+          await _audioPlayer!.stop();
+          await Future.delayed(Duration(milliseconds: 100)); // Small delay after stop
+        }
+      } catch (e) {
+        print('⚠️ Error stopping previous audio: $e');
       }
 
       if (audioType == AudioType.none || audioType.audioPath.isEmpty) {
@@ -49,26 +56,29 @@ class MeditationAudioService {
       print('🎵 Attempting to play ${audioType.name} audio from ${audioType.audioPath}');
       
       try {
-        // Set volume first
+        // Load the audio asset first
+        print('🎵 Loading audio asset: ${audioType.audioPath}');
+        final duration = await _audioPlayer!.setAsset(audioType.audioPath);
+        print('🎵 Asset loaded successfully, duration: ${duration?.inSeconds ?? 0}s');
+        
+        // Set volume after loading
         await _audioPlayer!.setVolume(volume);
         print('🎵 Volume set to ${(volume * 100).round()}%');
         
         // For meditation, we want to loop the audio
         await _audioPlayer!.setLoopMode(LoopMode.one);
         print('🎵 Loop mode set');
-
-        // Load the audio asset
-        print('🎵 Loading audio asset: ${audioType.audioPath}');
-        final duration = await _audioPlayer!.setAsset(audioType.audioPath);
-        print('🎵 Asset loaded successfully, duration: ${duration?.inSeconds ?? 0}s');
+        
+        // Small delay to ensure everything is ready
+        await Future.delayed(Duration(milliseconds: 200));
         
         // Start playing
         print('🎵 Starting playback...');
         await _audioPlayer!.play();
         print('🎵 Play command sent');
 
-        // Verify it's actually playing with a longer delay to allow for loading
-        await Future.delayed(Duration(milliseconds: 1000));
+        // Shorter verification delay
+        await Future.delayed(Duration(milliseconds: 500));
         final isPlaying = _audioPlayer!.playing;
         final playerState = _audioPlayer!.playerState;
         final processingState = _audioPlayer!.processingState;
@@ -77,18 +87,37 @@ class MeditationAudioService {
         print('🎵 Processing state: $processingState');
         print('🎵 Is playing: $isPlaying');
         
-        if (isPlaying && processingState == ProcessingState.ready) {
+        // More lenient success check - sometimes processing state might be buffering
+        if (isPlaying || processingState == ProcessingState.ready || processingState == ProcessingState.buffering) {
           print('✅ Successfully playing ${audioType.name} audio at volume ${(volume * 100).round()}%');
           return true;
         } else {
+          // Try once more after a delay
+          await Future.delayed(Duration(milliseconds: 500));
+          if (_audioPlayer!.playing) {
+            print('✅ Audio started after retry - ${audioType.name}');
+            return true;
+          }
           print('❌ Audio failed to start playing - State: $playerState, Processing: $processingState');
           return false;
         }
       } catch (assetError) {
         print('❌ Error loading or playing audio asset: $assetError');
         print('❌ Error type: ${assetError.runtimeType}');
-        print('❌ Stack trace: ${StackTrace.current}');
-        return false;
+        // Try to recover by re-initializing
+        try {
+          _audioPlayer?.dispose();
+          _audioPlayer = AudioPlayer();
+          await _audioPlayer!.setAsset(audioType.audioPath);
+          await _audioPlayer!.setVolume(volume);
+          await _audioPlayer!.setLoopMode(LoopMode.one);
+          await _audioPlayer!.play();
+          print('✅ Recovered from error and started playing');
+          return true;
+        } catch (recoveryError) {
+          print('❌ Recovery failed: $recoveryError');
+          return false;
+        }
       }
     } catch (e) {
       print('❌ Error playing audio: $e');

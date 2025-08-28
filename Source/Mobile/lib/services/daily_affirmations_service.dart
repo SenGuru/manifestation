@@ -227,11 +227,13 @@ class DailyAffirmationsService {
   Future<AffirmationResult<DailyAffirmationTextModel>> updateAffirmationText({
     required int affirmationTextId,
     required String text,
+    int? categoryId,
   }) async {
     try {
       final updateModel = DailyAffirmationTextUpdateModel(
         dailyAffirmationTextId: affirmationTextId,
         dailyAffirmationTextValue: text,
+        categoryId: categoryId,
         userId: _authService.currentUser?.userId,
       );
 
@@ -750,6 +752,57 @@ class DailyAffirmationsService {
       return AffirmationResult.failure(
         message: 'Error deleting category: ${e.toString()}',
       );
+    }
+  }
+
+  // ========================= TEXT TO AUDIO =========================
+
+  /// Convert text to audio using the backend API
+  Future<AffirmationResult<dynamic>> convertTextToAudio(String text) async {
+    _ensureInitialized();
+    
+    try {
+      print('🎵 Converting text to audio: "${text.substring(0, text.length > 50 ? 50 : text.length)}${text.length > 50 ? '...' : ''}"');
+      
+      final response = await _apiClient.apiV1ManifestConverttexttoaudioPost(body: text);
+      
+      print('🎵 Text-to-audio API response:');
+      print('   Status Code: ${response.statusCode}');
+      print('   Is Successful: ${response.isSuccessful}');
+      print('   Response Body Type: ${response.body.runtimeType}');
+      print('   Response Body: ${response.body}');
+      
+      if (response.isSuccessful) {
+        return AffirmationResult.success(
+          data: response.body,
+          message: 'Text converted to audio successfully',
+        );
+      } else {
+        return AffirmationResult.failure(
+          message: 'Failed to convert text to audio. Status: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      print('❌ Error converting text to audio: $e');
+      return AffirmationResult.failure(
+        message: 'Error converting text to audio: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Test the text-to-audio API with a simple affirmation
+  Future<void> testTextToAudioAPI() async {
+    const testText = "I am worthy of love and respect.";
+    print('🧪 Testing text-to-audio API with: "$testText"');
+    
+    final result = await convertTextToAudio(testText);
+    
+    if (result.isSuccess) {
+      print('✅ Text-to-audio API test successful!');
+      print('   Response data: ${result.data}');
+    } else {
+      print('❌ Text-to-audio API test failed!');
+      print('   Error: ${result.message}');
     }
   }
 }

@@ -359,15 +359,34 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   void _deleteElement(VisionBoardElement element) {
-    final updatedElements = widget.board.elements.where((e) => e.id != element.id).toList();
-    final updatedBoard = widget.board.copyWith(elements: updatedElements);
-    
-    // Clear selection if we deleted the selected element
-    if (selectedElementId == element.id) {
-      selectedElementId = null;
+    try {
+      print('🗑️ Deleting element with id: ${element.id}');
+      print('🗑️ Current elements count: ${widget.board.elements.length}');
+      
+      final updatedElements = widget.board.elements.where((e) => e.id != element.id).toList();
+      print('🗑️ Updated elements count: ${updatedElements.length}');
+      
+      final updatedBoard = widget.board.copyWith(elements: updatedElements);
+      
+      // Clear selection if we deleted the selected element
+      if (selectedElementId == element.id) {
+        setState(() {
+          selectedElementId = null;
+        });
+        print('🗑️ Cleared selection for deleted element');
+      }
+      
+      try {
+        widget.onBoardChanged(updatedBoard);
+        print('✅ Element deleted successfully');
+      } catch (callbackError) {
+        print('❌ Error in onBoardChanged callback: $callbackError');
+        throw callbackError; // Re-throw to maintain error visibility
+      }
+    } catch (e) {
+      print('❌ Error deleting element: $e');
+      print('❌ Stack trace: ${StackTrace.current}');
     }
-    
-    widget.onBoardChanged(updatedBoard);
   }
 
   // Visual feedback methods
@@ -513,13 +532,13 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     }
 
     return Positioned(
-      left: selectedElement.position.dx - 12.w,
-      top: selectedElement.position.dy - 12.w,
+      left: selectedElement.position.dx - 24.w, // Increased for larger handles
+      top: selectedElement.position.dy - 24.w, // Increased for larger handles
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
         curve: Curves.easeOut,
-        width: selectedElement.size.width + 24.w,
-        height: selectedElement.size.height + 24.w,
+        width: selectedElement.size.width + 48.w, // Increased for larger handles
+        height: selectedElement.size.height + 48.w, // Increased for larger handles
         decoration: BoxDecoration(
           border: Border.all(
             color: AppTheme.visionBoardGradient[0],
@@ -536,17 +555,17 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
         ),
         child: Stack(
           children: [
-            // Corner resize handles
-            _buildResizeHandle('top-left', -10.w, -10.w),
-            _buildResizeHandle('top-right', selectedElement.size.width + 4.w, -10.w),
-            _buildResizeHandle('bottom-left', -10.w, selectedElement.size.height + 4.w),
-            _buildResizeHandle('bottom-right', selectedElement.size.width + 4.w, selectedElement.size.height + 4.w),
+            // Corner resize handles - adjusted for larger handles with padding
+            _buildResizeHandle('top-left', -24.w, -24.w),
+            _buildResizeHandle('top-right', selectedElement.size.width + 8.w, -24.w),
+            _buildResizeHandle('bottom-left', -24.w, selectedElement.size.height + 8.w),
+            _buildResizeHandle('bottom-right', selectedElement.size.width + 8.w, selectedElement.size.height + 8.w),
             
-            // Edge handles
-            _buildResizeHandle('top-center', selectedElement.size.width / 2 - 3.w, -10.w),
-            _buildResizeHandle('bottom-center', selectedElement.size.width / 2 - 3.w, selectedElement.size.height + 4.w),
-            _buildResizeHandle('left-center', -10.w, selectedElement.size.height / 2 - 3.w),
-            _buildResizeHandle('right-center', selectedElement.size.width + 4.w, selectedElement.size.height / 2 - 3.w),
+            // Edge handles - adjusted for larger handles with padding
+            _buildResizeHandle('top-center', selectedElement.size.width / 2 - 16.w, -24.w),
+            _buildResizeHandle('bottom-center', selectedElement.size.width / 2 - 16.w, selectedElement.size.height + 8.w),
+            _buildResizeHandle('left-center', -24.w, selectedElement.size.height / 2 - 16.w),
+            _buildResizeHandle('right-center', selectedElement.size.width + 8.w, selectedElement.size.height / 2 - 16.w),
           ],
         ),
       ),
@@ -561,38 +580,42 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
         onPanStart: (details) => _onResizeStart(handleId, details),
         onPanUpdate: (details) => _onResizeUpdate(handleId, details),
         onPanEnd: (details) => _onResizeEnd(handleId, details),
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 150),
-          width: 20.w,
-          height: 20.w,
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppTheme.white,
-                AppTheme.white.withOpacity(0.95),
+        child: Container(
+          // Make hit area larger for better accessibility
+          padding: EdgeInsets.all(8.w),
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 150),
+            width: 32.w, // Increased from 20.w
+            height: 32.w, // Increased from 20.w
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.white,
+                  AppTheme.white.withOpacity(0.95),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              border: Border.all(
+                color: AppTheme.visionBoardGradient[0],
+                width: 3.w, // Increased border width for better visibility
+              ),
+              borderRadius: BorderRadius.circular(16.w), // Adjusted for larger size
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.visionBoardGradient[0].withOpacity(0.4),
+                  blurRadius: 12.r, // Increased shadow for better visibility
+                  offset: Offset(0, 6.h),
+                ),
+                BoxShadow(
+                  color: AppTheme.black.withOpacity(0.15),
+                  blurRadius: 6.r,
+                  offset: Offset(0, 3.h),
+                ),
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
             ),
-            border: Border.all(
-              color: AppTheme.visionBoardGradient[0],
-              width: 2.5.w,
-            ),
-            borderRadius: BorderRadius.circular(10.w),
-            boxShadow: [
-              BoxShadow(
-                color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
-                blurRadius: 8.r,
-                offset: Offset(0, 4.h),
-              ),
-              BoxShadow(
-                color: AppTheme.black.withOpacity(0.1),
-                blurRadius: 4.r,
-                offset: Offset(0, 2.h),
-              ),
-            ],
+            child: _getResizeHandleCursor(handleId),
           ),
-          child: _getResizeHandleCursor(handleId),
         ),
       ),
     );
@@ -623,7 +646,7 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     
     return Icon(
       icon,
-      size: 10.sp,
+      size: 16.sp, // Increased from 10.sp for better visibility
       color: AppTheme.visionBoardGradient[0],
     );
   }
