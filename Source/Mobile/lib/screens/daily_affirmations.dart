@@ -595,16 +595,18 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
       _pageController?.dispose();
       _pageController = PageController(
         initialPage: currentAffirmationIndex,
-        viewportFraction: 1.0,
+        viewportFraction: 0.95, // Make cards wider, less padding between them
       );
     }
     
     return Expanded(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+        margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         child: PageView.builder(
           controller: _pageController,
           itemCount: currentCategory.affirmations.length,
+          // Enable physics for better swipe feel
+          physics: BouncingScrollPhysics(),
           onPageChanged: (index) {
             HapticFeedback.selectionClick();
             setState(() {
@@ -624,75 +626,106 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
           },
           itemBuilder: (context, index) {
             final affirmation = currentCategory.affirmations[index];
+            
+            // Calculate scale for cards that are not in focus
+            final isCurrentCard = index == currentAffirmationIndex;
+            
             return AnimatedBuilder(
-              animation: _swipeAnimation,
+              animation: _pageController ?? PageController(),
               builder: (context, child) {
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 8.h),
-                  padding: EdgeInsets.all(24.w),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        currentCategory.color.withValues(alpha: 0.1),
-                        currentCategory.color.withAlpha((0.05 * 255).round()),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    borderRadius: BorderRadius.circular(20.r),
-                    border: Border.all(
-                      color: currentCategory.color.withValues(alpha: 0.3),
-                      width: 1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: currentCategory.color.withValues(alpha: 0.1),
-                        blurRadius: 20,
-                        offset: Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      // Header with affirmation actions for custom affirmations
-                      if (affirmation.isCustom) 
-                        _buildAffirmationActions()
-                      else
-                        SizedBox(height: 16.h),
-                      
-                      Expanded(
-                        child: Center(
-                          child: AnimatedSwitcher(
-                            duration: Duration(milliseconds: 300),
-                            transitionBuilder: (child, animation) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: SlideTransition(
-                                  position: Tween<Offset>(
-                                    begin: Offset(0.3, 0),
-                                    end: Offset.zero,
-                                  ).animate(animation),
-                                  child: child,
-                                ),
-                              );
-                            },
-                            child: Text(
-                              affirmation.text,
-                              key: ValueKey(affirmation.id),
-                              style: TextStyle(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.textPrimary,
-                                height: 1.4,
-                              ),
-                              textAlign: TextAlign.center,
+                double value = 1.0;
+                if (_pageController?.position.haveDimensions ?? false) {
+                  value = _pageController!.page! - index;
+                  value = (1 - (value.abs() * 0.15)).clamp(0.0, 1.0);
+                }
+                
+                return Center(
+                  child: Transform.scale(
+                    scale: value,
+                    child: Opacity(
+                      opacity: value.clamp(0.8, 1.0),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 12.h),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              currentCategory.color.withValues(alpha: 0.15),
+                              currentCategory.color.withValues(alpha: 0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(24.r),
+                          border: Border.all(
+                            color: isCurrentCard 
+                              ? currentCategory.color.withValues(alpha: 0.4)
+                              : currentCategory.color.withValues(alpha: 0.2),
+                            width: isCurrentCard ? 2 : 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: currentCategory.color.withValues(alpha: isCurrentCard ? 0.2 : 0.1),
+                              blurRadius: isCurrentCard ? 30 : 20,
+                              offset: Offset(0, isCurrentCard ? 12 : 8),
+                              spreadRadius: isCurrentCard ? 2 : 0,
                             ),
+                            BoxShadow(
+                              color: AppTheme.black.withValues(alpha: 0.1),
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(24.w),
+                          child: Column(
+                                children: [
+                                  // Header with affirmation actions for custom affirmations
+                                  if (affirmation.isCustom) 
+                                    _buildAffirmationActions()
+                                  else
+                                    SizedBox(height: 16.h),
+                                  
+                                  Expanded(
+                                    child: Center(
+                                      child: AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 250),
+                                        switchInCurve: Curves.easeInOut,
+                                        switchOutCurve: Curves.easeInOut,
+                                        transitionBuilder: (child, animation) {
+                                          return FadeTransition(
+                                            opacity: animation,
+                                            child: ScaleTransition(
+                                              scale: Tween<double>(
+                                                begin: 0.95,
+                                                end: 1.0,
+                                              ).animate(animation),
+                                              child: child,
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          affirmation.text,
+                                          key: ValueKey(affirmation.id),
+                                          style: TextStyle(
+                                            fontSize: isCurrentCard ? 26.sp : 24.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppTheme.textPrimary,
+                                            height: 1.5,
+                                            letterSpacing: 0.3,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 24.h),
+                                  _buildControls(),
+                                ],
                           ),
                         ),
                       ),
-                      SizedBox(height: 24.h),
-                      _buildControls(),
-                    ],
+                    ),
                   ),
                 );
               },
@@ -760,24 +793,30 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
     
     return Column(
       children: [
-        // Navigation dots
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            currentCategory.affirmations.length,
-            (index) => Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.w),
-              width: 8.w,
-              height: 8.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: index == currentAffirmationIndex 
-                    ? currentCategory.color 
-                    : AppTheme.textSecondary.withValues(alpha: 0.3),
+        // Navigation dots with swipe hint
+        if (currentCategory.affirmations.length > 1)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  currentCategory.affirmations.length,
+                  (index) => AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    margin: EdgeInsets.symmetric(horizontal: 4.w),
+                    width: index == currentAffirmationIndex ? 24.w : 8.w,
+                    height: 8.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.r),
+                      color: index == currentAffirmationIndex 
+                          ? currentCategory.color 
+                          : AppTheme.textSecondary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ),
         SizedBox(height: 24.h),
         // Control buttons
         Row(
@@ -1623,6 +1662,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
                 controller: textController,
                 style: TextStyle(color: AppTheme.textPrimary),
                 maxLines: 3,
+                maxLength: 180, // Character limit appropriate for card display
                 decoration: InputDecoration(
                   hintText: 'I am worthy of ${category.name.toLowerCase()}...',
                   hintStyle: TextStyle(color: AppTheme.textSecondary.withValues(alpha: 0.7)),
@@ -1641,6 +1681,22 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
                   filled: true,
                   fillColor: AppTheme.backgroundMedium,
                 ),
+                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 4.h),
+                    child: Text(
+                      '$currentLength / $maxLength',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: currentLength > (maxLength! * 0.9)
+                          ? Colors.orange
+                          : currentLength > (maxLength * 0.95)
+                            ? Colors.red
+                            : AppTheme.textSecondary,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -1652,10 +1708,28 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
             ElevatedButton(
               onPressed: () async {
                 final text = textController.text.trim();
-                if (text.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  await _addAffirmationToCategory(category, text);
+                if (text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please enter an affirmation'),
+                      backgroundColor: Colors.orange,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
                 }
+                if (text.length > 180) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Affirmation must be 180 characters or less'),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
+                }
+                Navigator.of(context).pop();
+                await _addAffirmationToCategory(category, text);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: category.color,
@@ -2275,6 +2349,7 @@ class _EditAffirmationDialogState extends State<_EditAffirmationDialog> {
         controller: _textController,
         style: TextStyle(color: AppTheme.textPrimary),
         maxLines: 3,
+        maxLength: 180, // Character limit appropriate for card display
         enabled: !_isProcessing,
         decoration: InputDecoration(
           hintText: 'Enter your affirmation...',
@@ -2292,6 +2367,22 @@ class _EditAffirmationDialogState extends State<_EditAffirmationDialog> {
             borderSide: BorderSide(color: AppTheme.affirmationGradient[0]),
           ),
         ),
+        buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+          return Padding(
+            padding: EdgeInsets.only(top: 4.h),
+            child: Text(
+              '$currentLength / $maxLength',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: currentLength > (maxLength! * 0.9)
+                  ? Colors.orange
+                  : currentLength > (maxLength * 0.95)
+                    ? Colors.red
+                    : AppTheme.textSecondary,
+              ),
+            ),
+          );
+        },
       ),
       actions: [
         TextButton(
@@ -2329,6 +2420,11 @@ class _EditAffirmationDialogState extends State<_EditAffirmationDialog> {
       
       if (newText.isEmpty) {
         _showErrorSnackBar('Affirmation text cannot be empty');
+        return;
+      }
+      
+      if (newText.length > 180) {
+        _showErrorSnackBar('Affirmation must be 180 characters or less');
         return;
       }
       
