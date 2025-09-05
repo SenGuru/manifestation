@@ -265,48 +265,19 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28.r),
-        child: Stack(
-          children: [
-            // Main canvas for user interaction
-            RepaintBoundary(
-              key: _canvasKey,
-              child: Stack(
-                children: [
-                  // Canvas with padding to prevent cutoff
-                  Positioned.fill(
-                    child: Padding(
-                      padding: EdgeInsets.all(12.w),
-                      child: VisionBoardCanvas(
-                        board: currentBoard,
-                        selectedTool: selectedTool,
-                        onBoardChanged: _onBoardChanged,
-                        onDeselectTool: _deselectTool,
-                      ),
-                    ),
-                  ),
-                ],
+        child: Container(
+          child: RepaintBoundary(
+            key: _canvasKey,
+            child: Container(
+              padding: EdgeInsets.all(12.w),
+              child: VisionBoardCanvas(
+                board: currentBoard,
+                selectedTool: selectedTool,
+                onBoardChanged: _onBoardChanged,
+                onDeselectTool: _deselectTool,
               ),
             ),
-            
-            // Hidden clean canvas for thumbnail capture (positioned off-screen)
-            Positioned(
-              left: -9999, // Move way off-screen so it's not visible
-              top: -9999,
-              child: RepaintBoundary(
-                key: _thumbnailCanvasKey,
-                child: Container(
-                  width: 400, // Fixed size for consistent thumbnails
-                  height: 300,
-                  child: VisionBoardCanvas(
-                    board: currentBoard,
-                    selectedTool: VisionBoardTool.select, // Always use select tool for clean capture
-                    onBoardChanged: (_) {}, // No-op callback since this is for capture only
-                    hideSelectionIndicators: true, // Hide all selection UI
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

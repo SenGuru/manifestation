@@ -39,51 +39,104 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: widget.board.backgroundColor,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          // Clear selection when tapping empty space and deselect active tools
-          if (selectedElementId != null || widget.selectedTool != VisionBoardTool.select) {
-            setState(() {
-              selectedElementId = null;
-            });
-            // Call parent to reset tool selection to select/default mode
-            if (widget.selectedTool != VisionBoardTool.select && widget.onDeselectTool != null) {
-              widget.onDeselectTool!();
-            }
-          }
-        },
-        child: Stack(
-          children: [
-            // Background grid (hide when capturing thumbnail)
-            if (widget.selectedTool != VisionBoardTool.select && !widget.hideSelectionIndicators)
-              _buildGrid(),
-            
-            // Board elements with proper keys for efficient updates
-            ...widget.board.elements.asMap().entries.map((entry) {
-              final index = entry.key;
-              final element = entry.value;
-              return RepaintBoundary(
-                key: ValueKey(element.id), // Unique key for efficient updates
-                child: _buildElement(element, index),
-              );
-            }),
-            
-            // Selection overlay with resize handles
-            if (selectedElementId != null && widget.selectedTool == VisionBoardTool.resize)
-              _buildSelectionOverlay(),
-            
-            // Empty state
-            if (widget.board.elements.isEmpty)
-              _buildEmptyState(),
-          ],
-        ),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Ensure we have valid constraints
+        if (constraints.maxWidth <= 0 || constraints.maxHeight <= 0) {
+          return Container(
+            width: 100,
+            height: 100,
+            color: widget.board.backgroundColor,
+            child: Center(
+              child: Text('Loading...', style: TextStyle(color: AppTheme.textPrimary)),
+            ),
+          );
+        }
+        
+        return Container(
+          width: constraints.maxWidth,
+          height: constraints.maxHeight,
+          color: widget.board.backgroundColor,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              // Clear selection when tapping empty space and deselect active tools
+              try {
+                if (selectedElementId != null || widget.selectedTool != VisionBoardTool.select) {
+                  setState(() {
+                    selectedElementId = null;
+                  });
+                  // Call parent to reset tool selection to select/default mode
+                  if (widget.selectedTool != VisionBoardTool.select && widget.onDeselectTool != null) {
+                    widget.onDeselectTool!();
+                  }
+                }
+              } catch (e) {
+                print('❌ Error in onTap: $e');
+              }
+            },
+            child: Container(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: Stack(
+                clipBehavior: Clip.hardEdge,
+                children: _buildStackChildren(),
+              ),
+            ),
+          ),
+        );
+      },
     );
+  }
+  
+  List<Widget> _buildStackChildren() {
+    List<Widget> children = [];
+    
+    try {
+      // Background grid (hide when capturing thumbnail)
+      if (widget.selectedTool != VisionBoardTool.select && !widget.hideSelectionIndicators) {
+        children.add(_buildGrid());
+      }
+      
+      // Board elements with proper keys for efficient updates
+      for (int index = 0; index < widget.board.elements.length; index++) {
+        final element = widget.board.elements[index];
+        if (element != null) {
+          children.add(
+            RepaintBoundary(
+              key: ValueKey('${element.id}_$index'), // Stable key
+              child: _buildElementSafely(element, index),
+            ),
+          );
+        }
+      }
+      
+      // Temporarily disable selection overlay to isolate ParentDataWidget issue
+      // TODO: Re-enable once we identify the source of the error
+      /*
+      if (selectedElementId != null && 
+          widget.selectedTool == VisionBoardTool.resize && 
+          !widget.hideSelectionIndicators) {
+        children.add(_buildSelectionOverlaySafely());
+      }
+      */
+      
+      // Empty state
+      if (widget.board.elements.isEmpty) {
+        children.add(_buildEmptyState());
+      }
+      
+    } catch (e) {
+      print('❌ Error building stack children: $e');
+      // Return minimal safe children on error
+      children = [
+        Center(
+          child: Text('Error loading canvas', style: TextStyle(color: AppTheme.textPrimary)),
+        ),
+      ];
+    }
+    
+    return children;
   }
 
   Widget _buildGrid() {
@@ -95,52 +148,78 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   }
 
   Widget _buildElement(VisionBoardElement element, int index) {
-    final isBeingDragged = draggingElementId == element.id;
-    
-    return Positioned(
-      left: element.position.dx,
-      top: element.position.dy,
-      child: GestureDetector(
-        onTap: () => _onElementTap(element),
-        onPanStart: (details) => _onElementPanStart(element, details),
-        onPanUpdate: (details) => _onElementPanUpdate(element, details),
-        onPanEnd: (details) => _onElementPanEnd(element, details),
-        behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: isBeingDragged ? 0 : 200),
-          curve: Curves.easeOut,
-          child: Transform.rotate(
-            angle: element.rotation,
-            child: Container(
-              width: element.size.width,
-              height: element.size.height,
-              padding: EdgeInsets.all(2.w), // Add breathing room
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8.r), // Rounder corners
-                border: _shouldShowElementBorder(element) 
-                    ? Border.all(
-                        color: _getElementBorderColor(element),
-                        width: _getBorderWidth(element),
-                      ) 
-                    : null,
-                boxShadow: _getElementShadow(element, isBeingDragged),
-              ),
-              child: Stack(
-                children: [
-                  Container(
-                    margin: EdgeInsets.all(2.w), // Inner margin for content
-                    child: _buildElementContent(element),
-                  ),
-                  // Show tool cursor overlay
-                  if (_shouldShowToolCursor(element))
-                    _buildToolCursorOverlay(element),
-                ],
-              ),
+    return _buildElementSafely(element, index);
+  }
+  
+  Widget _buildElementSafely(VisionBoardElement element, int index) {
+    try {
+      // Validate element data
+      if (element.size.width <= 0 || element.size.height <= 0) {
+        return SizedBox.shrink();
+      }
+      
+      final safeLeft = element.position.dx.isFinite && element.position.dx >= 0 ? element.position.dx.clamp(0.0, 2000.0) : 0.0;
+      final safeTop = element.position.dy.isFinite && element.position.dy >= 0 ? element.position.dy.clamp(0.0, 2000.0) : 0.0;
+      final safeWidth = element.size.width.isFinite ? element.size.width.clamp(10.0, 800.0) : 100.0;
+      final safeHeight = element.size.height.isFinite ? element.size.height.clamp(10.0, 800.0) : 100.0;
+      
+      return Positioned(
+        left: safeLeft,
+        top: safeTop,
+        width: safeWidth,
+        height: safeHeight,
+        child: GestureDetector(
+          onTap: () {
+            try {
+              _onElementTap(element);
+            } catch (e) {
+              print('❌ Error in element tap: $e');
+            }
+          },
+          onPanStart: (details) {
+            try {
+              _onElementPanStart(element, details);
+            } catch (e) {
+              print('❌ Error in element pan start: $e');
+            }
+          },
+          onPanUpdate: (details) {
+            try {
+              _onElementPanUpdate(element, details);
+            } catch (e) {
+              print('❌ Error in element pan update: $e');
+            }
+          },
+          onPanEnd: (details) {
+            try {
+              _onElementPanEnd(element, details);
+            } catch (e) {
+              print('❌ Error in element pan end: $e');
+            }
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: safeWidth,
+            height: safeHeight,
+            padding: EdgeInsets.all(2.w),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.r),
+              border: _shouldShowElementBorder(element) 
+                  ? Border.all(
+                      color: _getElementBorderColor(element),
+                      width: _getBorderWidth(element),
+                    ) 
+                  : null,
+              boxShadow: _getElementShadow(element, false),
             ),
+            child: _buildElementContent(element),
           ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      print('❌ Error building element ${element.id}: $e');
+      return SizedBox.shrink();
+    }
   }
 
   Widget _buildElementContent(VisionBoardElement element) {
@@ -517,28 +596,43 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   // Selection overlay with resize handles
   Widget _buildSelectionOverlay() {
-    // Hide selection overlay when capturing thumbnail
-    if (widget.hideSelectionIndicators || selectedElementId == null || widget.board.elements.isEmpty) {
-      return SizedBox.shrink();
-    }
-    
-    VisionBoardElement? selectedElement;
+    return _buildSelectionOverlaySafely();
+  }
+  
+  Widget _buildSelectionOverlaySafely() {
     try {
-      selectedElement = widget.board.elements.firstWhere(
-        (e) => e.id == selectedElementId,
-      );
-    } catch (e) {
-      return SizedBox.shrink();
-    }
+      // Hide selection overlay when capturing thumbnail
+      if (widget.hideSelectionIndicators || selectedElementId == null || widget.board.elements.isEmpty) {
+        return SizedBox.shrink();
+      }
+      
+      VisionBoardElement? selectedElement;
+      try {
+        selectedElement = widget.board.elements.firstWhere(
+          (e) => e.id == selectedElementId,
+        );
+      } catch (e) {
+        return SizedBox.shrink();
+      }
 
-    return Positioned(
-      left: selectedElement.position.dx - 24.w, // Increased for larger handles
-      top: selectedElement.position.dy - 24.w, // Increased for larger handles
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        curve: Curves.easeOut,
-        width: selectedElement.size.width + 48.w, // Increased for larger handles
-        height: selectedElement.size.height + 48.w, // Increased for larger handles
+      // Validate selected element data
+      if (selectedElement.size.width <= 0 || selectedElement.size.height <= 0) {
+        return SizedBox.shrink();
+      }
+
+      final safeLeft = selectedElement.position.dx.isFinite ? (selectedElement.position.dx - 24.w).clamp(-500.0, 3000.0) : 0.0;
+      final safeTop = selectedElement.position.dy.isFinite ? (selectedElement.position.dy - 24.w).clamp(-500.0, 3000.0) : 0.0;
+      final safeWidth = selectedElement.size.width.isFinite ? (selectedElement.size.width + 48.w).clamp(50.0, 2000.0) : 100.0;
+      final safeHeight = selectedElement.size.height.isFinite ? (selectedElement.size.height + 48.w).clamp(50.0, 2000.0) : 100.0;
+
+      return Positioned(
+        left: safeLeft,
+        top: safeTop,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+          width: safeWidth,
+          height: safeHeight,
         decoration: BoxDecoration(
           border: Border.all(
             color: AppTheme.visionBoardGradient[0],
@@ -553,29 +647,38 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
             ),
           ],
         ),
-        child: Stack(
-          children: [
-            // Corner resize handles - adjusted for larger handles with padding
-            _buildResizeHandle('top-left', -24.w, -24.w),
-            _buildResizeHandle('top-right', selectedElement.size.width + 8.w, -24.w),
-            _buildResizeHandle('bottom-left', -24.w, selectedElement.size.height + 8.w),
-            _buildResizeHandle('bottom-right', selectedElement.size.width + 8.w, selectedElement.size.height + 8.w),
-            
-            // Edge handles - adjusted for larger handles with padding
-            _buildResizeHandle('top-center', selectedElement.size.width / 2 - 16.w, -24.w),
-            _buildResizeHandle('bottom-center', selectedElement.size.width / 2 - 16.w, selectedElement.size.height + 8.w),
-            _buildResizeHandle('left-center', -24.w, selectedElement.size.height / 2 - 16.w),
-            _buildResizeHandle('right-center', selectedElement.size.width + 8.w, selectedElement.size.height / 2 - 16.w),
-          ],
+          child: Stack(
+            children: [
+              // Corner resize handles - adjusted for larger handles with padding
+              _buildResizeHandle('top-left', -24.w, -24.w),
+              _buildResizeHandle('top-right', selectedElement.size.width + 8.w, -24.w),
+              _buildResizeHandle('bottom-left', -24.w, selectedElement.size.height + 8.w),
+              _buildResizeHandle('bottom-right', selectedElement.size.width + 8.w, selectedElement.size.height + 8.w),
+              
+              // Edge handles - adjusted for larger handles with padding  
+              _buildResizeHandle('top-center', selectedElement.size.width / 2 - 16.w, -24.w),
+              _buildResizeHandle('bottom-center', selectedElement.size.width / 2 - 16.w, selectedElement.size.height + 8.w),
+              _buildResizeHandle('left-center', -24.w, selectedElement.size.height / 2 - 16.w),
+              _buildResizeHandle('right-center', selectedElement.size.width + 8.w, selectedElement.size.height / 2 - 16.w),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      print('❌ Error building selection overlay: $e');
+      return SizedBox.shrink(); // Return empty widget on error
+    }
   }
 
   Widget _buildResizeHandle(String handleId, double left, double top) {
-    return Positioned(
-      left: left,
-      top: top,
+    try {
+      // Validate position values
+      final safeLeft = left.isFinite ? left.clamp(-200.0, 2000.0) : 0.0;
+      final safeTop = top.isFinite ? top.clamp(-200.0, 2000.0) : 0.0;
+      
+      return Positioned(
+        left: safeLeft,
+        top: safeTop,
       child: GestureDetector(
         onPanStart: (details) => _onResizeStart(handleId, details),
         onPanUpdate: (details) => _onResizeUpdate(handleId, details),
@@ -618,7 +721,11 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
           ),
         ),
       ),
-    );
+      );
+    } catch (e) {
+      print('❌ Error building resize handle $handleId: $e');
+      return SizedBox.shrink(); // Return empty widget on error
+    }
   }
 
   Widget _getResizeHandleCursor(String handleId) {

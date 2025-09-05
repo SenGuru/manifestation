@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import '../constants/app_theme.dart';
 import '../services/user_profile_service.dart';
 import '../services/user_service.dart';
+import '../services/profile_picture_notifier.dart';
 
 class UserProfilePicture extends StatefulWidget {
   final double size;
@@ -39,6 +40,8 @@ class _UserProfilePictureState extends State<UserProfilePicture> {
   bool _isLoading = true;
   bool _hasError = false;
   final UserProfileService _profileService = UserProfileService();
+  final ProfilePictureNotifier _profilePictureNotifier = ProfilePictureNotifier();
+  int _lastUpdateCounter = 0;
 
   // Getter to access the current image URL
   String? get currentImageUrl => _imageUrl;
@@ -106,6 +109,9 @@ class _UserProfilePictureState extends State<UserProfilePicture> {
   @override
   void initState() {
     super.initState();
+    // Listen to profile picture updates
+    _profilePictureNotifier.addListener(_onProfilePictureUpdated);
+    
     // Use cached image if available, otherwise load from API
     if (widget.cachedImageUrl != null && widget.cachedImageUrl!.isNotEmpty) {
       String processedImageUrl = widget.cachedImageUrl!;
@@ -127,6 +133,21 @@ class _UserProfilePictureState extends State<UserProfilePicture> {
         });
       }
     } else {
+      _loadProfilePicture();
+    }
+  }
+
+  @override
+  void dispose() {
+    _profilePictureNotifier.removeListener(_onProfilePictureUpdated);
+    super.dispose();
+  }
+
+  void _onProfilePictureUpdated() {
+    // Check if this is a new update
+    if (_profilePictureNotifier.updateCounter != _lastUpdateCounter) {
+      _lastUpdateCounter = _profilePictureNotifier.updateCounter;
+      // Force reload the profile picture from the server
       _loadProfilePicture();
     }
   }

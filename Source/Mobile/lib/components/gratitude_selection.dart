@@ -230,8 +230,23 @@ class _GratitudeSectionState extends State<GratitudeSection> {
               ),
               maxLines: null,
               minLines: 4,
+              maxLength: 500, // Backend limit for gratitudes
               textAlignVertical: TextAlignVertical.top,
               textCapitalization: TextCapitalization.sentences,
+              buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                return Padding(
+                  padding: EdgeInsets.only(top: 4.h),
+                  child: Text(
+                    '$currentLength / $maxLength',
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: currentLength > (maxLength! * 0.9) 
+                        ? Colors.orange 
+                        : AppTheme.textSecondary,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

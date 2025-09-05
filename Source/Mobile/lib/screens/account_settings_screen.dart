@@ -6,6 +6,7 @@ import '../services/unified_auth_service.dart';
 import '../services/user_service.dart';
 import '../services/subscription_service.dart';
 import '../services/user_profile_service.dart';
+import '../services/profile_picture_notifier.dart';
 import '../components/network_error_dialog.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/universal_back_button.dart';
@@ -61,6 +62,8 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   File? _selectedProfileImage;
   bool _isUploadingImage = false;
   String? _cachedProfileImageUrl;
+  int _profilePictureKey = 0; // Add a key counter to force widget rebuild
+  bool _isRefreshingProfilePicture = false; // Track when refreshing after upload
 
   void _initializeAnimations() {
     // Main edit mode controller
@@ -94,6 +97,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
   void initState() {
     super.initState();
     _initializeAnimations();
+    // Initialize with parent's cached URL if available
     _cachedProfileImageUrl = widget.cachedProfileImageUrl;
     _loadUserData();
     
@@ -232,6 +236,9 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
         _nameError = null;
         _emailError = null;
         _passwordError = null;
+        _selectedProfileImage = null; // Clear any selected image
+        _isRefreshingProfilePicture = false; // Clear refresh flag
+        _profilePictureKey++; // Force refresh when exiting edit mode
       });
       
       // Animate controllers for additional effects if needed
@@ -812,26 +819,40 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
                             ),
                           )
                         : UserProfilePicture(
-                            key: const ValueKey('account_settings_profile_picture'),
+                            key: ValueKey('account_settings_profile_picture_$_profilePictureKey'),
                             size: 64.0,
                             borderColor: AppTheme.affirmationGradient[0],
                             borderWidth: 0.0,
                             showBorder: false,
-                            cachedImageUrl: _cachedProfileImageUrl ?? widget.cachedProfileImageUrl,
+                            cachedImageUrl: _cachedProfileImageUrl,
+                            onImageLoaded: (String? imageUrl) {
+                              // Update cached image URL when new image loads
+                              if (imageUrl != null) {
+                                setState(() {
+                                  _cachedProfileImageUrl = imageUrl;
+                                  _isRefreshingProfilePicture = false; // Clear refresh flag
+                                });
+                              } else if (_isRefreshingProfilePicture) {
+                                // Failed to load new image
+                                setState(() {
+                                  _isRefreshingProfilePicture = false;
+                                });
+                              }
+                            },
                           ),
                   ),
                 ),
-                if (_isEditMode || _isUploadingImage)
+                if (_isEditMode || _isUploadingImage || _isRefreshingProfilePicture)
                   Positioned.fill(
                     child: AnimatedOpacity(
                       duration: Duration(milliseconds: 300),
-                      opacity: (_isEditMode || _isUploadingImage) ? 1.0 : 0.0,
+                      opacity: (_isEditMode || _isUploadingImage || _isRefreshingProfilePicture) ? 1.0 : 0.0,
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.black.withOpacity(_isUploadingImage ? 0.6 : 0.4),
+                          color: Colors.black.withOpacity((_isUploadingImage || _isRefreshingProfilePicture) ? 0.6 : 0.4),
                         ),
-                        child: _isUploadingImage 
+                        child: (_isUploadingImage || _isRefreshingProfilePicture)
                             ? SizedBox(
                                 width: 24.w,
                                 height: 24.h,
@@ -1101,6 +1122,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
       
       // Upload profile picture if one was selected
       bool profilePictureUploadSuccess = true;
+      bool hadProfilePicture = _selectedProfileImage != null;
       if (_selectedProfileImage != null) {
         print('📤 Uploading profile picture...');
         final uploadResult = await _profileService.uploadProfilePicture(
@@ -1113,7 +1135,12 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
           // Clear cached profile image URL to force reload from server
           setState(() {
             _cachedProfileImageUrl = null; // This will force the UserProfilePicture widget to reload from API
+            _selectedProfileImage = null; // Clear the selected image immediately
+            _profilePictureKey++; // Increment key to force widget rebuild
+            _isRefreshingProfilePicture = true; // Show loading state while refreshing
           });
+          // Notify all UserProfilePicture widgets to refresh
+          ProfilePictureNotifier().notifyProfilePictureUpdated();
         } else {
           print('❌ Profile picture upload failed: ${uploadResult.errorMessage}');
           profilePictureUploadSuccess = false;
@@ -1126,18 +1153,19 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
         // Update stored user data to sync with other parts of the app
         await _updateStoredUserData();
         
-        // Update the current values
+        // Update the current values and exit edit mode
         setState(() {
           _currentFullName = _fullNameController.text;
           _currentEmail = _emailController.text;
           _isUpdatingProfile = false;
-          // Clear the selected profile image since it's now uploaded
-          _selectedProfileImage = null;
+          _isEditMode = false; // Exit edit mode after successful update
+          _showPasswordField = false; // Hide password field
+          _passwordController.clear(); // Clear password
+          // Profile image already cleared and key incremented after successful upload
         });
         
         // Show success message
         String successMessage = 'Profile updated successfully';
-        bool hadProfilePicture = _selectedProfileImage != null;
         if (hadProfilePicture) {
           successMessage = 'Profile and picture updated successfully';
         }

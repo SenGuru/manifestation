@@ -465,8 +465,34 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
                 maxLines: null,
                 expands: true,
+                maxLength: 2000, // Backend limit for reflection
                 textAlignVertical: TextAlignVertical.top,
                 textCapitalization: TextCapitalization.sentences,
+                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                  return Positioned(
+                    bottom: 8.h,
+                    right: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardBackground.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        '$currentLength / $maxLength',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: currentLength > (maxLength! * 0.9)
+                            ? Colors.orange
+                            : currentLength > (maxLength * 0.95)
+                              ? Colors.red
+                              : AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -538,8 +564,34 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
                 maxLines: null,
                 expands: true,
+                maxLength: 2000, // Backend limit for reflection
                 textAlignVertical: TextAlignVertical.top,
                 textCapitalization: TextCapitalization.sentences,
+                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                  return Positioned(
+                    bottom: 8.h,
+                    right: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardBackground.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        '$currentLength / $maxLength',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: currentLength > (maxLength! * 0.9)
+                            ? Colors.orange
+                            : currentLength > (maxLength * 0.95)
+                              ? Colors.red
+                              : AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -840,21 +892,84 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     }
   }
 
+  // Helper method to sanitize text input
+  String _sanitizeText(String text) {
+    // Remove potentially problematic characters while preserving legitimate text
+    return text
+        .replaceAll('\u0000', '') // Remove null characters
+        .replaceAll('\r', '\n') // Normalize line endings
+        .trim();
+  }
+
+  // Helper method to validate field length
+  String? _validateFieldLength(String? text, int maxLength, String fieldName) {
+    if (text == null || text.isEmpty) return null;
+    
+    final sanitized = _sanitizeText(text);
+    if (sanitized.length > maxLength) {
+      return '$fieldName is too long (${sanitized.length} characters, max $maxLength)';
+    }
+    return null;
+  }
+
   Future<void> _completeJournal() async {
     setState(() {
       isSaving = true;
     });
 
     try {
-      print('📖 Saving journal entry...');
+      print('📖 Validating and saving journal entry...');
       print('   Is Editing Existing: $isEditingExistingEntry');
       print('   Mood: ${selectedMood.displayName}');
       print('   Gratitudes: ${gratitudeItems.where((item) => item.isNotEmpty).length}');
       print('   Has Reflection: ${reflection.isNotEmpty}');
       print('   Has Intention: ${intention.isNotEmpty}');
 
-      // Clean gratitudes and ensure we have at least some content
-      final cleanGratitudes = gratitudeItems.map((g) => g.trim()).where((g) => g.isNotEmpty).toList();
+      // Validate field lengths before submission
+      List<String> validationErrors = [];
+      
+      // Validate gratitudes (max 500 chars each)
+      for (int i = 0; i < gratitudeItems.length; i++) {
+        final error = _validateFieldLength(gratitudeItems[i], 500, 'Gratitude ${i + 1}');
+        if (error != null) validationErrors.add(error);
+      }
+      
+      // Validate reflection (max 2000 chars)
+      final reflectionError = _validateFieldLength(reflection, 2000, 'Reflection');
+      if (reflectionError != null) validationErrors.add(reflectionError);
+      
+      // Validate tomorrow's intentions (max 2000 chars)
+      final intentionError = _validateFieldLength(intention, 2000, 'Tomorrow\'s intentions');
+      if (intentionError != null) validationErrors.add(intentionError);
+      
+      // Show validation errors if any
+      if (validationErrors.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Please fix the following issues:'),
+                ...validationErrors.map((e) => Text('• $e')),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 5),
+          ),
+        );
+        setState(() {
+          isSaving = false;
+        });
+        return;
+      }
+
+      // Clean and sanitize gratitudes
+      final cleanGratitudes = gratitudeItems
+          .map((g) => _sanitizeText(g))
+          .where((g) => g.isNotEmpty)
+          .toList();
       
       // If no gratitudes provided, show a helpful error
       if (cleanGratitudes.isEmpty) {
@@ -865,6 +980,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             behavior: SnackBarBehavior.floating,
           ),
         );
+        setState(() {
+          isSaving = false;
+        });
         return;
       }
 
@@ -875,17 +993,21 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           throw Exception('Invalid existing journal ID');
         }
 
+        // Sanitize all text fields before sending
+        final sanitizedReflection = _sanitizeText(reflection);
+        final sanitizedIntention = _sanitizeText(intention);
+        
         final result = await _journalService.updateDailyJournal(
           journalId: existingId,
           journalDate: DateTime.now(),
           moodTypeId: _journalService.mapMoodToApiMoodTypeId(selectedMood.index), // Use correct backend enum mapping
-          gratitude1: gratitudeItems.isNotEmpty ? gratitudeItems[0].trim() : null,
-          gratitude2: gratitudeItems.length > 1 ? gratitudeItems[1].trim() : null,
-          gratitude3: gratitudeItems.length > 2 ? gratitudeItems[2].trim() : null,
-          gratitude4: gratitudeItems.length > 3 ? gratitudeItems[3].trim() : null,
-          gratitude5: gratitudeItems.length > 4 ? gratitudeItems[4].trim() : null,
-          reflection: reflection.trim().isEmpty ? null : reflection.trim(),
-          tomorrowsIntentions: intention.trim().isEmpty ? null : intention.trim(),
+          gratitude1: cleanGratitudes.isNotEmpty ? cleanGratitudes[0] : null,
+          gratitude2: cleanGratitudes.length > 1 ? cleanGratitudes[1] : null,
+          gratitude3: cleanGratitudes.length > 2 ? cleanGratitudes[2] : null,
+          gratitude4: cleanGratitudes.length > 3 ? cleanGratitudes[3] : null,
+          gratitude5: cleanGratitudes.length > 4 ? cleanGratitudes[4] : null,
+          reflection: sanitizedReflection.isEmpty ? null : sanitizedReflection,
+          tomorrowsIntentions: sanitizedIntention.isEmpty ? null : sanitizedIntention,
         );
 
         if (result.isSuccess) {
@@ -910,16 +1032,20 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         }
       } else {
         // Create new journal entry
+        // Sanitize all text fields before sending
+        final sanitizedReflection = _sanitizeText(reflection);
+        final sanitizedIntention = _sanitizeText(intention);
+        
         final result = await _journalService.createDailyJournal(
           journalDate: DateTime.now(),
           moodTypeId: _journalService.mapMoodToApiMoodTypeId(selectedMood.index), // Use correct backend enum mapping
-          gratitude1: gratitudeItems.isNotEmpty ? gratitudeItems[0].trim() : null,
-          gratitude2: gratitudeItems.length > 1 ? gratitudeItems[1].trim() : null,
-          gratitude3: gratitudeItems.length > 2 ? gratitudeItems[2].trim() : null,
-          gratitude4: gratitudeItems.length > 3 ? gratitudeItems[3].trim() : null,
-          gratitude5: gratitudeItems.length > 4 ? gratitudeItems[4].trim() : null,
-          reflection: reflection.trim().isEmpty ? null : reflection.trim(),
-          tomorrowsIntentions: intention.trim().isEmpty ? null : intention.trim(),
+          gratitude1: cleanGratitudes.isNotEmpty ? cleanGratitudes[0] : null,
+          gratitude2: cleanGratitudes.length > 1 ? cleanGratitudes[1] : null,
+          gratitude3: cleanGratitudes.length > 2 ? cleanGratitudes[2] : null,
+          gratitude4: cleanGratitudes.length > 3 ? cleanGratitudes[3] : null,
+          gratitude5: cleanGratitudes.length > 4 ? cleanGratitudes[4] : null,
+          reflection: sanitizedReflection.isEmpty ? null : sanitizedReflection,
+          tomorrowsIntentions: sanitizedIntention.isEmpty ? null : sanitizedIntention,
         );
 
         if (result.isSuccess) {
@@ -950,25 +1076,60 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     } catch (e) {
       print('📖 Error saving journal entry: $e');
       
-      // Show user-friendly error message
+      // Parse error message for more specific feedback
       String errorMessage = 'Failed to save journal entry';
-      if (e.toString().contains('network') || e.toString().contains('connection')) {
-        errorMessage = 'Network error - please check your connection';
-      } else if (e.toString().contains('timeout')) {
-        errorMessage = 'Request timed out - please try again';
-      } else if (e.toString().contains('authentication') || e.toString().contains('auth')) {
-        errorMessage = 'Authentication error - please log in again';
-      } else if (e.toString().contains('Unexpected error when creating Daily Journal') || 
-                 e.toString().contains('Npgsql')) {
-        errorMessage = 'Journal feature is temporarily unavailable. The server team has been notified.';
+      final errorString = e.toString().toLowerCase();
+      
+      if (errorString.contains('network') || errorString.contains('connection') || errorString.contains('failed host lookup')) {
+        errorMessage = 'Network error - please check your internet connection and try again';
+      } else if (errorString.contains('timeout')) {
+        errorMessage = 'Request timed out - the server is taking too long to respond. Please try again';
+      } else if (errorString.contains('authentication') || errorString.contains('unauthorized') || errorString.contains('401')) {
+        errorMessage = 'Your session has expired. Please log in again';
+      } else if (errorString.contains('duplicate') || errorString.contains('already exists')) {
+        errorMessage = 'You already have a journal entry for today. Try editing the existing entry instead';
+      } else if (errorString.contains('too long') || errorString.contains('max length') || errorString.contains('exceeds')) {
+        errorMessage = 'Some of your text entries are too long. Please shorten them and try again';
+      } else if (errorString.contains('invalid') || errorString.contains('format')) {
+        errorMessage = 'Invalid data format. Please check your entries for special characters';
+      } else if (errorString.contains('required') || errorString.contains('null') || errorString.contains('empty')) {
+        errorMessage = 'Please fill in all required fields (at least one gratitude is required)';
+      } else if (errorString.contains('unexpected error when creating daily journal') || 
+                 errorString.contains('npgsql') || 
+                 errorString.contains('database')) {
+        errorMessage = 'Database error - our team has been notified. Please try again later';
+      } else if (errorString.contains('server') || errorString.contains('500') || errorString.contains('internal')) {
+        errorMessage = 'Server error - something went wrong on our end. Please try again';
       }
       
+      // Show error with icon and action button if appropriate
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
+          content: Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.white, size: 20.sp),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+              ),
+            ],
+          ),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 4),
+          duration: Duration(seconds: 5),
+          action: errorString.contains('session') || errorString.contains('auth')
+            ? SnackBarAction(
+                label: 'Login',
+                textColor: Colors.white,
+                onPressed: () {
+                  // Navigate to login screen
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                },
+              )
+            : null,
         ),
       );
     } finally {
