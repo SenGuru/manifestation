@@ -68,25 +68,30 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   void initState() {
     super.initState();
     currentBoard = widget.existingBoard ?? VisionBoard.empty();
-    
+
     // Ensure new boards get a stable ID immediately
     if (currentBoard.id.isEmpty) {
       currentBoard = currentBoard.copyWith(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
       );
     }
-    
+
     _saveToUndoStack();
     _startSessionTracking();
-    
+
     // Load board elements if this is an existing board
     if (widget.existingBoard != null) {
       _loadBoardElements();
       // Only mark as saved to server if it's truly an existing board from server
       // New boards created with _createNewBoard have IDs but aren't on server yet
       hasBeenSavedToServer = true;
+    } else {
+      // For new boards, set the initial state as the saved state
+      // so we don't show "unsaved changes" for an empty board
+      lastSavedState = currentBoard.copyWith();
+      print('✅ Set initial lastSavedState for new board');
     }
-    
+
     _initializeControllers();
   }
 
@@ -185,10 +190,21 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
         ),
       );
     }
-    
-    return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
-      body: SafeArea(
+
+    return PopScope(
+      canPop: !hasUnsavedChanges,
+      onPopInvoked: (bool didPop) async {
+        print('🚪 PopScope invoked - didPop: $didPop, hasUnsavedChanges: $hasUnsavedChanges');
+        if (didPop) return;
+        // If we have unsaved changes, show the exit dialog
+        if (hasUnsavedChanges) {
+          print('⚠️ Showing exit dialog');
+          _showExitDialog();
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.backgroundDark,
+        body: SafeArea(
         child: Column(
           children: [
             // Top header
@@ -225,61 +241,97 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           ],
         ),
       ),
+      ), // PopScope
     );
   }
 
   Widget _buildCanvasArea() {
-    return Container(
-      margin: EdgeInsets.only(
-        left: 20.w,
-        right: 20.w,
-        top: 12.h,
-        bottom: 8.h, // Less bottom margin to prevent cutoff
-      ),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            currentBoard.backgroundColor,
-            currentBoard.backgroundColor.withValues(alpha: 0.98),
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        borderRadius: BorderRadius.circular(28.r),
-        border: Border.all(
-          color: AppTheme.textMedium.withValues(alpha: 0.08),
-          width: 1.w,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.black.withValues(alpha: 0.08),
-            blurRadius: 25.r,
-            offset: Offset(0, 12.h),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          margin: EdgeInsets.only(
+            left: 20.w,
+            right: 20.w,
+            top: 12.h,
+            bottom: 8.h, // Less bottom margin to prevent cutoff
           ),
-          BoxShadow(
-            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.05),
-            blurRadius: 40.r,
-            offset: Offset(0, 20.h),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28.r),
-        child: Container(
-          child: RepaintBoundary(
-            key: _canvasKey,
-            child: Container(
-              padding: EdgeInsets.all(12.w),
-              child: VisionBoardCanvas(
-                board: currentBoard,
-                selectedTool: selectedTool,
-                onBoardChanged: _onBoardChanged,
-                onDeselectTool: _deselectTool,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                currentBoard.backgroundColor,
+                currentBoard.backgroundColor.withValues(alpha: 0.98),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(28.r),
+            border: Border.all(
+              color: AppTheme.textMedium.withValues(alpha: 0.08),
+              width: 1.w,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.black.withValues(alpha: 0.08),
+                blurRadius: 25.r,
+                offset: Offset(0, 12.h),
               ),
+              BoxShadow(
+                color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.05),
+                blurRadius: 40.r,
+                offset: Offset(0, 20.h),
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(28.r),
+            child: Stack(
+              children: [
+                // Main canvas with padding (visible)
+                Container(
+                  child: RepaintBoundary(
+                    key: _canvasKey,
+                    child: Container(
+                      padding: EdgeInsets.all(12.w),
+                      child: VisionBoardCanvas(
+                        board: currentBoard,
+                        selectedTool: selectedTool,
+                        onBoardChanged: _onBoardChanged,
+                        onDeselectTool: _deselectTool,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Hidden clean canvas for thumbnail (no padding, no selection indicators)
+                Positioned(
+                  left: -10000, // Move off-screen
+                  top: 0,
+                  child: SizedBox(
+                    width: constraints.maxWidth - 40.w, // Match visible canvas width
+                    height: constraints.maxHeight,
+                    child: Opacity(
+                      opacity: 0.0,
+                      child: RepaintBoundary(
+                        key: _thumbnailCanvasKey,
+                        child: Container(
+                          color: currentBoard.backgroundColor,
+                          child: VisionBoardCanvas(
+                            board: currentBoard,
+                            selectedTool: VisionBoardTool.select, // No active tool
+                            onBoardChanged: (_) {}, // No-op
+                            onDeselectTool: () {}, // No-op
+                            hideSelectionIndicators: true, // Hide all selection UI
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -290,9 +342,8 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
       child: Row(
         children: [
             // Back button
-            GestureDetector(
-              onTap: () => _handleBackButton(),
-              child: UniversalBackButton(),
+            UniversalBackButton(
+              onPressed: () => _handleBackButton(),
             ),
             
             SizedBox(width: 16.w),
@@ -456,12 +507,14 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
 
   void _onBoardChanged(VisionBoard newBoard) {
+    print('📝 Board changed - elements: ${newBoard.elements.length}');
     setState(() {
       currentBoard = newBoard;
       hasUnsavedChanges = _hasChangesFromLastSave();
+      print('🔔 hasUnsavedChanges set to: $hasUnsavedChanges');
     });
     _saveToUndoStack();
-    
+
     // Auto-save disabled for server-only mode
     _autoSaveToServer();
   }
@@ -487,13 +540,19 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   }
   
   bool _hasChangesFromLastSave() {
-    if (lastSavedState == null) return true;
-    
+    if (lastSavedState == null) {
+      print('🔍 No last saved state - treating as changed');
+      return true;
+    }
+
     // Compare current board with last saved state
     final currentJson = jsonEncode(currentBoard.toJson());
     final savedJson = jsonEncode(lastSavedState!.toJson());
-    
-    return currentJson != savedJson;
+
+    final hasChanges = currentJson != savedJson;
+    print('🔍 Comparing boards - hasChanges: $hasChanges');
+
+    return hasChanges;
   }
 
   void _showImagePicker() {
@@ -1442,54 +1501,46 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   Future<Uint8List?> _captureThumbnail() async {
     try {
       print('📸 Capturing clean vision board thumbnail...');
-      
-      // Wait a frame for UI to settle
-      await Future.delayed(Duration(milliseconds: 100));
-      
+
+      // Wait for UI to fully render
+      await Future.delayed(Duration(milliseconds: 300));
+
       // Use the clean thumbnail canvas that has no selection indicators
       RenderRepaintBoundary? boundary = _thumbnailCanvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-      
+
       if (boundary == null) {
         print('❌ Failed to find clean thumbnail RenderRepaintBoundary');
-        
-        // Try to use main canvas as fallback
-        boundary = _canvasKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-        if (boundary == null) {
-          print('❌ Failed to find main canvas RenderRepaintBoundary as fallback');
-          return null;
-        }
-        print('⚠️ Using main canvas as fallback for thumbnail');
+        return null;
       }
-      
+
+      print('✅ Found clean thumbnail boundary');
+
       // Wait for render boundary to be ready
-      if (!boundary.debugNeedsPaint) {
-        // Boundary is clean, safe to capture
-        print('✅ Boundary is ready for capture');
-      } else {
-        print('⚠️ Boundary needs paint, waiting...');
-        await Future.delayed(Duration(milliseconds: 200));
+      if (boundary.debugNeedsPaint) {
+        print('⚠️ Boundary needs paint, waiting for next frame...');
+        await Future.delayed(Duration(milliseconds: 300));
       }
-      
-      // Capture the image at a lower resolution for thumbnail
-      // Using scale 0.7 for better quality thumbnail
-      ui.Image image = await boundary.toImage(pixelRatio: 0.7);
-      print('📸 Image captured: ${image.width}x${image.height}');
-      
-      // Convert to byte data
+
+      // Capture at higher resolution for better quality
+      // pixelRatio 2.0 gives good quality for thumbnails
+      ui.Image image = await boundary.toImage(pixelRatio: 2.0);
+      print('📸 High-quality image captured: ${image.width}x${image.height}');
+
+      // Convert to JPEG for smaller file size (thumbnails don't need transparency)
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-      
+
       if (byteData == null) {
         print('❌ Failed to convert image to byte data');
         image.dispose();
         return null;
       }
-      
+
       Uint8List pngBytes = byteData.buffer.asUint8List();
-      print('✅ Clean thumbnail captured successfully (${pngBytes.length} bytes) - no selection indicators');
-      
+      print('✅ Clean thumbnail captured successfully (${pngBytes.length} bytes, ${image.width}x${image.height})');
+
       // Dispose the image to free memory
       image.dispose();
-      
+
       return pngBytes;
     } catch (e, stackTrace) {
       print('❌ Error capturing clean thumbnail: $e');
@@ -1694,9 +1745,13 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           // Update current board with full content from server
           setState(() {
             currentBoard = result.data!;
+            lastSavedState = result.data!.copyWith(); // Set the saved state baseline
+            hasUnsavedChanges = false;
             isLoadingContent = false;
           });
-          
+
+          print('✅ Set lastSavedState after loading board');
+
           // Clear undo stack and create new initial state
           undoStack.clear();
           undoIndex = -1;
@@ -1704,18 +1759,50 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
           
         } else {
           print('❌ Failed to load board content: ${result.message}');
-          // Keep the lightweight board but show empty state
+          // Keep the lightweight board but show error
           setState(() {
             isLoadingContent = false;
           });
+
+          // Show error to user
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to load board content: ${result.message ?? 'Server error'}'),
+                backgroundColor: Colors.red,
+                duration: Duration(seconds: 4),
+                action: SnackBarAction(
+                  label: 'Retry',
+                  textColor: Colors.white,
+                  onPressed: _loadBoardElements,
+                ),
+              ),
+            );
+          }
         }
-        
+
       } catch (e) {
         print('❌ Error loading board elements: $e');
-        // Keep the lightweight board but show empty state
+        // Keep the lightweight board but show error
         setState(() {
           isLoadingContent = false;
         });
+
+        // Show error to user
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Network error loading board: ${e.toString()}'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 4),
+              action: SnackBarAction(
+                label: 'Retry',
+                textColor: Colors.white,
+                onPressed: _loadBoardElements,
+              ),
+            ),
+          );
+        }
       }
     }
   }
@@ -1894,9 +1981,12 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
 
 
   void _handleBackButton() {
+    print('🔙 Back button pressed - hasUnsavedChanges: $hasUnsavedChanges');
     if (hasUnsavedChanges) {
+      print('⚠️ Showing exit dialog from back button');
       _showExitDialog();
     } else {
+      print('✅ No unsaved changes - navigating back');
       Navigator.pop(context, currentBoard);
     }
   }
@@ -1904,63 +1994,124 @@ class _VisionBoardScreenState extends State<VisionBoardScreen>
   void _showExitDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppTheme.cardBackground,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.r),
-        ),
-        title: Text(
-          'Save Changes?',
-          style: TextStyle(
-            color: AppTheme.textLight,
-            fontSize: 20.sp,
-            fontWeight: FontWeight.bold,
+      barrierDismissible: false,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.all(24.w),
+          decoration: BoxDecoration(
+            color: AppTheme.cardBackground,
+            borderRadius: BorderRadius.circular(24.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 20.r,
+                offset: Offset(0, 10.h),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Warning icon
+              Container(
+                width: 64.w,
+                height: 64.w,
+                decoration: BoxDecoration(
+                  color: Colors.orange.withOpacity(0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.orange,
+                  size: 36.sp,
+                ),
+              ),
+
+              SizedBox(height: 20.h),
+
+              // Title
+              Text(
+                'Unsaved Changes',
+                style: TextStyle(
+                  color: AppTheme.textLight,
+                  fontSize: 22.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: 12.h),
+
+              // Message
+              Text(
+                'You have unsaved changes to your vision board. Are you sure you want to leave?',
+                style: TextStyle(
+                  color: AppTheme.textMedium,
+                  fontSize: 15.sp,
+                  height: 1.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: 28.h),
+
+              // Buttons row
+              Row(
+                children: [
+                  // Cancel button
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        backgroundColor: AppTheme.backgroundMedium,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(
+                          color: AppTheme.textLight,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(width: 12.w),
+
+                  // Leave button
+                  Expanded(
+                    child: TextButton(
+                      onPressed: () {
+                        Navigator.pop(context); // Close dialog
+                        Navigator.pop(context, currentBoard); // Go back
+                      },
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.symmetric(vertical: 16.h),
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: Text(
+                        'Leave',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
-        content: Text(
-          'You have unsaved changes. Would you like to save before leaving?',
-          style: TextStyle(
-            color: AppTheme.textMedium,
-            fontSize: 16.sp,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, currentBoard);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => VisionBoardHome()),
-              );
-            },
-            child: Text(
-              'Discard',
-              style: TextStyle(color: Colors.red),
-            ),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(
-              'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
-            ),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, currentBoard);
-              _saveBoard().then((_) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => VisionBoardHome()),
-                );
-              });
-            },
-            child: Text(
-              'Save',
-              style: TextStyle(color: AppTheme.visionBoardGradient[0]),
-            ),
-          ),
-        ],
       ),
     );
   }

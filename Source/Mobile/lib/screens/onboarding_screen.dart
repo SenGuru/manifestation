@@ -69,8 +69,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         setState(() {
           _featuresVisible = true;
         });
-        // Start subtle loop for floating effect
-        _mainController.repeat(reverse: true);
       }
     });
   }
@@ -126,34 +124,31 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   Widget _buildHeader() {
     return Column(
       children: [
-        // Logo with subtle floating
-        Transform.translate(
-          offset: Offset(0, _floatAnimation.value),
-          child: Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Container(
-              width: 100.w,
-              height: 100.h,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: AppTheme.affirmationGradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+        // Logo
+        Transform.scale(
+          scale: _scaleAnimation.value,
+          child: Container(
+            width: 100.w,
+            height: 100.h,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: AppTheme.affirmationGradient,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.affirmationGradient[0].withOpacity(0.3),
+                  blurRadius: 25.r,
+                  offset: Offset(0, 10.h),
                 ),
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.affirmationGradient[0].withOpacity(0.3),
-                    blurRadius: 25.r,
-                    offset: Offset(0, 10.h),
-                  ),
-                ],
-              ),
-              child: Icon(
-                Icons.auto_awesome,
-                color: AppTheme.white,
-                size: 50.sp,
-              ),
+              ],
+            ),
+            child: Icon(
+              Icons.auto_awesome,
+              color: AppTheme.white,
+              size: 50.sp,
             ),
           ),
         ),

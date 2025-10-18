@@ -32,6 +32,15 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
   bool isResizing = false;
   String? resizeHandle; // Which resize handle is being dragged
 
+  // Drag tracking
+  Offset? dragStartPosition; // Initial position when drag starts
+  Offset? elementStartPosition; // Element's position when drag starts
+
+  // Resize tracking
+  Offset? resizeStartPosition; // Initial position when resize starts
+  Size? elementStartSize; // Element's size when resize starts
+  Offset? elementStartPositionForResize; // Element's position when resize starts
+
   // Canvas zoom and pan
   double canvasScale = 1.0;
   Offset canvasOffset = Offset.zero;
@@ -102,25 +111,17 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       for (int index = 0; index < widget.board.elements.length; index++) {
         final element = widget.board.elements[index];
         if (element != null) {
-          children.add(
-            RepaintBoundary(
-              key: ValueKey('${element.id}_$index'), // Stable key
-              child: _buildElementSafely(element, index),
-            ),
-          );
+          children.add(_buildElementSafely(element, index));
         }
       }
-      
-      // Temporarily disable selection overlay to isolate ParentDataWidget issue
-      // TODO: Re-enable once we identify the source of the error
-      /*
-      if (selectedElementId != null && 
-          widget.selectedTool == VisionBoardTool.resize && 
+
+      // Selection overlay with resize handles
+      if (selectedElementId != null &&
+          widget.selectedTool == VisionBoardTool.resize &&
           !widget.hideSelectionIndicators) {
         children.add(_buildSelectionOverlaySafely());
       }
-      */
-      
+
       // Empty state
       if (widget.board.elements.isEmpty) {
         children.add(_buildEmptyState());
@@ -164,55 +165,58 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       final safeHeight = element.size.height.isFinite ? element.size.height.clamp(10.0, 800.0) : 100.0;
       
       return Positioned(
+        key: ValueKey(element.id),
         left: safeLeft,
         top: safeTop,
         width: safeWidth,
         height: safeHeight,
-        child: GestureDetector(
-          onTap: () {
-            try {
-              _onElementTap(element);
-            } catch (e) {
-              print('❌ Error in element tap: $e');
-            }
-          },
-          onPanStart: (details) {
-            try {
-              _onElementPanStart(element, details);
-            } catch (e) {
-              print('❌ Error in element pan start: $e');
-            }
-          },
-          onPanUpdate: (details) {
-            try {
-              _onElementPanUpdate(element, details);
-            } catch (e) {
-              print('❌ Error in element pan update: $e');
-            }
-          },
-          onPanEnd: (details) {
-            try {
-              _onElementPanEnd(element, details);
-            } catch (e) {
-              print('❌ Error in element pan end: $e');
-            }
-          },
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            width: safeWidth,
-            height: safeHeight,
-            padding: EdgeInsets.all(2.w),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.r),
-              border: _shouldShowElementBorder(element) 
-                  ? Border.all(
-                      color: _getElementBorderColor(element),
-                      width: _getBorderWidth(element),
-                    ) 
-                  : null,
-              boxShadow: _getElementShadow(element, false),
+        child: RepaintBoundary(
+          child: GestureDetector(
+            onTap: () {
+              try {
+                _onElementTap(element);
+              } catch (e) {
+                print('❌ Error in element tap: $e');
+              }
+            },
+            onPanStart: (details) {
+              try {
+                _onElementPanStart(element, details);
+              } catch (e) {
+                print('❌ Error in element pan start: $e');
+              }
+            },
+            onPanUpdate: (details) {
+              try {
+                _onElementPanUpdate(element, details);
+              } catch (e) {
+                print('❌ Error in element pan update: $e');
+              }
+            },
+            onPanEnd: (details) {
+              try {
+                _onElementPanEnd(element, details);
+              } catch (e) {
+                print('❌ Error in element pan end: $e');
+              }
+            },
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              width: safeWidth,
+              height: safeHeight,
+              padding: EdgeInsets.all(2.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                border: _shouldShowElementBorder(element)
+                    ? Border.all(
+                        color: _getElementBorderColor(element),
+                        width: _getBorderWidth(element),
+                      )
+                    : null,
+                boxShadow: _getElementShadow(element, false),
+              ),
+              child: _buildElementContent(element),
             ),
-            child: _buildElementContent(element),
           ),
         ),
       );
@@ -760,89 +764,102 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
 
   // Resize handling
   void _onResizeStart(String handleId, DragStartDetails details) {
+    if (selectedElementId == null) return;
+
+    final selectedElement = widget.board.elements.firstWhere(
+      (e) => e.id == selectedElementId,
+      orElse: () => widget.board.elements.first,
+    );
+
     setState(() {
       isResizing = true;
       resizeHandle = handleId;
+      resizeStartPosition = details.localPosition;
+      elementStartSize = selectedElement.size;
+      elementStartPositionForResize = selectedElement.position;
     });
   }
 
   void _onResizeUpdate(String handleId, DragUpdateDetails details) {
-    if (!isResizing || selectedElementId == null) return;
+    if (!isResizing || selectedElementId == null || resizeStartPosition == null ||
+        elementStartSize == null || elementStartPositionForResize == null) return;
 
     final selectedElement = widget.board.elements.firstWhere((e) => e.id == selectedElementId);
-    final delta = details.delta;
-    
-    Size newSize = selectedElement.size;
-    Offset newPosition = selectedElement.position;
+
+    // Calculate total offset from start
+    final totalOffset = details.localPosition - resizeStartPosition!;
+
+    Size newSize = elementStartSize!;
+    Offset newPosition = elementStartPositionForResize!;
 
     // Calculate new size and position based on which handle is being dragged
     switch (handleId) {
       case 'top-left':
         newSize = Size(
-          (selectedElement.size.width - delta.dx).clamp(50.w, double.infinity),
-          (selectedElement.size.height - delta.dy).clamp(50.h, double.infinity),
+          (elementStartSize!.width - totalOffset.dx).clamp(50.w, double.infinity),
+          (elementStartSize!.height - totalOffset.dy).clamp(50.h, double.infinity),
         );
         newPosition = Offset(
-          selectedElement.position.dx + (selectedElement.size.width - newSize.width),
-          selectedElement.position.dy + (selectedElement.size.height - newSize.height),
+          elementStartPositionForResize!.dx + (elementStartSize!.width - newSize.width),
+          elementStartPositionForResize!.dy + (elementStartSize!.height - newSize.height),
         );
         break;
       case 'top-right':
         newSize = Size(
-          (selectedElement.size.width + delta.dx).clamp(50.w, double.infinity),
-          (selectedElement.size.height - delta.dy).clamp(50.h, double.infinity),
+          (elementStartSize!.width + totalOffset.dx).clamp(50.w, double.infinity),
+          (elementStartSize!.height - totalOffset.dy).clamp(50.h, double.infinity),
         );
         newPosition = Offset(
-          selectedElement.position.dx,
-          selectedElement.position.dy + (selectedElement.size.height - newSize.height),
+          elementStartPositionForResize!.dx,
+          elementStartPositionForResize!.dy + (elementStartSize!.height - newSize.height),
         );
         break;
       case 'bottom-left':
         newSize = Size(
-          (selectedElement.size.width - delta.dx).clamp(50.w, double.infinity),
-          (selectedElement.size.height + delta.dy).clamp(50.h, double.infinity),
+          (elementStartSize!.width - totalOffset.dx).clamp(50.w, double.infinity),
+          (elementStartSize!.height + totalOffset.dy).clamp(50.h, double.infinity),
         );
         newPosition = Offset(
-          selectedElement.position.dx + (selectedElement.size.width - newSize.width),
-          selectedElement.position.dy,
+          elementStartPositionForResize!.dx + (elementStartSize!.width - newSize.width),
+          elementStartPositionForResize!.dy,
         );
         break;
       case 'bottom-right':
         newSize = Size(
-          (selectedElement.size.width + delta.dx).clamp(50.w, double.infinity),
-          (selectedElement.size.height + delta.dy).clamp(50.h, double.infinity),
+          (elementStartSize!.width + totalOffset.dx).clamp(50.w, double.infinity),
+          (elementStartSize!.height + totalOffset.dy).clamp(50.h, double.infinity),
         );
         break;
       case 'top-center':
         newSize = Size(
-          selectedElement.size.width,
-          (selectedElement.size.height - delta.dy).clamp(50.h, double.infinity),
+          elementStartSize!.width,
+          (elementStartSize!.height - totalOffset.dy).clamp(50.h, double.infinity),
         );
         newPosition = Offset(
-          selectedElement.position.dx,
-          selectedElement.position.dy + (selectedElement.size.height - newSize.height),
+          elementStartPositionForResize!.dx,
+          elementStartPositionForResize!.dy + (elementStartSize!.height - newSize.height),
         );
         break;
       case 'bottom-center':
         newSize = Size(
-          selectedElement.size.width,
-          (selectedElement.size.height + delta.dy).clamp(50.h, double.infinity),
+          elementStartSize!.width,
+          (elementStartSize!.height + totalOffset.dy).clamp(50.h, double.infinity),
         );
         break;
       case 'left-center':
         newSize = Size(
-          (selectedElement.size.width - delta.dx).clamp(50.w, double.infinity),
-          selectedElement.size.height,
+          (elementStartSize!.width - totalOffset.dx).clamp(50.w, double.infinity),
+          elementStartSize!.height,
         );
         newPosition = Offset(
-          selectedElement.position.dx + (selectedElement.size.width - newSize.width),
-          selectedElement.position.dy,
+          elementStartPositionForResize!.dx + (elementStartSize!.width - newSize.width),
+          elementStartPositionForResize!.dy,
         );
         break;
       case 'right-center':
         newSize = Size(
-          (selectedElement.size.width + delta.dx).clamp(50.w, double.infinity),
-          selectedElement.size.height,
+          (elementStartSize!.width + totalOffset.dx).clamp(50.w, double.infinity),
+          elementStartSize!.height,
         );
         break;
     }
@@ -854,37 +871,60 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
     setState(() {
       isResizing = false;
       resizeHandle = null;
+      resizeStartPosition = null;
+      elementStartSize = null;
+      elementStartPositionForResize = null;
     });
   }
 
   void _onElementPanStart(VisionBoardElement element, DragStartDetails details) {
-    // Movement is always available - just don't start drag for delete/resize tools
-    // unless the element is already selected
-    bool canStartDrag = true;
-    
-    if (widget.selectedTool == VisionBoardTool.delete) {
-      // Don't allow dragging when delete tool is active
-      canStartDrag = false;
-    } else if (widget.selectedTool == VisionBoardTool.resize && selectedElementId != element.id) {
-      // Don't allow dragging unselected elements when resize tool is active
-      canStartDrag = false;
+    // Explicitly allow dragging for select, move, and rotate tools
+    // Block dragging for delete tool
+    // For resize tool, only allow dragging if element is already selected
+    bool canStartDrag = false;
+
+    switch (widget.selectedTool) {
+      case VisionBoardTool.select:
+      case VisionBoardTool.move:
+      case VisionBoardTool.rotate:
+        canStartDrag = true;
+        break;
+      case VisionBoardTool.resize:
+        canStartDrag = (selectedElementId == element.id);
+        break;
+      case VisionBoardTool.delete:
+        canStartDrag = false;
+        break;
     }
-    
+
     if (canStartDrag) {
       setState(() {
         isDragging = true;
         draggingElementId = element.id;
         selectedElementId = element.id; // Select the element being dragged
+        dragStartPosition = details.localPosition; // Store where the drag started
+        elementStartPosition = element.position; // Store element's original position
       });
     }
   }
 
   void _onElementPanUpdate(VisionBoardElement element, DragUpdateDetails details) {
     // Only update position if we're in drag mode
-    if (isDragging && draggingElementId == element.id) {
-      final delta = details.delta;
-      final newPosition = element.position + delta;
-      _updateElementPosition(element, newPosition);
+    if (isDragging && draggingElementId == element.id && elementStartPosition != null && dragStartPosition != null) {
+      // Calculate the total offset from where we started dragging
+      final currentDragPosition = details.localPosition;
+      final totalOffset = currentDragPosition - dragStartPosition!;
+
+      // Apply the total offset to the element's original starting position
+      final newPosition = elementStartPosition! + totalOffset;
+
+      // Get the current element to update
+      final currentElement = widget.board.elements.firstWhere(
+        (e) => e.id == element.id,
+        orElse: () => element,
+      );
+
+      _updateElementPosition(currentElement, newPosition);
     }
   }
 
@@ -893,6 +933,8 @@ class _VisionBoardCanvasState extends State<VisionBoardCanvas> {
       setState(() {
         isDragging = false;
         draggingElementId = null;
+        dragStartPosition = null;
+        elementStartPosition = null;
       });
     }
   }

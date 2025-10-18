@@ -40,5 +40,13 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Mistel needs access to your photo library to add images to your vision boards.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Mistel needs permission to save vision board images to your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Mistel needs access to your camera to capture photos for your vision boards.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mistel uses your microphone for voice-guided affirmations and meditation sessions.</string>
 </dict>
 </plist>

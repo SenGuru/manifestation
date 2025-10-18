@@ -13,10 +13,12 @@ class SubscriptionService {
   static const String _premiumKey = 'is_premium_user';
   static const String _subscriptionExpiryKey = 'subscription_expiry';
   static const String _lastCheckKey = 'last_premium_check';
+  static const String _premiumUserIdKey = 'premium_user_id';
   
   bool _isPremium = false;
   DateTime? _subscriptionExpiry;
   DateTime? _lastServerCheck;
+  int? _premiumUserId;
   
   Manifestation? _apiClient;
   UnifiedAuthService? _authService;
@@ -75,28 +77,49 @@ class SubscriptionService {
   Future<void> _loadSubscriptionStatus() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      _isPremium = prefs.getBool(_premiumKey) ?? false;
       
-      final expiryString = prefs.getString(_subscriptionExpiryKey);
-      if (expiryString != null) {
-        _subscriptionExpiry = DateTime.parse(expiryString);
+      // Get current user ID from auth service
+      final currentUserId = _authService?.userId;
+      final storedPremiumUserId = prefs.getInt(_premiumUserIdKey);
+      
+      // Check if the stored premium status belongs to the current user
+      if (currentUserId != null && storedPremiumUserId != null && currentUserId == storedPremiumUserId) {
+        _isPremium = prefs.getBool(_premiumKey) ?? false;
+        _premiumUserId = storedPremiumUserId;
         
-        // Check if subscription has expired
-        if (_subscriptionExpiry != null && _subscriptionExpiry!.isBefore(DateTime.now())) {
-          _isPremium = false;
-          await _saveSubscriptionStatus();
+        final expiryString = prefs.getString(_subscriptionExpiryKey);
+        if (expiryString != null) {
+          _subscriptionExpiry = DateTime.parse(expiryString);
+          
+          // Check if subscription has expired
+          if (_subscriptionExpiry != null && _subscriptionExpiry!.isBefore(DateTime.now())) {
+            _isPremium = false;
+            await _saveSubscriptionStatus();
+          }
+        }
+        
+        final lastCheckString = prefs.getString(_lastCheckKey);
+        if (lastCheckString != null) {
+          _lastServerCheck = DateTime.parse(lastCheckString);
+        }
+        
+        print('📱 Subscription Service initialized for user $currentUserId:');
+        print('   Is Premium: $_isPremium');
+        print('   Expiry: $_subscriptionExpiry');
+        print('   Last Server Check: $_lastServerCheck');
+      } else {
+        // Different user or no user logged in, reset premium status
+        print('📱 Different user detected (current: $currentUserId, stored: $storedPremiumUserId), resetting premium status');
+        _isPremium = false;
+        _subscriptionExpiry = null;
+        _lastServerCheck = null;
+        _premiumUserId = currentUserId;
+        
+        // Clear the stored premium data since it belongs to a different user
+        if (currentUserId != storedPremiumUserId) {
+          await clearPremiumStatus();
         }
       }
-      
-      final lastCheckString = prefs.getString(_lastCheckKey);
-      if (lastCheckString != null) {
-        _lastServerCheck = DateTime.parse(lastCheckString);
-      }
-      
-      print('📱 Subscription Service initialized:');
-      print('   Is Premium: $_isPremium');
-      print('   Expiry: $_subscriptionExpiry');
-      print('   Last Server Check: $_lastServerCheck');
     } catch (e) {
       print('❌ Error loading subscription status: $e');
       _isPremium = false;
@@ -108,6 +131,13 @@ class SubscriptionService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_premiumKey, _isPremium);
+      
+      // Save the user ID associated with this premium status
+      final currentUserId = _authService?.userId;
+      if (currentUserId != null) {
+        await prefs.setInt(_premiumUserIdKey, currentUserId);
+        _premiumUserId = currentUserId;
+      }
       
       if (_subscriptionExpiry != null) {
         await prefs.setString(_subscriptionExpiryKey, _subscriptionExpiry!.toIso8601String());
@@ -346,6 +376,47 @@ class SubscriptionService {
         'meditationDesignsPerCategory': maxFreeMeditationDesignsPerCategory,
       }
     };
+  }
+  
+  /// Clear premium status (used on logout)
+  Future<void> clearPremiumStatus() async {
+    try {
+      print('🧹 Clearing premium status for logout...');
+      
+      // Reset in-memory state
+      _isPremium = false;
+      _subscriptionExpiry = null;
+      _lastServerCheck = null;
+      _premiumUserId = null;
+      
+      // Clear from SharedPreferences
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_premiumKey);
+      await prefs.remove(_subscriptionExpiryKey);
+      await prefs.remove(_lastCheckKey);
+      await prefs.remove(_premiumUserIdKey);
+      
+      print('✅ Premium status cleared');
+    } catch (e) {
+      print('❌ Error clearing premium status: $e');
+    }
+  }
+  
+  /// Refresh premium status for a new user login
+  Future<void> refreshForNewUser() async {
+    try {
+      print('🔄 Refreshing subscription service for new user...');
+      
+      // Reload subscription status which will check if it belongs to current user
+      await _loadSubscriptionStatus();
+      
+      // Check with server for the new user's premium status
+      await checkPremiumStatusFromServer();
+      
+      print('✅ Subscription service refreshed for new user');
+    } catch (e) {
+      print('❌ Error refreshing subscription service: $e');
+    }
   }
 }
 

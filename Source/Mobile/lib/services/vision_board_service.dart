@@ -104,11 +104,14 @@ class VisionBoardService {
   Manifestation? _apiClient;
   UnifiedAuthService? _authService;
   bool _isInitialized = false;
-  
+
+  // Cache duration - expire cached vision boards after 30 minutes
+  static const Duration _cacheDuration = Duration(minutes: 30);
+
   // LRU cache for vision board XML content (max 50 items, ~5MB estimated)
   final LRUCache<String, String> _memoryCache = LRUCache<String, String>(50);
   final LRUCache<String, DateTime> _cacheTimestamps = LRUCache<String, DateTime>(50);
-  
+
   // LRU cache for picture metadata (max 100 items)
   final LRUCache<int, List<dynamic>> _picturesCache = LRUCache<int, List<dynamic>>(100);
   final LRUCache<int, DateTime> _picturesCacheTimestamps = LRUCache<int, DateTime>(100);
@@ -139,12 +142,48 @@ class VisionBoardService {
   
   /// Get cache statistics
   Map<String, dynamic> getCacheStats() {
+    // Calculate expired entries
+    final now = DateTime.now();
+    int expiredCount = 0;
+    for (final key in _cacheTimestamps.keys) {
+      final timestamp = _cacheTimestamps.get(key);
+      if (timestamp != null && now.difference(timestamp) >= _cacheDuration) {
+        expiredCount++;
+      }
+    }
+
     return {
       'cachedBoards': _memoryCache.length,
+      'expiredBoards': expiredCount,
       'totalCacheSize': _memoryCache.values.fold(0, (sum, xml) => sum + xml.length),
       'oldestCache': _cacheTimestamps.values.isEmpty ? null : _cacheTimestamps.values.reduce((a, b) => a.isBefore(b) ? a : b),
       'newestCache': _cacheTimestamps.values.isEmpty ? null : _cacheTimestamps.values.reduce((a, b) => a.isAfter(b) ? a : b),
+      'cacheDuration': '${_cacheDuration.inMinutes} minutes',
     };
+  }
+
+  /// Clear expired cache entries
+  void clearExpiredCache() {
+    final now = DateTime.now();
+    final keysToRemove = <String>[];
+
+    // Find all expired entries
+    for (final key in _cacheTimestamps.keys) {
+      final timestamp = _cacheTimestamps.get(key);
+      if (timestamp != null && now.difference(timestamp) >= _cacheDuration) {
+        keysToRemove.add(key);
+      }
+    }
+
+    // Remove expired entries
+    for (final key in keysToRemove) {
+      _memoryCache.remove(key);
+      _cacheTimestamps.remove(key);
+    }
+
+    if (keysToRemove.isNotEmpty) {
+      print('🗑️ Cleared ${keysToRemove.length} expired cache entries');
+    }
   }
   
   /// Public method to get picture ID for a vision board (for external use)
@@ -185,19 +224,19 @@ class VisionBoardService {
   Future<VisionBoardResult<int?>> createVisionBoard(VisionBoard visionBoard, {Map<String, dynamic>? thumbnailInfo}) async {
     try {
       print('📤 Creating vision board "${visionBoard.title}" on server...');
-      
+
       // Debug title before processing
       print('🔍 DEBUG: Raw title: "${visionBoard.title}"');
       print('🔍 DEBUG: Title length: ${visionBoard.title.length}');
       print('🔍 DEBUG: Title bytes: ${utf8.encode(visionBoard.title).length}');
-      
+
       if (_apiClient == null || _authService == null) {
-        return VisionBoardResult.failure(message: 'Service not initialized');
+        return VisionBoardResult.failure(message: 'Vision Board service is not ready. Please restart the app.');
       }
-      
+
       final userId = await _authService!.getUserId();
       if (userId == null) {
-        return VisionBoardResult.failure(message: 'User not authenticated');
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
       }
       
       // Generate XML content
@@ -338,7 +377,16 @@ class VisionBoardService {
       
     } catch (e) {
       print('❌ Error creating vision board: $e');
-      return VisionBoardResult.failure(message: 'Failed to create vision board: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') || errorStr.contains('failed host lookup')) {
+        return VisionBoardResult.failure(message: 'No internet connection. Please check your network and try again.');
+      } else if (errorStr.contains('timeout')) {
+        return VisionBoardResult.failure(message: 'Server is not responding. Please try again later.');
+      } else if (errorStr.contains('401') || errorStr.contains('unauthorized')) {
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
+      } else {
+        return VisionBoardResult.failure(message: 'Could not save vision board. Please try again.');
+      }
     }
   }
   
@@ -348,18 +396,18 @@ class VisionBoardService {
   Future<VisionBoardResult<bool>> updateVisionBoard(VisionBoard visionBoard, {int? pictureId, Map<String, dynamic>? thumbnailInfo}) async {
     try {
       if (_apiClient == null || _authService == null) {
-        return VisionBoardResult.failure(message: 'Service not initialized');
+        return VisionBoardResult.failure(message: 'Vision Board service is not ready. Please restart the app.');
       }
-      
+
       final userId = await _authService!.getUserId();
       if (userId == null) {
-        return VisionBoardResult.failure(message: 'User not authenticated');
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
       }
       
       // Use provided picture ID or lookup by vision board ID
       final finalPictureId = pictureId ?? await _getPictureIdByVisionBoardId(visionBoard.id, userId);
       if (finalPictureId == null) {
-        return VisionBoardResult.failure(message: 'Vision board not found on server');
+        return VisionBoardResult.failure(message: 'Vision board not found. It may have been deleted or moved.');
       }
       
       // Generate updated XML content
@@ -488,7 +536,16 @@ class VisionBoardService {
       
     } catch (e) {
       print('❌ Error updating vision board: $e');
-      return VisionBoardResult.failure(message: 'Failed to update vision board: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') || errorStr.contains('failed host lookup')) {
+        return VisionBoardResult.failure(message: 'No internet connection. Changes saved locally, will sync when online.');
+      } else if (errorStr.contains('timeout')) {
+        return VisionBoardResult.failure(message: 'Server is not responding. Please try again later.');
+      } else if (errorStr.contains('401') || errorStr.contains('unauthorized')) {
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
+      } else {
+        return VisionBoardResult.failure(message: 'Could not update vision board. Please try again.');
+      }
     }
   }
   
@@ -498,12 +555,12 @@ class VisionBoardService {
   Future<VisionBoardResult<List<VisionBoard>>> getUserVisionBoards() async {
     try {
       if (_apiClient == null || _authService == null) {
-        return VisionBoardResult.failure(message: 'Service not initialized');
+        return VisionBoardResult.failure(message: 'Vision Board service is not ready. Please restart the app.');
       }
-      
+
       final userId = await _authService!.getUserId();
       if (userId == null) {
-        return VisionBoardResult.failure(message: 'User not authenticated');
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
       }
       
       print('📥 Getting vision board list for user: $userId');
@@ -514,8 +571,16 @@ class VisionBoardService {
       );
       
       if (!response.isSuccessful || response.body?.isSuccess != true) {
+        final statusCode = response.statusCode;
+        if (statusCode == 401 || statusCode == 403) {
+          return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
+        } else if (statusCode == 404) {
+          return VisionBoardResult.failure(message: 'No vision boards found. Create your first one!');
+        } else if (statusCode >= 500) {
+          return VisionBoardResult.failure(message: 'Server error. Our team has been notified. Please try again later.');
+        }
         return VisionBoardResult.failure(
-          message: response.body?.errorHolder?.toString() ?? 'Failed to get vision boards'
+          message: response.body?.errorHolder?.toString() ?? 'Could not load vision boards. Please try again.'
         );
       }
       
@@ -551,7 +616,16 @@ class VisionBoardService {
       
     } catch (e) {
       print('❌ Error getting vision boards: $e');
-      return VisionBoardResult.failure(message: 'Failed to get vision boards: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') || errorStr.contains('failed host lookup')) {
+        return VisionBoardResult.failure(message: 'No internet connection. Please check your network.');
+      } else if (errorStr.contains('timeout')) {
+        return VisionBoardResult.failure(message: 'Request timed out. Please try again.');
+      } else if (errorStr.contains('401') || errorStr.contains('unauthorized')) {
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
+      } else {
+        return VisionBoardResult.failure(message: 'Could not load vision boards. Please check your connection and try again.');
+      }
     }
   }
   
@@ -559,12 +633,12 @@ class VisionBoardService {
   Future<VisionBoardResult<VisionBoard?>> getVisionBoard(String visionBoardId) async {
     try {
       if (_apiClient == null || _authService == null) {
-        return VisionBoardResult.failure(message: 'Service not initialized');
+        return VisionBoardResult.failure(message: 'Vision Board service is not ready. Please restart the app.');
       }
-      
+
       final userId = await _authService!.getUserId();
       if (userId == null) {
-        return VisionBoardResult.failure(message: 'User not authenticated');
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
       }
       
       print('📥 Getting full vision board content for ID: $visionBoardId');
@@ -573,18 +647,27 @@ class VisionBoardService {
       final cacheKey = '${userId}_$visionBoardId';
       final cachedXml = _memoryCache.get(cacheKey);
       final cacheTime = _cacheTimestamps.get(cacheKey);
-      
+
       if (cachedXml != null && cacheTime != null) {
-        print('💾 Found cached XML content (${cachedXml.length} chars, cached at ${cacheTime.toIso8601String()})');
-        
-        // Parse cached XML content
-        final visionBoard = await _parseVisionBoardXML(cachedXml);
-        if (visionBoard != null) {
-          print('✅ Successfully parsed cached vision board with ${visionBoard.elements.length} elements');
-          return VisionBoardResult.success(
-            data: visionBoard,
-            message: 'Vision board retrieved from cache'
-          );
+        // Check if cache is still valid (not expired)
+        final cacheAge = DateTime.now().difference(cacheTime);
+        if (cacheAge < _cacheDuration) {
+          print('💾 Found valid cached XML content (${cachedXml.length} chars, age: ${cacheAge.inMinutes}m)');
+
+          // Parse cached XML content
+          final visionBoard = await _parseVisionBoardXML(cachedXml);
+          if (visionBoard != null) {
+            print('✅ Successfully parsed cached vision board with ${visionBoard.elements.length} elements');
+            return VisionBoardResult.success(
+              data: visionBoard,
+              message: 'Vision board retrieved from cache'
+            );
+          }
+        } else {
+          print('🗑️ Cache expired (age: ${cacheAge.inMinutes}m), will fetch fresh data');
+          // Clear expired cache entry
+          _memoryCache.remove(cacheKey);
+          _cacheTimestamps.remove(cacheKey);
         }
       }
       
@@ -606,14 +689,22 @@ class VisionBoardService {
       
       if (!response.isSuccessful) {
         print('❌ Failed to download vision board file: ${response.statusCode}');
-        return VisionBoardResult.failure(message: 'Failed to download vision board content');
+        final statusCode = response.statusCode;
+        if (statusCode == 404) {
+          return VisionBoardResult.failure(message: 'Vision board not found. It may have been deleted.');
+        } else if (statusCode == 401 || statusCode == 403) {
+          return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
+        } else if (statusCode >= 500) {
+          return VisionBoardResult.failure(message: 'Server error. Please try again later.');
+        }
+        return VisionBoardResult.failure(message: 'Could not load vision board. Please try again.');
       }
-      
+
       // Get the XML content from the response
       final xmlContent = response.bodyString;
       if (xmlContent.trim().isEmpty) {
         print('❌ Empty response from download endpoint');
-        return VisionBoardResult.failure(message: 'Empty vision board content');
+        return VisionBoardResult.failure(message: 'Vision board is empty or corrupted. Please recreate it.');
       }
       
       print('✅ Downloaded XML content (${xmlContent.length} chars)');
@@ -640,12 +731,21 @@ class VisionBoardService {
           message: 'Vision board retrieved successfully'
         );
       } else {
-        return VisionBoardResult.failure(message: 'Failed to parse vision board XML');
+        return VisionBoardResult.failure(message: 'Vision board data is corrupted. Please try recreating it.');
       }
-      
+
     } catch (e) {
       print('❌ Error getting vision board: $e');
-      return VisionBoardResult.failure(message: 'Failed to get vision board: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') || errorStr.contains('failed host lookup')) {
+        return VisionBoardResult.failure(message: 'No internet connection. Please check your network.');
+      } else if (errorStr.contains('timeout')) {
+        return VisionBoardResult.failure(message: 'Request timed out. Please try again.');
+      } else if (errorStr.contains('formatexception') || errorStr.contains('xmlexception')) {
+        return VisionBoardResult.failure(message: 'Vision board data is corrupted. Please try recreating it.');
+      } else {
+        return VisionBoardResult.failure(message: 'Could not load vision board. Please try again.');
+      }
     }
   }
   
@@ -658,21 +758,21 @@ class VisionBoardService {
   // ========================= DELETE VISION BOARD =========================
   
   /// Delete vision board from server
-  Future<VisionBoardResult<bool>> deleteVisionBoard(String visionBoardId) async {  
+  Future<VisionBoardResult<bool>> deleteVisionBoard(String visionBoardId) async {
     try {
       if (_apiClient == null || _authService == null) {
-        return VisionBoardResult.failure(message: 'Service not initialized');
+        return VisionBoardResult.failure(message: 'Vision Board service is not ready. Please restart the app.');
       }
-      
+
       final userId = await _authService!.getUserId();
       if (userId == null) {
-        return VisionBoardResult.failure(message: 'User not authenticated');
+        return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
       }
       
       // First, get the picture ID for this vision board
       final pictureId = await _getPictureIdByVisionBoardId(visionBoardId, userId);
       if (pictureId == null) {
-        return VisionBoardResult.failure(message: 'Vision board not found on server');
+        return VisionBoardResult.failure(message: 'Vision board not found. It may have already been deleted.');
       }
       
       print('🗑️ Deleting vision board $visionBoardId (Picture ID: $pictureId)');
@@ -683,19 +783,38 @@ class VisionBoardService {
       
       if (response.isSuccessful && response.body?.isSuccess == true) {
         print('✅ Vision board deleted successfully');
+        // Clear cache after deletion
+        clearCacheForBoard(visionBoardId, userId);
+        invalidatePicturesCache(userId);
+
         return VisionBoardResult.success(
           data: true,
           message: 'Vision board deleted successfully'
         );
       } else {
-        final errorMessage = response.body?.errorHolder?.toString() ?? 
-                            'Failed to delete vision board';
+        final statusCode = response.statusCode;
+        if (statusCode == 404) {
+          return VisionBoardResult.failure(message: 'Vision board already deleted or not found.');
+        } else if (statusCode == 401 || statusCode == 403) {
+          return VisionBoardResult.failure(message: 'Your session has expired. Please log in again.');
+        } else if (statusCode >= 500) {
+          return VisionBoardResult.failure(message: 'Server error. Please try again later.');
+        }
+        final errorMessage = response.body?.errorHolder?.toString() ??
+                            'Could not delete vision board. Please try again.';
         return VisionBoardResult.failure(message: errorMessage);
       }
-      
+
     } catch (e) {
       print('❌ Error deleting vision board: $e');
-      return VisionBoardResult.failure(message: 'Failed to delete vision board: $e');
+      final errorStr = e.toString().toLowerCase();
+      if (errorStr.contains('socketexception') || errorStr.contains('failed host lookup')) {
+        return VisionBoardResult.failure(message: 'No internet connection. Please check your network.');
+      } else if (errorStr.contains('timeout')) {
+        return VisionBoardResult.failure(message: 'Request timed out. Please try again.');
+      } else {
+        return VisionBoardResult.failure(message: 'Could not delete vision board. Please try again.');
+      }
     }
   }
   
@@ -705,52 +824,62 @@ class VisionBoardService {
   Future<int?> _getPictureIdByVisionBoardId(String visionBoardId, int userId) async {
     try {
       print('🔍 Looking for picture ID for vision board: $visionBoardId');
-      
-      // Check cache first (cache for 30 minutes or until explicit invalidation)
-      final cacheExpiry = DateTime.now().subtract(Duration(minutes: 30));
+
+      // Check cache first (using same cache duration as vision boards)
       final cachedTimestamp = _picturesCacheTimestamps.get(userId);
-      
-      List<dynamic> pictures;
-      
       final cachedPictures = _picturesCache.get(userId);
-      if (cachedTimestamp != null && cachedTimestamp.isAfter(cacheExpiry) && cachedPictures != null) {
-        // Use cached data
-        pictures = cachedPictures;
-        print('📋 Using cached pictures list (${pictures.length} pictures)');
-      } else {
-        // Fetch from API
+
+      List<dynamic>? pictures;
+
+      // Try to use cached data if valid
+      if (cachedTimestamp != null && cachedPictures != null) {
+        final cacheAge = DateTime.now().difference(cachedTimestamp);
+        if (cacheAge < _cacheDuration) {
+          // Cache is still valid, use it
+          pictures = cachedPictures;
+          print('📋 Using cached pictures list (${pictures.length} pictures, age: ${cacheAge.inMinutes}m)');
+        } else {
+          print('🗑️ Pictures cache expired (age: ${cacheAge.inMinutes}m), will fetch fresh data');
+          // Clear expired cache
+          _picturesCache.remove(userId);
+          _picturesCacheTimestamps.remove(userId);
+        }
+      }
+
+      // If we didn't get pictures from cache, fetch from API
+      if (pictures == null) {
         final response = await _apiClient!.apiV1ManifestGetvisionboardpicturesGet(
           userId: userId,
         );
-        
+
         if (response.isSuccessful && response.body?.isSuccess == true) {
           pictures = response.body?.model ?? [];
-          
+
           // Cache the results
           _picturesCache.put(userId, pictures);
           _picturesCacheTimestamps.put(userId, DateTime.now());
-          
+
           print('🔍 Found ${pictures.length} pictures, cached for future use');
         } else {
           print('❌ Failed to get pictures list: ${response.body?.errorHolder}');
           return null;
         }
       }
-      
+
       // Find the picture with matching location (vision board ID)
       for (final picture in pictures) {
         print('🔍 Checking picture: ID=${picture.visionBoardPictureId}, location=${picture.location}, fileName=${picture.fileName}');
-        
+
         // Check multiple possible matches
-        if ((picture.location == visionBoardId || 
-             picture.fileName?.contains(visionBoardId) == true) && 
+        if ((picture.location == visionBoardId ||
+             picture.fileName?.contains(visionBoardId) == true) &&
             picture.fileName?.endsWith('.xml') == true &&
             picture.isDeleted != true) {
           print('✅ Found matching picture ID: ${picture.visionBoardPictureId}');
           return picture.visionBoardPictureId;
         }
       }
-      
+
       print('⚠️ No matching picture found for vision board: $visionBoardId');
       return null;
     } catch (e) {
@@ -771,8 +900,10 @@ class VisionBoardService {
       if (metadata.visionBoardPictureId != null) {
         // Use the downloadvisionboardpicturethumbnail endpoint
         final baseUrl = _apiClient!.client.baseUrl;
-        thumbnailUrl = '$baseUrl/api/v1/manifest/downloadvisionboardpicturethumbnail?id=${metadata.visionBoardPictureId}';
-        print('📸 Built thumbnail URL: $thumbnailUrl');
+        // Add timestamp to bust cache and force reload of updated thumbnails
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        thumbnailUrl = '$baseUrl/api/v1/manifest/downloadvisionboardpicturethumbnail?id=${metadata.visionBoardPictureId}&t=$timestamp';
+        print('📸 Built thumbnail URL with cache buster: $thumbnailUrl');
       }
       
       // Download the XML content to extract the real title and elements
@@ -862,8 +993,10 @@ class VisionBoardService {
       if (metadata.visionBoardPictureId != null) {
         // Use the downloadvisionboardpicturethumbnail endpoint
         final baseUrl = _apiClient!.client.baseUrl;
-        thumbnailUrl = '$baseUrl/api/v1/manifest/downloadvisionboardpicturethumbnail?id=${metadata.visionBoardPictureId}';
-        print('📸 Built thumbnail URL: $thumbnailUrl');
+        // Add timestamp to bust cache and force reload of updated thumbnails
+        final timestamp = DateTime.now().millisecondsSinceEpoch;
+        thumbnailUrl = '$baseUrl/api/v1/manifest/downloadvisionboardpicturethumbnail?id=${metadata.visionBoardPictureId}&t=$timestamp';
+        print('📸 Built thumbnail URL with cache buster: $thumbnailUrl');
       }
       
       return VisionBoard(

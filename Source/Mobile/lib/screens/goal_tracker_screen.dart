@@ -33,6 +33,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   GoalCategory selectedCategory = GoalCategory.all;
   bool showCompletedGoals = true;
   bool _isLoading = false;
+  bool _hasError = false;
+  String? _errorMessage;
   
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
@@ -127,13 +129,15 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             
             // Goals list
             Expanded(
-              child: filteredGoals.isEmpty 
-                  ? _buildEmptyState()
-                  : RefreshIndicator(
-                      onRefresh: _loadGoals,
-                      color: AppTheme.goalTrackerGradient[0],
-                      child: _buildGoalsList(filteredGoals),
-                    ),
+              child: _hasError
+                  ? _buildErrorState()
+                  : filteredGoals.isEmpty
+                      ? _buildEmptyState()
+                      : RefreshIndicator(
+                          onRefresh: _loadGoals,
+                          color: AppTheme.goalTrackerGradient[0],
+                          child: _buildGoalsList(filteredGoals),
+                        ),
             ),
           ],
         ),
@@ -455,7 +459,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             ),
             SizedBox(height: 24.h),
             Text(
-              selectedCategory == GoalCategory.all 
+              selectedCategory == GoalCategory.all
                   ? 'No Goals Yet'
                   : 'No ${selectedCategory.displayName} Goals',
               style: TextStyle(
@@ -497,6 +501,82 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                     SizedBox(width: 8.w),
                     Text(
                       'Create Goal',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Goals',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadGoals,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.goalTrackerGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
@@ -570,6 +650,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     
     setState(() {
       _isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
 
     try {
@@ -723,14 +805,20 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         print('⚠️  Auto-association disabled due to server-side API issues with category validation');
       } else {
         print('❌ Failed to load goals from API: ${result.message}');
-        print('🔄 Falling back to hardcoded goals...');
-        await _loadHardcodedGoals();
+        setState(() {
+          _hasError = true;
+          _errorMessage = result.message ?? 'Failed to load goals from server';
+          goals = []; // Clear any old data
+        });
       }
     } catch (e, stackTrace) {
       print('❌ Exception loading goals: $e');
       print('📍 Stack trace: $stackTrace');
-      print('🔄 Falling back to hardcoded goals...');
-      await _loadHardcodedGoals();
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        goals = []; // Clear any old data
+      });
     } finally {
       setState(() {
         _isLoading = false;

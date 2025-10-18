@@ -82,10 +82,8 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
     try {
       await _analyticsService.initialize();
       await _audioService.initialize();
-      print('📊 Visual meditation analytics initialized');
-      print('🎵 Visual meditation audio initialized');
     } catch (e) {
-      print('❌ Error initializing visual meditation services: $e');
+      // Silently handle initialization errors
     }
   }
 
@@ -111,24 +109,21 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
 
   @override
   void dispose() {
-    print('🔄 dispose() called - _sessionStarted: $_sessionStarted, isSessionActive: $isSessionActive');
-    
     // Cancel timer to prevent double counting
     _meditationTimer?.cancel();
     _meditationTimer = null;
-    
+
     _sessionController.dispose();
     _backgroundController.dispose();
-    
+
     // End session tracking if active (but don't stop audio)
     if (_sessionStarted && isSessionActive) {
-      print('🔄 Disposing active session - ending tracking only');
       _endSessionTracking();
     }
-    
+
     // Don't dispose audio service here - let it continue playing
     // Only stop audio if user explicitly ended the session
-    
+
     super.dispose();
   }
 
@@ -179,47 +174,45 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         audioVolume = prefs.getDouble('visual_meditation_audio_volume') ?? 0.7;
       });
     } catch (e) {
-      print('Error loading visual meditation settings: $e');
+      // Silently handle load errors - will use defaults
     }
   }
 
   Future<void> _saveSettings() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      
+
       // Save visual type
       await prefs.setInt('visual_meditation_visual_type', selectedVisualType.index);
-      
+
       // Save duration
       await prefs.setInt('visual_meditation_duration', selectedDuration);
-      
+
       // Save intensity and size
       await prefs.setDouble('visual_meditation_intensity', visualIntensity);
       await prefs.setDouble('visual_meditation_size', visualSize);
-      
+
       // Save candle color
       await prefs.setInt('visual_meditation_candle_color', selectedCandleColor.index);
-      
+
       // Save moon phase
       await prefs.setInt('visual_meditation_moon_phase', selectedMoonPhase.index);
-      
+
       // Save nature pattern
       await prefs.setInt('visual_meditation_nature_pattern', selectedNaturePattern.index);
-      
+
       // Save geometric pattern
       await prefs.setInt('visual_meditation_geometric_pattern', selectedGeometricPattern.index);
-      
+
       // Save audio settings
       await prefs.setInt('visual_meditation_audio_type', selectedAudioType.index);
       await prefs.setDouble('visual_meditation_audio_volume', audioVolume);
     } catch (e) {
-      print('Error saving visual meditation settings: $e');
+      // Silently handle save errors
     }
   }
 
   void _startSession() async {
-    print('📊 Starting visual meditation session');
-    
     // Set session state and start immediately
     setState(() {
       isSessionActive = true;
@@ -227,30 +220,24 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
       remainingSeconds = selectedDuration * 60;
       _sessionStartTime = DateTime.now();
     });
-    
+
     // Start UI animations
     _backgroundController.forward();
-    
+
     // Start timer immediately - no delays, no complexity
     _startTimer();
-    
+
     // Start analytics tracking (async, don't wait)
     _startSessionTracking().catchError((e) {
-      print('⚠️ Analytics tracking failed: $e');
+      // Silently handle analytics errors
     });
-    
+
     // Start audio (async, don't wait)
     if (selectedAudioType != AudioType.none) {
-      _audioService.playAudio(selectedAudioType, volume: audioVolume).then((success) {
-        if (!success) {
-          print('⚠️ Audio failed to start, continuing session without audio');
-        }
-      }).catchError((e) {
-        print('⚠️ Audio error: $e');
+      _audioService.playAudio(selectedAudioType, volume: audioVolume).catchError((e) {
+        // Silently handle audio errors
       });
     }
-    
-    print('✅ Visual meditation session started - timer is running');
   }
   
   /// Start session tracking for visual meditation
@@ -270,21 +257,18 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         },
       );
       _sessionStarted = true;
-      print('📊 Visual meditation session tracking started');
     } catch (e) {
-      print('❌ Error starting visual meditation session tracking: $e');
+      // Silently handle tracking errors
     }
   }
 
   void _startTimer() {
-    print('🎯 Starting timer - ${remainingSeconds}s remaining');
-    
     // Cancel any existing timer
     _meditationTimer?.cancel();
-    
+
     // Start UI animation
     _sessionController.repeat();
-    
+
     // Start countdown timer
     _meditationTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (!mounted) {
@@ -292,7 +276,7 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         _meditationTimer = null;
         return;
       }
-      
+
       if (remainingSeconds > 0) {
         setState(() {
           remainingSeconds--;
@@ -303,25 +287,21 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         _endSession();
       }
     });
-    
-    print('✅ Timer started and counting down');
   }
 
   void _pauseSession() {
-    print('⏸️ Pausing session');
-    
     // Cancel timer first to prevent double counting
     _meditationTimer?.cancel();
     _meditationTimer = null;
-    
+
     setState(() {
       isPlaying = false;
     });
     _sessionController.stop();
-    
+
     // Pause audio
     _audioService.pauseAudio();
-    
+
     // Update session metadata
     if (_sessionStarted) {
       _analyticsService.updateSessionMetadata(
@@ -333,23 +313,19 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         },
       );
     }
-    
-    print('⏸️ Session paused - timer cancelled');
   }
 
   void _resumeSession() {
-    print('▶️ Resuming session');
-    
     setState(() {
       isPlaying = true;
     });
-    
+
     // Resume audio
     _audioService.resumeAudio();
-    
+
     // Start timer again
     _startTimer();
-    
+
     // Update session metadata
     if (_sessionStarted) {
       _analyticsService.updateSessionMetadata(
@@ -361,50 +337,43 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
         },
       );
     }
-    
-    print('▶️ Session resumed - timer restarted');
   }
 
   void _endSession() async {
-    print('🛑 _endSession called - Stack trace: ${StackTrace.current}');
-    
     if (!isSessionActive) {
-      print('🛑 Session already ended, skipping');
       return;
     }
-    
+
     // Cancel timer immediately to prevent double counting
     _meditationTimer?.cancel();
     _meditationTimer = null;
-    
+
     setState(() {
       isSessionActive = false;
       isPlaying = false;
     });
-    
+
     _sessionController.stop();
     _backgroundController.reverse();
-    
+
     // End meditation session audio properly
     await _audioService.endMeditationSession();
-    
+
     // End session tracking
     await _endSessionTracking();
-    
-    print('📊 Visual meditation session completed');
-    
+
     // Show completion dialog
     _showCompletionDialog();
   }
-  
+
   /// End session tracking for visual meditation
   Future<void> _endSessionTracking() async {
     if (_sessionStarted) {
       try {
-        final actualDuration = _sessionStartTime != null 
+        final actualDuration = _sessionStartTime != null
             ? DateTime.now().difference(_sessionStartTime!).inSeconds
             : selectedDuration * 60;
-            
+
         await _analyticsService.endSession(
           ActivityType.visualMeditation,
           additionalMetadata: {
@@ -415,9 +384,8 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           },
         );
         _sessionStarted = false;
-        print('📊 Visual meditation session tracking ended');
       } catch (e) {
-        print('❌ Error ending visual meditation session tracking: $e');
+        // Silently handle tracking errors
       }
     }
   }
@@ -1483,7 +1451,6 @@ class _VisualMeditationScreenState extends State<VisualMeditationScreen>
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              print('🛑 End session confirmed by user');
               _endSession();
             },
             child: Text(

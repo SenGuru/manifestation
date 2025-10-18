@@ -78,14 +78,19 @@ class DailyAffirmationsService {
   /// Get supported default categories from API
   Future<AffirmationResult<List<DefaultCategoryModel>>> getSupportedDefaultCategories() async {
     try {
+      print('📞 getSupportedDefaultCategories called');
       final response = await _apiClient.apiV1ManifestGetdefaultcategorysGet();
+
+      print('📞 getSupportedDefaultCategories response: status=${response.statusCode}, isSuccessful=${response.isSuccessful}, hasBody=${response.body != null}');
+      print('📞 Response body: ${response.bodyString}');
 
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
-        
+        print('📞 getSupportedDefaultCategories returnModel: isSuccess=${returnModel.isSuccess}, hasModel=${returnModel.model != null}, modelLength=${returnModel.model?.length ?? 0}');
+
         if (returnModel.isSuccess == true && returnModel.model != null) {
           print('🔍 Total default categories from API: ${returnModel.model!.length}');
-          
+
           // Filter to only include daily affirmation categories using proper enum
           final filteredCategories = returnModel.model!.where((category) {
             final isAffirmationCategory = category.predefinedCategoryTypeId == PredefinedCategoryTypes.dailyAffirmation;
@@ -94,22 +99,25 @@ class DailyAffirmationsService {
           }).toList();
 
           print('✅ Filtered daily affirmation categories: ${filteredCategories.length}');
-          
+
           return AffirmationResult.success(
             data: filteredCategories,
             message: 'Default categories loaded successfully',
           );
         } else {
+          print('❌ getSupportedDefaultCategories API returned isSuccess=false or null model');
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to load default categories',
           );
         }
       } else {
+        print('❌ getSupportedDefaultCategories network error: ${response.statusCode}');
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      print('❌ getSupportedDefaultCategories exception: $e');
       return AffirmationResult.failure(
         message: 'Error loading default categories: ${e.toString()}',
       );
@@ -121,29 +129,39 @@ class DailyAffirmationsService {
   /// Get user's custom categories
   Future<AffirmationResult<List<CategoryModel>>> getUserCategories() async {
     try {
+      print('📞 getUserCategories called for userId: ${_authService.currentUser?.userId}');
       final response = await _apiClient.apiV1ManifestGetcategorysGet(
         userId: _authService.currentUser?.userId,
       );
 
+      print('📞 getUserCategories response: status=${response.statusCode}, isSuccessful=${response.isSuccessful}, hasBody=${response.body != null}');
+
       if (response.isSuccessful && response.body != null) {
         final returnModel = response.body!;
-        
-        if (returnModel.isSuccess == true && returnModel.model != null) {
+        print('📞 getUserCategories returnModel: isSuccess=${returnModel.isSuccess}, hasModel=${returnModel.model != null}, modelLength=${returnModel.model?.length ?? 0}');
+
+        if (returnModel.isSuccess == true) {
+          // Even if model is null, treat as empty list for new users
+          final categories = returnModel.model ?? [];
+          print('✅ getUserCategories returning ${categories.length} categories');
           return AffirmationResult.success(
-            data: returnModel.model!,
+            data: categories,
             message: 'User categories loaded successfully',
           );
         } else {
+          print('❌ getUserCategories API returned isSuccess=false: ${returnModel.errorHolder}');
           return AffirmationResult.failure(
             message: returnModel.errorHolder?.toString() ?? 'Failed to load user categories',
           );
         }
       } else {
+        print('❌ getUserCategories network error: ${response.statusCode}');
         return AffirmationResult.failure(
           message: 'Network error: ${response.statusCode}',
         );
       }
     } catch (e) {
+      print('❌ getUserCategories exception: $e');
       return AffirmationResult.failure(
         message: 'Error loading user categories: ${e.toString()}',
       );
@@ -353,15 +371,17 @@ class DailyAffirmationsService {
   Future<void> createHiddenCategoriesForNewUser() async {
     try {
       print('🔍 Checking for hidden categories...');
-      
+
       // Get existing user categories to check if hidden ones exist
       final userCategoriesResult = await getUserCategories();
-      if (!userCategoriesResult.isSuccess || userCategoriesResult.data == null) {
-        print('❌ Could not load user categories, skipping hidden category creation');
+      if (!userCategoriesResult.isSuccess) {
+        print('❌ Could not load user categories (API error), skipping hidden category creation');
         return;
       }
-      
-      final existingCategories = userCategoriesResult.data!;
+
+      // For new users, data might be null or empty - that's OK, create all hidden categories
+      final existingCategories = userCategoriesResult.data ?? [];
+      print('✅ User has ${existingCategories.length} existing categories');
       final List<String> hiddenNames = [
         'Love(custom_made)',
         'Abundance(custom_made)', 

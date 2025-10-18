@@ -2,7 +2,8 @@ import 'package:just_audio/just_audio.dart';
 import '../models/meditation_models.dart';
 
 class MeditationAudioService {
-  static final MeditationAudioService _instance = MeditationAudioService._internal();
+  static final MeditationAudioService _instance =
+      MeditationAudioService._internal();
   factory MeditationAudioService() => _instance;
   MeditationAudioService._internal();
 
@@ -16,7 +17,6 @@ class MeditationAudioService {
     if (!_isInitialized) {
       _audioPlayer = AudioPlayer();
       _isInitialized = true;
-      print('🎵 Meditation audio service initialized');
     }
   }
 
@@ -29,7 +29,6 @@ class MeditationAudioService {
 
       // Re-initialize if player was disposed
       if (_audioPlayer == null) {
-        print('🔄 Re-initializing audio player');
         _audioPlayer = AudioPlayer();
         _isInitialized = true;
       }
@@ -38,72 +37,50 @@ class MeditationAudioService {
       try {
         if (_audioPlayer!.playing) {
           await _audioPlayer!.stop();
-          await Future.delayed(Duration(milliseconds: 100)); // Small delay after stop
+          await Future.delayed(Duration(milliseconds: 100));
         }
       } catch (e) {
-        print('⚠️ Error stopping previous audio: $e');
+        // Ignore errors when stopping
       }
 
       if (audioType == AudioType.none || audioType.audioPath.isEmpty) {
         await stopAudio();
-        print('🎵 Audio set to Silent - no audio will play');
         return true;
       }
 
       _currentAudioType = audioType;
       _currentVolume = volume;
 
-      print('🎵 Attempting to play ${audioType.name} audio from ${audioType.audioPath}');
-      
       try {
-        // Load the audio asset first
-        print('🎵 Loading audio asset: ${audioType.audioPath}');
-        final duration = await _audioPlayer!.setAsset(audioType.audioPath);
-        print('🎵 Asset loaded successfully, duration: ${duration?.inSeconds ?? 0}s');
-        
-        // Set volume after loading
+        // Load the audio asset
+        await _audioPlayer!.setAsset(audioType.audioPath);
+
+        // Set volume and loop mode
         await _audioPlayer!.setVolume(volume);
-        print('🎵 Volume set to ${(volume * 100).round()}%');
-        
-        // For meditation, we want to loop the audio
         await _audioPlayer!.setLoopMode(LoopMode.one);
-        print('🎵 Loop mode set');
-        
+
         // Small delay to ensure everything is ready
         await Future.delayed(Duration(milliseconds: 200));
-        
-        // Start playing
-        print('🎵 Starting playback...');
-        await _audioPlayer!.play();
-        print('🎵 Play command sent');
 
-        // Shorter verification delay
+        // Start playing
+        await _audioPlayer!.play();
+
+        // Verification delay
         await Future.delayed(Duration(milliseconds: 500));
         final isPlaying = _audioPlayer!.playing;
-        final playerState = _audioPlayer!.playerState;
         final processingState = _audioPlayer!.processingState;
-        
-        print('🎵 Player state: $playerState');
-        print('🎵 Processing state: $processingState');
-        print('🎵 Is playing: $isPlaying');
-        
-        // More lenient success check - sometimes processing state might be buffering
-        if (isPlaying || processingState == ProcessingState.ready || processingState == ProcessingState.buffering) {
-          print('✅ Successfully playing ${audioType.name} audio at volume ${(volume * 100).round()}%');
+
+        // Check if playback started successfully
+        if (isPlaying ||
+            processingState == ProcessingState.ready ||
+            processingState == ProcessingState.buffering) {
           return true;
         } else {
           // Try once more after a delay
           await Future.delayed(Duration(milliseconds: 500));
-          if (_audioPlayer!.playing) {
-            print('✅ Audio started after retry - ${audioType.name}');
-            return true;
-          }
-          print('❌ Audio failed to start playing - State: $playerState, Processing: $processingState');
-          return false;
+          return _audioPlayer!.playing;
         }
       } catch (assetError) {
-        print('❌ Error loading or playing audio asset: $assetError');
-        print('❌ Error type: ${assetError.runtimeType}');
         // Try to recover by re-initializing
         try {
           _audioPlayer?.dispose();
@@ -112,16 +89,12 @@ class MeditationAudioService {
           await _audioPlayer!.setVolume(volume);
           await _audioPlayer!.setLoopMode(LoopMode.one);
           await _audioPlayer!.play();
-          print('✅ Recovered from error and started playing');
           return true;
         } catch (recoveryError) {
-          print('❌ Recovery failed: $recoveryError');
           return false;
         }
       }
     } catch (e) {
-      print('❌ Error playing audio: $e');
-      print('❌ AudioType: ${audioType.name}, Path: ${audioType.audioPath}');
       // Fallback - continue without audio rather than blocking meditation
       return false;
     }
@@ -132,7 +105,6 @@ class MeditationAudioService {
     if (_audioPlayer != null && _isInitialized) {
       _currentVolume = volume;
       await _audioPlayer!.setVolume(volume);
-      print('🎵 Audio volume set to ${(volume * 100).round()}%');
     }
   }
 
@@ -140,7 +112,6 @@ class MeditationAudioService {
   Future<void> pauseAudio() async {
     if (_audioPlayer != null && _isInitialized) {
       await _audioPlayer!.pause();
-      print('⏸️ Audio paused');
     }
   }
 
@@ -148,7 +119,6 @@ class MeditationAudioService {
   Future<void> resumeAudio() async {
     if (_audioPlayer != null && _isInitialized) {
       await _audioPlayer!.play();
-      print('▶️ Audio resumed');
     }
   }
 
@@ -156,12 +126,14 @@ class MeditationAudioService {
   Future<void> stopAudio() async {
     if (_audioPlayer != null && _isInitialized) {
       await _audioPlayer!.stop();
-      print('⏹️ Audio stopped');
     }
   }
 
   // Preview audio (short play for selection)
-  Future<void> previewAudio(AudioType audioType, {Duration duration = const Duration(seconds: 3)}) async {
+  Future<void> previewAudio(
+    AudioType audioType, {
+    Duration duration = const Duration(seconds: 3),
+  }) async {
     try {
       if (!_isInitialized) {
         await initialize();
@@ -173,14 +145,12 @@ class MeditationAudioService {
 
       // Create a temporary player for preview
       final previewPlayer = AudioPlayer();
-      
+
       try {
         await previewPlayer.setVolume(0.5); // Lower volume for preview
         await previewPlayer.setAsset(audioType.audioPath);
         await previewPlayer.play();
-        
-        print('🎵 Previewing ${audioType.name} audio');
-        
+
         // Stop after duration
         await Future.delayed(duration);
         await previewPlayer.stop();
@@ -188,7 +158,7 @@ class MeditationAudioService {
         await previewPlayer.dispose();
       }
     } catch (e) {
-      print('❌ Error previewing audio: $e');
+      // Silently fail preview
     }
   }
 
@@ -206,20 +176,18 @@ class MeditationAudioService {
         }
         await _audioPlayer!.dispose();
       } catch (e) {
-        print('❌ Error disposing audio player: $e');
+        // Ignore disposal errors
       }
       _audioPlayer = null;
       _isInitialized = false;
       _currentAudioType = AudioType.none;
-      print('🎵 Meditation audio service disposed');
     }
   }
-  
+
   // Stop and dispose when meditation session ends completely
   Future<void> endMeditationSession() async {
     if (_audioPlayer != null && _isInitialized) {
       await stopAudio();
-      print('🎵 Meditation session ended - audio stopped but service remains active');
     }
   }
 }
