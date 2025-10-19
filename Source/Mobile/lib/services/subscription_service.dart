@@ -223,7 +223,9 @@ class SubscriptionService {
   }
   
   /// Check if user has premium subscription
-  bool get isPremium => _isPremium;
+  /// TEMPORARY: Always return true for free version (Phase 1 - No IAP)
+  /// TODO: Implement Apple In-App Purchase in Phase 2
+  bool get isPremium => true; // _isPremium;
   
   /// Get subscription expiry date
   DateTime? get subscriptionExpiry => _subscriptionExpiry;
