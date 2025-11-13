@@ -1,0 +1,91 @@
+<form name="form" #lvDailyAffirmationSessionCategoryForm="ngForm" appFocusOnError
+  [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+  (ngSubmit)="lvDailyAffirmationSessionCategoryForm.form.valid && onSubmit(lvDailyAffirmationSessionCategoryForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-daily-affirmation-session-category-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-daily-affirmation-session-category-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div>
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedCategory">Category
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+          <span *ngIf="!isViewMode" class="pull-right cursor-pointer mr-1" (click)="showAddCategoryModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvCategory="ngModel" placeholder="Category" name="selectedCategory" id="selectedCategory" required
+            [items]="categorys" class="form-control" bindLabel="categoryName" [clearable]="false"
+            [ngClass]="{'is-invalid': lvDailyAffirmationSessionCategoryForm.submitted && lvCategory.invalid }"
+            [typeahead]="categoryTypeahead$" [loading]="categoryTypeaheadLoading" [(ngModel)]="selectedCategory">
+          </ng-select>
+          <div *ngIf="lvDailyAffirmationSessionCategoryForm.submitted && lvCategory.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvCategory.errors?.['required']">Category is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationSessionCategoryModel?.categoryId ? dailyAffirmationSessionCategoryModel.categoryId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedDailyAffirmationSession">Daily Affirmation Session
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+          <span *ngIf="!isViewMode" class="pull-right cursor-pointer mr-1"
+            (click)="showAddDailyAffirmationSessionModal()"><i class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvDailyAffirmationSession="ngModel" placeholder="Daily Affirmation Session"
+            name="selectedDailyAffirmationSession" id="selectedDailyAffirmationSession" required
+            [items]="dailyAffirmationSessions" class="form-control" bindLabel="dailyAffirmationSessionName"
+            [clearable]="false"
+            [ngClass]="{'is-invalid': lvDailyAffirmationSessionCategoryForm.submitted && lvDailyAffirmationSession.invalid }"
+            [typeahead]="dailyAffirmationSessionTypeahead$" [loading]="dailyAffirmationSessionTypeaheadLoading"
+            [(ngModel)]="selectedDailyAffirmationSession">
+          </ng-select>
+          <div *ngIf="lvDailyAffirmationSessionCategoryForm.submitted && lvDailyAffirmationSession.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvDailyAffirmationSession.errors?.['required']">Daily Affirmation Session is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationSessionCategoryModel?.dailyAffirmationSessionId ?
+          dailyAffirmationSessionCategoryModel.dailyAffirmationSessionId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedUser">User
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+          <span *ngIf="!isViewMode" class="pull-right cursor-pointer mr-1" (click)="showAddUserModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvUser="ngModel" placeholder="User" name="selectedUser" id="selectedUser" required [items]="users"
+            class="form-control" bindLabel="userName" [clearable]="false"
+            [ngClass]="{'is-invalid': lvDailyAffirmationSessionCategoryForm.submitted && lvUser.invalid }"
+            [typeahead]="userTypeahead$" [loading]="userTypeaheadLoading" [(ngModel)]="selectedUser">
+          </ng-select>
+          <div *ngIf="lvDailyAffirmationSessionCategoryForm.submitted && lvUser.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvUser.errors?.['required']">User is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationSessionCategoryModel?.userId ? dailyAffirmationSessionCategoryModel.userId : '-'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light"
+      id="vagncart-daily-affirmation-session-category-modal-close-btn" data-bs-dismiss="modal"
+      (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success"
+      id="vagncart-daily-affirmation-session-category-modal-submit-btn"
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

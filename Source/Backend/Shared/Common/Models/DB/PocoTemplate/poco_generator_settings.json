@@ -1,0 +1,35 @@
+{
+  "classPrefix": "",
+  "classSuffix": "",
+  "connectionString": "Server=(localdb)\\ManifestDbServer;Initial Catalog=ManifestDb;Persist Security Info=True;User ID=admin;Password=@Dmin123##;MultipleActiveResultSets=False;Application Name=PocoGenerator;",
+  "includeViews": "true",
+  "namespace": "Manifest.Common.Models.DB",
+  "schemaName": "",
+  "dbType": "sqlserver",
+  "onlyGenerateSelectedTables": false,
+  "ignoredTableNames": [
+    "VersionInfo",
+    "sysdiagrams"
+  ],
+  "inbuiltSchema": [
+    "dbo",
+    "public"
+  ],
+  "columnsToJsonIgnore": [
+    "User.PasswordHash",
+    "User.PasswordChangedDate",
+    "User.LoginFailedAttempt",
+    "User.OneTimeToken",
+    "User.OneTimeExpireDateTime",
+    "User.LoginFailedAttempt",
+    "User.NewUserActivationGuid",
+    "User.NewUserActivationCompletedOn",
+    "User.ProfileImageLocation"
+  ],
+  "generate": [
+    {
+      "templateFileName": "{ConfigFolder}/Poco.cshtm",
+      "codeFileName": "{ConfigFolder}/../Poco.cs"
+    }
+  ]
+}

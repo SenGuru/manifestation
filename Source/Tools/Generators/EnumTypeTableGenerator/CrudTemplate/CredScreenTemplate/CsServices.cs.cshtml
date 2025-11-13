@@ -1,0 +1,683 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Framework.Infrastructure.Exceptions;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Utils;
+using %AppName%.Common.Enums;
+using %AppName%.Common.Models.DB;
+using %AppName%.Common.Models.SearchCriteria;
+using %AppName%.Common.Models.ViewModels;
+#pragma warning disable IDE0060, CS1998, SA1513, SA1028, SA1106, SA1107, S1116, SA1513, SA1120, SA1000, SA1028, S3923, S1481, SA1505, S1871, S108 , SA1507 , SA1108 , SA1508
+
+namespace %AppName%.Service.App
+{
+    public partial class CredService
+    {
+@{
+    int i = 0;
+    //int breakAfter = -1;
+    var lst = CodeGenerator.CredUIHelper.RepoMapper();
+    string GetRepoName(string propName)
+    {
+        if (lst.Exists(x => x.prop.ToLower().Trim() == propName.ToLower().Trim()))
+        {
+            var item = lst.FirstOrDefault(x => x.prop.ToLower().Trim() == propName.ToLower().Trim());
+            return item.repoName;
+        }
+        return "credRepository";
+    }
+
+    string GetServiceName(string propName)
+    {
+        return "";
+    }
+    
+    bool CanAllowProperty(string propName)
+    {
+        if (propName == "VerificationEntityProfileFileId" || propName == "VerifiedBy")
+            return false;
+        return true;
+    }
+
+    string GetPropertyNameForRepo(string propName)
+    {
+        if (propName.EndsWith("StateId"))
+            return "StateId";
+        if (propName.EndsWith("CountryId"))
+            return "CountryId";
+        return propName;
+    }
+
+    string GetExtraVarName(string propName)
+    {
+        if (propName == "case")
+            return "@";
+        return "";
+    }
+}
+@foreach (var t in Model.Code.Sections)
+{
+    //if(i > breakAfter)
+    //    continue;
+    i++;
+    if (i != 1)
+    {
+    }
+    var pkCol = t.GetPK();
+    if (pkCol == null)
+    {
+        throw new Exception($"Unable to find Pk for {t.ViewClassName}");
+    }
+}
+
+@foreach (var t in Model.Code.Sections)
+{
+    //if(i > breakAfter)
+    //    continue;
+    i++;
+    if (i != 1)
+    {
+    }
+    var pkCol = t.GetPK();
+    var pkColName = "";
+    var pkColNameWithDefinition = "";
+    var pkColIdithType = "";
+    if (pkCol == null)
+    {
+        throw new Exception($"Unable to find Pk for {t.ViewClassName}");
+    }
+    
+    pkColName = pkCol.TsDbColumnName;
+    pkColNameWithDefinition = pkCol.PkForViewTableName + " " + pkCol.TsDbColumnName;
+    pkColIdithType = "long " + pkCol.TsDbColumnName;
+    var pkAltName = pkCol.TsDbColumnName;
+    var pkAltCapName = pkCol.DbColumnName;    
+    if (pkCol.TsDbColumnName == "caseId")
+    {
+        pkAltName = "entityProfileId";
+        pkAltCapName = "EntityProfileId";
+    }
+    var pkAltCapNameWithoutId = pkAltCapName;
+    if (pkAltCapNameWithoutId.EndsWith("Id"))
+    {
+        pkAltCapNameWithoutId = pkAltCapNameWithoutId.Substring(0, pkAltCapNameWithoutId.Length - 2);
+    }
+    var pkAltNameWithoutId = pkAltName;
+    if (pkAltNameWithoutId.EndsWith("Id"))
+    {
+        pkAltNameWithoutId = pkAltNameWithoutId.Substring(0, pkAltNameWithoutId.Length - 2);
+    }
+@:        #region @(t.ViewClassName)
+@:                  
+        @:public async Task<ReturnModel<@(t.ViewClassName)Model>> Get@(t.ViewClassName)Async(@pkColIdithType)
+        @:{
+@:            try
+@:            {
+                  if (pkCol != null)
+                  {
+@:                var @pkCol.TsDbColumnName.Replace("Id","")Value = await @(GetServiceName(@pkCol.DbColumnName))Get@(@pkCol.DbColumnName.Replace("Id",""))ByIdAsync(@pkColName);
+@:                if (!@(pkCol.TsDbColumnName.Replace("Id",""))Value.IsSuccess)
+@:                {
+@:                     return log.ErrorAndReturnModel<@(t.ViewClassName)Model>(@(pkCol.TsDbColumnName.Replace("Id",""))Value);
+@:                }
+@:                var permssionResult = await permissionService.DoesUserHavePermissionToViewCred(@pkCol.TsDbColumnName.Replace("Id","")Value.Model);
+@:                if (!permssionResult.IsSuccess)
+@:                {
+@:                    return log.ErrorAndReturnModel<@(t.ViewClassName)Model>(permssionResult);
+@:                }
+                  }
+                  
+@:                var resultView = await credRepository.Get@(t.ViewClassName)Async(@(pkCol.TsDbColumnName));
+@:                if (resultView == null)
+@:                {
+@:                    return log.ErrorAndReturnModel<@(t.ViewClassName)Model>("Unable to find @(t.ViewClassName)", new { @(pkCol.TsDbColumnName) });
+@:                }
+@:                var result = objectMapperService.<@(t.ViewClassName)ViewTo@(t.ViewClassName)Model(resultView);
+                
+                  @foreach (var col in t.GetMergedColumns())
+                  {
+                    if(!col.IsArray)
+                    {
+                        continue;
+                    }
+                    var commentStr = "";
+                    if (col.DbColumnNameWithoutIds == "SpecialSkillMetaData" || col.DbColumnNameWithoutIds == "AccessibilityMetaData" || col.DbColumnNameWithoutIds == "OfficePersonnelLngMetaData" || col.DbColumnNameWithoutIds == "InterpretersLanguageMetaData" || col.DbColumnNameWithoutIds == "AcceptTypeOrPatientMetaData" || col.DbColumnNameWithoutIds == "LocationServiceMetaData" || col.DbColumnNameWithoutLastS == "EntityProfileContact")
+                    {
+                        commentStr = "// major todo - we need to fix this manually -- ";
+                    }
+
+                    if(col.DbColumnName.EndsWith("Ids"))
+                    {
+                        var fKeyId = col.FKeyTypeName + "Id";
+                        if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+                        {
+                            fKeyId = "MetaDataId";
+                        }
+@:                @(commentStr)result.@(col.DbColumnName) = (await @(GetRepoName(@col.DbColumnName)).Get@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(result.@(pkAltCapName))).SelectToList(x => x.@(fKeyId));
+                    }                    
+                    else 
+                    {
+@:                @(commentStr)result.@(col.DbColumnName) = objectMapperService.@(col.DbColumnNameWithoutLastS)ListTo@(col.DbColumnNameWithoutLastS)ModelList(await @(GetRepoName(@col.DbColumnName)).Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(result.@(pkAltCapName)));
+                    }
+                  }
+@:                return ReturnModel<@(t.ViewClassName)Model>.Success(result);
+@:            }
+@:            catch(Exception ex)
+@:            {
+    @:                return log.ErrorAndReturnModel<@(t.ViewClassName)Model>("Unexpected error when getting @(t.SectionName)",new { @(pkColName) }, ex);
+@:            }
+        @:}
+@:
+                    @foreach (var col in t.GetMergedColumns())
+                    {
+                        if(!col.IsArray)
+                        {
+                            continue;
+                        }
+                        if (col.DbColumnNameWithoutIds == "AccessibilityMetaData" && col.DbColumnNameWithoutIds == "SpecialSkillMetaData" || col.DbColumnNameWithoutIds == "AccessibilityMetaData" || col.DbColumnNameWithoutIds == "OfficePersonnelLngMetaData" || col.DbColumnNameWithoutIds == "InterpretersLanguageMetaData" || col.DbColumnNameWithoutIds == "AcceptTypeOrPatientMetaData" || col.DbColumnNameWithoutIds == "LocationServiceMetaData" || col.DbColumnNameWithoutLastS == "EntityProfileContact")
+                        {
+                            pkAltName = col.ParentTable.TsDbTableName + "Id";
+                            pkAltNameWithoutId = col.ParentTable.TsDbTableName;
+                            pkAltCapName = col.ParentTable.DbTableName + "Id";
+                            pkAltCapNameWithoutId = col.ParentTable.DbTableName;
+                            //pkTableName = col.ParentTable.DbTableName;
+                        }
+                
+                        if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+                        {
+@:                      
+@:        public async Task Update@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(long @(pkAltName), List<long> new@(col.DbColumnName), List<long> existing@(col.DbColumnName))
+@:        {
+@:            if (new@(col.DbColumnNameWithoutIds)Ids == null)
+@:                new@(col.DbColumnNameWithoutIds)Ids = new List<long>();
+@:
+@:            if (existing@(col.DbColumnNameWithoutIds)Ids == null)
+@:                existing@(col.DbColumnNameWithoutIds)Ids = new List<long>();
+@:
+@:            var db@(col.DbColumnNameWithoutIds)Ids = (await credRepository.Get@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(@(pkAltName))).SelectToList(x => x.MetaDataId);
+@:            if (db@(col.DbColumnNameWithoutIds)Ids != null && db@(col.DbColumnNameWithoutIds)Ids.Count > 0)            {
+@:
+@:                var metaItemsToDelete = existing@(col.DbColumnNameWithoutIds)Ids.Where(x => !db@(col.DbColumnNameWithoutIds)Ids.Contains(x));
+@:                foreach (var x in metaItemsToDelete)
+@:                {
+@:                    await credRepository.HardDelete@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(x, @(pkAltName));
+@:                }
+@:
+@:                var metaItemsToUpdate = existing@(col.DbColumnNameWithoutIds)Ids.Where(x => !db@(col.DbColumnNameWithoutIds)Ids.Contains(x));
+@:                foreach (var x in metaItemsToUpdate)
+@:                {
+@:                    if (!await credRepository.Does@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)ExistsAsync(x, @(pkAltName)))
+@:                    {
+@:                        var result = await credRepository.Create@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(x, @(pkAltName), await currentSessionService.GetCurrentUserIdAsNullableAsync());
+@:                    }                    
+@:                }
+@:            }
+@:
+@:            foreach (var x in new@(col.DbColumnNameWithoutIds)Ids)
+@:            {
+@:                await credRepository.Create@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(@(pkAltName), x, await currentSessionService.GetCurrentUserIdAsNullableAsync());
+@:            }
+@:        }
+@:
+@:        public Task Create@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(long @(pkAltName), List<long> new@(col.DbColumnName))
+@:        {
+@:            return Update@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(@(pkAltName), new@(col.DbColumnName), null);
+@:        }
+@:
+                        }            
+                        else
+                        {
+                            if (col.DbColumnNameWithoutIds == "EntityProfileOtherName" || col.DbColumnNameWithoutLastS == "EntityProfileOtherName")
+                            {
+@:        public async Task UpdateEntityProfileOtherNamesByEntityProfileIdAsync(long entityProfileId, List<EntityProfileOtherNameCreateModel> newEntityProfileOtherNames, List<EntityProfileOtherNameUpdateModel> existingEntityProfileOtherNames)
+@:        {
+@:            if (newEntityProfileOtherNames == null)
+@:                newEntityProfileOtherNames = new List<EntityProfileOtherNameCreateModel>();
+@:
+@:            if (existingEntityProfileOtherNames == null)
+@:                existingEntityProfileOtherNames = new List<EntityProfileOtherNameUpdateModel>();
+@:
+@:            var dbEntityProfileOtherNames = await credRepository.GetEntityProfileOtherNamesByEntityProfileIdAsync(entityProfileId);
+@:            if (dbEntityProfileOtherNames != null && dbEntityProfileOtherNames.Count > 0)
+@:            {
+@:                var dbExistingEntityProfileOtherNameIds = dbEntityProfileOtherNames.SelectToList(x => x.EntityProfileOtherNameId);
+@:
+@:                var itemsToDelete = existingEntityProfileOtherNames.Where(x => !dbExistingEntityProfileOtherNameIds.Contains(x.EntityProfileOtherNameId));
+@:                foreach (var x in itemsToDelete)
+@:                {
+@:                    await credRepository.HardDeleteEntityProfileOtherNameByIdAsync(x.EntityProfileOtherNameId);
+@:                }
+@:
+@:                var entityProfileOtherNamesToUpdate = existingEntityProfileOtherNames.Where(x => !dbExistingEntityProfileOtherNameIds.Contains(x.EntityProfileOtherNameId));
+@:                foreach (var x in entityProfileOtherNamesToUpdate)
+@:                {
+@:                    var mappedItem = objectMapperService.EntityProfileOtherNameToEntityProfileOtherNameUpdateModel(x);
+@:                    var result = await UpdateEntityProfileOtherNameAsync(mappedItem);
+@:                    if (!result.IsSuccess)
+@:                    {
+@:                        throw new RollbackException(result);
+@:                    }
+@:                }
+@:            }
+@:
+@:            foreach (var x in newEntityProfileOtherNames)
+@:            {
+@:                x.EntityProfileId = entityProfileId;
+@:                var result = await CreateEntityProfileOtherNameAsync(x);
+@:                if (!result.IsSuccess)
+@:                {
+@:                    throw new RollbackException(result);
+@:                }
+@:            }
+@:        }
+@:
+@:        public Task CreateEntityProfileOtherNamesByEntityProfileIdAsync(long entityProfileId, List<EntityProfileOtherNameCreateModel> newEntityProfileOtherNames)
+@:        {
+@:            return UpdateEntityProfileOtherNamesByEntityProfileIdAsync(entityProfileId, newEntityProfileOtherNames, null);
+@:        }
+@:
+                        }
+
+@:
+@:      //[HttpGet]
+@:       //public async Task<ReturnListModel<@(col.DbColumnNameWithoutLastS)Model>> Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)(@(pkAltCapName)SearchCriteria search)
+@:       // {
+@:       //   return credService.Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(search)
+@:       // }
+@:
+@:        public async Task<ReturnListModel<@(col.DbColumnNameWithoutLastS)Model>> Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(@(pkAltCapName)SearchCriteria search)
+@:        {
+@:            if (search == null)
+@:            {
+@:                return log.ErrorAndReturnListModel<@(col.DbColumnNameWithoutLastS)Model>("Identifier is not provided when getting @(col.DbColumnNameWithoutLastS)s By @(pkAltCapName)");
+@:            }
+@:
+@:            var @(pkAltNameWithoutId)Value = await @(GetServiceName(@pkCol.DbColumnName))Get@(pkAltCapNameWithoutId)ByIdAsync(search.@pkAltCapName);
+@:            if (!@(pkAltNameWithoutId)Value.IsSuccess)
+@:            {
+@:              return log.ErrorAndReturnListModel<@(col.DbColumnNameWithoutLastS)Model>(@(pkAltNameWithoutId)Value);
+@:            }
+@:
+@:            try
+@:            {
+@:                return this.ConvertToList(await credRepository.Get@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(search), objectMapperService.@(col.DbColumnNameWithoutLastS)ListTo@(col.DbColumnNameWithoutLastS)ModelList);
+@:            }
+@:            catch (Exception ex)
+@:            {
+@:                return log.ErrorAndReturnListModel<@(col.DbColumnNameWithoutLastS)Model>($"Unexpected error when getting @(col.DbColumnNameWithoutLastS)s", ex);
+@:            }
+@:        }
+@:                            
+                        }
+                    }
+        @:public async Task<ReturnModel<bool>> CreateOrUpdate@(t.ViewClassName)Async(@(t.ViewClassName)CreateUpdateModel model)
+        @:{
+@:            try
+@:            {
+@:                var @pkCol.TsDbColumnName.Replace("Id","")Value = await @(GetServiceName(@pkCol.DbColumnName))Get@(@pkCol.DbColumnName.Replace("Id",""))ByIdAsync(model.@pkCol.DbColumnName);
+@:                if (!@(pkCol.TsDbColumnName.Replace("Id",""))Value.IsSuccess)
+@:                {
+@:                     return log.ErrorAndReturnModel<bool>(@(pkCol.TsDbColumnName.Replace("Id",""))Value);
+@:                }
+@:                var permssionResult = await permissionService.DoesUserHavePermissionToCreateOrUpdateCred(@pkCol.TsDbColumnName.Replace("Id","")Value.Model, model.StepInfo);
+@:                if (!permssionResult.IsSuccess)
+@:                {
+@:                    return log.ErrorAndReturnModel<bool>(permssionResult);
+@:                }
+@:                var errorLst = await Is@(t.ViewClassName)ValidAsync(model);
+@:                if (errorLst != null && errorLst.Count > 0)
+@:                {
+@:                    return log.ErrorAndReturnModel<bool>("Error when Saving @(t.ViewClassName)", new { model }, errorLst);
+@:                }
+@:                //var existingItem = await 
+@:                //Todo: Using Transaction Save all the data
+@:                using(var trx = await transactionManager.BeginTransactionAsync())
+@:                {
+                    var colSortedByTables = t.GetMergedColumns().GroupBy(x => x.ParentTable);
+
+                    var tblsToIgnore = new List<string>();
+                    tblsToIgnore.Add(pkCol.ParentTable.DbTableName);
+                    @foreach (var col in t.GetMergedColumns())
+                    {
+                        
+                        if (col.IsArray)
+                        {
+                            if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+                            {
+                                continue;
+                            }
+                    @:// to ignore @col.DbColumnName , @col.ParentTable.DbTableName
+                            //tblsToIgnore.Add(col.DbColumnName);
+                        }
+                    }
+
+@:                  if(model.@(pkAltCapName) <= 0) /*** todo , need to check how the Create function is initialeted***/
+@:                  {
+                        if (!tblsToIgnore.Contains(pkCol.ParentTable.DbTableName))
+                        {
+@:                      // ** check and uncomment - var objFor@(pkCol.ParentTable.DbTableName) =  objectMapperService.@(t.ViewClassName)CreateUpdateModelTo@(pkCol.ParentTable.DbTableName)(model);
+@:                      // ** check and uncomment - existingItem = await credRepository.Create@(t.ViewClassName)For@(pkCol.ParentTable.DbTableName)Async(objFor@(pkCol.ParentTable.DbTableName), await currentSession.GetCurrentUserIdAsync());
+@:
+                        }
+                    foreach (var colTables in colSortedByTables)
+                    {
+                        var tbl = colTables.Key;
+                        //if (tblsToIgnore.Contains(tbl.DbTableName) || tblsToIgnore.Contains(tbl.DbTableName+"s"))
+                        //{
+                        //    continue;
+                        //}
+@:                      // ** check and uncomment - var objFor@(tbl.DbTableName) =  objectMapperService.@(t.ViewClassName)CreateUpdateModelTo@(tbl.DbTableName)(model);
+@:                      // ** check and uncomment - await credRepository.Create@(t.ViewClassName)For@(tbl.DbTableName)Async(model, await currentSession.GetCurrentUserIdAsync());
+                    }
+
+                    @foreach (var col in t.GetMergedColumns())
+                    {
+                        if(!col.IsArray)
+                        {
+                            continue;
+                        }
+
+                        if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+                        {
+@:                      //** uncomment after fixing repo  --- await Create@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(model.@(pkAltCapName), model.New@(col.DbColumnName));
+                        }                    
+                        else 
+                        {
+                            if (col.DbColumnNameWithoutLastS == "EntityProfileOtherName")
+                            {
+@:                      await Create@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(model.@(pkAltCapName), model.New@(col.DbColumnName));
+                            }
+                        }
+                    }
+@:                  }
+@:                  else
+@:                  {
+                        if (!tblsToIgnore.Contains(pkCol.ParentTable.DbTableName))
+                        {@:                            
+@:                      // ** check and uncomment - var objFor@(pkCol.ParentTable.DbTableName) =  objectMapperService.@(t.ViewClassName)CreateUpdateModelTo@(pkCol.ParentTable.DbTableName)(model);
+@:                      // ** check and uncomment - await credRepository.Update@(t.ViewClassName)For@(pkCol.ParentTable.DbTableName)Async(objFor@(pkCol.ParentTable.DbTableName), await currentSession.GetCurrentUserIdAsync());
+@:
+                        }
+                    foreach (var colTables in colSortedByTables)
+                    {
+                        var tbl = colTables.Key;
+                        //if (tblsToIgnore.Contains(tbl.DbTableName) || tblsToIgnore.Contains(tbl.DbTableName+"s"))
+                        //{
+                        //    continue;
+                        //}
+@:                        
+@:                      // ** check and uncomment - var objFor@(tbl.DbTableName) =  objectMapperService.@(t.ViewClassName)CreateUpdateModelTo@(tbl.DbTableName)(model);
+@:                      // ** check and uncomment - await credRepository.Update@(t.ViewClassName)For@(tbl.DbTableName)Async(model, await currentSession.GetCurrentUserIdAsync());
+@:
+                    }
+                    @foreach (var col in t.GetMergedColumns())
+                    {
+                        if(!col.IsArray)
+                        {
+                            continue;
+                        }
+
+                        if (col.ElementType == CodeGenerator.ElementTypes.MetaData || col.ElementType == CodeGenerator.ElementTypes.EnumWithMetaData || col.ElementType == CodeGenerator.ElementTypes.MetaDataWithChild)
+                        {
+@:                      //** uncomment after fixing repo  --- await Update@(col.DbColumnNameWithoutIds)sBy@(pkAltCapName)Async(model.@(pkAltCapName), model.New@(col.DbColumnName), model.Existing@(col.DbColumnName));
+                        }                    
+                        else 
+                        {
+                            if (col.DbColumnNameWithoutLastS == "EntityProfileOtherName")
+                            {
+@:                      await Update@(col.DbColumnNameWithoutLastS)sBy@(pkAltCapName)Async(model.@(pkAltCapName), model.New@(col.DbColumnName), model.Existing@(col.DbColumnName));
+                            }                            
+                        }
+                    }
+@:                  }
+@:                  await trx.CompleteAsync();
+@:                }
+@:                //Todo: Write to Audit Log
+@:                return await Task.FromResult(ReturnModel<bool>.Success(true));
+@:            }
+@:            catch(Exception ex)
+@:            {
+@:                return log.ErrorAndReturnModel<bool>("Unexpected error when saving @(t.ViewClassName)",new { model }, ex);
+@:            }
+        @:}
+@:
+        @:public async Task<List<ReturnErrorItem>> Is@(t.ViewClassName)ValidAsync(@(t.ViewClassName)CreateUpdateModel model)
+        @:{
+@:            var result = new List<ReturnErrorItem>();
+@:            //Todo : 1) Check Type, 2) Check Metadata and see if it within the range, 3) Check FKey and see if it exists and belong to this Tenant
+              foreach(var col in t.AllColumns)
+              {
+              if(!CanAllowProperty(col.DbColumnName))
+              {
+                  continue;
+              }
+
+              if(col.DbColumnName.EndsWith("TypeId"))
+              {
+                if (col.IsNull)
+                {
+@:            if (model.@(col.DbColumnName) != null)
+@:            {
+@:              if (model.@(col.DbColumnName) <= 0 || ValidationUtils.IsEnumValid<@(col.DbColumnName.Replace("TypeId", "Types")),long>(model.@(col.DbColumnName) ?? 0) == false)
+@:              {
+@:                    result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName.Replace("TypeId","Types")) is not valid"));
+@:              }
+@:            }
+                }
+                else
+                {
+@:            if (model.@(col.DbColumnName) <= 0 || ValidationUtils.IsEnumValid<@(col.DbColumnName.Replace("TypeId", "Types")),long>(model.@(col.DbColumnName)) == false)
+@:            {
+@:                result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName.Replace("TypeId","Types")) is not valid"));
+@:            }
+                }
+              }
+              else if(col.DbColumnName.EndsWith("MetaDataId"))
+              {
+                if(!col.IsNull)
+                {
+@:            var @(col.TsDbColumnName.Replace("MetaDataId","MetaData")) = await credRepository.GetMetaDataByIdAsync(model.@(col.DbColumnName));
+@:            if (@(col.TsDbColumnName.Replace("MetaDataId","MetaData")) == null)
+@:            {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName.Replace("TypeId","Type")) is not valid"));
+@:            }
+@:            else if (@(col.TsDbColumnName.Replace("MetaDataId","MetaData")).MetaDataGroupId != (int)MetaDataGroupTypes.@(col.MetaDataType.Replace(" ","")))
+@:            {
+@:              result.Add(new ReturnErrorItem("@(col.DbColumnName)", "ProviderTypeMetaDataId should be of type @(col.Caption)"));
+@:            }
+                }
+                else
+                {
+@:            if (model.@(col.DbColumnName) != null)
+@:            {
+@:              var @(col.TsDbColumnName.Replace("MetaDataId", "MetaData")) = await credRepository.GetMetaDataByIdAsync(model.@(col.DbColumnName) ?? 0);;
+@:              if (@(col.TsDbColumnName.Replace("MetaDataId","MetaData")) == null)
+@:              {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName.Replace("TypeId","Types")) is not valid"));
+@:              }
+@:              else if (@(col.TsDbColumnName.Replace("MetaDataId","MetaData")).MetaDataGroupId != (int)MetaDataGroupTypes.@(col.MetaDataType.Replace(" ","")))
+@:              {
+@:                result.Add(new ReturnErrorItem("@(col.DbColumnName)", "ProviderTypeMetaDataId should be of type @(col.Caption)"));
+@:              }
+@:            }
+                }
+              }
+              else if(col.DbColumnName.EndsWith("Id"))
+              {
+                if(!col.IsNull)
+                {
+@:            var @(GetExtraVarName(col.TsDbColumnName.Replace("Id", "")))@(col.TsDbColumnName.Replace("Id", "")) = await @(GetRepoName(col.DbColumnName)).Get@(GetPropertyNameForRepo(col.DbColumnName).Replace("Id", ""))ByIdAsync(model.@(col.DbColumnName));
+@:            if (@(GetExtraVarName(col.TsDbColumnName.Replace("Id", "")))@(col.TsDbColumnName.Replace("Id","")) == null)
+@:            {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName.Replace("Id","Ids")) is not valid"));
+@:            }
+                }
+                else
+                {
+@:            if (model.@(col.DbColumnName) != null)
+@:            {
+@:              var @(GetExtraVarName(col.TsDbColumnName.Replace("Id", "")))@(col.TsDbColumnName.Replace("Id", "")) = await @(GetRepoName(col.DbColumnName)).Get@(GetPropertyNameForRepo(col.DbColumnName).Replace("Id", ""))ByIdAsync(model.@(col.DbColumnName) ?? 0); ;
+@:              if (@(GetExtraVarName(col.TsDbColumnName.Replace("Id", "")))@(col.TsDbColumnName.Replace("Id","")) == null)
+@:              {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName.Replace("Id","Ids")) is not valid"));
+@:              }
+@:            }
+                }
+              }
+              else if(col.DbColumnName.EndsWith("MetaDataIds"))
+              {
+@:            if (!model.Existing@(col.DbColumnName).IsNullOrEmpty())
+@:            {
+@:                var metaItems = await credRepository.GetMetaDataByIdsAsync(model.Existing@(col.DbColumnName));
+@:                foreach(var m in metaItems)
+@:                {
+@:                    if (m.MetaDataGroupId != (int)MetaDataGroupTypes.@(col.MetaDataType.Replace(" ","")))
+@:                    {
+@:                        result.Add(new ReturnErrorItem("Existing@(col.DbColumnName)", "@(col.DbColumnName) should be of type @(col.MetaDataType.Replace(" ",""))"));
+@:                        break;
+@:                    }
+@:                }
+@:            }
+@:
+@:            if (!model.New@(col.DbColumnName).IsNullOrEmpty())
+@:            {
+@:                var metaItems = await credRepository.GetMetaDataByIdsAsync(model.New@(col.DbColumnName));
+@:                foreach (var m in metaItems)
+@:                {
+@:                    if (m.MetaDataGroupId != (int)MetaDataGroupTypes.@(col.MetaDataType.Replace(" ","")))
+@:                    {
+@:                        result.Add(new ReturnErrorItem("New@(col.DbColumnName)", "@(col.DbColumnName) should be of type @(col.MetaDataType.Replace(" ",""))"));
+@:                        break;
+@:                    }
+@:                }
+@:            }
+              }
+              else if(col.DbColumnName.EndsWith("Ids"))
+              {
+@:                //Array - @col.ToString() 
+                  continue;
+              }
+              else if(col.DataType == CodeGenerator.CSharpDataTypes.@string)
+              {
+                if(!col.IsNull)
+                {
+@:            if (model.@(col.DbColumnName).IsTrimmedStringNullOrEmpty())
+@:            {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) cannot be empty"));
+@:            }
+@:            else if (model.@(col.DbColumnName).Length > @(col.ParentTable.DbTableName).COLUMN_SIZE_@(col.DbColumnName))
+@:            {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) length cannot exceed {@(col.ParentTable.DbTableName).COLUMN_SIZE_@(col.DbColumnName)}"));
+@:            }
+                }
+                else
+                {
+@:            if (model.@(col.DbColumnName) != null)
+@:            {
+@:              if (model.@(col.DbColumnName).IsTrimmedStringNullOrEmpty())
+@:              {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) cannot be empty"));
+@:              }
+@:              else if(model.@(col.DbColumnName).Length > @(col.ParentTable.DbTableName).COLUMN_SIZE_@(col.DbColumnName))
+@:              {
+@:                     result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) length cannot exceed {@(col.ParentTable.DbTableName).COLUMN_SIZE_@(col.DbColumnName)}"));
+@:              }
+@:            }
+                }
+              }
+              else if(col.DataType == CodeGenerator.CSharpDataTypes.DateTime || col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+              {
+                if(!col.IsNull)
+                {
+@:            if (!DateUtils.IsInvalidDate(model.@(col.DbColumnName)))
+@:            {
+@:                 result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) is not valid"));
+@:            }
+                }
+                else
+                {
+@:            if (model.@(col.DbColumnName) != null)
+@:            {
+@:              if (!DateUtils.IsInvalidDate(model.@(col.DbColumnName)))
+@:              {
+@:                result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) is not valid"));
+@:              }
+@:            }
+              if(col.DbColumnName.Contains("End"))
+              {
+@:            if (DateUtils.IsInvalidDate(model.@(col.DbColumnName)) && DateUtils.IsInvalidDate(model.@(col.DbColumnName.Replace("End","Start"))))
+@:            {
+@:              if (model.@(col.DbColumnName) > model.@(col.DbColumnName.Replace("End","Start")))
+@:              {
+@:                  result.Add(new ReturnErrorItem("@(col.DbColumnName)","@(col.DbColumnName) should be less than @(col.DbColumnName.Replace("End","Start"))"));
+@:              }
+@:            }
+              }
+                }
+              }
+              else if(col.IsFkey)
+              {
+@:            //FKey - @col.ToString()
+@:            if (!model.Existing@(@col.DbColumnName).IsNullOrEmpty())
+@:            {
+@:                int i = 0;
+@:                foreach (var m in model.Existing@(@col.DbColumnName))
+@:                {
+@:                    var lst = await GenericErrorForUpdateAsync(m);
+@:                    if (!lst.IsNullOrEmpty())
+@:                    {
+@:                        foreach(var e in lst)
+@:                        {
+@:                            result.Add(new ReturnErrorItem($"Existing@(@col.DbColumnName)[{i}].{e.Key}", e.Value));
+@:                        }
+@:                    }
+@:                }
+@:            }
+@:            
+@:            if (!model.New@(@col.DbColumnName).IsNullOrEmpty())
+@:            {
+@:                int i = 0;
+@:                foreach (var m in model.New@(@col.DbColumnName))
+@:                {
+@:                    var lst = await GenericErrorForCreateAsync(m);
+@:                    if (!lst.IsNullOrEmpty())
+@:                    {
+@:                        foreach (var e in lst)
+@:                        {
+@:                            result.Add(new ReturnErrorItem($"New@(@col.DbColumnName)[{i}].{e.Key}", e.Value));
+@:                        }
+@:                    }
+@:                }
+@:            }
+              }
+              else if(col.IsArray)
+              {
+@:            //Array - @col.ToString()
+              }
+              else
+              {
+@:            //@col.ToString()
+              }
+              }
+@:            return result;
+        @:}
+@:
+        @:public async Task<ReturnModel<bool>> Mark@(t.ViewClassName)AsVerifiedAsync()
+        @:{
+@:            try
+@:            {
+@:                return await Task.FromResult(ReturnModel<bool>.Success(true));
+@:            }
+@:            catch(Exception ex)
+@:            {
+@:                return log.ErrorAndReturnModel<bool>("Unexpected error when marking @(t.ViewClassName) as verified",new { }, ex);
+@:            }
+        @:}
+        @:#endregion @(t.ViewClassName)
+}
+    }
+}
+#pragma warning restore IDE0060, CS1998, SA1513, SA1028, SA1106, SA1107, S1116, SA1513, SA1120, SA1000, SA1028, S3923, S1481, SA1505, S1871, S108 , SA1507 , SA1108 , SA1508

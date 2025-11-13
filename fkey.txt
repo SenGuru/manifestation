@@ -1,0 +1,62 @@
+Running CI Tool
+ECHO is off.
+Restoring Cake tool
+Tool 'cake.tool' (version '3.0.0') was restored. Available commands: dotnet-cake
+
+Restore was successful.
+Running Cake with param = --Command=atm
+C:/Projects/Own/manifestation/CI/build.cake(469,5): warning CS0162: Unreachable code detected
+
+========================================
+Command
+========================================
+Restore is enabled
+
+========================================
+build-code-generator
+========================================
+Building Crud Generator App ...
+MSBuild version 17.14.14+a129329f1 for .NET Framework
+
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  Framework.Infrastructure -> C:\Projects\Own\manifestation\Source\Backend\Framework\Infrastructure\bin\Debug\net8.0\Framework.Infrastructure.dll
+  Framework.Data -> C:\Projects\Own\manifestation\Source\Backend\Framework\Data\bin\Debug\net8.0\Framework.Data.dll
+  Manifest.Common -> C:\Projects\Own\manifestation\Source\Backend\Shared\Common\bin\Debug\net8.0\Manifest.Common.dll
+  Framework.Web -> C:\Projects\Own\manifestation\Source\Backend\Framework\Web\bin\Debug\net8.0\Framework.Web.dll
+  Manifest.Repository -> C:\Projects\Own\manifestation\Source\Backend\Shared\Repository\bin\Debug\net8.0\Manifest.Repository.dll
+  Manifest.Service -> C:\Projects\Own\manifestation\Source\Backend\Shared\Service\bin\Debug\net8.0\Manifest.Service.dll
+  Manifest.SharedApp -> C:\Projects\Own\manifestation\Source\Backend\Shared\SharedApp\bin\Debug\net8.0\Manifest.SharedApp.dll
+  Manifest.Web -> C:\Projects\Own\manifestation\Source\Backend\Shared\Web\bin\Debug\net8.0\Manifest.Web.dll
+  Manifest.DI.Web -> C:\Projects\Own\manifestation\Source\Backend\Shared\DI\Web\bin\Debug\net8.0\Manifest.DI.Web.dll
+  Manifest.App.Api -> C:\Projects\Own\manifestation\Source\Backend\Api\All\bin\Debug\net8.0\Manifest.Api.All.dll
+  EnumTypeTableGenerator -> C:\Projects\Own\manifestation\Source\Tools\Generators\EnumTypeTableGenerator\bin\Debug\net8.0\EnumTypeTableGenerator.dll
+
+========================================
+generate-all-table-mig
+========================================
+
+           
+                
+
+Completed generating All Table Mig Gen ...
+
+Task                          Duration            
+--------------------------------------------------
+build-code-generator          00:00:02.8900434    
+generate-all-table-mig        00:00:00.0638355    
+--------------------------------------------------
+Total:                        00:00:02.9538789    
+
+========================================
+Default
+========================================
+
+Task                          Duration            
+--------------------------------------------------
+Command                       00:00:02.9584264    
+--------------------------------------------------
+Total:                        00:00:02.9584432    
+
+[m[32m]9;8;"USERNAME"\@]9;8;"COMPUTERNAME"\ [92mC:\Projects\Own\manifestation[90m
+[90m#[m ]9;12\EXIT /B  

@@ -1,0 +1,1192 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+@{
+    var dashName = "case-" + Model.CSection.ViewLowerClassNameWithDash;
+    var className = Model.CSection.ViewClassName;
+    var smallClassName = Model.CSection.TsViewClassName;
+    var secName = Model.CSection.SectionName;
+    var withDiff = false;
+
+    foreach(var c in Model.CSection.GetMergedColumns())
+    {
+        if (c.IsArray)
+        {
+            withDiff = true;
+            break;
+        }        
+    }
+    var withDiffStr = withDiff ? "WithDiff" : "";
+}
+
+import { Component, Input, OnInit, ViewChild, ElementRef } from '@@angular/core';
+import { FormGroup, NgForm } from '@@angular/forms';
+import { DateUtils } from 'projects/shared-library/src/common/framework/common/utils/date.utils';
+import { EntityProfileOtherNameSearchCriteria, Status } from 'projects/shared-library/src/common/models/app-custom-model';
+import { CountryModel, EntityProfileOtherNameModel, EntityProfileOtherNameWithDiffModel, MetaDataModel, ParentMetaDataModel, ProviderProfileInformationCreateUpdateModel, ProviderProfileInformationModel, StateModel, StateSearchCriteria, TenantModel, TenantSearchCriteria } from 'projects/shared-library/src/common/models/app-model';
+import { HttpService } from 'projects/shared-library/src/common/services/http/app-http-client';
+import { SelectService } from 'projects/shared-library/src/common/services/http/select-service';
+import { CustomDate, DialogService, SessionService } from 'projects/shared-library/src/public-api';
+import { NgbModal } from '@@ng-bootstrap/ng-bootstrap';
+import { AsYouType } from 'libphonenumber-js';
+import { NpiTypes } from 'projects/shared-library/src/common/models/app-enums';
+import { CustomSelectService } from 'projects/shared-library/src/common/services/http/custom-select.service';
+@foreach(var col in Model.CSection.GetMergedColumnsThatHasGrid())
+{
+@:import { AddCase@(col.DbColumnNameWithoutLastS)ModalComponent } from '../../../../modals/add-case-@(col.DbColumnNameWithoutLastSWithDash)-modal/add-case-@(col.DbColumnNameWithoutLastSWithDash)-modal.component';
+}
+declare function initFlatPickrElement(element: any): any;
+
+@@Component({
+  selector: 'app-@(dashName)-screen',
+  templateUrl: './@(dashName)-screen.component.html'
+})
+export class Case@(className)ScreenComponent implements OnInit {
+    @@Input() isCreateMode: boolean;
+    @@Input() isViewMode: boolean;
+    @@Input() isEditMode: boolean;
+    @@Input() @(Model.CSection.GetPK().TsDbColumnName): number;
+    @@Input() npiTypeId: number;
+    @@Input() appTypeId: number;
+    npiTypeForModal: Status;
+    npiType = NpiTypes;
+    @(smallClassName)Model: @(className)Model = new @(className)Model();
+
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    if (col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@int || col.DataType == CodeGenerator.CSharpDataTypes.@float)
+    {
+        if (col.DbColumnName.Contains("PhoneNumber",StringComparison.CurrentCultureIgnoreCase))
+        {
+@:    @(col.TsDbColumnName)Pattern = '^((\\+91-?)|0)?[0-9]{10}$';
+        }
+        else if (col.DbColumnName.Contains("npi",StringComparison.CurrentCultureIgnoreCase))
+        {
+@:    @(col.TsDbColumnName)Pattern = '[0-9]{10}$';
+        }
+            continue;
+        }
+        if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+        {
+@:    a@(col.DbColumnName): any;
+        }
+        else if (col.DbColumnName.EndsWith("MetaDataId"))
+        {
+@:    selected@(col.DbColumnNameWithoutId): MetaDataModel;
+@:    @(col.TsDbColumnNameWithoutId)s: MetaDataModel[] = []; 
+        }
+        else if (col.DbColumnName.EndsWith("TypeId"))
+        {
+@:    selected@(col.DbColumnNameWithoutId): Status;
+@:    @(col.TsDbColumnNameWithoutId)s: Status[] = [];
+        }
+        else if (col.DbColumnName.EndsWith("TypeIds"))
+        {
+@:      //major todo ids @col.ToString()
+        }
+        else if (col.DbColumnName.EndsWith("MetaDataIds"))
+        {
+@:    selected@(col.DbColumnNameWithoutIds)s: MetaDataModel[] = [];
+@:    @(col.TsDbColumnNameWithoutIds)s: MetaDataModel[] = [];
+        }
+        else if (col.IsArray)
+        {
+@:    existing@(col.DbColumnNameWithoutIds): @(col.FKeyTypeName)Model[] = [];
+@:    @(col.TsDbColumnNameWithoutIds): @(col.FKeyTypeName)Model[] = [];
+@:    selected@(col.DbColumnNameWithoutIds): @(col.FKeyTypeName)Model[] = [];            
+        }
+        else if (col.DbColumnName.EndsWith("StateId"))
+        {
+@:    selected@(col.DbColumnNameWithoutId): StateModel;
+@:    @(col.TsDbColumnNameWithoutId)s: StateModel[] = [];
+        }
+        else if (col.DbColumnName.EndsWith("CountryId"))
+        {
+@:    selected@(col.DbColumnNameWithoutId): CountryModel;
+@:    @(col.TsDbColumnNameWithoutId)s: CountryModel[] = [];
+@:    @(col.TsDbColumnNameWithoutId)Text: string = 'United States';                    
+        }
+        else if (col.IsFkey)
+        {
+            if(col.DbColumnName.EndsWith("Ids"))
+            {
+@:    selected@(col.DbColumnNameWithoutIds)s: @(col.FKeyTypeName)Model[] = [];
+@:    @(col.TsDbColumnNameWithoutIds)s: @(col.FKeyTypeName)Model[] = [];
+            }
+            else
+            {
+@:    existing@(col.DbColumnNameWithoutId)s: @(col.FKeyTypeName)Model[] = [];
+@:    @(col.TsDbColumnNameWithoutId)s: @(col.FKeyTypeName)Model[] = [];
+@:    selected@(col.DbColumnNameWithoutId): @(col.FKeyTypeName)Model;
+
+            }
+        }
+        else if (col.PkForView)
+        {
+            continue;
+        }
+        else
+        {
+@:    @col.TsDbColumnName: @col.TsDataType;
+        }
+    }
+
+
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:    @@ViewChild('vc@(col.DbColumnName)') dt@(col.DbColumnName): ElementRef;
+    }
+}
+
+@foreach(var col in Model.CSection.GetMergedColumnsThatHasGrid())
+{
+@:    @(col.TsDbColumnNameWithoutIds)Columns = [
+     foreach(var c in col.ParentTable.Columns)
+     {
+@:      {
+@:        text: '@(c.ColumnName)',
+@:        align: 'left',
+@:        sortable: true,
+@:        value: '@(c.TsDbColumnName)',
+@:        width: '150px',
+@:      },
+     }
+@:      {
+@:        text: '',
+@:        align: 'left',
+@:        sortable: false,
+@:        value: 'action',
+@:        width: '35px',
+@:      }
+@:   ];
+}
+/*
+  aDateOfBirth: any;
+  aParStartDate: any;
+  aParEndDate: any;
+  aAttestationDate: any;
+  aNetworkApprovalDate: any;
+  aVerificationDate: any;
+@@ViewChild('vcParStartDate') dtParStartDate: ElementRef;
+@@ViewChild('vcParEndDate') dtParEndDate: ElementRef;
+@@ViewChild('vcDateOfBirth') dtDateOfBirth: ElementRef;
+@@ViewChild('vcAttestationDate') dtAttestationDate: ElementRef;
+@@ViewChild('vcNetworkApprovalDate') dtNetworkApprovalDate: ElementRef;
+@@ViewChild('vcVerificationDate') dtVerificationDate: ElementRef;
+        
+  verificationSourceTypes: Status[] = [];
+  selectedVerificationSourceType: Status;
+  isErrorFiles: boolean;
+  files: File = null;
+  fileName: string;
+  @(smallClassName)Model: @(className)Model = new @(className)Model();
+  
+  searchKeyword: string;
+  nuccGroupingMetaDatas: MetaDataModel[] = [];
+  selectedNuccGroupingMetaData: MetaDataModel;
+  providerTypeMetaDatas: MetaDataModel[] = [];
+  selectedproviderTypeMetaData: MetaDataModel;
+  practiceSettingMetaDatas: MetaDataModel[] = [];
+  selectedPracticeSettingMetaData: MetaDataModel;
+  lineOfBusinessMetaDatas: MetaDataModel[] = [];
+  selectedLineOfBusinessMetaDatas: MetaDataModel[] = [];
+  suffixMetaDatas: MetaDataModel[] = [];
+  selectedsuffixMetaData: MetaDataModel;
+  genderIdentityMetaDatas: MetaDataModel[] = [];
+  selectedGenderIdentityMetaData: MetaDataModel;
+  raceMetaDatas: MetaDataModel[] = [];
+  selectedRaceMetaData: MetaDataModel;
+  terminationReasonMetaDatas: MetaDataModel[] = [];
+  selectedterminationReasonMetaData: MetaDataModel;
+  providerLanguageMetaDatas: MetaDataModel[] = [];
+  selectedProviderLanguageMetaDatas: MetaDataModel[] = [];
+  participatingPlansMetaDatas: MetaDataModel[] = [];
+  selectedParticipatingPlansMetaDatas: MetaDataModel[] = [];
+  npiTypes: Status[] = [];
+  mailingAddressCountries: CountryModel[] = [];
+  businessAddressCountries: CountryModel[] = [];
+  selectedBusinessAddressCountry: CountryModel;
+  selectedMailingAddressCountry: CountryModel;
+  businessAddressStates: StateModel[] = [];
+  mailingAddressStates: StateModel[] = [];
+  selectedBusinessAddressState: StateModel;
+  selectedMailingAddressState: StateModel;
+  otherNameColumns = [];
+  countryText = 'United States';
+  
+  npiPattern = '[0-9]{10}$';
+  BusinessAddressPhoneNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  MailingAddressPhoneNumberPattern = '^((\\+91-?)|0)?[0-9]{10}$';
+  
+  parentMetaDataModel: ParentMetaDataModel = new ParentMetaDataModel();
+  existingEntityProfileOtherNames: EntityProfileOtherNameModel[] = [];
+*/
+
+  constructor(private modalService: NgbModal,
+    private customDate: CustomDate,
+    private selectService: SelectService,
+    private dialogService: DialogService,
+    public customSelectService: CustomSelectService,
+    private httpService: HttpService,
+    public sessionService: SessionService,) {
+/*
+    this.otherNameColumns = [
+      {
+        text: 'Name',
+        align: 'left',
+        sortable: true,
+        value: 'name',
+        width: '150px',
+      },
+      {
+        text: 'Line of Business',
+        align: 'left',
+        sortable: true,
+        value: 'dummyLineOfBusinessMetaDatas',
+        width: '95px',
+      }, ,
+      {
+        text: 'Organization',
+        align: 'left',
+        sortable: true,
+        value: 'organizationName',
+        width: '95px',
+      },
+      {
+        text: 'Start Date',
+        align: 'left',
+        sortable: true,
+        value: 'startDate',
+        width: '95px',
+      },
+      {
+        text: 'End Date',
+        align: 'left',
+        sortable: true,
+        value: 'endDate',
+        width: '95px',
+      },
+      {
+        text: '',
+        align: 'left',
+        sortable: false,
+        value: 'action',
+        width: '35px',
+      }
+    ]
+*/
+  }
+  
+  ngOnInit(): void {
+    this.get@(className)(this.@(Model.CSection.GetPK().TsDbColumnName));
+    this.loadSelectItems();
+    this.npiTypeForModal = this.selectService.GetWithBlankNpiTypes().find(i => i.id == this.npiTypeId);
+    /*
+    this.getMailingAddressCountries(this.countryText);
+    this.getBusinessAddressCountries(this.countryText);
+    this.getMailingAddressStates(1);
+    this.getBusinessAddressStates(1);
+    this.npiTypes = this.selectService.GetWithBlankNpiTypes();
+    this.verificationSourceTypes = this.selectService.GetResourceTypes();
+    if (!this.selectedNpiType) this.selectedNpiType = this.npiTypes.find(i => i.id == null);
+    if (this.selectedNpiType.id == NpiTypes.Organization) {
+      this.otherNameColumns = this.otherNameColumns.filter(list => list.value !== 'name');
+      this.otherNameColumns = this.otherNameColumns.filter(list => list.value !== 'dummyLineOfBusinessMetaDatas');
+    }
+    if (this.selectedNpiType.id == NpiTypes.Individual) this.otherNameColumns = this.otherNameColumns.filter(list => list.value !== 'organizationName');
+    //  this.parentMetaDataModel.parentMetaDataId = this.selectedNpiType ? this.selectedNpiType.id : null;
+    this.loadSelectItems();
+    */    
+  }
+
+  get@(className)(@(Model.CSection.GetPK().TsDbColumnName): number) {
+    this.httpService.get@(className)(caseId).subscribe(result => {
+      if (!result.isSuccess) {
+        this.dialogService.errorWithReturnModel("unable to get data", result);
+        return console.error("unable to get data - failed: get@(className)", result);
+      }
+
+      this.@(smallClassName)Model = result.model;
+@foreach(var col in Model.CSection.GetMergedColumnsThatHasGrid())
+{
+@:      this.existing@(col.DbColumnNameWithoutIds) = result.model.@(col.TsDbColumnNameWithoutIds);
+}
+      /*
+      this.existingEntityProfileOtherNames = result.model.entityProfileOtherNames;
+      */    
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:      this.a@(col.DbColumnName) = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.@(col.TsDbColumnName)), 'datezone');
+    }
+}
+/*
+      this.aAttestationDate = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.attestationDate), 'datezone');
+      this.aDateOfBirth = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.dateOfBirth), 'datezone');
+      this.aNetworkApprovalDate = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.networkApprovalDate), 'datezone');
+      this.aParEndDate = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.parEndDate), 'datezone');
+      this.aParStartDate = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.parStartDate), 'datezone');
+      this.aVerificationDate = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.verifiedDate), 'datezone');
+*/
+    });
+  }
+
+  loadSelectItems() {
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    else if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime || col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@float || col.DataType == CodeGenerator.CSharpDataTypes.@int || col.DataType == CodeGenerator.CSharpDataTypes.@bool || col.PkForView)
+    {
+        continue;
+    }
+    if (col.DbColumnName.EndsWith("MetaDataId"))
+    {
+@:    let @(col.TsDbColumnNameWithoutId)ParentMetaDataModel = new ParentMetaDataModel();
+@:    this.get@(col.DbColumnNameWithoutId)s(@(col.TsDbColumnNameWithoutId)ParentMetaDataModel);
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataIds"))
+    {
+@:    let @(col.TsDbColumnNameWithoutIds)ParentMetaDataModel = new ParentMetaDataModel();
+@:    this.get@(col.DbColumnNameWithoutIds)s(@(col.TsDbColumnNameWithoutIds)ParentMetaDataModel);
+    }    
+    else if (col.DbColumnName.EndsWith("StateId"))
+    {
+@:    this.get@(col.DbColumnNameWithoutId)s(1);
+    }
+    else if (col.DbColumnName.EndsWith("CountryId"))
+    {
+@:    this.get@(col.DbColumnNameWithoutId)s(this.countryText);
+    }
+    else if (col.DbColumnName.EndsWith("TypeId"))
+    {
+@:    this.get@(col.DbColumnNameWithoutId)s();
+    }
+    else if (col.DbColumnName.EndsWith("TypeIds"))
+    {
+@:    //major todo : @col.ToString()
+    }
+    else if (col.IsArray || col.IsFkey)
+    {
+        if(col.IsArray)
+        {
+@:    this.get@(col.DbColumnNameWithoutIds)();
+        }
+        else
+        {
+@:    this.get@(col.DbColumnNameWithoutId)s();
+        }
+    }
+    else
+    {
+@:    //Another major todo : Not implemented for  @col.DbColumnName : @col.DataType , Fkey : @col.FKeyTypeName                
+    }
+} 
+/*      
+    this.getSuffixMetaDatas(this.parentMetaDataModel);
+    this.getLineOfBusinessMetaDatas(this.parentMetaDataModel);
+    this.getNUCCGroupingMetaDatas(this.parentMetaDataModel);
+    this.getPracticeSettingMetaDatas(this.parentMetaDataModel);
+    this.getProviderTypeMetaDatas(this.parentMetaDataModel);
+    this.getGenderIdentityMetaDatas(this.parentMetaDataModel);
+    this.getRaceMetaData(this.parentMetaDataModel);
+    this.getLanuguageMetaDatas(this.parentMetaDataModel);
+    this.getTerminationReasonMetaDatas(this.parentMetaDataModel);
+    this.getParticipatingPlansMetaDatas(this.parentMetaDataModel);
+*/
+  }
+
+  ngAfterViewInit(): void {
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:  if (this.dt@(col.DbColumnName)) initFlatPickrElement(this.dt@(col.DbColumnName).nativeElement.id);
+    }
+}
+/*      
+    if (this.dtParStartDate) initFlatPickrElement(this.dtParStartDate.nativeElement.id);
+    if (this.dtParEndDate) initFlatPickrElement(this.dtParEndDate.nativeElement.id);
+    if (this.dtDateOfBirth) initFlatPickrElement(this.dtDateOfBirth.nativeElement.id);
+    if (this.dtAttestationDate) initFlatPickrElement(this.dtAttestationDate.nativeElement.id);
+    if (this.dtNetworkApprovalDate) initFlatPickrElement(this.dtNetworkApprovalDate.nativeElement.id);
+    if (this.dtVerificationDate) initFlatPickrElement(this.dtVerificationDate.nativeElement.id);
+*/
+  }
+
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.PkForView || col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@bool || col.DataType == CodeGenerator.CSharpDataTypes.DateTime|| col.DataType == CodeGenerator.CSharpDataTypes.@int || col.DataType == CodeGenerator.CSharpDataTypes.@float)
+    {
+        continue;
+    }
+    else if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataId"))
+    {
+@:    get@(col.DbColumnNameWithoutId)s(parentMetaDataModel: ParentMetaDataModel) {
+@:          this.httpService.get@(col.MetaDataType)MetaDatas(parentMetaDataModel).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.MetaDataType)MetaDatas",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) 
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.metaDataId == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:          });
+@:    }
+@:
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataIds"))
+    {
+@:    get@(col.DbColumnNameWithoutIds)s(parentMetaDataModel: ParentMetaDataModel) {
+@:          this.httpService.get@(col.MetaDataType)MetaDatas(parentMetaDataModel).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.MetaDataType)MetaDatas",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutIds)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.@(smallClassName)Model.@(col.TsDbColumnName)?.map(id => {
+@:                      let selectedItems = this.@(col.TsDbColumnNameWithoutIds)s.find(i => i.metaDataId == id);
+@:                      if(selectedItems) this.selected@(col.DbColumnNameWithoutIds)s.push(selectedItems);
+@:                  }); 
+@:              }
+@:          });
+@:    }
+@:
+    }
+    else if (col.DbColumnName.EndsWith("CountryId"))
+    {
+        var sName = col.DbColumnNameWithoutId.Replace("Country","State");
+        sName = sName.Replace("country","state");
+        
+        var sLName = col.TsDbColumnNameWithoutId.Replace("Country","State");
+        sLName = sLName.Replace("country","state");
+        
+@:    get@(col.DbColumnNameWithoutId)s(keyword: string) {
+@:          this.httpService.getCountriesByKeyword(keyword).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  console.error('Unable To fetch  countries');
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(item => item.countryName === this.countryText);
+@:              }
+@:          });
+@:    }
+@:
+@:    change@(col.DbColumnNameWithoutId)(country: CountryModel) {
+@:      if (this.selected@(col.DbColumnNameWithoutId).countryName === this.countryText) return;
+@:      this.selected@(col.DbColumnNameWithoutId).countryName = country.countryName;
+@:      this.countryText = country.countryName;
+@:      this.@(smallClassName)Model.@(sLName)Id = null;
+@:      this.selected@(sName) = null;
+@:      this.get@(sName)s(country.countryId);
+@:    }
+@:
+    }
+    else if (col.DbColumnName.EndsWith("StateId"))
+    {
+        
+@:    get@(col.DbColumnNameWithoutId)s(countryId: number) {
+@:          let stateSearchCriteria = new StateSearchCriteria();
+@:          stateSearchCriteria.countryId = countryId;
+@:          this.httpService.getStates(stateSearchCriteria).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  console.error('Unable To fetch  States');
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.stateId == this.@(smallClassName)Model.@(col.TsDbColumnName));    
+@:              }
+@:          });
+@:    }
+@:
+    }    
+    else if (col.DbColumnName.EndsWith("TypeId"))
+    {
+@:    get@(col.DbColumnNameWithoutId)s() {
+@:      this.@(col.TsDbColumnNameWithoutId)s = this.selectService.Get@(col.DbColumnNameWithoutId)s();
+@:      if(!this.isCreateMode) {
+@:          this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.id == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:      }
+@:    }
+@:
+    } 
+    else if (col.DbColumnName.EndsWith("Id") || (col.IsFkey && !col.IsArray))
+    {
+        if (col.FKeyTypeName == "Country")
+        {
+@:    get@(col.DbColumnNameWithoutId)s() {
+@:          this.httpService.getCountriesByKeyword(null).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.DbColumnNameWithoutId)",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.@(col.TsFKeyTypeName)Id == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:              }
+@:          });
+@:    }
+@:
+        }
+        else
+        {
+@:    get@(col.DbColumnNameWithoutId)s() {
+@:          this.httpService.get@(col.FKeyTypeName)s(new @(col.FKeyTypeName)SearchCriteria()).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.DbColumnNameWithoutId)",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.@(col.TsFKeyTypeName)Id == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:              }
+@:          });
+@:    }
+@:            
+        }    
+    } 
+    else if (col.IsArray)
+    {
+@:    get@(col.DbColumnNameWithoutIds)() {
+@:          this.httpService.get@(col.FKeyTypeName)s(new @(col.FKeyTypeName)SearchCriteria()).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.MetaDataType)MetaDatas",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutIds) = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)?.map(id => {
+@:                      let selectedItems = this.@(col.TsDbColumnNameWithoutIds).find(i => i.@(col.TsFKeyTypeName)Id == id.@(col.TsFKeyTypeName)Id);
+@:                      if(selectedItems) this.selected@(col.DbColumnNameWithoutIds).push(selectedItems);
+@:                  }); 
+@:              }
+@:          });
+@:    }
+
+    }
+    else
+    {
+@:      //major todo : Not implemented for  @col.DbColumnName : @col.DataType , Fkey : @col.FKeyTypeName
+@:      //@col.ToString()
+    }
+}
+
+/*
+  uploadFile(event) {
+    this.files = event.target.files[0];
+    this.fileName = event.target.files[0].name;
+    if (this.files === null) {
+      this.isErrorFiles = true;
+    } else {
+      this.isErrorFiles = false;
+    }
+  }
+
+  getParticipatingPlansMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getParticipatingPlansMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) {
+        return console.error("unable to get data - failed: getParticipatingPlansMetaDatas", result);
+      }
+      this.participatingPlansMetaDatas = result.model;
+      this.@(smallClassName)Model.participatingPlansMetaDataIds?.map(id => {
+        let selectedParticpatingPlansMetaData = this.participatingPlansMetaDatas.find(i => i.metaDataId == id.metaDataId);
+        if (selectedParticpatingPlansMetaData) this.selectedParticipatingPlansMetaDatas.push(selectedParticpatingPlansMetaData);
+      });
+    });
+  }
+
+  public getSelectedLineOfBusinessMetaData(lineOfBusinessMetaDataIds: number[]): MetaDataModel[] {
+    let selectedLineOfBusinessMetaDatas = [];
+    lineOfBusinessMetaDataIds?.map(id => {
+      let selectedLineOfBusinessMetaData = this.lineOfBusinessMetaDatas.find(i => i.metaDataId == id);
+      if (selectedLineOfBusinessMetaData) selectedLineOfBusinessMetaDatas.push(selectedLineOfBusinessMetaData);
+    });
+    return selectedLineOfBusinessMetaDatas;
+  }
+
+  getTerminationReasonMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getTerminationReasonMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) {
+        return console.error("unable to get data - failed: getTerminationReasonMetaDatas", result);
+      }
+      this.terminationReasonMetaDatas = result.model;
+      this.selectedterminationReasonMetaData = this.terminationReasonMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.terminationReasonMetaDataId);
+
+    });
+  }
+
+  getLanuguageMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getLanuguageMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) {
+        return console.error("unable to get data - failed: getLanuguageMetaDatas", result);
+      }
+      this.providerLanguageMetaDatas = result.model;
+      this.@(smallClassName)Model.providerLanguageMetaDataIds?.map(id => {
+        let selectedProviderLanguageMetaDatas = this.providerLanguageMetaDatas.find(i => i.metaDataId == id.metaDataId);
+        if (selectedProviderLanguageMetaDatas) this.selectedProviderLanguageMetaDatas.push(selectedProviderLanguageMetaDatas);
+      });
+    });
+  }
+
+  getRaceMetaData(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getRaceMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) {
+        return console.error("unable to get data - failed: getRaceMetaDatas", result);
+      }
+      this.raceMetaDatas = result.model;
+      this.selectedRaceMetaData = this.raceMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.raceMetaDataId);
+
+    });
+  }
+
+  getGenderIdentityMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getGenderIdentityMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) {
+        return console.error("unable to get data - failed: getGenderIdentityMetaDatas", result);
+      }
+      this.genderIdentityMetaDatas = result.model;
+      this.selectedGenderIdentityMetaData = this.genderIdentityMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.genderIdentityMetaDataId);
+    });
+  }
+
+  getSuffixMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getSuffixMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) {
+        return console.error("unable to get data - failed: getSuffixMetaDatas", result);
+      }
+      this.suffixMetaDatas = result.model;
+      this.selectedsuffixMetaData = this.suffixMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.suffixMetaDataId);
+    });
+  }
+
+  getNUCCGroupingMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getNUCCGroupingMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) return console.error("unable to get data - failed: getNUCCGroupingMetaDatas", result);
+      this.nuccGroupingMetaDatas = result.model;
+      this.selectedNuccGroupingMetaData = this.nuccGroupingMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.nuccGroupingMetaDataId);
+    });
+  }
+
+  getProviderTypeMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getProviderTypeMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) return console.error("unable to get data - failed: getProviderTypeMetaDatas", result);
+      this.providerTypeMetaDatas = result.model;
+      this.selectedproviderTypeMetaData = this.providerTypeMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.providerTypeMetaDataId);
+    });
+  }
+
+  getPracticeSettingMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getPracticeSettingMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) return console.error("unable to get data - failed: getPracticeSettingMetaDatas", result);
+      this.practiceSettingMetaDatas = result.model;
+      this.selectedPracticeSettingMetaData = this.practiceSettingMetaDatas.find(i => i.metaDataId == this.@(smallClassName)Model.practiceSettingMetaDataId);
+    });
+  }
+
+  getLineOfBusinessMetaDatas(parentMetaDataModel: ParentMetaDataModel) {
+    this.httpService.getLineOfBusinessMetaDatas(parentMetaDataModel).subscribe(result => {
+      if (!result.isSuccess) return console.error("unable to get data - failed: getLineOfBusinessMetaDatas", result);
+      this.lineOfBusinessMetaDatas = result.model;
+      this.@(smallClassName)Model.lineOfBusinessMetaDataIds?.map(id => {
+        let selectedLineOfBusinessMetaData = this.lineOfBusinessMetaDatas.find(i => i.metaDataId == id.metaDataId);
+        if (selectedLineOfBusinessMetaData) this.selectedLineOfBusinessMetaDatas.push(selectedLineOfBusinessMetaData);
+      });
+    });
+  }
+
+  getMailingAddressStates(countryId: number) {
+    let stateSearchCriteria = new StateSearchCriteria();
+    stateSearchCriteria.countryId = countryId;
+    this.httpService.getStates(stateSearchCriteria).subscribe(data => {
+      if (!data.isSuccess) {
+        console.error('Unable To fetch Mailing States');
+      }
+      this.mailingAddressStates = data.model;
+      this.selectedMailingAddressState = this.mailingAddressStates.find(item => item.stateId == this.@(smallClassName)Model.mailingStateId);
+    });
+  }
+
+  getBusinessAddressStates(countryId: number) {
+    let stateSearchCriteria = new StateSearchCriteria();
+    stateSearchCriteria.countryId = countryId;
+    this.httpService.getStates(stateSearchCriteria).subscribe(data => {
+      if (!data.isSuccess) {
+        console.error('Unable To fetch Business States');
+      }
+      this.businessAddressStates = data.model;
+      this.selectedBusinessAddressState = this.businessAddressStates.find(item => item.stateId == this.@(smallClassName)Model.stateId);
+
+    });
+  }
+
+  getMailingAddressCountries(keyword: string) {
+    this.httpService.getCountriesByKeyword(keyword).subscribe(data => {
+      if (!data.isSuccess) {
+        console.error('Unable To fetch States');
+      }
+      this.mailingAddressCountries = data.model;
+      this.selectedMailingAddressCountry = this.mailingAddressCountries.find(item => item.countryName === this.countryText);
+    });
+  }
+
+  getBusinessAddressCountries(keyword: string) {
+    this.httpService.getCountriesByKeyword(keyword).subscribe(data => {
+      if (!data.isSuccess) {
+        console.error('Unable To fetch States');
+      }
+      this.businessAddressCountries = data.model;
+      this.selectedBusinessAddressCountry = this.businessAddressCountries.find(item => item.countryName === this.countryText);
+    });
+  }
+
+  changeMailingCountry(country: CountryModel) {
+    if (this.selectedMailingAddressCountry.countryName !== this.countryText) {
+      this.selectedMailingAddressCountry.countryName = country.countryName;
+      this.countryText = country.countryName;
+      this.@(smallClassName)Model.mailingStateId = null;
+      this.selectedMailingAddressState = null;
+      this.getMailingAddressStates(country.countryId);
+    }
+  }
+
+  changeBusinessCountry(country: CountryModel) {
+    if (this.selectedBusinessAddressCountry.countryName !== this.countryText) {
+      this.selectedBusinessAddressCountry.countryName = country.countryName;
+      this.countryText = country.countryName;
+      this.@(smallClassName)Model.stateId = null;
+      this.selectedBusinessAddressState = null;
+      this.getBusinessAddressStates(country.countryId);
+    }
+  }
+*/
+
+/*
+  showAddEntityProfileOtherNameModal() {
+    const modalRef = this.modalService.open(CaseEntityProfileOtherNameModalComponent, {
+      centered: true,
+      size: 'lg',
+      beforeDismiss: () => !modalRef.componentInstance.workflowStageForm.dirty
+    });
+    const componentInstance = modalRef.componentInstance as CaseEntityProfileOtherNameModalComponent;
+    componentInstance.title = "Add Profile Info";
+    componentInstance.isCreateMode = true;
+    componentInstance.selectedNpiType = this.npiTypeForModal;
+    componentInstance.buttonText = "Add Profile";
+    componentInstance.existingEntityProfileOtherNames = this.existingEntityProfileOtherNames;
+    componentInstance.modalResponse.subscribe(res => {
+      if (!res) return;
+      if (!this.@(smallClassName)Model.entityProfileOtherNames) this.@(smallClassName)Model.entityProfileOtherNames = [];
+      this.@(smallClassName)Model.entityProfileOtherNames.push(res);
+      componentInstance.close();
+    });
+  }
+
+  showUpdateEntityProfileOtherNameModal(item: EntityProfileOtherNameModel) {
+    const modalRef = this.modalService.open(CaseEntityProfileOtherNameModalComponent, {
+      centered: true,
+      size: 'lg',
+      beforeDismiss: () => !modalRef.componentInstance.workflowStageForm.dirty
+    });
+    const componentInstance = modalRef.componentInstance as CaseEntityProfileOtherNameModalComponent;
+    componentInstance.title = "Update Profile";
+    componentInstance.isEditMode = true;
+    componentInstance.buttonText = "Update Profile";
+    componentInstance.existingEntityProfileOtherNames = this.existingEntityProfileOtherNames;
+    componentInstance.selectedNpiType = this.npiTypeForModal;
+    componentInstance.entityProfileOtherNameModel = item as EntityProfileOtherNameWithDiffModel;
+    componentInstance.modalResponse.subscribe(res => {
+      if (!res) return;
+      let e = this.@(smallClassName)Model.entityProfileOtherNames.findIndex(i => i.entityProfileOtherNameId == res.entityProfileOtherNameId);
+      if (e === -1) return this.dialogService.error("unable to find the Other Name data");
+
+      this.@(smallClassName)Model.entityProfileOtherNames.splice(e, 1, res);
+      this.dialogService.success("successfully updated the Other Name  data");
+      componentInstance.close();
+    });
+  }
+
+  deleteEntityProfileOtherNameData(item: EntityProfileOtherNameModel) {
+    this.dialogService.confirmWithTitle("Delete Other Name", `Are you sure want to delete ${item.firstName}  ${item.lastName}`).then(res => {
+      if (!res) return;
+      let e = this.@(smallClassName)Model.entityProfileOtherNames.findIndex(i => i.entityProfileOtherNameId == item.entityProfileOtherNameId);
+      if (e === -1) return this.dialogService.error("unable to find the Other Name data");
+
+      this.@(smallClassName)Model.entityProfileOtherNames.splice(e, 1);
+      this.dialogService.success("successfully delete the Other Name  data");
+    });
+  }
+
+  showViewProfileOtherNameModal(item: EntityProfileOtherNameModel) {
+    const modalRef = this.modalService.open(CaseEntityProfileOtherNameModalComponent, {
+      centered: true,
+      size: 'lg',
+      beforeDismiss: () => !modalRef.componentInstance.workflowStageForm.dirty
+    });
+    const componentInstance = modalRef.componentInstance as CaseEntityProfileOtherNameModalComponent;
+    componentInstance.title = "View Other Name ";
+    componentInstance.isViewMode = true;
+    componentInstance.buttonText = "View Other Name ";
+    componentInstance.existingEntityProfileOtherNames = this.existingEntityProfileOtherNames;
+    componentInstance.selectedNpiType = this.npiTypeForModal;
+    componentInstance.entityProfileOtherNameModel = item as EntityProfileOtherNameWithDiffModel;
+  }
+*/
+
+@foreach (var col in Model.CSection.GetMergedColumnsThatHasGrid())
+{
+    @:  showAdd@(col.DbColumnNameWithoutLastS)Modal() {
+@:    const modalRef = this.modalService.open(AddCase@(col.DbColumnNameWithoutLastS)ModalComponent, {
+@:      centered: true,
+@:      size: 'lg',
+@:      beforeDismiss: () => !modalRef.componentInstance.workflowStageForm.dirty
+@:    });
+@:    const componentInstance = modalRef.componentInstance as AddCase@(col.DbColumnNameWithoutLastS)ModalComponent;
+@:    componentInstance.title = "Add @(col.ColumnName)";
+@:    componentInstance.isCreateMode = true;
+@:    componentInstance.selectedNpiType = this.npiTypeForModal;
+@:    componentInstance.buttonText = "Add @(col.ColumnName)";
+@:    componentInstance.modalResponse.subscribe(res => {
+@:      if (!res) return;
+@:      if (!this.@(smallClassName)Model.@(col.TsDbColumnName)) this.@(smallClassName)Model.@(col.TsDbColumnName) = [];
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName).push(res);
+@:      componentInstance.close();
+@:    });
+@:  }
+@:
+    @:  showUpdate@(col.DbColumnNameWithoutLastS)Modal(item: @(col.DbColumnNameWithoutLastS)Model) {
+@:    const modalRef = this.modalService.open(AddCase@(col.DbColumnNameWithoutLastS)ModalComponent, {
+@:      centered: true,
+@:      size: 'lg',
+@:      beforeDismiss: () => !modalRef.componentInstance.workflowStageForm.dirty
+@:    });
+@:    const componentInstance = modalRef.componentInstance as AddCase@(col.DbColumnNameWithoutLastS)ModalComponent;
+@:    componentInstance.title = "Update @(col.ColumnName)";
+@:    componentInstance.isEditMode = true;
+@:    componentInstance.buttonText = "Update @(col.ColumnName)";
+@:    componentInstance.selectedNpiType = this.npiTypeForModal;
+@:    componentInstance.@(col.TsDbColumnNameWithoutLastS)Model = item as @(col.DbColumnNameWithoutLastS)WithDiffModel;
+@:    componentInstance.modalResponse.subscribe(res => {
+@:      if (!res) return;
+@:      let e = this.@(smallClassName)Model.@(col.TsDbColumnName).findIndex(i => i.@(col.TsDbColumnNameWithoutLastS)Id == res.@(col.TsDbColumnNameWithoutLastS)Id);
+@:      if (e === -1) return this.dialogService.error("unable to find the @(col.ColumnName) data");
+@:
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName).splice(e, 1, res);
+@:      this.dialogService.success("successfully updated the @(col.ColumnName)  data");
+@:      componentInstance.close();
+@:    });
+@:  }
+@:
+    @:  delete@(col.DbColumnNameWithoutLastS)Data(item: @(col.DbColumnNameWithoutLastS)Model) {
+@:    this.dialogService.confirmWithTitle("Delete @(col.ColumnName)", `Are you sure want to delete xyz`).then(res => {
+@:      if (!res) return;
+@:      let e = this.@(smallClassName)Model.@(col.TsDbColumnName).findIndex(i => i.@(col.TsDbColumnNameWithoutLastS)Id == item.@(col.TsDbColumnNameWithoutLastS)Id);
+@:      if (e === -1) return this.dialogService.error("unable to find the @(col.ColumnName) data");
+@:
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName).splice(e, 1);
+@:      this.dialogService.success("successfully delete the @(col.ColumnName)  data");
+@:    });
+@:  }
+@:
+@:  showView@(col.DbColumnNameWithoutLastS)Modal(item: @(col.DbColumnNameWithoutLastS)Model) {
+@:    const modalRef = this.modalService.open(AddCase@(col.DbColumnNameWithoutLastS)ModalComponent, {
+@:      centered: true,
+@:      size: 'lg',
+@:      beforeDismiss: () => !modalRef.componentInstance.workflowStageForm.dirty
+@:    });
+@:    const componentInstance = modalRef.componentInstance as AddCase@(col.DbColumnNameWithoutLastS)ModalComponent;
+@:    componentInstance.title = "View @(col.ColumnName) ";
+@:    componentInstance.isViewMode = true;
+@:    componentInstance.buttonText = "View @(col.ColumnName) ";
+@:    componentInstance.selectedNpiType = this.npiTypeForModal;
+@:    componentInstance.@(col.TsDbColumnNameWithoutLastS)Model = item as @(col.DbColumnNameWithoutLastS)WithDiffModel;
+@:  }
+}
+
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:    update@(col.DbColumnName)(event: Event) {
+@:      this.a@(col.DbColumnName) = event;
+@:    }
+@:
+    }
+}
+/*
+  updateParStartDate(event: Event) {
+    this.aParStartDate = event;
+  }
+
+  updateParEndDate(event: Event) {
+    this.aParEndDate = event;
+  }
+
+  updateDateOfBirth(event: Event) {
+    this.aDateOfBirth = event;
+  }
+
+  updateAttestationDate(event: Event) {
+    this.aAttestationDate = event;
+  }
+
+  updateNationalApprovalDate(event: Event) {
+    this.aNetworkApprovalDate = event;
+  }
+
+  updateVerificationDate(event: Event) {
+    this.aVerificationDate = event;
+  }
+*/
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DataType == CodeGenerator.CSharpDataTypes.@string)
+    {
+        if(col.DbColumnName.Contains("Phone",StringComparison.CurrentCultureIgnoreCase))
+        {
+@:  format@(col.DbColumnName)() {
+@:    const formatter = new AsYouType('US');
+@:    let formatted@(col.DbColumnName) = formatter.input(this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:    this.@(smallClassName)Model.@(col.TsDbColumnName) = formatted@(col.DbColumnName);
+@:  }
+            @:
+        }
+        else if(col.DbColumnName.Contains("Zip",StringComparison.CurrentCultureIgnoreCase))
+        {
+@:  format@(col.DbColumnName)() {
+@:    const regex = /(\d{5})(\d{4})/;
+@:    if (this.@(smallClassName)Model.@(col.TsDbColumnName).length === 9) {
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.@(smallClassName)Model.@(col.TsDbColumnName).replace(regex, '$1-$2');
+@:    }
+@:  }
+@:
+        }
+    }
+}
+/*
+  formatBusinessPhoneNumber() {
+    const formatter = new AsYouType('US');
+    let formattedBusinessPhone = formatter.input(this.@(smallClassName)Model.phone);
+    this.@(smallClassName)Model.phone = formattedBusinessPhone;
+  }
+
+  formatMailingPhoneNumber() {
+    const formatter = new AsYouType('US');
+    let formattedMailingPhone = formatter.input(this.@(smallClassName)Model.mailingPhone);
+    this.@(smallClassName)Model.mailingPhone = formattedMailingPhone;
+  }
+
+  formatZipCode() {
+    const regex = /(\d{5})(\d{4})/;
+    if (this.@(smallClassName)Model.zipCode.length === 9) {
+      this.@(smallClassName)Model.zipCode = this.@(smallClassName)Model.zipCode.replace(regex, '$1-$2');
+    }
+    if (this.@(smallClassName)Model.mailingZipCode.length === 9) {
+      this.@(smallClassName)Model.mailingZipCode = this.@(smallClassName)Model.mailingZipCode.replace(regex, '$1-$2');
+    }
+  }
+*/
+
+  onSubmit(f: NgForm) {
+    if (!f.valid) {
+      const element = document.getElementById('main');
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' });
+        }, 0);
+      }
+      return;
+    };
+    //   if (this.files === null) {
+    //     this.isErrorFiles = true;
+    //      return;
+    // }
+    let @(smallClassName)Model = this.generateModel(f.value);
+    if (this.isCreateMode) {
+      this.create@(className)(@(smallClassName)Model);
+    }
+    else {
+      this.update@(className)(@(smallClassName)Model);
+    }
+  }
+
+  create@(className)(@(smallClassName)CreateUpdateModel: @(className)CreateUpdateModel) {
+    this.httpService.createOrUpdate@(className)(@(smallClassName)CreateUpdateModel).subscribe(result => {
+      if (!result.isSuccess) return this.dialogService.errorWithReturnModel("unable to create @(secName)", result);
+      this.dialogService.success("Sucessfully created the @(secName)");
+    });
+  }
+
+  update@(className)(@(smallClassName)CreateUpdateModel: @(className)CreateUpdateModel) {
+    this.httpService.createOrUpdate@(className)(@(smallClassName)CreateUpdateModel).subscribe(result => {
+      if (!result.isSuccess) return this.dialogService.errorWithReturnModel("unable to create @(secName)", result);
+      this.dialogService.success("Sucessfully Updated the @(secName)");
+    });
+  }
+
+  generateModel(obj: @(className)CreateUpdateModel): @(className)CreateUpdateModel {
+    let @(smallClassName)CreateUpdateModel = new @(className)CreateUpdateModel();
+    Object.assign(@(smallClassName)CreateUpdateModel, obj);
+    Object.keys(@(smallClassName)CreateUpdateModel).forEach(key => {
+      if (@(smallClassName)CreateUpdateModel[key] && typeof @(smallClassName)CreateUpdateModel[key] === 'object') {
+        delete (@(smallClassName)CreateUpdateModel[key]);
+      }
+    });
+
+@foreach (var col in Model.CSection.GetMergedColumns())
+{
+    if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    if (col.DataType == CodeGenerator.CSharpDataTypes.@bool || col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@int  || col.DataType == CodeGenerator.CSharpDataTypes.@float|| col.PkForView)
+    {
+        continue;
+    }
+    else if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:      @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) = this.a@(col.DbColumnName);
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataId"))
+    {   
+@:      @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).metaDataId : null;
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataIds"))
+    {   
+@:    //  reset existing and new line of business
+@:    @(smallClassName)CreateUpdateModel.existing@(col.DbColumnNameWithoutIds)Ids = [];
+        @:    @(smallClassName)CreateUpdateModel.new@(col.DbColumnNameWithoutIds)Ids = [];
+@:
+@:    this.selected@(col.DbColumnNameWithoutIds)s.map(meta => {
+@:        let existingMetaDataIdx = this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)Ids.findIndex(eMeta => eMeta === meta.metaDataId);
+@:        if (existingMetaDataIdx !== -1) @(smallClassName)CreateUpdateModel.existing@(col.DbColumnNameWithoutIds)Ids.push(meta.metaDataId);
+        @:        else @(smallClassName)CreateUpdateModel.new@(col.DbColumnNameWithoutIds)Ids.push(meta.metaDataId);
+@:    });
+    } 
+    else if (col.DbColumnName.EndsWith("Ids"))
+    {   
+@:    //  reset existing and new line of business
+@:    @(smallClassName)CreateUpdateModel.existing@(col.DbColumnNameWithoutIds)s = [];
+@:    @(smallClassName)CreateUpdateModel.new@(col.DbColumnNameWithoutIds)s = [];
+@:
+@:    this.selected@(col.DbColumnNameWithoutIds)s.map(item => {
+@:        if (!@(smallClassName)CreateUpdateModel.@(col.TsDbColumnNameWithoutIds)s) @(smallClassName)CreateUpdateModel.@(col.TsDbColumnNameWithoutIds)s = [];
+@:        let existingItemIdx = @(smallClassName)CreateUpdateModel.@(col.TsDbColumnNameWithoutIds)s.findIndex(eItem => eItem.@(col.TsFKeyTypeName)Id === item.@(col.TsFKeyTypeName)Id);
+@:        if (existingItemIdx !== -1) @(smallClassName)CreateUpdateModel.existing@(col.DbColumnNameWithoutIds)Ids.push(item.@(col.TsFKeyTypeName)Id);
+@:        else @(smallClassName)CreateUpdateModel.new@(col.DbColumnNameWithoutIds)s.push(item.@(col.TsFKeyTypeName)Id);
+@:    });
+    }     
+    else
+    {
+        if (col.DbColumnName.EndsWith("CountryId"))
+        {
+@:      @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).countryId : null;
+        }
+        else if (col.DbColumnName.EndsWith("StateId"))
+        {
+@:      @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).stateId : null;
+        }
+        else if (col.DbColumnName.EndsWith("TypeId"))
+        {
+@:      @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).id : null;
+        }        
+        else if (col.DbColumnName.EndsWith("Id") && (col.IsFkey && !col.IsArray))
+        {
+@:      @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).@(col.TsFKeyTypeName)Id : null;
+        }        
+        else
+        {
+@:      //major todo: @(smallClassName)CreateUpdateModel.@(col.TsDbColumnName) is not intialized
+        }
+    }
+}
+    return @(smallClassName)CreateUpdateModel;
+  }
+
+  /*
+  generateModel(obj: @(className)CreateUpdateModel): @(className)CreateUpdateModel {
+    let @(smallClassName)CreateUpdateModel = new @(className)CreateUpdateModel();
+    Object.assign(@(smallClassName)CreateUpdateModel, obj);
+    Object.keys(@(smallClassName)CreateUpdateModel).forEach(key => {
+      if (@(smallClassName)CreateUpdateModel[key] && typeof @(smallClassName)CreateUpdateModel[key] === 'object') {
+        delete (@(smallClassName)CreateUpdateModel[key]);
+      }
+    });
+    if (!this.@(smallClassName)Model.entityProfileOtherNames) this.@(smallClassName)Model.entityProfileOtherNames = [];
+    @(smallClassName)CreateUpdateModel.existingEntityProfileOtherNames = [];
+    @(smallClassName)CreateUpdateModel.newEntityProfileOtherNames = [];
+    this.@(smallClassName)Model.entityProfileOtherNames.map(item => {
+      if (item.entityProfileOtherNameId > 0) {
+        @(smallClassName)CreateUpdateModel.existingEntityProfileOtherNames.push(item as EntityProfileOtherNameWithDiffModel);
+      } else {
+        @(smallClassName)CreateUpdateModel.newEntityProfileOtherNames.push(item as EntityProfileOtherNameWithDiffModel);
+      }
+    });
+    @(smallClassName)CreateUpdateModel.suffixMetaDataId = this.selectedsuffixMetaData ? this.selectedsuffixMetaData.metaDataId : null;
+    @(smallClassName)CreateUpdateModel.nuccGroupingMetaDataId = this.selectedNuccGroupingMetaData ? this.selectedNuccGroupingMetaData.metaDataGroupId : null;
+    @(smallClassName)CreateUpdateModel.providerTypeMetaDataId = this.selectedproviderTypeMetaData ? this.selectedproviderTypeMetaData.metaDataId : null;
+    @(smallClassName)CreateUpdateModel.terminationReasonMetaDataId = this.selectedterminationReasonMetaData ? this.selectedterminationReasonMetaData.metaDataId : null;
+    @(smallClassName)CreateUpdateModel.raceMetaDataId = this.selectedRaceMetaData ? this.selectedRaceMetaData.metaDataId : null;
+    @(smallClassName)CreateUpdateModel.genderIdentityMetaDataId = this.selectedGenderIdentityMetaData ? this.selectedGenderIdentityMetaData.metaDataId : null;
+    @(smallClassName)CreateUpdateModel.practiceSettingMetaDataId = this.selectedPracticeSettingMetaData ? this.selectedPracticeSettingMetaData.metaDataId : null;
+    @(smallClassName)CreateUpdateModel.stateId = this.selectedBusinessAddressState ? this.selectedBusinessAddressState.stateId : null;
+    @(smallClassName)CreateUpdateModel.countryId = this.selectedBusinessAddressCountry ? this.selectedBusinessAddressCountry.countryId : null;
+    // selected line of business
+    this.selectedLineOfBusinessMetaDatas.map(meta => {
+      // existing line of business
+      if (!this.@(smallClassName)Model.lineOfBusinessMetaDataIds) this.@(smallClassName)Model.lineOfBusinessMetaDataIds = [];
+      let existingMetaDataIds = this.@(smallClassName)Model.lineOfBusinessMetaDataIds.findIndex(eMeta => eMeta.metaDataId === meta.metaDataId);
+      if (!@(smallClassName)CreateUpdateModel.existingLineOfBusinessMetaDataIds) @(smallClassName)CreateUpdateModel.existingLineOfBusinessMetaDataIds = [];
+      if (!@(smallClassName)CreateUpdateModel.newLineOfBusinessMetaDataIds) @(smallClassName)CreateUpdateModel.newLineOfBusinessMetaDataIds = [];
+      // validate if existId or not
+      if (existingMetaDataIds !== -1) @(smallClassName)CreateUpdateModel.existingLineOfBusinessMetaDataIds.push(meta.metaDataId);
+      else @(smallClassName)CreateUpdateModel.newLineOfBusinessMetaDataIds.push(meta.metaDataId);
+
+    });
+
+
+    // selected Participating plans
+    this.selectedParticipatingPlansMetaDatas.map(meta => {
+      // existing Participating plans
+      if (!this.@(smallClassName)Model.participatingPlansMetaDataIds) this.@(smallClassName)Model.participatingPlansMetaDataIds = [];
+      let existingMetaDataIds = this.@(smallClassName)Model.participatingPlansMetaDataIds.findIndex(eMeta => eMeta.metaDataId === meta.metaDataId);
+      // validate if existId or not
+      if (!@(smallClassName)CreateUpdateModel.existingParticipatingPlansMetaDataIds) @(smallClassName)CreateUpdateModel.existingParticipatingPlansMetaDataIds = [];
+      if (!@(smallClassName)CreateUpdateModel.newParticipatingPlansMetaDataIds) @(smallClassName)CreateUpdateModel.newParticipatingPlansMetaDataIds = [];
+      if (existingMetaDataIds !== -1) @(smallClassName)CreateUpdateModel.existingParticipatingPlansMetaDataIds.push(meta.metaDataId);
+      else @(smallClassName)CreateUpdateModel.newParticipatingPlansMetaDataIds.push(meta.metaDataId);
+
+    });
+
+
+    // selected Participating plans
+    this.selectedProviderLanguageMetaDatas.map(meta => {
+      // existing Participating plans
+      if (!this.@(smallClassName)Model.providerLanguageMetaDataIds) this.@(smallClassName)Model.providerLanguageMetaDataIds = [];
+      let existingMetaDataIds = this.@(smallClassName)Model.providerLanguageMetaDataIds.findIndex(eMeta => eMeta.metaDataId === meta.metaDataId);
+      // validate if existId or not
+      if (!@(smallClassName)CreateUpdateModel.existingProviderLanguageMetaDataIds) @(smallClassName)CreateUpdateModel.existingProviderLanguageMetaDataIds = [];
+      if (!@(smallClassName)CreateUpdateModel.newProviderLanguageMetaDataIds) @(smallClassName)CreateUpdateModel.newProviderLanguageMetaDataIds = [];
+      if (existingMetaDataIds !== -1) @(smallClassName)CreateUpdateModel.existingProviderLanguageMetaDataIds.push(meta.metaDataId);
+      else @(smallClassName)CreateUpdateModel.newProviderLanguageMetaDataIds.push(meta.metaDataId);
+
+    });
+    @(smallClassName)CreateUpdateModel.dateOfBirth = this.aDateOfBirth;
+    @(smallClassName)CreateUpdateModel.parStartDate = this.aParStartDate;
+    @(smallClassName)CreateUpdateModel.parEndDate = this.aParEndDate;
+    @(smallClassName)CreateUpdateModel.attestationDate = this.aAttestationDate;
+    @(smallClassName)CreateUpdateModel.networkApprovalDate = this.aNetworkApprovalDate;
+    //  @(smallClassName)CreateUpdateModel.verficationProof = this.files;
+    @(smallClassName)CreateUpdateModel.verificationSourceMetaDataId = this.selectedVerificationSourceType ? this.selectedVerificationSourceType.id : null;
+    @(smallClassName)CreateUpdateModel.verifiedDate = this.aVerificationDate;
+    return @(smallClassName)CreateUpdateModel;
+  }
+  */
+}

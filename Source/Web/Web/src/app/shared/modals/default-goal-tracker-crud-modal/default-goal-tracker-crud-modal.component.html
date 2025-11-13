@@ -1,0 +1,43 @@
+
+<form name="form" #lvDefaultGoalTrackerForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lvDefaultGoalTrackerForm.form.valid && onSubmit(lvDefaultGoalTrackerForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-default-goal-tracker-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-default-goal-tracker-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">        
+
+          <div class="col-sm-6">
+            <label class="form-label" for="defaultGoalTrackerText">Default Goal Tracker Text
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvDefaultGoalTrackerText="ngModel" type="text" name="defaultGoalTrackerText" id="defaultGoalTrackerText" placeholder="Default Goal Tracker Text" required  maxlength="{{ defaultGoalTrackerText__size }}"
+                 class="form-control" [ngClass]="{'is-invalid': lvDefaultGoalTrackerForm.submitted && lvDefaultGoalTrackerText.invalid }"
+                [(ngModel)]="defaultGoalTrackerModel.defaultGoalTrackerText">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvDefaultGoalTrackerForm.submitted) && lvDefaultGoalTrackerText.errors?.['required']">
+                  Default Goal Tracker Text is required
+                </span>
+                    <span *ngIf="lvDefaultGoalTrackerForm.submitted && lvDefaultGoalTrackerText.errors?.['maxlength']">
+                        Maximum {{ defaultGoalTrackerText__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{defaultGoalTrackerModel?.defaultGoalTrackerText ? defaultGoalTrackerModel.defaultGoalTrackerText : '-'}}
+            </div>
+          </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-default-goal-tracker-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-default-goal-tracker-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

@@ -1,0 +1,289 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+<div class="page-header px-3 py-2 bg-white" *ngIf="!isConfigScreen">
+  <div class="d-flex align-items-center">
+      <div class="col-sm-auto">
+          <!-- Page title -->
+          <h3 class="card-title mb-0 flex-grow-1" id="vagncart-@(Model.SmallDashEntityName)-page-title">
+              @(Model.SplitetCapitalizeEntityName)s
+          </h3>
+      </div>
+     <!-- add @(Model.SmallEntityName) btn -->
+      <div class="d-flex justify-content-sm-end col-sm"> 
+       <!--
+      <button type="button" class="btn btn-sm vagn-btn-sm btn-secondary" data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn"><i
+          class="ri-download-cloud-2-fill"></i> Import</button>
+      <button type="button" class="btn btn-sm vagn-btn-sm btn-info" data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn"><i
+          class=" ri-upload-cloud-2-fill"></i> Export</button>
+       -->   
+
+          <button type="button" class="btn btn-success btn-sm vagn-btn-sm"  (click)="showAdd@(Model.CapitalizeEntityName)Modal();" data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn"><i class="ri-add-line align-bottom me-1"></i> Add @(Model.SplitetCapitalizeEntityName)</button>
+      </div>
+  </div>
+</div>
+<div class="card mb-2 pt-2">
+<div class="card-header pt-2">
+<form @("#")@(Model.SmallEntityName)Search="ngForm"
+  novalidate
+  focusOnError
+  (ngSubmit)="onSearch(@(Model.SmallEntityName)Search)"
+>
+ 
+  <div class="row">
+    <div class="col-md-2 pr-0">
+      <input
+        type="text"
+        class="form-control"
+        name="@(Model.SmallDashEntityName)-search-input"
+        placeholder="Search Text"
+        [(ngModel)]="this.searchModel.keyword"
+      />
+    </div>
+@foreach(var p in Model.SearchCriteriaType.GetProperties())
+{
+    var pName = p.Name;
+
+    var pNameWithOutTypeId = p.Name.Replace("TypeId","");
+    var pLNameWithOutTypeId = StringUtils.MakeFirstCharAsLower(pNameWithOutTypeId);
+    var pCamelNameWithOutTypeId = StringUtils.SplitCamelCase(pNameWithOutTypeId);                
+    var pNameWithOutTypesId = p.Name.Replace("TypeIds","");                
+    var pLNameWithOutTypesId= StringUtils.MakeFirstCharAsLower(pNameWithOutTypesId);
+
+    var pNameWithOutId = p.Name.Replace("Id","");
+    var pLNameWithOutId = StringUtils.MakeFirstCharAsLower(pNameWithOutId);
+    var pCamelNameWithOutId = StringUtils.SplitCamelCase(pNameWithOutId);
+    
+    var pNameWithOutIds = p.Name.Replace("Ids","");
+    var pLNameWithOutIds = StringUtils.MakeFirstCharAsLower(pNameWithOutIds);
+    var pCamelNameWithOutIds = StringUtils.SplitCamelCase(pNameWithOutIds);
+
+    var pLName = StringUtils.MakeFirstCharAsLower(p.Name);
+    var pCamelName = StringUtils.SplitCamelCase(pName);
+    var pCamelLName = StringUtils.SplitCamelCase((pLName));
+
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	  {
+      continue;
+    }   	
+	else if (CodeGenUtils.IsPropertyIgnoreForSearchFilter(p.Name))
+	  {
+      continue;
+    }
+	else if (p.Name == "StateId" || (p.Name == "SelectedId") || p.Name == "CompanyId")
+	 {
+      continue;
+    }
+    else if (p.Name.StartsWith("Predefined") && p.Name.EndsWith("TypeIds"))
+	  {
+    <div class="col-md-2 pr-0">
+      <ng-select placeholder="@(pCamelNameWithOutIds)" name="selected@(pNameWithOutIds)s" id="selected@(pNameWithOutIds)s" [items]="@(pLNameWithOutIds)s"
+         bindLabel="type" [clearable]="true" [multiple]="true"
+         [(ngModel)]="selected@(pNameWithOutIds)s">
+        <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+          <div *ngFor="let item of selected@(pNameWithOutIds)s | slice:-1:1" class="ng-value">
+            <span class="ng-value-label">{{item.type}}</span>
+            <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+          </div>
+          <div *ngIf="items.length > 1" class="ng-value">
+            <span class="ng-value-label">{{items.length - 0}} Selected...</span>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    }
+    else if (p.Name.StartsWith("Predefined") && p.Name.EndsWith("TypeId"))
+	  {
+    <div class="col-md-2">
+      <ng-select placeholder="@(pCamelNameWithOutId)" name="selected@(pNameWithOutId)" id="selected@(pNameWithOutId)" [items]="(pNameWithOutId)s" bindLabel="type" class="ng-select" [clearable]="true" 
+                      [(ngModel)]="selected@(pNameWithOutId)">
+      </ng-select>
+    </div> 
+    }
+        else if (p.Name.EndsWith("Ids"))
+	  {
+      <div class="col-md-2">
+      <ng-select class="form-control" placeholder="@(pNameWithOutIds)" name="selected@(pNameWithOutId)s" id="selected@(pNameWithOutId)s" [items]="@(pLNameWithOutIds)s" bindLabel="@(pLNameWithOutId)Name" 
+      [clearable]="true" [multiple]="true" [typeahead]="@(pLNameWithOutId)Typeahead$" [loading]="@(pLNameWithOutId)TypeaheadLoading" [(ngModel)]="selected@(pNameWithOutId)s">
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of selected@(pNameWithOutId)s | slice:-1:1">
+          <span class="ng-value-label">{{item.@(pLNameWithOutId)Name}}</span>
+          <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true">×</span>
+        </div>
+        <div class="ng-value" *ngIf="items.length > 1">
+          <span class="ng-value-label">{{items.length - 0}} Selected...</span>
+        </div>
+      </ng-template>
+    </ng-select>
+    </div>
+      }
+        else if (p.Name.EndsWith("Id"))
+	  {
+    <div class="col-md-2">
+      <ng-select class="form-control" placeholder="@(pCamelNameWithOutId)" name="selected@(pNameWithOutId)" id="selected@(pNameWithOutId)" [items]="@(pLNameWithOutId)s"
+       bindLabel="@(pLNameWithOutId)Name" [clearable]="true" 
+       [typeahead]="@(pLNameWithOutId)Typeahead$" [loading]="@(pLNameWithOutId)TypeaheadLoading" [(ngModel)]="selected@(pNameWithOutId)">
+    </ng-select>
+    </div>      
+      }
+      else
+      {
+      }      
+}
+    <div class="d-flex justify-content-sm-end col-sm gap-1">
+      <button type="submit" class="btn btn-primary btn-sm vagn-btn-sm search" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+      <button type="button" class="btn bg-light btn-sm vagn-btn-sm" (click)="onReset(@(Model.SmallEntityName)Search)">
+        Reset
+      </button>
+      <button *ngIf="isConfigScreen" type="button" class="btn btn-success btn-sm vagn-btn-sm"  (click)="showAdd@(Model.CapitalizeEntityName)Modal();" data-bs-toggle="modal" id="create-@(Model.SmallDashEntityName)-btn"><i class="ri-add-line align-bottom me-1"></i> Add @(Model.SplitetCapitalizeEntityName)</button>
+     
+      <!--
+      <div *ngIf="isConfigScreen" class="btn-group" role="group" ngbDropdown [container]="'body'">
+        <button id="btnGroupDrop1" type="button"
+          class="btn btn-sm vagn-btn-sm btn-secondary dropdown-toggle material-shadow-none arrow-none"
+          data-bs-toggle="dropdown" aria-expanded="false" ngbDropdownToggle>
+          Actions
+        </button>
+         <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1" ngbDropdownMenu>
+           <li><a class="dropdown-item cursor-pointer" (click)="export@(Model.CapitalizeEntityName)();"><i
+                class=" ri-download-cloud-2-fill"></i> Export</a></li>
+           <li><a class="dropdown-item cursor-pointer" (click)="showImport@(Model.CapitalizeEntityName)Modal()"><i
+                class="ri-upload-cloud-2-fill"></i> Import</a></li>
+         </ul>
+      </div> 
+        -->
+
+  </div>
+  </div>
+</form>
+</div>
+
+<div class="card-body">
+<div class="table-responsive table-card mb-1" id="vagncart-@(Model.SmallDashEntityName)-page-table" [ngClass]="isConfigScreen ? 'vagncart-table-sm' : 'vagncart-table'">
+<table class="table" *ngIf="listData.length > 0; else nodata">
+  <thead>
+    <tr>
+      <th *ngFor="let column of columns" class="text-left"
+        [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }" (click)="changeSort(column)"
+      >
+        <span class="mr-1" [innerHTML]="column.text"></span>
+        <i
+          [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "
+        ></i>
+      </th>
+      <th
+        class="text-left w-1"
+      >
+        <span class="mr-1">ACTION</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of listData">
+	@foreach(var p in Model.EntityType.GetProperties())
+    {
+    var pNameWithFirstLetterUC = p.Name.Replace("Id","");
+    var pNameWithFirstLetterLC = StringUtils.MakeFirstCharAsLower(pNameWithFirstLetterUC);
+    var propName = p.Name;
+    var formatValue = "";	
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	{
+        continue;
+    }
+    else if (p.Name == "CreatedByUserId" || p.Name == "CreatedDate" || p.Name == "IsDeleted" || p.Name == "CompanyId")
+	{
+        continue;
+    }
+    else if (p.Name == "ModifiedByUserId")
+	{
+@:      <td class="text-left">
+@:        {{ item.modifiedByUserFirstName }} {{ item.modifiedByUserLastName }}
+@:      </td>
+        continue;
+    } else if(p.Name.StartsWith("Predefined") && p.Name.EndsWith("TypeId")) {
+ @:      <td>  
+ @:        <span class="badge bg-{{enumViewService.get@(pNameWithFirstLetterUC)Class(item.@(pNameWithFirstLetterLC)Id)}}-subtle text-{{enumViewService.get@(pNameWithFirstLetterUC)Class(item.@(pNameWithFirstLetterLC)Id)}}"
+ @:       >{{ item.@(pNameWithFirstLetterLC)Name  }}</span>
+ @:      </td>
+        continue;
+    }
+    else if (p.Name.EndsWith("TypeId"))
+	{
+        propName = p.Name.Replace("TypeId","TypeName");
+    }
+    else if (p.Name.EndsWith("TypeIds"))
+	{
+        propName = p.Name.Replace("TypeIds","TypeName");
+    }
+    else if (p.Name.EndsWith("Id"))
+	{
+        propName = p.Name.Replace("Id","Name");
+    }
+    if (p.Name == (Model.EntityType.Name+"Id"))
+	{
+        continue;
+    }
+    else if (p.Name.EndsWith("TypeId"))
+	{
+        propName = p.Name.Replace("TypeId","TypeName");
+    }
+    else if (p.Name.EndsWith("TypeIds"))
+	{
+        propName = p.Name.Replace("TypeIds","TypeName");
+    }
+    else if (p.Name.EndsWith("Id"))
+	{
+        propName = p.Name.Replace("Id","Name");
+    }
+	else if (p.Name.ToLower().Contains("date") || p.Name.ToLower().Contains("time"))
+	{
+        formatValue = "|  date: " +  "\'" + "MM/dd/yy" + "\'";
+    }
+	
+@:      <td class="text-left">
+@:        {{ item.@(StringUtils.MakeFirstCharAsLower(propName)) @Raw(@formatValue) }}
+@:      </td>
+  }
+      <td class="text-left">
+          <div class="d-flex gap-2">
+          <div class="view">
+            <button type="button" class="btn btn-sm vagn-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" (click)="showView@(Model.CapitalizeEntityName)Modal(item)">View</button>
+          </div>
+          <div class="edit">
+              <button type="button" class="btn btn-sm vagn-btn-sm btn-success edit-item-btn" data-bs-toggle="modal" (click)="showUpdate@(Model.CapitalizeEntityName)Modal(item)">Edit</button>
+          </div>
+          <div class="remove">
+              <button type="button" class="btn btn-sm vagn-btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" (click)="delete@(Model.CapitalizeEntityName)(item)">Remove</button>
+          </div>
+
+          <!-- 
+          <div class="enable">
+              <button *ngIf="!item.active" class="btn btn-sm vagn-btn-sm btn-danger enable-item-btn" data-bs-toggle="modal"
+                type="button" (click)="enable@(Model.CapitalizeEntityName)(item)">Enable</button>
+                <button *ngIf="item.active" class="btn btn-sm vagn-btn-sm btn-danger disable-item-btn" data-bs-toggle="modal"
+                type="button" (click)="disable@(Model.CapitalizeEntityName)(item)">Disable</button>
+           </div>
+           -->
+         </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ng-template #nodata>
+<app-no-data-found></app-no-data-found>
+</ng-template>
+</div>
+<app-pagination
+#pagination
+[totalItems]="totalItems" [currentPage]="searchModel.page"
+(pageOptionChanged)="paginationChange($event)"
+></app-pagination>
+</div>
+</div>

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <StartupObject>Manifest.Tests.TestDataGenerator.Program</StartupObject>
+	  <NuGetAudit>False</NuGetAudit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Manifest.Tests.Common.csproj" />
+  </ItemGroup>
+
+</Project>

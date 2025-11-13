@@ -1,0 +1,492 @@
+
+<form #lvJobForm="ngForm" name="form" appFocusOnError (ngSubmit)="lvJobForm.form.valid && onSubmit(lvJobForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="manifest-job-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="manifest-job-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedJobType">Job Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedJobType="ngModel" placeholder="Select Job Type" class="form-control" name="selectedPredefinedJobType"
+            id="selectedPredefinedJobType"
+            bindLabel="type" required
+            [items]="predefinedJobTypes" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvPredefinedJobType.invalid }" [(ngModel)]="selectedPredefinedJobType">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvPredefinedJobType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedJobType.errors?.['required']">Job Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.predefinedJobTypeName ? jobModel.predefinedJobTypeName : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedJobTemplate">Job Template
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcJobTemplateId #lvJobTemplate="ngModel" placeholder="Job Template" class="form-control"
+            name="selectedJobTemplate" id="selectedJobTemplate"
+            bindLabel="jobTemplateName" required
+            [items]="jobTemplates" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvJobTemplate.invalid }" [typeahead]="jobTemplateTypeahead$"  [loading]="jobTemplateTypeaheadLoading" [(ngModel)]="selectedJobTemplate">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvJobTemplate.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvJobTemplate.errors?.['required']">Job Template is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.jobTemplateId ? jobModel.jobTemplateId : '-'}}
+        </div>
+      </div>
+      </div>
+    <div class="form-group row mb-4">        
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedJobOrReportType">Job Or Report Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedJobOrReportType="ngModel" placeholder="Select Job Or Report Type" class="form-control" name="selectedPredefinedJobOrReportType"
+            id="selectedPredefinedJobOrReportType"
+            bindLabel="type" required
+            [items]="predefinedJobOrReportTypes" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvPredefinedJobOrReportType.invalid }" [(ngModel)]="selectedPredefinedJobOrReportType">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvPredefinedJobOrReportType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedJobOrReportType.errors?.['required']">Job Or Report Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.predefinedJobOrReportTypeName ? jobModel.predefinedJobOrReportTypeName : '-'}}
+        </div>
+      </div>
+    </div>
+  <div class="form-group row mb-4">    
+      <div class="col-sm-6">
+        <label class="form-label" for="submittedDate">Date
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvSubmittedDate="ngModel" class="form-control flatpickr-input" type="text" mwlFlatpickr
+            name="submittedDate" id="submittedDate" required altFormat="F j, Y"
+            dateFormat="Y-m-d" placeholder="Select Submitted Date" [altInput]="true" [convertModelValue]="true"
+            [ngClass]="{'is-invalid': lvJobForm.submitted && lvSubmittedDate.invalid }"
+            [(ngModel)]="aSubmittedDate" />
+          <div *ngIf="lvJobForm.submitted && lvSubmittedDate.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvSubmittedDate.errors?.['required']">Submitted Date is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.submittedDate ? (jobModel.submittedDate | date : 'dd/MM/yy')  : '-'}}
+        </div>
+      </div>
+    </div>
+  <div class="form-group row mb-4">    
+          <div class="col-sm-12">
+            <label class="form-label" for="Message">Message
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvMessage="ngModel" type="text" name="message" id="Message" required class="form-control" placeholder="Message"
+                 maxlength="{{ message__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvMessage.invalid }"
+                [(ngModel)]="jobModel.message">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvMessage.errors?.['required']">
+                  Message is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvMessage.errors?.['maxlength']">
+                        Maximum {{ message__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.message ? jobModel.message : '-'}}
+            </div>
+          </div>
+        </div>
+      <div class="form-group row mb-4">    
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedJobStatusType">Job Status
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedJobStatusType="ngModel" placeholder="Select Job Status" class="form-control" name="selectedPredefinedJobStatusType"
+            id="selectedPredefinedJobStatusType"
+            bindLabel="type" required
+            [items]="predefinedJobStatusTypes" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvPredefinedJobStatusType.invalid }" [(ngModel)]="selectedPredefinedJobStatusType">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvPredefinedJobStatusType.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedJobStatusType.errors?.['required']">Job Status is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.predefinedJobStatusTypeName ? jobModel.predefinedJobStatusTypeName : '-'}}
+        </div>
+      </div> 
+          <div class="col-sm-6">
+            <label class="form-label" for="executableFolder">Executable Folder
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutableFolder="ngModel" type="text" name="executableFolder" id="executableFolder" required class="form-control" placeholder="Executable Folder"
+                 maxlength="{{ executableFolder__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutableFolder.invalid }"
+                [(ngModel)]="jobModel.executableFolder">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvExecutableFolder.errors?.['required']">
+                  Executable Folder is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvExecutableFolder.errors?.['maxlength']">
+                        Maximum {{ executableFolder__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.executableFolder ? jobModel.executableFolder : '-'}}
+            </div>
+          </div>
+        </div>
+      <div class="form-group row mb-4">    
+          <div class="col-sm-6">
+            <label class="form-label" for="executableName">Executable Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutableName="ngModel" type="text" name="executableName" id="executableName" required class="form-control" placeholder="Executable Name"
+                 maxlength="{{ executableName__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutableName.invalid }"
+                [(ngModel)]="jobModel.executableName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvExecutableName.errors?.['required']">
+                  Executable Name is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvExecutableName.errors?.['maxlength']">
+                        Maximum {{ executableName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.executableName ? jobModel.executableName : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="executableParameter">Executable Parameter
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutableParameter="ngModel" type="text" name="executableParameter" id="executableParameter" required class="form-control" placeholder="Executable Parameter"
+                 maxlength="{{ executableParameter__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutableParameter.invalid }"
+                [(ngModel)]="jobModel.executableParameter">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvExecutableParameter.errors?.['required']">
+                  Executable Parameter is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvExecutableParameter.errors?.['maxlength']">
+                        Maximum {{ executableParameter__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.executableParameter ? jobModel.executableParameter : '-'}}
+            </div>
+          </div>
+        </div>
+      <div class="form-group row mb-4">    
+          <div class="col-sm-6">
+            <label class="form-label" for="serializedJobParameter">Serialized Job Parameter
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvSerializedJobParameter="ngModel" type="text" id="serializedJobParameter" name="serializedJobParameter" required class="form-control" placeholder="Serialized Job Parameter"
+                 maxlength="{{ serializedJobParameter__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvSerializedJobParameter.invalid }"
+                [(ngModel)]="jobModel.serializedJobParameter">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvSerializedJobParameter.errors?.['required']">
+                  Serialized Job Parameter is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvSerializedJobParameter.errors?.['maxlength']">
+                        Maximum {{ serializedJobParameter__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.serializedJobParameter ? jobModel.serializedJobParameter : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="reportTemplateFile">Report Template File
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvReportTemplateFile="ngModel" type="text" name="reportTemplateFile"  id="reportTemplateFile" required class="form-control" placeholder="Report Template File"
+                 maxlength="{{ reportTemplateFile__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvReportTemplateFile.invalid }"
+                [(ngModel)]="jobModel.reportTemplateFile">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvReportTemplateFile.errors?.['required']">
+                  Report Template File is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvReportTemplateFile.errors?.['maxlength']">
+                        Maximum {{ reportTemplateFile__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.reportTemplateFile ? jobModel.reportTemplateFile : '-'}}
+            </div>
+          </div>
+        </div>
+      <div class="form-group row mb-4">    
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportDoc"
+              id="exportDoc" [disabled]="isViewMode" [(ngModel)]="jobModel.exportDoc">
+            <label class="form-check-label" for="exportDoc">
+              Export Doc
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportXls"
+              id="exportXls" [disabled]="isViewMode" [(ngModel)]="jobModel.exportXls">
+            <label class="form-check-label" for="exportXls">
+              Export Xls
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportPpt"
+              id="exportPpt" [disabled]="isViewMode" [(ngModel)]="jobModel.exportPpt">
+            <label class="form-check-label" for="exportPpt">
+              Export Ppt
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="exportCsv">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportCsv"
+              id="exportCsv" [disabled]="isViewMode" [(ngModel)]="jobModel.exportCsv">
+            <label class="form-check-label" for="exportCsv">
+              Export Csv
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="exportXml">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportXml"
+              id="exportXml" [disabled]="isViewMode" [(ngModel)]="jobModel.exportXml">
+            <label class="form-check-label" for="exportXml">
+              Export Xml
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="exportPdf">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportPdf"
+              id="exportPdf" [disabled]="isViewMode" [(ngModel)]="jobModel.exportPdf">
+            <label class="form-check-label" for="exportPdf">
+              Export Pdf
+            </label>
+          </div>
+        </div>
+      </div>      
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="exportCustom">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="exportCustom"
+              id="exportCustom" [disabled]="isViewMode" [(ngModel)]="jobModel.exportCustom">
+            <label class="form-check-label" for="exportCustom">
+              Export Custom
+            </label>
+          </div>
+        </div>
+      </div>      
+          <div class="col-sm-6">
+            <label class="form-label" for="customExportName">Custom Export Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvCustomExportName="ngModel" type="text" name="customExportName" required class="form-control" placeholder="Custom Export Name"
+                 maxlength="{{ customExportName__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvCustomExportName.invalid }"
+                [(ngModel)]="jobModel.customExportName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvCustomExportName.errors?.['required']">
+                  Custom Export Name is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvCustomExportName.errors?.['maxlength']">
+                        Maximum {{ customExportName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.customExportName ? jobModel.customExportName : '-'}}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="jobName">Job Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvJobName="ngModel" type="text" name="jobName" id="jobName" required class="form-control" placeholder="Job Name"
+                 maxlength="{{ jobName__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvJobName.invalid }"
+                [(ngModel)]="jobModel.jobName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvJobName.errors?.['required']">
+                  Job Name is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvJobName.errors?.['maxlength']">
+                        Maximum {{ jobName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.jobName ? jobModel.jobName : '-'}}
+            </div>
+          </div>
+     <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="includeDataSourceFile">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="includeDataSourceFile"
+              id="includeDataSourceFile" [disabled]="isViewMode" [(ngModel)]="jobModel.includeDataSourceFile">
+            <label class="form-check-label" for="includeDataSourceFile">
+              Include Data Source File
+            </label>
+          </div>
+        </div>
+      </div>      
+          <div class="col-sm-6">
+            <label class="form-label" for="executionAppName">Execution App Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutionAppName="ngModel" type="text" name="executionAppName" required class="form-control" placeholder="Execution App Name"
+                 maxlength="{{ executionAppName__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutionAppName.invalid }"
+                [(ngModel)]="jobModel.executionAppName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvExecutionAppName.errors?.['required']">
+                  Execution App Name is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvExecutionAppName.errors?.['maxlength']">
+                        Maximum {{ executionAppName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.executionAppName ? jobModel.executionAppName : '-'}}
+            </div>
+          </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedExecutionApp">Execution App
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcExecutionAppId #lvExecutionApp="ngModel" placeholder="Execution App" class="form-control"
+            name="selectedExecutionApp" id="selectedExecutionApp"
+            bindLabel="executionAppName" required
+            [items]="executionApps" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutionApp.invalid }" [typeahead]="executionAppTypeahead$"  [loading]="executionAppTypeaheadLoading" [(ngModel)]="selectedExecutionApp">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvExecutionApp.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvExecutionApp.errors?.['required']">Execution App is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.executionAppId ? jobModel.executionAppId : '-'}}
+        </div>
+      </div>
+          <div class="col-sm-6">
+            <label class="form-label" for="executionHostName">Execution Host Name
+              <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            </label>
+            <div *ngIf="!isViewMode">
+              <input #lvExecutionHostName="ngModel" type="text" name="executionHostName" required class="form-control" placeholder="Execution Host Name"
+                 maxlength="{{ executionHostName__size }}" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutionHostName.invalid }"
+                [(ngModel)]="jobModel.executionHostName">
+              <div class="invalid-feedback invalid-feedback-fixed">
+                <span *ngIf="(lvJobForm.submitted) && lvExecutionHostName.errors?.['required']">
+                  Execution Host Name is required
+                </span>
+                    <span *ngIf="lvJobForm.submitted && lvExecutionHostName.errors?.['maxlength']">
+                        Maximum {{ executionHostName__size }} characters allowed.
+                    </span>
+              </div>
+            </div>
+            <div *ngIf="isViewMode">
+              {{jobModel.executionHostName ? jobModel.executionHostName : '-'}}
+            </div>
+          </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedExecutionProcess">Execution Process
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcExecutionProcessId #lvExecutionProcess="ngModel" placeholder="Execution Process" class="form-control"
+            name="selectedExecutionProcess" id="selectedExecutionProcess"
+            bindLabel="executionProcessName" required
+            [items]="executionProcesss" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutionProcess.invalid }" [typeahead]="executionProcessTypeahead$"  [loading]="executionProcessTypeaheadLoading" [(ngModel)]="selectedExecutionProcess">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvExecutionProcess.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvExecutionProcess.errors?.['required']">Execution Process is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.executionProcessId ? jobModel.executionProcessId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedExecutionThread">Execution Thread
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #vcExecutionThreadId #lvExecutionThread="ngModel" placeholder="Execution Thread" class="form-control"
+            name="selectedExecutionThread" id="selectedExecutionThread"
+            bindLabel="executionThreadName" required
+            [items]="executionThreads" [clearable]="false" [ngClass]="{'is-invalid': lvJobForm.submitted && lvExecutionThread.invalid }" [typeahead]="executionThreadTypeahead$"  [loading]="executionThreadTypeaheadLoading" [(ngModel)]="selectedExecutionThread">
+          </ng-select>
+          <div *ngIf="lvJobForm.submitted && lvExecutionThread.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvExecutionThread.errors?.['required']">Execution Thread is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobModel.executionThreadId ? jobModel.executionThreadId : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-job-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success" id="manifest-job-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

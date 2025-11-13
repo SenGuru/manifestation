@@ -1,0 +1,134 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../constants/app_theme.dart';
+import 'package:mistel/models/journey_entry.dart';
+
+class MoodSelector extends StatefulWidget {
+  final Mood selectedMood;
+  final Function(Mood) onMoodSelected;
+
+  const MoodSelector({
+    Key? key,
+    required this.selectedMood,
+    required this.onMoodSelected,
+  }) : super(key: key);
+
+  @override
+  _MoodSelectorState createState() => _MoodSelectorState();
+}
+
+class _MoodSelectorState extends State<MoodSelector>
+    with TickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: Mood.values.map((mood) {
+        return Container(
+          margin: EdgeInsets.only(bottom: 12.h),
+          child: _buildMoodOption(mood),
+        );
+      }).toList(),
+    );
+  }
+
+
+  Widget _buildMoodOption(Mood mood) {
+    final isSelected = widget.selectedMood == mood;
+    
+    return GestureDetector(
+      onTap: () {
+        widget.onMoodSelected(mood);
+        _pulseController.forward().then((_) {
+          _pulseController.reverse();
+        });
+      },
+      child: AnimatedBuilder(
+        animation: _pulseAnimation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: isSelected ? _pulseAnimation.value : 1.0,
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+              decoration: BoxDecoration(
+                color: isSelected 
+                    ? mood.color.withOpacity(0.1)
+                    : AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(
+                  color: isSelected 
+                      ? mood.color
+                      : AppTheme.borderSecondary,
+                  width: isSelected ? 2 : 1,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    mood.emoji,
+                    style: TextStyle(fontSize: 32.sp),
+                  ),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          mood.displayName,
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                            color: isSelected ? mood.color : AppTheme.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 2.h),
+                        Text(
+                          mood.description,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: AppTheme.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (isSelected)
+                    Icon(
+                      Icons.check_circle,
+                      color: mood.color,
+                      size: 24.sp,
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

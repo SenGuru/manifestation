@@ -1,0 +1,177 @@
+<header id="page-topbar" data-scroll-header (window:scroll)="windowScroll()">
+    <div class="layout-width">
+        <div class="navbar-header">
+            <div class="d-flex">
+                <!-- LOGO -->
+                <div class="navbar-brand-box horizontal-logo">
+                    <a href="javascript:void(0);" class="logo logo-dark">
+                        <span class="logo-sm">
+                            <img src="assets/images/logo-sm.png" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="assets/images/logo-dark.png" alt="" height="17">
+                        </span>
+                    </a>
+
+                    <a href="javascript:void(0);" class="logo logo-light">
+                        <span class="logo-sm">
+                            <img src="assets/images/logo-sm.png" alt="" height="22">
+                        </span>
+                        <span class="logo-lg">
+                            <img src="assets/images/logo-light.png" alt="" height="17">
+                        </span>
+                    </a>
+                </div>
+
+                <button type="button"
+                    class="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger material-shadow-none"
+                    id="topnav-hamburger-icon" (click)="toggleMobileMenu($event)">
+                    <span class="hamburger-icon">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </span>
+                </button>
+
+                <!-- App Search-->
+                <form class="app-search d-none d-md-block">
+                    <div class="position-relative">
+                        <input #searchInput type="text" class="form-control" placeholder="Search..." autocomplete="off"
+                            id="search-options" value="" [formControl]="searchFromControl" (keyup)="Search()"
+                            (focusout)="searchFromControl.setValue('')">
+                        <span class="mdi mdi-magnify search-widget-icon"></span>
+                        <span
+                            class="mdi mdi-close-circle search-widget-icon search-widget-icon-close d-none cursor-pointer"
+                            id="search-close-options" (click)="closeBtn()"></span>
+                    </div>
+                    <div class="dropdown-menu dropdown-menu-lg" id="search-dropdown">
+                        <ngx-simplebar class="global-search-simplebar-container">
+
+                            <div class="dropdown-header">
+                                <h6 class="text-overflow text-muted mb-0 text-uppercase">Recent Searches</h6>
+                            </div>
+
+                            <div class="dropdown-item bg-transparent text-wrap">
+                                <a href="javascript:void(0);"
+                                    class="btn btn-soft-secondary btn-sm rounded-pill me-1">how to
+                                    setup <i class="mdi mdi-magnify ms-1"></i></a>
+                                <a href="javascript:void(0);" class="btn btn-soft-secondary btn-sm rounded-pill">Users
+                                    <i class="mdi mdi-magnify ms-1"></i></a>
+                            </div>
+
+                            <div class="dropdown-header mt-2">
+                                <h6 class="text-overflow text-muted mb-1 text-uppercase">Pages</h6>
+                            </div> 
+
+                            <ng-container *ngIf="enable.includes('user') && isSuperAdmin">
+                                <span *ngIf="(isUserSearchLoading || (userSearchResult?.model?.length ?? 0) > 0)"
+                                    class="dropdown-header fs-14">User </span>
+                                <div *ngIf="isUserSearchLoading" class="dropdown-item">
+                                    <div class="spinner-border spinner-border-sm ml-4" role="status"></div>
+                                </div>
+                                <div *ngFor="let item of userSearchResult?.model" class="dropdown-item cursor-pointer"
+                                    (mousedown)="selectUser(item)">
+                                    <div class="ml-4">{{item.userName}}</div>
+                                </div>
+                            </ng-container> 
+
+                            <ng-container *ngIf="enable.includes('user') && isSuperAdmin">
+                                <div *ngIf="userSearchResult?.totalRecords ?? 0 > 0"
+                                    class="dropdown-item cursor-pointer" (mousedown)="goToDetailsPage('user')">
+                                    <i class="ri-list-unordered"></i>
+                                    <span class="mx-2">View Users ({{userSearchResult?.totalRecords}})</span>
+                                </div>
+                            </ng-container>
+
+                        </ngx-simplebar>
+
+                        <!-- <div class="text-center pt-3 pb-1">
+                            <a (click)="viewAllSearchResult()" class="btn btn-primary btn-sm cursor-pointer">View All Results <i
+                                    class="ri-arrow-right-line ms-1"></i></a>
+                        </div> -->
+                    </div>
+                </form>
+            </div>
+
+            <div class="d-flex align-items-center">
+
+                <div class="dropdown d-md-none topbar-head-dropdown header-item" ngbDropdown>
+                    <button type="button"
+                        class="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle"
+                        id="page-header-search-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                        aria-expanded="false" ngbDropdownToggle>
+                        <i class="bx bx-search fs-22"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end p-0"
+                        aria-labelledby="page-header-search-dropdown" ngbDropdownMenu>
+                        <form class="p-3">
+                            <div class="form-group m-0">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search ..."
+                                        aria-label="Recipient's username">
+                                    <button class="btn btn-primary" type="submit"><i
+                                            class="mdi mdi-magnify"></i></button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="ms-1 header-item d-none d-sm-flex">
+                    <button type="button"
+                        class="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle"
+                        data-toggle="fullscreen" (click)="fullscreen()">
+                        <i class='bx bx-fullscreen fs-22'></i>
+                    </button>
+                </div>
+
+                <div class="ms-1 header-item d-none d-sm-flex">
+                    <button type="button"
+                        class="btn btn-icon btn-topbar material-shadow-none btn-ghost-secondary rounded-circle light-dark-mode">
+                        <i class='bx bx-moon fs-22' (click)="changeMode('dark')"></i>
+                        <i class='bx bx-sun fs-22' (click)="changeMode('light')"></i>
+                    </button>
+                </div>
+
+                <!-- <app-notification-card></app-notification-card> -->
+
+                <div class="dropdown ms-sm-3 header-item topbar-user" ngbDropdown>
+                    <button type="button" class="btn material-shadow-none" id="page-header-user-dropdown"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+                        <span class="d-flex align-items-center">
+                            <img class="rounded-circle header-profile-user" alt=""
+                                [src]="userProfilePicture ? userProfilePicture : 'assets/images/users/avatar-1.jpg'">
+                            <span class="text-start ms-xl-2">
+                                <span
+                                    class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{{currentUser?.firstName}}
+                                    {{currentUser?.lastName}}</span>
+                                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
+                                    {{ currentUser?.userTypeName }}
+                                </span>
+                                <!-- <span class="d-none d-xl-inline-block ms-1 fw-medium user-name-text">Jack Sparrow</span>
+                                <span class="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">Admin</span> -->
+                            </span>
+                        </span>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end" ngbDropdownMenu>
+                        <!-- item-->
+                        <h6 class="dropdown-header">Welcome {{currentUser?.firstName}}!</h6>
+                        <a class="dropdown-item" routerLink="/{{initialUrl}}/profile"><i
+                                class="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i> <span
+                                class="align-middle">Profile</span></a>
+                        <a class="dropdown-item cursor-pointer" (click)="showChangePasswordOptionModal()"><i class=" ri-lock-password-line
+                                        text-muted fs-16 align-middle me-1"></i> <span class="align-middle">Reset
+                                Password</span></a>
+                        <a *ngIf="!isSuperAdmin" class="dropdown-item" routerLink="/pages/faqs"><i
+                                class="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span
+                                class="align-middle">Help</span></a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="javascript: void(0);" (click)="onLogOutClick()"><i
+                                class="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span
+                                class="align-middle" data-key="t-logout">Logout</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

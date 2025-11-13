@@ -1,0 +1,35 @@
+namespace Manifest.Common.Enums
+{
+    public enum PredefinedAuditOperationTypes
+    {
+        ResourceCreated = 100001,
+        ResourceUpdated = 100002,
+        ResourceDeleted = 100003,
+        ResourceUndeleted = 100004,
+        ResourceHardDeleted = 100005,
+        ResourceEnable = 100006,
+        ResourceDisable = 100007,
+        SuperAdminLogin = 101001,
+        Login = 101002,
+        Logout = 101003,
+        LoginFailed = 101004,
+        ForgotPasswordFailedRequest = 101005,
+        ResetPassword = 101006,
+        SocialLogin = 101007,
+        SocialLoginFailed = 101008,
+        AlternateLogin = 101009,
+        AlternateLoginFailed = 101010,
+        ChangedPassword = 101011,
+        ForgotPasswordRequest = 101012,
+        UserCreated = 101015,
+        UserUpdated = 101016,
+        UserDeleted = 101017,
+        LoginEnabled = 101018,
+        LoginDisabled = 101019,
+        UpdateConfiguration = 101020,
+        Report = 101021,
+        RunReport = 101022,
+        ViewReport = 101023,
+        DownloadReport = 101024,
+    }
+}

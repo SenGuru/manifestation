@@ -1,0 +1,167 @@
+public void Ping_WithValidData_ReturnsValidData()
+{
+    var r = Ping();
+}
+public void Ping_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void AuthorizedPing_WithValidData_ReturnsValidData()
+{
+    var r = AuthorizedPing();
+}
+public void AuthorizedPing_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void Login_WithValidData_ReturnsValidData()
+{
+    var model = new LoginModel();
+    var r = Login();
+}
+public void Login_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UserSetNewPassword_WithValidData_ReturnsValidData()
+{
+    var model = new ResetPasswordRequestModel();
+    var r = UserSetNewPassword();
+}
+public void UserSetNewPassword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UserRecoverForgotPassword_WithValidData_ReturnsValidData()
+{
+    var model = new RecoverPasswordRequestModel();
+    var r = UserRecoverForgotPassword();
+}
+public void UserRecoverForgotPassword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GenerateOtpForAnonymousUser_WithValidData_ReturnsValidData()
+{
+    var model = new AnonymousLoginModel();
+    var r = GenerateOtpForAnonymousUser();
+}
+public void GenerateOtpForAnonymousUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSiteConfiguration_WithValidData_ReturnsValidData()
+{
+    var model = new String();
+    var r = GetSiteConfiguration();
+}
+public void GetSiteConfiguration_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetLoginOption_WithValidData_ReturnsValidData()
+{
+    var r = GetLoginOption();
+}
+public void GetLoginOption_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void AlternateLogin_WithValidData_ReturnsValidData()
+{
+    var model = new AlternateLoginModel();
+    var r = AlternateLogin();
+}
+public void AlternateLogin_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ExternalLoginCallBack_WithValidData_ReturnsValidData()
+{
+    var model = new ExternalLoginCallBackModel();
+    var r = ExternalLoginCallBack();
+}
+public void ExternalLoginCallBack_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ResetPassword_WithValidData_ReturnsValidData()
+{
+    var model = new String();
+    var r = ResetPassword();
+}
+public void ResetPassword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsChangePasswordSessionValid_WithValidData_ReturnsValidData()
+{
+    var model = new String();
+    var r = IsChangePasswordSessionValid();
+}
+public void IsChangePasswordSessionValid_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ChangePassword_WithValidData_ReturnsValidData()
+{
+    var model = new ChangeForgotPasswordModel();
+    var r = ChangePassword();
+}
+public void ChangePassword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ForgotPassword_WithValidData_ReturnsValidData()
+{
+    var model = new ForgotPasswordModel();
+    var r = ForgotPassword();
+}
+public void ForgotPassword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ChangeCurrentPassword_WithValidData_ReturnsValidData()
+{
+    var model = new ChangePasswordModel();
+    var r = ChangeCurrentPassword();
+}
+public void ChangeCurrentPassword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void LoginWithToken_WithValidData_ReturnsValidData()
+{
+    var model = new String();
+    var r = LoginWithToken();
+}
+public void LoginWithToken_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GlobalSettings_WithValidData_ReturnsValidData()
+{
+    var model = new String();
+    var r = GlobalSettings();
+}
+public void GlobalSettings_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateAccount_WithValidData_ReturnsValidData()
+{
+    var model = new AccountCreateModel();
+    var r = CreateAccount();
+}
+public void CreateAccount_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GenerateCaptchUrl_WithValidData_ReturnsValidData()
+{
+    var r = GenerateCaptchUrl();
+}
+public void GenerateCaptchUrl_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

@@ -1,0 +1,94 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header details screen
+ 
+            
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header details ts config screen
+
+    @Output() showChangeTab: EventEmitter<string> = new EventEmitter<string>();
+    selectedMovieShootDayConfigScreenType: MovieShootDayConfigScreenTabTypes;
+              
+    changeTab(tab: MovieShootDayConfigScreenTabTypes) {
+      this.showChangeTab.emit(tab);
+      this.selectedMovieShootDayConfigScreenType = tab;
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header config screen
+<div class="tab-container">
+             
+          
+  
+            <div *ngIf="showShootDaySummaryListScreen">
+              <app-shoot-day-summary-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-shoot-day-summary-list-screen>
+            </div>  
+  
+            <div *ngIf="showMovieShootDayListScreen">
+              <app-movie-shoot-day-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-movie-shoot-day-list-screen>
+            </div>  
+  
+            <div *ngIf="showMovieShootDayBudgetListScreen">
+              <app-movie-shoot-day-budget-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-movie-shoot-day-budget-list-screen>
+            </div>  
+  
+            <div *ngIf="showMovieShootDayExpenseListScreen">
+              <app-movie-shoot-day-expense-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-movie-shoot-day-expense-list-screen>
+            </div>  
+
+
+        </div>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header config ts config screen
+
+ ///// member initialization
+
+  selectedMovieShootDayConfigScreenType: MovieShootDayConfigScreenTabTypes;
+  
+showShootDaySummaryListScreen: boolean = false;
+showMovieShootDayListScreen: boolean = false;
+showMovieShootDayBudgetListScreen: boolean = false;
+showMovieShootDayExpenseListScreen: boolean = false;
+
+  changeTab(tab: MovieShootDayConfigScreenTabTypes) {
+    this.resetTabs();
+    this.selectedMovieShootDayConfigScreenType = tab;
+  
+
+        if (tab === 'summary') {
+          this.showShootDaySummaryListScreen = true;
+        }
+ else if (tab === 'movie-shoot-days') {
+            this.showMovieShootDayListScreen = true;
+        }
+ else if (tab === 'shoot-day-budget') {
+            this.showMovieShootDayBudgetListScreen = true;
+        }
+ else if (tab === 'shoot-day-expense') {
+            this.showMovieShootDayExpenseListScreen = true;
+        }
+
+    }
+  resetTabs() {
+    
+this.showShootDaySummaryListScreen = false;
+this.showMovieShootDayListScreen = false;
+this.showMovieShootDayBudgetListScreen = false;
+this.showMovieShootDayExpenseListScreen = false;
+
+    }
+
+/////////////////////////////////////////////////////
+In custom-model.ts
+export type MovieShootDayConfigScreenTabTypes = 'summary' | 'movie-shoot-days' | 'shoot-day-budget' | 'shoot-day-expense';

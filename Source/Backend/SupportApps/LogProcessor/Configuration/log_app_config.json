@@ -1,0 +1,18 @@
+{
+  "UsePostgresDb": true,
+  "PostgresDbConnectionString": "host=localhost;database=logdb;username=postgres;password=MySasiGuru1994",
+  "LogDirectory": "|ConfigPath|/../../../../../Data/Logs",
+  "AppLogDatabasePath": "|ConfigPath|/../../../../../Data/logdb/LogData.db",
+  "AppLogFileDataBasePath": "|ConfigPath|/../../../../../Data/logfileconfig/LogFileDB.db",
+  "PerfLogDatabasePath": "|ConfigPath|/../../../../../Data/logdb/PerfLogData.db",
+  "PerfLogFileDataBasePath": "|ConfigPath|/../../../../../Data/logfileconfig/PerfFileDB.db",
+  "LogCentralizedServerUrl": "http://localhost:5285/",
+  "LogBatchSize": 200,
+  "EmailSettings": {
+    "SmtpServer": "<your_smtp_server>",
+    "SmtpPort": 587,
+    "SmtpUsername": "<your_smtp_username>",
+    "SmtpPassword": "<your_smtp_password>",
+    "AdminEmail": "<admin_email_address>"
+  }
+}

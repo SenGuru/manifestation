@@ -1,0 +1,66 @@
+using System;
+using System.Collections.Generic;
+using Framework.Infrastructure.Models.Search;
+
+namespace Manifest.Common.Models.SearchCriteria
+{
+    public class GoalTrackerCategorySearchCriteria : BaseSearchCriteria
+    {
+    //public DateTime? StartDate { get; set; }
+
+    //public DateTime? EndDate { get; set; }
+
+        public bool ShowDeleted { get; set; } = false;
+
+        
+public long? CategoryId { get; set; }
+
+        public long? GoalTrackerId { get; set; }
+
+        public long? UserId { get; set; }
+
+        public long? CreatedByUserId { get; set; }
+
+        public long? ModifiedByUserId { get; set; }
+
+    }
+
+    
+
+        public class GoalTrackerCategoryByCategoryIdSearchCriteria : BaseSearchCriteria
+        {
+                public long CategoryId { get; set; }
+        }
+
+
+        public class CategoryByGoalTrackerCategoryIdSearchCriteria : BaseSearchCriteria
+        {
+                public long GoalTrackerCategoryId { get; set; }
+        }
+
+
+        public class GoalTrackerCategoryByGoalTrackerIdSearchCriteria : BaseSearchCriteria
+        {
+                public long GoalTrackerId { get; set; }
+        }
+
+
+        public class GoalTrackerByGoalTrackerCategoryIdSearchCriteria : BaseSearchCriteria
+        {
+                public long GoalTrackerCategoryId { get; set; }
+        }
+
+
+        public class GoalTrackerCategoryByUserIdSearchCriteria : BaseSearchCriteria
+        {
+                public long UserId { get; set; }
+        }
+
+
+        public class UserByGoalTrackerCategoryIdSearchCriteria : BaseSearchCriteria
+        {
+                public long GoalTrackerCategoryId { get; set; }
+        }
+
+
+}

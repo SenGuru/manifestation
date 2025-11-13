@@ -1,0 +1,51 @@
+public void GetAppLogs_WithValidData_ReturnsValidData()
+{
+    var model = new AppLogSearchCriteria();
+    var r = GetAppLogs();
+}
+public void GetAppLogs_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetLogUniqueSeverityTypes_WithValidData_ReturnsValidData()
+{
+    var r = GetLogUniqueSeverityTypes();
+}
+public void GetLogUniqueSeverityTypes_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetLogUniqueFunctionTypes_WithValidData_ReturnsValidData()
+{
+    var r = GetLogUniqueFunctionTypes();
+}
+public void GetLogUniqueFunctionTypes_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetLogUniqueFileNames_WithValidData_ReturnsValidData()
+{
+    var r = GetLogUniqueFileNames();
+}
+public void GetLogUniqueFileNames_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetPerfLogs_WithValidData_ReturnsValidData()
+{
+    var model = new PerfLogSearchCriteria();
+    var r = GetPerfLogs();
+}
+public void GetPerfLogs_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAppFunctionAggregateLogs_WithValidData_ReturnsValidData()
+{
+    var model = new AppFunctionAggregateSearchCriteria();
+    var r = GetAppFunctionAggregateLogs();
+}
+public void GetAppFunctionAggregateLogs_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

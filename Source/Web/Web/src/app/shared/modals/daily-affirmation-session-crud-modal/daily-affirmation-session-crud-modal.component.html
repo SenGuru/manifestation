@@ -1,0 +1,78 @@
+
+<form name="form" #lvDailyAffirmationSessionForm="ngForm" appFocusOnError [ngClass]="isShowFullScreen ? 'card p-4' : ''"
+(ngSubmit)="lvDailyAffirmationSessionForm.form.valid && onSubmit(lvDailyAffirmationSessionForm)">
+  <div *ngIf="!isShowFullScreen" class="modal-header bg-light p-3">
+    <h5 class="modal-title" id="vagncart-daily-affirmation-session-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="vagncart-daily-affirmation-session-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div> 
+  <div [ngClass]="isShowFullScreen ? '' : 'modal-body'"
+    [ngStyle]="!isShowFullScreen ? {'height': 'calc(100vh - 260px)', 'overflow-y': 'auto'} : {'':''}">
+
+    <div class="form-group row mb-3">        
+
+      <div class="col-sm-6">
+        <label class="form-label" for="dailyAffirmationSessionDate"> Daily Affirmation Session Date
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input mwlFlatpickr #lvDailyAffirmationSessionDate="ngModel" type="text" placeholder="Select Daily Affirmation Session Date" name="dailyAffirmationSessionDate" id="dailyAffirmationSessionDate"
+            class="form-control flatpickr-input" [altInput]="true" altFormat="F j, Y" dateFormat="Y-m-d"
+            required  [convertModelValue]="true" [ngClass]="{'is-invalid': lvDailyAffirmationSessionForm.submitted && lvDailyAffirmationSessionDate.invalid }"
+           [(ngModel)]="dailyAffirmationSessionModel.dailyAffirmationSessionDate" />
+          <div *ngIf="lvDailyAffirmationSessionForm.submitted && lvDailyAffirmationSessionDate.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvDailyAffirmationSessionDate.errors?.['required']">Daily Affirmation Session Date is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationSessionModel?.dailyAffirmationSessionDate ? (dailyAffirmationSessionModel.dailyAffirmationSessionDate | date : 'MM/dd/yy')  : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedUser">User
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+            <span *ngIf="!isViewMode"  class="pull-right cursor-pointer mr-1" (click)="showAddUserModal()"><i
+              class="ri-add-line"></i> Add</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvUser="ngModel" placeholder="User" name="selectedUser" id="selectedUser" required
+            [items]="users" class="form-control" bindLabel="userName" [clearable]="false" 
+            [ngClass]="{'is-invalid': lvDailyAffirmationSessionForm.submitted && lvUser.invalid }"
+            [typeahead]="userTypeahead$" [loading]="userTypeaheadLoading" [(ngModel)]="selectedUser">
+          </ng-select>
+          <div *ngIf="lvDailyAffirmationSessionForm.submitted && lvUser.invalid" class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvUser.errors?.['required']">User is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationSessionModel?.userId ? dailyAffirmationSessionModel.userId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="addedToFeedDate"> Added To Feed Date
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input mwlFlatpickr #lvAddedToFeedDate="ngModel" type="text" placeholder="Select Added To Feed Date" name="addedToFeedDate" id="addedToFeedDate"
+            class="form-control flatpickr-input" [altInput]="true" altFormat="F j, Y" dateFormat="Y-m-d"
+            required  [convertModelValue]="true" [ngClass]="{'is-invalid': lvDailyAffirmationSessionForm.submitted && lvAddedToFeedDate.invalid }"
+           [(ngModel)]="dailyAffirmationSessionModel.addedToFeedDate" />
+          <div *ngIf="lvDailyAffirmationSessionForm.submitted && lvAddedToFeedDate.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvAddedToFeedDate.errors?.['required']">Added To Feed Date is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{dailyAffirmationSessionModel?.addedToFeedDate ? (dailyAffirmationSessionModel.addedToFeedDate | date : 'MM/dd/yy')  : '-'}}
+        </div>
+      </div>
+  </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" *ngIf="!isShowFullScreen" class="btn btn-sm vagn-btn-sm btn-light" id="vagncart-daily-affirmation-session-modal-close-btn" data-bs-dismiss="modal"
+     (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm vagn-btn-sm btn-success" id="vagncart-daily-affirmation-session-modal-submit-btn" 
+      [ngClass]="!isShowFullScreen ? 'vagn-btn-sm btn-sm' : ''">{{buttonText}}</button>
+  </div>
+</form>

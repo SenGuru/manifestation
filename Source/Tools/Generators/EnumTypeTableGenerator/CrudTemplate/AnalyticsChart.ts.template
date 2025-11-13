@@ -1,0 +1,101 @@
+  get%returnModel%By%name%ChartOptions(data: %returnModel%By%name%%typeName%StatsModel[], reportType: ReportTypes): ChartOptions {
+    return this.get%returnModel%By%name%ChartOptionsInternal(data, reportType, true);
+  }
+
+  get%returnModel%By%name%ChartOptionsInternal(data: %returnModel%By%name%%typeName%StatsModel[], reportType: ReportTypes, isAnalyticsChart: boolean): ChartOptions {
+    let chartOptions: ChartOptions = new ChartOptions();
+    let chartSeriesLabel: string[] = [];
+    let chartSeriesData: number[] = [];
+    let chartHeight = "275px";
+
+    if(isAnalyticsChart) chartHeight = "350px";
+
+    if (!isAnalyticsChart && data.length > 1) {
+      data = [data[0]];
+    }
+    if (data.length === 0) {
+      return null;
+    }
+    else if (data.length == 1) {
+      let item = data[0];
+      this.getChartSeries4PieFor%name%(item, chartSeriesLabel, chartSeriesData);
+      chartOptions = {
+        series: chartSeriesData,
+        labels: chartSeriesLabel,
+        chart: {
+          width: "90%",
+          height: chartHeight,
+          type: "pie"
+        },
+        dataLabels: {  
+          enabled: true, 
+          formatter: function (val, opts) {
+            return opts.w.globals.labels[opts.seriesIndex] + ' (' + opts.w.globals.series[opts.seriesIndex] + ')';
+          },
+        },
+      };
+    }
+    else if (data.length > 1) {
+      let categoriesList = data.map(list => {
+        if (ReportTypes.CustomDateRange === reportType || ReportTypes.Weekly === reportType) {
+          return DateUtils.dateToString(new Date(list.day));
+        }
+        else if (ReportTypes.Monthly === reportType) {
+          return DateUtils.getMonthNamefromMonthNumber(list.month) + ' ' +  list.year;
+        }
+        else if (ReportTypes.Yearly === reportType) {
+          return `${list.year}`;
+        }
+        else {
+          throw 'Report Type not handled'; 
+        }
+      });
+      let chartSeries: any[] = [];
+      this.getChartSeries4BarFor%name%(data, chartSeries);
+      chartOptions = {
+        series: chartSeries,
+        chart: {
+          type: 'bar',
+          width: "95%",
+          height: chartHeight,
+          stacked: true,
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          curve: "straight"
+        },
+        grid: {
+          row: {
+            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+            opacity: 0.5
+          }
+        },
+        xaxis: {
+          categories: categoriesList,
+        }
+      };
+    }
+    return chartOptions;
+
+  }
+
+  get%returnModel%By%name%ChartOptionsInDashboard(data: %returnModel%By%name%%typeName%StatsModel[], reportType: ReportTypes): ChartOptions {
+    return this.get%returnModel%By%name%ChartOptionsInternal(data, reportType, false);
+  }
+
+  getChartSeries4PieFor%name%(item: %returnModel%By%name%%typeName%StatsModel, chartSeriesLabel: string[], chartSeriesData: number[]) {
+%pieChartStatements%
+    /*if (item.draftingCount > 0) {
+      chartSeriesLabel.push('Drafting');
+      chartSeriesData.push(item.draftingCount);
+    }*/
+  }
+  getChartSeries4BarFor%name%(data: %returnModel%By%name%%typeName%StatsModel[], chartSeries: any[]) {
+%barChartStatements%
+    /*let draftingList = data.map(list => list.draftingCount);
+    if (draftingList.some(x => x > 0)) {
+      chartSeries.push({ name: 'Drafting', data: draftingList });
+    }*/
+  }

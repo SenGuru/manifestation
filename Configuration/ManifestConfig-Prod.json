@@ -1,0 +1,44 @@
+{
+  "configuration": {
+    "appSettings": {
+
+      "serverPort": 9494,
+
+      "logSettings": {
+        "logTrace": true,
+        "logDebug": true,
+        "logInfo": true,
+        "logSql": true,
+        "logWarn": true,
+        "logError": true,
+        "logPerformance": true,
+        "logToFile": true,
+        "logLocation": "|ConfigPath|\\..\\Data\\Logs",
+        "logToDebugger": true,
+        "logToConsole": true
+      },
+      "connectionStrings": {
+        "default": {
+          "databaseType": "postgresql",
+          "databaseName": "Manifest-Prod-1",
+          "databaseServer": "134.209.155.131",
+          "databaseUserName": "postgres",
+          "databasePassword": "/D4i565@Dmin123##",
+          "ignoreValidation": true,
+          "databaseCommandTimeout": 99999,
+          "maxPoolSize": 99,
+          "automaticMigration": true,
+          "migrationNamespace": "Manifest.Repository.Migration.Application",
+          "migrationProfile": null
+        }
+      }
+    }
+  },
+
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Error"
+    }
+  }
+}

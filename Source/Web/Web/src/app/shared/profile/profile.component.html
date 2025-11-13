@@ -1,0 +1,329 @@
+<div class="row">
+  <!--end col-->
+  <div class="col-xxl-12">
+    <div class="card">
+      <div class="card-header">
+        <ul #customNav="ngbNav" ngbNav class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0"
+          role="tablist" [activeId]="1">
+          <li class="nav-item" [ngbNavItem]="1">
+            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab">
+              <i class="fas fa-home"></i>
+              Personal Details
+            </a>
+            <ng-template ngbNavContent>
+              <form #lvUserForm="ngForm" name="form" appFocusOnError
+                (ngSubmit)="lvUserForm.form.valid && onSubmit(lvUserForm)">
+                <div>
+                  <div class="form-group row mb-4">
+                    <div class="col-sm-8">
+                      <div class="form-group row mb-4">
+                        <div class="col-sm-6">
+                          <label class="form-label" for="userName">User Name
+                            <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                          </label>
+                          <div *ngIf="!isViewMode">
+                            <input #lvUserName="ngModel" type="text" name="userName" id="userName" required
+                              class="form-control" placeholder="User Name" maxlength="{{ userName__size }}"
+                              [ngClass]="{'is-invalid': lvUserForm.submitted && lvUserName.invalid }"
+                              [(ngModel)]="userModel.userName">
+                            <div class="invalid-feedback invalid-feedback-fixed">
+                              <span *ngIf="(lvUserForm.submitted) && lvUserName.errors?.['required']">
+                                User Name is required
+                              </span>
+                              <span *ngIf="lvUserForm.submitted && lvUserName.errors?.['maxlength']">
+                                Maximum {{ userName__size }} characters allowed.
+                              </span>
+                            </div>
+                          </div>
+                          <div *ngIf="isViewMode">
+                            {{userModel.userName ? userModel.userName : '-'}}
+                          </div>
+                        </div>
+
+                        <div *ngIf="isCreateMode" class="col-sm-6 group-control">
+                          <label class="form-label" for="initialPassword">
+                            Initial Password
+                            <span class="required-sign">&nbsp;*</span></label>
+                          <div *ngIf="isCreateMode">
+                            <div class="input-group">
+                              <input #initialPwd="ngModel" type="password" class="form-control"
+                                placeholder="Initial Password" id="initialPassword" name="initialPassword"
+                                autocomplete="off" required
+                                [ngClass]="{'error': lvUserForm.submitted && initialPwd.invalid }"
+                                [(ngModel)]="initialPassword" />
+                            </div>
+                            <div class="invalid-feedback invalid-feedback-fixed">
+                              <span *ngIf="(lvUserForm.submitted) && initialPwd.errors?.['required']">
+                                Initial Password is required
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="form-group row mb-4">
+                        <div class="col-sm-6">
+                          <label class="form-label" for="selectedPredefinedUserType">User Type
+                            <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                          </label>
+                          <div *ngIf="!isViewMode">
+                            <ng-select #lvPredefinedUserType="ngModel" placeholder="Select User Type"
+                              class="form-control" name="selectedPredefinedUserType" id="selectedPredefinedUserType"
+                              bindLabel="type" required [items]="predefinedUserTypes" [clearable]="false"
+                              [ngClass]="{'is-invalid': lvUserForm.submitted && lvPredefinedUserType.invalid }"
+                              [(ngModel)]="selectedPredefinedUserType">
+                            </ng-select>
+                            <div *ngIf="lvUserForm.submitted && lvPredefinedUserType.invalid"
+                              class="invalid-feedback invalid-feedback-fixed">
+                              <div *ngIf="lvPredefinedUserType.errors?.['required']">User Type is required</div>
+                            </div>
+                          </div>
+                          <div *ngIf="isViewMode">
+                            {{userModel.predefinedUserTypeName ? userModel.predefinedUserTypeName : '-'}}
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <label class="form-label" for="email">Email
+                            <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                          </label>
+                          <div *ngIf="!isViewMode">
+                            <input #lvEmail="ngModel" type="text" name="email" id="email" required appEmailvalidator
+                              class="form-control" placeholder="Email" maxlength="{{ email__size }}"
+                              [ngClass]="{'is-invalid': lvUserForm.submitted && lvEmail.invalid }"
+                              [(ngModel)]="userModel.email">
+                            <div class="invalid-feedback invalid-feedback-fixed">
+                              <span *ngIf="(lvUserForm.submitted) && lvEmail.errors?.['required']">
+                                Email is required
+                              </span>
+                              <span *ngIf="lvUserForm.submitted && lvEmail.errors?.['maxlength']">
+                                Maximum {{ email__size }} characters allowed.
+                              </span>
+                              <span *ngIf="(lvUserForm.submitted) && lvEmail.hasError('emailvalidator')">
+                                Please provide a valid Email
+                              </span>
+                            </div>
+                          </div>
+                          <div *ngIf="isViewMode">
+                            {{userModel.email ? userModel.email : '-'}}
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="card col-sm-4">
+                      <div class="card-body p-4">
+
+                        <div class="text-center">
+                          <div class="profile-user position-relative d-inline-block mx-auto mb-2">
+                            <img class="rounded-circle avatar-xl img-thumbnail user-profile-image material-shadow"
+                              alt=""
+                              [src]="userProfilePicture ? userProfilePicture : 'assets/images/users/avatar-1.jpg'">
+                            <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
+                              <input #vcFileInput id="user-profile-img-file-input" type="file"
+                                class="profile-img-file-input" name="userProfileFileUpload" [disabled]="isViewMode"
+                                [accept]="allowedFileTypes" (change)="uploadFile($event)">
+                              <label for="user-profile-img-file-input" class="profile-photo-edit avatar-xs">
+                                <span class="avatar-title rounded-circle bg-light text-body material-shadow">
+                                  <i class="ri-camera-fill"></i>
+                                </span>
+                              </label>
+                            </div>
+                          </div>
+                          <div *ngIf="fileName && userFileUpload">
+                            {{fileName? fileName : ''}} <i class="bx bx-trash fs-16 m-1 cursor-pointer"
+                              (click)="onClearFiles()"></i>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                  <div class="form-group row mb-4">
+                    <div class="col-sm-4">
+                      <label class="form-label" for="firstName">First Name
+                        <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                      </label>
+                      <div *ngIf="!isViewMode">
+                        <input #lvFirstName="ngModel" type="text" name="firstName" id="firstName" required
+                          class="form-control" placeholder="First Name" maxlength="{{ firstName__size }}"
+                          [ngClass]="{'is-invalid': lvUserForm.submitted && lvFirstName.invalid }"
+                          [(ngModel)]="userModel.firstName">
+                        <div class="invalid-feedback invalid-feedback-fixed">
+                          <span *ngIf="(lvUserForm.submitted) && lvFirstName.errors?.['required']">
+                            First Name is required
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvFirstName.errors?.['maxlength']">
+                            Maximum {{ firstName__size }} characters allowed.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="isViewMode">
+                        {{userModel.firstName ? userModel.firstName : '-'}}
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label class="form-label" for="lastName">Last Name
+                        <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                      </label>
+                      <div *ngIf="!isViewMode">
+                        <input #lvLastName="ngModel" type="text" name="lastName" id="lastName" required
+                          class="form-control" placeholder="Last Name" maxlength="{{ lastName__size }}"
+                          [ngClass]="{'is-invalid': lvUserForm.submitted && lvLastName.invalid }"
+                          [(ngModel)]="userModel.lastName">
+                        <div class="invalid-feedback invalid-feedback-fixed">
+                          <span *ngIf="(lvUserForm.submitted) && lvLastName.errors?.['required']">
+                            Last Name is required
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvLastName.errors?.['maxlength']">
+                            Maximum {{ lastName__size }} characters allowed.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="isViewMode">
+                        {{userModel.lastName ? userModel.lastName : '-'}}
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label class="form-label" for="workPhone">Work Phone
+                        <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                      </label>
+                      <div *ngIf="!isViewMode">
+                        <input #lvWorkPhone="ngModel" type="text" name="workPhone" id="workPhone" required
+                          class="form-control" appPhoneNumberValidator placeholder="Work Phone"
+                          maxlength="{{ workPhone__size }}"
+                          [ngClass]="{'is-invalid': lvUserForm.submitted && lvWorkPhone.invalid }"
+                          [(ngModel)]="userModel.workPhone" (keypress)="customSelectService.numberOnly($event)">
+                        <div class="invalid-feedback invalid-feedback-fixed">
+                          <span *ngIf="(lvUserForm.submitted) && lvWorkPhone.errors?.['required']">
+                            Work Phone is required
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvWorkPhone.hasError('phoneNumberValidator')">
+                            Phone Number is not a valid
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvWorkPhone.errors?.['maxlength']">
+                            Maximum {{ workPhone__size }} characters allowed.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="isViewMode">
+                        {{userModel.workPhone ? userModel.workPhone : '-'}}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row mb-4">
+                    <div class="col-sm-4">
+                      <label class="form-label" for="workPhoneExt">Work Phone Ext
+                        <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                      </label>
+                      <div *ngIf="!isViewMode">
+                        <input #lvWorkPhoneExt="ngModel" type="text" name="workPhoneExt" id="workPhoneExt" required
+                          class="form-control" placeholder="Work Phone Ext" maxlength="{{ workPhoneExt__size }}"
+                          [ngClass]="{'is-invalid': lvUserForm.submitted && lvWorkPhoneExt.invalid }"
+                          [(ngModel)]="userModel.workPhoneExt" (keypress)="customSelectService.numberOnly($event)">
+                        <div class="invalid-feedback invalid-feedback-fixed">
+                          <span *ngIf="(lvUserForm.submitted) && lvWorkPhoneExt.errors?.['required']">
+                            Work Phone Ext is required
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvWorkPhoneExt.errors?.['maxlength']">
+                            Maximum {{ workPhoneExt__size }} characters allowed.
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="isViewMode">
+                        {{userModel.workPhoneExt ? userModel.workPhoneExt : '-'}}
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <label class="form-label" for="cellPhone">Cell Phone
+                        <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+                      </label>
+                      <div *ngIf="!isViewMode">
+                        <input #lvCellPhone="ngModel" type="text" name="cellPhone" id="cellPhone" required
+                          class="form-control" appPhoneNumberValidator placeholder="Cell Phone"
+                          maxlength="{{ cellPhone__size }}"
+                          [ngClass]="{'is-invalid': lvUserForm.submitted && lvCellPhone.invalid }"
+                          [(ngModel)]="userModel.cellPhone" (keypress)="customSelectService.numberOnly($event)">
+                        <div class="invalid-feedback invalid-feedback-fixed">
+                          <span *ngIf="(lvUserForm.submitted) && lvCellPhone.errors?.['required']">
+                            Cell Phone is required
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvCellPhone.errors?.['maxlength']">
+                            Maximum {{ cellPhone__size }} characters allowed.
+                          </span>
+                          <span *ngIf="lvUserForm.submitted && lvCellPhone.hasError('phoneNumberValidator')">
+                            Phone Number is not a valid
+                          </span>
+                        </div>
+                      </div>
+                      <div *ngIf="isViewMode">
+                        {{userModel.cellPhone ? userModel.cellPhone : '-'}}
+                      </div>
+                    </div>
+                    <div *ngIf="!isCreateMode" class="col-sm-4">
+                      <div class="mt-3">
+                        <label class="form-label" for="active">
+                        </label>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" value="true" name="active" id="active"
+                            [disabled]="isViewMode" [(ngModel)]="userModel.active">
+                          <label class="form-check-label" for="active">
+                            Active
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+                    id="manifest-user-information-submit-btn">Save</button>
+                </div>
+
+              </form>
+            </ng-template>
+          </li>
+          <li class="nav-item" [ngbNavItem]="2">
+            <a ngbNavLink class="nav-link" data-bs-toggle="tab" role="tab">
+              <i class="far fa-user"></i>
+              Login Histroy
+            </a>
+            <ng-template ngbNavContent>
+              <div *ngIf="auditOperations && auditOperations.length > 0; else nodata">
+                <div *ngFor="let item of auditOperations" class="d-flex align-items-center mb-4">
+                  <div class="flex-shrink-0 avatar-sm">
+                    <div class="avatar-title bg-light text-primary rounded-3 fs-18 material-shadow">
+                      <i class="ri-smartphone-line"></i>
+                    </div>
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h6>{{ item.userName }}</h6>
+                    <p class="text-muted mb-0"> <span>{{ item.ipAddress }} </span> - <span
+                        class="badge bg-{{enumViewService.getPredefinedAuditOperationTypeClass(item.predefinedAuditOperationTypeId)}}-subtle text-{{enumViewService.getPredefinedAuditOperationTypeClass(item.predefinedAuditOperationTypeId)}}">{{
+                        item.predefinedAuditOperationTypeName }}</span> - {{ item.description }} - <span>{{
+                        item.auditDateTime | utcToBrowserTime }}</span></p>
+
+                  </div>
+                </div>
+              </div>
+              <ng-template #nodata>
+                <div class="manifest-table-no-btn">
+                  <app-no-data-found></app-no-data-found>
+                </div>
+              </ng-template>
+            </ng-template>
+          </li>
+
+        </ul>
+      </div>
+      <div class="card-body p-4">
+        <div class="tab-content">
+          <div [ngbNavOutlet]="customNav"></div>
+        </div>
+      </div>
+    </div>
+  </div><!--end col-->
+</div><!--end row-->

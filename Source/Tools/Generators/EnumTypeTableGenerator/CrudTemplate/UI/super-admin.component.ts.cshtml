@@ -1,0 +1,35 @@
+@using Framework.Infrastructure.Utils
+@using CodeGenerator
+
+import { Component, OnInit, ViewChild } from '@@angular/core';
+import { NgbModal } from '@@ng-bootstrap/ng-bootstrap';
+import { @(Model.CapitalizeEntityName)CrudModalComponent as @(Model.CapitalizeEntityName)CrudModalComponent } from '../../../modals/@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-crud-modal/@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-crud-modal.component';
+import { @(Model.CapitalizeEntityName)ListScreenComponent as @(Model.CapitalizeEntityName)ListScreenComponent } from '../@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-list-screen/@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-list-screen.component';
+
+@@Component({
+  selector: 'app-super-admin-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-screen',
+  templateUrl: './super-admin-@(StringUtils.SplitCamelCase(Model.CapitalizeEntityName,"-").ToLower())-screen.component.html', 
+  standalone: false,
+})
+export class SuperAdmin@(Model.CapitalizeEntityName)ScreenComponent implements OnInit {
+
+ @@ViewChild(@(Model.CapitalizeEntityName)ListScreenComponent) public @(Model.SmallEntityName)ListScreenComponent: @(Model.CapitalizeEntityName)ListScreenComponent;
+ public constructor(private modalService: NgbModal) {
+    //
+  }
+
+ public ngOnInit(): void {
+      //
+  }
+
+  public show@(Model.CapitalizeEntityName)CrudModal(): void {
+    const modalRef = this.modalService.open(@(Model.CapitalizeEntityName)CrudModalComponent, { windowClass: 'my-class',size:'xl'});
+  const componentInstance = modalRef.componentInstance as @(Model.CapitalizeEntityName)CrudModalComponent;
+  componentInstance.isCreateMode = true;
+  componentInstance.buttonText = 'Add';
+  componentInstance.title = 'Add @(StringUtils.SplitCamelCase(Model.CapitalizeEntityName))';
+  componentInstance.onCloseCallback = () => {
+    this.@(Model.SmallEntityName)ListScreenComponent.get@(Model.CapitalizeEntityName)s(this.@(Model.SmallEntityName)ListScreenComponent.searchModel);
+  }
+  }
+}

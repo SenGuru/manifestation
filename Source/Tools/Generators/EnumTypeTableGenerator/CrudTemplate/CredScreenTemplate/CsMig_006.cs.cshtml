@@ -1,0 +1,116 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+using System;
+using FluentMigrator;
+using %AppName%.Common.Enums;
+
+#pragma warning disable SA1028
+#pragma warning disable S101 // Types should be named in PascalCase
+#pragma warning disable SA1137
+namespace %AppName%.Repository.Migration.Application
+{
+    [Migration(006)]
+    public class Mig_006 : BaseMigration
+    {
+        public override void Up()
+        {
+@{
+    int i = 0;
+    //int breakAfter = -1;
+}
+@foreach (var t in Model.Code.Tables)
+{
+        //if(i > breakAfter)
+        //    continue;
+        i ++;
+            @:Create.Table("@(t.DbTableName)")
+@foreach (var c in t.Columns)
+{
+        if (c.IsFkey && c.ControlType == CodeGenerator.ControlTypes.MultiSelect)
+            continue;
+            @:.WithColumn("@(c.DbColumnName)").As@(c.MigrationDataType)(@(c.Size > 0 ? c.Size.ToString() : ""))@(c.IsNull ? ".Nullable()" : ".NotNullable()")@Raw(!c.IsPkForTable ? "" : ".Identity().PrimaryKey(\"PK_" + t.DbTableName + "\")")// 1 - @*@(c.ToString())*@
+}
+                @:;
+}
+
+@{
+    i = 0;
+    //int breakAfter = -1;
+}
+@foreach (var t in Model.Code.Tables)
+{
+        //if(i > breakAfter)
+        //    continue;
+        i ++;
+@foreach (var c in t.Columns)
+{
+        if (String.IsNullOrEmpty(c.DbColumnName))
+        {
+            continue;
+        }
+
+        if (c.DbColumnName.EndsWith("Id"))
+        {
+            var idxName = "IX_"+(t.DbTableName)+ "_" + (c.DbColumnName);
+            if (idxName.Length > 128)
+            {
+                idxName = idxName.Substring(0, 120) + i.ToString();
+            }
+            @:Create.Index("@(idxName)").OnTable("@(t.DbTableName)").OnColumn("@(c.DbColumnName)");
+        }
+}
+}
+
+@{
+    i = 0;
+    //int breakAfter = -1;
+}
+@foreach (var t in Model.Code.Tables)
+{
+        //if(i > breakAfter)
+        //    continue;
+        i ++;
+@foreach (var c in t.Columns)
+{
+        if (String.IsNullOrEmpty(c.DbColumnName))
+        {
+            continue;
+        }
+
+        if (c.DbColumnName == t.DbTableName+"Id")
+        {
+            continue;
+        }
+
+        if (c.IsPkForTable)
+        {
+            continue;
+        }
+        
+        var fkeyName = "FK_"+(t.DbTableName)+ "_" + (c.DbColumnName);
+        if (fkeyName.Length > 128)
+        {
+            fkeyName = fkeyName.Substring(0, 120) + i.ToString();
+        }
+
+        if (c.DbColumnName.EndsWith("MetaDataId"))
+        {
+            @:Create.ForeignKey("@(fkeyName)").FromTable("@(t.DbTableName)").ForeignColumns("@(c.DbColumnName)").ToTable("MetaData").PrimaryColumns("MetaDataId");
+        }
+        else if (c.DbColumnName.EndsWith("TypeId"))
+        {
+            var tblName = c.DbColumnName.Replace("Id","");
+            @:Create.ForeignKey("@(fkeyName)").FromTable("@(t.DbTableName)").ForeignColumns("@(c.DbColumnName)").ToTable("@tblName").PrimaryColumns("@tblName@("Id")");
+        }
+        else if (c.DbColumnName.EndsWith("Id") && c.IsFkey)
+        {
+            var tblName = c.FKeyTypeName;
+            @:Create.ForeignKey("@(fkeyName)").FromTable("@(t.DbTableName)").ForeignColumns("@(c.DbColumnName)").ToTable("@tblName").PrimaryColumns("@tblName@("Id")");
+        }
+}
+}
+        }
+    }
+}
+#pragma warning restore SA1137
+#pragma warning restore S101 // Types should be named in PascalCase
+#pragma warning restore SA1028

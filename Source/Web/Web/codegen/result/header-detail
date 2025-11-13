@@ -1,0 +1,193 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header details screen
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mt-n4 mx-n4">
+            <div class="bg-warning-subtle">
+                <div class="card-body pb-0 px-4">
+                    <div class="row mb-3">
+                        <div class="col-md">
+                            <div class="row align-items-center g-3">
+                                <div class="col-md-auto">
+                                    <div class="col-auto">
+                                        <div class="avatar-md">
+                                            <img [src]="hostProfilePicture" alt="host-information-img"
+                                                class="img-thumbnail rounded-circle manifest-header-img" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <div>
+                                        <h4 class="fw-bold">Host Configuration</h4>
+                                        <div class="hstack gap-3 flex-wrap">
+                                            <div> <i class="ri-dashboard-fill"></i> Language : {{hostInfo?.language}}
+                                            </div>
+                                            <div class="vr"></div>
+                                            <div><i class="ri-menu-2-line"></i> Runing Time : {{hostInfo?.runningTime |
+                                                secondsToHour }}
+                                            </div>
+                                            <div class="vr"></div>
+                                            <div><i class="ri-currency-line"></i> Budget Cost :
+                                                {{hostInfo?.budgetCost}}</div>
+                                            <div class="vr"></div>
+                                            <div><i class="ri-team-line"></i> Company: {{hostInfo?.companyName}}</div>
+                                            <div class="vr"></div>
+                                            <div class="badge rounded-pill bg-info fs-12">New</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-auto">
+                            <div class="hstack gap-1 flex-wrap">
+                                <button type="button" class="btn py-0 fs-16 text-body material-shadow-none"
+                                    (click)="backToHostsListScreen();">
+                                    <i class="ri-arrow-go-back-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xxl-12">
+                    <div class="card mb-0 shadow-none bg-transparent">
+                        <div class="card-header align-items-center d-flex bg-transparent">
+                            <div class="flex-shrink-0 ms-2">
+                                <ul ngbNav
+                                    class="nav justify-content-end nav-tabs-custom rounded card-header-tabs border-bottom-0">
+
+                    <li class="nav-item cursor-pointer" (click)="changeTab('summary')">
+                        <a class="nav-link bg-transparent pt-0 pb-2"
+                            [ngClass]="selectedMovieShootDayConfigScreenType == 'summary' ? 'active' : ''">
+                            Summary
+                        </a>
+                    </li> 
+                     
+
+                    <li class="nav-item cursor-pointer" (click)="changeTab('movie-shoot-days')">
+                        <a class="nav-link bg-transparent pt-0 pb-2"
+                            [ngClass]="selectedMovieShootDayConfigScreenType == 'movie-shoot-days' ? 'active' : ''">
+                            Movie Shoot Days
+                        </a>
+                    </li> 
+                     
+
+                    <li class="nav-item cursor-pointer" (click)="changeTab('shoot-day-budget')">
+                        <a class="nav-link bg-transparent pt-0 pb-2"
+                            [ngClass]="selectedMovieShootDayConfigScreenType == 'shoot-day-budget' ? 'active' : ''">
+                            Shoot Day Budget
+                        </a>
+                    </li> 
+                     
+
+                    <li class="nav-item cursor-pointer" (click)="changeTab('shoot-day-expense')">
+                        <a class="nav-link bg-transparent pt-0 pb-2"
+                            [ngClass]="selectedMovieShootDayConfigScreenType == 'shoot-day-expense' ? 'active' : ''">
+                            Shoot Day Expense
+                        </a>
+                    </li> 
+                     
+
+                             </ul>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                 <!-- end card body -->
+                </div>
+            </div>
+            <!-- end card -->
+        </div>
+        <!-- end col -->
+     </div>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header details ts config screen
+
+    @Output() showChangeTab: EventEmitter<string> = new EventEmitter<string>();
+    selectedMovieShootDayConfigScreenType: MovieShootDayConfigScreenTabTypes;
+              
+    changeTab(tab: MovieShootDayConfigScreenTabTypes) {
+      this.showChangeTab.emit(tab);
+      this.selectedMovieShootDayConfigScreenType = tab;
+    }
+    
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header config screen
+<div class="tab-container">
+             
+          
+  
+            <div *ngIf="showShootDaySummaryListScreen">
+              <app-shoot-day-summary-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-shoot-day-summary-list-screen>
+            </div>  
+  
+            <div *ngIf="showMovieShootDayListScreen">
+              <app-movie-shoot-day-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-movie-shoot-day-list-screen>
+            </div>  
+  
+            <div *ngIf="showMovieShootDayBudgetListScreen">
+              <app-movie-shoot-day-budget-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-movie-shoot-day-budget-list-screen>
+            </div>  
+  
+            <div *ngIf="showMovieShootDayExpenseListScreen">
+              <app-movie-shoot-day-expense-list-screen
+               [isSuperAdmin]="isSuperAdmin"
+                [isMovieShootDayConfig]="true" [companyId]="companyId" [companyName]="companyName"></app-movie-shoot-day-expense-list-screen>
+            </div>  
+
+
+        </div>
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// In header config ts config screen
+
+ ///// member initialization
+
+  selectedMovieShootDayConfigScreenType: MovieShootDayConfigScreenTabTypes;
+  
+showShootDaySummaryListScreen: boolean = false;
+showMovieShootDayListScreen: boolean = false;
+showMovieShootDayBudgetListScreen: boolean = false;
+showMovieShootDayExpenseListScreen: boolean = false;
+
+  changeTab(tab: MovieShootDayConfigScreenTabTypes) {
+    this.resetTabs();
+    this.selectedMovieShootDayConfigScreenType = tab;
+  
+
+        if (tab == 'summary') {
+          this.showShootDaySummaryListScreen = true;
+        }
+ else if (tab == 'movie-shoot-days') {
+            this.showMovieShootDayListScreen = true;
+        }
+ else if (tab == 'shoot-day-budget') {
+            this.showMovieShootDayBudgetListScreen = true;
+        }
+ else if (tab == 'shoot-day-expense') {
+            this.showMovieShootDayExpenseListScreen = true;
+        }
+
+    }
+  resetTabs() {
+    
+this.showShootDaySummaryListScreen = false;
+this.showMovieShootDayListScreen = false;
+this.showMovieShootDayBudgetListScreen = false;
+this.showMovieShootDayExpenseListScreen = false;
+
+    }
+
+/////////////////////////////////////////////////////
+In custom-model.ts
+export type MovieShootDayConfigScreenTabTypes: summary | movie-shoot-days | shoot-day-budget | shoot-day-expense;

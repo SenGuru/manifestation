@@ -1,0 +1,17 @@
+public void GetCommonConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetCommonConfigurationAsync();
+}
+public void GetCommonConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveCommonConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new CommonConfigurationSettingsModel();
+    var r = SaveCommonConfigurationAsync();
+}
+public void SaveCommonConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

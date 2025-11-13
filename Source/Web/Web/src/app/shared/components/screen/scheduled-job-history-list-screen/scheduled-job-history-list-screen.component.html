@@ -1,0 +1,147 @@
+
+<div class="page-header px-3 py-2">
+  <div class="d-flex align-items-center">
+      <div class="col-sm-auto">
+          <!-- Page title -->
+          <h3 class="card-title mb-0 flex-grow-1">
+              Scheduled Job Historys
+          </h3>
+      </div>
+     <!-- add scheduledJobHistory btn -->
+      <div class="d-flex justify-content-sm-end col-sm"> 
+          <button type="button" class="btn btn-success btn-sm mnf-btn-sm"  data-bs-toggle="modal" id="create-user-btn" (click)="showAddScheduledJobHistoryModal();"><i class="ri-add-line align-bottom me-1"></i> Add User</button>
+      </div>
+  </div>
+</div>
+<div class="card mb-2">
+<div class="card-header py-2">
+<form #scheduledJobHistorySearch="ngForm"
+  novalidate
+  focusOnError
+  (ngSubmit)="onSearch(scheduledJobHistorySearch)"
+>
+ 
+  <div class="row">
+    <div class="col-md-2 pr-0">
+      <input
+        type="text"
+        class="form-control"
+        name="example-text-input"
+        placeholder="Search Text"
+        [(ngModel)]="this.searchModel.keyword"
+      />
+    </div>     
+    <div class="col-md-2">
+      <ng-select placeholder="Scheduled Job" class="form-control"
+      name="selectedScheduledJob" id="selectedScheduledJob" bindLabel="scheduledJobName"
+      [items]="scheduledJobs" [clearable]="true" [typeahead]="scheduledJobTypeahead$" [loading]="scheduledJobTypeaheadLoading" [(ngModel)]="selectedScheduledJob">
+    </ng-select>
+    </div>       
+    <div class="d-flex justify-content-sm-end col-sm">
+      <button type="submit" class="btn btn-primary btn-sm mnf-btn-sm mx-1" data-bs-toggle="modal" id="user-search-btn"><i class="ri-search-line align-bottom me-1"></i> Search</button>
+      <button type="button" class="btn btn-sm mnf-btn-sm bg-light" (click)="onReset(scheduledJobHistorySearch)">
+        Reset
+      </button>
+    </div>
+  </div>
+</form>
+</div>
+
+<div class="card-body">
+<div class="table-responsive table-card manifest-table" >
+<table *ngIf="listData.length > 0; else nodata" class="table">
+  <thead class="manifest-table-header">
+    <tr>
+      <th
+        *ngFor="let column of columns"
+        class="text-left"
+        [ngClass]="{
+          'w-1': column.value === 'action',
+          'sort': column.sortable
+        }"
+        (click)="changeSort(column)"
+      >
+        <span class="mr-1" [innerHTML]="column.text"></span>
+        <i
+          [ngClass]="
+            searchModel.sortBy === column.value
+              ? 'fa fa-sort-' + currentSort
+              : ''
+          "
+        ></i>
+      </th>
+      <th
+        class="text-left w-1 last-col-floating-container"
+      >
+        <span class="mr-1">ACTION</span>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of listData">
+      <td class="text-left">
+        <!-- {{ item.scheduledJobName  }} -->
+      </td> 
+      <td class="text-left">
+        {{ item.pickupDate |  date: 'dd/MM/yy' }}
+      </td>
+      <td class="text-left">
+        {{ item.pickupMachineName  }}
+      </td>
+      <td class="text-left">
+        {{ item.pickupProcessName  }}
+      </td>
+      <td class="text-left">
+        {{ item.isDeleted  }}
+      </td>
+      <td class="text-left">
+        {{ item.createdDate |  date: 'dd/MM/yy' }}
+      </td>
+      <td class="text-left">
+        {{ item.createdByUserFirstName }} {{ item.createdByUserLastName }}
+      </td>
+      <td class="text-left">
+        {{ item.modifiedDate |  date: 'dd/MM/yy' }}
+      </td>
+      <td class="text-left">
+        {{ item.modifiedByUserFirstName }} {{ item.modifiedByUserLastName }}
+      </td>
+      <td class="text-left last-col-floating-container">
+        <div class="action-col-wrap">
+          <span class="mx-1">
+            <a>
+              <span class="text-dark" title="View ScheduledJobHistory" (click)="showViewScheduledJobHistoryModal(item)">
+                <app-icon-view></app-icon-view>
+              </span>
+            </a>
+          </span>
+          <span class="mx-1" >
+            <a>
+              <span class="text-dark" title="Edit ScheduledJobHistory" (click)="showUpdateScheduledJobHistoryModal(item)">
+                <app-icon-edit ></app-icon-edit>
+              </span>
+            </a>
+          </span>
+          <span class="mx-1" >
+            <a class="cursor-pointer">
+              <span class="text-dark" title="Delete ScheduledJobHistory" (click)="deleteScheduledJobHistory(item)">
+                <app-icon-delete></app-icon-delete>
+              </span>
+            </a>
+          </span>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<ng-template #nodata>
+<app-no-data-found></app-no-data-found>
+</ng-template>
+</div>
+<app-pagination
+#pagination
+[totalItems]="totalItems" [currentPage]="searchModel.page"
+(pageOptionChanged)="paginationChange($event)"
+></app-pagination>
+</div>
+</div>

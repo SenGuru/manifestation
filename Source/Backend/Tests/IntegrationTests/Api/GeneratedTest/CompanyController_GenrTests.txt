@@ -1,0 +1,233 @@
+public void UploadUserPicture_WithValidData_ReturnsValidData()
+{
+    var model = new UserPictureWithFileFormModel();
+    var r = UploadUserPicture();
+}
+public void UploadUserPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void ClearUserPicture_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = ClearUserPicture();
+}
+public void ClearUserPicture_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUsers_WithValidData_ReturnsValidData()
+{
+    var model = new UserSearchCriteria();
+    var r = GetUsers();
+}
+public void GetUsers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateUser_WithValidData_ReturnsValidData()
+{
+    var model = new UserCreateWithFileFormModel();
+    var r = CreateUser();
+}
+public void CreateUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUser_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUser();
+}
+public void GetUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateUserByAdmin_WithValidData_ReturnsValidData()
+{
+    var model = new UserUpdateWithFileFormModel();
+    var r = UpdateUserByAdmin();
+}
+public void UpdateUserByAdmin_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void EnableUserById_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = EnableUserById();
+}
+public void EnableUserById_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void DisableUserById_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = DisableUserById();
+}
+public void DisableUserById_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkUserAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkUserAsDeleted();
+}
+public void MarkUserAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkUserAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkUserAsNotDeleted();
+}
+public void MarkUserAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateMinimalUserProfileForCurrentUser_WithValidData_ReturnsValidData()
+{
+    var model = new MinimalUserProfileModel();
+    var r = UpdateMinimalUserProfileForCurrentUser();
+}
+public void UpdateMinimalUserProfileForCurrentUser_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void EnablePremiumFeature_WithValidData_ReturnsValidData()
+{
+    var model = new EnablePremiumFeatureModel();
+    var r = EnablePremiumFeature();
+}
+public void EnablePremiumFeature_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsPremiumFeatureEnabled_WithValidData_ReturnsValidData()
+{
+    var r = IsPremiumFeatureEnabled();
+}
+public void IsPremiumFeatureEnabled_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserPermissions_WithValidData_ReturnsValidData()
+{
+    var model = new UserPermissionSearchCriteria();
+    var r = GetUserPermissions();
+}
+public void GetUserPermissions_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserPermission_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserPermission();
+}
+public void GetUserPermission_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateUserPermission_WithValidData_ReturnsValidData()
+{
+    var model = new UserPermissionCreateModel();
+    var r = CreateUserPermission();
+}
+public void CreateUserPermission_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateUserPermission_WithValidData_ReturnsValidData()
+{
+    var model = new UserPermissionUpdateModel();
+    var r = UpdateUserPermission();
+}
+public void UpdateUserPermission_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkUserPermissionAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkUserPermissionAsDeleted();
+}
+public void MarkUserPermissionAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkUserPermissionAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkUserPermissionAsNotDeleted();
+}
+public void MarkUserPermissionAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserGroups_WithValidData_ReturnsValidData()
+{
+    var model = new UserGroupSearchCriteria();
+    var r = GetUserGroups();
+}
+public void GetUserGroups_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetUserGroup_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetUserGroup();
+}
+public void GetUserGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateUserGroup_WithValidData_ReturnsValidData()
+{
+    var model = new UserGroupCreateModel();
+    var r = CreateUserGroup();
+}
+public void CreateUserGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleUserGroup_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleUserGroupCreateModel();
+    var r = CreateMultipleUserGroup();
+}
+public void CreateMultipleUserGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateUserGroup_WithValidData_ReturnsValidData()
+{
+    var model = new UserGroupUpdateModel();
+    var r = UpdateUserGroup();
+}
+public void UpdateUserGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkUserGroupAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkUserGroupAsDeleted();
+}
+public void MarkUserGroupAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkUserGroupAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkUserGroupAsNotDeleted();
+}
+public void MarkUserGroupAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

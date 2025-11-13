@@ -1,0 +1,95 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+import { StateModel, MetaDataModel } from "./app-model";
+
+@{
+    int i = 0;
+    //int breakAfter = -1;
+    var addedColumns = new List<string>();
+}
+@foreach (var t in Model.Code.Sections)
+{
+        //if(i > breakAfter)
+        //    continue;
+        i ++;
+        addedColumns.Clear();
+@:export class @(t.ViewClassName)Model {
+
+@foreach (var c in t.AllColumns)
+{
+        var arrStr = "";
+        if (c.IsArray)
+            arrStr = "[]";
+        var withoutId = c.TsDbColumnName.Replace("Id", "");
+        bool withNameExists = t.AllColumns.Any(x => x.TsDbColumnName == withoutId + "Name");
+
+        if (c.IsFkey)
+        {
+                if (c.ElementType == CodeGenerator.ElementTypes.File)
+                {
+                @foreach (var cf in c.FileRelatedColumnsForView)
+                {                    
+    @:@(cf.TsFileColumn) : @(cf.TsDataType); // 1 - @(c.ToString())
+    addedColumns.Add(cf.TsFileColumn);
+                }
+                }
+                else
+                {
+                if (c.ControlType == CodeGenerator.ControlTypes.MultiSelect || c.ParentTable.IsList)
+                    {
+                        if (c.DbColumnName.EndsWith("MetaDataIds"))
+                        {
+    @:@(c.TsDbColumnName) : MetaDataModel@(arrStr);//2 - @(c.ToString())
+    addedColumns.Add(c.TsDbColumnName);
+                        }
+                        else
+                        {
+    @:@(c.TsDbColumnName) : @(c.FKeyTypeName)Model@(arrStr);//2.1 - @(c.ToString())
+    addedColumns.Add(c.TsDbColumnName);
+                        }
+                    }
+                    else
+                    {
+    @:@(c.TsDbColumnName) : number@(arrStr);//2.2 - @(c.ToString())
+    addedColumns.Add(c.TsDbColumnName);
+                    }
+
+                    if(!c.IsArray && !withNameExists)
+                    {
+    @:@(withoutId)Name : string;//2.3 - @(c.ToString())
+addedColumns.Add(withoutId+"Name");
+                    }
+                }
+        }
+        else
+        {
+            if (c.TsDataType == CodeGenerator.TsDataTypes.fKey)
+            {
+                if (addedColumns.Any(x => x == c.TsDbColumnName))
+                {
+                    continue;
+                }
+    @:@(c.TsDbColumnName) : number@(arrStr); //3 - @(c.ToString())
+                if(!c.IsArray&& !withNameExists && !c.IsPkForTable)
+                {
+    @:@(withoutId)Name : string; //4 - @(c.ToString())
+    addedColumns.Add(withoutId+"Name");
+                }
+            }
+            else
+            {
+                if (addedColumns.Any(x => x == c.TsDbColumnName))
+                {
+                    continue;
+                }
+    @:@(c.TsDbColumnName) : @(c.TsDataType)@(arrStr); // 5 - @(c.ToString())
+addedColumns.Add(c.TsDbColumnName);
+                if (c.TsDbColumnName.EndsWith("MetaDataId") && !c.IsArray && !withNameExists)
+                {
+    @:@(withoutId)Name : string; //6 - @(c.ToString())
+    addedColumns.Add(withoutId+"Name");
+                }
+            }
+        }
+}
+@:}
+}

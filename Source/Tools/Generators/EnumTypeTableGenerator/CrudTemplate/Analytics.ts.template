@@ -1,0 +1,203 @@
+import { DatePipe } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, OnInit, Output, ViewChild,EventEmitter } from '@angular/core';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
+import { endOfMonth, endOfYear } from 'date-fns';
+import { CrudService } from 'src/app/shared/services/crud.service';
+import { DialogService } from 'src/app/shared/services/dialog.service';
+import { BaseSearchCriteria } from 'src/common/framework/common/models/base-search-criteria.model';
+import { DateUtils } from 'src/common/framework/common/utils/date.utils';
+import { ReportMonthTypes, ReportTypes, ReportYearTypes } from 'src/common/models/app-custom-enums';
+import { ChartOptions, IBaseAnalyticsSearchCriteria, OppantTableColumn, ReportDropdown, Status } from 'src/common/models/app-custom-model';
+import { %returnModel%By%name%%typeName%StatsModel, %returnModel%Model, %name%%typeName%DashboardSearchCriteria } from 'src/common/models/app-model';
+import { ChartService } from 'src/common/services/charts/chart.service';
+import { HttpService } from 'src/common/services/http/app-http-client';
+import { CustomSelectService } from 'src/common/services/http/custom-select.service';
+import { SelectService } from 'src/common/services/http/select-service';
+import { BaseAnalyticsScreenComponent } from '../base-analytics-screen/base-analytics-screen.component';
+import { ListColumns } from '../list-columns';
+declare function initFlatPickrElement(element: any): any;
+
+@Component({
+  selector: 'app-analytics-%returnModelSmall%-by-%splittedFileName%-screen',
+  templateUrl: './analytics-%returnModelSmall%-by-%splittedFileName%-screen.html'
+})
+export class Analytics%returnModel%By%name%ScreenComponent extends BaseAnalyticsScreenComponent<Analytics%returnModel%By%name%ScreenComponent,%name%%typeName%DashboardSearchCriteria,%returnModel%By%name%%typeName%StatsModel,%returnModel%Model> implements OnInit {
+
+  search%name%Types: Status[]=[];
+  selected%name%Type: Status[]=[];
+  columns:OppantTableColumn[]= ListColumns.%returnModelWithSmallFirstLetter%Columns;
+  chartValues: ChartOptions;
+
+  constructor(public customSelectService: CustomSelectService,public httpService: HttpService,public crudService: CrudService,
+    public selectService: SelectService,public datePipe: DatePipe,public chartService: ChartService,public dialogService: DialogService) {
+    super(customSelectService,httpService, crudService, selectService, datePipe, chartService,dialogService);
+  }
+
+  ngOnInit(): void {
+    this.search%name%Types = this.selectService.Get%name%%typeOrEmptyForTypeInName%s();
+    this.selected%name%Type = [];
+    this.baseNgOnInit(this,this.newSearchCriteriaCreateCallbackFunction, this.searchCriteriaUpdateCallbackFunction,this.filterNameCallbackFunction,this.dailyCallbackFunction,this.weeklyCallbackFunction,this.monthlyCallbackFunction,this.yearlyCallbackFunction,this.listCallbackFunction);
+  }
+
+  ngAfterViewInit(): void {
+    this.baseNgAfterViewInit(this);
+  }
+
+  onLoadSelectionByDefault(){
+    this.baseOnLoadSelectionByDefault(this,this.searchCriteriaUpdateCallbackFunction,this.filterNameCallbackFunction,this.dailyCallbackFunction,this.weeklyCallbackFunction,this.monthlyCallbackFunction,this.yearlyCallbackFunction,this.listCallbackFunction);
+  }
+
+  changeReportType(){
+    this.baseChangeReportType(this,this.searchCriteriaUpdateCallbackFunction,this.filterNameCallbackFunction,this.dailyCallbackFunction,this.weeklyCallbackFunction,this.monthlyCallbackFunction,this.yearlyCallbackFunction,this.listCallbackFunction);
+  }
+  updateStartDate(event: any) {
+    this.baseUpdateStartDate(this,event);
+  }
+
+  updateEndDate(event: any) {
+    this.baseUpdateEndDate(this,event);
+  }
+
+  search(){
+    this.listData = [];
+    this.baseSearch(this,this.searchCriteriaUpdateCallbackFunction,this.filterNameCallbackFunction,this.dailyCallbackFunction,this.weeklyCallbackFunction,this.monthlyCallbackFunction,this.yearlyCallbackFunction,this.listCallbackFunction);
+  }
+
+  getMonthlyData(){
+    this.baseGetMonthlyData(this,this.monthlyCallbackFunction);
+  }
+
+  getWeeklyData(){
+    this.baseGetWeeklyData(this,this.weeklyCallbackFunction);
+  }
+
+  getYearlyData(){
+    this.baseGetYearlyData(this,this.yearlyCallbackFunction);
+  }
+
+  getDailyData(){
+    this.baseGetDailyData(this,this.dailyCallbackFunction);
+  }
+
+  reset(){
+    this.selected%name%Type = [];
+    this.baseReset(this,this.newSearchCriteriaCreateCallbackFunction);
+  }
+
+  getListData(){
+    this.baseGetListData(this,this.listCallbackFunction);
+  }
+
+  paginationChange(page: BaseSearchCriteria) {
+    this.basePaginationChange(this,page,this.listCallbackFunction);
+  }
+
+  filterNameCallbackFunction(thisObjParam) : string{
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    let statusAsString = "";
+    if(thisObj.selected%name%Type.length > 0){
+      statusAsString = thisObj.selected%name%Type.length > 2 ? thisObj.selected%name%Type.slice(0,2).map(status => status.type).join(',') + " ..." 
+      : thisObj.selected%name%Type.map(status => status.type).join(',');
+
+    }
+    return statusAsString;
+  }
+
+  newSearchCriteriaCreateCallbackFunction(thisObjParam) {
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    return new %name%%typeName%DashboardSearchCriteria();
+  }
+
+  searchCriteriaUpdateCallbackFunction(thisObjParam) {
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    if(thisObj.selected%name%Type.length > 0 ){
+      thisObj.searchCriteria.%returnModelWithSmallFirstLetter%TypeIds = thisObj.selected%name%Type.map(status => status.id);
+    }
+  }
+
+  dailyCallbackFunction(thisObjParam){
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    const search = %name%%typeName%DashboardSearchCriteria.getCopy(thisObj.searchCriteria,true);
+    thisObj.httpService.%dailyFunctionName%(search).subscribe(result =>{
+      if(!result.isSuccess){
+        return;
+      }
+      thisObj.chartData = result.model;
+      thisObj.chartValues = thisObj.chartService.get%returnModel%By%name%ChartOptions(thisObj.chartData,ReportTypes.CustomDateRange);
+    })
+  }
+
+  monthlyCallbackFunction(thisObjParam){
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    const search = %name%%typeName%DashboardSearchCriteria.getCopy(thisObj.searchCriteria,true);
+    if(thisObj.selectedReportMonth && thisObj.selectedReportMonth.id === ReportMonthTypes.CustomMonthType){
+      search.startDate = thisObj.fromDate;
+      thisObj.endDate =endOfMonth(thisObj.endDate);
+      search.endDate = thisObj.endDate;
+    }
+    IBaseAnalyticsSearchCriteria.fixDateForSending(search);
+   
+    thisObj.httpService.%monthlyFunctionName%(search).subscribe(result =>{
+      if(!result.isSuccess){
+        return;
+      }
+      thisObj.chartData = result.model;
+      thisObj.chartValues = thisObj.chartService.get%returnModel%By%name%ChartOptions(thisObj.chartData,ReportTypes.Monthly);
+    })
+  }
+
+  weeklyCallbackFunction(thisObjParam){
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    const search = %name%%typeName%DashboardSearchCriteria.getCopy(thisObj.searchCriteria,true);
+    IBaseAnalyticsSearchCriteria.fixDateForSending(search);
+    thisObj.httpService.%weeklyFunctionName%(search).subscribe(result =>{
+      if(!result.isSuccess){
+        return;
+      }
+      thisObj.chartData = result.model;
+      thisObj.chartValues = thisObj.chartService.get%returnModel%By%name%ChartOptions(thisObj.chartData,ReportTypes.Weekly);
+    })
+  }
+
+  yearlyCallbackFunction(thisObjParam){
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    const search = %name%%typeName%DashboardSearchCriteria.getCopy(thisObj.searchCriteria,true);
+    if(thisObj.selectedReportMonth && thisObj.selectedReportMonth.id === ReportYearTypes.CustomYearType){
+      search.startDate = thisObj.fromDate;      
+      search.endDate = endOfYear(thisObj.endDate);  
+    }
+    IBaseAnalyticsSearchCriteria.fixDateForSending(search);
+    thisObj.httpService.%yearlyFunctionName%(search).subscribe(result =>{
+      if(!result.isSuccess){
+        return;
+      }
+      thisObj.chartData = result.model;
+      thisObj.chartValues = thisObj.chartService.get%returnModel%By%name%ChartOptions(thisObj.chartData,ReportTypes.Yearly);
+    })
+  }
+
+
+  listCallbackFunction(thisObjParam){
+    let thisObj = thisObjParam as Analytics%returnModel%By%name%ScreenComponent;
+    const search = %name%%typeName%DashboardSearchCriteria.getCopy(thisObj.searchCriteria,true);
+    if(thisObj.selectedReportMonth && thisObj.selectedReportMonth.id === ReportMonthTypes.CustomMonthType){
+      search.startDate = thisObj.fromDate;
+      search.endDate = thisObj.endDate;
+    }
+    else if(thisObj.selectedReportMonth && thisObj.selectedReportMonth.id === ReportYearTypes.CustomYearType){
+      search.startDate = thisObj.fromDate;
+      search.endDate = thisObj.endDate;
+    }
+    IBaseAnalyticsSearchCriteria.fixDateForSending(search);
+    let http : HttpService = thisObj.httpService;
+    http.%modelListFunctionName%(search).subscribe(result =>{
+      if(!result.isSuccess){
+        return;
+      }
+      thisObj.listData = result.model;
+      thisObj.listDataTotalRecord = result.totalRecords;
+    })
+  }
+
+  
+}

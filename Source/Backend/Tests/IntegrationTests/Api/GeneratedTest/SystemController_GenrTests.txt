@@ -1,0 +1,1611 @@
+public void GetSupportedCountries_WithValidData_ReturnsValidData()
+{
+    var r = GetSupportedCountries();
+}
+public void GetSupportedCountries_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCountriesByKeyword_WithValidData_ReturnsValidData()
+{
+    var model = new String();
+    var r = GetCountriesByKeyword();
+}
+public void GetCountriesByKeyword_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetStates_WithValidData_ReturnsValidData()
+{
+    var model = new StateSearchCriteria();
+    var r = GetStates();
+}
+public void GetStates_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetState_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetState();
+}
+public void GetState_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetLogConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetLogConfigurationAsync();
+}
+public void GetLogConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveLogConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new LogConfigurationModel();
+    var r = SaveLogConfigurationAsync();
+}
+public void SaveLogConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetWebConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetWebConfigurationAsync();
+}
+public void GetWebConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveWebConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new ManifestWebConfigurationModel();
+    var r = SaveWebConfigurationAsync();
+}
+public void SaveWebConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAppConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetAppConfigurationAsync();
+}
+public void GetAppConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveAppConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new AppConfigurationModel();
+    var r = SaveAppConfigurationAsync();
+}
+public void SaveAppConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCommonConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetCommonConfigurationAsync();
+}
+public void GetCommonConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveCommonConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new CommonConfigurationModel();
+    var r = SaveCommonConfigurationAsync();
+}
+public void SaveCommonConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCoordinatorConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetCoordinatorConfigurationAsync();
+}
+public void GetCoordinatorConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveCoordinatorConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new CoordinatorConfigurationModel();
+    var r = SaveCoordinatorConfigurationAsync();
+}
+public void SaveCoordinatorConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetReportServerConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var r = GetReportServerConfigurationAsync();
+}
+public void GetReportServerConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void SaveReportServerConfigurationAsync_WithValidData_ReturnsValidData()
+{
+    var model = new ReportServerConfigurationModel();
+    var r = SaveReportServerConfigurationAsync();
+}
+public void SaveReportServerConfigurationAsync_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetConfigurationGroups_WithValidData_ReturnsValidData()
+{
+    var model = new ConfigurationGroupSearchCriteria();
+    var r = GetConfigurationGroups();
+}
+public void GetConfigurationGroups_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetConfigurationGroup_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetConfigurationGroup();
+}
+public void GetConfigurationGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateConfigurationGroup_WithValidData_ReturnsValidData()
+{
+    var model = new ConfigurationGroupCreateModel();
+    var r = CreateConfigurationGroup();
+}
+public void CreateConfigurationGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateConfigurationGroup_WithValidData_ReturnsValidData()
+{
+    var model = new ConfigurationGroupUpdateModel();
+    var r = UpdateConfigurationGroup();
+}
+public void UpdateConfigurationGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkConfigurationGroupAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkConfigurationGroupAsDeleted();
+}
+public void MarkConfigurationGroupAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkConfigurationGroupAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkConfigurationGroupAsNotDeleted();
+}
+public void MarkConfigurationGroupAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetConfigurationItems_WithValidData_ReturnsValidData()
+{
+    var model = new ConfigurationItemSearchCriteria();
+    var r = GetConfigurationItems();
+}
+public void GetConfigurationItems_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetConfigurationItem_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetConfigurationItem();
+}
+public void GetConfigurationItem_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateConfigurationItem_WithValidData_ReturnsValidData()
+{
+    var model = new ConfigurationItemCreateModel();
+    var r = CreateConfigurationItem();
+}
+public void CreateConfigurationItem_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateConfigurationItem_WithValidData_ReturnsValidData()
+{
+    var model = new ConfigurationItemUpdateModel();
+    var r = UpdateConfigurationItem();
+}
+public void UpdateConfigurationItem_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkConfigurationItemAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkConfigurationItemAsDeleted();
+}
+public void MarkConfigurationItemAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkConfigurationItemAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkConfigurationItemAsNotDeleted();
+}
+public void MarkConfigurationItemAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetEnumGroups_WithValidData_ReturnsValidData()
+{
+    var model = new EnumGroupSearchCriteria();
+    var r = GetEnumGroups();
+}
+public void GetEnumGroups_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetEnumGroup_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetEnumGroup();
+}
+public void GetEnumGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateEnumGroup_WithValidData_ReturnsValidData()
+{
+    var model = new EnumGroupCreateModel();
+    var r = CreateEnumGroup();
+}
+public void CreateEnumGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateEnumGroup_WithValidData_ReturnsValidData()
+{
+    var model = new EnumGroupUpdateModel();
+    var r = UpdateEnumGroup();
+}
+public void UpdateEnumGroup_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkEnumGroupAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkEnumGroupAsDeleted();
+}
+public void MarkEnumGroupAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkEnumGroupAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkEnumGroupAsNotDeleted();
+}
+public void MarkEnumGroupAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetEnumTypes_WithValidData_ReturnsValidData()
+{
+    var model = new EnumTypeSearchCriteria();
+    var r = GetEnumTypes();
+}
+public void GetEnumTypes_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetEnumType_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetEnumType();
+}
+public void GetEnumType_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateEnumType_WithValidData_ReturnsValidData()
+{
+    var model = new EnumTypeCreateModel();
+    var r = CreateEnumType();
+}
+public void CreateEnumType_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateEnumType_WithValidData_ReturnsValidData()
+{
+    var model = new EnumTypeUpdateModel();
+    var r = UpdateEnumType();
+}
+public void UpdateEnumType_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkEnumTypeAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkEnumTypeAsDeleted();
+}
+public void MarkEnumTypeAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkEnumTypeAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkEnumTypeAsNotDeleted();
+}
+public void MarkEnumTypeAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobs_WithValidData_ReturnsValidData()
+{
+    var model = new JobSearchCriteria();
+    var r = GetJobs();
+}
+public void GetJobs_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJob_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetJob();
+}
+public void GetJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJob_WithValidData_ReturnsValidData()
+{
+    var model = new JobCreateModel();
+    var r = CreateJob();
+}
+public void CreateJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobFromScheduledJob_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = CreateJobFromScheduledJob();
+}
+public void CreateJobFromScheduledJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobFromJobTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new JobCreateModel();
+    var r = CreateJobFromJobTemplate();
+}
+public void CreateJobFromJobTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateJob_WithValidData_ReturnsValidData()
+{
+    var model = new JobUpdateModel();
+    var r = UpdateJob();
+}
+public void UpdateJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobAsDeleted();
+}
+public void MarkJobAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobAsNotDeleted();
+}
+public void MarkJobAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobAttachments_WithValidData_ReturnsValidData()
+{
+    var model = new JobAttachmentSearchCriteria();
+    var r = GetJobAttachments();
+}
+public void GetJobAttachments_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetJobAttachment();
+}
+public void GetJobAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new JobAttachmentCreateModel();
+    var r = CreateJobAttachment();
+}
+public void CreateJobAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateJobAttachment_WithValidData_ReturnsValidData()
+{
+    var model = new JobAttachmentUpdateModel();
+    var r = UpdateJobAttachment();
+}
+public void UpdateJobAttachment_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobAttachmentAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobAttachmentAsDeleted();
+}
+public void MarkJobAttachmentAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobAttachmentAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobAttachmentAsNotDeleted();
+}
+public void MarkJobAttachmentAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobNotificationEmails_WithValidData_ReturnsValidData()
+{
+    var model = new JobNotificationEmailSearchCriteria();
+    var r = GetJobNotificationEmails();
+}
+public void GetJobNotificationEmails_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetJobNotificationEmail();
+}
+public void GetJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new JobNotificationEmailCreateModel();
+    var r = CreateJobNotificationEmail();
+}
+public void CreateJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new JobNotificationEmailUpdateModel();
+    var r = UpdateJobNotificationEmail();
+}
+public void UpdateJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobNotificationEmailAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobNotificationEmailAsDeleted();
+}
+public void MarkJobNotificationEmailAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobNotificationEmailAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobNotificationEmailAsNotDeleted();
+}
+public void MarkJobNotificationEmailAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobTemplateCategorys_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateCategorySearchCriteria();
+    var r = GetJobTemplateCategorys();
+}
+public void GetJobTemplateCategorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobTemplateCategory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetJobTemplateCategory();
+}
+public void GetJobTemplateCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobTemplateCategory_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateCategoryCreateModel();
+    var r = CreateJobTemplateCategory();
+}
+public void CreateJobTemplateCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateJobTemplateCategory_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateCategoryUpdateModel();
+    var r = UpdateJobTemplateCategory();
+}
+public void UpdateJobTemplateCategory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobTemplateCategoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobTemplateCategoryAsDeleted();
+}
+public void MarkJobTemplateCategoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobTemplateCategoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobTemplateCategoryAsNotDeleted();
+}
+public void MarkJobTemplateCategoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobTemplates_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateSearchCriteria();
+    var r = GetJobTemplates();
+}
+public void GetJobTemplates_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetJobTemplate();
+}
+public void GetJobTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateCreateModel();
+    var r = CreateJobTemplate();
+}
+public void CreateJobTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateJobTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateUpdateModel();
+    var r = UpdateJobTemplate();
+}
+public void UpdateJobTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobTemplateAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobTemplateAsDeleted();
+}
+public void MarkJobTemplateAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobTemplateAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobTemplateAsNotDeleted();
+}
+public void MarkJobTemplateAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobTemplateParameters_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateParameterSearchCriteria();
+    var r = GetJobTemplateParameters();
+}
+public void GetJobTemplateParameters_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetJobTemplateParameter_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetJobTemplateParameter();
+}
+public void GetJobTemplateParameter_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateJobTemplateParameter_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateParameterCreateModel();
+    var r = CreateJobTemplateParameter();
+}
+public void CreateJobTemplateParameter_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateJobTemplateParameter_WithValidData_ReturnsValidData()
+{
+    var model = new JobTemplateParameterUpdateModel();
+    var r = UpdateJobTemplateParameter();
+}
+public void UpdateJobTemplateParameter_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobTemplateParameterAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobTemplateParameterAsDeleted();
+}
+public void MarkJobTemplateParameterAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkJobTemplateParameterAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkJobTemplateParameterAsNotDeleted();
+}
+public void MarkJobTemplateParameterAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMessageToSends_WithValidData_ReturnsValidData()
+{
+    var model = new MessageToSendSearchCriteria();
+    var r = GetMessageToSends();
+}
+public void GetMessageToSends_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMessageToSend_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMessageToSend();
+}
+public void GetMessageToSend_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMessageToSend_WithValidData_ReturnsValidData()
+{
+    var model = new MessageToSendCreateModel();
+    var r = CreateMessageToSend();
+}
+public void CreateMessageToSend_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetRealtimeMessages_WithValidData_ReturnsValidData()
+{
+    var model = new RealtimeMessageSearchCriteria();
+    var r = GetRealtimeMessages();
+}
+public void GetRealtimeMessages_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetRealtimeMessage_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetRealtimeMessage();
+}
+public void GetRealtimeMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateRealtimeMessage_WithValidData_ReturnsValidData()
+{
+    var model = new RealtimeMessageCreateModel();
+    var r = CreateRealtimeMessage();
+}
+public void CreateRealtimeMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateRealtimeMessage_WithValidData_ReturnsValidData()
+{
+    var model = new RealtimeMessageUpdateModel();
+    var r = UpdateRealtimeMessage();
+}
+public void UpdateRealtimeMessage_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSavedJobs_WithValidData_ReturnsValidData()
+{
+    var model = new SavedJobSearchCriteria();
+    var r = GetSavedJobs();
+}
+public void GetSavedJobs_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSavedJob_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetSavedJob();
+}
+public void GetSavedJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateSavedJob_WithValidData_ReturnsValidData()
+{
+    var model = new SavedJobCreateModel();
+    var r = CreateSavedJob();
+}
+public void CreateSavedJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateSavedJob_WithValidData_ReturnsValidData()
+{
+    var model = new SavedJobUpdateModel();
+    var r = UpdateSavedJob();
+}
+public void UpdateSavedJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSavedJobAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSavedJobAsDeleted();
+}
+public void MarkSavedJobAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSavedJobAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSavedJobAsNotDeleted();
+}
+public void MarkSavedJobAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetScheduledJobs_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobSearchCriteria();
+    var r = GetScheduledJobs();
+}
+public void GetScheduledJobs_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetScheduledJob_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetScheduledJob();
+}
+public void GetScheduledJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateScheduledJob_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobCreateModel();
+    var r = CreateScheduledJob();
+}
+public void CreateScheduledJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateScheduledJob_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobUpdateModel();
+    var r = UpdateScheduledJob();
+}
+public void UpdateScheduledJob_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkScheduledJobAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkScheduledJobAsDeleted();
+}
+public void MarkScheduledJobAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkScheduledJobAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkScheduledJobAsNotDeleted();
+}
+public void MarkScheduledJobAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAuditOperations_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationSearchCriteria();
+    var r = GetAuditOperations();
+}
+public void GetAuditOperations_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAuditOperation_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetAuditOperation();
+}
+public void GetAuditOperation_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateAuditOperation_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationCreateModel();
+    var r = CreateAuditOperation();
+}
+public void CreateAuditOperation_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateAuditOperation_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationUpdateModel();
+    var r = UpdateAuditOperation();
+}
+public void UpdateAuditOperation_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkAuditOperationAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkAuditOperationAsDeleted();
+}
+public void MarkAuditOperationAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkAuditOperationAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkAuditOperationAsNotDeleted();
+}
+public void MarkAuditOperationAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAuditOperationDetailByAuditOperationId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetAuditOperationDetailByAuditOperationId();
+}
+public void GetAuditOperationDetailByAuditOperationId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void IsAuditOperationDetailAvailableByAuditOperationId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = IsAuditOperationDetailAvailableByAuditOperationId();
+}
+public void IsAuditOperationDetailAvailableByAuditOperationId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAuditOperationDetails_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationDetailSearchCriteria();
+    var r = GetAuditOperationDetails();
+}
+public void GetAuditOperationDetails_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAuditOperationDetail_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetAuditOperationDetail();
+}
+public void GetAuditOperationDetail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateAuditOperationDetail_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationDetailCreateModel();
+    var r = CreateAuditOperationDetail();
+}
+public void CreateAuditOperationDetail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateAuditOperationDetail_WithValidData_ReturnsValidData()
+{
+    var model = new AuditOperationDetailUpdateModel();
+    var r = UpdateAuditOperationDetail();
+}
+public void UpdateAuditOperationDetail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkAuditOperationDetailAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkAuditOperationDetailAsDeleted();
+}
+public void MarkAuditOperationDetailAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkAuditOperationDetailAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkAuditOperationDetailAsNotDeleted();
+}
+public void MarkAuditOperationDetailAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSavedJobNotificationEmails_WithValidData_ReturnsValidData()
+{
+    var model = new SavedJobNotificationEmailSearchCriteria();
+    var r = GetSavedJobNotificationEmails();
+}
+public void GetSavedJobNotificationEmails_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSavedJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetSavedJobNotificationEmail();
+}
+public void GetSavedJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateSavedJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new SavedJobNotificationEmailCreateModel();
+    var r = CreateSavedJobNotificationEmail();
+}
+public void CreateSavedJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateSavedJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new SavedJobNotificationEmailUpdateModel();
+    var r = UpdateSavedJobNotificationEmail();
+}
+public void UpdateSavedJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSavedJobNotificationEmailAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSavedJobNotificationEmailAsDeleted();
+}
+public void MarkSavedJobNotificationEmailAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSavedJobNotificationEmailAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSavedJobNotificationEmailAsNotDeleted();
+}
+public void MarkSavedJobNotificationEmailAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetScheduledJobHistorys_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobHistorySearchCriteria();
+    var r = GetScheduledJobHistorys();
+}
+public void GetScheduledJobHistorys_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetScheduledJobHistory_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetScheduledJobHistory();
+}
+public void GetScheduledJobHistory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateScheduledJobHistory_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobHistoryCreateModel();
+    var r = CreateScheduledJobHistory();
+}
+public void CreateScheduledJobHistory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateScheduledJobHistory_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobHistoryUpdateModel();
+    var r = UpdateScheduledJobHistory();
+}
+public void UpdateScheduledJobHistory_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkScheduledJobHistoryAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkScheduledJobHistoryAsDeleted();
+}
+public void MarkScheduledJobHistoryAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkScheduledJobHistoryAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkScheduledJobHistoryAsNotDeleted();
+}
+public void MarkScheduledJobHistoryAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetScheduledJobNotificationEmails_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobNotificationEmailSearchCriteria();
+    var r = GetScheduledJobNotificationEmails();
+}
+public void GetScheduledJobNotificationEmails_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetScheduledJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetScheduledJobNotificationEmail();
+}
+public void GetScheduledJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateScheduledJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobNotificationEmailCreateModel();
+    var r = CreateScheduledJobNotificationEmail();
+}
+public void CreateScheduledJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateScheduledJobNotificationEmail_WithValidData_ReturnsValidData()
+{
+    var model = new ScheduledJobNotificationEmailUpdateModel();
+    var r = UpdateScheduledJobNotificationEmail();
+}
+public void UpdateScheduledJobNotificationEmail_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkScheduledJobNotificationEmailAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkScheduledJobNotificationEmailAsDeleted();
+}
+public void MarkScheduledJobNotificationEmailAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkScheduledJobNotificationEmailAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkScheduledJobNotificationEmailAsNotDeleted();
+}
+public void MarkScheduledJobNotificationEmailAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCompanyStorageConfiguration_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCompanyStorageConfiguration();
+}
+public void GetCompanyStorageConfiguration_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetCompanyStorageConfigurationByCompanyId_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetCompanyStorageConfigurationByCompanyId();
+}
+public void GetCompanyStorageConfigurationByCompanyId_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void DoesCompanyStorageConfigurationByCompanyIdExists_WithValidData_ReturnsValidData()
+{
+    var r = DoesCompanyStorageConfigurationByCompanyIdExists();
+}
+public void DoesCompanyStorageConfigurationByCompanyIdExists_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateCompanyStorageConfiguration_WithValidData_ReturnsValidData()
+{
+    var model = new CompanyStorageConfigurationCreateModel();
+    var r = CreateCompanyStorageConfiguration();
+}
+public void CreateCompanyStorageConfiguration_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateCompanyStorageConfiguration_WithValidData_ReturnsValidData()
+{
+    var model = new CompanyStorageConfigurationUpdateModel();
+    var r = UpdateCompanyStorageConfiguration();
+}
+public void UpdateCompanyStorageConfiguration_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMailServers_WithValidData_ReturnsValidData()
+{
+    var model = new MailServerSearchCriteria();
+    var r = GetMailServers();
+}
+public void GetMailServers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMailServer_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMailServer();
+}
+public void GetMailServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMailServer_WithValidData_ReturnsValidData()
+{
+    var model = new MailServerCreateModel();
+    var r = CreateMailServer();
+}
+public void CreateMailServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateMailServer_WithValidData_ReturnsValidData()
+{
+    var model = new MailServerUpdateModel();
+    var r = UpdateMailServer();
+}
+public void UpdateMailServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMailServerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMailServerAsDeleted();
+}
+public void MarkMailServerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMailServerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMailServerAsNotDeleted();
+}
+public void MarkMailServerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSmsServers_WithValidData_ReturnsValidData()
+{
+    var model = new SmsServerSearchCriteria();
+    var r = GetSmsServers();
+}
+public void GetSmsServers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSmsServer_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetSmsServer();
+}
+public void GetSmsServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateSmsServer_WithValidData_ReturnsValidData()
+{
+    var model = new SmsServerCreateModel();
+    var r = CreateSmsServer();
+}
+public void CreateSmsServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateSmsServer_WithValidData_ReturnsValidData()
+{
+    var model = new SmsServerUpdateModel();
+    var r = UpdateSmsServer();
+}
+public void UpdateSmsServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSmsServerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSmsServerAsDeleted();
+}
+public void MarkSmsServerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSmsServerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSmsServerAsNotDeleted();
+}
+public void MarkSmsServerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSingleSignOnServers_WithValidData_ReturnsValidData()
+{
+    var model = new SingleSignOnServerSearchCriteria();
+    var r = GetSingleSignOnServers();
+}
+public void GetSingleSignOnServers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetSingleSignOnServer_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetSingleSignOnServer();
+}
+public void GetSingleSignOnServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateSingleSignOnServer_WithValidData_ReturnsValidData()
+{
+    var model = new SingleSignOnServerCreateModel();
+    var r = CreateSingleSignOnServer();
+}
+public void CreateSingleSignOnServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateSingleSignOnServer_WithValidData_ReturnsValidData()
+{
+    var model = new SingleSignOnServerUpdateModel();
+    var r = UpdateSingleSignOnServer();
+}
+public void UpdateSingleSignOnServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSingleSignOnServerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSingleSignOnServerAsDeleted();
+}
+public void MarkSingleSignOnServerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkSingleSignOnServerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkSingleSignOnServerAsNotDeleted();
+}
+public void MarkSingleSignOnServerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetPushNotificationServers_WithValidData_ReturnsValidData()
+{
+    var model = new PushNotificationServerSearchCriteria();
+    var r = GetPushNotificationServers();
+}
+public void GetPushNotificationServers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetPushNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetPushNotificationServer();
+}
+public void GetPushNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreatePushNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new PushNotificationServerCreateModel();
+    var r = CreatePushNotificationServer();
+}
+public void CreatePushNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultiplePushNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new MultiplePushNotificationServerCreateModel();
+    var r = CreateMultiplePushNotificationServer();
+}
+public void CreateMultiplePushNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdatePushNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new PushNotificationServerUpdateModel();
+    var r = UpdatePushNotificationServer();
+}
+public void UpdatePushNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkPushNotificationServerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkPushNotificationServerAsDeleted();
+}
+public void MarkPushNotificationServerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkPushNotificationServerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkPushNotificationServerAsNotDeleted();
+}
+public void MarkPushNotificationServerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVoiceNotificationServers_WithValidData_ReturnsValidData()
+{
+    var model = new VoiceNotificationServerSearchCriteria();
+    var r = GetVoiceNotificationServers();
+}
+public void GetVoiceNotificationServers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetVoiceNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetVoiceNotificationServer();
+}
+public void GetVoiceNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateVoiceNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new VoiceNotificationServerCreateModel();
+    var r = CreateVoiceNotificationServer();
+}
+public void CreateVoiceNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleVoiceNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleVoiceNotificationServerCreateModel();
+    var r = CreateMultipleVoiceNotificationServer();
+}
+public void CreateMultipleVoiceNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateVoiceNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new VoiceNotificationServerUpdateModel();
+    var r = UpdateVoiceNotificationServer();
+}
+public void UpdateVoiceNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVoiceNotificationServerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVoiceNotificationServerAsDeleted();
+}
+public void MarkVoiceNotificationServerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkVoiceNotificationServerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkVoiceNotificationServerAsNotDeleted();
+}
+public void MarkVoiceNotificationServerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetWhatsAppNotificationServers_WithValidData_ReturnsValidData()
+{
+    var model = new WhatsAppNotificationServerSearchCriteria();
+    var r = GetWhatsAppNotificationServers();
+}
+public void GetWhatsAppNotificationServers_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetWhatsAppNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetWhatsAppNotificationServer();
+}
+public void GetWhatsAppNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateWhatsAppNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new WhatsAppNotificationServerCreateModel();
+    var r = CreateWhatsAppNotificationServer();
+}
+public void CreateWhatsAppNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMultipleWhatsAppNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new MultipleWhatsAppNotificationServerCreateModel();
+    var r = CreateMultipleWhatsAppNotificationServer();
+}
+public void CreateMultipleWhatsAppNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateWhatsAppNotificationServer_WithValidData_ReturnsValidData()
+{
+    var model = new WhatsAppNotificationServerUpdateModel();
+    var r = UpdateWhatsAppNotificationServer();
+}
+public void UpdateWhatsAppNotificationServer_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkWhatsAppNotificationServerAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkWhatsAppNotificationServerAsDeleted();
+}
+public void MarkWhatsAppNotificationServerAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkWhatsAppNotificationServerAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkWhatsAppNotificationServerAsNotDeleted();
+}
+public void MarkWhatsAppNotificationServerAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMessageTemplates_WithValidData_ReturnsValidData()
+{
+    var model = new MessageTemplateSearchCriteria();
+    var r = GetMessageTemplates();
+}
+public void GetMessageTemplates_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetMessageTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = GetMessageTemplate();
+}
+public void GetMessageTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void CreateMessageTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new MessageTemplateCreateModel();
+    var r = CreateMessageTemplate();
+}
+public void CreateMessageTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void UpdateMessageTemplate_WithValidData_ReturnsValidData()
+{
+    var model = new MessageTemplateUpdateModel();
+    var r = UpdateMessageTemplate();
+}
+public void UpdateMessageTemplate_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMessageTemplateAsDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMessageTemplateAsDeleted();
+}
+public void MarkMessageTemplateAsDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void MarkMessageTemplateAsNotDeleted_WithValidData_ReturnsValidData()
+{
+    var model = new Int64();
+    var r = MarkMessageTemplateAsNotDeleted();
+}
+public void MarkMessageTemplateAsNotDeleted_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}
+public void GetAppDetails_WithValidData_ReturnsValidData()
+{
+    var r = GetAppDetails();
+}
+public void GetAppDetails_WithValidInvalidToken_ReturnsUnAuthorizedStatus()
+{
+    
+}

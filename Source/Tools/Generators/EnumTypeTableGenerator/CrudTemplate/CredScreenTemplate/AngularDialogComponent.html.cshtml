@@ -1,0 +1,298 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+@using CodeGenerator;
+@{
+    var dashName = "case-" + Model.CTable.DbLowerTableNameWithDash;
+    var className = Model.CTable.DbTableName;
+    var smallClassName = Model.CTable.TsDbTableName;
+}
+
+<div>
+    <div class="modal-header" appDraggable>
+        <h5 class="modal-title">{{title}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="close()">
+            <app-icon-cancel></app-icon-cancel>
+        </button>
+    </div>
+    <form #form="ngForm" novalidate appFocusOnError (ngSubmit)="onSubmit(form)">
+        <div class="modal-body">
+@{            
+            <div class="row">
+@foreach (var col in Model.CTable.Columns)
+{
+    if (col.PkForView)
+    {
+        continue;
+    }
+    else if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    
+    else if(col.DataType == CSharpDataTypes.@string || col.DataType == CSharpDataTypes.@int || col.DataType == CSharpDataTypes.@float)
+    {
+        var tVal = "text";
+        if (col.DataType == CSharpDataTypes.@int)
+        {
+            tVal = "number";
+        }
+        else if (col.DataType == CSharpDataTypes.@float)
+        {
+            tVal = "number";
+        }
+@:          <div class='col-sm-5 group-control' *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)">
+@:              <label class="form-label">@(col.ColumnName)<span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span></label>
+@:              <div class="pr-0" *ngIf="!isViewMode">
+@:                  <input type="@tVal" class="form-control" #lv@(col.DbColumnName)="ngModel" required id="@(col.TsDbColumnName)" name="@(col.TsDbColumnName)"
+@:                               placeholder="@(col.ColumnName)" [(ngModel)]="@(smallClassName)Model.@(col.TsDbColumnName)"
+@:                               [ngClass]="{ 'error': form.submitted && lv@(col.DbColumnName).invalid }" />
+@:                  <div class="error-msg error-msg-fixed">
+@:                      <h4>
+@:                          <small>
+@:                              <span class="text-danger" *ngIf="(form.submitted) && lv@(col.DbColumnName).errors?.required">
+@:                                    @(col.ColumnName) is required
+@:                              </span>
+@:                          </small>
+@:                      </h4>
+@:                  </div>
+@:              </div>
+@:            <div *ngIf="isViewMode">
+@:                {{@(smallClassName)Model.@(col.TsDbColumnName)}}
+@:            </div>
+@:          </div>
+    }
+    else if(col.DataType == CSharpDataTypes.DateTime)
+    {
+@:          <div class="col-sm-5 group-control" *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)">
+@:              <label class="form-label">
+@:                @(col.ColumnName)
+@:                <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+@:              </label>
+@:              <div *ngIf="isViewMode; else edit@(col.DbColumnName)">
+@:                  <div class="text-muted">
+@:                    {{ @(smallClassName)Model.@(col.TsDbColumnName) | date : 'MM/dd/yy' }}
+@:                  </div>
+@:              </div>
+@:              <ng-template #edit@(col.DbColumnName)>
+@:                <div class="input-icon">
+@:                    <input id="@(col.TsDbColumnName)" name="@(col.TsDbColumnName)" #vc@(col.DbColumnName)
+@:                           (ngModelChange)="update@(col.DbColumnName)($event)" type="text" [ngModel]="a@(col.DbColumnName)"
+@:                           class="form-control flatpickr-input" placeholder="Select a date" readonly="readonly" />
+@:                    <span class="input-icon-addon">
+@:                        <app-date-icon></app-date-icon>
+@:                    </span>
+@:                </div>
+@:                <div class="error-msg error-msg-fixed">
+@:                    <h4>
+@:                        <small>
+@:                            <span class="text-danger" *ngIf="(form.submitted) && vc@(col.DbColumnName).errors?.required">
+@:                                @(col.ColumnName) Date is required
+@:                            </span>
+@:                        </small>
+@:                    </h4>
+@:                </div>
+@:              </ng-template>
+@:          </div>
+    }
+    else if(col.DbColumnName.EndsWith("TypeId"))
+    {
+        var itemsVarName = col.TsDbColumnNameWithoutId+"s";
+        if(col.IsArray)
+        {
+            itemsVarName = col.TsDbColumnNameWithoutIds+"s";
+        }        
+@:          <div class="col-sm-5 group-control" *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)">
+@:            <label class="form-label">
+@:                @(col.ColumnName)
+@:                <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+@:            </label>
+@:            <div *ngIf="!isViewMode">
+@:                <ng-select [items]="@(itemsVarName)" #lv@(col.DbColumnNameWithoutId)="ngModel"
+@:                        id="selected@(col.DbColumnNameWithoutId)" name="selected@(col.DbColumnNameWithoutId)"
+@:                        [(ngModel)]="selected@(col.DbColumnNameWithoutId)" [clearable]="false" bindLabel="type"
+@:                        aria-placeholder="@(col.ColumnName)" required [ngClass]="{'error': form.submitted && lv@(col.DbColumnNameWithoutId).invalid }">
+@:
+@:                </ng-select>
+@:                <div class="error-msg error-msg-fixed">
+@:                    <h4>
+@:                        <small>
+@:                            <span class="text-danger" *ngIf="(form.submitted) && lv@(col.DbColumnNameWithoutId).errors?.required">
+@:                                @(col.ColumnName) is required
+@:                            </span>
+@:                        </small>
+@:                    </h4>
+@:                </div>
+@:            </div>
+@:            <div *ngIf="isViewMode">
+@:                {{selected@(col.DbColumnNameWithoutId).type}}
+@:            </div>
+@:          </div>
+    }    
+    else if(col.ElementType == ElementTypes.MetaData || col.ElementType == ElementTypes.MetaDataWithChild)
+    {
+        var itemsVarName = col.TsDbColumnNameWithoutId+"s";
+        if(col.IsArray)
+        {
+            itemsVarName = col.TsDbColumnNameWithoutId;
+        }
+@:          <div class="col-sm-5 group-control" *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)">
+@:            <label class="form-label">
+@:                @(col.ColumnName)
+@:                <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+@:            </label>
+@:            <div *ngIf="!isViewMode">
+@:                <ng-select [items]="@(itemsVarName)" #lv@(col.DbColumnNameWithoutId)="ngModel"
+@:                        id="selected@(col.DbColumnNameWithoutId)" name="selected@(col.DbColumnNameWithoutId)"
+@:                        [(ngModel)]="selected@(col.DbColumnNameWithoutId)" [clearable]="false" bindLabel="metaDataName"
+@:                        aria-placeholder="@(col.ColumnName)" required [ngClass]="{'error': form.submitted && lv@(col.DbColumnNameWithoutId).invalid }">
+@:
+@:                </ng-select>
+@:                <div class="error-msg error-msg-fixed">
+@:                    <h4>
+@:                        <small>
+@:                            <span class="text-danger" *ngIf="(form.submitted) && lv@(col.DbColumnNameWithoutId).errors?.required">
+@:                                @(col.ColumnName) is required
+@:                            </span>
+@:                        </small>
+@:                    </h4>
+@:                </div>
+@:            </div>
+@:            <div *ngIf="isViewMode">
+            if(col.IsArray)
+            {
+@:              <span class="text-muted" *ngFor="let item of selected@(col.DbColumnNameWithoutIds)s">
+@:              {{
+@:                  item.@(col.TsDbColumnNameWithoutIds)Name
+@:              }}
+@:              </span>
+            }
+            else
+            {   
+@:              {{selected@(col.DbColumnNameWithoutId).metaDataName}}
+            }
+@:          </div>
+    }
+    else if(col.IsFkey || col.ElementType == ElementTypes.LookupList)
+    {
+@:          <div class="col-sm-5 group-control" *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)"> 
+@:            <label class="form-label">
+@:                @(col.ColumnName)
+@:                <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+@:            </label>
+@:            <div *ngIf="!isViewMode">
+@:                <ng-select [items]="@(col.TsDbColumnNameWithoutId)s" #lv@(col.DbColumnNameWithoutId)="ngModel"
+@:                        id="selected@(col.DbColumnNameWithoutId)" name="selected@(col.DbColumnNameWithoutId)"
+@:                        [(ngModel)]="selected@(col.DbColumnNameWithoutId)" [clearable]="false" 
+        if(col.DbColumnName.EndsWith("CountryId"))        
+        {
+@:                         bindLabel="countryName"
+@:                         (change)="change@(col.DbColumnNameWithoutId)(selected@(col.DbColumnNameWithoutId))"
+        }
+        else if(col.DbColumnName.EndsWith("StateId"))        
+        {
+@:                         bindLabel="stateName"
+        }
+        else
+        {
+@:                         bindLabel="@(col.TsDbColumnNameWithoutId)Name"
+        }        
+@:                        aria-placeholder="@(col.ColumnName)" required [ngClass]="{'error': form.submitted && lv@(col.DbColumnNameWithoutId).invalid }">
+@:
+@:                </ng-select>
+@:                <div class="error-msg error-msg-fixed">
+@:                    <h4>
+@:                        <small>
+@:                            <span class="text-danger" *ngIf="(form.submitted) && lv@(col.DbColumnNameWithoutId).errors?.required">
+@:                                @(col.ColumnName) is required
+@:                            </span>
+@:                        </small>
+@:                    </h4>
+@:                </div>
+@:            </div>
+@:            <div *ngIf="isViewMode">
+        if(col.DbColumnName.EndsWith("CountryId"))        
+        {
+@:                {{selected@(col.DbColumnNameWithoutId).countryName}}
+        }
+        else if(col.DbColumnName.EndsWith("StateId"))        
+        {
+@:                {{selected@(col.DbColumnNameWithoutId).stateName}}
+        }
+        else
+        {
+            if(col.IsArray)
+            {
+@:              <span class="text-muted" *ngFor="let item of selected@(col.DbColumnNameWithoutId)">
+@:              {{
+@:                  item.@(col.TsFKeyTypeName)Name
+@:              }}
+@:              </span>
+            }
+            else
+            {
+@:               {{selected@(col.DbColumnNameWithoutId).@(col.TsDbColumnNameWithoutId)Name}}
+            }
+        }
+@:            </div>
+@:          </div>
+    }
+    else if (col.DataType == CSharpDataTypes.@bool)
+    {
+@:          <div class="col-sm-5 group-control" *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)">
+@:                <label class="form-label"> 
+@:                    <input class="form-check-input" [(ngModel)]="@(smallClassName)Model.@(col.TsDbColumnName)"
+@:                    name="@(col.TsDbColumnName)" id="@(col.TsDbColumnName)" type="checkbox" [disabled]="isViewMode" />
+@:                  <span class="form-check-label"><strong>@(col.ColumnName)</strong></span>
+@:                    <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+@:                </label>
+@:          </div>
+    }
+    else
+    {
+@:          <div class="col-sm-5 group-control" *ngIf="customSelectService.@(GetShowHideFunction(col))(selectedNpiType)">
+@:            <label class="form-label">
+@:                major todo @(col.ColumnName) is Not implemented
+@:                @col.ToString()
+@:                <span class="required-sign" *ngIf="!isViewMode">&nbsp;*</span>
+@:            </label>
+@:          </div>
+    }
+}
+            </div>
+}            
+
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary btn-sm mr-1" *ngIf="!isViewMode">{{buttonText}}</button>
+            <button type="button" class="btn btn-danger btn-sm mr-1" (click)="close()">Cancel</button>
+
+        </div>
+    </form>
+</div>
+
+@{
+    string GetShowHideFunction(Column col)
+    {
+        if (col.ApplicableTo == ApplicableToUITypes.All)
+        {
+            return "showFieldsAll";
+        }
+        else if (col.ApplicableTo == ApplicableToUITypes.Pr)
+        {
+            return "showFieldsIndividual";
+        }
+        else if (col.ApplicableTo == ApplicableToUITypes.Or)
+        {
+            return "showFieldsOrganization";
+        }
+        else if (col.ApplicableTo == ApplicableToUITypes.ATypical)
+        {
+            return "showFieldsAType";
+        }
+        else if (col.ApplicableTo == ApplicableToUITypes.PrAndOr)
+        {
+            return "showFieldsIndividualAndOrganization";
+        }        
+        throw new Exception($"Invalid ApplicableTo value {col.ApplicableTo}");
+    }
+}

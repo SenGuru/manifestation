@@ -1,0 +1,457 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+@{
+    var dashName = "case-" + Model.CTable.DbLowerTableNameWithDash;
+    var className = Model.CTable.DbTableName;
+    var smallClassName = Model.CTable.TsDbTableName;
+    var withDiff = false;
+
+    foreach(var c in Model.CTable.Columns)
+    {
+        if (c.IsArray)
+        {
+            withDiff = true;
+            break;
+        }        
+    }
+    var withDiffStr = withDiff ? "WithDiff" : "";
+}
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@@angular/core';
+import { NgForm } from '@@angular/forms';
+import { NgbActiveModal } from '@@ng-bootstrap/ng-bootstrap';
+import { DateUtils } from 'projects/shared-library/src/common/framework/common/utils/date.utils';
+import { Status } from 'projects/shared-library/src/common/models/app-custom-model';
+import { NpiTypes } from 'projects/shared-library/src/common/models/app-enums';
+import { @(className)@(withDiffStr)Model, MetaDataModel, ParentMetaDataModel,StateModel,CountryModel,StateSearchCriteria, EntityProfilePracticeLocationModel,InstitutionModel,InstitutionSearchCriteria,InsuranceCarrierModel,InsuranceCarrierSearchCriteria,EntityProfileSpecialtyModel } from 'projects/shared-library/src/common/models/app-model';
+import { HttpService } from 'projects/shared-library/src/common/services/http/app-http-client';
+import { CustomSelectService } from 'projects/shared-library/src/common/services/http/custom-select.service';
+import { CustomDate, SelectService } from 'projects/shared-library/src/public-api';
+declare function initFlatPickrElement(element: any): any;
+
+@@Component({
+  selector: 'add-@dashName-modal',
+  templateUrl: './add-@dashName-modal.component.html'
+})
+export class AddCase@(className)ModalComponent implements OnInit {
+    @@Output() modalResponse: EventEmitter<@(className)@(withDiffStr)Model> = new EventEmitter<@(className)@(withDiffStr)Model>();
+    @@Input() title:string;
+    @@Input() buttonText:string;
+    @@Input() onCloseCallBack: any = null;
+    @@Input() isCreateMode: boolean;
+    @@Input() isEditMode: boolean;
+    @@Input() isViewMode: boolean;
+    @@Input() @(smallClassName)Model: @(className)@(withDiffStr)Model = new @(className)@(withDiffStr)Model();
+    @@Input() selectedNpiType: Status;
+    npiType = NpiTypes;
+
+        @foreach (var col in Model.CTable.Columns)
+        {
+            if (col.DbColumnName == "VerificationEntityProfileFileId")
+            {
+                continue;
+            }
+            if (col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@int || col.DataType == CodeGenerator.CSharpDataTypes.@float)
+            {
+                continue;
+            }
+            if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+            {
+@:    a@(col.DbColumnName): any;
+            }
+            else if (col.DbColumnName.EndsWith("MetaDataId"))
+            {
+@:    selected@(col.DbColumnNameWithoutId): MetaDataModel;
+@:    @(col.TsDbColumnNameWithoutId)s: MetaDataModel[] = []; 
+            }
+            else if (col.DbColumnName.EndsWith("TypeId"))
+            {
+@:    selected@(col.DbColumnNameWithoutId): Status;
+@:    @(col.TsDbColumnNameWithoutId)s: Status[] = [];
+            }
+            else if (col.DbColumnName.EndsWith("TypeIds"))
+            {
+@:      //major todo ids @col.ToString()
+            }
+            else if (col.DbColumnName.EndsWith("MetaDataIds"))
+            {
+@:    selected@(col.DbColumnNameWithoutIds)s: MetaDataModel[] = [];
+@:    @(col.TsDbColumnNameWithoutIds)s: MetaDataModel[] = [];
+            }
+            else if (col.IsArray)
+            {
+@:    selected@(col.DbColumnNameWithoutIds)s: @(col.FKeyTypeName)Model[] = [];
+@:    @(col.TsDbColumnNameWithoutIds)s: @(col.FKeyTypeName)Model[] = [];
+            }
+            else if (col.DbColumnName.EndsWith("StateId"))
+            {
+@:    selected@(col.DbColumnNameWithoutId): StateModel;
+@:    @(col.TsDbColumnNameWithoutId)s: StateModel[] = [];
+            }
+            else if (col.DbColumnName.EndsWith("CountryId"))
+            {
+@:    selected@(col.DbColumnNameWithoutId): CountryModel;
+@:    @(col.TsDbColumnNameWithoutId)s: CountryModel[] = [];
+@:    @(col.TsDbColumnNameWithoutId)Text: string = 'United States';                    
+            }
+            else if (col.IsFkey)
+            {
+                if(col.DbColumnName.EndsWith("Ids"))
+                {
+@:    selected@(col.DbColumnNameWithoutIds)s: @(col.FKeyTypeName)Model[] = [];
+@:    @(col.TsDbColumnNameWithoutIds)s: @(col.FKeyTypeName)Model[] = [];
+                }
+                else
+                {
+@:    selected@(col.DbColumnNameWithoutId): @(col.FKeyTypeName)Model;
+@:    @(col.TsDbColumnNameWithoutId)s: @(col.FKeyTypeName)Model[] = [];
+                }
+            }
+            else if (col.PkForView)
+            {
+                continue;
+            }
+            else
+            {
+@:    @col.TsDbColumnName: @col.TsDataType;
+            }
+        }
+
+        @foreach (var col in Model.CTable.Columns)
+        {
+            if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+            {
+@:    @@ViewChild('vc@(col.DbColumnName)') dt@(col.DbColumnName): ElementRef;
+            }
+        }
+
+    constructor(
+        private activeModal: NgbActiveModal,
+        public customSelectService: CustomSelectService,
+        private selectService: SelectService,
+        private httpService: HttpService,
+        private customDate: CustomDate ) {
+    }
+
+    ngOnInit(): void {
+        if(!this.isCreateMode) {
+        @foreach (var col in Model.CTable.Columns)
+        {
+            if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+            {
+@:            this.a@(col.DbColumnName) = this.customDate.transform(DateUtils.parseAsLocal(this.@(smallClassName)Model.@(col.TsDbColumnName)), 'datezone');
+            }
+        }
+        }
+        
+@foreach (var col in Model.CTable.Columns)
+{
+    if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    else if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime || col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@float || col.DataType == CodeGenerator.CSharpDataTypes.@int || col.DataType == CodeGenerator.CSharpDataTypes.@bool || col.PkForView)
+    {
+        continue;
+    }
+    if (col.DbColumnName.EndsWith("MetaDataId"))
+    {
+@:        let @(col.TsDbColumnNameWithoutId)ParentMetaDataModel = new ParentMetaDataModel();
+@:        this.get@(col.DbColumnNameWithoutId)s(@(col.TsDbColumnNameWithoutId)ParentMetaDataModel);
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataIds"))
+    {
+@:        let @(col.TsDbColumnNameWithoutIds)ParentMetaDataModel = new ParentMetaDataModel();
+@:        this.get@(col.DbColumnNameWithoutIds)s(@(col.TsDbColumnNameWithoutIds)ParentMetaDataModel);
+    }    
+    else if (col.DbColumnName.EndsWith("StateId"))
+    {
+@:        this.get@(col.DbColumnNameWithoutId)s(1);
+    }
+    else if (col.DbColumnName.EndsWith("CountryId"))
+    {
+@:        this.get@(col.DbColumnNameWithoutId)s(this.countryText);
+    }
+    else if (col.DbColumnName.EndsWith("TypeId"))
+    {
+@:        this.get@(col.DbColumnNameWithoutId)s();
+    }
+    else if (col.DbColumnName.EndsWith("TypeIds"))
+    {
+@:        //major todo : @col.ToString()
+    }
+    else if (col.IsArray || col.IsFkey)
+    {
+        if(col.IsArray)
+        {
+@:        this.get@(col.DbColumnNameWithoutIds)s();
+        }
+        else
+        {
+@:        this.get@(col.DbColumnNameWithoutId)s();
+        }
+    }
+    else
+    {
+@:        //Another major todo : Not implemented for  @col.DbColumnName : @col.DataType , Fkey : @col.FKeyTypeName                
+    }
+}
+    }
+
+@foreach (var col in Model.CTable.Columns)
+{
+    if (col.PkForView || col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@bool || col.DataType == CodeGenerator.CSharpDataTypes.DateTime|| col.DataType == CodeGenerator.CSharpDataTypes.@int || col.DataType == CodeGenerator.CSharpDataTypes.@float)
+    {
+        continue;
+    }
+    else if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataId"))
+    {
+@:    get@(col.DbColumnNameWithoutId)s(parentMetaDataModel: ParentMetaDataModel) {
+@:          this.httpService.get@(col.MetaDataType)MetaDatas(parentMetaDataModel).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.MetaDataType)MetaDatas",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) 
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.metaDataId == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:          });
+@:    }
+@:
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataIds"))
+    {
+@:    get@(col.DbColumnNameWithoutIds)s(parentMetaDataModel: ParentMetaDataModel) {
+@:          this.httpService.get@(col.MetaDataType)MetaDatas(parentMetaDataModel).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.MetaDataType)MetaDatas",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutIds)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s?.map(id => {
+@:                      let selectedItems = this.@(col.TsDbColumnNameWithoutIds)s.find(i => i.metaDataId == id.metaDataId);
+@:                      if(selectedItems) this.selected@(col.DbColumnNameWithoutIds)s.push(selectedItems);
+@:                  }); 
+@:              }
+@:          });
+@:    }
+@:
+    }
+    else if (col.DbColumnName.EndsWith("CountryId"))
+    {
+        var sName = col.DbColumnNameWithoutId.Replace("Country","State");
+        sName = sName.Replace("country","state");
+        
+        var sLName = col.TsDbColumnNameWithoutId.Replace("Country","State");
+        sLName = sLName.Replace("country","state");
+        
+@:    get@(col.DbColumnNameWithoutId)s(keyword: string) {
+@:          this.httpService.getCountriesByKeyword(keyword).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  console.error('Unable To fetch  countries');
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(item => item.countryName === this.countryText);
+@:              }
+@:          });
+@:    }
+@:
+@:    change@(col.DbColumnNameWithoutId)(country: CountryModel) {
+@:      if (this.selected@(col.DbColumnNameWithoutId).countryName === this.countryText) return;
+@:      this.selected@(col.DbColumnNameWithoutId).countryName = country.countryName;
+@:      this.countryText = country.countryName;
+@:      this.@(smallClassName)Model.@(sLName)Id = null;
+@:      this.selected@(sName) = null;
+@:      this.get@(sName)s(country.countryId);
+@:    }
+@:
+    }
+    else if (col.DbColumnName.EndsWith("StateId"))
+    {
+        
+@:    get@(col.DbColumnNameWithoutId)s(countryId: number) {
+@:          let stateSearchCriteria = new StateSearchCriteria();
+@:          stateSearchCriteria.countryId = countryId;
+@:          this.httpService.getStates(stateSearchCriteria).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  console.error('Unable To fetch  States');
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.stateId == this.@(smallClassName)Model.@(col.TsDbColumnName));    
+@:              }
+@:          });
+@:    }
+@:
+    }    
+    else if (col.DbColumnName.EndsWith("TypeId"))
+    {
+@:    get@(col.DbColumnNameWithoutId)s() {
+@:      this.@(col.TsDbColumnNameWithoutId)s = this.selectService.Get@(col.DbColumnNameWithoutId)s();
+@:      if(!this.isCreateMode) {
+@:          this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.id == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:      }
+@:    }
+@:
+    } 
+    else if (col.DbColumnName.EndsWith("Id") || (col.IsFkey && !col.IsArray))
+    {
+        if (col.FKeyTypeName == "Country")
+        {
+@:    get@(col.DbColumnNameWithoutId)s() {
+@:          this.httpService.getCountriesByKeyword(null).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.DbColumnNameWithoutId)",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.@(col.TsFKeyTypeName)Id == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:              }
+@:          });
+@:    }
+@:
+        }
+        else
+        {
+@:    get@(col.DbColumnNameWithoutId)s() {
+@:          this.httpService.get@(col.FKeyTypeName)s(new @(col.FKeyTypeName)SearchCriteria()).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.DbColumnNameWithoutId)",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutId)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.selected@(col.DbColumnNameWithoutId) = this.@(col.TsDbColumnNameWithoutId)s.find(i => i.@(col.TsFKeyTypeName)Id == this.@(smallClassName)Model.@(col.TsDbColumnName));
+@:              }
+@:          });
+@:    }
+@:            
+        }    
+    } 
+    else if (col.IsArray)
+    {
+@:    get@(col.DbColumnNameWithoutIds)s() {
+@:          this.httpService.get@(col.FKeyTypeName)s(new @(col.FKeyTypeName)SearchCriteria()).subscribe(result => {
+@:              if(!result.isSuccess) {
+@:                  return console.error("unable to get data- failed: @(col.MetaDataType)MetaDatas",result);
+@:              }
+@:              this.@(col.TsDbColumnNameWithoutIds)s = result.model;
+@:              if(!this.isCreateMode) {
+@:                  this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s?.map(id => {
+@:                      let selectedItems = this.@(col.TsDbColumnNameWithoutIds)s.find(i => i.@(col.TsFKeyTypeName)Id == id.@(col.TsFKeyTypeName)Id);
+@:                      if(selectedItems) this.selected@(col.DbColumnNameWithoutIds)s.push(selectedItems);
+@:                  }); 
+@:              }
+@:          });
+@:    }
+
+    }
+    else
+    {
+@:      //major todo : Not implemented for  @col.DbColumnName : @col.DataType , Fkey : @col.FKeyTypeName
+@:      //@col.ToString()
+    }
+}
+        
+
+    ngAfterViewInit(): void {
+@foreach (var col in Model.CTable.Columns)
+{
+            if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+            {
+@:          if (this.dt@(col.DbColumnName)) initFlatPickrElement(this.dt@(col.DbColumnName).nativeElement.id);
+            }
+}
+    }
+        
+@foreach (var col in Model.CTable.Columns)
+{
+    if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:    update@(col.DbColumnName)(event: Event) {
+@:      this.a@(col.DbColumnName) = event;
+@:    }
+@:
+    }
+}
+
+    close() {
+        this.activeModal.close();
+    }
+
+    onSubmit(f:NgForm) {
+        if(!f.valid) {
+            return;
+        }
+@foreach (var col in Model.CTable.Columns)
+{
+    if (col.DbColumnName == "VerificationEntityProfileFileId")
+    {
+        continue;
+    }
+    if (col.DataType == CodeGenerator.CSharpDataTypes.@bool || col.DataType == CodeGenerator.CSharpDataTypes.@string || col.DataType == CodeGenerator.CSharpDataTypes.@int  || col.DataType == CodeGenerator.CSharpDataTypes.@float|| col.PkForView)
+    {
+        continue;
+    }
+    else if (col.DataType == CodeGenerator.CSharpDataTypes.DateTime)
+    {
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.a@(col.DbColumnName);
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataId"))
+    {   
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).metaDataId : null;
+    }
+    else if (col.DbColumnName.EndsWith("MetaDataIds"))
+    {   
+@:    //  reset existing and new line of business
+@:    this.@(smallClassName)Model.existing@(col.DbColumnNameWithoutIds)s = [];
+@:    this.@(smallClassName)Model.new@(col.DbColumnNameWithoutIds)s = [];
+@:
+@:    this.selected@(col.DbColumnNameWithoutIds)s.map(meta => {
+@:        if (!this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s) this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s = [];
+@:        let existingMetaDataIdx = this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s.findIndex(eMeta => eMeta.metaDataId === meta.metaDataId);
+@:        if (existingMetaDataIdx !== -1) this.@(smallClassName)Model.existing@(col.DbColumnNameWithoutIds)s.push(meta.metaDataId);
+@:        else this.@(smallClassName)Model.new@(col.DbColumnNameWithoutIds)s.push(meta.metaDataId);
+@:    });
+    } 
+    else if (col.DbColumnName.EndsWith("Ids"))
+    {   
+@:    //  reset existing and new line of business
+@:    this.@(smallClassName)Model.existing@(col.DbColumnNameWithoutIds)s = [];
+@:    this.@(smallClassName)Model.new@(col.DbColumnNameWithoutIds)s = [];
+@:
+@:    this.selected@(col.DbColumnNameWithoutIds)s.map(item => {
+@:        if (!this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s) this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s = [];
+@:        let existingItemIdx = this.@(smallClassName)Model.@(col.TsDbColumnNameWithoutIds)s.findIndex(eItem => eItem.@(col.TsFKeyTypeName)Id === item.@(col.TsFKeyTypeName)Id);
+@:        if (existingItemIdx !== -1) this.@(smallClassName)Model.existing@(col.DbColumnNameWithoutIds)s.push(item.@(col.TsFKeyTypeName)Id);
+@:        else this.@(smallClassName)Model.new@(col.DbColumnNameWithoutIds)s.push(item.@(col.TsFKeyTypeName)Id);
+@:    });
+    }     
+    else
+    {
+        if (col.DbColumnName.EndsWith("CountryId"))
+        {
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).countryId : null;
+        }
+        else if (col.DbColumnName.EndsWith("StateId"))
+        {
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).stateId : null;
+        }
+        else if (col.DbColumnName.EndsWith("TypeId"))
+        {
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).id : null;
+        }        
+        else if (col.DbColumnName.EndsWith("Id") && (col.IsFkey && !col.IsArray))
+        {
+@:      this.@(smallClassName)Model.@(col.TsDbColumnName) = this.selected@(col.DbColumnNameWithoutId) ?  this.selected@(col.DbColumnNameWithoutId).@(col.TsFKeyTypeName)Id : null;
+        }        
+        else
+        {
+@:      //major todo: this.@(smallClassName)Model.@(col.TsDbColumnName) is not intialized
+        }
+    }
+}
+      this.activeModal.close(this.@(smallClassName)Model);
+    }
+}

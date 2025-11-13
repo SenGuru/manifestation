@@ -1,0 +1,237 @@
+<form #lvPushNotificationServerForm="ngForm" name="form" appFocusOnError
+  (ngSubmit)="lvPushNotificationServerForm.form.valid && onSubmit(lvPushNotificationServerForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="manifest-push-notification-server-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="manifest-push-notification-server-modal-cancel-btn" (click)="cancel(true)"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="pushNotificationServerCode">Push Notification Server Code
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvPushNotificationServerCode="ngModel" type="text"
+            name="pushNotificationServerCode" id="pushNotificationServerCode"
+            required class="form-control" placeholder="Push Notification Server Code"
+            maxlength="{{ pushNotificationServerCode__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvPushNotificationServerCode.invalid }"
+            [(ngModel)]="pushNotificationServerModel.pushNotificationServerCode">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvPushNotificationServerForm.submitted) && lvPushNotificationServerCode.errors?.['required']">
+              Push Notification Server Code is required
+            </span>
+            <span *ngIf="lvPushNotificationServerForm.submitted && lvPushNotificationServerCode.errors?.['maxlength']">
+              Maximum {{ pushNotificationServerCode__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.pushNotificationServerCode ?
+          pushNotificationServerModel.pushNotificationServerCode : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="pushNotificationServerName">Push Notification Server Name
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvPushNotificationServerName="ngModel" type="text"
+            name="pushNotificationServerName" id="pushNotificationServerName"
+            required class="form-control" placeholder="Push Notification Server Name"
+            maxlength="{{ pushNotificationServerName__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvPushNotificationServerName.invalid }"
+            [(ngModel)]="pushNotificationServerModel.pushNotificationServerName">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvPushNotificationServerForm.submitted) && lvPushNotificationServerName.errors?.['required']">
+              Push Notification Server Name is required
+            </span>
+            <span *ngIf="lvPushNotificationServerForm.submitted && lvPushNotificationServerName.errors?.['maxlength']">
+              Maximum {{ pushNotificationServerName__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.pushNotificationServerName ?
+          pushNotificationServerModel.pushNotificationServerName : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedPushNotificationServerType">Push Notification Server Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedPushNotificationServerType="ngModel" placeholder="Select Push Notification Server Type"
+            class="form-control" name="selectedPredefinedPushNotificationServerType" id="selectedPredefinedPushNotificationServerType"
+            bindLabel="type"
+            required [items]="predefinedPushNotificationServerTypes"
+            [clearable]="false" [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvPredefinedPushNotificationServerType.invalid }" [(ngModel)]="selectedPredefinedPushNotificationServerType">
+          </ng-select>
+          <div *ngIf="lvPushNotificationServerForm.submitted && lvPredefinedPushNotificationServerType.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedPushNotificationServerType.errors?.['required']">Push Notification Server
+              Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{selectedPredefinedPushNotificationServerType?.type ?
+          selectedPredefinedPushNotificationServerType?.type : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="projectId">Project
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvProjectId="ngModel" type="text" name="projectId" id="projectId"
+            required class="form-control" placeholder="Push Notification Server Code" maxlength="{{ projectId__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvProjectId.invalid }"
+            [(ngModel)]="pushNotificationServerModel.projectId">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvPushNotificationServerForm.submitted) && lvProjectId.errors?.['required']">
+              Push Notification Server Code is required
+            </span>
+            <span *ngIf="lvPushNotificationServerForm.submitted && lvProjectId.errors?.['maxlength']">
+              Maximum {{ projectId__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.projectId ? pushNotificationServerModel.projectId : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="apiKey">Api Key
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvApiKey="ngModel" type="text" name="apiKey" id="apiKey"
+            required class="form-control" placeholder="Api Key" maxlength="{{ apiKey__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvApiKey.invalid }"
+            [(ngModel)]="pushNotificationServerModel.apiKey">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvPushNotificationServerForm.submitted) && lvApiKey.errors?.['required']">
+              Api Key is required
+            </span>
+            <span *ngIf="lvPushNotificationServerForm.submitted && lvApiKey.errors?.['maxlength']">
+              Maximum {{ apiKey__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.apiKey ? pushNotificationServerModel.apiKey : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="apiSecret">Api Secret
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvApiSecret="ngModel" type="text" name="apiSecret" id="apiSecret"
+            required class="form-control" placeholder="Api Secret" maxlength="{{ apiSecret__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvApiSecret.invalid }"
+            [(ngModel)]="pushNotificationServerModel.apiSecret">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvPushNotificationServerForm.submitted) && lvApiSecret.errors?.['required']">
+              Api Secret is required
+            </span>
+            <span *ngIf="lvPushNotificationServerForm.submitted && lvApiSecret.errors?.['maxlength']">
+              Maximum {{ apiSecret__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.apiSecret ? pushNotificationServerModel.apiSecret : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="appleTeamId">Apple Team
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvAppleTeamId="ngModel" type="text" name="appleTeamId"
+            id="appleTeamId" required class="form-control" placeholder="Api Secret" maxlength="{{ appleTeamId__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvAppleTeamId.invalid }"
+            [(ngModel)]="pushNotificationServerModel.appleTeamId">
+          <div *ngIf="lvPushNotificationServerForm.submitted && lvAppleTeamId.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvAppleTeamId.errors?.['required']">Apple Team is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.appleTeamId ? pushNotificationServerModel.appleTeamId : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="appleKeyId">Apple Key
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvAppleKeyId="ngModel" type="text" name="appleKeyId"
+            id="appleKeyId" required class="form-control" placeholder="Api Secret" maxlength="{{ appleKeyId__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvAppleKeyId.invalid }"
+            [(ngModel)]="pushNotificationServerModel.appleKeyId">
+          <div *ngIf="lvPushNotificationServerForm.submitted && lvAppleKeyId.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvAppleKeyId.errors?.['required']">Apple Key is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.appleKeyId ? pushNotificationServerModel.appleKeyId : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="appleAuthKey">Apple Auth Key
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvAppleAuthKey="ngModel" type="text" name="appleAuthKey"
+            id="appleAuthKey" required class="form-control" placeholder="Apple Auth Key" maxlength="{{ appleAuthKey__size }}"
+            [ngClass]="{'is-invalid': lvPushNotificationServerForm.submitted && lvAppleAuthKey.invalid }"
+            [(ngModel)]="pushNotificationServerModel.appleAuthKey">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvPushNotificationServerForm.submitted) && lvAppleAuthKey.errors?.['required']">
+              Apple Auth Key is required
+            </span>
+            <span *ngIf="lvPushNotificationServerForm.submitted && lvAppleAuthKey.errors?.['maxlength']">
+              Maximum {{ appleAuthKey__size }} characters allowed.
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{pushNotificationServerModel.appleAuthKey ? pushNotificationServerModel.appleAuthKey : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="mt-3">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isEnabled" id="isEnabled"
+              [disabled]="isViewMode" [(ngModel)]="pushNotificationServerModel.isEnabled">
+            <label class="form-check-label" for="isEnabled">
+              Is Enabled
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-sm mnf-btn-sm btn-light" id="manifest-push-notification-server-modal-close-btn"
+      data-bs-dismiss="modal" (click)="cancel(true)">Close</button>
+    <button *ngIf="!isViewMode" type="submit"
+      class="btn btn-sm mnf-btn-sm btn-success" id="manifest-push-notification-server-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

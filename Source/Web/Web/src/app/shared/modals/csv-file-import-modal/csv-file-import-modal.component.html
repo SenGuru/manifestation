@@ -1,0 +1,133 @@
+<div>
+    <div class="modal-header p-3">
+        <h5 class="modal-title" id="manifest-csv-dialoge-title">{{title}} {{currentStep}}/4</h5>
+        <button type="button" id="manifest-csv-dialoge-close-btn" class="btn-close" (click)="cancel(true)"></button>
+    </div>
+    <form #form="ngForm" novalidate appFocusOnError (ngSubmit)="onSubmit(form)">
+        <div class="modal-body" style="height:calc(100vh - 315px);">
+            <div *ngIf="currentStep === 1" class="m-3 pt-1">
+                <h5 class="text-left pb-2 mt-3">Chooose file to Import</h5>
+                <div class="row justify-content-center">
+                    <div class="col-md-12 mt-2">
+                        <div class="input-group">
+                            <input #fileInput type="file" class="form-control" id="csvFileFile" accept=".csv" required
+                                (change)="uploadFile($event)">
+                        </div>
+                        <div class="mt-1">
+                            <span *ngIf="isErrorFiles " class="text-danger text-center ml-2">
+                                {{isErrorFiles ? "File is Required":"" }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-left mt-4 cursor-pointer text-primary">
+                    <a style="text-decoration:underline;" (click)="downloadSampleFile()">Click here to download the
+                        Sample Import file</a>
+                </div>
+            </div>
+            <div *ngIf="currentStep === 2">
+
+                <div class="card">
+                    <div class="tab-content">
+                        <div class="table-responsive opnt-table-md" style="height: calc(100vh - 405px);">
+                            <table *ngIf="tableData.length > 0 else nodata"
+                                class="table table-hover table-outline table-vcenter text-nowrap card-table table-striped">
+                                <thead class="opnt-table-header">
+                                    <tr>
+
+                                        <th class="text-left">
+                                            <label class="form-check m-0 pr-0">
+
+                                                <input type="checkbox" class="form-check-input" [checked]="isChooseAll"
+                                                    (change)="chooseAllList()" /><span
+                                                    class="form-check-label"></span></label>
+                                        </th>
+                                        <th *ngFor="let column of headerList" class="text-left">
+                                            {{ column }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of tableData; let i = index">
+
+                                        <td class="text-left">
+                                            <label class="form-check m-0 pr-0">
+                                                <input type="checkbox" class="form-check-input"
+                                                    [checked]="selectedCheckBox[i]" [value]="item"
+                                                    (change)="onCheckboxChange($event, item, i)" /><span
+                                                    class="form-check-label"></span></label>
+                                        </td>
+
+                                        <td *ngFor="let data of headerData" class="small text-left">
+                                            <span class="ellipsis">
+                                                <!-- {{item[data]}} -->
+                                            </span>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                        <ng-template #nodata>
+                            <app-no-data-found></app-no-data-found>
+                        </ng-template>
+
+                    </div>
+                    <div>Selected Items - {{listCheckArray.length}}, Total Items - {{tableData.length}}</div>
+
+                </div>
+            </div>
+            <div *ngIf="currentStep === 3">
+                <div class="mb-3">
+                    <label class="form-label text-center mt-4" for="">
+                        <h4>Importing Item {{sendedItem}} of {{totalItem}}</h4>
+                    </label>
+                    <div>
+                        <div class="progress my-2">
+                            <div class="progress-bar p-1" style="height: max-content;" role="progressbar"
+                                [attr.aria-valuenow]="onLoadingProgress" [attr.aria-valuemin]="0"
+                                [attr.aria-valuemax]="totalItem" [style.width]="onLoadingProgress +'%'">
+                            </div>
+                        </div>
+                        <span class="text-center text-muted mb-4">{{onLoadingProgress}}% Completed</span>
+                    </div>
+                </div>
+                <div class="m-2 text-left">
+                    <strong>Messages</strong>
+                    <div>
+                        <div>
+                            <textarea class="text-left form-control col-md-12  mt-1" id="itemMesssage" rows="10"
+                                disabled name="itemMesssage">{{message}}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div *ngIf="currentStep === 4">
+                <div class="m-4">
+                    <div class="my-3">
+                        <h4>Successfully Imported : {{successItem}} </h4>
+                    </div>
+                    <div class="my-3">
+                        <h4>Failed to Imports :{{failedItem}} </h4>
+                    </div>
+                    <div class="my-3">
+                        <h4>Total : {{totalItem}}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="currentStep !== 4" type="button" class="btn btn-light btn-sm mnf-btn-sm"
+                id="manifest-csv-import-modal-cancel-btn" (click)="cancel(true)">Cancel</button>
+            <button *ngIf="currentStep === 2" type="button" class="btn btn-primary btn-sm mnf-btn-sm mr-1"
+                id="manifest-csv-import-modal-previous-btn" (click)="goToPrevious()">Previous</button>
+            <button *ngIf="currentStep !== 4" type="submit" class="btn btn-primary btn-sm mnf-btn-sm mr-1"
+                id="manifest-csv-import-modal-next-btn">Next</button>
+            <button *ngIf="currentStep === 4" type="button" class="btn btn-primary btn-sm mnf-btn-sm mr-1"
+                id="manifest-csv-import-modal-okay-btn" (click)="cancel(false)">Okay</button>
+        </div>
+    </form>
+</div>

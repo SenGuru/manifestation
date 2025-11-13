@@ -1,0 +1,130 @@
+@model EnumTypeTableGenerator.Models.CredUiTemplateData
+using System;
+using System.Collections.Generic;
+
+#pragma warning disable SA1508 , SA1402 , SA1649, SA1507,SA1516, SA1513 // Closing braces should not be preceded by blank line
+namespace %AppName%.Common.Models.ViewModels
+{
+    @{
+        int i = 0;
+        //int breakAfter = -1;
+        var addedColumns = new List<string>();
+    }
+    @foreach (var t in Model.Code.Sections)
+    {
+            //if(i > breakAfter)
+            //    continue;
+            i ++;
+            addedColumns.Clear();
+    @:public class @(t.ViewClassName)View
+    @:{
+    @foreach (var c in t.AllColumns)
+    {
+            var arrStr = "";
+            var arrEndStr = "";
+            var nullableSym = "";
+            if (c.IsArray)
+            {
+                arrStr = "List<";
+                arrEndStr = ">";
+            }
+            else
+            {
+                if (c.IsNull && c.DataType != CodeGenerator.CSharpDataTypes.@string)
+                {
+                    nullableSym = "?";
+                }
+            }
+
+            var withoutId = c.DbColumnName.Replace("Id", "");
+            bool withNameExists = t.AllColumns.Any(x => x.DbColumnName == withoutId + "Name");
+
+            if (c.IsFkey)
+            {
+                    if (c.ElementType == CodeGenerator.ElementTypes.File)
+                    {
+                    @foreach (var cf in c.FileRelatedColumnsForView)
+                    {
+                    var nullableSymX = "";
+                    if (cf.DataType != CodeGenerator.CSharpDataTypes.@string)
+                    {
+                        nullableSymX = "?";
+                    }  
+    @:public @(cf.DataType)@(nullableSymX) @(cf.FileColumn) { get; set; } // 1 -@*@(c.ToString())*@
+@:
+        addedColumns.Add(cf.FileColumn);
+                    }
+                    }
+                    else
+                    {
+                    if (c.ControlType == CodeGenerator.ControlTypes.MultiSelect || c.ParentTable.IsList)
+                        {
+                            if (c.DbColumnName.EndsWith("MetaDataIds"))
+                            {
+        @:public @Raw(arrStr+"long"+arrEndStr)@(nullableSym) @(c.DbColumnName) { get; set; }//2 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                            }
+                            else
+                            {
+        @:public @Raw(arrStr+c.FKeyTypeName+"Model"+arrEndStr)@(nullableSym) @(c.DbColumnName) { get; set; }//2.1 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                            }
+                        }
+                        else
+                        {
+        @:public @Raw(arrStr + "long" + arrEndStr)@(nullableSym) @(c.DbColumnName) {get ; set;}//2.2 -@*@(c.ToString())*@
+        addedColumns.Add(c.DbColumnName);
+                        }
+
+                        if(!c.IsArray && !withNameExists)
+                        {
+@:                            
+        @:public string @(withoutId)Name {get; set;} //2.3 -@*@(c.ToString())*@
+    addedColumns.Add(withoutId+"Name");
+                        }
+                    }
+            }
+            else
+            {
+                if (c.TsDataType == CodeGenerator.TsDataTypes.fKey)
+                {
+                    if (addedColumns.Any(x => x == c.DbColumnName))
+                    {
+                        continue;
+                    }
+        @:public @Raw(arrStr + "long" + arrEndStr)@(nullableSym) @(c.DbColumnName) { get; set; }//3 -@*@(c.ToString())*@
+                    if(!c.IsArray&& !withNameExists && !c.IsPkForTable)
+                    {
+@:
+        @:public string @(withoutId)Name { get; set; }//4 -@*@(c.ToString())*@
+        addedColumns.Add(withoutId+"Name");
+                    }
+                }
+                else
+                {
+                    if (addedColumns.Any(x => x == c.DbColumnName))
+                    {
+                        continue;
+                    }
+        @:public @Raw(arrStr + c.DataType + arrEndStr)@(nullableSym) @(c.DbColumnName) { get; set; } // 5 -@*@(c.ToString())*@
+    addedColumns.Add(c.DbColumnName);
+                    if (c.DbColumnName.EndsWith("MetaDataId") && !c.IsArray && !withNameExists)
+                    {
+@:
+        @:public string @(withoutId)Name { get; set; } //6 -@*@(c.ToString())*@
+        addedColumns.Add(withoutId+"Name");
+                    }
+                }
+            }
+@:
+    }
+    @:}
+
+    @:public class @(t.ViewClassName)Model : @(t.ViewClassName)View
+    @:{
+    @:  public CredStepInfoModel StepInfo { get; set; }
+    @:}
+@:
+}
+}
+#pragma warning restore SA1508 , SA1402 , SA1649, SA1507,SA1516, SA1513 // Closing braces should not be preceded by blank line

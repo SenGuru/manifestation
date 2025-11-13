@@ -1,0 +1,350 @@
+<!-- auth-page wrapper -->
+<div class="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
+    <div class="bg-overlay"></div>
+    <!-- auth-page content -->
+    <div class="auth-page-content overflow-hidden pt-lg-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card overflow-hidden card-bg-fill galaxy-border-none">
+                        <div class="row g-0">
+                            <div class="col-lg-6">
+                                <div class="p-lg-5 p-4 auth-one-bg h-100">
+                                    <div class="bg-overlay"></div>
+                                    <div class="position-relative h-100 d-flex flex-column">
+                                        <div class="mb-4">
+                                            <a class="d-block">
+                                                <h2 class="text-white">
+                                                    Manifestation
+                                                </h2>
+                                            </a>
+                                        </div>
+                                        <!-- <div class="mb-4">
+                                          <a routerLink="" class="d-block">
+                                              <div [class.admin-auth-bg]="loginType === loginTypeEnumValue.NormalUser"
+                                                  [class.user-auth-bg]="loginType === loginTypeEnumValue.AnonymousUser">
+                                              </div>
+                                          </a>
+                                      </div> -->
+                                        <div class="mt-auto">
+                                            <div class="mb-3">
+                                                <i class="ri-double-quotes-l display-4 text-success"></i>
+                                            </div>
+
+                                            <ngb-carousel [showNavigationArrows]="showNavigationArrows">
+                                                <ng-template ngbSlide>
+                                                    <div class="carousel-inner text-center text-white-50 pb-5">
+                                                        <div class="carousel-item active">
+                                                            <p class="fs-15 fst-italic">“THE MOST HONEST FORM OF
+                                                                FILMMAKING IS TO MAKE A FILM FOR YOURSELF.”</p>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template ngbSlide>
+                                                    <div class="carousel-inner text-center text-white-50 pb-5">
+                                                        <div class="carousel-item active">
+                                                            <p class="fs-15 fst-italic">“I WOULD TRAVEL DOWN TO HELL AND
+                                                                WRESTLE A FILM AWAY FROM THE DEVIL IF IT WAS NECESSARY.”
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template ngbSlide>
+                                                    <div class="carousel-inner text-center text-white-50 pb-5">
+                                                        <div class="carousel-item active">
+                                                            <p class="fs-15 fst-italic">“WHEN PEOPLE ASK ME IF I WENT TO
+                                                                FILM SCHOOL I TELL THEM, ‘NO, I WENT TO FILMS’.”</p>
+                                                        </div>
+                                                    </div>
+                                                </ng-template>
+                                            </ngb-carousel>
+                                            <!-- end carousel -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end col -->
+
+                            <div class="col-lg-6">
+                                <div class="p-lg-5 p-4">
+                                    <div class="text-center mt-2">
+                                        <h5 class="text-primary">Welcome Back !</h5>
+                                        <p class="text-muted">Sign in to continue to the Manifest admin panel.</p>
+                                    </div>
+                                    <div class="p-2 mt-3 admin-panel-login-form">
+                                        <form #adminlogin="ngForm"
+                                            (ngSubmit)="adminlogin.form.valid && onSubmitAdminLogin(adminlogin)">
+                                            <div class="mb-3">
+                                                <label class="form-label" for="">User Name</label>
+                                                <input #lvUsername="ngModel" type="text" name="username"
+                                                    class="form-control" required placeholder="User Name"
+                                                    autocomplete="randomName" [ngClass]="{
+                                                'form-control': true,
+                                                'is-invalid': adminlogin.submitted && lvUsername.invalid
+                                              }" [(ngModel)]="credentials.username" />
+                                                <div *ngIf="
+                                                adminlogin.submitted && lvUsername.invalid"
+                                                    class="invalid-feedback invalid-feedback-fixed mt-0">
+                                                    User Name is required
+                                                </div>
+                                            </div>
+                                            <div *ngIf="siteDetails?.loginOptionModel && siteDetails.loginOptionModel.useBuiltInAuthentication"
+                                                class="mb-3">
+                                                <div class="float-end">
+                                                    <a routerLink="/forgot-password" class="text-muted me-2">Forgot
+                                                        password?</a>
+                                                </div>
+                                                <label class="form-label" for=""> Password </label>
+                                                <input #lvPassword="ngModel" type="password"
+                                                    name="password" autocomplete="new-password" class="form-control"
+                                                    required placeholder="Password" [ngClass]="{
+                                                'form-control': true,
+                                                'is-invalid': adminlogin.submitted && lvPassword.invalid
+                                              }" [(ngModel)]="credentials.password" />
+                                                <div *ngIf="adminlogin.submitted && lvPassword.invalid"
+                                                    class="invalid-feedback invalid-feedback-fixed mt-0">
+                                                    <div *ngIf="lvPassword.errors?.['required']">Password is required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value=""
+                                                    id="auth-remember-check">
+                                                <label class="form-check-label" for="auth-remember-check">Remember
+                                                    me</label>
+                                            </div>
+
+                                            <div class="mt-4">
+                                                <button class="btn btn-success w-100" type="submit">Sign In</button>
+                                            </div>
+
+                                            <div class="mt-4 text-center">
+                                                <p class="mb-0">If you're user <a routerLink="/user/login"
+                                                        class="fw-semibold text-primary text-decoration-underline">
+                                                        click here
+                                                    </a> to proceed. </p>
+                                            </div>
+                                            <div class="mt-4 text-center">
+                                                <div class="signin-other-title">
+                                                    <h5 class="fs-13 mb-4 title">Sign In with</h5>
+                                                </div>
+                                                <div class="d-flex gap-2 justify-content-center">
+                                                    <!-- <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button> -->
+                                                    <button type="button" title="Google Sign-In"
+                                                        class="btn btn-danger btn-icon waves-effect waves-light"
+                                                        (click)="loginServerWithGlAndMs(predefinedSingleSignOnServerType.Google)">
+                                                        <i class="ri-google-fill fs-20"></i>
+                                                    </button>
+
+                                                    <button type="button" title="Microsoft Sign-In"
+                                                        class="btn btn-info btn-icon waves-effect waves-light"
+                                                        (click)="loginServerWithGlAndMs(predefinedSingleSignOnServerType.Microsoft)"><i
+                                                            class="mdi mdi-microsoft-office fs-20"></i></button>
+                                                    <!-- <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+                                                  <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button> -->
+                                                </div>
+                                            </div>
+                                            <div class="site-config app-version-container">
+                                                <div class="manifest-login-form-app-version-info">App Version :
+                                                    {{siteDetails?.appVersion}} </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="p-lg-5 p-4" *ngIf="loginType === loginTypeEnumValue.AnonymousUser">
+                                    <div class="text-center mt-2">
+                                        <h5 class="text-primary">Welcome Back !</h5>
+                                        <p class="text-muted mb-2">Sign in to continue to the Manifest user panel.</p>
+                                        <div class="text-success" *ngIf="currentPage === 1 && !isAuthCodeSubmitted">
+                                            Manifest sent a one time passcode to your email/phone
+                                        </div>
+                                    </div>
+                                    <div class="p-2 mt-3">
+                                        <form #userlogin="ngForm"
+                                            (ngSubmit)="userlogin.form.valid && onSubmitUserLogin(userlogin)">
+                                            <div class="mb-3">
+
+                                                <div class="col-xxl-12" *ngIf="currentPage === 0">
+                                                    <div class="card mb-0 shadow-none bg-transparent">
+                                                        <div
+                                                            class="card-header align-items-center d-flex bg-transparent p-0 m-0 py-4">
+                                                            <div class="flex-shrink-0 ms-2">
+                                                                <ul ngbNav
+                                                                    class="nav justify-content-end nav-tabs-custom rounded card-header-tabs border-bottom-0">
+
+                                                                    <li class="nav-item cursor-pointer"
+                                                                        (click)="changeTab('email')">
+                                                                        <a class="nav-link bg-transparent pt-0 pb-2"
+                                                                            [ngClass]="externalUserLoginType === 'email' ? 'active' : ''">
+                                                                            Email
+                                                                        </a>
+                                                                    </li>
+
+                                                                    <li class="nav-item cursor-pointer"
+                                                                        (click)="changeTab('phone')">
+                                                                        <a class="nav-link bg-transparent pt-0 pb-2"
+                                                                            [ngClass]="externalUserLoginType === 'phone' ? 'active' : ''">
+                                                                            Phone
+                                                                        </a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- email -->
+                                               <!-- <div *ngIf="anonymousLogin.isEmail" class="mt-2">
+                                                    <input type="email" [(ngModel)]="anonymousLogin.authValue"
+                                                        name="authValueEmail" id="authValueEmail" class="form-control"
+                                                        #lvAuthValueEmail="ngModel" required appEmailvalidator
+                                                        [ngClass]="{
+                                                    'form-control': true,
+                                                    'is-invalid': userlogin.submitted && lvAuthValueEmail.invalid
+                                                  }" placeholder="Email" autocomplete="randomName" />
+                                                    <div class="invalid-feedback invalid-feedback-fixed m-0 p-0">
+                                                        <span
+                                                            *ngIf="(userlogin.submitted) && lvAuthValueEmail.errors?.required">
+                                                            Email is required
+                                                        </span>
+                                                        <span
+                                                            *ngIf="(userlogin.submitted) && lvAuthValueEmail.hasError('emailvalidator')">
+                                                            Please provide a valid Email
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- phone -->
+                                              <!--  <div *ngIf="!anonymousLogin.isEmail" class="mt-2">
+                                                    <input type="text" [(ngModel)]="anonymousLogin.authValue"
+                                                        name="authValuePhone" id="authValuePhone" class="form-control"
+                                                        #lvAuthValuePhone="ngModel" required appPhoneNumberValidator
+                                                        (keypress)="customSelectService.numberOnly($event)" [ngClass]="{
+                                                    'form-control': true, 
+                                                    'is-invalid': userlogin.submitted && lvAuthValuePhone.invalid 
+                                                  }" placeholder="Phone" autocomplete="cc-number" />
+                                                    <div class="invalid-feedback invalid-feedback-fixed m-0 p-0">
+                                                        <span
+                                                            *ngIf="(userlogin.submitted) && lvAuthValuePhone.errors?.required ">
+                                                            Phone is required
+                                                        </span>
+                                                        <span
+                                                            *ngIf="(userlogin.submitted) && lvAuthValuePhone.hasError('phoneNumberValidator') ">
+                                                            Phone is not a valid
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3" *ngIf="currentPage === 1">
+                                                <div class="float-end">
+                                                    <countdown [config]="{ leftTime: 600 }"
+                                                        (event)="handleCountdownEvent($event)" class="mx-2"></countdown>
+                                                    <button type="button"
+                                                        class="text-muted cursor-pointer btn btn-sm mnf-btn-sm border-0"
+                                                        [disabled]="disableResendButton"
+                                                        (click)="resendAnonymousUserAuth()">Resend passcode?</button>
+                                                </div>
+                                                <label class="form-label"> PassCode </label>
+                                                <input type="password" [(ngModel)]="anonymousLogin.authCode"
+                                                    name="password" #lvPassCode="ngModel" class="form-control" required
+                                                    [ngClass]="{
+                                                'form-control': true,
+                                                'is-invalid': userlogin.submitted && lvPassCode.invalid && isAuthCodeSubmitted 
+                                              }" placeholder="PassCode" />
+                                                <div *ngIf="userlogin.submitted && lvPassCode.invalid && isAuthCodeSubmitted"
+                                                    class="invalid-feedback invalid-feedback-fixed m-0 p-0">
+                                                    <div *ngIf="lvPassCode.errors?.required && isAuthCodeSubmitted">
+                                                        PassCode is
+                                                        required</div>
+                                                </div>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox"
+                                                    [(ngModel)]="anonymousLogin.rememberMe" id="auth-remember-check">
+                                                <label class="form-check-label" for="auth-remember-check">Remember
+                                                    me</label>
+                                            </div>
+
+                                            <div class="mt-4">
+                                                <button class="btn btn-primary w-100" type="submit"
+                                                    *ngIf="currentPage === 0">Next</button>
+                                                <button class="btn btn-primary w-100" type="submit"
+                                                    *ngIf="currentPage === 1">Sign In</button>
+                                                <button class="btn btn-secondary w-100 mt-2" type="button"
+                                                    *ngIf="currentPage === 1"
+                                                    (click)="cancelAnonymousLogin()">Cancel</button>
+                                            </div>
+
+                                            <div class="mt-4 text-center">
+                                                <p class="mb-0">If you're admin <a routerLink="/admin/login"
+                                                        class="fw-semibold text-primary text-decoration-underline">
+                                                        click here
+                                                    </a> to proceed. </p>
+                                            </div>
+
+                                            <div class="my-4 text-center">
+                                                <div class="signin-other-title">
+                                                    <h5 class="fs-13 mb-4 title">Sign In with</h5>
+                                                </div>
+                                                <div class="d-flex gap-2 justify-content-center">
+                                                    <!-- <button type="button" class="btn btn-primary btn-icon waves-effect waves-light"><i class="ri-facebook-fill fs-16"></i></button> -->
+                                                  <!--  <button type="button"
+                                                        class="btn btn-danger btn-icon waves-effect waves-light"><i
+                                                            class="ri-google-fill fs-20"></i></button>
+                                                    <button type="button"
+                                                        class="btn btn-info btn-icon waves-effect waves-light"><i
+                                                            class="mdi mdi-microsoft-office fs-20"></i></button>
+                                                    <!-- <button type="button" class="btn btn-dark btn-icon waves-effect waves-light"><i class="ri-github-fill fs-16"></i></button>
+                                                  <button type="button" class="btn btn-info btn-icon waves-effect waves-light"><i class="ri-twitter-fill fs-16"></i></button> -->
+                                              <!--  </div>
+                                            </div>
+                                            <div class="site-config app-version-container">
+                                                <div class="manifest-login-form-app-version-info">App Version :
+                                                    {{siteDetails?.appVersion}} </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div> -->
+
+                            </div>
+                            <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                    </div>
+                    <!-- end card -->
+
+                    <div class="mt-5 text-center">
+                        <p class="mb-0"><span class="text-muted">Don't have an account ? </span><a
+                                class="fw-semibold text-primary text-decoration-underline text-light">Contact Us </a>
+                        </p>
+                    </div>
+                </div>
+                <!-- end col -->
+
+            </div>
+            <!-- end row -->
+        </div>
+        <!-- end container -->
+    </div>
+    <!-- end auth page content -->
+
+    <!-- footer -->
+    <footer class="footer galaxy-border-none">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-center">
+                      <p class="mb-0">&copy; {{year}} Manifestation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- end Footer -->
+</div>
+<!-- end auth-page-wrapper -->
+<div *ngIf="isLoading" class="hc-loading">
+    <img src="assets/images/favicon.png" class="mnf-loading-img" alt="">
+    <br />
+    <!-- <p style="font-size:18px;">Loading...</p> -->
+</div>
+<!-- <app-toasts aria-live="polite" aria-atomic="true"></app-toasts> -->

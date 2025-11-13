@@ -1,0 +1,24 @@
+{
+  "classPrefix": "",
+  "classSuffix": "",
+  "connectionString": "Server=(localdb)\\ManifestDbServer;Initial Catalog=ManifestDb;Persist Security Info=True;User ID=admin;Password=@Dmin123##;MultipleActiveResultSets=False;Application Name=PocoGenerator;",
+  "includeViews": "true",
+  "namespace": "Manifest.Repository.Migration.Application",
+  "schemaName": "",
+  "dbType": "sqlserver",
+  "onlyGenerateSelectedTables": "false",
+  "ignoredTableNames": [
+    "VersionInfo",
+    "sysdiagrams"
+  ],
+  "inbuiltSchema": [
+    "dbo",
+    "public"
+  ],
+  "generate": [
+    {
+      "templateFileName": "{ConfigFolder}/migration_script.cshtm",
+      "codeFileName": "{ConfigFolder}/../Mig_001.cs"
+    }
+  ]
+}

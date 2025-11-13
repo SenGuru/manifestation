@@ -1,0 +1,45 @@
+{
+  "configuration": {
+    "appSettings": {
+
+      "serverPort": 9191,
+
+      "logSettings": {
+        "logTrace": true,
+        "logDebug": true,
+        "logInfo": true,
+        "logSql": true,
+        "logWarn": true,
+        "logError": true,
+        "logPerformance": true,
+        "logToFile": true,
+        "logLocation": "|ConfigPath|\\..\\Data\\Logs",
+        "logToDebugger": true,
+        "logToConsole": true
+      },
+      "connectionStrings": {
+        "default": {
+          "databaseType": "sqlite3",
+          "databaseName": "|ConfigPath|\\..\\Data\\Database\\ManifestDb.sqlite3",
+          "databaseServer": "(localdb)\\ManifestDBServer",
+          "databaseUserName": "admin",
+          "databasePassword": "admin",
+          "ignoreValidation": true,
+          "databaseCommandTimeout": 99999,
+          "maxPoolSize": 99,
+          "alwaysCreateNewDatabase": true,
+          "automaticMigration": true,
+          "migrationNamespace": "Manifest.Repository.Migration.Application",
+          "migrationProfile": null
+        }
+      }
+      }
+    },
+
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Error"
+    }
+  }
+}

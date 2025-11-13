@@ -1,0 +1,236 @@
+<form #lvJobTemplateParameterForm="ngForm" name="form" appFocusOnError
+  (ngSubmit)="lvJobTemplateParameterForm.form.valid && onSubmit(lvJobTemplateParameterForm)">
+  <div class="modal-header p-3">
+    <h5 class="modal-title" id="manifest-job-template-parameter-modal-title">{{title}}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cancel"
+      id="manifest-job-template-parameter-modal-cancel-btn" (click)="cancel()"></button>
+  </div>
+  <div class="modal-body">
+
+    <div class="form-group row mb-4">
+ 
+      <div class="col-sm-6">
+        <label class="form-label" for="name">Job Param Name
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvName="ngModel" type="text" name="name" id="name" required class="form-control"
+            placeholder="Job Param Name" [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvName.invalid }"
+            [(ngModel)]="jobTemplateParameterModel.name">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvJobTemplateParameterForm.submitted) && lvName.errors?.['required']">
+              Job Param Name is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.name ? jobTemplateParameterModel.name : '-'}}
+        </div>
+      </div>
+      
+      <div class="col-sm-6">
+        <label class="form-label" for="caption">Caption
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvCaption="ngModel" type="text" name="caption" id="caption" required
+            class="form-control" placeholder="Caption"
+            [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvCaption.invalid }"
+            [(ngModel)]="jobTemplateParameterModel.caption">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvJobTemplateParameterForm.submitted) && lvCaption.errors?.['required']">
+              Caption is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.caption ? jobTemplateParameterModel.caption : '-'}}
+        </div>
+      </div>
+
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="value">Value
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvValue="ngModel" type="text" name="value" id="value" required class="form-control"
+            placeholder="Value" [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvValue.invalid }"
+            [(ngModel)]="jobTemplateParameterModel.value">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvJobTemplateParameterForm.submitted) && lvValue.errors?.['required']">
+              Value is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.value ? jobTemplateParameterModel.value : '-'}}
+        </div>
+      </div>
+      
+      <div class="col-sm-6 row">
+        <div class="mt-3 col-sm-auto">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isVisible" id="isVisible"
+              [disabled]="isViewMode" [(ngModel)]="jobTemplateParameterModel.isVisible">
+            <label class="form-check-label" for="isVisible">
+              Is Visible
+            </label>
+          </div>
+        </div>
+
+        <div class="mt-3 col-sm-auto">
+          <label class="form-label" for="">
+          </label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="true" name="isEmpty" id="isEmpty"
+              [disabled]="isViewMode" [(ngModel)]="jobTemplateParameterModel.empty">
+            <label class="form-check-label" for="isEmpty">
+              Is Empty
+            </label>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="defaultValue">Default Value
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvDefaultValue="ngModel" type="text" name="defaultValue" id="defaultValue"
+            required class="form-control" placeholder="Default Value"
+            [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvDefaultValue.invalid }"
+            [(ngModel)]="jobTemplateParameterModel.defaultValue">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvJobTemplateParameterForm.submitted) && lvDefaultValue.errors?.['required']">
+              Default Value is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.defaultValue ? jobTemplateParameterModel.defaultValue : '-'}}
+        </div>
+      </div>
+      
+      <div class="col-sm-6">
+        <label class="form-label" for="position">Position
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <input #lvPosition="ngModel" type="text" name="position" id="position" required class="form-control"
+            placeholder="Position" [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvPosition.invalid }"
+            [(ngModel)]="jobTemplateParameterModel.position">
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvJobTemplateParameterForm.submitted) && lvPosition.errors?.['required']">
+              Position is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.position ? jobTemplateParameterModel.position : '-'}}
+        </div>
+      </div>
+
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedFieldControlType">Field Control Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedFieldControlType="ngModel" placeholder="Select Field Control Type"
+            class="form-control" name="selectedPredefinedFieldControlType" id="selectedPredefinedFieldControlType"
+            bindLabel="type"
+            required [items]="predefinedFieldControlTypes" [clearable]="false"
+            [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvPredefinedFieldControlType.invalid }" [(ngModel)]="selectedPredefinedFieldControlType">
+          </ng-select>
+          <div *ngIf="lvJobTemplateParameterForm.submitted && lvPredefinedFieldControlType.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedFieldControlType.errors?.['required']">Field Control Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.predefinedFieldControlTypeName ?
+          jobTemplateParameterModel.predefinedFieldControlTypeName : '-'}}
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedFieldType">Field Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedFieldType="ngModel" placeholder="Select Field Type" class="form-control"
+            name="selectedPredefinedFieldType" id="selectedPredefinedFieldType"
+            bindLabel="type"
+            required [items]="predefinedFieldTypes" [clearable]="false"
+            [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvPredefinedFieldType.invalid }" [(ngModel)]="selectedPredefinedFieldType">
+          </ng-select>
+          <div *ngIf="lvJobTemplateParameterForm.submitted && lvPredefinedFieldType.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedFieldType.errors?.['required']">Field Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.predefinedFieldTypeName ? jobTemplateParameterModel.predefinedFieldTypeName :
+          '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-6">
+        <label class="form-label" for="selectedPredefinedFieldPopulatorType">Field Populator Type
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <ng-select #lvPredefinedFieldPopulatorType="ngModel" placeholder="Select Field Populator Type"
+            class="form-control" name="selectedPredefinedFieldPopulatorType" id="selectedPredefinedFieldPopulatorType"
+            bindLabel="type"
+            required [items]="predefinedFieldPopulatorTypes" [clearable]="false"
+            [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvPredefinedFieldPopulatorType.invalid }" [(ngModel)]="selectedPredefinedFieldPopulatorType">
+          </ng-select>
+          <div *ngIf="lvJobTemplateParameterForm.submitted && lvPredefinedFieldPopulatorType.invalid"
+            class="invalid-feedback invalid-feedback-fixed">
+            <div *ngIf="lvPredefinedFieldPopulatorType.errors?.['required']">Field Populator Type is required</div>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.predefinedFieldPopulatorTypeName ?
+          jobTemplateParameterModel.predefinedFieldPopulatorTypeName : '-'}}
+        </div>
+      </div>
+    </div>
+    <div class="form-group row mb-4">
+      <div class="col-sm-12">
+        <label class="form-label" for="populatorSource">Populator Source
+          <span *ngIf="!isViewMode" class="required-sign">&nbsp;*</span>
+        </label>
+        <div *ngIf="!isViewMode">
+          <textarea #lvPopulatorSource="ngModel" type="text" rows="4" name="populatorSource"
+            required class="form-control" placeholder="Populator Source"
+            [ngClass]="{'is-invalid': lvJobTemplateParameterForm.submitted && lvPopulatorSource.invalid }"
+            [(ngModel)]="jobTemplateParameterModel.populatorSource"></textarea>
+          <div class="invalid-feedback invalid-feedback-fixed">
+            <span *ngIf="(lvJobTemplateParameterForm.submitted) && lvPopulatorSource.errors?.['required']">
+              Populator Source is required
+            </span>
+          </div>
+        </div>
+        <div *ngIf="isViewMode">
+          {{jobTemplateParameterModel.populatorSource ? jobTemplateParameterModel.populatorSource : '-'}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm mnf-btn-sm" id="manifest-job-template-parameter-modal-close-btn"
+      data-bs-dismiss="modal" (click)="cancel()">Close</button>
+    <button *ngIf="!isViewMode" type="submit" class="btn btn-sm mnf-btn-sm btn-success"
+      id="manifest-job-template-parameter-modal-submit-btn">{{buttonText}}</button>
+  </div>
+</form>

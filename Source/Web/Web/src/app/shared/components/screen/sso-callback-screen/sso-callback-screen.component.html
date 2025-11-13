@@ -1,0 +1,22 @@
+<div class="row justify-content-center">
+  <div class="col-sm-6 my-4 p-4">
+     <div class="card p-4">
+          <div class="card-title">
+            <h4>
+              Single-Sign On Result :
+            </h4>
+          </div>
+         <div *ngIf="provider"> Provider: {{provider}}</div>
+         <div *ngIf="callBackUri"> CallBackUri: {{callBackUri}}</div>
+         <div *ngIf="singleSignOnIdentifier"> Single Sign-On Identifier: {{singleSignOnIdentifier}}</div>
+         <div *ngIf="code"> Code: {{code}}</div>
+         <div *ngIf="access_token"> Access Token: {{access_token}}</div>
+         <div *ngIf="error" class="text-danger"> Error: {{error}}</div>
+         <div *ngIf="state"> State: {{state}}</div>
+         <div class="mt-5 text-center">
+          <p class="mb-0">Try other ways to login <a href="/" class="fw-semibold text-primary text-decoration-underline"> Click here
+              </a></p>
+          </div>
+        </div>
+  </div>
+</div>

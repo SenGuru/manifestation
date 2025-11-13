@@ -1,0 +1,934 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'journal_entry_details_screen.dart';
+import 'journal_stats_screen.dart';
+import '../models/journey_entry.dart';
+import '../models/mood_selector.dart';
+import '../constants/app_theme.dart';
+import '../services/daily_journal_service.dart';
+import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
+import '../widgets/universal_back_button.dart';
+
+class CalendarViewScreen extends StatefulWidget {
+  @override
+  _CalendarViewScreenState createState() => _CalendarViewScreenState();
+}
+
+class _CalendarViewScreenState extends State<CalendarViewScreen> {
+  DateTime selectedDate = DateTime.now();
+  DateTime currentMonth = DateTime.now();
+  Map<String, JournalEntry> journalEntries = {}; // Key: YYYY-MM-DD format (displayed)
+  Map<String, JournalEntry> allJournalEntries = {}; // Key: YYYY-MM-DD format (all data)
+  final DailyJournalService _journalService = DailyJournalService();
+  bool isLoadingEntries = false;
+  
+  // Daterange filtering
+  DateTime? filterStartDate;
+  DateTime? filterEndDate;
+  bool showingFilteredView = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    _journalService.initialize();
+    _loadJournalEntries();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundDark,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: _loadJournalEntries,
+          color: AppTheme.journalGradient[0],
+          child: Column(
+            children: [
+              _buildHeader(),
+              _buildDateRangeFilter(),
+              _buildMonthSelector(),
+              _buildCalendarGrid(),
+              _buildSelectedDateDetails(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: EdgeInsets.all(24.w),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              UniversalBackButton(),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Journal Calendar',
+                      style: TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textLight,
+                      ),
+                    ),
+                    Text(
+                      'Track your manifestation journey',
+                      style: TextStyle(
+                        fontSize: 14.sp,
+                        color: AppTheme.textMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              _buildStatsButton(),
+            ],
+          ),
+          
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatsButton() {
+    return GestureDetector(
+      onTap: _showStatsView,
+      child: Container(
+        width: 44.w,
+        height: 44.h,
+        decoration: BoxDecoration(
+          color: AppTheme.accentGold.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: AppTheme.accentGold.withOpacity(0.3),
+          ),
+        ),
+        child: Icon(
+          Icons.analytics_outlined,
+          color: AppTheme.accentGold,
+          size: 20.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDateRangeFilter() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+      child: Row(
+        children: [
+          // Date range filter button
+          Expanded(
+            child: GestureDetector(
+              onTap: _showDateRangePicker,
+              child: Container(
+                height: 40.h,
+                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                decoration: BoxDecoration(
+                  color: showingFilteredView 
+                      ? AppTheme.visionBoardGradient[0].withOpacity(0.1)
+                      : AppTheme.cardBackground,
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(
+                    color: showingFilteredView 
+                        ? AppTheme.visionBoardGradient[0].withOpacity(0.3)
+                        : AppTheme.textMedium.withOpacity(0.2),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.date_range,
+                      color: showingFilteredView 
+                          ? AppTheme.visionBoardGradient[0] 
+                          : AppTheme.textMedium,
+                      size: 16.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: Text(
+                        showingFilteredView 
+                            ? '${_formatFilterDate(filterStartDate!)} - ${_formatFilterDate(filterEndDate!)}'
+                            : 'Filter by date range',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: showingFilteredView 
+                              ? AppTheme.visionBoardGradient[0] 
+                              : AppTheme.textMedium,
+                          fontWeight: showingFilteredView ? FontWeight.w500 : FontWeight.normal,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (showingFilteredView)
+                      GestureDetector(
+                        onTap: _clearDateRangeFilter,
+                        child: Container(
+                          padding: EdgeInsets.all(4.w),
+                          child: Icon(
+                            Icons.close,
+                            color: AppTheme.visionBoardGradient[0],
+                            size: 16.sp,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          
+          SizedBox(width: 12.w),
+          
+          // Quick filter buttons
+          _buildQuickFilterButton('This Week', () => _setQuickFilter(7)),
+          SizedBox(width: 8.w),
+          _buildQuickFilterButton('This Month', () => _setQuickFilter(30)),
+        ],
+      ),  
+    );
+  }
+
+  Widget _buildQuickFilterButton(String label, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: AppTheme.journalGradient[0].withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(
+            color: AppTheme.journalGradient[0].withOpacity(0.3),
+          ),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: AppTheme.journalGradient[0],
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMonthSelector() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: _previousMonth,
+            child: Container(
+              width: 40.w,
+              height: 40.h,
+              decoration: BoxDecoration(
+                color: AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Icon(
+                Icons.chevron_left,
+                color: AppTheme.textLight,
+                size: 20.sp,
+              ),
+            ),
+          ),
+          Text(
+            _formatMonthYear(currentMonth),
+            style: TextStyle(
+              fontSize: 20.sp,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.textLight,
+            ),
+          ),
+          GestureDetector(
+            onTap: _nextMonth,
+            child: Container(
+              width: 40.w,
+              height: 40.h,
+              decoration: BoxDecoration(
+                color: AppTheme.cardBackground,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Icon(
+                Icons.chevron_right,
+                color: AppTheme.textLight,
+                size: 20.sp,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCalendarGrid() {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          children: [
+            // Weekday headers
+            Row(
+              children: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                  .map((day) => Expanded(
+                        child: Center(
+                          child: Text(
+                            day,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: AppTheme.textMedium,
+                            ),
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+            SizedBox(height: 16.h),
+            
+            // Calendar days
+            Expanded(
+              child: isLoadingEntries
+                  ? Center(
+                      child: StylishLoading(
+                        message: 'Loading journal entries...',
+                        size: 60.w,
+                      ),
+                    )
+                  : GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 7,
+                        childAspectRatio: 1,
+                        mainAxisSpacing: 8.h,
+                        crossAxisSpacing: 8.w,
+                      ),
+                      itemCount: _getDaysInMonth(),
+                      itemBuilder: (context, index) {
+                        final date = _getDateForIndex(index);
+                        final hasEntry = _hasEntryForDate(date);
+                        final isSelected = _isSameDay(date, selectedDate);
+                        final isToday = _isSameDay(date, DateTime.now());
+                        final isCurrentMonth = date.month == currentMonth.month;
+                        
+                        return GestureDetector(
+                          onTap: () => _selectDate(date),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: isSelected 
+                                  ? LinearGradient(
+                                      colors: [AppTheme.journalGradient[0], AppTheme.accentLavender],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    )
+                                  : hasEntry 
+                                      ? LinearGradient(
+                                          colors: [
+                                            AppTheme.affirmationGradient[0].withOpacity(0.15),
+                                            AppTheme.accentLavender.withOpacity(0.1),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
+                                      : null,
+                              color: !isSelected && !hasEntry 
+                                  ? AppTheme.cardBackground.withOpacity(0.3)
+                                  : null,
+                              borderRadius: BorderRadius.circular(12.r),
+                              border: isToday 
+                                  ? Border.all(color: AppTheme.accentGold, width: 2.w)
+                                  : hasEntry && !isSelected
+                                      ? Border.all(color: AppTheme.affirmationGradient[0].withOpacity(0.4), width: 1.w)
+                                      : Border.all(color: AppTheme.textMedium.withOpacity(0.1), width: 0.5.w),
+                              boxShadow: isSelected || hasEntry ? [
+                                BoxShadow(
+                                  color: (isSelected ? AppTheme.journalGradient[0] : AppTheme.affirmationGradient[0]).withOpacity(0.2),
+                                  blurRadius: 8.r,
+                                  offset: Offset(0, 2.h),
+                                ),
+                              ] : null,
+                            ),
+                            child: Stack(
+                              children: [
+                                Center(
+                                  child: Text(
+                                    '${date.day}',
+                                    style: TextStyle(
+                                      fontSize: 14.sp,
+                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                                      color: !isCurrentMonth
+                                          ? AppTheme.textMedium.withOpacity(0.3)
+                                          : isSelected
+                                              ? AppTheme.white
+                                              : AppTheme.textLight,
+                                    ),
+                                  ),
+                                ),
+                                if (hasEntry && !isSelected)
+                                  Positioned(
+                                    top: 6.h,
+                                    right: 6.w,
+                                    child: Container(
+                                      width: 8.w,
+                                      height: 8.h,
+                                      decoration: BoxDecoration(
+                                        color: _getMoodColorForDate(date),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white.withOpacity(0.5),
+                                          width: 1.w,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(0.2),
+                                            blurRadius: 2.r,
+                                            offset: Offset(0, 1.h),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectedDateDetails() {
+    final entry = _getEntryForDate(selectedDate);
+    final isToday = _isSameDay(selectedDate, DateTime.now());
+    
+    return Expanded(
+      flex: 2,
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.all(20.w),
+        decoration: BoxDecoration(
+          color: AppTheme.cardBackground,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Date header
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _formatSelectedDate(selectedDate),
+                      style: TextStyle(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.textLight,
+                      ),
+                    ),
+                    if (isToday)
+                      Text(
+                        'Today',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: AppTheme.accentGold,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                  ],
+                ),
+                if (entry != null || isToday)
+                  _buildActionButton(entry, isToday),
+              ],
+            ),
+            
+            SizedBox(height: 16.h),
+            
+            // Entry content
+            Expanded(
+              child: entry != null 
+                  ? _buildEntryPreview(entry)
+                  : _buildEmptyState(isToday),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton(JournalEntry? entry, bool isToday) {
+    if (entry != null) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: () => _viewEntry(entry),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+              decoration: BoxDecoration(
+                color: AppTheme.journalGradient[0].withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20.r),
+                border: Border.all(color: AppTheme.journalGradient[0].withOpacity(0.3)),
+              ),
+              child: Text(
+                'View',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.journalGradient[0],
+                ),
+              ),
+            ),
+          ),
+          if (isToday) SizedBox(width: 8.w),
+          if (isToday)
+            GestureDetector(
+              onTap: () => _editEntry(entry),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: AppTheme.accentGold.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(color: AppTheme.accentGold.withOpacity(0.3)),
+                ),
+                child: Text(
+                  'Edit',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: AppTheme.accentGold,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      );
+    } else if (isToday) {
+      return GestureDetector(
+        onTap: _createTodayEntry,
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(colors: AppTheme.journalGradient),
+            borderRadius: BorderRadius.circular(20.r),
+          ),
+          child: Text(
+            'Create',
+            style: TextStyle(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
+              color: AppTheme.white,
+            ),
+          ),
+        ),
+      );
+    }
+    return SizedBox.shrink();
+  }
+
+  Widget _buildEntryPreview(JournalEntry entry) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Mood
+          Row(
+            children: [
+              Icon(entry.mood.icon, color: entry.mood.color, size: 16.sp),
+              SizedBox(width: 8.w),
+              Text(
+                entry.mood.displayName,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppTheme.textLight,
+                ),
+              ),
+            ],
+          ),
+          
+          if (entry.gratitudes.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Text(
+              'Gratitudes',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.affirmationGradient[0],
+              ),
+            ),
+            SizedBox(height: 4.h),
+            ...entry.gratitudes.take(2).map((gratitude) => Padding(
+              padding: EdgeInsets.only(bottom: 2.h),
+              child: Text(
+                '• $gratitude',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppTheme.textMedium,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            )).toList(),
+            if (entry.gratitudes.length > 2)
+              Text(
+                '• +${entry.gratitudes.length - 2} more',
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  color: AppTheme.textMedium.withOpacity(0.7),
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+          ],
+          
+          if (entry.reflection.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Text(
+              'Reflection',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.accentGold,
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              entry.reflection,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppTheme.textMedium,
+              ),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+          
+          if (entry.intention.isNotEmpty) ...[
+            SizedBox(height: 12.h),
+            Text(
+              'Intention',
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.visionBoardGradient[0],
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Text(
+              entry.intention,
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppTheme.textMedium,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(bool isToday) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            isToday ? Icons.edit_calendar : Icons.calendar_today_outlined,
+            color: AppTheme.textMedium.withOpacity(0.5),
+            size: 32.sp,
+          ),
+          SizedBox(height: 12.h),
+          Text(
+            isToday 
+                ? 'No journal entry for today yet'
+                : 'No journal entry for this date',
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: AppTheme.textMedium,
+            ),
+          ),
+          if (isToday) ...[
+            SizedBox(height: 8.h),
+            Text(
+              'Tap "Create" to start your daily reflection',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: AppTheme.textMedium.withOpacity(0.7),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // Helper methods
+  void _previousMonth() {
+    setState(() {
+      currentMonth = DateTime(currentMonth.year, currentMonth.month - 1);
+    });
+    // Optionally reload entries when month changes
+    // _loadJournalEntries();
+  }
+
+  void _nextMonth() {
+    setState(() {
+      currentMonth = DateTime(currentMonth.year, currentMonth.month + 1);
+    });
+    // Optionally reload entries when month changes
+    // _loadJournalEntries();
+  }
+
+  void _selectDate(DateTime date) {
+    setState(() {
+      selectedDate = date;
+    });
+  }
+
+  int _getDaysInMonth() {
+    final firstDay = DateTime(currentMonth.year, currentMonth.month, 1);
+    final lastDay = DateTime(currentMonth.year, currentMonth.month + 1, 0);
+    final startDate = firstDay.subtract(Duration(days: firstDay.weekday % 7));
+    final endDate = lastDay.add(Duration(days: 6 - lastDay.weekday % 7));
+    return endDate.difference(startDate).inDays + 1;
+  }
+
+  DateTime _getDateForIndex(int index) {
+    final firstDay = DateTime(currentMonth.year, currentMonth.month, 1);
+    final startDate = firstDay.subtract(Duration(days: firstDay.weekday % 7));
+    return startDate.add(Duration(days: index));
+  }
+
+  bool _hasEntryForDate(DateTime date) {
+    return journalEntries.containsKey(_formatDateKey(date));
+  }
+
+  JournalEntry? _getEntryForDate(DateTime date) {
+    return journalEntries[_formatDateKey(date)];
+  }
+
+  Color _getMoodColorForDate(DateTime date) {
+    final entry = _getEntryForDate(date);
+    return entry?.mood.color ?? AppTheme.affirmationGradient[0];
+  }
+
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+           date1.month == date2.month &&
+           date1.day == date2.day;
+  }
+
+  String _formatDateKey(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
+  }
+
+  String _formatMonthYear(DateTime date) {
+    final months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return '${months[date.month - 1]} ${date.year}';
+  }
+
+  String _formatSelectedDate(DateTime date) {
+    final months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+
+  Future<void> _loadJournalEntries() async {
+    if (isLoadingEntries) return;
+    
+    setState(() {
+      isLoadingEntries = true;
+    });
+
+    try {
+      print('📅 Loading journal entries from API...');
+      
+      // Get all user journal entries from the API
+      final result = await _journalService.getUserDailyJournals();
+      
+      if (result.isSuccess && result.data != null) {
+        final apiEntries = result.data!;
+        final Map<String, JournalEntry> loadedEntries = {};
+        
+        print('📅 Processing ${apiEntries.length} journal entries from API');
+        
+        // Convert API entries to local journal entries
+        for (final apiEntry in apiEntries) {
+          if (apiEntry.dailyJournalDate != null) {
+            final journalEntry = JournalEntry.fromApiModel(apiEntry);
+            final dateKey = _formatDateKey(journalEntry.date);
+            loadedEntries[dateKey] = journalEntry;
+            
+            print('📅 Loaded entry for $dateKey: ${journalEntry.mood.displayName}');
+          }
+        }
+        
+        setState(() {
+          allJournalEntries = loadedEntries;
+          journalEntries = loadedEntries; // Initially show all
+        });
+        
+        print('📅 Successfully loaded ${loadedEntries.length} journal entries');
+      } else {
+        print('📅 Failed to load journal entries: ${result.message}');
+        // Keep empty map - no entries found or error occurred
+        setState(() {
+          allJournalEntries = {};
+          journalEntries = {};
+        });
+      }
+    } catch (e) {
+      print('📅 Exception loading journal entries: $e');
+      // Keep empty map on error
+      setState(() {
+        allJournalEntries = {};
+        journalEntries = {};
+      });
+      
+      // Show error message to user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to load journal entries'),
+          backgroundColor: Colors.orange,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoadingEntries = false;
+      });
+    }
+  }
+
+  void _createTodayEntry() {
+    Navigator.pop(context, 'create_new');
+  }
+
+  void _editEntry(JournalEntry entry) {
+    Navigator.pop(context, 'edit_${entry.id}');
+  }
+
+  void _viewEntry(JournalEntry entry) {
+    // Navigate to detailed view
+    pushWithoutSwipe(
+      context,
+      JournalEntryDetailScreen(entry: entry),
+    );
+  }
+
+  void _showStatsView() {
+    pushWithoutSwipe(
+      context,
+      JournalStatsScreen(entries: journalEntries),
+    );
+  }
+
+  // Date range filtering methods
+  Future<void> _showDateRangePicker() async {
+    final DateTimeRange? picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now().add(Duration(days: 365)),
+      initialDateRange: filterStartDate != null && filterEndDate != null
+          ? DateTimeRange(start: filterStartDate!, end: filterEndDate!)
+          : null,
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.dark(
+              primary: AppTheme.visionBoardGradient[0],
+              onPrimary: AppTheme.white,
+              surface: AppTheme.cardBackground,
+              onSurface: AppTheme.textLight,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        filterStartDate = picked.start;
+        filterEndDate = picked.end;
+        showingFilteredView = true;
+      });
+      _applyDateRangeFilter();
+    }
+  }
+
+  void _setQuickFilter(int days) {
+    final now = DateTime.now();
+    setState(() {
+      filterEndDate = now;
+      filterStartDate = now.subtract(Duration(days: days - 1));
+      showingFilteredView = true;
+    });
+    _applyDateRangeFilter();
+  }
+
+  void _clearDateRangeFilter() {
+    setState(() {
+      filterStartDate = null;
+      filterEndDate = null;
+      showingFilteredView = false;
+      journalEntries = allJournalEntries; // Restore all entries
+    });
+  }
+
+  void _applyDateRangeFilter() {
+    if (filterStartDate == null || filterEndDate == null) return;
+
+    // Filter from all journal entries by date range
+    final Map<String, JournalEntry> filteredEntries = {};
+    
+    allJournalEntries.forEach((dateKey, entry) {
+      if (_isDateInRange(entry.date, filterStartDate!, filterEndDate!)) {
+        filteredEntries[dateKey] = entry;
+      }
+    });
+
+    setState(() {
+      journalEntries = filteredEntries;
+    });
+
+    print('📅 Applied date range filter: ${filteredEntries.length} entries found from ${allJournalEntries.length} total');
+  }
+
+  bool _isDateInRange(DateTime date, DateTime start, DateTime end) {
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    final startOnly = DateTime(start.year, start.month, start.day);
+    final endOnly = DateTime(end.year, end.month, end.day);
+    
+    return dateOnly.isAtSameMomentAs(startOnly) ||
+           dateOnly.isAtSameMomentAs(endOnly) ||
+           (dateOnly.isAfter(startOnly) && dateOnly.isBefore(endOnly));
+  }
+
+  String _formatFilterDate(DateTime date) {
+    return '${date.month}/${date.day}';
+  }
+}

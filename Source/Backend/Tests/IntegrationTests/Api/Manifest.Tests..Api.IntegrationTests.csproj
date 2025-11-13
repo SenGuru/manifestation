@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+	  <NuGetAudit>False</NuGetAudit>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="GeneratedTest\**" />
+    <EmbeddedResource Remove="GeneratedTest\**" />
+    <None Remove="GeneratedTest\**" />
+  </ItemGroup>
+  <ItemGroup>
+          <PackageReference Include="Lindhart.Analyser.MissingAwaitWarning" Version="2.0.0" />
+
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Flurl.Http" Version="4.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.10" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.6.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.6.1" />
+    <PackageReference Include="TestStack.BDDfy" Version="4.3.2" />
+	<PackageReference Include="netDumbster" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AsyncFixer" Version="1.6.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Api\All\Manifest.App.Api.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Infrastructure\Framework.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\Framework\TestUtilities\Framework.TestUtilities.csproj" />
+    <ProjectReference Include="..\..\..\Framework\Web\Framework.Web.csproj" />
+    <ProjectReference Include="..\..\..\Shared\Common\Manifest.Common.csproj" />
+    <ProjectReference Include="..\..\Common\Manifest.Tests.Common.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\..\App.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+  </PropertyGroup>
+
+</Project>
