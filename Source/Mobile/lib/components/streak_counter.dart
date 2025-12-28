@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
+import 'package:mistel/constants/colors.dart';
 import '../constants/app_theme.dart';
 
 class StreakCounter extends StatelessWidget {

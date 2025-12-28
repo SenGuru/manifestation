@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:math' as math;
-import 'package:fun/models/meditation_models.dart';
+import 'package:mistel/models/meditation_models.dart';
 
 class AnimatedMoon extends StatefulWidget {
   final MoonPhase phase;

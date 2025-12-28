@@ -31,7 +31,12 @@ class _JournalPromptState extends State<JournalPrompt> {
 
   @override
   void dispose() {
+    try {
     _controller.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing controller: $e');
+    }
+
     super.dispose();
   }
 

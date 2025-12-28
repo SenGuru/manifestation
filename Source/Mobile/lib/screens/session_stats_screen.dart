@@ -5,6 +5,7 @@ import '../constants/app_theme.dart';
 import '../services/usage_analytics_service.dart';
 import '../models/analytics_models.dart';
 import '../widgets/stylish_loading.dart';
+import '../widgets/universal_back_button.dart';
 
 class SessionStatsScreen extends StatefulWidget {
   @override
@@ -73,6 +74,17 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundDark,
+        body: Center(
+          child: StylishLoading(
+            message: 'Loading your statistics...',
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundDark,
       body: SafeArea(
@@ -80,13 +92,9 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
           children: [
             _buildHeader(),
             Expanded(
-              child: _isLoading
-                  ? StylishLoading(
-                      message: 'Loading your statistics...',
-                    )
-                  : _errorMessage.isNotEmpty
-                      ? _buildErrorState()
-                      : _buildStatsContent(),
+              child: _errorMessage.isNotEmpty
+                  ? _buildErrorState()
+                  : _buildStatsContent(),
             ),
           ],
         ),
@@ -99,52 +107,15 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Text(
-              'Session Statistics',
+              'Progress & Stats',
               style: TextStyle(
                 color: AppTheme.textLight,
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          GestureDetector(
-            onTap: _loadStats,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.2),
-                ),
-              ),
-              child: Icon(
-                Icons.refresh,
-                color: AppTheme.textLight,
-                size: 20.sp,
               ),
             ),
           ),
@@ -216,8 +187,6 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
             _buildActivityBreakdown(),
             SizedBox(height: 24.h),
             _buildWeeklyActivity(),
-            SizedBox(height: 24.h),
-            _buildCurrentSessions(),
             SizedBox(height: 20.h),
           ],
         ),
@@ -462,134 +431,209 @@ class _SessionStatsScreenState extends State<SessionStatsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Weekly Activity',
-          style: TextStyle(
-            color: AppTheme.textLight,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Container(
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: AppTheme.cardBackground,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Column(
-            children: _stats!.activities.entries.map((entry) {
-              final activityType = entry.key;
-              final activityStats = entry.value;
-              return Padding(
-                padding: EdgeInsets.only(bottom: 16.h),
-                child: _buildWeeklyChart(
-                  activityStats,
-                  activityType.shortName,
-                  activityType.primaryColor,
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildWeeklyChart(ActivityStats stats, String title, Color color) {
-    final weeklyData = stats.weeklyActivity;
-    final maxSessions = weeklyData.isEmpty ? 1 : weeklyData.map((d) => d.sessionCount).reduce((a, b) => a > b ? a : b);
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            color: AppTheme.textLight,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 8.h),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: weeklyData.map((data) {
-            final heightRatio = maxSessions > 0 ? data.sessionCount / maxSessions : 0;
-            return Column(
-              children: [
-                Container(
-                  width: 24.w,
-                  height: 30.h,
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: 24.w,
-                    height: (heightRatio * 30.h).clamp(2.h, 30.h),
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(2.r),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  data.dayName,
-                  style: TextStyle(
-                    color: AppTheme.textMedium,
-                    fontSize: 10.sp,
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCurrentSessions() {
-    // Note: Active session tracking is now handled directly by the API
-    // This section shows recent sessions instead of active ones
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Recent Sessions',
-          style: TextStyle(
-            color: AppTheme.textLight,
-            fontSize: 18.sp,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 16.h),
-        Container(
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: AppTheme.cardBackground,
-            borderRadius: BorderRadius.circular(12.r),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                Icons.info_outline,
-                color: AppTheme.textMedium,
+          children: [
+            Container(
+              padding: EdgeInsets.all(8.w),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: AppTheme.analyticsGradient),
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Icon(
+                Icons.calendar_view_week,
+                color: AppTheme.white,
                 size: 20.sp,
               ),
-              SizedBox(width: 12.w),
-              Text(
-                'Session tracking managed by API',
-                style: TextStyle(
-                  color: AppTheme.textMedium,
-                  fontSize: 14.sp,
+            ),
+            SizedBox(width: 12.w),
+            Text(
+              'Weekly Activity',
+              style: TextStyle(
+                color: AppTheme.textLight,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20.h),
+        ..._stats!.activities.entries.map((entry) {
+          final activityType = entry.key;
+          final activityStats = entry.value;
+          return Padding(
+            padding: EdgeInsets.only(bottom: 20.h),
+            child: _buildEnhancedWeeklyChart(
+              activityStats,
+              activityType.shortName,
+              activityType.gradientColors,
+              activityType.icon,
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildEnhancedWeeklyChart(ActivityStats stats, String title, List<Color> gradient, IconData icon) {
+    final weeklyData = stats.weeklyActivity;
+    final maxSessions = weeklyData.isEmpty ? 1 : weeklyData.map((d) => d.sessionCount).reduce((a, b) => a > b ? a : b);
+    final totalWeekSessions = weeklyData.fold(0, (sum, data) => sum + data.sessionCount);
+    
+    return Container(
+      padding: EdgeInsets.all(20.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: gradient.map((c) => c.withOpacity(0.05)).toList(),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: gradient[0].withOpacity(0.2),
+          width: 1.w,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header with icon and title
+          Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(10.w),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(colors: gradient),
+                  borderRadius: BorderRadius.circular(12.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: gradient[0].withOpacity(0.3),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                  ],
+                ),
+                child: Icon(icon, color: AppTheme.white, size: 22.sp),
+              ),
+              SizedBox(width: 16.w),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: AppTheme.textLight,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(height: 4.h),
+                    Text(
+                      '$totalWeekSessions sessions this week',
+                      style: TextStyle(
+                        color: AppTheme.textMedium,
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-        ),
-      ],
+          
+          SizedBox(height: 24.h),
+          
+          // Chart
+          Container(
+            height: 100.h,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: weeklyData.asMap().entries.map((entry) {
+                final index = entry.key;
+                final data = entry.value;
+                final heightRatio = maxSessions > 0 ? data.sessionCount / maxSessions : 0;
+                final barHeight = (heightRatio * 60.h).clamp(4.h, 60.h);
+                final isToday = data.date.day == DateTime.now().day;
+                
+                return Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 2.w),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Session count label
+                        SizedBox(
+                          height: 16.h,
+                          child: data.sessionCount > 0 
+                            ? Text(
+                                '${data.sessionCount}',
+                                style: TextStyle(
+                                  color: gradient[0],
+                                  fontSize: 10.sp,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : null,
+                        ),
+                        
+                        SizedBox(height: 2.h),
+                        
+                        // Bar
+                        Container(
+                          width: 24.w,
+                          height: barHeight,
+                          decoration: BoxDecoration(
+                            gradient: data.sessionCount > 0
+                                ? LinearGradient(
+                                    colors: gradient,
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  )
+                                : null,
+                            color: data.sessionCount == 0 
+                                ? AppTheme.textMedium.withOpacity(0.1)
+                                : null,
+                            borderRadius: BorderRadius.circular(4.r),
+                            boxShadow: data.sessionCount > 0 ? [
+                              BoxShadow(
+                                color: gradient[0].withOpacity(0.2),
+                                blurRadius: 3.r,
+                                offset: Offset(0, 1.h),
+                              ),
+                            ] : null,
+                          ),
+                        ),
+                        
+                        SizedBox(height: 4.h),
+                        
+                        // Day label
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 1.h),
+                          decoration: isToday ? BoxDecoration(
+                            color: gradient[0].withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(6.r),
+                          ) : null,
+                          child: Text(
+                            data.dayName,
+                            style: TextStyle(
+                              color: isToday ? gradient[0] : AppTheme.textMedium,
+                              fontSize: 10.sp,
+                              fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  // Active session tracking methods removed - now handled by API directly
+  // Recent sessions section removed - now handled by API directly
 }

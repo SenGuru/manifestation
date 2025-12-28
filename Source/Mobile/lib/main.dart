@@ -8,7 +8,9 @@ import 'constants/app_theme.dart';
 import 'services/unified_auth_service.dart';
 import 'services/vision_board_service.dart';
 import 'services/theme_service.dart';
+import 'services/subscription_service.dart';
 import 'widgets/session_activity_tracker.dart';
+import 'widgets/animated_theme_transition.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,14 +22,18 @@ void main() async {
   ]);
   
   // Initialize unified auth service first and wait for it to complete
-  await UnifiedAuthService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  await UnifiedAuthService().initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
   
   // Initialize VisionBoardService (this depends on auth being ready)
-  await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  await VisionBoardService().initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
   
   // Initialize theme service
   await ThemeService().initialize();
   
+  // Initialize subscription service
+  await SubscriptionService().initialize();
+  
+  // Initialize in-app purchase service (don't wait for this as it might fail on simulators)
   print('🚀 All services initialized, starting app with cache-only mode');
   
   runApp(ManifestationApp());
@@ -77,9 +83,13 @@ class _ManifestationAppState extends State<ManifestationApp> {
       splitScreenMode: true,
       builder: (context, child) {
         return SessionActivityTracker(
-          child: MaterialApp(
-          title: 'Manifestation App',
-          debugShowCheckedModeBanner: false,
+          child: ListenableBuilder(
+            listenable: _themeService,
+            builder: (context, child) {
+              return RepaintBoundary(
+                child: MaterialApp(
+                  title: 'Manifestation App',
+                  debugShowCheckedModeBanner: false,
           theme: AppTheme.themeData.copyWith(
             textTheme: GoogleFonts.poppinsTextTheme(
               TextTheme(
@@ -230,7 +240,10 @@ class _ManifestationAppState extends State<ManifestationApp> {
             ),
           ),
           // Start with the welcome screen
-          home: SplashScreen(),
+                  home: SplashScreen(),
+                ),
+              );
+            },
           ),
         );
       },

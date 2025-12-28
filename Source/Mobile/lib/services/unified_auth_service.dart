@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:chopper/chopper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/generated/code/manifestation.swagger.dart';
+import '../services/daily_affirmations_service.dart';
+import '../services/subscription_service.dart';
 
 /// Unified authentication service that combines login, session management, and user data
 class UnifiedAuthService {
@@ -25,6 +27,7 @@ class UnifiedAuthService {
   static const String _userNameKey = 'user_name';
   static const String _firstNameKey = 'first_name';
   static const String _lastNameKey = 'last_name';
+  static const String _userEmailKey = 'user_email';
   
   // Session settings
   static const Duration _defaultSessionTimeout = Duration(hours: 24);
@@ -50,8 +53,8 @@ class UnifiedAuthService {
       // Try multiple API URLs in order of preference
       final apiUrls = [
         baseUrl,
-        'http://manifestation-qa-1.senthilguru.net',
-        'http://24.199.119.33',
+        'https://manifestation-qa-1.senthilguru.net',
+        'https://24.199.119.33',
         'https://manifestation-qa-1.senthilguru.net',
         'https://24.199.119.33'
       ].where((url) => url != null).cast<String>().toList();
@@ -119,12 +122,25 @@ class UnifiedAuthService {
           _currentUser = returnModel.model!;
           _authToken = returnModel.model!.token;
           
-          // Save session with all data
+          // Create userData with the email we know the user has
+          final userData = _currentUser!.toJson();
+          userData['email'] = username; // Store the email/username used for login
+          
+          // Save session with all data including email
           await _saveSession(
             token: _authToken!,
-            userData: _currentUser!.toJson(),
+            userData: userData,
             rememberMe: rememberMe,
           );
+          
+          // Refresh premium status for the newly logged in user
+          try {
+            print('🔄 Refreshing premium status for logged in user...');
+            final subscriptionService = SubscriptionService();
+            await subscriptionService.refreshForNewUser();
+          } catch (e) {
+            print('⚠️ Error refreshing premium status: $e');
+          }
           
           print('✅ Login successful for: ${_currentUser!.userName}');
           return AuthResult.success(
@@ -254,15 +270,36 @@ class UnifiedAuthService {
           print('🔐 Current User Name: ${_currentUser!.userName}');
           print('🔐 Auth Token Present: ${_authToken?.isNotEmpty == true}');
           
-          // Save session
-          print('🔐 Saving session data...');
+          // Create userData with the email we know the user provided
+          final userData = _currentUser!.toJson();
+          userData['email'] = email; // Store the email provided during account creation
+          
+          // Save session with all data including email
+          print('🔐 Saving session data with email: $email');
           await _saveSession(
             token: _authToken!,
-            userData: _currentUser!.toJson(),
+            userData: userData,
             rememberMe: rememberMe,
           );
           
           print('✅ Account creation successful for: ${_currentUser!.userName}');
+          
+          // Initialize premium status for the newly created account
+          try {
+            print('🔄 Initializing premium status for new account...');
+            final subscriptionService = SubscriptionService();
+            await subscriptionService.refreshForNewUser();
+          } catch (e) {
+            print('⚠️ Error initializing premium status: $e');
+          }
+          
+          // Create hidden categories in background (don't await to avoid blocking)
+          _createHiddenCategoriesForNewUser().then((_) {
+            print('✅ Hidden categories created in background');
+          }).catchError((e) {
+            print('❌ Failed to create hidden categories in background: $e');
+          });
+          
           print('🔐=== ACCOUNT CREATION DEBUG END (SUCCESS) ===');
           return AuthResult.success(
             user: _currentUser!,
@@ -318,6 +355,17 @@ class UnifiedAuthService {
       // Clear stored session
       await _clearStoredSession();
       
+      // IMPORTANT: Clear premium subscription status on logout
+      // This ensures the next user doesn't inherit premium status
+      try {
+        print('🔥 LOGOUT: Clearing premium subscription status...');
+        final subscriptionService = SubscriptionService();
+        await subscriptionService.clearPremiumStatus();
+        print('✅ Premium status cleared');
+      } catch (e) {
+        print('⚠️ Error clearing premium status: $e');
+      }
+      
       // Cache clearing removed - now using direct API calls
       
       // Reset onboarding and tour flags for new users
@@ -369,6 +417,10 @@ class UnifiedAuthService {
       await prefs.setString(_userNameKey, model['userName'] ?? '');
       await prefs.setString(_firstNameKey, model['firstName'] ?? '');
       await prefs.setString(_lastNameKey, model['lastName'] ?? '');
+      // Store email if present in userData
+      if (userData['email'] != null && userData['email'].toString().isNotEmpty) {
+        await prefs.setString(_userEmailKey, userData['email']);
+      }
       
       // Cache the data
       _cachedUserData = userData;
@@ -459,21 +511,132 @@ class UnifiedAuthService {
         }
       }
       
-      // Session is valid, restore it
-      _currentState = SessionState.loggedIn;
-      _lastActivityTime = DateTime.now();
+      // IMPORTANT: Validate session with server before allowing login
+      print('🔐 Validating session with server...');
+      final validationResult = await _validateSessionWithServer();
       
-      // Update the is_logged_in flag if it wasn't set (for future restarts)
-      if (!isLoggedIn) {
-        print('🔧 Updating is_logged_in flag for future restarts');
-        await prefs.setBool(_isLoggedInKey, true);
+      if (validationResult == true) {
+        // Session is valid, restore it
+        _currentState = SessionState.loggedIn;
+        _lastActivityTime = DateTime.now();
+        
+        // Update the is_logged_in flag if it wasn't set (for future restarts)
+        if (!isLoggedIn) {
+          print('🔧 Updating is_logged_in flag for future restarts');
+          await prefs.setBool(_isLoggedInKey, true);
+        }
+        
+        print('✅ Session successfully restored and validated with server');
+      } else if (validationResult == null) {
+        // Network error - can't validate session, keep it for retry
+        print('🌐 Cannot validate session due to network issues');
+        print('💡 Keeping session for retry when network is restored');
+        _currentState = SessionState.networkError;
+        _lastActivityTime = DateTime.now();
+        
+        // Keep the session data but mark as network error state
+        // Don't clear the session - user can retry
+      } else {
+        // Session is invalid (401/403 from server)
+        print('❌ Session validation failed - token is invalid, clearing stored session');
+        await _clearStoredSession();
+        _currentState = SessionState.loggedOut;
       }
-      
-      print('✅ Session successfully restored');
       
     } catch (e) {
       print('❌ Error checking stored session: $e');
       _currentState = SessionState.loggedOut;
+    }
+  }
+
+  /// Validate session with server to ensure it's still active and network is available
+  /// Returns: null for network error, true for valid session, false for invalid session
+  Future<bool?> _validateSessionWithServer() async {
+    try {
+      if (_apiClient == null || _authToken == null) {
+        print('❌ No API client or auth token for validation');
+        return false;
+      }
+      
+      // Try a simple API call that requires authentication
+      // We'll use a lightweight endpoint that just checks if the token is valid
+      final response = await _apiClient!.apiV1CompanyGetuserpictureGet(
+        userId: _currentUser?.userId,
+      );
+      
+      // Analyze response to determine if it's an auth issue or server issue
+      if (response.statusCode == 401) {
+        // 401 Unauthorized - token is definitely invalid
+        print('🔐 Session validation result: INVALID - Token unauthorized (status: 401)');
+        return false;
+      } else if (response.statusCode == 403) {
+        // 403 Forbidden - could be server config issue or invalid token
+        // Since user wants to treat this as connectivity, we'll return null
+        print('🔐 Session validation result: SERVER_ISSUE - 403 Forbidden (treating as connectivity issue)');
+        return null; // Treat as network/server issue
+      } else if (response.statusCode >= 200 && response.statusCode < 300) {
+        // Success response - session is valid
+        print('🔐 Session validation result: VALID (status: ${response.statusCode})');
+        return true;
+      } else if (response.statusCode == 404) {
+        // 404 Not Found - endpoint exists but resource doesn't, auth worked
+        print('🔐 Session validation result: VALID - Auth worked, resource not found (status: 404)');
+        return true;
+      } else {
+        // Other status codes (500, etc.) - treat as server issues
+        print('🔐 Session validation result: SERVER_ISSUE - Unexpected status ${response.statusCode}');
+        return null; // Treat as network/server issue
+      }
+    } catch (e) {
+      print('❌ Session validation failed: $e');
+      
+      // Check if this is a network error
+      final errorMessage = e.toString().toLowerCase();
+      if (errorMessage.contains('socket') || 
+          errorMessage.contains('network') ||
+          errorMessage.contains('failed host lookup') ||
+          errorMessage.contains('connection refused') ||
+          errorMessage.contains('timeout')) {
+        print('🌐 Network unavailable - cannot validate session');
+        print('💡 This is a connectivity issue, not an auth issue');
+        return null; // null indicates network error
+      }
+      
+      // Other errors (non-network) should be treated as invalid session
+      return false;
+    }
+  }
+
+  /// Retry session validation (for when network is restored)
+  Future<bool> retrySessionValidation() async {
+    print('🔄 Retrying session validation...');
+    print('🔄 Current state before retry: $_currentState');
+    print('🔄 Has auth token: ${_authToken != null}');
+    print('🔄 Has current user: ${_currentUser != null}');
+    
+    try {
+      final validationResult = await _validateSessionWithServer();
+      print('🔄 Validation result: $validationResult');
+      
+      if (validationResult == true) {
+        print('✅ Session validation retry successful - restoring logged in state');
+        _currentState = SessionState.loggedIn;
+        _lastActivityTime = DateTime.now();
+        return true;
+      } else if (validationResult == null) {
+        print('🌐 Still cannot connect to server for validation');
+        _currentState = SessionState.networkError;
+        return false;
+      } else {
+        print('❌ Session validation retry failed - token is invalid');
+        await _clearStoredSession();
+        _currentState = SessionState.loggedOut;
+        return false;
+      }
+    } catch (e) {
+      print('❌ Error during session validation retry: $e');
+      _currentState = SessionState.networkError;
+      return false;
     }
   }
 
@@ -492,6 +655,7 @@ class UnifiedAuthService {
       await prefs.remove(_userNameKey);
       await prefs.remove(_firstNameKey);
       await prefs.remove(_lastNameKey);
+      await prefs.remove(_userEmailKey);
     } catch (e) {
       print('❌ Error clearing stored session: $e');
     }
@@ -533,6 +697,7 @@ class UnifiedAuthService {
   LoggedInUserModel? get currentUser => _currentUser;
   String? get authToken => _authToken;
   bool get isLoggedIn => _currentState == SessionState.loggedIn;
+  int? get userId => _currentUser?.userId ?? _cachedUserId;
   SessionState get sessionState => _currentState;
   
   /// Get current user ID
@@ -575,12 +740,28 @@ class UnifiedAuthService {
       
       if (userDataString != null) {
         _cachedUserData = jsonDecode(userDataString);
+        // Also ensure email is in the cached data if stored separately
+        final storedEmail = prefs.getString(_userEmailKey);
+        if (storedEmail != null && storedEmail.isNotEmpty) {
+          _cachedUserData!['email'] = storedEmail;
+        }
         return _cachedUserData;
       }
       
       return null;
     } catch (e) {
       print('❌ Error retrieving user data: $e');
+      return null;
+    }
+  }
+  
+  /// Get user email from storage
+  Future<String?> getUserEmail() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getString(_userEmailKey);
+    } catch (e) {
+      print('❌ Error getting user email: $e');
       return null;
     }
   }
@@ -593,6 +774,46 @@ class UnifiedAuthService {
       lastActivityTime: _lastActivityTime,
     );
   }
+
+  /// Update user data in storage (for profile updates)
+  Future<void> updateUserData(Map<String, dynamic> userData) async {
+    try {
+      print('🔄 Updating user data in auth service...');
+      
+      await _saveSession(
+        token: _authToken ?? '',
+        userData: userData,
+        rememberMe: true, // Preserve existing session settings
+      );
+      
+      // Also update the current user object if possible
+      try {
+        _currentUser = LoggedInUserModel.fromJson(userData);
+        print('✅ Updated current user object');
+      } catch (e) {
+        print('⚠️ Could not update current user object: $e');
+        // Continue anyway - the storage update is more important
+      }
+      
+      print('✅ User data updated successfully in auth service');
+    } catch (e) {
+      print('❌ Error updating user data in auth service: $e');
+      throw e; // Re-throw to let caller handle it
+    }
+  }
+
+  /// Create hidden categories for a new user account
+  Future<void> _createHiddenCategoriesForNewUser() async {
+    try {
+      print('🔧 Creating hidden categories for new user...');
+      final affirmationService = DailyAffirmationsService();
+      await affirmationService.createHiddenCategoriesForNewUser();
+      print('✅ Hidden categories created successfully');
+    } catch (e) {
+      print('❌ Error creating hidden categories for new user: $e');
+      // Don't throw error - this is optional functionality that shouldn't block account creation
+    }
+  }
 }
 
 /// Session state enumeration
@@ -602,6 +823,7 @@ enum SessionState {
   expired,
   timedOut,
   error,
+  networkError, // Can't validate session due to connectivity issues
 }
 
 /// Session information model

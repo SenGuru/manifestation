@@ -1,19 +1,23 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:fun/components/gratitude_selection.dart';
-import 'package:fun/models/journey_entry.dart';
-import 'package:fun/constants/colors.dart';
-import 'package:fun/constants/app_theme.dart';
-import 'package:fun/models/mood_selector.dart';
-import 'package:fun/screens/calendar_view_screen.dart';
-import 'package:fun/services/daily_journal_service.dart';
-import 'package:fun/services/guided_tour_service.dart';
-import 'package:fun/widgets/stylish_loading.dart';
-import 'package:fun/widgets/keyboard_dismissal_wrapper.dart';
+import 'package:mistel/components/gratitude_selection.dart';
+import 'package:mistel/models/journey_entry.dart';
+import 'package:mistel/constants/colors.dart';
+import 'package:mistel/constants/app_theme.dart';
+import 'package:mistel/models/mood_selector.dart';
+import 'package:mistel/screens/calendar_view_screen.dart';
+import 'package:mistel/services/daily_journal_service.dart';
+import 'package:mistel/services/guided_tour_service.dart';
+import 'package:mistel/widgets/stylish_loading.dart';
+import 'package:mistel/widgets/keyboard_dismissal_wrapper.dart';
+import 'package:mistel/utils/navigation_utils.dart';
+import 'package:mistel/widgets/universal_back_button.dart';
 
 class ManifestationJournalScreen extends StatefulWidget {
+  // Enhanced with manual draft saving functionality - debug exit dialog
   @override
   _ManifestationJournalScreenState createState() => _ManifestationJournalScreenState();
 }
@@ -21,9 +25,15 @@ class ManifestationJournalScreen extends StatefulWidget {
 class _ManifestationJournalScreenState extends State<ManifestationJournalScreen> {
   final PageController _pageController = PageController();
   final TextEditingController _reflectionController = TextEditingController();
+  final TextEditingController _intentionController = TextEditingController();
   final DailyJournalService _journalService = DailyJournalService();
   
+  // Debounce timers to prevent excessive setState calls during typing
+  Timer? _reflectionDebounceTimer;
+  Timer? _intentionDebounceTimer;
+  
   int currentPage = 0;
+  double scrollPosition = 0.0; // Track partial scroll position
   Mood selectedMood = Mood.neutral;
   List<String> gratitudeItems = ['', '', '', '', '']; // Expanded to 5 gratitudes
   String reflection = '';
@@ -32,6 +42,22 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
   JournalEntry? existingEntry;
   bool isLoading = false;
   bool isSaving = false;
+  
+  // Track what the user has actually changed during this session
+  bool _userHasInteracted = false;
+  bool _moodChanged = false;
+  bool _gratitudeChanged = false;
+  bool _reflectionChanged = false;
+  bool _intentionChanged = false;
+  
+  // Dynamic default state - updates after each save to become the new baseline
+  Mood _baselineMood = Mood.neutral;
+  List<String> _baselineGratitudes = ['', '', '', '', ''];
+  String _baselineReflection = '';
+  String _baselineIntention = '';
+  
+  // Track loaded state to differentiate between user changes and loaded values
+  bool _hasLoadedDraft = false;
   
   final List<String> journalPrompts = [
     "What am I most grateful for today?",
@@ -51,11 +77,57 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     // Initialize the service
     _journalService.initialize();
     
+    // Add scroll listener to track partial scroll positions
+    _pageController.addListener(_onPageScroll);
+    
+    // Add debounced listeners to text controllers to sync with state
+    _reflectionController.addListener(() {
+      if (_reflectionController.text != reflection) {
+        // Cancel previous timer
+        _reflectionDebounceTimer?.cancel();
+        
+        // Set new timer with 300ms delay
+        _reflectionDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+          if (mounted && _reflectionController.text != reflection) {
+            setState(() {
+              reflection = _reflectionController.text;
+              _userHasInteracted = true;
+              _reflectionChanged = true;
+              print('📖 REFLECTION CHANGED: "${_reflectionController.text}", _userHasInteracted: $_userHasInteracted');
+            });
+            _updateDraftProgress();
+          }
+        });
+      }
+    });
+    
+    _intentionController.addListener(() {
+      if (_intentionController.text != intention) {
+        // Cancel previous timer
+        _intentionDebounceTimer?.cancel();
+        
+        // Set new timer with 300ms delay
+        _intentionDebounceTimer = Timer(const Duration(milliseconds: 300), () {
+          if (mounted && _intentionController.text != intention) {
+            setState(() {
+              intention = _intentionController.text;
+              _userHasInteracted = true;
+              _intentionChanged = true;
+            });
+            _updateDraftProgress();
+          }
+        });
+      }
+    });
+    
     // For debugging purposes - uncomment this line to run constraint debugging
     // _journalService.runConstraintDebugging();
     
     // Check for existing entry for today
     _checkForExistingEntry();
+    
+    // Load any existing draft
+    _loadDraftProgress();
     
     // Show guided tour after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -72,10 +144,29 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
+  void _onPageScroll() {
+    if (_pageController.hasClients && _pageController.page != null) {
+      final page = _pageController.page!;
+      // Clamp the page value to ensure it's within valid bounds
+      final clampedPage = page.clamp(0.0, 4.0);
+      
+      setState(() {
+        scrollPosition = clampedPage;
+        currentPage = clampedPage.round();
+      });
+    }
+  }
+
   @override
   void dispose() {
+    // Cancel debounce timers to prevent memory leaks
+    _reflectionDebounceTimer?.cancel();
+    _intentionDebounceTimer?.cancel();
+    
+    _pageController.removeListener(_onPageScroll);
     _pageController.dispose();
     _reflectionController.dispose();
+    _intentionController.dispose();
     super.dispose();
   }
 
@@ -110,11 +201,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 Expanded(
                   child: PageView(
                     controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() {
-                        currentPage = index;
-                      });
-                    },
                     children: [
                       _buildMoodPage(),
                       _buildGratitudePage(),
@@ -142,22 +228,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         children: [
           GestureDetector(
             onTap: _handleBackButton,
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                  color: AppTheme.textMedium.withOpacity(0.1),
-                ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
-            ),
+            child: UniversalBackButton(),
           ),
           SizedBox(width: 16.w),
           Expanded(
@@ -216,16 +287,51 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               height: 3.h,
               margin: EdgeInsets.only(right: index < 4 ? 6.w : 0),
               decoration: BoxDecoration(
-                color: index <= currentPage
-                    ? AppTheme.journalGradient[0]
-                    : AppTheme.textMedium.withOpacity(0.2),
+                color: AppTheme.textMedium.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(2.r),
+              ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Get real-time scroll position directly from controller
+                  final realTimePosition = _pageController.hasClients 
+                    ? (_pageController.page ?? 0.0).clamp(0.0, 4.0)
+                    : 0.0;
+                  
+                  return Stack(
+                    children: [
+                      // Flowing progress overlay for this segment
+                      Container(
+                        height: 3.h,
+                        width: _calculateSegmentWidth(index, constraints.maxWidth, realTimePosition),
+                        decoration: BoxDecoration(
+                          color: AppTheme.journalGradient[0],
+                          borderRadius: BorderRadius.circular(2.r),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           );
         }),
       ),
     );
+  }
+  
+  double _calculateSegmentWidth(int segmentIndex, double maxWidth, double position) {
+    // Calculate what percentage of this segment should be filled based on scroll position
+    if (position <= segmentIndex) {
+      // Haven't reached this segment yet
+      return 0.0;
+    } else if (position >= segmentIndex + 1) {
+      // This segment is fully completed
+      return maxWidth;
+    } else {
+      // Partially filled segment - fill from left to right
+      final segmentProgress = position - segmentIndex;
+      return maxWidth * segmentProgress.clamp(0.0, 1.0);
+    }
   }
 
 
@@ -261,6 +367,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               onMoodSelected: (mood) {
                 setState(() {
                   selectedMood = mood;
+                  _userHasInteracted = true;
+                  _moodChanged = true;
+                  print('📖 MOOD CHANGED: $mood, _userHasInteracted: $_userHasInteracted');
                 });
               },
             ),
@@ -282,6 +391,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               onGratitudeChanged: (index, value) {
                 setState(() {
                   gratitudeItems[index] = value;
+                  _userHasInteracted = true;
+                  _gratitudeChanged = true;
                 });
               },
             ),
@@ -331,6 +442,8 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 onChanged: (value) {
                   setState(() {
                     reflection = value;
+                    _userHasInteracted = true;
+                    _reflectionChanged = true;
                   });
                 },
                 style: TextStyle(
@@ -345,7 +458,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     color: AppTheme.textSecondary,
                     fontSize: 16.sp,
                     height: 1.6,
-                    fontStyle: FontStyle.italic,
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(20.w),
@@ -353,8 +465,34 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
                 maxLines: null,
                 expands: true,
+                maxLength: 2000, // Backend limit for reflection
                 textAlignVertical: TextAlignVertical.top,
                 textCapitalization: TextCapitalization.sentences,
+                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                  return Positioned(
+                    bottom: 8.h,
+                    right: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardBackground.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        '$currentLength / $maxLength',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: currentLength > (maxLength! * 0.9)
+                            ? Colors.orange
+                            : currentLength > (maxLength * 0.95)
+                              ? Colors.red
+                              : AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -402,12 +540,11 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 onChanged: (value) {
                   setState(() {
                     intention = value;
+                    _userHasInteracted = true;
+                    _intentionChanged = true;
                   });
                 },
-                controller: TextEditingController(text: intention)
-                  ..selection = TextSelection.fromPosition(
-                    TextPosition(offset: intention.length),
-                  ),
+                controller: _intentionController,
                 style: TextStyle(
                   color: AppTheme.textPrimary,
                   fontSize: 16.sp,
@@ -420,7 +557,6 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                     color: AppTheme.textSecondary,
                     fontSize: 16.sp,
                     height: 1.6,
-                    fontStyle: FontStyle.italic,
                   ),
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.all(20.w),
@@ -428,8 +564,34 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                 ),
                 maxLines: null,
                 expands: true,
+                maxLength: 2000, // Backend limit for reflection
                 textAlignVertical: TextAlignVertical.top,
                 textCapitalization: TextCapitalization.sentences,
+                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                  return Positioned(
+                    bottom: 8.h,
+                    right: 8.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                      decoration: BoxDecoration(
+                        color: AppTheme.cardBackground.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: Text(
+                        '$currentLength / $maxLength',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                          color: currentLength > (maxLength! * 0.9)
+                            ? Colors.orange
+                            : currentLength > (maxLength * 0.95)
+                              ? Colors.red
+                              : AppTheme.textSecondary,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -666,7 +828,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           Expanded(
             flex: currentPage == 0 ? 1 : 1,
             child: GestureDetector(
-              onTap: isSaving ? null : (currentPage < 4 ? _nextPage : _saveEntry),
+              onTap: isSaving ? null : (currentPage < 4 ? _nextPage : _completeJournal),
               child: Container(
                 height: 44.h,
                 decoration: BoxDecoration(
@@ -686,7 +848,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                             ),
                             SizedBox(width: 8.w),
                             Text(
-                              isEditingExistingEntry ? 'Updating...' : 'Saving...',
+                              'Completing...',
                               style: TextStyle(
                                 fontSize: 15.sp,
                                 fontWeight: FontWeight.w600,
@@ -696,7 +858,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                           ],
                         )
                       : Text(
-                          currentPage < 4 ? 'Next' : (isEditingExistingEntry ? 'Update Entry' : 'Save Entry'),
+                          currentPage < 4 ? 'Next' : (isEditingExistingEntry ? 'Complete' : 'Complete'),
                           style: TextStyle(
                             fontSize: 15.sp,
                             fontWeight: FontWeight.w600,
@@ -730,21 +892,84 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     }
   }
 
-  Future<void> _saveEntry() async {
+  // Helper method to sanitize text input
+  String _sanitizeText(String text) {
+    // Remove potentially problematic characters while preserving legitimate text
+    return text
+        .replaceAll('\u0000', '') // Remove null characters
+        .replaceAll('\r', '\n') // Normalize line endings
+        .trim();
+  }
+
+  // Helper method to validate field length
+  String? _validateFieldLength(String? text, int maxLength, String fieldName) {
+    if (text == null || text.isEmpty) return null;
+    
+    final sanitized = _sanitizeText(text);
+    if (sanitized.length > maxLength) {
+      return '$fieldName is too long (${sanitized.length} characters, max $maxLength)';
+    }
+    return null;
+  }
+
+  Future<void> _completeJournal() async {
     setState(() {
       isSaving = true;
     });
 
     try {
-      print('📖 Saving journal entry...');
+      print('📖 Validating and saving journal entry...');
       print('   Is Editing Existing: $isEditingExistingEntry');
       print('   Mood: ${selectedMood.displayName}');
       print('   Gratitudes: ${gratitudeItems.where((item) => item.isNotEmpty).length}');
       print('   Has Reflection: ${reflection.isNotEmpty}');
       print('   Has Intention: ${intention.isNotEmpty}');
 
-      // Clean gratitudes and ensure we have at least some content
-      final cleanGratitudes = gratitudeItems.map((g) => g.trim()).where((g) => g.isNotEmpty).toList();
+      // Validate field lengths before submission
+      List<String> validationErrors = [];
+      
+      // Validate gratitudes (max 500 chars each)
+      for (int i = 0; i < gratitudeItems.length; i++) {
+        final error = _validateFieldLength(gratitudeItems[i], 500, 'Gratitude ${i + 1}');
+        if (error != null) validationErrors.add(error);
+      }
+      
+      // Validate reflection (max 2000 chars)
+      final reflectionError = _validateFieldLength(reflection, 2000, 'Reflection');
+      if (reflectionError != null) validationErrors.add(reflectionError);
+      
+      // Validate tomorrow's intentions (max 2000 chars)
+      final intentionError = _validateFieldLength(intention, 2000, 'Tomorrow\'s intentions');
+      if (intentionError != null) validationErrors.add(intentionError);
+      
+      // Show validation errors if any
+      if (validationErrors.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Please fix the following issues:'),
+                ...validationErrors.map((e) => Text('• $e')),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 5),
+          ),
+        );
+        setState(() {
+          isSaving = false;
+        });
+        return;
+      }
+
+      // Clean and sanitize gratitudes
+      final cleanGratitudes = gratitudeItems
+          .map((g) => _sanitizeText(g))
+          .where((g) => g.isNotEmpty)
+          .toList();
       
       // If no gratitudes provided, show a helpful error
       if (cleanGratitudes.isEmpty) {
@@ -755,6 +980,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             behavior: SnackBarBehavior.floating,
           ),
         );
+        setState(() {
+          isSaving = false;
+        });
         return;
       }
 
@@ -765,21 +993,32 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           throw Exception('Invalid existing journal ID');
         }
 
+        // Sanitize all text fields before sending
+        final sanitizedReflection = _sanitizeText(reflection);
+        final sanitizedIntention = _sanitizeText(intention);
+        
         final result = await _journalService.updateDailyJournal(
           journalId: existingId,
           journalDate: DateTime.now(),
           moodTypeId: _journalService.mapMoodToApiMoodTypeId(selectedMood.index), // Use correct backend enum mapping
-          gratitude1: gratitudeItems.isNotEmpty ? gratitudeItems[0].trim() : null,
-          gratitude2: gratitudeItems.length > 1 ? gratitudeItems[1].trim() : null,
-          gratitude3: gratitudeItems.length > 2 ? gratitudeItems[2].trim() : null,
-          gratitude4: gratitudeItems.length > 3 ? gratitudeItems[3].trim() : null,
-          gratitude5: gratitudeItems.length > 4 ? gratitudeItems[4].trim() : null,
-          reflection: reflection.trim().isEmpty ? null : reflection.trim(),
-          tomorrowsIntentions: intention.trim().isEmpty ? null : intention.trim(),
+          gratitude1: cleanGratitudes.isNotEmpty ? cleanGratitudes[0] : null,
+          gratitude2: cleanGratitudes.length > 1 ? cleanGratitudes[1] : null,
+          gratitude3: cleanGratitudes.length > 2 ? cleanGratitudes[2] : null,
+          gratitude4: cleanGratitudes.length > 3 ? cleanGratitudes[3] : null,
+          gratitude5: cleanGratitudes.length > 4 ? cleanGratitudes[4] : null,
+          reflection: sanitizedReflection.isEmpty ? null : sanitizedReflection,
+          tomorrowsIntentions: sanitizedIntention.isEmpty ? null : sanitizedIntention,
         );
 
         if (result.isSuccess) {
           print('📖 Journal entry updated successfully!');
+          // Reset all interaction flags since entry is saved
+          _userHasInteracted = false;
+          _moodChanged = false;
+          _gratitudeChanged = false;
+          _reflectionChanged = false;
+          _intentionChanged = false;
+          await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Journal entry updated successfully! 📖'),
@@ -793,20 +1032,31 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         }
       } else {
         // Create new journal entry
+        // Sanitize all text fields before sending
+        final sanitizedReflection = _sanitizeText(reflection);
+        final sanitizedIntention = _sanitizeText(intention);
+        
         final result = await _journalService.createDailyJournal(
           journalDate: DateTime.now(),
           moodTypeId: _journalService.mapMoodToApiMoodTypeId(selectedMood.index), // Use correct backend enum mapping
-          gratitude1: gratitudeItems.isNotEmpty ? gratitudeItems[0].trim() : null,
-          gratitude2: gratitudeItems.length > 1 ? gratitudeItems[1].trim() : null,
-          gratitude3: gratitudeItems.length > 2 ? gratitudeItems[2].trim() : null,
-          gratitude4: gratitudeItems.length > 3 ? gratitudeItems[3].trim() : null,
-          gratitude5: gratitudeItems.length > 4 ? gratitudeItems[4].trim() : null,
-          reflection: reflection.trim().isEmpty ? null : reflection.trim(),
-          tomorrowsIntentions: intention.trim().isEmpty ? null : intention.trim(),
+          gratitude1: cleanGratitudes.isNotEmpty ? cleanGratitudes[0] : null,
+          gratitude2: cleanGratitudes.length > 1 ? cleanGratitudes[1] : null,
+          gratitude3: cleanGratitudes.length > 2 ? cleanGratitudes[2] : null,
+          gratitude4: cleanGratitudes.length > 3 ? cleanGratitudes[3] : null,
+          gratitude5: cleanGratitudes.length > 4 ? cleanGratitudes[4] : null,
+          reflection: sanitizedReflection.isEmpty ? null : sanitizedReflection,
+          tomorrowsIntentions: sanitizedIntention.isEmpty ? null : sanitizedIntention,
         );
 
         if (result.isSuccess) {
           print('📖 Journal entry created successfully!');
+          // Reset all interaction flags since entry is saved
+          _userHasInteracted = false;
+          _moodChanged = false;
+          _gratitudeChanged = false;
+          _reflectionChanged = false;
+          _intentionChanged = false;
+          await _clearDraftProgress(); // Clear draft since entry is saved
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text('Journal entry saved successfully! 📖'),
@@ -826,25 +1076,60 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     } catch (e) {
       print('📖 Error saving journal entry: $e');
       
-      // Show user-friendly error message
+      // Parse error message for more specific feedback
       String errorMessage = 'Failed to save journal entry';
-      if (e.toString().contains('network') || e.toString().contains('connection')) {
-        errorMessage = 'Network error - please check your connection';
-      } else if (e.toString().contains('timeout')) {
-        errorMessage = 'Request timed out - please try again';
-      } else if (e.toString().contains('authentication') || e.toString().contains('auth')) {
-        errorMessage = 'Authentication error - please log in again';
-      } else if (e.toString().contains('Unexpected error when creating Daily Journal') || 
-                 e.toString().contains('Npgsql')) {
-        errorMessage = 'Journal feature is temporarily unavailable. The server team has been notified.';
+      final errorString = e.toString().toLowerCase();
+      
+      if (errorString.contains('network') || errorString.contains('connection') || errorString.contains('failed host lookup')) {
+        errorMessage = 'Network error - please check your internet connection and try again';
+      } else if (errorString.contains('timeout')) {
+        errorMessage = 'Request timed out - the server is taking too long to respond. Please try again';
+      } else if (errorString.contains('authentication') || errorString.contains('unauthorized') || errorString.contains('401')) {
+        errorMessage = 'Your session has expired. Please log in again';
+      } else if (errorString.contains('duplicate') || errorString.contains('already exists')) {
+        errorMessage = 'You already have a journal entry for today. Try editing the existing entry instead';
+      } else if (errorString.contains('too long') || errorString.contains('max length') || errorString.contains('exceeds')) {
+        errorMessage = 'Some of your text entries are too long. Please shorten them and try again';
+      } else if (errorString.contains('invalid') || errorString.contains('format')) {
+        errorMessage = 'Invalid data format. Please check your entries for special characters';
+      } else if (errorString.contains('required') || errorString.contains('null') || errorString.contains('empty')) {
+        errorMessage = 'Please fill in all required fields (at least one gratitude is required)';
+      } else if (errorString.contains('unexpected error when creating daily journal') || 
+                 errorString.contains('npgsql') || 
+                 errorString.contains('database')) {
+        errorMessage = 'Database error - our team has been notified. Please try again later';
+      } else if (errorString.contains('server') || errorString.contains('500') || errorString.contains('internal')) {
+        errorMessage = 'Server error - something went wrong on our end. Please try again';
       }
       
+      // Show error with icon and action button if appropriate
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
+          content: Row(
+            children: [
+              Icon(Icons.error_outline, color: Colors.white, size: 20.sp),
+              SizedBox(width: 8.w),
+              Expanded(
+                child: Text(
+                  errorMessage,
+                  style: TextStyle(fontSize: 14.sp),
+                ),
+              ),
+            ],
+          ),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 4),
+          duration: Duration(seconds: 5),
+          action: errorString.contains('session') || errorString.contains('auth')
+            ? SnackBarAction(
+                label: 'Login',
+                textColor: Colors.white,
+                onPressed: () {
+                  // Navigate to login screen
+                  Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+                },
+              )
+            : null,
         ),
       );
     } finally {
@@ -862,41 +1147,81 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     try {
       final today = DateTime.now();
       print('📖 Checking for existing journal entry for today: ${today.toString()}');
-      
+
       // Check for existing journal entry for today
       final result = await _journalService.getDailyJournalForDate(today);
-      
+
       if (result.isSuccess && result.data != null) {
         // Found existing entry - load it for editing
         print('📖 Found existing journal entry for today');
-        
+
         final apiEntry = result.data!;
         final journalEntry = JournalEntry.fromApiModel(apiEntry);
-        
+
         setState(() {
           existingEntry = journalEntry;
           isEditingExistingEntry = true;
           selectedMood = journalEntry.mood;
-          
+
           // Load gratitudes (expand to 5 entries)
           gratitudeItems = List<String>.filled(5, '');
           for (int i = 0; i < journalEntry.gratitudes.length && i < 5; i++) {
             gratitudeItems[i] = journalEntry.gratitudes[i];
           }
-          
+
           reflection = journalEntry.reflection;
           intention = journalEntry.intention;
           _reflectionController.text = reflection;
+          _intentionController.text = intention;
+
+          // Reset interaction flags when loading existing entry
+          _userHasInteracted = false;
+          _moodChanged = false;
+          _gratitudeChanged = false;
+          _reflectionChanged = false;
+          _intentionChanged = false;
         });
-        
+
         print('📖 Loaded existing entry: ${journalEntry.gratitudes.length} gratitudes, mood: ${journalEntry.mood.displayName}');
-      } else {
-        // No existing entry found - start with new entry
+      } else if (result.isSuccess && result.data == null) {
+        // No existing entry found (404 or null) - start with new entry
         print('📖 No existing journal entry found for today - starting new entry');
         setState(() {
           isEditingExistingEntry = false;
           existingEntry = null;
         });
+      } else {
+        // API call failed - show error
+        print('📖 API failed to check for existing entry: ${result.message}');
+        setState(() {
+          isEditingExistingEntry = false;
+          existingEntry = null;
+        });
+
+        // Show error to user
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20.sp),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text('Failed to check for existing journal: ${result.message ?? 'Server error'}'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 4),
+              action: SnackBarAction(
+                label: 'Retry',
+                textColor: Colors.white,
+                onPressed: _checkForExistingEntry,
+              ),
+            ),
+          );
+        }
       }
     } catch (e) {
       print('📖 Error checking for existing entry: $e');
@@ -905,15 +1230,31 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         isEditingExistingEntry = false;
         existingEntry = null;
       });
-      
+
       // Show error to user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to load existing journal entry'),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text('Network error checking for existing journal'),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: _checkForExistingEntry,
+            ),
+          ),
+        );
+      }
     } finally {
       setState(() {
         isLoading = false;
@@ -923,11 +1264,9 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
 
 
   void _showCalendarView() async {
-    final result = await Navigator.push(
+    final result = await pushWithoutSwipe(
       context,
-      MaterialPageRoute(
-        builder: (context) => CalendarViewScreen(),
-      ),
+      CalendarViewScreen(),
     );
     
     if (result != null) {
@@ -998,71 +1337,152 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     }
   }
 
-  // Check if user has unsaved changes
+  // Check if user has made changes AND values differ from baseline
   bool _hasUnsavedChanges() {
-    // If we're editing an existing entry, compare with original values
-    if (isEditingExistingEntry && existingEntry != null) {
-      // Check if mood changed
-      if (selectedMood != existingEntry!.mood) return true;
-      
-      // Check if gratitudes changed
-      final originalGratitudes = List<String>.filled(5, '');
-      for (int i = 0; i < existingEntry!.gratitudes.length && i < 5; i++) {
-        originalGratitudes[i] = existingEntry!.gratitudes[i];
-      }
-      for (int i = 0; i < 5; i++) {
-        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) return true;
-      }
-      
-      // Check if reflection changed
-      if (reflection.trim() != existingEntry!.reflection.trim()) return true;
-      
-      // Check if intention changed
-      if (intention.trim() != existingEntry!.intention.trim()) return true;
-      
-      return false;
-    } else {
-      // For new entries, check if any data has been entered
-      // Check if mood is not neutral (default)
-      if (selectedMood != Mood.neutral) return true;
-      
-      // Check if any gratitude items have content
-      if (gratitudeItems.any((item) => item.trim().isNotEmpty)) return true;
-      
-      // Check if reflection has content
-      if (reflection.trim().isNotEmpty) return true;
-      
-      // Check if intention has content
-      if (intention.trim().isNotEmpty) return true;
-      
+    print('🔍 _hasUnsavedChanges check:');
+    print('   _userHasInteracted: $_userHasInteracted');
+    print('   selectedMood: $selectedMood (baseline: $_baselineMood)');
+    print('   reflection: "$reflection" (baseline: "$_baselineReflection")');
+    print('   intention: "$intention" (baseline: "$_baselineIntention")');
+    
+    // Must have user interaction
+    if (!_userHasInteracted) {
+      print('   → No user interaction, returning false');
       return false;
     }
+    
+    // Check if current state is same as original defaults - if so, no need to save
+    bool isAtOriginalDefaults = (
+      selectedMood == Mood.neutral &&
+      gratitudeItems.every((item) => item.trim().isEmpty) &&
+      reflection.trim().isEmpty &&
+      intention.trim().isEmpty
+    );
+    
+    if (isAtOriginalDefaults) {
+      print('   → Current state matches original defaults, no need to save, returning false');
+      return false;
+    }
+    
+    // Check if any value differs from baseline
+    if (selectedMood != _baselineMood) {
+      print('   → Mood changed from baseline, returning true');
+      return true;
+    }
+    
+    // Check gratitudes
+    for (int i = 0; i < gratitudeItems.length; i++) {
+      if (gratitudeItems[i].trim() != _baselineGratitudes[i]) {
+        print('   → Gratitude $i changed from baseline: "${gratitudeItems[i]}" vs "${_baselineGratitudes[i]}", returning true');
+        return true;
+      }
+    }
+    
+    // Check text fields
+    if (reflection.trim() != _baselineReflection) {
+      print('   → Reflection changed from baseline, returning true');
+      return true;
+    }
+    if (intention.trim() != _baselineIntention) {
+      print('   → Intention changed from baseline, returning true');
+      return true;
+    }
+    
+    print('   → No changes detected from baseline, returning false');
+    return false;
+  }
+  
+  // Reset everything to original defaults (for complete reset)
+  void _revertToDefaults() {
+    setState(() {
+      selectedMood = Mood.neutral;
+      gratitudeItems = ['', '', '', '', ''];
+      reflection = '';
+      intention = '';
+      
+      // Update text controllers
+      _reflectionController.text = '';
+      _intentionController.text = '';
+      
+      // Reset baseline to original defaults
+      _baselineMood = Mood.neutral;
+      _baselineGratitudes = ['', '', '', '', ''];
+      _baselineReflection = '';
+      _baselineIntention = '';
+      
+      // Reset all flags
+      _userHasInteracted = false;
+      _moodChanged = false;
+      _gratitudeChanged = false;
+      _reflectionChanged = false;
+      _intentionChanged = false;
+      _hasLoadedDraft = false;
+    });
+    
+    // Clear any saved draft
+    _clearDraftProgress();
+  }
+  
+  // Revert to baseline (for discarding unsaved changes)
+  void _revertToBaseline() {
+    setState(() {
+      selectedMood = _baselineMood;
+      gratitudeItems = List.from(_baselineGratitudes);
+      reflection = _baselineReflection;
+      intention = _baselineIntention;
+      
+      // Update text controllers
+      _reflectionController.text = _baselineReflection;
+      _intentionController.text = _baselineIntention;
+      
+      // Reset interaction flags - we're back to the baseline state
+      _userHasInteracted = false;
+      _moodChanged = false;
+      _gratitudeChanged = false;
+      _reflectionChanged = false;
+      _intentionChanged = false;
+    });
   }
 
   // Handle will pop (back gesture or back button)
   Future<bool> _onWillPop() async {
+    print('🔍 _onWillPop called - currentPage: $currentPage, isSaving: $isSaving');
+    print('   Current values:');
+    print('     selectedMood: $selectedMood');
+    print('     gratitudeItems: $gratitudeItems');
+    print('     reflection: "$reflection"');
+    print('     intention: "$intention"');
+    print('   Baseline values:');
+    print('     _baselineMood: $_baselineMood');
+    print('     _baselineGratitudes: $_baselineGratitudes');
+    print('     _baselineReflection: "$_baselineReflection"');
+    print('     _baselineIntention: "$_baselineIntention"');
+    
     // If we're on the summary page or saving, allow normal back navigation
     if (currentPage == 4 || isSaving) {
+      print('   → Allowing navigation (summary page or saving)');
       return true;
     }
     
-    // If editing existing entry, allow normal back navigation without dialog
-    if (isEditingExistingEntry) {
-      return true;
-    }
-
     // Check if user has unsaved changes
-    if (!_hasUnsavedChanges()) {
+    final hasChanges = _hasUnsavedChanges();
+    print('   → _hasUnsavedChanges returned: $hasChanges');
+    
+    if (!hasChanges) {
+      print('   → No changes detected, returning TRUE to allow navigation');
       return true; // No changes, allow back navigation
     }
 
+    print('   → Changes detected, showing save dialog');
     // Show save progress dialog
-    return await _showSaveProgressDialog() ?? false;
+    final result = await _showSaveProgressDialog();
+    print('   → Save dialog result: $result');
+    return result ?? false;
   }
 
-  // Show dialog asking user what to do with unsaved changes
-  Future<bool?> _showSaveProgressDialog() async {
-    return showDialog<bool>(
+  // Show dialog asking user if they want to save as draft
+  Future<void> _showSaveDraftDialog() async {
+    return showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
@@ -1090,7 +1510,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               SizedBox(width: 12.w),
               Expanded(
                 child: Text(
-                  'Save Your Progress?',
+                  'Save as Draft?',
                   style: TextStyle(
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
@@ -1105,7 +1525,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'You have unsaved changes in your journal entry:',
+                'Would you like to save your current progress as a draft? You can continue working on it later.',
                 style: TextStyle(
                   fontSize: 16.sp,
                   color: AppTheme.textMedium,
@@ -1114,48 +1534,27 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
               ),
               SizedBox(height: 16.h),
               ..._buildUnsavedChangesSummary(),
-              SizedBox(height: 16.h),
-              Text(
-                'What would you like to do?',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  color: AppTheme.textLight,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
             ],
           ),
           actions: [
-            // Cancel button
+            // Don't Save button
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
+              onPressed: () => Navigator.of(context).pop(),
               child: Text(
-                'Cancel',
+                'Don\'t Save',
                 style: TextStyle(
                   color: AppTheme.textMedium,
                   fontSize: 16.sp,
                 ),
               ),
             ),
-            // Discard button
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text(
-                'Discard',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            // Save button
+            // Save Draft button
             Container(
               margin: EdgeInsets.only(left: 8.w),
               child: ElevatedButton(
                 onPressed: () async {
-                  Navigator.of(context).pop(true); // Close dialog and allow navigation
-                  await _saveDraftProgress(); // Save as draft/progress, not as finished entry
+                  Navigator.of(context).pop(); // Close dialog
+                  await _saveDraftProgress(true); // Save the draft with snackbar
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.journalGradient[0],
@@ -1166,7 +1565,7 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
                   padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
                 ),
                 child: Text(
-                  isEditingExistingEntry ? 'Update' : 'Save',
+                  'Save Draft',
                   style: TextStyle(
                     fontSize: 16.sp,
                     fontWeight: FontWeight.w600,
@@ -1180,89 +1579,272 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
-  // Build summary of unsaved changes for the dialog
+  // Show dialog asking user what to do with unsaved changes
+  Future<bool?> _showSaveProgressDialog() async {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.symmetric(horizontal: 20.w),
+            decoration: BoxDecoration(
+              color: AppTheme.cardBackground,
+              borderRadius: BorderRadius.circular(24.r),
+              boxShadow: [
+                BoxShadow(
+                  color: AppTheme.shadow,
+                  blurRadius: 20.r,
+                  offset: Offset(0, 10.h),
+                ),
+              ],
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(24.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header with icon
+                  Container(
+                    width: 64.w,
+                    height: 64.h,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: AppTheme.journalGradient,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.edit_note_rounded,
+                      color: Colors.white,
+                      size: 32.sp,
+                    ),
+                  ),
+                  
+                  SizedBox(height: 20.h),
+                  
+                  // Title
+                  Text(
+                    'Unsaved Changes',
+                    style: TextStyle(
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.textPrimary,
+                    ),
+                  ),
+                  
+                  SizedBox(height: 12.h),
+                  
+                  // Description
+                  Text(
+                    'You have progress in your journal that hasn\'t been saved yet.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: AppTheme.textSecondary,
+                      height: 1.5,
+                    ),
+                  ),
+                  
+                  SizedBox(height: 24.h),
+                  
+                  // Changes summary in a card
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(16.w),
+                    decoration: BoxDecoration(
+                      color: AppTheme.backgroundSecondary,
+                      borderRadius: BorderRadius.circular(16.r),
+                      border: Border.all(
+                        color: AppTheme.borderSecondary,
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.pending_actions,
+                              color: AppTheme.journalGradient[0],
+                              size: 18.sp,
+                            ),
+                            SizedBox(width: 8.w),
+                            Text(
+                              'Your Progress',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: AppTheme.textPrimary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 12.h),
+                        ..._buildUnsavedChangesSummary(),
+                      ],
+                    ),
+                  ),
+                  
+                  SizedBox(height: 32.h),
+                  
+                  // Action buttons
+                  Column(
+                    children: [
+                      // Save as Draft button (primary action)
+                      Container(
+                        width: double.infinity,
+                        height: 48.h,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            await _saveDraftProgress();
+                            Navigator.of(context).pop(true);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.journalGradient[0],
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16.r),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.save_rounded,
+                                size: 20.sp,
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                'Save as Draft',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      
+                      SizedBox(height: 12.h),
+                      
+                      // Secondary actions row
+                      Row(
+                        children: [
+                          // Cancel button
+                          Expanded(
+                            child: Container(
+                              height: 44.h,
+                              child: TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: AppTheme.backgroundSecondary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          
+                          SizedBox(width: 12.w),
+                          
+                          // Discard button
+                          Expanded(
+                            child: Container(
+                              height: 44.h,
+                              child: TextButton(
+                                onPressed: () {
+                                  _revertToBaseline();
+                                  Navigator.of(context).pop(true);
+                                },
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Colors.red.withOpacity(0.1),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r),
+                                  ),
+                                ),
+                                child: Text(
+                                  'Discard',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Build summary of unsaved changes (categories only, not details)
   List<Widget> _buildUnsavedChangesSummary() {
     List<Widget> changes = [];
     
-    if (isEditingExistingEntry && existingEntry != null) {
-      // For existing entries, show what changed
-      if (selectedMood != existingEntry!.mood) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.mood,
-          text: 'Mood updated to ${selectedMood.displayName}',
-          color: selectedMood.color,
-        ));
+    // Compare against baseline values (what was last saved), not original defaults
+    if (selectedMood != _baselineMood) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.mood,
+        text: 'Mood',
+        color: selectedMood.color,
+      ));
+    }
+    
+    // Check gratitude changes against baseline
+    bool gratitudesChanged = false;
+    for (int i = 0; i < 5; i++) {
+      if (gratitudeItems[i].trim() != _baselineGratitudes[i].trim()) {
+        gratitudesChanged = true;
+        break;
       }
-      
-      // Check gratitude changes
-      final originalGratitudes = List<String>.filled(5, '');
-      for (int i = 0; i < existingEntry!.gratitudes.length && i < 5; i++) {
-        originalGratitudes[i] = existingEntry!.gratitudes[i];
-      }
-      bool gratitudesChanged = false;
-      for (int i = 0; i < 5; i++) {
-        if (gratitudeItems[i].trim() != originalGratitudes[i].trim()) {
-          gratitudesChanged = true;
-          break;
-        }
-      }
-      if (gratitudesChanged) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.favorite,
-          text: 'Gratitude entries modified',
-          color: AppTheme.affirmationGradient[0],
-        ));
-      }
-      
-      if (reflection.trim() != existingEntry!.reflection.trim()) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.auto_stories,
-          text: reflection.trim().isEmpty ? 'Reflection removed' : 'Reflection updated',
-          color: AppTheme.accentGold,
-        ));
-      }
-      
-      if (intention.trim() != existingEntry!.intention.trim()) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.wb_sunny,
-          text: intention.trim().isEmpty ? 'Intention removed' : 'Tomorrow\'s intention updated',
-          color: AppTheme.goalTrackerGradient[0],
-        ));
-      }
-    } else {
-      // For new entries, show what's been entered
-      if (selectedMood != Mood.neutral) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.mood,
-          text: 'Mood: ${selectedMood.displayName}',
-          color: selectedMood.color,
-        ));
-      }
-      
-      final gratitudeCount = gratitudeItems.where((item) => item.trim().isNotEmpty).length;
-      if (gratitudeCount > 0) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.favorite,
-          text: '$gratitudeCount gratitude ${gratitudeCount == 1 ? 'entry' : 'entries'}',
-          color: AppTheme.affirmationGradient[0],
-        ));
-      }
-      
-      if (reflection.trim().isNotEmpty) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.auto_stories,
-          text: 'Daily reflection written',
-          color: AppTheme.accentGold,
-        ));
-      }
-      
-      if (intention.trim().isNotEmpty) {
-        changes.add(_buildChangeSummaryItem(
-          icon: Icons.wb_sunny,
-          text: 'Tomorrow\'s intention set',
-          color: AppTheme.goalTrackerGradient[0],
-        ));
-      }
+    }
+    if (gratitudesChanged) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.favorite,
+        text: 'Gratitudes',
+        color: AppTheme.affirmationGradient[0],
+      ));
+    }
+    
+    // Check reflection changes against baseline
+    if (reflection.trim() != _baselineReflection.trim()) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.auto_stories,
+        text: 'Daily Reflection',
+        color: AppTheme.accentGold,
+      ));
+    }
+    
+    // Check intention changes against baseline
+    if (intention.trim() != _baselineIntention.trim()) {
+      changes.add(_buildChangeSummaryItem(
+        icon: Icons.wb_sunny,
+        text: 'Tomorrow\'s Intention',
+        color: AppTheme.goalTrackerGradient[0],
+      ));
     }
     
     return changes;
@@ -1306,8 +1888,108 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     );
   }
 
+  // Load existing draft progress
+  Future<void> _loadDraftProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      final draftJson = prefs.getString('journal_draft_$dateKey');
+      if (draftJson != null) {
+        final draftData = jsonDecode(draftJson) as Map<String, dynamic>;
+        
+        print('📖 Loading draft progress...');
+        print('   Draft data found: ${draftData.keys}');
+        
+        setState(() {
+          // Load mood (find by display name)
+          final moodName = draftData['mood'] as String?;
+          if (moodName != null) {
+            final mood = Mood.values.firstWhere(
+              (m) => m.displayName == moodName,
+              orElse: () => Mood.neutral,
+            );
+            selectedMood = mood;
+          }
+          
+          // Load gratitudes
+          final draftGratitudes = draftData['gratitudes'] as List<dynamic>?;
+          if (draftGratitudes != null) {
+            gratitudeItems = List<String>.filled(5, '');
+            for (int i = 0; i < draftGratitudes.length && i < 5; i++) {
+              gratitudeItems[i] = draftGratitudes[i].toString();
+            }
+          }
+          
+          // Load reflection
+          final draftReflection = draftData['reflection'] as String?;
+          if (draftReflection != null) {
+            reflection = draftReflection;
+            _reflectionController.text = reflection;
+          }
+          
+          // Load intention
+          final draftIntention = draftData['intention'] as String?;
+          if (draftIntention != null) {
+            intention = draftIntention;
+            _intentionController.text = intention;
+          }
+        });
+        
+        print('📖 Draft progress loaded successfully');
+        
+        // Set loaded values as the baseline for change detection
+        _baselineMood = selectedMood;
+        _baselineGratitudes = List.from(gratitudeItems);
+        _baselineReflection = reflection.trim();
+        _baselineIntention = intention.trim();
+        
+        // Reset interaction flags when loading draft
+        _userHasInteracted = false;
+        _moodChanged = false;
+        _gratitudeChanged = false;
+        _reflectionChanged = false;
+        _intentionChanged = false;
+        _hasLoadedDraft = true;
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.restore, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Draft progress restored'),
+              ],
+            ),
+            backgroundColor: AppTheme.journalGradient[0],
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print('📖 Error loading draft progress: $e');
+      // Continue silently without draft
+    }
+  }
+
+  // Clear draft progress (when entry is saved or no longer needed)
+  Future<void> _clearDraftProgress() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      await prefs.remove('journal_draft_$dateKey');
+      print('📖 Draft progress cleared');
+    } catch (e) {
+      print('📖 Error clearing draft progress: $e');
+    }
+  }
+
   // Save current progress as draft without creating a finalized journal entry
-  Future<void> _saveDraftProgress() async {
+  Future<bool> _saveDraftProgress([bool showSnackBar = false]) async {
     try {
       print('📖 Saving draft progress...');
       
@@ -1334,31 +2016,67 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
       print('   Has Reflection: ${reflection.trim().isNotEmpty}');
       print('   Has Intention: ${intention.trim().isNotEmpty}');
       
-      // Show confirmation
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
-              SizedBox(width: 8.w),
-              Text('Progress saved as draft'),
-            ],
-          ),
-          backgroundColor: AppTheme.journalGradient[0],
-          behavior: SnackBarBehavior.floating,
-          duration: Duration(seconds: 2),
-        ),
-      );
+      // Update baseline and reset interaction flags
+      setState(() {
+        // Current state becomes the new baseline for future change detection
+        _baselineMood = selectedMood;
+        _baselineGratitudes = List.from(gratitudeItems);
+        _baselineReflection = reflection.trim();
+        _baselineIntention = intention.trim();
+        
+        print('📖 NEW BASELINE SET AFTER SAVE:');
+        print('   Baseline mood: $_baselineMood');
+        print('   Baseline gratitudes: $_baselineGratitudes');  
+        print('   Baseline reflection: "$_baselineReflection"');
+        print('   Baseline intention: "$_baselineIntention"');
+        
+        // Reset interaction flags after saving - current state is now the baseline
+        _userHasInteracted = false;
+        _moodChanged = false;
+        _gratitudeChanged = false;
+        _reflectionChanged = false;
+        _intentionChanged = false;
+        
+        print('📖 Flags reset after save - _userHasInteracted: $_userHasInteracted');
+      });
       
+      // Show confirmation only if requested and context is valid
+      if (showSnackBar && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.save_outlined, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Text('Progress saved as draft'),
+              ],
+            ),
+            backgroundColor: AppTheme.journalGradient[0],
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+      
+      return true;
     } catch (e) {
       print('📖 Error saving draft progress: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Failed to save progress: ${e.toString()}'),
-          backgroundColor: Colors.red,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      if (showSnackBar && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to save progress: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      return false;
     }
+  }
+
+  /// Update draft progress (debounced version for text input)
+  void _updateDraftProgress() {
+    // Call the existing save draft method without showing snackbar
+    _saveDraftProgress(false);
   }
 }

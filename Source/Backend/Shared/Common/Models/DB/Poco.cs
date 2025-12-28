@@ -2426,7 +2426,7 @@ namespace Manifest.Common.Models.DB
 
         #region ColumnSize
         public const int COLUMN_SIZE_DefaultMeditationFileName = 255;
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
@@ -2460,7 +2460,7 @@ namespace Manifest.Common.Models.DB
         public long PredefinedMeditationTypeId { get; set; }
         
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -2647,6 +2647,7 @@ namespace Manifest.Common.Models.DB
 
         #region Columns
         public const string COLUMN_DefaultVisionBoardPictureId = "DefaultVisionBoardPictureId";
+        public const string COLUMN_Title = "Title";
         public const string COLUMN_Location = "Location";
         public const string COLUMN_FileName = "FileName";
         public const string COLUMN_FileSize = "FileSize";
@@ -2658,12 +2659,14 @@ namespace Manifest.Common.Models.DB
         #endregion
 
         #region ColumnSize
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Title = 100;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
         #region ColumnNull
         public const bool COLUMN_NULLABLE_DefaultVisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_Title = true;
         public const bool COLUMN_NULLABLE_Location = true;
         public const bool COLUMN_NULLABLE_FileName = false;
         public const bool COLUMN_NULLABLE_FileSize = false;
@@ -2680,8 +2683,12 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long DefaultVisionBoardPictureId { get; set; }
         
+        [Column("Title")]
+        [StringLength(100)]
+        public string Title { get; set; }
+        
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -2715,6 +2722,7 @@ namespace Manifest.Common.Models.DB
         {
             var sb = new StringBuilder();
             sb.AppendLine($"DefaultVisionBoardPictureId = {DefaultVisionBoardPictureId} , ");
+            sb.AppendLine($"Title = {Title} , ");
             sb.AppendLine($"Location = {Location} , ");
             sb.AppendLine($"FileName = {FileName} , ");
             sb.AppendLine($"FileSize = {FileSize} , ");
@@ -2734,6 +2742,7 @@ namespace Manifest.Common.Models.DB
             return new DefaultVisionBoardPicture
             {
             DefaultVisionBoardPictureId = item.DefaultVisionBoardPictureId,
+            Title = item.Title,
             Location = item.Location,
             FileName = item.FileName,
             FileSize = item.FileSize,
@@ -3258,8 +3267,8 @@ namespace Manifest.Common.Models.DB
 
         #region ColumnSize
         public const int COLUMN_SIZE_FileAttachmentFileName = 128;
-        public const int COLUMN_SIZE_FileAttachmentFileLocation = 512;
-        public const int COLUMN_SIZE_FileAttachmentPreviewFileLocation = 512;
+        public const int COLUMN_SIZE_FileAttachmentFileLocation = 1024;
+        public const int COLUMN_SIZE_FileAttachmentPreviewFileLocation = 1024;
         public const int COLUMN_SIZE_Description = 200;
         #endregion
 
@@ -3296,11 +3305,11 @@ namespace Manifest.Common.Models.DB
         
         [Column("FileAttachmentFileLocation")]
         [NotNull]
-        [StringLength(512)]
+        [StringLength(1024)]
         public string FileAttachmentFileLocation { get; set; }
         
         [Column("FileAttachmentPreviewFileLocation")]
-        [StringLength(512)]
+        [StringLength(1024)]
         public string FileAttachmentPreviewFileLocation { get; set; }
         
         [Column("FileAttachmentHasPreview")]
@@ -5324,7 +5333,7 @@ namespace Manifest.Common.Models.DB
 
         #region ColumnSize
         public const int COLUMN_SIZE_MeditationFileName = 255;
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
         #endregion
 
@@ -5359,7 +5368,7 @@ namespace Manifest.Common.Models.DB
         public string MeditationFileName { get; set; }
         
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -8080,6 +8089,8 @@ namespace Manifest.Common.Models.DB
         public const string COLUMN_ProfileImageGuid = "ProfileImageGuid";
         public const string COLUMN_ProfileImageLocation = "ProfileImageLocation";
         public const string COLUMN_ProfileImageActualFileName = "ProfileImageActualFileName";
+        public const string COLUMN_HasUserPurchasedPremiumFeature = "HasUserPurchasedPremiumFeature";
+        public const string COLUMN_PremiumFeatureValidUntil = "PremiumFeatureValidUntil";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
         public const string COLUMN_CreatedByUserId = "CreatedByUserId";
@@ -8125,6 +8136,8 @@ namespace Manifest.Common.Models.DB
         public const bool COLUMN_NULLABLE_ProfileImageGuid = true;
         public const bool COLUMN_NULLABLE_ProfileImageLocation = true;
         public const bool COLUMN_NULLABLE_ProfileImageActualFileName = true;
+        public const bool COLUMN_NULLABLE_HasUserPurchasedPremiumFeature = false;
+        public const bool COLUMN_NULLABLE_PremiumFeatureValidUntil = true;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
         public const bool COLUMN_NULLABLE_CreatedByUserId = true;
@@ -8231,6 +8244,13 @@ namespace Manifest.Common.Models.DB
         [StringLength(125)]
         public string ProfileImageActualFileName { get; set; }
         
+        [Column("HasUserPurchasedPremiumFeature")]
+        [NotNull]
+        public bool HasUserPurchasedPremiumFeature { get; set; }
+        
+        [Column("PremiumFeatureValidUntil")]
+        public DateTime? PremiumFeatureValidUntil { get; set; }
+        
         [Column("IsDeleted")]
         [NotNull]
         public bool IsDeleted { get; set; }
@@ -8276,6 +8296,8 @@ namespace Manifest.Common.Models.DB
             sb.AppendLine($"ProfileImageGuid = {ProfileImageGuid} , ");
             sb.AppendLine($"ProfileImageLocation = {ProfileImageLocation} , ");
             sb.AppendLine($"ProfileImageActualFileName = {ProfileImageActualFileName} , ");
+            sb.AppendLine($"HasUserPurchasedPremiumFeature = {HasUserPurchasedPremiumFeature} , ");
+            sb.AppendLine($"PremiumFeatureValidUntil = {PremiumFeatureValidUntil} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
             sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
@@ -8315,6 +8337,8 @@ namespace Manifest.Common.Models.DB
             ProfileImageGuid = item.ProfileImageGuid,
             ProfileImageLocation = item.ProfileImageLocation,
             ProfileImageActualFileName = item.ProfileImageActualFileName,
+            HasUserPurchasedPremiumFeature = item.HasUserPurchasedPremiumFeature,
+            PremiumFeatureValidUntil = item.PremiumFeatureValidUntil,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,
             CreatedByUserId = item.CreatedByUserId,
@@ -8632,6 +8656,124 @@ namespace Manifest.Common.Models.DB
         }
     }
     
+    [Table("UserPurchaseHistory")]
+    [Serializable]
+    public partial class UserPurchaseHistory : IAuditableModel, INewObject<UserPurchaseHistory>
+    {
+        public const string TABLE_NAME = "UserPurchaseHistory";
+
+        public const string ALL_COLUMNS_FOR_SELECT = "*";
+
+        #region Columns
+        public const string COLUMN_UserPurchaseHistoryId = "UserPurchaseHistoryId";
+        public const string COLUMN_UserId = "UserId";
+        public const string COLUMN_IsAPurchase = "IsAPurchase";
+        public const string COLUMN_PurchaseOrDisableDate = "PurchaseOrDisableDate";
+        public const string COLUMN_ValidUntil = "ValidUntil";
+        public const string COLUMN_IsDeleted = "IsDeleted";
+        public const string COLUMN_CreatedDate = "CreatedDate";
+        public const string COLUMN_CreatedByUserId = "CreatedByUserId";
+        public const string COLUMN_ModifiedDate = "ModifiedDate";
+        public const string COLUMN_ModifiedByUserId = "ModifiedByUserId";
+        #endregion
+
+        #region ColumnSize
+        #endregion
+
+        #region ColumnNull
+        public const bool COLUMN_NULLABLE_UserPurchaseHistoryId = false;
+        public const bool COLUMN_NULLABLE_UserId = false;
+        public const bool COLUMN_NULLABLE_IsAPurchase = false;
+        public const bool COLUMN_NULLABLE_PurchaseOrDisableDate = false;
+        public const bool COLUMN_NULLABLE_ValidUntil = true;
+        public const bool COLUMN_NULLABLE_IsDeleted = false;
+        public const bool COLUMN_NULLABLE_CreatedDate = false;
+        public const bool COLUMN_NULLABLE_CreatedByUserId = true;
+        public const bool COLUMN_NULLABLE_ModifiedDate = false;
+        public const bool COLUMN_NULLABLE_ModifiedByUserId = true;
+        #endregion
+
+        [Column("UserPurchaseHistoryId")]
+        [LinqToDB.Mapping.PrimaryKey]
+        [Identity]
+        [NotNull]
+        public long UserPurchaseHistoryId { get; set; }
+        
+        [Column("UserId")]
+        [NotNull]
+        public long UserId { get; set; }
+        
+        [Column("IsAPurchase")]
+        [NotNull]
+        public bool IsAPurchase { get; set; }
+        
+        [Column("PurchaseOrDisableDate")]
+        [NotNull]
+        public DateTime PurchaseOrDisableDate { get; set; }
+        
+        [Column("ValidUntil")]
+        public DateTime? ValidUntil { get; set; }
+        
+        [Column("IsDeleted")]
+        [NotNull]
+        public bool IsDeleted { get; set; }
+        
+        [Column("CreatedDate")]
+        [NotNull]
+        public DateTime CreatedDate { get; set; }
+        
+        [Column("CreatedByUserId")]
+        public long? CreatedByUserId { get; set; }
+        
+        [Column("ModifiedDate")]
+        [NotNull]
+        public DateTime ModifiedDate { get; set; }
+        
+        [Column("ModifiedByUserId")]
+        public long? ModifiedByUserId { get; set; }
+        
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"UserPurchaseHistoryId = {UserPurchaseHistoryId} , ");
+            sb.AppendLine($"UserId = {UserId} , ");
+            sb.AppendLine($"IsAPurchase = {IsAPurchase} , ");
+            sb.AppendLine($"PurchaseOrDisableDate = {PurchaseOrDisableDate} , ");
+            sb.AppendLine($"ValidUntil = {ValidUntil} , ");
+            sb.AppendLine($"IsDeleted = {IsDeleted} , ");
+            sb.AppendLine($"CreatedDate = {CreatedDate} , ");
+            sb.AppendLine($"CreatedByUserId = {CreatedByUserId} , ");
+            sb.AppendLine($"ModifiedDate = {ModifiedDate} , ");
+            sb.AppendLine($"ModifiedByUserId = {ModifiedByUserId} , ");
+            return sb.ToString();
+        }
+
+        public UserPurchaseHistory New(UserPurchaseHistory item)
+        {
+            if (item == null)
+                return null;
+
+            return new UserPurchaseHistory
+            {
+            UserPurchaseHistoryId = item.UserPurchaseHistoryId,
+            UserId = item.UserId,
+            IsAPurchase = item.IsAPurchase,
+            PurchaseOrDisableDate = item.PurchaseOrDisableDate,
+            ValidUntil = item.ValidUntil,
+            IsDeleted = item.IsDeleted,
+            CreatedDate = item.CreatedDate,
+            CreatedByUserId = item.CreatedByUserId,
+            ModifiedDate = item.ModifiedDate,
+            ModifiedByUserId = item.ModifiedByUserId,
+            };
+        }
+
+        public UserPurchaseHistory NewFromObject()
+        {
+            return New(this);
+        }
+    }
+    
     [Table("VisionBoardPicture")]
     [Serializable]
     public partial class VisionBoardPicture : IAuditableModel, INewObject<VisionBoardPicture>
@@ -8642,9 +8784,13 @@ namespace Manifest.Common.Models.DB
 
         #region Columns
         public const string COLUMN_VisionBoardPictureId = "VisionBoardPictureId";
+        public const string COLUMN_Title = "Title";
         public const string COLUMN_Location = "Location";
         public const string COLUMN_FileName = "FileName";
         public const string COLUMN_FileSize = "FileSize";
+        public const string COLUMN_ThumbnailLocation = "ThumbnailLocation";
+        public const string COLUMN_ThumbnailFileName = "ThumbnailFileName";
+        public const string COLUMN_ThumbnailFileSize = "ThumbnailFileSize";
         public const string COLUMN_UserId = "UserId";
         public const string COLUMN_IsDeleted = "IsDeleted";
         public const string COLUMN_CreatedDate = "CreatedDate";
@@ -8654,15 +8800,22 @@ namespace Manifest.Common.Models.DB
         #endregion
 
         #region ColumnSize
-        public const int COLUMN_SIZE_Location = 255;
+        public const int COLUMN_SIZE_Title = 100;
+        public const int COLUMN_SIZE_Location = 1024;
         public const int COLUMN_SIZE_FileName = 255;
+        public const int COLUMN_SIZE_ThumbnailLocation = 1024;
+        public const int COLUMN_SIZE_ThumbnailFileName = 255;
         #endregion
 
         #region ColumnNull
         public const bool COLUMN_NULLABLE_VisionBoardPictureId = false;
+        public const bool COLUMN_NULLABLE_Title = true;
         public const bool COLUMN_NULLABLE_Location = true;
         public const bool COLUMN_NULLABLE_FileName = false;
         public const bool COLUMN_NULLABLE_FileSize = false;
+        public const bool COLUMN_NULLABLE_ThumbnailLocation = true;
+        public const bool COLUMN_NULLABLE_ThumbnailFileName = true;
+        public const bool COLUMN_NULLABLE_ThumbnailFileSize = true;
         public const bool COLUMN_NULLABLE_UserId = false;
         public const bool COLUMN_NULLABLE_IsDeleted = false;
         public const bool COLUMN_NULLABLE_CreatedDate = false;
@@ -8677,8 +8830,12 @@ namespace Manifest.Common.Models.DB
         [NotNull]
         public long VisionBoardPictureId { get; set; }
         
+        [Column("Title")]
+        [StringLength(100)]
+        public string Title { get; set; }
+        
         [Column("Location")]
-        [StringLength(255)]
+        [StringLength(1024)]
         public string Location { get; set; }
         
         [Column("FileName")]
@@ -8689,6 +8846,17 @@ namespace Manifest.Common.Models.DB
         [Column("FileSize")]
         [NotNull]
         public long FileSize { get; set; }
+        
+        [Column("ThumbnailLocation")]
+        [StringLength(1024)]
+        public string ThumbnailLocation { get; set; }
+        
+        [Column("ThumbnailFileName")]
+        [StringLength(255)]
+        public string ThumbnailFileName { get; set; }
+        
+        [Column("ThumbnailFileSize")]
+        public long? ThumbnailFileSize { get; set; }
         
         [Column("UserId")]
         [NotNull]
@@ -8716,9 +8884,13 @@ namespace Manifest.Common.Models.DB
         {
             var sb = new StringBuilder();
             sb.AppendLine($"VisionBoardPictureId = {VisionBoardPictureId} , ");
+            sb.AppendLine($"Title = {Title} , ");
             sb.AppendLine($"Location = {Location} , ");
             sb.AppendLine($"FileName = {FileName} , ");
             sb.AppendLine($"FileSize = {FileSize} , ");
+            sb.AppendLine($"ThumbnailLocation = {ThumbnailLocation} , ");
+            sb.AppendLine($"ThumbnailFileName = {ThumbnailFileName} , ");
+            sb.AppendLine($"ThumbnailFileSize = {ThumbnailFileSize} , ");
             sb.AppendLine($"UserId = {UserId} , ");
             sb.AppendLine($"IsDeleted = {IsDeleted} , ");
             sb.AppendLine($"CreatedDate = {CreatedDate} , ");
@@ -8736,9 +8908,13 @@ namespace Manifest.Common.Models.DB
             return new VisionBoardPicture
             {
             VisionBoardPictureId = item.VisionBoardPictureId,
+            Title = item.Title,
             Location = item.Location,
             FileName = item.FileName,
             FileSize = item.FileSize,
+            ThumbnailLocation = item.ThumbnailLocation,
+            ThumbnailFileName = item.ThumbnailFileName,
+            ThumbnailFileSize = item.ThumbnailFileSize,
             UserId = item.UserId,
             IsDeleted = item.IsDeleted,
             CreatedDate = item.CreatedDate,

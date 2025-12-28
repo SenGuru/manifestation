@@ -123,6 +123,9 @@ namespace Manifest.Repository.Common
                        ProfileImageActualFileName = item.ProfileImageActualFileName,
                        ProfileImageLocation = item.ProfileImageLocation,
                        IsDeleted = item.IsDeleted,
+                       HasUserPurchasedPremiumFeature = item.HasUserPurchasedPremiumFeature,
+                       PremiumFeatureValidUntil = item.PremiumFeatureValidUntil,
+                       ProfileImageGuid = item.ProfileImageGuid,
                        CreatedDate = item.CreatedDate,
                        ModifiedByUserFirstName = item.FirstName,
                        ModifiedByUserLastName = item.LastName,
@@ -283,12 +286,24 @@ namespace Manifest.Repository.Common
                .Where(x => x.UserId == profile.UserId)
                .Set(x => x.FirstName, profile.FirstName)
                .Set(x => x.LastName, profile.LastName)
-               .Set(x => x.CellPhone, profile.CellPhone)
-               .Set(x => x.WorkPhone, profile.WorkPhone)
                .Set(x => x.Email, profile.Email)
-               .Set(x => x.UserName, profile.UserName)
-               .Set(x => x.NotificationThroughEmail, profile.NotificationThroughEmail)
+               .Set(x => x.UserName, profile.Email)
                .UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<bool> UpdateUserPremiumFeatureAsync(long userId, bool hasPremium, DateTime? validUntil, long? modifiedBy)
+        {
+            return await appDBManager.GetTable<User>()
+               .Where(x => x.UserId == userId)
+               .Set(x => x.HasUserPurchasedPremiumFeature, hasPremium)
+               .Set(x => x.PremiumFeatureValidUntil, validUntil)
+               .UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public async Task<UserPurchaseHistory> CreateUserPurchaseHistoryAsync(UserPurchaseHistory userPurchaseHistory, long? createdBy)
+        {
+            userPurchaseHistory.UserPurchaseHistoryId = await appDBManager.InsertWithAuditAsync<UserPurchaseHistory, long>(userPurchaseHistory, createdBy);
+            return userPurchaseHistory;
         }
 
         public Task<int> GetUserCountAsync()

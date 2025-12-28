@@ -299,15 +299,22 @@ class HybridVoiceService {
       // Process text for more natural TTS delivery
       String processedText = _processTextForNaturalTTS(text);
       
+      print('🎙️ Original text: "$text"');
+      print('🎙️ Processed text: "$processedText"');
+      
       final result = await _flutterTts!.speak(processedText);
       if (result == 1) {
         _isPlaying = true;
+        print('✅ TTS started successfully');
         return true;
+      } else {
+        print('❌ TTS failed to start (result: $result)');
       }
       return false;
       
     } catch (e) {
-      print('Enhanced TTS error: $e');
+      print('❌ Enhanced TTS error: $e');
+      print('❌ Stack trace: ${StackTrace.current}');
       return false;
     }
   }
@@ -325,9 +332,22 @@ class HybridVoiceService {
     processed = processed.replaceAll("I've", "I have");
     processed = processed.replaceAll("can't", "cannot");
     processed = processed.replaceAll("won't", "will not");
+    processed = processed.replaceAll("don't", "do not");
+    processed = processed.replaceAll("doesn't", "does not");
+    processed = processed.replaceAll("isn't", "is not");
+    processed = processed.replaceAll("aren't", "are not");
     
-    // Add subtle emphasis markers (some TTS engines support this)
-    processed = processed.replaceAll(RegExp(r'\b(I am|I will|I can)\b'), r'<emphasis level="moderate">\1</emphasis>');
+    // Remove any existing SSML tags that might cause issues
+    processed = processed.replaceAll(RegExp(r'<[^>]*>'), '');
+    
+    // Add natural emphasis through repetition and spacing instead of SSML
+    // This is more compatible across different TTS engines
+    processed = processed.replaceAll(RegExp(r'\b(I am)\b', caseSensitive: false), 'I am');
+    processed = processed.replaceAll(RegExp(r'\b(I will)\b', caseSensitive: false), 'I will');
+    processed = processed.replaceAll(RegExp(r'\b(I can)\b', caseSensitive: false), 'I can');
+    
+    // Clean up extra spaces
+    processed = processed.replaceAll(RegExp(r'\s+'), ' ');
     
     return processed.trim();
   }

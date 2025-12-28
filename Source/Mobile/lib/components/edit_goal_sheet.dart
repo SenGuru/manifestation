@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
-import 'package:fun/models/goals.dart';
+import 'package:mistel/models/goals.dart';
 
 class EditGoalSheet extends StatefulWidget {
   final Goal goal;

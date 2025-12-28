@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/services/unified_auth_service.dart';
+import 'package:mistel/services/unified_auth_service.dart';
 import '../components/add_goal_sheet.dart';
 import '../components/edit_goal_sheet.dart';
 import '../components/goal_card.dart';
@@ -12,9 +12,13 @@ import '../constants/app_theme.dart';
 import '../constants/goal_constants.dart';
 import '../services/goal_tracker_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
 import 'goal_detail_screen_redesigned.dart';
+import '../widgets/universal_back_button.dart';
 
 class GoalTrackerScreen extends StatefulWidget {
   @override
@@ -29,6 +33,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
   GoalCategory selectedCategory = GoalCategory.all;
   bool showCompletedGoals = true;
   bool _isLoading = false;
+  bool _hasError = false;
+  String? _errorMessage;
   
   late AnimationController _fabAnimationController;
   late Animation<double> _fabAnimation;
@@ -60,6 +66,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     );
     
     print('📊 Starting initial goal load...');
+    // Start loading immediately like vision board does
     _loadGoals();
     _fabAnimationController.forward();
     
@@ -68,7 +75,11 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   @override
   void dispose() {
-    _fabAnimationController.dispose();
+    try {
+      _fabAnimationController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing FAB animation controller: $e');
+    }
     super.dispose();
   }
 
@@ -86,12 +97,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     // Show loading screen while loading goals
     if (_isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading goals...',
         ),
       );
     }
+
 
     final filteredGoals = _filterGoals();
     
@@ -102,7 +114,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     print('   Show completed: $showCompletedGoals');
     
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -117,13 +129,15 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             
             // Goals list
             Expanded(
-              child: filteredGoals.isEmpty 
-                  ? _buildEmptyState()
-                  : RefreshIndicator(
-                      onRefresh: _loadGoals,
-                      color: AppTheme.goalTrackerGradient[0],
-                      child: _buildGoalsList(filteredGoals),
-                    ),
+              child: _hasError
+                  ? _buildErrorState()
+                  : filteredGoals.isEmpty
+                      ? _buildEmptyState()
+                      : RefreshIndicator(
+                          onRefresh: _loadGoals,
+                          color: AppTheme.goalTrackerGradient[0],
+                          child: _buildGoalsList(filteredGoals),
+                        ),
             ),
           ],
         ),
@@ -149,25 +163,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
       padding: EdgeInsets.all(20.w),
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Container(
-              width: 44.w,
-              height: 44.h,
-              decoration: BoxDecoration(
-                color: AppTheme.cardBackground,
-                borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
-                    ),
-              ),
-              child: Icon(
-                Icons.arrow_back,
-                color: AppTheme.textLight,
-                size: 20.sp,
-              ),
-            ),
-          ),
+          UniversalBackButton(),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(
@@ -178,14 +174,14 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   'Track your manifestation progress',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
@@ -203,7 +199,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               ),
               child: Icon(
                 Icons.tune,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -231,7 +227,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         borderRadius: BorderRadius.circular(20.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.goalTrackerGradient[0].withOpacity(0.3),
+            color: AppTheme.goalTrackerGradient[0].withValues(alpha: 0.3),
             blurRadius: 12.r,
             offset: Offset(0, 6.h),
           ),
@@ -254,7 +250,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                         child: CircularProgressIndicator(
                           value: overallProgress / 100,
                           strokeWidth: 6,
-                          backgroundColor: AppTheme.white.withOpacity(0.3),
+                          backgroundColor: AppTheme.white.withValues(alpha: 0.3),
                           valueColor: AlwaysStoppedAnimation<Color>(AppTheme.white),
                         ),
                       ),
@@ -290,7 +286,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                       'Keep manifesting your dreams!',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppTheme.white.withOpacity(0.8),
+                        color: AppTheme.white.withValues(alpha: 0.8),
                       ),
                     ),
                   ],
@@ -310,7 +306,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               Container(
                 width: 1,
                 height: 30.h,
-                color: AppTheme.white.withOpacity(0.3),
+                color: AppTheme.white.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem('Active', activeGoals.toString(), Icons.trending_up),
@@ -318,7 +314,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               Container(
                 width: 1,
                 height: 30.h,
-                color: AppTheme.white.withOpacity(0.3),
+                color: AppTheme.white.withValues(alpha: 0.3),
               ),
               Expanded(
                 child: _buildStatItem('Done', completedGoals.toString(), Icons.check_circle),
@@ -351,7 +347,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           label,
           style: TextStyle(
             fontSize: 12.sp,
-            color: AppTheme.white.withOpacity(0.8),
+            color: AppTheme.white.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -382,13 +378,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
               decoration: BoxDecoration(
                 color: isSelected 
-                    ? category.color.withOpacity(0.1)
+                    ? category.color.withValues(alpha: 0.1)
                     : AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
                   color: isSelected 
                       ? category.color
-                      : AppTheme.textMedium.withOpacity(0.3),
+                      : AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
@@ -396,7 +392,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 children: [
                   Icon(
                     category.icon,
-                    color: isSelected ? category.color : AppTheme.textMedium,
+                    color: isSelected ? category.color : AppTheme.textSecondary,
                     size: 16.sp,
                   ),
                   SizedBox(width: 8.w),
@@ -405,7 +401,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                      color: isSelected ? category.color : AppTheme.textMedium,
+                      color: isSelected ? category.color : AppTheme.textSecondary,
                     ),
                   ),
                 ],
@@ -421,9 +417,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     return ListView.builder(
       padding: EdgeInsets.all(20.w),
       itemCount: filteredGoals.length,
+      // Removed itemExtent to allow dynamic height for expandable cards
+      cacheExtent: 500, // Cache off-screen items for smooth scrolling
       itemBuilder: (context, index) {
         final goal = filteredGoals[index];
         return Container(
+          key: ValueKey(goal.id), // Unique key for efficient updates
           margin: EdgeInsets.only(bottom: 16.h),
           child: GoalCard(
             goal: goal,
@@ -449,7 +448,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               width: 120.w,
               height: 120.h,
               decoration: BoxDecoration(
-                color: AppTheme.goalTrackerGradient[0].withOpacity(0.1),
+                color: AppTheme.goalTrackerGradient[0].withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -460,13 +459,13 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             ),
             SizedBox(height: 24.h),
             Text(
-              selectedCategory == GoalCategory.all 
+              selectedCategory == GoalCategory.all
                   ? 'No Goals Yet'
                   : 'No ${selectedCategory.displayName} Goals',
               style: TextStyle(
                 fontSize: 24.sp,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             SizedBox(height: 12.h),
@@ -476,7 +475,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   : 'Create a goal in this category to get started',
               style: TextStyle(
                 fontSize: 16.sp,
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
             ),
@@ -502,6 +501,82 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                     SizedBox(width: 8.w),
                     Text(
                       'Create Goal',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Goals',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadGoals,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.goalTrackerGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
@@ -575,6 +650,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     
     setState(() {
       _isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
 
     try {
@@ -617,9 +694,10 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         
         print('🔄 Converting ${apiGoals.length} API goals to UI goals...');
         
-        // Load all user milestones once (much faster than per-goal API calls)
-        print('📋 Loading all user milestones in one API call...');
-        final allUserMilestones = await _loadAllUserMilestones();
+        // Skip loading milestones initially for faster load
+        // Milestones will be loaded when clicking on individual goals
+        print('⚡ Skipping milestone load for faster initial display...');
+        final List<GoalTrackerMileStoneModel> allUserMilestones = [];
         
         for (int i = 0; i < apiGoals.length; i++) {
           final apiGoal = apiGoals[i];
@@ -675,8 +753,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             print('🔍 No categories found via either method');
           }
           
-          // Get milestones for this specific goal from the loaded data
-          final milestones = _getMilestonesForGoal(apiGoal, allUserMilestones);
+          // Skip milestone loading initially - will be loaded when goal is clicked
+          final milestones = <Milestone>[];
           
           // Determine category from actualCategories (either from existingCategorys or separate API)
           final goalCategory = _getGoalCategoryFromActualCategories(actualCategories, apiGoal.goalTrackerName ?? '', apiGoal.goalTrackerId);
@@ -684,8 +762,8 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
           // Determine priority from API data
           final goalPriority = _goalTrackerService.mapApiPriorityToUiPriority(apiGoal.predefinedGoalPriorityTypeId);
           
-          // Calculate progress based on completed milestones
-          final progress = _calculateGoalProgress(milestones);
+          // Progress will be calculated when goal details are loaded
+          final progress = 0.0;
           
           print('🏷️  Goal "${apiGoal.goalTrackerName}" FINAL categorized as: ${goalCategory.displayName}');
           print('🔥 Goal priority mapped: API ID ${apiGoal.predefinedGoalPriorityTypeId} → ${goalPriority.displayName}');
@@ -704,6 +782,9 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             tags: [goalCategory.displayName.toLowerCase()],
           ));
         }
+        
+        // Sort goals by creation date - newest first (top to bottom)
+        convertedGoals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         
         setState(() {
           goals = convertedGoals;
@@ -724,14 +805,20 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         print('⚠️  Auto-association disabled due to server-side API issues with category validation');
       } else {
         print('❌ Failed to load goals from API: ${result.message}');
-        print('🔄 Falling back to hardcoded goals...');
-        await _loadHardcodedGoals();
+        setState(() {
+          _hasError = true;
+          _errorMessage = result.message ?? 'Failed to load goals from server';
+          goals = []; // Clear any old data
+        });
       }
     } catch (e, stackTrace) {
       print('❌ Exception loading goals: $e');
       print('📍 Stack trace: $stackTrace');
-      print('🔄 Falling back to hardcoded goals...');
-      await _loadHardcodedGoals();
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        goals = []; // Clear any old data
+      });
     } finally {
       setState(() {
         _isLoading = false;
@@ -1098,6 +1185,9 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         ),
       ];
       
+      // Sort hardcoded goals by creation date - newest first (top to bottom)
+      hardcodedGoals.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      
       setState(() {
         goals = hardcodedGoals;
       });
@@ -1439,6 +1529,21 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   void _showAddGoalSheet() {
     print('➕ Opening add goal sheet...');
+    
+    // Check subscription limits
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateGoal(goals.length)) {
+      print('🚫 Goal creation blocked - limit reached: ${goals.length}/${SubscriptionService.maxFreeGoals}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'goal',
+          customMessage: 'Unlock unlimited goals and premium tracking features',
+        ),
+      );
+      return;
+    }
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -1477,88 +1582,16 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
 
   void _showGoalDetails(Goal goal) async {
     print('👁️  Opening goal details for: ${goal.title}');
-    print('🎯 Fetching fresh goal data from API...');
+    print('🎯 Fetching detailed goal data with milestones...');
     
-    // Show loading indicator
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(
-        child: CircularProgressIndicator(),
+    // Navigate immediately to loading screen
+    pushWithoutSwipe(
+      context,
+      _GoalLoadingScreen(
+        goalId: goal.id,
+        goalTitle: goal.title,
       ),
     );
-    
-    try {
-      // Parse goal ID to int
-      final goalId = int.tryParse(goal.id);
-      if (goalId == null) {
-        print('❌ Invalid goal ID: ${goal.id}');
-        Navigator.pop(context); // Close loading dialog
-        return;
-      }
-      
-      // Fetch fresh goal data from API
-      final result = await _goalTrackerService.getSingleGoalTracker(goalId);
-      
-      // Close loading dialog
-      Navigator.pop(context);
-      
-      if (result.isSuccess && result.data != null) {
-        print('✅ Fresh goal data loaded, opening details screen');
-        
-        // Convert API goal to UI Goal with fresh data
-        final freshGoal = await _convertApiGoalToUiGoal(result.data!);
-        
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => GoalDetailScreenRedesigned(
-              goal: freshGoal,
-          onGoalUpdated: (updatedGoal) async {
-            print('🔄 Goal updated from details screen:');
-            print('   Original: ${goal.title}');
-            print('   Updated: ${updatedGoal.title}');
-            
-            // Update goal using the service
-            await _updateGoalWithService(
-              goalId: updatedGoal.id,
-              title: updatedGoal.title,
-              targetDate: updatedGoal.targetDate,
-            );
-          },
-          onGoalDeleted: (deletedGoal) async {
-            print('🗑️  Goal deleted from details screen: ${deletedGoal.title}');
-            
-            // Delete goal using the service
-            await _deleteGoalWithService(deletedGoal.id);
-          },
-        ),
-      ),
-    );
-      } else {
-        print('❌ Failed to load fresh goal data: ${result.message}');
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load goal details: ${result.message}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e) {
-      // Close loading dialog if still open
-      if (Navigator.canPop(context)) {
-        Navigator.pop(context);
-      }
-      
-      print('❌ Exception while loading goal details: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error loading goal details'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
   }
 
   /// Convert a single API goal to UI Goal object (used when fetching fresh goal details)
@@ -1695,7 +1728,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         title: Text(
           'Delete Goal',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -1703,7 +1736,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
         content: Text(
           'Are you sure you want to delete "${goal.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -1712,7 +1745,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(
@@ -1752,7 +1785,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -1763,7 +1796,7 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                 style: TextStyle(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ),
@@ -1774,12 +1807,12 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
                   ListTile(
                     leading: Icon(
                       Icons.visibility,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                     title: Text(
                       'Show Completed Goals',
                       style: TextStyle(
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                         fontSize: 16.sp,
                       ),
                     ),
@@ -1919,5 +1952,245 @@ class _GoalTrackerScreenState extends State<GoalTrackerScreen>
     } catch (e) {
       print('❌ Test error: $e');
     }
+  }
+}
+
+// Loading screen that fetches detailed goal data
+class _GoalLoadingScreen extends StatefulWidget {
+  final String goalId;
+  final String goalTitle;
+  
+  const _GoalLoadingScreen({
+    Key? key,
+    required this.goalId,
+    required this.goalTitle,
+  }) : super(key: key);
+  
+  @override
+  _GoalLoadingScreenState createState() => _GoalLoadingScreenState();
+}
+
+class _GoalLoadingScreenState extends State<_GoalLoadingScreen> {
+  final GoalTrackerService _goalTrackerService = GoalTrackerService();
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadDetailedGoalData();
+  }
+  
+  Future<void> _loadDetailedGoalData() async {
+    try {
+      print('🔄 Loading detailed data for goal: ${widget.goalTitle}');
+      
+      // Parse goal ID to int
+      final goalId = int.tryParse(widget.goalId);
+      if (goalId == null) {
+        print('❌ Invalid goal ID: ${widget.goalId}');
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Invalid goal ID'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      
+      // Initialize service
+      _goalTrackerService.initialize();
+      
+      // Fetch detailed goal data from API
+      final result = await _goalTrackerService.getSingleGoalTracker(goalId);
+      
+      if (result.isSuccess && result.data != null) {
+        print('✅ Detailed goal data loaded');
+        
+        // Load milestones for this goal
+        print('📋 Loading milestones for goal...');
+        final milestonesResult = await _goalTrackerService.getMilestonesByGoalTracker(goalId);
+        final milestonesData = milestonesResult.data ?? [];
+        
+        // Convert API goal to UI Goal with full data
+        final apiGoal = result.data!;
+        
+        // Convert milestones
+        final milestones = milestonesData.map((apiMilestone) => Milestone(
+          id: apiMilestone.goalTrackerMileStoneId?.toString() ?? '',
+          title: apiMilestone.goalTrackerMileStoneName ?? '',
+          description: '', // API doesn't have description field
+          isCompleted: apiMilestone.predefinedGoalStatusTypeId == 4, // Status 4 is completed
+          completedAt: apiMilestone.goalTrackerMileStoneCompletedDate,
+          targetDate: apiMilestone.goalTrackerMileStoneEndDate,
+        )).toList();
+        
+        // Determine category from API data
+        // Use existingCategorys from the detailed goal data
+        final actualCategories = apiGoal.existingCategorys;
+        
+        // Debug category data
+        print('🔍 Category Debug for goal: ${apiGoal.goalTrackerName}');
+        print('   existingCategorys: $actualCategories');
+        print('   existingCategorys type: ${actualCategories.runtimeType}');
+        print('   existingCategorys length: ${actualCategories?.length ?? 0}');
+        if (actualCategories != null && actualCategories.isNotEmpty) {
+          print('   First category: ${actualCategories.first}');
+          print('   First category type: ${actualCategories.first.runtimeType}');
+        }
+        
+        final goalCategory = _getGoalCategoryFromActualCategories(actualCategories);
+        print('   Final determined category: ${goalCategory.displayName}');
+        
+        // Determine priority
+        final goalPriority = _mapApiPriorityToUiPriority(apiGoal.predefinedGoalPriorityTypeId);
+        
+        // Calculate progress based on milestones
+        final progress = _calculateProgress(milestones);
+        
+        // Create full Goal object
+        final detailedGoal = Goal(
+          id: apiGoal.goalTrackerId?.toString() ?? '',
+          title: apiGoal.goalTrackerName ?? '',
+          description: '', // API doesn't have description
+          category: goalCategory,
+          priority: goalPriority,
+          targetDate: apiGoal.goalTrackerEndDate ?? DateTime.now().add(Duration(days: 30)),
+          createdAt: apiGoal.goalTrackerStartDate ?? DateTime.now(),
+          milestones: milestones,
+          currentProgress: progress,
+          tags: [goalCategory.displayName.toLowerCase()],
+        );
+        
+        print('✅ Goal details fully loaded with ${milestones.length} milestones');
+        
+        // Replace current route with goal detail screen without animation
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => GoalDetailScreenRedesigned(
+              goal: detailedGoal,
+              onGoalUpdated: (updatedGoal) async {
+                print('🔄 Goal updated from details screen');
+                Navigator.pop(context);
+              },
+              onGoalDeleted: (deletedGoal) async {
+                print('🗑️ Goal deleted from details screen');
+                Navigator.pop(context);
+              },
+            ),
+            transitionDuration: Duration.zero, // No animation
+            reverseTransitionDuration: Duration.zero, // No animation on back
+          ),
+        );
+      } else {
+        print('❌ Failed to load detailed goal data: ${result.message}');
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to load goal details'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      print('❌ Exception loading detailed goal data: $e');
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error loading goal details'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+  
+  // Helper methods
+  GoalCategory _getGoalCategoryFromActualCategories(List<dynamic>? actualCategories) {
+    print('🔍 _getGoalCategoryFromActualCategories called');
+    print('   actualCategories: $actualCategories');
+    
+    if (actualCategories != null && actualCategories.isNotEmpty) {
+      // Get the first category
+      final category = actualCategories.first;
+      print('   Processing category: $category');
+      print('   Category type: ${category.runtimeType}');
+      
+      // Try to get category name from the category object
+      String? categoryName;
+      if (category is CategoryModel) {
+        categoryName = category.categoryName;
+        print('   CategoryModel.categoryName: $categoryName');
+      } else if (category is Map) {
+        categoryName = category['categoryName'];
+        print('   Map[categoryName]: $categoryName');
+      } else {
+        print('   Unknown category type, trying toString: ${category.toString()}');
+      }
+      
+      if (categoryName != null) {
+        final lowerName = categoryName.toLowerCase();
+        print('   Checking categoryName: "$categoryName" (lowercase: "$lowerName")');
+        
+        // Map category names to GoalCategory enum
+        if (lowerName.contains('career') || lowerName.contains('work')) {
+          print('   → Mapped to GoalCategory.career');
+          return GoalCategory.career;
+        } else if (lowerName.contains('health') || lowerName.contains('fitness')) {
+          print('   → Mapped to GoalCategory.health');
+          return GoalCategory.health;
+        } else if (lowerName.contains('love') || lowerName.contains('relationship')) {
+          print('   → Mapped to GoalCategory.relationships');
+          return GoalCategory.relationships;
+        } else if (lowerName.contains('money') || lowerName.contains('finance')) {
+          print('   → Mapped to GoalCategory.financial');
+          return GoalCategory.financial;
+        } else if (lowerName.contains('personal')) {
+          print('   → Mapped to GoalCategory.personal');
+          return GoalCategory.personal;
+        } else if (lowerName.contains('spiritual')) {
+          print('   → Mapped to GoalCategory.spiritual');
+          return GoalCategory.spiritual;
+        } else {
+          print('   → No category match found for "$categoryName"');
+        }
+      } else {
+        print('   → No categoryName found in category object');
+      }
+    } else {
+      print('   → actualCategories is null or empty');
+    }
+    
+    // Default fallback
+    print('   → Falling back to GoalCategory.personal');
+    return GoalCategory.personal;
+  }
+  
+  GoalPriority _mapApiPriorityToUiPriority(int? apiPriorityId) {
+    switch (apiPriorityId) {
+      case 1:
+        return GoalPriority.high;
+      case 2:
+        return GoalPriority.medium;
+      case 3:
+        return GoalPriority.low;
+      default:
+        return GoalPriority.medium;
+    }
+  }
+  
+  double _calculateProgress(List<Milestone> milestones) {
+    if (milestones.isEmpty) return 0.0;
+    final completed = milestones.where((m) => m.isCompleted).length;
+    return (completed / milestones.length) * 100;
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundPrimary,
+      body: StylishLoading(
+        message: 'Loading goal details...',
+      ),
+    );
   }
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/services/user_service.dart';
+import 'package:mistel/services/user_service.dart';
 import '../constants/app_theme.dart';
 import '../models/goals.dart';
 import '../components/progress_update_dialog.dart';
 import '../components/edit_goal_sheet.dart';
 import '../components/milestone_dialog.dart';
+import '../components/sophisticated_milestone_timeline.dart';
 import '../widgets/universal_back_button.dart';
 import '../models/api_milestone.dart';
 import '../services/goal_tracker_service.dart';
 import '../constants/goal_constants.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 
 class GoalDetailScreenRedesigned extends StatefulWidget {
   final Goal goal;
@@ -85,7 +88,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -133,7 +136,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
-              color: currentGoal.category.color.withOpacity(0.3),
+              color: currentGoal.category.color.withValues(alpha: 0.3),
               blurRadius: 12.r,
               offset: Offset(0, 4.h),
             ),
@@ -183,7 +186,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             width: 60.w,
             height: 60.h,
             decoration: BoxDecoration(
-              color: currentGoal.category.color.withOpacity(0.1),
+              color: currentGoal.category.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(
@@ -202,7 +205,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -231,7 +234,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
               ),
               child: Icon(
                 Icons.edit,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 20.sp,
               ),
             ),
@@ -242,7 +245,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
               width: 44.w,
               height: 44.h,
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.r),
               ),
               child: Icon(
@@ -274,7 +277,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             Text(
@@ -319,7 +322,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                 ? '${currentGoal.daysUntilTarget.abs()}d'
                 : '${currentGoal.daysUntilTarget}d',
             Icons.schedule,
-            currentGoal.isOverdue ? Colors.red : AppTheme.textMedium,
+            currentGoal.isOverdue ? Colors.red : AppTheme.textSecondary,
           ),
         ),
       ],
@@ -353,7 +356,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             label,
             style: TextStyle(
               fontSize: 11.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -377,7 +380,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
           ),
           SizedBox(height: 12.h),
@@ -385,7 +388,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             currentGoal.description,
             style: TextStyle(
               fontSize: 14.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
               height: 1.5,
             ),
           ),
@@ -396,142 +399,111 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
 
   Widget _buildMilestonesCard() {
     return Container(
-      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: AppTheme.cardBackground,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Milestones',
-                style: TextStyle(
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
+          // Header with add button
+          Padding(
+            padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Milestones Timeline',
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    '${currentGoal.completedMilestones}/${currentGoal.milestones.length}',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: currentGoal.category.color,
-                    ),
-                  ),
-                  SizedBox(width: 8.w),
-                  GestureDetector(
-                    onTap: _showAddMilestone,
-                    child: Container(
-                      padding: EdgeInsets.all(6.w),
-                      decoration: BoxDecoration(
-                        color: currentGoal.category.color.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(6.r),
-                      ),
-                      child: Icon(
-                        Icons.add,
-                        color: currentGoal.category.color,
-                        size: 16.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          
-          SizedBox(height: 16.h),
-          
-          // Milestones list or empty state
-          if (currentGoal.milestones.isNotEmpty)
-            ...currentGoal.milestones.asMap().entries.map((entry) {
-            final index = entry.key;
-            final milestone = entry.value;
-            
-            return Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              child: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () => _toggleMilestone(index),
-                    child: Container(
-                      width: 20.w,
-                      height: 20.h,
-                      decoration: BoxDecoration(
-                        color: milestone.isCompleted 
-                            ? currentGoal.category.color
-                            : Colors.transparent,
-                        border: Border.all(
-                          color: milestone.isCompleted 
-                              ? currentGoal.category.color
-                              : AppTheme.textMedium,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                      child: milestone.isCompleted
-                          ? Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 12.sp,
-                            )
-                          : null,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: Text(
-                      milestone.title,
+                Row(
+                  children: [
+                    Text(
+                      '${currentGoal.completedMilestones}/${currentGoal.milestones.length}',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: milestone.isCompleted 
-                            ? AppTheme.textMedium
-                            : AppTheme.textLight,
-                        decoration: milestone.isCompleted 
-                            ? TextDecoration.lineThrough
-                            : TextDecoration.none,
+                        fontWeight: FontWeight.w600,
+                        color: currentGoal.category.color,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }).toList()
+                    SizedBox(width: 8.w),
+                    GestureDetector(
+                      onTap: _showAddMilestone,
+                      child: Container(
+                        padding: EdgeInsets.all(6.w),
+                        decoration: BoxDecoration(
+                          color: currentGoal.category.color.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(6.r),
+                        ),
+                        child: Icon(
+                          Icons.add,
+                          color: currentGoal.category.color,
+                          size: 16.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           
-          // Empty state
+          // Sophisticated timeline or empty state
+          if (currentGoal.milestones.isNotEmpty)
+            SophisticatedMilestoneTimeline(
+              milestones: currentGoal.milestones,
+              accentColor: currentGoal.category.color,
+            )
           else
-            Container(
+            Padding(
               padding: EdgeInsets.all(20.w),
               child: Column(
                 children: [
                   Icon(
-                    Icons.flag_outlined,
-                    color: AppTheme.textMedium,
-                    size: 32.sp,
+                    Icons.timeline,
+                    color: AppTheme.textSecondary,
+                    size: 48.sp,
                   ),
-                  SizedBox(height: 8.h),
+                  SizedBox(height: 16.h),
                   Text(
                     'No milestones yet',
                     style: TextStyle(
-                      fontSize: 14.sp,
-                      color: AppTheme.textMedium,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: AppTheme.textSecondary,
                     ),
                   ),
                   SizedBox(height: 8.h),
+                  Text(
+                    'Create milestones to track your progress with detailed timelines',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      color: AppTheme.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 16.h),
                   GestureDetector(
                     onTap: _showAddMilestone,
-                    child: Text(
-                      'Add your first milestone',
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: currentGoal.category.color,
-                        fontWeight: FontWeight.w600,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                      decoration: BoxDecoration(
+                        color: currentGoal.category.color.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(25.r),
+                        border: Border.all(
+                          color: currentGoal.category.color.withValues(alpha: 0.3),
+                        ),
+                      ),
+                      child: Text(
+                        'Add Your First Milestone',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: currentGoal.category.color,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),
@@ -558,7 +530,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
           ),
           SizedBox(height: 16.h),
@@ -567,7 +539,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             'Goal Created',
             currentGoal.createdAt,
             Icons.flag_outlined,
-            AppTheme.textMedium,
+            AppTheme.textSecondary,
             true,
           ),
           
@@ -584,7 +556,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             'Target Date',
             currentGoal.targetDate,
             Icons.celebration_outlined,
-            currentGoal.isCompleted ? Colors.green : AppTheme.textMedium,
+            currentGoal.isCompleted ? Colors.green : AppTheme.textSecondary,
             currentGoal.isCompleted,
           ),
         ],
@@ -607,7 +579,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             width: 28.w,
             height: 28.h,
             decoration: BoxDecoration(
-              color: isCompleted ? color : color.withOpacity(0.2),
+              color: isCompleted ? color : color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(6.r),
             ),
             child: Icon(
@@ -626,14 +598,14 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   '${date.day}/${date.month}/${date.year}',
                   style: TextStyle(
                     fontSize: 12.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
@@ -712,7 +684,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         title: Text(
           'Delete Goal',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -720,7 +692,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         content: Text(
           'Are you sure you want to delete "${currentGoal.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -729,7 +701,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(
@@ -904,6 +876,20 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
           content: Text('User not loaded. Please try again.'),
           backgroundColor: Colors.red,
           behavior: SnackBarBehavior.fixed,
+        ),
+      );
+      return;
+    }
+
+    // Check subscription limits for milestones
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateMilestone(currentGoal.milestones.length)) {
+      print('🚫 Milestone creation blocked - limit reached: ${currentGoal.milestones.length}/${SubscriptionService.maxFreeMilestonesPerGoal}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'milestone',
+          customMessage: 'Unlock unlimited milestones and premium goal tracking',
         ),
       );
       return;
@@ -1095,7 +1081,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
         title: Text(
           'Update Goal Progress?',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
@@ -1106,7 +1092,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             Text(
               'You completed a milestone! Would you like to update your overall goal progress?',
               style: TextStyle(
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
                 fontSize: 14.sp,
               ),
             ),
@@ -1126,7 +1112,7 @@ class _GoalDetailScreenRedesignedState extends State<GoalDetailScreenRedesigned>
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Not Now',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(

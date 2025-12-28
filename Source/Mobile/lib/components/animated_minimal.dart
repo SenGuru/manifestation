@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_theme.dart';
 import 'dart:math' as math;
 
-import 'package:fun/constants/meditation_constants.dart';
+import 'package:mistel/constants/meditation_constants.dart';
 
 
 class AnimatedMinimal extends StatefulWidget {

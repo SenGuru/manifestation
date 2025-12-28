@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fun/components/enhanced_progress_update_dialog.dart';
+import 'package:mistel/components/enhanced_progress_update_dialog.dart';
 
 import '../models/goals.dart';
 import '../models/progress_tracker.dart';

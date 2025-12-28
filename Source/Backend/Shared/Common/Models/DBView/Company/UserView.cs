@@ -9,9 +9,6 @@ namespace Manifest.Common.Models.DBView
         public string PredefinedUserTypeName { get; set; }
 
         [NotColumn]
-        public string CompanyCode { get; set; }
-
-        [NotColumn]
         public string ModifiedByUserFirstName { get; set; }
 
         [NotColumn]

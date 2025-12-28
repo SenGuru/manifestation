@@ -1417,7 +1417,6 @@ export class UserPictureWithFileFormModel {
 export class UserModel {
     existingPermissionTypeIds : number[] | null = null;
     predefinedUserTypeName : string = '';
-    companyCode : string = '';
     modifiedByUserFirstName : string = '';
     modifiedByUserLastName : string = '';
     modifiedByUserEmail : string = '';
@@ -1437,6 +1436,8 @@ export class UserModel {
     accountLockedUntil : Date | null = null;
     profileImageGuid : string | null = null;
     profileImageActualFileName : string = '';
+    hasUserPurchasedPremiumFeature : boolean = false;
+    premiumFeatureValidUntil : Date | null = null;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -1457,8 +1458,6 @@ export class UserModel {
         obj.existingPermissionTypeIds = self.existingPermissionTypeIds;
       if (self.hasOwnProperty('predefinedUserTypeName'))
         obj.predefinedUserTypeName = self.predefinedUserTypeName;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
       if (self.hasOwnProperty('modifiedByUserFirstName'))
         obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
       if (self.hasOwnProperty('modifiedByUserLastName'))
@@ -1497,6 +1496,10 @@ export class UserModel {
         obj.profileImageGuid = self.profileImageGuid;
       if (self.hasOwnProperty('profileImageActualFileName'))
         obj.profileImageActualFileName = self.profileImageActualFileName;
+      if (self.hasOwnProperty('hasUserPurchasedPremiumFeature'))
+        obj.hasUserPurchasedPremiumFeature = self.hasUserPurchasedPremiumFeature;
+      if (self.hasOwnProperty('premiumFeatureValidUntil'))
+        obj.premiumFeatureValidUntil = self.premiumFeatureValidUntil ?? (!adjustDateToUTC ? self.premiumFeatureValidUntil : (self.premiumFeatureValidUntil !== null ? DateUtils.parseAsUTC(self.premiumFeatureValidUntil) : self.premiumFeatureValidUntil ));
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -1545,7 +1548,6 @@ export class UserCreateWithFileFormModel {
     captchaCode : string = '';
     newPermissionTypeIds : number[] | null = null;
     initialPassword : string = '';
-    companyCode : string = '';
     modifiedByUserFirstName : string = '';
     modifiedByUserLastName : string = '';
     modifiedByUserEmail : string = '';
@@ -1564,6 +1566,8 @@ export class UserCreateWithFileFormModel {
     accountLockedUntil : Date | null = null;
     profileImageGuid : string | null = null;
     profileImageActualFileName : string = '';
+    hasUserPurchasedPremiumFeature : boolean = false;
+    premiumFeatureValidUntil : Date | null = null;
     isDeleted : boolean = false;
     static userName__size : number = 50;
     static email__size : number = 100;
@@ -1584,8 +1588,6 @@ export class UserCreateWithFileFormModel {
         obj.newPermissionTypeIds = self.newPermissionTypeIds;
       if (self.hasOwnProperty('initialPassword'))
         obj.initialPassword = self.initialPassword;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
       if (self.hasOwnProperty('modifiedByUserFirstName'))
         obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
       if (self.hasOwnProperty('modifiedByUserLastName'))
@@ -1622,6 +1624,10 @@ export class UserCreateWithFileFormModel {
         obj.profileImageGuid = self.profileImageGuid;
       if (self.hasOwnProperty('profileImageActualFileName'))
         obj.profileImageActualFileName = self.profileImageActualFileName;
+      if (self.hasOwnProperty('hasUserPurchasedPremiumFeature'))
+        obj.hasUserPurchasedPremiumFeature = self.hasUserPurchasedPremiumFeature;
+      if (self.hasOwnProperty('premiumFeatureValidUntil'))
+        obj.premiumFeatureValidUntil = self.premiumFeatureValidUntil ?? (!adjustDateToUTC ? self.premiumFeatureValidUntil : (self.premiumFeatureValidUntil !== null ? DateUtils.parseAsUTC(self.premiumFeatureValidUntil) : self.premiumFeatureValidUntil ));
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       return obj;
@@ -1632,7 +1638,6 @@ export class UserUpdateWithFileFormModel {
     uploadedFile : File | null = null;
     existingPermissionTypeIds : number[] | null = null;
     predefinedUserTypeName : string = '';
-    companyCode : string = '';
     modifiedByUserFirstName : string = '';
     modifiedByUserLastName : string = '';
     modifiedByUserEmail : string = '';
@@ -1652,6 +1657,8 @@ export class UserUpdateWithFileFormModel {
     accountLockedUntil : Date | null = null;
     profileImageGuid : string | null = null;
     profileImageActualFileName : string = '';
+    hasUserPurchasedPremiumFeature : boolean = false;
+    premiumFeatureValidUntil : Date | null = null;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
@@ -1674,8 +1681,6 @@ export class UserUpdateWithFileFormModel {
         obj.existingPermissionTypeIds = self.existingPermissionTypeIds;
       if (self.hasOwnProperty('predefinedUserTypeName'))
         obj.predefinedUserTypeName = self.predefinedUserTypeName;
-      if (self.hasOwnProperty('companyCode'))
-        obj.companyCode = self.companyCode;
       if (self.hasOwnProperty('modifiedByUserFirstName'))
         obj.modifiedByUserFirstName = self.modifiedByUserFirstName;
       if (self.hasOwnProperty('modifiedByUserLastName'))
@@ -1714,6 +1719,10 @@ export class UserUpdateWithFileFormModel {
         obj.profileImageGuid = self.profileImageGuid;
       if (self.hasOwnProperty('profileImageActualFileName'))
         obj.profileImageActualFileName = self.profileImageActualFileName;
+      if (self.hasOwnProperty('hasUserPurchasedPremiumFeature'))
+        obj.hasUserPurchasedPremiumFeature = self.hasUserPurchasedPremiumFeature;
+      if (self.hasOwnProperty('premiumFeatureValidUntil'))
+        obj.premiumFeatureValidUntil = self.premiumFeatureValidUntil ?? (!adjustDateToUTC ? self.premiumFeatureValidUntil : (self.premiumFeatureValidUntil !== null ? DateUtils.parseAsUTC(self.premiumFeatureValidUntil) : self.premiumFeatureValidUntil ));
       if (self.hasOwnProperty('isDeleted'))
         obj.isDeleted = self.isDeleted;
       if (self.hasOwnProperty('createdDate'))
@@ -1724,6 +1733,110 @@ export class UserUpdateWithFileFormModel {
         obj.modifiedDate = self.modifiedDate ?? (!adjustDateToUTC ? self.modifiedDate : DateUtils.parseAsUTC(self.modifiedDate));
       if (self.hasOwnProperty('modifiedByUserId'))
         obj.modifiedByUserId = self.modifiedByUserId;
+      return obj;
+    }
+}
+
+export class UserProfileModel {
+    userId : number = 0;
+    isPrivate : boolean = false;
+    userName : string = '';
+    firstName : string = '';
+    lastName : string = '';
+    email : string = '';
+    workPhone : string = '';
+    cellPhone : string = '';
+    billingAddress1 : string = '';
+    billingAddress2 : string = '';
+    locationCity : string = '';
+    locationState : string = '';
+    locationZip : string = '';
+    locationCountry : string = '';
+    countryGuid : number | null = null;
+    stateGuid : number | null = null;
+
+    static getCopy(self : UserProfileModel,adjustDateToUTC : boolean = false) : UserProfileModel {
+      let obj = new UserProfileModel();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('isPrivate'))
+        obj.isPrivate = self.isPrivate;
+      if (self.hasOwnProperty('userName'))
+        obj.userName = self.userName;
+      if (self.hasOwnProperty('firstName'))
+        obj.firstName = self.firstName;
+      if (self.hasOwnProperty('lastName'))
+        obj.lastName = self.lastName;
+      if (self.hasOwnProperty('email'))
+        obj.email = self.email;
+      if (self.hasOwnProperty('workPhone'))
+        obj.workPhone = self.workPhone;
+      if (self.hasOwnProperty('cellPhone'))
+        obj.cellPhone = self.cellPhone;
+      if (self.hasOwnProperty('billingAddress1'))
+        obj.billingAddress1 = self.billingAddress1;
+      if (self.hasOwnProperty('billingAddress2'))
+        obj.billingAddress2 = self.billingAddress2;
+      if (self.hasOwnProperty('locationCity'))
+        obj.locationCity = self.locationCity;
+      if (self.hasOwnProperty('locationState'))
+        obj.locationState = self.locationState;
+      if (self.hasOwnProperty('locationZip'))
+        obj.locationZip = self.locationZip;
+      if (self.hasOwnProperty('locationCountry'))
+        obj.locationCountry = self.locationCountry;
+      if (self.hasOwnProperty('countryGuid'))
+        obj.countryGuid = self.countryGuid;
+      if (self.hasOwnProperty('stateGuid'))
+        obj.stateGuid = self.stateGuid;
+      return obj;
+    }
+}
+
+export class MinimalUserProfileModel {
+    userId : number | null = null;
+    email : string = '';
+    firstName : string = '';
+    lastName : string = '';
+
+    static getCopy(self : MinimalUserProfileModel,adjustDateToUTC : boolean = false) : MinimalUserProfileModel {
+      let obj = new MinimalUserProfileModel();
+      if (self.hasOwnProperty('userId'))
+        obj.userId = self.userId;
+      if (self.hasOwnProperty('email'))
+        obj.email = self.email;
+      if (self.hasOwnProperty('firstName'))
+        obj.firstName = self.firstName;
+      if (self.hasOwnProperty('lastName'))
+        obj.lastName = self.lastName;
+      return obj;
+    }
+}
+
+export class EnablePremiumFeatureModel {
+    password : string = '';
+    validityYears : number = 0;
+
+    static getCopy(self : EnablePremiumFeatureModel,adjustDateToUTC : boolean = false) : EnablePremiumFeatureModel {
+      let obj = new EnablePremiumFeatureModel();
+      if (self.hasOwnProperty('password'))
+        obj.password = self.password;
+      if (self.hasOwnProperty('validityYears'))
+        obj.validityYears = self.validityYears;
+      return obj;
+    }
+}
+
+export class IsPremiumFeatureEnabledModel {
+    enabled : boolean = false;
+    enabledUntilDate : Date | null = null;
+
+    static getCopy(self : IsPremiumFeatureEnabledModel,adjustDateToUTC : boolean = false) : IsPremiumFeatureEnabledModel {
+      let obj = new IsPremiumFeatureEnabledModel();
+      if (self.hasOwnProperty('enabled'))
+        obj.enabled = self.enabled;
+      if (self.hasOwnProperty('enabledUntilDate'))
+        obj.enabledUntilDate = self.enabledUntilDate ?? (!adjustDateToUTC ? self.enabledUntilDate : (self.enabledUntilDate !== null ? DateUtils.parseAsUTC(self.enabledUntilDate) : self.enabledUntilDate ));
       return obj;
     }
 }
@@ -2214,8 +2327,8 @@ export class FileAttachmentModel {
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
     static fileAttachmentFileName__size : number = 128;
-    static fileAttachmentFileLocation__size : number = 512;
-    static fileAttachmentPreviewFileLocation__size : number = 512;
+    static fileAttachmentFileLocation__size : number = 1024;
+    static fileAttachmentPreviewFileLocation__size : number = 1024;
     static description__size : number = 200;
 
     static getCopy(self : FileAttachmentModel,adjustDateToUTC : boolean = false) : FileAttachmentModel {
@@ -2418,8 +2531,8 @@ export class FileAttachmentCreateWithFileFormModel {
     description : string = '';
     userId : number = 0;
     static fileAttachmentFileName__size : number = 128;
-    static fileAttachmentFileLocation__size : number = 512;
-    static fileAttachmentPreviewFileLocation__size : number = 512;
+    static fileAttachmentFileLocation__size : number = 1024;
+    static fileAttachmentPreviewFileLocation__size : number = 1024;
     static description__size : number = 200;
 
     static getCopy(self : FileAttachmentCreateWithFileFormModel,adjustDateToUTC : boolean = false) : FileAttachmentCreateWithFileFormModel {
@@ -2457,8 +2570,8 @@ export class FileAttachmentUpdateModel {
     description : string = '';
     userId : number = 0;
     static fileAttachmentFileName__size : number = 128;
-    static fileAttachmentFileLocation__size : number = 512;
-    static fileAttachmentPreviewFileLocation__size : number = 512;
+    static fileAttachmentFileLocation__size : number = 1024;
+    static fileAttachmentPreviewFileLocation__size : number = 1024;
     static description__size : number = 200;
 
     static getCopy(self : FileAttachmentUpdateModel,adjustDateToUTC : boolean = false) : FileAttachmentUpdateModel {
@@ -2841,17 +2954,24 @@ export class VisionBoardPictureModel {
     createdBy : string = '';
     modifiedBy : string = '';
     visionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
     isDeleted : boolean = false;
     createdDate : Date = new Date();
     createdByUserId : number | null = null;
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureModel,adjustDateToUTC : boolean = false) : VisionBoardPictureModel {
       let obj = new VisionBoardPictureModel();
@@ -2875,12 +2995,20 @@ export class VisionBoardPictureModel {
         obj.modifiedBy = self.modifiedBy;
       if (self.hasOwnProperty('visionBoardPictureId'))
         obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       if (self.hasOwnProperty('isDeleted'))
@@ -2898,9 +3026,13 @@ export class VisionBoardPictureModel {
 
     static getAsCreateModel(self : VisionBoardPictureModel) : VisionBoardPictureCreateModel {
       let obj = new VisionBoardPictureCreateModel();
+      obj.title = self.title;
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
+      obj.thumbnailLocation = self.thumbnailLocation;
+      obj.thumbnailFileName = self.thumbnailFileName;
+      obj.thumbnailFileSize = self.thumbnailFileSize;
       obj.userId = self.userId;
       return obj;
     }
@@ -4845,7 +4977,7 @@ export class DefaultMeditationFileModel {
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
     static defaultMeditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultMeditationFileModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileModel {
@@ -4954,7 +5086,7 @@ export class DefaultMeditationFileCreateModel {
     fileName : string = '';
     fileSize : number = 0;
     static defaultMeditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultMeditationFileCreateModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileCreateModel {
@@ -4992,7 +5124,7 @@ export class DefaultMeditationFileUpdateModel {
     fileName : string = '';
     fileSize : number = 0;
     static defaultMeditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultMeditationFileUpdateModel,adjustDateToUTC : boolean = false) : DefaultMeditationFileUpdateModel {
@@ -5023,6 +5155,7 @@ export class DefaultVisionBoardPictureModel {
     createdBy : string = '';
     modifiedBy : string = '';
     defaultVisionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
@@ -5031,7 +5164,8 @@ export class DefaultVisionBoardPictureModel {
     createdByUserId : number | null = null;
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultVisionBoardPictureModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureModel {
@@ -5054,6 +5188,8 @@ export class DefaultVisionBoardPictureModel {
         obj.modifiedBy = self.modifiedBy;
       if (self.hasOwnProperty('defaultVisionBoardPictureId'))
         obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -5075,6 +5211,7 @@ export class DefaultVisionBoardPictureModel {
 
     static getAsCreateModel(self : DefaultVisionBoardPictureModel) : DefaultVisionBoardPictureCreateModel {
       let obj = new DefaultVisionBoardPictureCreateModel();
+      obj.title = self.title;
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
@@ -5084,6 +5221,7 @@ export class DefaultVisionBoardPictureModel {
     static getAsUpdateModel(self : DefaultVisionBoardPictureModel):DefaultVisionBoardPictureUpdateModel {
       let obj = new DefaultVisionBoardPictureUpdateModel();
       obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      obj.title = self.title;
       obj.location = self.location;
       obj.fileName = self.fileName;
       obj.fileSize = self.fileSize;
@@ -5121,14 +5259,18 @@ export class DefaultVisionBoardPictureSearchCriteria extends BaseSearchCriteria{
 }
 
 export class DefaultVisionBoardPictureCreateModel {
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultVisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureCreateModel {
       let obj = new DefaultVisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -5152,16 +5294,20 @@ export class MultipleDefaultVisionBoardPictureCreateModel {
 
 export class DefaultVisionBoardPictureUpdateModel {
     defaultVisionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : DefaultVisionBoardPictureUpdateModel,adjustDateToUTC : boolean = false) : DefaultVisionBoardPictureUpdateModel {
       let obj = new DefaultVisionBoardPictureUpdateModel();
       if (self.hasOwnProperty('defaultVisionBoardPictureId'))
         obj.defaultVisionBoardPictureId = self.defaultVisionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
@@ -6998,7 +7144,7 @@ export class MeditationFileModel {
     modifiedDate : Date = new Date();
     modifiedByUserId : number | null = null;
     static meditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : MeditationFileModel,adjustDateToUTC : boolean = false) : MeditationFileModel {
@@ -7117,7 +7263,7 @@ export class MeditationFileCreateModel {
     fileSize : number = 0;
     userId : number = 0;
     static meditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : MeditationFileCreateModel,adjustDateToUTC : boolean = false) : MeditationFileCreateModel {
@@ -7158,7 +7304,7 @@ export class MeditationFileUpdateModel {
     fileSize : number = 0;
     userId : number = 0;
     static meditationFileName__size : number = 255;
-    static location__size : number = 255;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
 
     static getCopy(self : MeditationFileUpdateModel,adjustDateToUTC : boolean = false) : MeditationFileUpdateModel {
@@ -7454,24 +7600,39 @@ export class VisionBoardPictureSearchCriteria extends BaseSearchCriteria{
 
 export class VisionBoardPictureCreateWithFileFormModel {
     uploadedFile : File | null = null;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureCreateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateWithFileFormModel {
       let obj = new VisionBoardPictureCreateWithFileFormModel();
       if (self.hasOwnProperty('uploadedFile'))
         obj.uploadedFile = self.uploadedFile;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7492,12 +7653,19 @@ export class MultipleVisionBoardPictureCreateModel {
 export class VisionBoardPictureUpdateWithFileFormModel {
     uploadedFile : File | null = null;
     visionBoardPictureId : number = 0;
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
     static uploadedFile__required  = true;
 
     static getCopy(self : VisionBoardPictureUpdateWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureUpdateWithFileFormModel {
@@ -7506,12 +7674,20 @@ export class VisionBoardPictureUpdateWithFileFormModel {
         obj.uploadedFile = self.uploadedFile;
       if (self.hasOwnProperty('visionBoardPictureId'))
         obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;
@@ -7560,6 +7736,20 @@ export class UserByVisionBoardPictureIdSearchCriteria extends BaseSearchCriteria
         obj.sortBy = self.sortBy;
       if (self.hasOwnProperty('sortAscending'))
         obj.sortAscending = self.sortAscending;
+      return obj;
+    }
+}
+
+export class VisionBoardPictureThumbnailWithFileFormModel {
+    visionBoardPictureId : number = 0;
+    uploadedFile : File | null = null;
+
+    static getCopy(self : VisionBoardPictureThumbnailWithFileFormModel,adjustDateToUTC : boolean = false) : VisionBoardPictureThumbnailWithFileFormModel {
+      let obj = new VisionBoardPictureThumbnailWithFileFormModel();
+      if (self.hasOwnProperty('visionBoardPictureId'))
+        obj.visionBoardPictureId = self.visionBoardPictureId;
+      if (self.hasOwnProperty('uploadedFile'))
+        obj.uploadedFile = self.uploadedFile;
       return obj;
     }
 }
@@ -15872,21 +16062,36 @@ export class IFormFile {
 }
 
 export class VisionBoardPictureCreateModel {
+    title : string = '';
     location : string = '';
     fileName : string = '';
     fileSize : number = 0;
+    thumbnailLocation : string = '';
+    thumbnailFileName : string = '';
+    thumbnailFileSize : number | null = null;
     userId : number = 0;
-    static location__size : number = 255;
+    static title__size : number = 100;
+    static location__size : number = 1024;
     static fileName__size : number = 255;
+    static thumbnailLocation__size : number = 1024;
+    static thumbnailFileName__size : number = 255;
 
     static getCopy(self : VisionBoardPictureCreateModel,adjustDateToUTC : boolean = false) : VisionBoardPictureCreateModel {
       let obj = new VisionBoardPictureCreateModel();
+      if (self.hasOwnProperty('title'))
+        obj.title = self.title;
       if (self.hasOwnProperty('location'))
         obj.location = self.location;
       if (self.hasOwnProperty('fileName'))
         obj.fileName = self.fileName;
       if (self.hasOwnProperty('fileSize'))
         obj.fileSize = self.fileSize;
+      if (self.hasOwnProperty('thumbnailLocation'))
+        obj.thumbnailLocation = self.thumbnailLocation;
+      if (self.hasOwnProperty('thumbnailFileName'))
+        obj.thumbnailFileName = self.thumbnailFileName;
+      if (self.hasOwnProperty('thumbnailFileSize'))
+        obj.thumbnailFileSize = self.thumbnailFileSize;
       if (self.hasOwnProperty('userId'))
         obj.userId = self.userId;
       return obj;

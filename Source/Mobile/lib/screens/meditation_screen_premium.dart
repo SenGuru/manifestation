@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:ui';
 import '../constants/app_theme.dart';
 import '../models/meditation_models.dart';
 import '../components/meditation_timer.dart';
+import '../widgets/universal_back_button.dart';
 
 class PremiumMeditationScreen extends StatefulWidget {
   @override
@@ -122,10 +124,30 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
 
   @override
   void dispose() {
-    _sessionController.dispose();
-    _breathingController.dispose();
-    _uiController.dispose();
-    _backgroundController.dispose();
+    try {
+      _sessionController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing session controller: $e');
+    }
+
+    try {
+      _breathingController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing breathing controller: $e');
+    }
+
+    try {
+      _uiController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing UI controller: $e');
+    }
+
+    try {
+      _backgroundController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing background controller: $e');
+    }
+
     super.dispose();
   }
 
@@ -194,26 +216,7 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
   Widget _buildPremiumHeader() {
     return Row(
       children: [
-        GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Container(
-            width: 48.w,
-            height: 48.h,
-            decoration: BoxDecoration(
-              color: AppTheme.white.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(16.r),
-              border: Border.all(
-                color: AppTheme.white.withOpacity(0.1),
-                width: 1,
-              ),
-            ),
-            child: Icon(
-              Icons.arrow_back_ios_rounded,
-              color: AppTheme.textLight,
-              size: 20.sp,
-            ),
-          ),
-        ),
+        UniversalBackButton(),
         SizedBox(width: 20.w),
         Expanded(
           child: Column(
@@ -648,8 +651,14 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
 
   Widget _buildPlayPauseButton() {
     return GestureDetector(
-      onTap: _togglePlayPause,
-      onLongPress: _endSession,
+      onTap: () {
+        HapticFeedback.mediumImpact();
+        _togglePlayPause();
+      },
+      onLongPress: () {
+        HapticFeedback.heavyImpact();
+        _endSession();
+      },
       child: Container(
         width: 60.w,
         height: 60.h,

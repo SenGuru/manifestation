@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/screens/session_stats_screen.dart';  
+import 'package:mistel/screens/session_stats_screen.dart';  
 import 'daily_affirmations.dart';
 import '../components/daily_inspiration.dart';
 import '../components/feature_card.dart';
@@ -13,40 +14,206 @@ import 'manifestation_journal.dart';
 import '../components/energy_meter.dart';
 import 'vision_board_home.dart';
 import 'social_feed_screen.dart';
+import '../utils/navigation_utils.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import 'login_screen.dart';
 import 'profile_screen.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
+import '../services/unified_auth_service.dart';
+import '../widgets/user_profile_picture.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   int currentStreak = 7;
-  String userName = 'Alex';
+  String userName = 'User';
+  bool _isPremium = false;
+  String? _cachedProfileImageUrl;
 
   @override
   void initState() {
     super.initState();
-    _loadUserName();
+    // Add app lifecycle observer to refresh data when app comes back to foreground
+    WidgetsBinding.instance.addObserver(this);
+    // Use post frame callback to prevent blocking initial render
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadInitialData();
+    });
+  }
+  
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+  
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Refresh user data when app comes back to foreground
+    if (state == AppLifecycleState.resumed) {
+      _refreshUserData();
+    }
+  }
+  
+  /// Refresh user data when returning from other screens
+  Future<void> _refreshUserData() async {
+    await _loadUserName();
   }
 
-  void _loadUserName() async {
+  void _loadInitialData() async {
     try {
-      // Hardcoded user name placeholder
-      final firstName = 'Alex';
+      // Load data in parallel to reduce wait time
+      final futures = [
+        _loadUserName(),
+        _loadPremiumStatusInternal(),
+      ];
+      
+      await Future.wait(futures);
+      
+      // Use single setState call to prevent multiple rebuilds
+      if (mounted) {
+        setState(() {
+          // State updates are already handled in individual methods
+        });
+        
+        // Only check premium upgrade after all data is loaded
+        _checkAndShowPremiumUpgrade();
+      }
+    } catch (e) {
+      debugPrint('Error loading initial data: $e');
+    }
+  }
+
+  Future<void> _loadPremiumStatusInternal() async {
+    try {
+      final subscriptionService = SubscriptionService();
+      await subscriptionService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
+      _isPremium = subscriptionService.isPremium;
+    } catch (e) {
+      debugPrint('Error loading premium status: $e');
+    }
+  }
+
+  void _togglePremiumStatus() async {
+    HapticFeedback.selectionClick();
+    try {
+      final subscriptionService = SubscriptionService();
+      final newPremiumStatus = !_isPremium;
+      await subscriptionService.setMockPremiumStatus(newPremiumStatus);
+      
       setState(() {
-        userName = firstName.isNotEmpty ? firstName : 'User';
+        _isPremium = newPremiumStatus;
       });
-      print('Loaded user name: $userName');
+      
+      // Show feedback
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            newPremiumStatus 
+                ? '✨ Premium Mode ON (Testing)' 
+                : '📱 Premium Mode OFF',
+          ),
+          backgroundColor: newPremiumStatus ? AppTheme.success : AppTheme.info,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      print('Error toggling premium status: $e');
+    }
+  }
+
+  Future<void> _loadUserName() async {
+    try {
+      final authService = UnifiedAuthService();
+      
+      // Always try to get fresh user data from storage first
+      final userData = await authService.getUserData();
+      String firstName = '';
+      
+      if (userData != null) {
+        firstName = userData['firstName'] ?? '';
+        print('Loaded firstName from storage: $firstName');
+      }
+      
+      // If storage is empty, fallback to currentUser object
+      if (firstName.isEmpty) {
+        final currentUser = authService.currentUser;
+        if (currentUser != null && currentUser.firstName != null) {
+          firstName = currentUser.firstName!;
+          print('Loaded firstName from currentUser: $firstName');
+        }
+      }
+      
+      if (mounted) {
+        setState(() {
+          userName = firstName.isNotEmpty ? firstName : 'User';
+        });
+        print('Set user name to: $userName');
+      }
     } catch (e) {
       print('Error loading user name: $e');
-      setState(() {
-        userName = 'User';
-      });
+      if (mounted) {
+        setState(() {
+          userName = 'User';
+        });
+      }
     }
+  }
+
+  void _checkAndShowPremiumUpgrade() async {
+    try {
+      final subscriptionService = SubscriptionService();
+      await subscriptionService.initialize();
+      
+      // Check if user is premium
+      if (!subscriptionService.isPremium) {
+        print('🎯 User is not premium, showing upgrade dialog');
+        
+        // Show the premium upgrade dialog after a short delay for better UX
+        await Future.delayed(Duration(milliseconds: 1000));
+        
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (context) => PremiumUpgradeDialog(
+              feature: 'app_launch',
+              customMessage: 'Unlock all features and enhance your manifestation journey with Premium!',
+              onUpgrade: () {
+                _handlePremiumUpgrade();
+              },
+            ),
+          );
+        }
+      } else {
+        print('✅ User has premium access');
+      }
+    } catch (e) {
+      print('❌ Error checking premium status: $e');
+    }
+  }
+
+  void _handlePremiumUpgrade() {
+    print('🚀 Premium upgrade requested - showing dialog');
+    
+    showDialog(
+      context: context,
+      builder: (context) => PremiumUpgradeDialog(
+        feature: 'Premium Features',
+        customMessage: 'Unlock all premium features to enhance your manifestation journey',
+        onUpgrade: () {
+          print('Premium upgrade completed');
+        },
+      ),
+    );
   }
   
   Widget _buildTopSection() {
@@ -119,11 +286,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               SizedBox(height: 8.h),
               Text(
-                'Ready to Manifest?',
+                'Ready to manifest?',
                 style: TextStyle(
-                  fontSize: 32.sp,
-                  color: AppTheme.textPrimary,
+                  fontSize: 28.sp,
                   fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
                 ),
               ),
             ],
@@ -131,47 +298,34 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         
         
-        // Profile button
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => ProfileScreen()),
-            );
+        // Profile picture with API integration
+        UserProfilePicture(
+          size: 44.0,
+          borderColor: AppTheme.affirmationGradient[0],
+          borderWidth: 2.5,
+          onImageLoaded: (String? imageUrl) {
+            // Cache the loaded image URL
+            _cachedProfileImageUrl = imageUrl;
           },
-          child: Container(
-            width: 44.w,
-            height: 44.h,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: AppTheme.affirmationGradient,
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppTheme.affirmationGradient[0].withValues(alpha: 0.3),
-                  blurRadius: 8.r,
-                  offset: Offset(0, 4.h),
-                ),
-              ],
-            ),
-            child: Icon(
-              Icons.person,
-              color: AppTheme.white,
-              size: 24.sp,
-            ),
-          ),
+          onTap: () async {
+            HapticFeedback.lightImpact();
+            await pushWithoutSwipe(
+              context,
+              ProfileScreen(cachedProfileImageUrl: _cachedProfileImageUrl),
+            );
+            // Refresh user data when returning from profile/settings
+            _refreshUserData();
+          },
         ),
       ],
     );
   }
   
   Widget _buildFeaturesGrid() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         Text(
           'Your Practice',
           style: TextStyle(
@@ -241,7 +395,8 @@ class _HomeScreenState extends State<HomeScreen> {
         
         SizedBox(height: 16.h),
         
-      ],
+        ],
+      ),
     );
   }
   
@@ -257,69 +412,54 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   
   void _navigateToFeature(String feature) {
+    HapticFeedback.lightImpact();
     switch (feature) {
       case 'affirmations':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => DailyAffirmationsScreen(),
-          ),
+          DailyAffirmationsScreen(),
         );
         break;
       case 'vision_board':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => VisionBoardHome(),
-          ),
+          VisionBoardHome(),
         );
         break;
       case 'journal':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => ManifestationJournalScreen(),
-          ),
+          ManifestationJournalScreen(),
         );
         break;
       case 'candle_meditation':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => VisualMeditationScreen(),
-          ),
+          VisualMeditationScreen(),
         );
         break;
       case 'goal_tracker':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => GoalTrackerScreen(),
-          ),
+          GoalTrackerScreen(),
         );
         break;
       case 'moon_phases':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => PremiumMeditationScreen(),
-          ),
+          PremiumMeditationScreen(),
         );
         break;
       case 'social':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => SocialFeedScreen(),
-          ),
+          SocialFeedScreen(),
         );
         break;
       case 'stats':
-        Navigator.push(
+        pushWithoutSwipe(
           context,
-          MaterialPageRoute(
-            builder: (context) => SessionStatsScreen(),
-          ),
+          SessionStatsScreen(),
         );
         break;
       default:

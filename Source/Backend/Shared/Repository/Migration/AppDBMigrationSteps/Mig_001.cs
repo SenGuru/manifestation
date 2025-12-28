@@ -280,7 +280,7 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("DefaultMeditationFileId").AsInt64().PrimaryKey("PK_DefaultMeditationFile").Identity().NotNullable()
                 .WithColumn("DefaultMeditationFileName").AsString(255).NotNullable()
                 .WithColumn("PredefinedMeditationTypeId").AsInt64().NotNullable()
-                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("Location").AsString(1024).Nullable()
                 .WithColumn("FileName").AsString(255).NotNullable()
                 .WithColumn("FileSize").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
@@ -303,7 +303,8 @@ namespace Manifest.Repository.Migration.Application
             UpdateSequenceStartValue("", "DefaultUserTypePermission", "DefaultUserTypePermissionId", 1000);
             Create.Table("DefaultVisionBoardPicture")
                 .WithColumn("DefaultVisionBoardPictureId").AsInt64().PrimaryKey("PK_DefaultVisionBoardPicture").Identity().NotNullable()
-                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("Title").AsString(100).Nullable()
+                .WithColumn("Location").AsString(1024).Nullable()
                 .WithColumn("FileName").AsString(255).NotNullable()
                 .WithColumn("FileSize").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
@@ -371,8 +372,8 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("FileAttachmentId").AsInt64().PrimaryKey("PK_FileAttachment").Identity().NotNullable()
                 .WithColumn("FileAttachmentFolderId").AsInt64().Nullable()
                 .WithColumn("FileAttachmentFileName").AsString(128).NotNullable()
-                .WithColumn("FileAttachmentFileLocation").AsString(512).NotNullable()
-                .WithColumn("FileAttachmentPreviewFileLocation").AsString(512).Nullable()
+                .WithColumn("FileAttachmentFileLocation").AsString(1024).NotNullable()
+                .WithColumn("FileAttachmentPreviewFileLocation").AsString(1024).Nullable()
                 .WithColumn("FileAttachmentHasPreview").AsBoolean().NotNullable()
                 .WithColumn("FileAttachmentFileSizeInBytes").AsInt64().NotNullable()
                 .WithColumn("Description").AsString(200).Nullable()
@@ -601,7 +602,7 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("MeditationFileId").AsInt64().PrimaryKey("PK_MeditationFile").Identity().NotNullable()
                 .WithColumn("PredefinedMeditationTypeId").AsInt64().NotNullable()
                 .WithColumn("MeditationFileName").AsString(255).NotNullable()
-                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("Location").AsString(1024).Nullable()
                 .WithColumn("FileName").AsString(255).NotNullable()
                 .WithColumn("FileSize").AsInt64().NotNullable()
                 .WithColumn("UserId").AsInt64().NotNullable()
@@ -929,6 +930,8 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ProfileImageGuid").AsGuid().Nullable()
                 .WithColumn("ProfileImageLocation").AsString(1024).Nullable()
                 .WithColumn("ProfileImageActualFileName").AsString(125).Nullable()
+                .WithColumn("HasUserPurchasedPremiumFeature").AsBoolean().NotNullable()
+                .WithColumn("PremiumFeatureValidUntil").AsDateTime().Nullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
                 .WithColumn("CreatedByUserId").AsInt64().Nullable()
@@ -968,11 +971,28 @@ namespace Manifest.Repository.Migration.Application
                 .WithColumn("ModifiedByUserId").AsInt64().Nullable()
 ;
             UpdateSequenceStartValue("", "UserPermission", "UserPermissionId", 1000);
+            Create.Table("UserPurchaseHistory")
+                .WithColumn("UserPurchaseHistoryId").AsInt64().PrimaryKey("PK_UserPurchaseHistory").Identity().NotNullable()
+                .WithColumn("UserId").AsInt64().NotNullable()
+                .WithColumn("IsAPurchase").AsBoolean().NotNullable()
+                .WithColumn("PurchaseOrDisableDate").AsDateTime().NotNullable()
+                .WithColumn("ValidUntil").AsDateTime().Nullable()
+                .WithColumn("IsDeleted").AsBoolean().NotNullable()
+                .WithColumn("CreatedDate").AsDateTime().NotNullable()
+                .WithColumn("CreatedByUserId").AsInt64().Nullable()
+                .WithColumn("ModifiedDate").AsDateTime().NotNullable()
+                .WithColumn("ModifiedByUserId").AsInt64().Nullable()
+;
+            UpdateSequenceStartValue("", "UserPurchaseHistory", "UserPurchaseHistoryId", 1000);
             Create.Table("VisionBoardPicture")
                 .WithColumn("VisionBoardPictureId").AsInt64().PrimaryKey("PK_VisionBoardPicture").Identity().NotNullable()
-                .WithColumn("Location").AsString(255).Nullable()
+                .WithColumn("Title").AsString(100).Nullable()
+                .WithColumn("Location").AsString(1024).Nullable()
                 .WithColumn("FileName").AsString(255).NotNullable()
                 .WithColumn("FileSize").AsInt64().NotNullable()
+                .WithColumn("ThumbnailLocation").AsString(1024).Nullable()
+                .WithColumn("ThumbnailFileName").AsString(255).Nullable()
+                .WithColumn("ThumbnailFileSize").AsInt64().Nullable()
                 .WithColumn("UserId").AsInt64().NotNullable()
                 .WithColumn("IsDeleted").AsBoolean().NotNullable()
                 .WithColumn("CreatedDate").AsDateTime().NotNullable()
@@ -1915,6 +1935,10 @@ namespace Manifest.Repository.Migration.Application
                 .OnColumn("CreatedByUserId")
             
             ;
+            Create.Index("IX_User_HasUserPurchasedPremiumFeature").OnTable("User")
+                .OnColumn("HasUserPurchasedPremiumFeature")
+            
+            ;
             Create.Index("IX_User_ModifiedByUserId").OnTable("User")
                 .OnColumn("ModifiedByUserId")
             
@@ -1960,6 +1984,18 @@ namespace Manifest.Repository.Migration.Application
             
             ;
             Create.Index("IX_UserPermission_UserId").OnTable("UserPermission")
+                .OnColumn("UserId")
+            
+            ;
+            Create.Index("IX_UserPurchaseHistory_CreatedByUserId").OnTable("UserPurchaseHistory")
+                .OnColumn("CreatedByUserId")
+            
+            ;
+            Create.Index("IX_UserPurchaseHistory_ModifiedByUserId").OnTable("UserPurchaseHistory")
+                .OnColumn("ModifiedByUserId")
+            
+            ;
+            Create.Index("IX_UserPurchaseHistory_UserId").OnTable("UserPurchaseHistory")
                 .OnColumn("UserId")
             
             ;
@@ -2478,6 +2514,12 @@ namespace Manifest.Repository.Migration.Application
             Create.ForeignKey("FK_UserPermission_PredefinedUserPermissionTypeId").FromTable("UserPermission").ForeignColumns("PredefinedUserPermissionTypeId")
                 .ToTable("EnumType").PrimaryColumns("EnumTypeId");
             Create.ForeignKey("FK_UserPermission_UserId").FromTable("UserPermission").ForeignColumns("UserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPurchaseHistory_CreatedByUserId").FromTable("UserPurchaseHistory").ForeignColumns("CreatedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPurchaseHistory_ModifiedByUserId").FromTable("UserPurchaseHistory").ForeignColumns("ModifiedByUserId")
+                .ToTable("User").PrimaryColumns("UserId");
+            Create.ForeignKey("FK_UserPurchaseHistory_UserId").FromTable("UserPurchaseHistory").ForeignColumns("UserId")
                 .ToTable("User").PrimaryColumns("UserId");
             Create.ForeignKey("FK_VisionBoardPicture_CreatedByUserId").FromTable("VisionBoardPicture").ForeignColumns("CreatedByUserId")
                 .ToTable("User").PrimaryColumns("UserId");

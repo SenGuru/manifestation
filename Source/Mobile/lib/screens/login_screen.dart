@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../services/unified_auth_service.dart';
+import '../components/network_error_dialog.dart';
 import 'signup_page.dart';
 import 'home_screen.dart';
 import 'forgot_password_screen.dart';
@@ -10,6 +12,7 @@ import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/keyboard_dismissal_wrapper.dart';
 import '../components/error_popup.dart';
+import '../utils/navigation_utils.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -266,6 +269,7 @@ class _LoginScreenState extends State<LoginScreen>
             children: [
               GestureDetector(
                 onTap: () {
+                  HapticFeedback.selectionClick();
                   setState(() {
                     _rememberMe = !_rememberMe;
                   });
@@ -311,7 +315,10 @@ class _LoginScreenState extends State<LoginScreen>
               Spacer(),
               
               GestureDetector(
-                onTap: _navigateToForgotPassword,
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  _navigateToForgotPassword();
+                },
                 child: Text(
                   'Forgot Password?',
                   style: TextStyle(
@@ -389,6 +396,7 @@ class _LoginScreenState extends State<LoginScreen>
                   suffixIcon: isPassword
                       ? GestureDetector(
                           onTap: () {
+                            HapticFeedback.selectionClick();
                             setState(() {
                               _isPasswordVisible = !_isPasswordVisible;
                             });
@@ -552,7 +560,10 @@ class _LoginScreenState extends State<LoginScreen>
             width: double.infinity,
             height: 56.h,
             child: ElevatedButton(
-              onPressed: _isLoading ? null : _handleLogin,
+              onPressed: _isLoading ? null : () {
+                HapticFeedback.mediumImpact();
+                _handleLogin();
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
@@ -609,7 +620,10 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _buildSignUpLink() {
     return Center(
       child: GestureDetector(
-        onTap: _navigateToSignUp,
+        onTap: () {
+          HapticFeedback.lightImpact();
+          _navigateToSignUp();
+        },
         child: RichText(
           text: TextSpan(
             style: TextStyle(
@@ -664,15 +678,15 @@ class _LoginScreenState extends State<LoginScreen>
           message: 'You\'ve successfully signed in. Ready to continue your manifestation journey?',
           actionText: 'Let\'s Go',
           onAction: () {
-            Navigator.pushReplacement(
+            pushWithoutSwipe(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              HomeScreen(),
             );
           },
           onDismiss: () {
-            Navigator.pushReplacement(
+            pushWithoutSwipe(
               context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
+              HomeScreen(),
             );
           },
         );
@@ -692,12 +706,11 @@ class _LoginScreenState extends State<LoginScreen>
         );
       }
     } catch (e) {
-      ErrorPopup.show(
+      // Show beautiful network error dialog
+      showNetworkErrorDialog(
         context,
-        title: 'Connection Error',
-        message: 'Unable to connect to our servers. Please check your internet connection and try again.',
-        actionText: 'Retry',
-        onAction: () => _handleLogin(),
+        message: 'We\'re having trouble connecting to our servers. Please check your internet connection and try again in a moment.',
+        onRetry: () => _handleLogin(),
       );
     } finally {
       setState(() {
@@ -709,6 +722,13 @@ class _LoginScreenState extends State<LoginScreen>
 
 
   void _navigateToSignUp() {
+    pushWithoutSwipe(
+      context,
+      SignUpScreen(),
+    );
+  }
+  
+  void _navigateToSignUpOld() {
     Navigator.push(
       context,
       PageRouteBuilder(
@@ -734,9 +754,9 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _navigateToForgotPassword() {
-    Navigator.push(
+    pushWithoutSwipe(
       context,
-      MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+      ForgotPasswordScreen(),
     );
   }
 

@@ -64,7 +64,11 @@ class _MeditationTimerState extends State<MeditationTimer>
 
   @override
   void dispose() {
-    _pulseController.dispose();
+    try {
+      _pulseController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing pulse controller: $e');
+    }
     super.dispose();
   }
 
@@ -213,7 +217,12 @@ class CircularProgressPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  bool shouldRepaint(covariant CircularProgressPainter oldDelegate) {
+    // Only repaint if progress, color, or stroke width changed
+    return oldDelegate.progress != progress ||
+           oldDelegate.color != color ||
+           oldDelegate.strokeWidth != strokeWidth;
+  }
 }
 
 // Enhanced timer with session phases
@@ -279,7 +288,11 @@ class _SessionTimerState extends State<SessionTimer>
 
   @override
   void dispose() {
-    _phaseController.dispose();
+    try {
+      _phaseController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing phase controller: $e');
+    }
     super.dispose();
   }
 

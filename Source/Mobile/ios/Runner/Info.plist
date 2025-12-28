@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Fun</string>
+	<string>Mistel</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>fun</string>
+	<string>mistel</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -40,5 +40,13 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Mistel needs access to your photo library to add images to your vision boards.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Mistel needs permission to save vision board images to your photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Mistel needs access to your camera to capture photos for your vision boards.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mistel uses your microphone for voice-guided affirmations and meditation sessions.</string>
 </dict>
 </plist>

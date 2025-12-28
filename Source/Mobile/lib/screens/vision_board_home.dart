@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../widgets/universal_back_button.dart';
+import 'dart:io';
+import 'dart:typed_data';
 import '../models/vision_board.dart';
 import '../services/vision_board_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/unified_auth_service.dart';
 import 'vision_board_screen.dart';
-import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
+import '../utils/navigation_utils.dart';
+import 'vision_board_gallery_screen.dart';
 
 class VisionBoardHome extends StatefulWidget {
   const VisionBoardHome({super.key});
@@ -18,6 +24,8 @@ class VisionBoardHome extends StatefulWidget {
 class _VisionBoardHomeState extends State<VisionBoardHome> {
   List<VisionBoard> visionBoards = [];
   bool isLoading = false;
+  bool _hasError = false;
+  String? _errorMessage;
   final GlobalKey _addButtonKey = GlobalKey();
 
   @override
@@ -48,27 +56,38 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   Future<void> _loadVisionBoards() async {
     setState(() {
       isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
-    
+
     try {
       // Initialize service
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
-      
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
+
       // Load from server
       final result = await visionBoardService.getUserVisionBoards();
-      
+
       if (result.isSuccess) {
         visionBoards = result.data ?? [];
+        _hasError = false;
       } else {
         print('❌ Failed to load vision boards: ${result.message}');
-        visionBoards = [];
+        setState(() {
+          _hasError = true;
+          _errorMessage = result.message ?? 'Failed to load vision boards from server';
+          visionBoards = [];
+        });
       }
     } catch (e) {
       print('❌ Error loading vision boards: $e');
-      visionBoards = [];
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        visionBoards = [];
+      });
     }
-    
+
     setState(() {
       isLoading = false;
     });
@@ -81,7 +100,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     // Show loading screen while loading vision boards
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading your vision boards...',
         ),
@@ -89,15 +108,17 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     }
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
             _buildHeader(),
             Expanded(
-              child: visionBoards.isEmpty
-                  ? _buildEmptyState()
-                  : _buildVisionBoardGrid(),
+              child: _hasError
+                  ? _buildErrorState()
+                  : visionBoards.isEmpty
+                      ? _buildEmptyState()
+                      : _buildVisionBoardGrid(),
             ),
           ],
         ),
@@ -114,25 +135,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         children: [
           Row(
             children: [
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 44.w,
-                  height: 44.h,
-                  decoration: BoxDecoration(
-                    color: AppTheme.cardBackground,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: AppTheme.textMedium.withOpacity(0.1),
-                    ),
-                  ),
-                  child: Icon(
-                    Icons.arrow_back,
-                    color: AppTheme.textLight,
-                    size: 20.sp,
-                  ),
-                ),
-              ),
+              UniversalBackButton(),
               SizedBox(width: 16.w),
               Expanded(
                 child: Column(
@@ -143,14 +146,14 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                       style: TextStyle(
                         fontSize: 24.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                       ),
                     ),
                     Text(
                       'Visualize your dreams',
                       style: TextStyle(
                         fontSize: 14.sp,
-                        color: AppTheme.textMedium,
+                        color: AppTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -176,12 +179,12 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Icon(
           Icons.more_vert,
-          color: AppTheme.textLight,
+          color: AppTheme.textPrimary,
           size: 20.sp,
         ),
       ),
@@ -196,20 +199,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           title: 'Total Boards',
           value: '${visionBoards.length}',
           color: AppTheme.visionBoardGradient[0],
-        ),
-        SizedBox(width: 12.w),
-        _buildStatCard(
-          icon: Icons.edit,
-          title: 'This Week',
-          value: '${visionBoards.where((b) => b.updatedAt.isAfter(DateTime.now().subtract(Duration(days: 7)))).length}',
-          color: AppTheme.visionBoardGradient[1],
-        ),
-        SizedBox(width: 12.w),
-        _buildStatCard(
-          icon: Icons.favorite,
-          title: 'Favorites',
-          value: '2', // TODO: Implement favorites
-          color: AppTheme.accentGold,
         ),
       ],
     );
@@ -228,7 +217,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(16.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Column(
@@ -238,7 +227,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               width: 32.w,
               height: 32.h,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.r),
               ),
               child: Icon(
@@ -253,14 +242,14 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
               ),
             ),
             Text(
               title,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: AppTheme.textMedium,
+                color: AppTheme.textSecondary,
               ),
             ),
           ],
@@ -298,7 +287,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             style: TextStyle(
               fontSize: 24.sp,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -306,7 +295,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             'Create your first vision board to start\nmanifesting your dreams',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
               height: 1.5,
             ),
             textAlign: TextAlign.center,
@@ -318,7 +307,86 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     );
   }
 
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Vision Boards',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadVisionBoards,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.visionBoardGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildVisionBoardGrid() {
+    // Show only first 4 vision boards for quick access
+    final displayedBoards = visionBoards.take(4).toList();
+    
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Column(
@@ -335,14 +403,19 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               mainAxisSpacing: 16.h,
               childAspectRatio: 0.75,
             ),
-            itemCount: visionBoards.length,
+            itemCount: displayedBoards.length,
             itemBuilder: (context, index) {
-              final board = visionBoards[index];
+              final board = displayedBoards[index];
               return _buildVisionBoardCard(board);
             },
           ),
-          SizedBox(height: 32.h),
-          _buildTemplatesSection(),
+          
+          // Show "View All" button if there are more than 4 boards
+          if (visionBoards.length > 4) ...[
+            SizedBox(height: 16.h),
+            _buildViewAllButton(),
+          ],
+
           SizedBox(height: 100.h), // Space for FAB
         ],
       ),
@@ -358,12 +431,12 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           style: TextStyle(
             fontSize: 20.sp,
             fontWeight: FontWeight.bold,
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
           ),
         ),
         GestureDetector(
           onTap: () {
-            // TODO: Navigate to all boards
+            _navigateToVisionBoardGallery();
           },
           child: Text(
             action,
@@ -380,18 +453,24 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
 
   Widget _buildVisionBoardCard(VisionBoard board) {
     return GestureDetector(
-      onTap: () => _openBoard(board),
-      onLongPress: () => _showBoardOptions(board),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        _openBoard(board);
+      },
+      onLongPress: () {
+        HapticFeedback.heavyImpact();
+        _showBoardOptions(board);
+      },
       child: Container(
         decoration: BoxDecoration(
           color: AppTheme.cardBackground,
           borderRadius: BorderRadius.circular(20.r),
           border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.black.withOpacity(0.05),
+              color: AppTheme.black.withValues(alpha: 0.05),
               blurRadius: 10.r,
               offset: Offset(0, 5.h),
             ),
@@ -407,75 +486,50 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      AppTheme.visionBoardGradient[0].withOpacity(0.1),
-                      AppTheme.visionBoardGradient[1].withOpacity(0.05),
+                      AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
+                      AppTheme.visionBoardGradient[1].withValues(alpha: 0.05),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
                 ),
-                child: _buildPlaceholderThumbnail(), // Always show placeholder for now
+                child: _buildVisionBoardPreview(board),
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 1,
               child: Padding(
-                padding: EdgeInsets.all(8.w),
+                padding: EdgeInsets.all(6.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      board.title,
+                      board.title.isEmpty ? 'Untitled Vision Board' : board.title,
                       style: TextStyle(
                         fontSize: 16.sp,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textLight,
+                        color: AppTheme.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 2.h),
-                    Text(
-                      '${board.elements.length} items • Last edited ${_formatDate(board.updatedAt)}',
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: AppTheme.textMedium,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Spacer(),
+                    SizedBox(height: 6.h),
                     Row(
                       children: [
                         Icon(
-                          Icons.edit,
-                          color: AppTheme.textMedium.withOpacity(0.6),
+                          Icons.schedule,
+                          color: AppTheme.textSecondary.withValues(alpha: 0.7),
                           size: 12.sp,
                         ),
                         SizedBox(width: 4.w),
                         Text(
                           _formatDate(board.updatedAt),
                           style: TextStyle(
-                            fontSize: 10.sp,
-                            color: AppTheme.textMedium.withOpacity(0.6),
-                          ),
-                        ),
-                        Spacer(),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-                          decoration: BoxDecoration(
-                            color: AppTheme.visionBoardGradient[0].withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                          child: Text(
-                            '${board.elements.length} items',
-                            style: TextStyle(
-                              fontSize: 10.sp,
-                              color: AppTheme.visionBoardGradient[0],
-                              fontWeight: FontWeight.w500,
-                            ),
+                            fontSize: 11.sp,
+                            color: AppTheme.textSecondary.withValues(alpha: 0.7),
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -494,104 +548,261 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      child: Container(), // Completely empty - shows nothing
+    );
+  }
+
+  Widget _buildVisionBoardPreview(VisionBoard board) {
+    // Try to download the thumbnail from the server
+    return FutureBuilder<Uint8List?>(
+      future: _fetchBoardThumbnail(board),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show loading state
+          return Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
+                  AppTheme.visionBoardGradient[1].withValues(alpha: 0.05),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  AppTheme.visionBoardGradient[0].withValues(alpha: 0.5),
+                ),
+                strokeWidth: 2,
+              ),
+            ),
+          );
+        }
+        
+        if (snapshot.hasData && snapshot.data != null) {
+          // Display the downloaded thumbnail
+          return ClipRRect(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+            child: Image.memory(
+              snapshot.data!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+              height: double.infinity,
+              errorBuilder: (context, error, stackTrace) {
+                print('❌ Error displaying thumbnail: $error');
+                return _buildSimpleThumbnail(board);
+              },
+            ),
+          );
+        }
+        
+        // Fallback to simple thumbnail if no server thumbnail
+        return _buildSimpleThumbnail(board);
+      },
+    );
+  }
+
+  Future<Uint8List?> _fetchBoardThumbnail(VisionBoard board) async {
+    try {
+      final visionBoardService = VisionBoardService();
+      
+      // First, get the picture ID for this vision board
+      final pictureId = await visionBoardService.getPictureIdForBoard(board.id);
+      if (pictureId == null) {
+        print('⚠️ No picture ID found for board: ${board.id}');
+        return null;
+      }
+      
+      print('📥 Fetching thumbnail for board ${board.id} with picture ID: $pictureId');
+      
+      // Download the thumbnail using the picture ID
+      final thumbnailBytes = await visionBoardService.downloadThumbnail(pictureId);
+      
+      if (thumbnailBytes != null) {
+        print('✅ Thumbnail fetched successfully: ${thumbnailBytes.length} bytes');
+      } else {
+        print('⚠️ No thumbnail available for board: ${board.id}');
+      }
+      
+      return thumbnailBytes;
+    } catch (e) {
+      print('❌ Error fetching thumbnail for board ${board.id}: $e');
+      return null;
+    }
+  }
+  
+  Widget _buildSimpleThumbnail(VisionBoard board) {
+    final displayTitle = board.title.isEmpty ? 'Vision Board' : board.title;
+    final firstLetter = displayTitle.substring(0, 1).toUpperCase();
+    final boardDate = _formatDate(board.updatedAt);
+    
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+            AppTheme.visionBoardGradient[1].withValues(alpha: 0.2),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      child: Stack(
         children: [
-          Icon(
-            Icons.dashboard,
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.3),
-            size: 40.sp,
+          // Background pattern
+          Positioned.fill(
+            child: CustomPaint(
+              painter: _GridPatternPainter(
+                color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.1),
+              ),
+            ),
           ),
-          SizedBox(height: 8.h),
-          Text(
-            'Vision Board',
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: AppTheme.textMedium.withOpacity(0.6),
+          // Center content
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 60.w,
+                  height: 60.h,
+                  decoration: BoxDecoration(
+                    color: AppTheme.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+                        blurRadius: 20.r,
+                        offset: Offset(0, 10.h),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Text(
+                      firstLetter,
+                      style: TextStyle(
+                        fontSize: 28.sp,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.visionBoardGradient[0],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                if (board.elements.isNotEmpty)
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
+                    decoration: BoxDecoration(
+                      color: AppTheme.white.withValues(alpha: 0.9),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Text(
+                      '${board.elements.length} items',
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        color: AppTheme.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
         ],
       ),
     );
   }
-
-  Widget _buildTemplatesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader('Templates', 'Browse all'),
-        SizedBox(height: 16.h),
-        Container(
-          height: 120.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container(
-                width: 160.w,
-                margin: EdgeInsets.only(right: 16.w),
-                child: _buildTemplateCard(index),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTemplateCard(int index) {
-    final templates = [
-      {'name': 'Dream Home', 'icon': Icons.home, 'color': AppTheme.accentGold},
-      {'name': 'Career Goals', 'icon': Icons.work, 'color': AppTheme.visionBoardGradient[0]},
-      {'name': 'Travel Dreams', 'icon': Icons.flight, 'color': AppTheme.journalGradient[0]},
-      {'name': 'Relationships', 'icon': Icons.favorite, 'color': AppTheme.accentCoral},
-      {'name': 'Health & Fitness', 'icon': Icons.fitness_center, 'color': AppTheme.accentMint},
-    ];
-
-    final template = templates[index];
+  
+  Widget _buildPreviewElement(VisionBoardElement element, VisionBoard board) {
+    // Scale factor for miniature version (make elements smaller)
+    const double scaleFactor = 0.6;
+    final double previewWidth = 160.w; // Approximate card width
+    final double previewHeight = 120.h; // Approximate card height
     
-    return GestureDetector(
-      onTap: () => _createFromTemplate(template['name'] as String),
+    // Scale position and size to fit in preview
+    final scaledX = (element.position.dx / 400) * previewWidth * scaleFactor;
+    final scaledY = (element.position.dy / 600) * previewHeight * scaleFactor;
+    final scaledWidth = (element.size.width / 400) * previewWidth * scaleFactor;
+    final scaledHeight = (element.size.height / 600) * previewHeight * scaleFactor;
+    
+    return Positioned(
+      left: scaledX.clamp(0.0, previewWidth - scaledWidth),
+      top: scaledY.clamp(0.0, previewHeight - scaledHeight),
       child: Container(
-        decoration: BoxDecoration(
-          color: AppTheme.cardBackground,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: AppTheme.textMedium.withOpacity(0.1),
-          ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: (template['color'] as Color).withOpacity(0.1),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-                ),
-                child: Icon(
-                  template['icon'] as IconData,
-                  color: template['color'] as Color,
-                  size: 32.sp,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Text(
-                template['name'] as String,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textLight,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
+        width: scaledWidth.clamp(20.w, previewWidth),
+        height: scaledHeight.clamp(20.h, previewHeight),
+        child: Transform.rotate(
+          angle: element.rotation * 0.5, // Reduce rotation for preview
+          child: _buildPreviewElementContent(element),
         ),
       ),
     );
+  }
+  
+  Widget _buildPreviewElementContent(VisionBoardElement element) {
+    if (element is VisionBoardImageElement) {
+      return Container(
+        decoration: BoxDecoration(
+          color: AppTheme.white,
+          borderRadius: BorderRadius.circular(4.r),
+          border: Border.all(
+            color: AppTheme.textSecondary.withValues(alpha: 0.2),
+            width: 0.5,
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(4.r),
+          child: element.imagePath.isNotEmpty
+              ? Image.file(
+                  File(element.imagePath),
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Icon(
+                    Icons.image,
+                    color: AppTheme.textSecondary.withValues(alpha: 0.4),
+                    size: 12.sp,
+                  ),
+                )
+              : Icon(
+                  Icons.image,
+                  color: AppTheme.textSecondary.withValues(alpha: 0.4),
+                  size: 12.sp,
+                ),
+        ),
+      );
+    } else if (element is VisionBoardTextElement) {
+      return Container(
+        padding: EdgeInsets.all(2.w),
+        decoration: BoxDecoration(
+          color: element.style.color?.withValues(alpha: 0.1) ?? AppTheme.white.withValues(alpha: 0.8),
+          borderRadius: BorderRadius.circular(2.r),
+          border: Border.all(
+            color: element.style.color?.withValues(alpha: 0.3) ?? AppTheme.textSecondary.withValues(alpha: 0.2),
+            width: 0.5,
+          ),
+        ),
+        child: Text(
+          element.text.length > 20 ? '${element.text.substring(0, 20)}...' : element.text,
+          style: TextStyle(
+            fontSize: 6.sp,
+            color: element.style.color ?? AppTheme.textPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    }
+    
+    return SizedBox.shrink();
   }
 
   Widget _buildCreateButton() {
@@ -607,7 +818,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         borderRadius: BorderRadius.circular(28.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.4),
+            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.4),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -628,6 +839,47 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     );
   }
 
+  Widget _buildViewAllButton() {
+    return Container(
+      width: double.infinity,
+      height: 50.h,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+          width: 1.5,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: _navigateToVisionBoardGallery,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.grid_view_rounded,
+                color: AppTheme.visionBoardGradient[0],
+                size: 20.sp,
+              ),
+              SizedBox(width: 8.w),
+              Text(
+                'View All ${visionBoards.length} Vision Boards',
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.visionBoardGradient[0],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildCreateBoardButton() {
     return Container(
       width: 200.w,
@@ -641,7 +893,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         borderRadius: BorderRadius.circular(25.r),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.visionBoardGradient[0].withOpacity(0.4),
+            color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.4),
             blurRadius: 20.r,
             offset: Offset(0, 10.h),
           ),
@@ -695,18 +947,16 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     // Create a new empty board with a generated ID
     final newBoard = VisionBoard(
       id: 'board_${DateTime.now().millisecondsSinceEpoch}',
-      title: 'New Vision Board',
+      title: '', // Start with empty title - user can edit in the editor
       elements: [],
       backgroundColor: AppTheme.white,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
     
-    Navigator.push(
+    pushWithoutSwipe<VisionBoard>(
       context,
-      MaterialPageRoute(
-        builder: (context) => VisionBoardScreen(existingBoard: newBoard),
-      ),
+      VisionBoardScreen(existingBoard: newBoard),
     ).then((result) {
       // Reload vision boards from server after editing
       _loadVisionBoards();
@@ -714,11 +964,9 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   }
 
   void _openBoard(VisionBoard board) {
-    Navigator.push(
+    pushWithoutSwipe<VisionBoard>(
       context,
-      MaterialPageRoute(
-        builder: (context) => VisionBoardScreen(existingBoard: board),
-      ),
+      VisionBoardScreen(existingBoard: board),
     ).then((result) {
       if (result != null) {
         // Update the specific board in the list
@@ -730,12 +978,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         });
       }
     });
-  }
-
-  void _createFromTemplate(String templateName) {
-    // TODO: Implement template creation
-    print('Creating from template: $templateName');
-    _createNewBoard();
   }
 
   void _showBoardOptions(VisionBoard board) {
@@ -756,7 +998,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -765,17 +1007,21 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               child: Column(
                 children: [
                   Text(
-                    board.title,
+                    board.title.isEmpty ? 'Untitled Vision Board' : board.title,
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                   SizedBox(height: 24.h),
                   _buildOptionItem(Icons.edit, 'Edit', () {
                     Navigator.pop(context);
                     _openBoard(board);
+                  }),
+                  _buildOptionItem(Icons.text_fields, 'Rename', () {
+                    Navigator.pop(context);
+                    _renameBoard(board);
                   }),
                   _buildOptionItem(Icons.copy, 'Duplicate', () {
                     Navigator.pop(context);
@@ -808,7 +1054,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           children: [
             Icon(
               icon,
-              color: isDestructive ? Colors.red : AppTheme.textMedium,
+              color: isDestructive ? Colors.red : AppTheme.textSecondary,
               size: 20.sp,
             ),
             SizedBox(width: 16.w),
@@ -816,7 +1062,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               title,
               style: TextStyle(
                 fontSize: 16.sp,
-                color: isDestructive ? Colors.red : AppTheme.textLight,
+                color: isDestructive ? Colors.red : AppTheme.textPrimary,
               ),
             ),
           ],
@@ -843,7 +1089,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
               height: 4.h,
               margin: EdgeInsets.only(top: 12.h),
               decoration: BoxDecoration(
-                color: AppTheme.textMedium.withOpacity(0.3),
+                color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2.r),
               ),
             ),
@@ -856,7 +1102,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.textLight,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -900,6 +1146,132 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     print('Sharing board: ${board.title}');
   }
 
+  void _renameBoard(VisionBoard board) async {
+    final TextEditingController nameController = TextEditingController();
+    nameController.text = board.title; // Pre-populate with current name
+    
+    final newName = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppTheme.cardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        title: Text(
+          'Rename Vision Board',
+          style: TextStyle(
+            fontSize: 20.sp,
+            fontWeight: FontWeight.bold,
+            color: AppTheme.textPrimary,
+          ),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Enter a new name for your vision board',
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+            SizedBox(height: 16.h),
+            TextField(
+              controller: nameController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: 'Vision board name',
+                hintStyle: TextStyle(
+                  color: AppTheme.textTertiary,
+                  fontSize: 14.sp,
+                ),
+                filled: true,
+                fillColor: AppTheme.surfaceElevated,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.symmetric(
+                  horizontal: 16.w,
+                  vertical: 12.h,
+                ),
+              ),
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textPrimary,
+              ),
+              onSubmitted: (value) {
+                final name = value.trim();
+                Navigator.pop(context, name.isEmpty ? board.title : name);
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              final name = nameController.text.trim();
+              Navigator.pop(context, name.isEmpty ? board.title : name);
+            },
+            child: Text(
+              'Rename',
+              style: TextStyle(
+                color: AppTheme.affirmationGradient.first,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    
+    // If user cancelled or name is the same, don't update
+    if (newName == null || newName == board.title) return;
+    
+    try {
+      // Update the board with the new name
+      final updatedBoard = board.copyWith(title: newName);
+      
+      // Update in local state
+      setState(() {
+        final index = visionBoards.indexWhere((b) => b.id == board.id);
+        if (index != -1) {
+          visionBoards[index] = updatedBoard;
+        }
+      });
+      
+      // TODO: Update on server via API
+      // For now, we just update locally
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Vision board renamed to "$newName"'),
+          backgroundColor: AppTheme.accentMint,
+          duration: Duration(seconds: 2),
+        ),
+      );
+      
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Failed to rename vision board: $e'),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+    }
+  }
+
   void _deleteBoard(VisionBoard board) {
     showDialog(
       context: context,
@@ -911,15 +1283,15 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         title: Text(
           'Delete Vision Board',
           style: TextStyle(
-            color: AppTheme.textLight,
+            color: AppTheme.textPrimary,
             fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
         content: Text(
-          'Are you sure you want to delete "${board.title}"? This action cannot be undone.',
+          'Are you sure you want to delete "${board.title.isEmpty ? 'this vision board' : board.title}"? This action cannot be undone.',
           style: TextStyle(
-            color: AppTheme.textMedium,
+            color: AppTheme.textSecondary,
             fontSize: 14.sp,
           ),
         ),
@@ -928,7 +1300,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             onPressed: () => Navigator.pop(context),
             child: Text(
               'Cancel',
-              style: TextStyle(color: AppTheme.textMedium),
+              style: TextStyle(color: AppTheme.textSecondary),
             ),
           ),
           TextButton(
@@ -950,7 +1322,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     try {
       // Initialize service
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       
       // Delete from server using vision board ID
       final result = await visionBoardService.deleteVisionBoard(board.id);
@@ -1028,4 +1400,52 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     // TODO: Implement settings
     print('Show settings');
   }
+
+  void _navigateToVisionBoardGallery() {
+    HapticFeedback.lightImpact();
+    pushWithoutSwipe(
+      context,
+      VisionBoardGalleryScreen(initialVisionBoards: visionBoards),
+    ).then((_) {
+      // Refresh vision boards when returning from gallery
+      _loadVisionBoards();
+    });
+  }
+}
+
+class _GridPatternPainter extends CustomPainter {
+  final Color color;
+
+  _GridPatternPainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 0.5
+      ..style = PaintingStyle.stroke;
+
+    const spacing = 20.0;
+    
+    // Draw vertical lines
+    for (double x = 0; x <= size.width; x += spacing) {
+      canvas.drawLine(
+        Offset(x, 0),
+        Offset(x, size.height),
+        paint,
+      );
+    }
+    
+    // Draw horizontal lines
+    for (double y = 0; y <= size.height; y += spacing) {
+      canvas.drawLine(
+        Offset(0, y),
+        Offset(size.width, y),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

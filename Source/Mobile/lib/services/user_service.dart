@@ -12,11 +12,20 @@ class UserService {
   // Cached user data
   static Map<String, dynamic>? _cachedUserData;
   static int? _cachedUserId;
+  
+  // Singleton SharedPreferences instance to prevent redundant getInstance calls
+  static SharedPreferences? _prefsInstance;
+  
+  /// Get or create SharedPreferences instance (singleton pattern)
+  static Future<SharedPreferences> get _prefs async {
+    _prefsInstance ??= await SharedPreferences.getInstance();
+    return _prefsInstance!;
+  }
 
   /// Store user data and auth token from login response
   static Future<void> storeUserData(Map<String, dynamic> userData, {String? authToken}) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       
       // Store complete user data as JSON
       await prefs.setString(_userDataKey, jsonEncode(userData));
@@ -48,7 +57,7 @@ class UserService {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       final userDataString = prefs.getString(_userDataKey);
       
       if (userDataString != null) {
@@ -71,7 +80,7 @@ class UserService {
     }
     
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       final userId = prefs.getInt(_userIdKey);
       final validUserId = userId != 0 ? userId : null;
       
@@ -88,7 +97,7 @@ class UserService {
   /// Get current user's first name
   static Future<String?> getFirstName() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       return prefs.getString(_firstNameKey);
     } catch (e) {
       print('Error getting first name: $e');
@@ -99,7 +108,7 @@ class UserService {
   /// Get current user's last name
   static Future<String?> getLastName() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       return prefs.getString(_lastNameKey);
     } catch (e) {
       print('Error getting last name: $e');
@@ -131,7 +140,7 @@ class UserService {
   /// Get current username
   static Future<String?> getUserName() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       return prefs.getString(_userNameKey);
     } catch (e) {
       print('Error getting username: $e');
@@ -155,7 +164,7 @@ class UserService {
     try {
       print('=== USER SERVICE CLEANUP START ===');
       
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       
       // Log what we're about to clear
       final currentUserId = prefs.getInt(_userIdKey);
@@ -221,7 +230,7 @@ class UserService {
   /// Verify that all user data has been cleared
   static Future<Map<String, dynamic>> _verifyDataCleared() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final prefs = await _prefs;
       
       final remaining = <String>[];
       

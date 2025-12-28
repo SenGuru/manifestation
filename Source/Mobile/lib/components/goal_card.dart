@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:fun/constants/colors.dart';
-import 'package:fun/constants/app_theme.dart';
-import 'package:fun/models/goals.dart';
+import 'package:mistel/constants/app_theme.dart';
+import 'package:mistel/models/goals.dart';
 
 class GoalCard extends StatefulWidget {
   final Goal goal;
@@ -37,9 +36,14 @@ class _GoalCardState extends State<GoalCard>
       duration: Duration(milliseconds: 1000),
       vsync: this,
     );
+    
+    // Safely calculate progress percentage
+    final progressValue = widget.goal.progressPercentage.isFinite ? 
+        (widget.goal.progressPercentage / 100).clamp(0.0, 1.0) : 0.0;
+        
     _progressAnimation = Tween<double>(
       begin: 0.0,
-      end: widget.goal.progressPercentage / 100,
+      end: progressValue,
     ).animate(CurvedAnimation(
       parent: _progressController,
       curve: Curves.easeInOut,
@@ -47,7 +51,7 @@ class _GoalCardState extends State<GoalCard>
     
     // Start animation after a short delay
     Future.delayed(Duration(milliseconds: 200), () {
-      if (mounted) {
+      if (mounted && _progressController.isCompleted == false) {
         _progressController.forward();
       }
     });
@@ -55,7 +59,11 @@ class _GoalCardState extends State<GoalCard>
 
   @override
   void dispose() {
-    _progressController.dispose();
+    try {
+      _progressController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing progress controller: $e');
+    }
     super.dispose();
   }
 
@@ -399,6 +407,7 @@ class _GoalCardState extends State<GoalCard>
                     ),
                   ),
                   SizedBox(height: 12.h),
+                  // Safely handle milestone display
                   ...widget.goal.milestones.take(3).map((milestone) {
                     return Container(
                       margin: EdgeInsets.only(bottom: 8.h),

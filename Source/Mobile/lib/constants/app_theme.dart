@@ -105,7 +105,7 @@ class AppTheme {
   
   static List<Color> get goalTrackerGradient => [
     const Color(0xFF3B82F6),
-    const Color(0xFF6366F1),
+    const Color(0xFF1E90FF),
   ];
   
   static List<Color> get analyticsGradient => [

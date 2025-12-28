@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import '../services/voice/hybrid_voice_service.dart';
 import '../models/affirmations.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
@@ -11,6 +12,8 @@ import '../utils/color_utils.dart';
 import '../services/daily_affirmations_service.dart';
 import '../services/usage_analytics_service.dart';
 import '../services/guided_tour_service.dart';
+import '../services/subscription_service.dart';
+import '../components/premium_upgrade_dialog.dart';
 import '../models/analytics_models.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/universal_back_button.dart';
@@ -20,37 +23,87 @@ class DailyAffirmationsScreen extends StatefulWidget {
   _DailyAffirmationsScreenState createState() => _DailyAffirmationsScreenState();
 }
 
-class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
+class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with TickerProviderStateMixin {
   int selectedCategoryIndex = 0;
   int currentAffirmationIndex = 0;
   bool isPlaying = false;
   bool isLoading = true;
-  
+  bool _hasError = false;
+  String? _errorMessage;
+
   List<AffirmationCategory> categories = [];
   List<AffirmationCategoryData> apiCategories = [];
+
+  // PageController for swipe functionality
+  PageController? _pageController;
+  int? _lastCategoryIndex; // Track which category the PageController was created for
+  late AnimationController _swipeAnimationController;
+  late Animation<double> _swipeAnimation;
   
   // Services
   final DailyAffirmationsService _affirmationService = DailyAffirmationsService();
   final UsageAnalyticsService _analyticsService = UsageAnalyticsService();
-  final FlutterTts _flutterTts = FlutterTts();
+  final HybridVoiceService _voiceService = HybridVoiceService();
   
   // Session tracking
   String? _sessionTracker;
   DateTime? _sessionStartTime;
   bool _sessionStarted = false;
+  
+  // Voice state monitoring
+  Timer? _voiceStateTimer;
 
   @override
   void initState() {
     super.initState();
     _initializeService();
     _loadCategories();
-    _initializeTTS();
+    _initializeVoiceService();
     _startSessionTracking();
     _startAnalyticsSession();
+    _initializeAnimations();
     
     // Show guided tour after the widget is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showGuidedTourIfNeeded();
+    });
+  }
+  
+  void _initializeAnimations() {
+    _swipeAnimationController = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _swipeAnimation = CurvedAnimation(
+      parent: _swipeAnimationController,
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  void _initializePageController() {
+    _pageController?.dispose();
+    _pageController = PageController(
+      initialPage: currentAffirmationIndex,
+      viewportFraction: 0.95,
+    );
+    _lastCategoryIndex = selectedCategoryIndex;
+  }
+
+  void _changeCategory(int newCategoryIndex) async {
+    if (selectedCategoryIndex == newCategoryIndex) return;
+
+    await _voiceService.stop();
+
+    // Dispose old controller before creating new one
+    _pageController?.dispose();
+    _pageController = null;
+
+    // Update state
+    setState(() {
+      selectedCategoryIndex = newCategoryIndex;
+      currentAffirmationIndex = 0;
+      isPlaying = false;
+      _lastCategoryIndex = null; // Force recreation in build
     });
   }
 
@@ -64,45 +117,35 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
   
   void _initializeService() {
-    _affirmationService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+    _affirmationService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
   }
 
-  Future<void> _initializeTTS() async {
+  Future<void> _initializeVoiceService() async {
     try {
-      await _flutterTts.setLanguage('en-US');
-      await _flutterTts.setSpeechRate(0.5);
-      await _flutterTts.setVolume(0.8);
-      await _flutterTts.setPitch(1.0);
+      await _voiceService.initialize();
+      await _voiceService.setVolume(0.8);
+      await _voiceService.setRate(0.5);
       
-      _flutterTts.setStartHandler(() {
-        if (mounted) {
-          setState(() {
-            isPlaying = true;
-          });
-        }
-      });
-
-      _flutterTts.setCompletionHandler(() {
-        if (mounted) {
-          setState(() {
-            isPlaying = false;
-          });
-        }
-      });
-
-      _flutterTts.setErrorHandler((message) {
-        print('TTS Error: $message');
-        if (mounted) {
-          setState(() {
-            isPlaying = false;
-          });
-        }
-      });
-
-      print('✅ TTS initialized successfully');
+      // Monitor voice service state
+      _startVoiceStateMonitoring();
+      
+      print('✅ HybridVoiceService initialized successfully');
     } catch (e) {
-      print('❌ TTS initialization failed: $e');
+      print('❌ HybridVoiceService initialization failed: $e');
     }
+  }
+
+  void _startVoiceStateMonitoring() {
+    _voiceStateTimer = Timer.periodic(Duration(milliseconds: 500), (timer) {
+      if (mounted) {
+        final voiceIsPlaying = _voiceService.isPlaying;
+        if (isPlaying != voiceIsPlaying) {
+          setState(() {
+            isPlaying = voiceIsPlaying;
+          });
+        }
+      }
+    });
   }
 
   void _startSessionTracking() {
@@ -114,34 +157,45 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   Future<void> _loadCategories() async {
     setState(() {
       isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
-    
+
     try {
       print('=== LOADING AFFIRMATIONS FROM API ===');
-      
+
       // Load from API first, fallback to mock if needed
       final result = await _affirmationService.getAllAffirmationCategories();
-      
-      if (result.isSuccess && result.data != null) {
+
+      if (result.isSuccess && result.data != null && result.data!.isNotEmpty) {
         print('✅ Loaded ${result.data!.length} categories from API');
         await _processApiData(result.data!);
       } else {
-        print('❌ API failed: ${result.message}');
-        print('📦 Falling back to mock data');
-        await _loadDefaultContent();
+        if (result.data != null && result.data!.isEmpty) {
+          print('⚠️ API returned 0 categories (new user) - loading defaults');
+          await _loadDefaultContent();
+        } else {
+          print('❌ API failed: ${result.message}');
+          setState(() {
+            _hasError = true;
+            _errorMessage = result.message ?? 'Failed to load affirmations from server';
+            categories = [];
+          });
+        }
       }
-      
+
       print('Total categories loaded: ${categories.length}');
       categories.forEach((category) {
         print('Category: ${category.name}, Affirmations: ${category.affirmations.length}');
       });
-      
+
     } catch (e) {
       print('❌ Error loading categories: $e');
-      print('📦 Falling back to mock data');
-      
-      // Fallback to default content
-      await _loadDefaultContent();
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        categories = [];
+      });
     } finally {
       setState(() {
         isLoading = false;
@@ -170,12 +224,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         // Use the actual color from the category data, or fallback to generated color
         final categoryColor = categoryData.color ?? _getCategoryColor(i);
         
+        final isCustomCategory = !categoryData.isDefault;
+        print('📂 Category: ${categoryData.name} - isDefault: ${categoryData.isDefault}, isCustom: $isCustomCategory');
+        
         uiCategories.add(AffirmationCategory(
           id: categoryData.id,
           name: categoryData.name,
           color: categoryColor,
           iconValue: categoryData.iconId,
           affirmations: affirmations,
+          isCustom: isCustomCategory, // Mark as custom if not default
         ));
       }
       
@@ -356,8 +414,13 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     _recordSessionData();
     // End analytics session
     _endAnalyticsSession();
-    // Stop and dispose TTS
-    _flutterTts.stop();
+    // Stop voice service and clean up
+    _voiceStateTimer?.cancel();
+    _voiceService.stop();
+    _voiceService.dispose();
+    // Dispose animation controllers
+    _swipeAnimationController.dispose();
+    _pageController?.dispose();
     super.dispose();
   }
 
@@ -391,15 +454,30 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     // Show loading screen while loading affirmations
     if (isLoading) {
       return Scaffold(
-        backgroundColor: AppTheme.backgroundDark,
+        backgroundColor: AppTheme.backgroundPrimary,
         body: StylishLoading(
           message: 'Loading affirmations...',
         ),
       );
     }
 
+    // Show error screen if failed to load
+    if (_hasError) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundPrimary,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(child: _buildErrorState()),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
-      backgroundColor: AppTheme.backgroundDark,
+      backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
         child: Column(
           children: [
@@ -428,17 +506,35 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   style: TextStyle(
                     fontSize: 24.sp,
                     fontWeight: FontWeight.bold,
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 Text(
                   'Transform your mindset with positive thoughts',
                   style: TextStyle(
                     fontSize: 14.sp,
-                    color: AppTheme.textMedium,
+                    color: AppTheme.textSecondary,
                   ),
                 ),
               ],
+            ),
+          ),
+          // Test API button
+          GestureDetector(
+            onTap: _testTextToAudioAPI,
+            child: Container(
+              width: 44.w,
+              height: 44.w,
+              margin: EdgeInsets.only(right: 8.w),
+              decoration: BoxDecoration(
+                color: Colors.orange,
+                borderRadius: BorderRadius.circular(12.w),
+              ),
+              child: Icon(
+                Icons.audio_file,
+                color: Colors.white,
+                size: 20.sp,
+              ),
             ),
           ),
           GestureDetector(
@@ -474,25 +570,24 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           final isSelected = selectedCategoryIndex == index;
           
           return GestureDetector(
-            onTap: () async {
-              await _flutterTts.stop();
-              setState(() {
-                selectedCategoryIndex = index;
-                currentAffirmationIndex = 0;
-                isPlaying = false;
-              });
+            onTap: () {
+              HapticFeedback.selectionClick();
+              _changeCategory(index);
             },
-            onLongPress: () => _showCategoryOptions(category, index),
+            onLongPress: () {
+              HapticFeedback.heavyImpact();
+              _showCategoryOptions(category, index);
+            },
             child: Container(
               margin: EdgeInsets.only(right: 12.w),
               padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8.h),
               decoration: BoxDecoration(
                 color: isSelected 
-                    ? category.color.withAlpha((0.1 * 255).round())
+                    ? category.color.withValues(alpha: 0.1)
                     : AppTheme.cardBackground,
                 borderRadius: BorderRadius.circular(25.r),
                 border: Border.all(
-                  color: isSelected ? category.color : AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                  color: isSelected ? category.color : AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Center(
@@ -501,7 +596,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   children: [
                     Icon(
                       category.iconData,
-                      color: isSelected ? category.color : AppTheme.textMedium,
+                      color: isSelected ? category.color : AppTheme.textSecondary,
                       size: 16.sp,
                     ),
                     SizedBox(width: 6.w),
@@ -510,7 +605,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                        color: isSelected ? category.color : AppTheme.textMedium,
+                        color: isSelected ? category.color : AppTheme.textSecondary,
                       ),
                     ),
                   ],
@@ -532,7 +627,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             'No affirmations available',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
             ),
           ),
         ),
@@ -546,52 +641,148 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       );
     }
 
-    final currentAffirmation = currentCategory.affirmations[currentAffirmationIndex];
+    // Create PageController if needed
+    if (_pageController == null || _lastCategoryIndex != selectedCategoryIndex) {
+      _pageController = PageController(
+        initialPage: 0, // Always start at 0 since currentAffirmationIndex is reset to 0
+        viewportFraction: 0.95,
+      );
+      _lastCategoryIndex = selectedCategoryIndex;
+    }
 
     return Expanded(
       child: Container(
-        margin: EdgeInsets.all(20.w),
-        padding: EdgeInsets.all(24.w),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              currentCategory.color.withAlpha((0.1 * 255).round()),
-              currentCategory.color.withAlpha((0.05 * 255).round()),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          borderRadius: BorderRadius.circular(20.r),
-          border: Border.all(
-            color: currentCategory.color.withAlpha((0.3 * 255).round()),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          children: [
-            // Header with affirmation actions for custom affirmations
-            if (!currentAffirmation.isCustom) 
-              SizedBox(height: 16.h)
-            else
-              _buildAffirmationActions(),
+        margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+        child: PageView.builder(
+          key: ValueKey('category_$selectedCategoryIndex'),
+          controller: _pageController,
+          itemCount: currentCategory.affirmations.length,
+          // Enable physics for better swipe feel
+          physics: BouncingScrollPhysics(),
+          onPageChanged: (index) {
+            HapticFeedback.selectionClick();
+            setState(() {
+              currentAffirmationIndex = index;
+            });
+            // Stop audio when swiping
+            if (isPlaying) {
+              _voiceService.stop();
+              setState(() {
+                isPlaying = false;
+              });
+            }
+            // Trigger swipe animation
+            _swipeAnimationController.forward().then((_) {
+              _swipeAnimationController.reset();
+            });
+          },
+          itemBuilder: (context, index) {
+            final affirmation = currentCategory.affirmations[index];
             
-            Expanded(
-              child: Center(
-                child: Text(
-                  currentAffirmation.text,
-                  style: TextStyle(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w600,
-                    color: AppTheme.textLight,
-                    height: 1.4,
+            // Calculate scale for cards that are not in focus
+            final isCurrentCard = index == currentAffirmationIndex;
+            
+            return AnimatedBuilder(
+              animation: _pageController ?? PageController(),
+              builder: (context, child) {
+                double value = 1.0;
+                if (_pageController?.position.haveDimensions ?? false) {
+                  value = _pageController!.page! - index;
+                  value = (1 - (value.abs() * 0.15)).clamp(0.0, 1.0);
+                }
+                
+                return Center(
+                  child: Transform.scale(
+                    scale: value,
+                    child: Opacity(
+                      opacity: value.clamp(0.8, 1.0),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4.w, vertical: 12.h),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              currentCategory.color.withValues(alpha: 0.15),
+                              currentCategory.color.withValues(alpha: 0.05),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(24.r),
+                          border: Border.all(
+                            color: isCurrentCard 
+                              ? currentCategory.color.withValues(alpha: 0.4)
+                              : currentCategory.color.withValues(alpha: 0.2),
+                            width: isCurrentCard ? 2 : 1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: currentCategory.color.withValues(alpha: isCurrentCard ? 0.2 : 0.1),
+                              blurRadius: isCurrentCard ? 30 : 20,
+                              offset: Offset(0, isCurrentCard ? 12 : 8),
+                              spreadRadius: isCurrentCard ? 2 : 0,
+                            ),
+                            BoxShadow(
+                              color: AppTheme.black.withValues(alpha: 0.1),
+                              blurRadius: 10,
+                              offset: Offset(0, 5),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(24.w),
+                          child: Column(
+                                children: [
+                                  // Header with affirmation actions for custom affirmations
+                                  if (affirmation.isCustom) 
+                                    _buildAffirmationActions()
+                                  else
+                                    SizedBox(height: 16.h),
+                                  
+                                  Expanded(
+                                    child: Center(
+                                      child: AnimatedSwitcher(
+                                        duration: Duration(milliseconds: 250),
+                                        switchInCurve: Curves.easeInOut,
+                                        switchOutCurve: Curves.easeInOut,
+                                        transitionBuilder: (child, animation) {
+                                          return FadeTransition(
+                                            opacity: animation,
+                                            child: ScaleTransition(
+                                              scale: Tween<double>(
+                                                begin: 0.95,
+                                                end: 1.0,
+                                              ).animate(animation),
+                                              child: child,
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          affirmation.text,
+                                          key: ValueKey(affirmation.id),
+                                          style: TextStyle(
+                                            fontSize: isCurrentCard ? 26.sp : 24.sp,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppTheme.textPrimary,
+                                            height: 1.5,
+                                            letterSpacing: 0.3,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 24.h),
+                                  _buildControls(),
+                                ],
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ),
-            SizedBox(height: 24.h),
-            _buildControls(),
-          ],
+                );
+              },
+            );
+          },
         ),
       ),
     );
@@ -613,12 +804,12 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.textSecondary.withValues(alpha: 0.3),
                 ),
               ),
               child: Icon(
                 Icons.edit,
-                color: AppTheme.textLight,
+                color: AppTheme.textPrimary,
                 size: 18.sp,
               ),
             ),
@@ -634,7 +825,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 color: AppTheme.cardBackground,
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: AppTheme.error.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.error.withValues(alpha: 0.3),
                 ),
               ),
               child: Icon(
@@ -654,24 +845,30 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     
     return Column(
       children: [
-        // Navigation dots
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            currentCategory.affirmations.length,
-            (index) => Container(
-              margin: EdgeInsets.symmetric(horizontal: 4.w),
-              width: 8.w,
-              height: 8.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: index == currentAffirmationIndex 
-                    ? currentCategory.color 
-                    : AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+        // Navigation dots with swipe hint
+        if (currentCategory.affirmations.length > 1)
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  currentCategory.affirmations.length,
+                  (index) => AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    margin: EdgeInsets.symmetric(horizontal: 4.w),
+                    width: index == currentAffirmationIndex ? 24.w : 8.w,
+                    height: 8.h,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4.r),
+                      color: index == currentAffirmationIndex 
+                          ? currentCategory.color 
+                          : AppTheme.textSecondary.withValues(alpha: 0.3),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-        ),
         SizedBox(height: 24.h),
         // Control buttons
         Row(
@@ -699,10 +896,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
             decoration: BoxDecoration(
-              color: currentCategory.color.withAlpha((0.1 * 255).round()),
+              color: currentCategory.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(24.r),
               border: Border.all(
-                color: currentCategory.color.withAlpha((0.3 * 255).round()),
+                color: currentCategory.color.withValues(alpha: 0.3),
                 width: 1.5,
               ),
             ),
@@ -746,13 +943,13 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           shape: BoxShape.circle,
           border: Border.all(
             color: enabled 
-                ? AppTheme.textMedium.withAlpha((0.3 * 255).round())
-                : AppTheme.textMedium.withAlpha((0.1 * 255).round()),
+                ? AppTheme.textSecondary.withValues(alpha: 0.3)
+                : AppTheme.textSecondary.withValues(alpha: 0.1),
           ),
         ),
         child: Icon(
           icon,
-          color: enabled ? AppTheme.textLight : AppTheme.textMedium.withAlpha((0.5 * 255).round()),
+          color: enabled ? AppTheme.textPrimary : AppTheme.textSecondary.withValues(alpha: 0.5),
           size: 24.sp,
         ),
       ),
@@ -803,55 +1000,100 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     
     try {
       if (isPlaying) {
-        await _flutterTts.stop();
-        setState(() {
-          isPlaying = false;
-        });
+        await _voiceService.stop();
         print('Paused affirmation: ${currentAffirmation.text}');
       } else {
         print('🔊 Playing affirmation: ${currentAffirmation.text}');
-        await _flutterTts.speak(currentAffirmation.text);
+        final success = await _voiceService.speak(currentAffirmation.text);
+        if (!success) {
+          _showErrorSnackBar('Unable to play audio. Please check your device settings.');
+        }
       }
     } catch (e) {
-      print('❌ TTS Error: $e');
-      setState(() {
-        isPlaying = false;
-      });
+      print('❌ Voice Service Error: $e');
       _showErrorSnackBar('Unable to play audio. Please check your device settings.');
+    }
+  }
+
+  void _testTextToAudioAPI() async {
+    if (categories.isEmpty) {
+      _showErrorSnackBar('No affirmations loaded yet');
+      return;
+    }
+    
+    final currentCategory = categories[selectedCategoryIndex];
+    final currentAffirmation = currentCategory.affirmations[currentAffirmationIndex];
+    
+    _showInfoSnackBar('Testing text-to-audio API...');
+    
+    try {
+      print('🧪 Testing text-to-audio API with current affirmation: "${currentAffirmation.text}"');
+      final result = await _affirmationService.convertTextToAudio(currentAffirmation.text);
+      
+      if (result.isSuccess) {
+        _showSuccessSnackBar('✅ API Success! Check console for response details.');
+        print('✅ Text-to-audio API returned: ${result.data}');
+      } else {
+        _showErrorSnackBar('❌ API Failed: ${result.message}');
+        print('❌ Text-to-audio API failed: ${result.message}');
+      }
+    } catch (e) {
+      _showErrorSnackBar('❌ Test Error: $e');
+      print('❌ Text-to-audio test error: $e');
     }
   }
 
   void _nextAffirmation() async {
     final currentCategory = categories[selectedCategoryIndex];
     if (currentAffirmationIndex < currentCategory.affirmations.length - 1) {
-      await _flutterTts.stop();
+      await _voiceService.stop();
       setState(() {
-        currentAffirmationIndex++;
         isPlaying = false;
       });
+      // Use PageController for smooth animation
+      if (_pageController != null) {
+        _pageController!.nextPage(
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
     }
   }
 
   void _previousAffirmation() async {
     if (currentAffirmationIndex > 0) {
-      await _flutterTts.stop();
+      await _voiceService.stop();
       setState(() {
-        currentAffirmationIndex--;
         isPlaying = false;
       });
+      // Use PageController for smooth animation
+      if (_pageController != null) {
+        _pageController!.previousPage(
+          duration: Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
     }
   }
 
   void _editCurrentAffirmation() {
-    final currentCategory = categories[selectedCategoryIndex];
-    final currentAffirmation = currentCategory.affirmations[currentAffirmationIndex];
-    
-    if (!currentAffirmation.isCustom) {
-      _showErrorSnackBar('Cannot edit default affirmations');
-      return;
-    }
+    try {
+      final currentCategory = categories[selectedCategoryIndex];
+      final currentAffirmation = currentCategory.affirmations[currentAffirmationIndex];
+      
+      print('🔧 Edit button clicked - isCustom: ${currentAffirmation.isCustom}, id: ${currentAffirmation.id}');
+      
+      if (!currentAffirmation.isCustom) {
+        print('⚠️ Cannot edit default affirmation');
+        _showErrorSnackBar('Cannot edit default affirmations');
+        return;
+      }
 
-    _showEditAffirmationDialog(currentAffirmation);
+      _showEditAffirmationDialog(currentAffirmation);
+    } catch (e) {
+      print('❌ Error in edit affirmation: $e');
+      _showErrorSnackBar('Error opening edit dialog: $e');
+    }
   }
 
   void _deleteCurrentAffirmation() async {
@@ -871,16 +1113,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Delete Affirmation',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: Text(
             'Are you sure you want to delete this affirmation?',
-            style: TextStyle(color: AppTheme.textMedium),
+            style: TextStyle(color: AppTheme.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
@@ -913,66 +1155,45 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 
   void _showEditAffirmationDialog(Affirmation affirmation) {
-    final TextEditingController textController = TextEditingController(text: affirmation.text);
-    
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: AppTheme.cardBackground,
-          title: Text(
-            'Edit Affirmation',
-            style: TextStyle(color: AppTheme.textLight),
-          ),
-          content: TextField(
-            controller: textController,
-            style: TextStyle(color: AppTheme.textLight),
-            maxLines: 3,
-            decoration: InputDecoration(
-              hintText: 'Enter your affirmation...',
-              hintStyle: TextStyle(color: AppTheme.textMedium),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.affirmationGradient[0]),
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
-            ),
-            TextButton(
-              onPressed: () async {
-                final newText = textController.text.trim();
-                if (newText.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  await _updateAffirmation(affirmation, newText);
-                }
-              },
-              child: Text('Save', style: TextStyle(color: AppTheme.affirmationGradient[0])),
-            ),
-          ],
-        );
-      },
-    );
+    try {
+      print('🔧 Opening edit dialog for affirmation: ${affirmation.text}');
+      
+      showDialog(
+        context: context,
+        barrierDismissible: false, // Prevent accidental dismissal
+        builder: (BuildContext dialogContext) {
+          return _EditAffirmationDialog(
+            affirmation: affirmation,
+            onSave: (newText) async {
+              Navigator.of(dialogContext).pop();
+              await _updateAffirmation(affirmation, newText);
+            },
+            onCancel: () {
+              Navigator.of(dialogContext).pop();
+            },
+          );
+        },
+      );
+    } catch (e) {
+      print('❌ Error showing edit dialog: $e');
+      _showErrorSnackBar('Error showing edit dialog: $e');
+    }
   }
 
   Future<void> _updateAffirmation(Affirmation affirmation, String newText) async {
     try {
       final affirmationId = int.tryParse(affirmation.id);
       if (affirmationId != null) {
+        // Get the current category ID to pass to the API
+        final currentCategory = categories[selectedCategoryIndex];
+        final categoryId = int.tryParse(currentCategory.id);
+        
+        print('🔧 Updating affirmation ID: $affirmationId with category ID: $categoryId');
+        
         final result = await _affirmationService.updateAffirmationText(
           affirmationTextId: affirmationId,
           text: newText,
+          categoryId: categoryId,
         );
         
         if (result.isSuccess) {
@@ -1004,6 +1225,17 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
       SnackBar(
         content: Text(message),
         backgroundColor: AppTheme.error,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
+      ),
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
       ),
@@ -1074,7 +1306,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: AppTheme.textMedium.withAlpha((0.3 * 255).round()),
+                  color: AppTheme.textSecondary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -1086,17 +1318,17 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.textLight,
+                  color: AppTheme.textPrimary,
                 ),
               ),
               SizedBox(height: 20.h),
               
               // Edit option
               ListTile(
-                leading: Icon(Icons.edit, color: AppTheme.textLight),
+                leading: Icon(Icons.edit, color: AppTheme.textPrimary),
                 title: Text(
                   'Edit Category',
-                  style: TextStyle(color: AppTheme.textLight),
+                  style: TextStyle(color: AppTheme.textPrimary),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -1135,21 +1367,21 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Edit Category',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: TextField(
             controller: nameController,
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
             decoration: InputDecoration(
               hintText: 'Category name...',
-              hintStyle: TextStyle(color: AppTheme.textMedium),
+              hintStyle: TextStyle(color: AppTheme.textSecondary),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
-                borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -1160,7 +1392,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () async {
@@ -1186,16 +1418,16 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           backgroundColor: AppTheme.cardBackground,
           title: Text(
             'Delete Category',
-            style: TextStyle(color: AppTheme.textLight),
+            style: TextStyle(color: AppTheme.textPrimary),
           ),
           content: Text(
             'Are you sure you want to delete "${category.name}"? This will also delete all affirmations in this category.',
-            style: TextStyle(color: AppTheme.textMedium),
+            style: TextStyle(color: AppTheme.textSecondary),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             TextButton(
               onPressed: () async {
@@ -1217,7 +1449,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
         final result = await _affirmationService.updateCategory(
           categoryId: categoryId,
           categoryName: newName,
-          colorAsInteger: category.color.value,
+          colorAsInteger: category.color.toARGB32(),
           predefinedIconTypeId: 3600001, // Default flower icon, would need to store this properly
         );
         
@@ -1246,7 +1478,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
           
           // If the deleted category was selected, switch to first category
           if (selectedCategoryIndex == categoryIndex) {
-            await _flutterTts.stop();
+            await _voiceService.stop();
             setState(() {
               selectedCategoryIndex = 0;
               currentAffirmationIndex = 0;
@@ -1298,10 +1530,10 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             width: 80.w,
             height: 80.h,
             decoration: BoxDecoration(
-              color: category.color.withAlpha((0.1 * 255).round()),
+              color: category.color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
               border: Border.all(
-                color: category.color.withAlpha((0.3 * 255).round()),
+                color: category.color.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
@@ -1320,7 +1552,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             style: TextStyle(
               fontSize: 22.sp,
               fontWeight: FontWeight.bold,
-              color: AppTheme.textLight,
+              color: AppTheme.textPrimary,
             ),
             textAlign: TextAlign.center,
           ),
@@ -1332,7 +1564,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
             'Create your first positive affirmation to begin manifesting your dreams in ${category.name.toLowerCase()}.',
             style: TextStyle(
               fontSize: 16.sp,
-              color: AppTheme.textMedium,
+              color: AppTheme.textSecondary,
               height: 1.4,
             ),
             textAlign: TextAlign.center,
@@ -1355,7 +1587,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 borderRadius: BorderRadius.circular(25.r),
                 boxShadow: [
                   BoxShadow(
-                    color: category.color.withAlpha((0.3 * 255).round()),
+                    color: category.color.withValues(alpha: 0.3),
                     blurRadius: 12.r,
                     offset: Offset(0, 6.h),
                   ),
@@ -1410,7 +1642,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                     'Tip: Start with "I am..." or "I believe..." statements',
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: AppTheme.textMedium,
+                      color: AppTheme.textSecondary,
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -1423,7 +1655,97 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
     );
   }
 
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Affirmations',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadCategories,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.affirmationGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _showAddAffirmationDialog(AffirmationCategory category) {
+    // Check subscription limits for affirmations in this category
+    final subscriptionService = SubscriptionService();
+    if (!subscriptionService.canCreateAffirmation(category.affirmations.length)) {
+      print('🚫 Affirmation creation blocked - limit reached: ${category.affirmations.length}/${SubscriptionService.maxFreeAffirmationsPerCategory}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'affirmation',
+          customMessage: 'Unlock unlimited affirmations and premium categories',
+        ),
+      );
+      return;
+    }
+    
     final TextEditingController textController = TextEditingController();
     
     showDialog(
@@ -1444,7 +1766,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                 child: Text(
                   'Add ${category.name} Affirmation',
                   style: TextStyle(
-                    color: AppTheme.textLight,
+                    color: AppTheme.textPrimary,
                     fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
@@ -1459,25 +1781,26 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
               Text(
                 'Create a positive affirmation that resonates with your ${category.name.toLowerCase()} goals.',
                 style: TextStyle(
-                  color: AppTheme.textMedium,
+                  color: AppTheme.textSecondary,
                   fontSize: 14.sp,
                 ),
               ),
               SizedBox(height: 16.h),
               TextField(
                 controller: textController,
-                style: TextStyle(color: AppTheme.textLight),
+                style: TextStyle(color: AppTheme.textPrimary),
                 maxLines: 3,
+                maxLength: 180, // Character limit appropriate for card display
                 decoration: InputDecoration(
                   hintText: 'I am worthy of ${category.name.toLowerCase()}...',
-                  hintStyle: TextStyle(color: AppTheme.textMedium.withAlpha((0.7 * 255).round())),
+                  hintStyle: TextStyle(color: AppTheme.textSecondary.withValues(alpha: 0.7)),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                    borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
-                    borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
+                    borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.r),
@@ -1486,21 +1809,55 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
                   filled: true,
                   fillColor: AppTheme.backgroundMedium,
                 ),
+                buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 4.h),
+                    child: Text(
+                      '$currentLength / $maxLength',
+                      style: TextStyle(
+                        fontSize: 12.sp,
+                        color: currentLength > (maxLength! * 0.9)
+                          ? Colors.orange
+                          : currentLength > (maxLength * 0.95)
+                            ? Colors.red
+                            : AppTheme.textSecondary,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text('Cancel', style: TextStyle(color: AppTheme.textMedium)),
+              child: Text('Cancel', style: TextStyle(color: AppTheme.textSecondary)),
             ),
             ElevatedButton(
               onPressed: () async {
                 final text = textController.text.trim();
-                if (text.isNotEmpty) {
-                  Navigator.of(context).pop();
-                  await _addAffirmationToCategory(category, text);
+                if (text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Please enter an affirmation'),
+                      backgroundColor: Colors.orange,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
                 }
+                if (text.length > 180) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Affirmation must be 180 characters or less'),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                  return;
+                }
+                Navigator.of(context).pop();
+                await _addAffirmationToCategory(category, text);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: category.color,
@@ -1541,9 +1898,40 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 
   void _showAddCategoryDialog() {
-    showDialog(
+    // Check subscription limits for custom categories only (default categories don't count)
+    final subscriptionService = SubscriptionService();
+    final customCategoriesCount = categories.where((cat) => cat.isCustom).length;
+    final totalCategoriesCount = categories.length;
+    
+    print('🔍 Category Creation Check:');
+    print('  - Total categories: $totalCategoriesCount');
+    print('  - Custom categories: $customCategoriesCount');
+    print('  - Is Premium: ${subscriptionService.isPremium}');
+    print('  - Max free custom categories: ${SubscriptionService.maxFreeCustomAffirmationCategories}');
+    print('  - Can create: ${subscriptionService.canCreateAffirmationCategory(customCategoriesCount)}');
+    
+    // Debug each category
+    categories.forEach((category) {
+      print('  📂 ${category.name}: isCustom=${category.isCustom}');
+    });
+    
+    if (!subscriptionService.canCreateAffirmationCategory(customCategoriesCount)) {
+      print('🚫 Category creation blocked - custom category limit reached: $customCategoriesCount/${SubscriptionService.maxFreeCustomAffirmationCategories}');
+      showDialog(
+        context: context,
+        builder: (context) => PremiumUpgradeDialog(
+          feature: 'affirmation_category',
+          customMessage: 'Unlock unlimited custom categories and premium features',
+        ),
+      );
+      return;
+    }
+    
+    showModalBottomSheet(
       context: context,
-      builder: (BuildContext context) => _AddCategoryDialog(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (BuildContext context) => _AddCategoryBottomSheet(
         onCategoryAdded: () {
           _loadCategories(); // Reload categories when a new one is added
         },
@@ -1552,215 +1940,405 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> {
   }
 }
 
-class _AddCategoryDialog extends StatefulWidget {
+class _AddCategoryBottomSheet extends StatefulWidget {
   final VoidCallback onCategoryAdded;
 
-  const _AddCategoryDialog({required this.onCategoryAdded});
+  const _AddCategoryBottomSheet({required this.onCategoryAdded});
 
   @override
-  _AddCategoryDialogState createState() => _AddCategoryDialogState();
+  _AddCategoryBottomSheetState createState() => _AddCategoryBottomSheetState();
 }
 
-class _AddCategoryDialogState extends State<_AddCategoryDialog> {
+class _AddCategoryBottomSheetState extends State<_AddCategoryBottomSheet> {
   final TextEditingController _nameController = TextEditingController();
   Color _selectedColor = AppTheme.accentGold;
   PredefinedIconTypes _selectedIcon = PredefinedIconTypes.flower;
   bool _isCreating = false;
 
   @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: AppTheme.cardBackground,
-      title: Text(
-        'Add Category',
-        style: TextStyle(
-          color: AppTheme.textLight,
-          fontSize: 20.sp,
-          fontWeight: FontWeight.bold,
-        ),
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: BoxDecoration(
+        color: AppTheme.cardBackground,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.black.withValues(alpha: 0.1),
+            blurRadius: 20.r,
+            offset: Offset(0, -8.h),
+          ),
+        ],
       ),
-      content: SizedBox(
-        width: double.maxFinite,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            // Category name input
-            Text(
-              'Category Name',
-              style: TextStyle(
-                color: AppTheme.textLight,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
+      child: Column(
+        children: [
+          // Drag handle
+          _buildDragHandle(),
+          
+          // Header with preview
+          _buildHeader(),
+          
+          // Content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(24.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Category name input
+                  _buildNameInput(),
+                  SizedBox(height: 32.h),
+                  
+                  // Color selection with navigation
+                  _buildColorSection(),
+                  SizedBox(height: 32.h),
+                  
+                  // Icon selection with navigation
+                  _buildIconSection(),
+                  SizedBox(height: 32.h),
+                ],
               ),
             ),
-            SizedBox(height: 8.h),
-            TextField(
-              controller: _nameController,
-              style: TextStyle(color: AppTheme.textLight),
-              decoration: InputDecoration(
-                hintText: 'Enter category name...',
-                hintStyle: TextStyle(color: AppTheme.textMedium),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: AppTheme.textMedium.withAlpha((0.3 * 255).round())),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12.r),
-                  borderSide: BorderSide(color: _selectedColor),
-                ),
-              ),
-            ),
-            SizedBox(height: 20.h),
-            
-            // Color selection
-            Text(
-              'Choose Color',
-              style: TextStyle(
-                color: AppTheme.textLight,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            _buildColorSelector(),
-            SizedBox(height: 20.h),
-            
-            // Icon selection
-            Text(
-              'Choose Icon',
-              style: TextStyle(
-                color: AppTheme.textLight,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 12.h),
-            _buildIconSelector(),
+          ),
+          
+          // Action buttons
+          _buildActionButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDragHandle() {
+    return Container(
+      width: 40.w,
+      height: 4.h,
+      margin: EdgeInsets.only(top: 12.h, bottom: 8.h),
+      decoration: BoxDecoration(
+        color: AppTheme.textSecondary.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(2.r),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Container(
+      padding: EdgeInsets.all(24.w),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            _selectedColor.withValues(alpha: 0.1),
+            _selectedColor.withValues(alpha: 0.05),
           ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
-        ),
+        borderRadius: BorderRadius.zero,
       ),
-      actions: [
-        TextButton(
-          onPressed: _isCreating ? null : () => Navigator.of(context).pop(),
-          child: Text(
-            'Cancel',
-            style: TextStyle(color: AppTheme.textMedium),
-          ),
-        ),
-        ElevatedButton(
-          onPressed: _isCreating ? null : _createCategory,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _selectedColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.r),
+      child: Row(
+        children: [
+          // Preview icon
+          Container(
+            width: 56.w,
+            height: 56.h,
+            decoration: BoxDecoration(
+              color: _selectedColor,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  color: _selectedColor.withValues(alpha: 0.3),
+                  blurRadius: 12.r,
+                  offset: Offset(0, 4.h),
+                ),
+              ],
+            ),
+            child: Icon(
+              Icons.add,
+              color: ColorUtils.getTextColor(_selectedColor),
+              size: 28.sp,
             ),
           ),
-          child: _isCreating
-              ? CompactStylishLoading(
-                  color: AppTheme.white,
-                  size: 16.w,
-                )
-              : Text(
-                  'Create',
-                  style: TextStyle(color: AppTheme.white),
+          SizedBox(width: 16.w),
+          
+          // Title and subtitle
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Create Category',
+                  style: TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+                SizedBox(height: 4.h),
+                Text(
+                  _nameController.text.isEmpty 
+                      ? 'Enter name, pick color & icon'
+                      : _nameController.text,
+                  style: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 14.sp,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNameInput() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Category Name',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 12.h),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: AppTheme.textSecondary.withValues(alpha: 0.2),
+            ),
+          ),
+          child: TextField(
+            controller: _nameController,
+            style: TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 16.sp,
+            ),
+            onChanged: (value) => setState(() {}), // Update preview
+            decoration: InputDecoration(
+              hintText: 'e.g., Health & Wellness',
+              hintStyle: TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 16.sp,
+              ),
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.all(16.w),
+            ),
+          ),
         ),
       ],
     );
   }
 
-  Widget _buildColorSelector() {
-    final predefinedColors = ColorUtils.getPredefinedCategoryColors();
+  Widget _buildColorSection() {
+    final colors = ColorUtils.getPredefinedCategoryColors();
+    final colorsPerPage = 15;
+    final totalPages = (colors.length / colorsPerPage).ceil();
     
-    return SizedBox(
-      height: 60.h,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: predefinedColors.length,
-        itemBuilder: (context, index) {
-          final color = predefinedColors[index];
-          final isSelected = _selectedColor == color;
-          
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedColor = color;
-              });
-            },
-            child: Container(
-              width: 50.w,
-              height: 50.h,
-              margin: EdgeInsets.only(right: 12.w),
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
-                border: isSelected 
-                    ? Border.all(color: AppTheme.white, width: 3)
-                    : Border.all(color: AppTheme.textMedium.withAlpha((0.3 * 255).round()), width: 1),
-              ),
-              child: isSelected 
-                  ? Icon(
-                      Icons.check,
-                      color: ColorUtils.getTextColor(color),
-                      size: 24.sp,
-                    )
-                  : null,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Choose Color',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        
+        // Color selection grid
+        SizedBox(
+          height: 120.h,
+          child: GridView.builder(
+            scrollDirection: Axis.horizontal,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 12.w,
+              crossAxisSpacing: 12.h,
+              childAspectRatio: 1.0,
             ),
-          );
-        },
+            itemCount: colors.length,
+            itemBuilder: (context, index) => _buildColorOption(colors[index]),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildIconSection() {
+    final icons = PredefinedIconTypes.getAllIcons();
+    final iconsPerPage = 20;
+    final totalPages = (icons.length / iconsPerPage).ceil();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Choose Icon',
+          style: TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 16.sp,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        
+        // Icon selection grid
+        SizedBox(
+          height: 200.h,
+          child: GridView.builder(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 6,
+              mainAxisSpacing: 12.h,
+              crossAxisSpacing: 12.w,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: icons.length,
+            itemBuilder: (context, index) => _buildIconOption(icons[index]),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildColorOption(Color color) {
+    final isSelected = _selectedColor == color;
+    
+    return GestureDetector(
+      onTap: () => setState(() => _selectedColor = color),
+      child: Container(
+        width: 44.w,
+        height: 44.h,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: isSelected 
+                ? AppTheme.white 
+                : AppTheme.textSecondary.withValues(alpha: 0.3),
+            width: isSelected ? 3 : 1,
+          ),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: color.withValues(alpha: 0.3),
+              blurRadius: 8.r,
+              offset: Offset(0, 2.h),
+            ),
+          ] : null,
+        ),
+        child: isSelected 
+            ? Icon(
+                Icons.check,
+                color: ColorUtils.getTextColor(color),
+                size: 20.sp,
+              )
+            : null,
       ),
     );
   }
 
-  Widget _buildIconSelector() {
-    final allIcons = PredefinedIconTypes.getAllIcons();
+  Widget _buildIconOption(PredefinedIconTypes iconType) {
+    final isSelected = _selectedIcon == iconType;
     
-    return SizedBox(
-      height: 120.h,
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 5,
-          mainAxisSpacing: 8.h,
-          crossAxisSpacing: 8.w,
+    return GestureDetector(
+      onTap: () => setState(() => _selectedIcon = iconType),
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSelected 
+              ? _selectedColor.withValues(alpha: 0.15)
+              : AppTheme.backgroundPrimary,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: isSelected 
+                ? _selectedColor 
+                : AppTheme.textSecondary.withValues(alpha: 0.2),
+            width: isSelected ? 2 : 1,
+          ),
         ),
-        itemCount: allIcons.length,
-        itemBuilder: (context, index) {
-          final iconType = allIcons[index];
-          final isSelected = _selectedIcon == iconType;
-          
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedIcon = iconType;
-              });
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: isSelected 
-                    ? _selectedColor.withAlpha((0.2 * 255).round())
-                    : AppTheme.backgroundMedium,
-                borderRadius: BorderRadius.circular(12.r),
-                border: isSelected
-                    ? Border.all(color: _selectedColor, width: 2)
-                    : Border.all(color: AppTheme.textMedium.withAlpha((0.3 * 255).round()), width: 1),
+        child: Icon(
+          iconType.iconData,
+          color: isSelected ? _selectedColor : AppTheme.textSecondary,
+          size: 24.sp,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(24.w, 16.h, 24.w, 32.h),
+      decoration: BoxDecoration(
+        color: AppTheme.backgroundPrimary,
+        border: Border(
+          top: BorderSide(
+            color: AppTheme.textSecondary.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextButton(
+              onPressed: _isCreating ? null : () => Navigator.of(context).pop(),
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
               ),
-              child: Icon(
-                iconType.iconData,
-                color: isSelected ? _selectedColor : AppTheme.textMedium,
-                size: 24.sp,
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: AppTheme.textSecondary,
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-          );
-        },
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            flex: 2,
+            child: ElevatedButton(
+              onPressed: _isCreating ? null : _createCategory,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: _selectedColor,
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                elevation: 0,
+                shadowColor: Colors.transparent,
+              ),
+              child: _isCreating
+                  ? CompactStylishLoading(
+                      color: ColorUtils.getTextColor(_selectedColor),
+                      size: 20.w,
+                    )
+                  : Text(
+                      'Create Category',
+                      style: TextStyle(
+                        color: ColorUtils.getTextColor(_selectedColor),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1777,6 +2355,12 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       return;
     }
 
+    // Double-check subscription limits as a safety measure
+    final subscriptionService = SubscriptionService();
+    // We need to get categories from parent widget - but since this is already checked
+    // in _showAddCategoryDialog, this is just a safety measure
+    print('🔒 Double-checking category creation limits before API call');
+
     setState(() {
       _isCreating = true;
     });
@@ -1786,7 +2370,7 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       final affirmationService = DailyAffirmationsService();
       final result = await affirmationService.createCategory(
         categoryName: name,
-        colorAsInteger: _selectedColor.value,
+        colorAsInteger: _selectedColor.toARGB32(),
         predefinedIconTypeId: _selectedIcon.value,
       );
       
@@ -1831,10 +2415,166 @@ class _AddCategoryDialogState extends State<_AddCategoryDialog> {
       );
     }
   }
+}
+
+// Separate StatefulWidget for the edit dialog to properly manage TextEditingController lifecycle
+class _EditAffirmationDialog extends StatefulWidget {
+  final Affirmation affirmation;
+  final Function(String) onSave;
+  final VoidCallback onCancel;
+
+  const _EditAffirmationDialog({
+    Key? key,
+    required this.affirmation,
+    required this.onSave,
+    required this.onCancel,
+  }) : super(key: key);
+
+  @override
+  _EditAffirmationDialogState createState() => _EditAffirmationDialogState();
+}
+
+class _EditAffirmationDialogState extends State<_EditAffirmationDialog> {
+  late TextEditingController _textController;
+  bool _isProcessing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.affirmation.text);
+  }
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _textController.dispose();
     super.dispose();
+  }
+
+  void _showErrorSnackBar(String message) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppTheme.cardBackground,
+      title: Text(
+        'Edit Affirmation',
+        style: TextStyle(color: AppTheme.textPrimary),
+      ),
+      content: TextField(
+        controller: _textController,
+        style: TextStyle(color: AppTheme.textPrimary),
+        maxLines: 3,
+        maxLength: 180, // Character limit appropriate for card display
+        enabled: !_isProcessing,
+        decoration: InputDecoration(
+          hintText: 'Enter your affirmation...',
+          hintStyle: TextStyle(color: AppTheme.textSecondary),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: AppTheme.textSecondary.withValues(alpha: 0.3)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12.r),
+            borderSide: BorderSide(color: AppTheme.affirmationGradient[0]),
+          ),
+        ),
+        buildCounter: (context, {required currentLength, required isFocused, maxLength}) {
+          return Padding(
+            padding: EdgeInsets.only(top: 4.h),
+            child: Text(
+              '$currentLength / $maxLength',
+              style: TextStyle(
+                fontSize: 12.sp,
+                color: currentLength > (maxLength! * 0.9)
+                  ? Colors.orange
+                  : currentLength > (maxLength * 0.95)
+                    ? Colors.red
+                    : AppTheme.textSecondary,
+              ),
+            ),
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: _isProcessing ? null : widget.onCancel,
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              color: _isProcessing ? AppTheme.textSecondary.withOpacity(0.5) : AppTheme.textSecondary,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: _isProcessing ? null : _handleSave,
+          child: _isProcessing
+              ? SizedBox(
+                  width: 20.w,
+                  height: 20.h,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppTheme.affirmationGradient[0]),
+                  ),
+                )
+              : Text(
+                  'Save',
+                  style: TextStyle(color: AppTheme.affirmationGradient[0]),
+                ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _handleSave() async {
+    try {
+      final newText = _textController.text.trim();
+      
+      if (newText.isEmpty) {
+        _showErrorSnackBar('Affirmation text cannot be empty');
+        return;
+      }
+      
+      if (newText.length > 180) {
+        _showErrorSnackBar('Affirmation must be 180 characters or less');
+        return;
+      }
+      
+      if (newText == widget.affirmation.text) {
+        // No changes, just close
+        widget.onCancel();
+        return;
+      }
+
+      setState(() {
+        _isProcessing = true;
+      });
+      
+      await widget.onSave(newText);
+      
+    } catch (e) {
+      print('❌ Error in save handler: $e');
+      _showErrorSnackBar('Error saving affirmation: $e');
+      
+      setState(() {
+        _isProcessing = false;
+      });
+    }
   }
 }

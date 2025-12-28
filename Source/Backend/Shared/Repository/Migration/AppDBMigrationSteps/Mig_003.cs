@@ -452,7 +452,7 @@ namespace Manifest.Repository.Migration.Application
 
             dynamic[] userParams =
             {
-                new { UserId = 1, UserGuid = Guid.NewGuid(), UserName = "super-admin", PredefinedUserTypeId = (int)PredefinedUserTypes.SuperAdmin, PasswordHash= PasswordHash.CreateHash("!test1234!", out _), Email= "sa@op.com", FirstName = "Super", LastName= "Admin",  Active = true, IsDeleted = false, CreatedDate = DateTime.UtcNow,  ModifiedDate = DateTime.UtcNow },
+                new { UserId = 1, UserGuid = Guid.NewGuid(), UserName = "super-admin", PredefinedUserTypeId = (int)PredefinedUserTypes.SuperAdmin, PasswordHash= PasswordHash.CreateHash("!test1234!", out _), Email= "sa@op.com", FirstName = "Super", LastName= "Admin",  Active = true, HasUserPurchasedPremiumFeature = false, IsDeleted = false, CreatedDate = DateTime.UtcNow,  ModifiedDate = DateTime.UtcNow },
 
                 //new { UserId = 1000, CompanyId = 1000, UserName = "acme-admin",PredefinedUserTypeId = (int)PredefinedUserTypes.CompanyAdmin,PasswordHash= PasswordHash.CreateHash("!test1234!", out _), Email= "admin@acme.op.com", FirstName = "Acme", LastName= "Admin",  Active = true, IsDeleted = false, CreatedDate = DateTime.UtcNow,  ModifiedDate = DateTime.UtcNow },
                 //new { UserId = 1001, CompanyId = 1000, UserName = "acme-config",PredefinedUserTypeId = (int)PredefinedUserTypes.CompanyConfigurator,PasswordHash= PasswordHash.CreateHash("!test1234!", out _), Email= "user1@acme.op.com", FirstName = "Acme", LastName= "User 1",  Active = true, IsDeleted = false, CreatedDate = DateTime.UtcNow,  ModifiedDate = DateTime.UtcNow },

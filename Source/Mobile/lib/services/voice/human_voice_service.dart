@@ -8,7 +8,7 @@ class HumanVoiceService {
   factory HumanVoiceService() => _instance;
   HumanVoiceService._internal();
 
-  AudioPlayer? _audioPlayer;
+  AudioPlayer? _audioPlayer;  
   bool _isInitialized = false;
   bool _isPlaying = false;
   String _currentText = '';

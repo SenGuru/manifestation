@@ -8,6 +8,7 @@ class VisionBoard {
   final Color backgroundColor;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? thumbnailUrl;
 
   const VisionBoard({
     required this.id,
@@ -16,6 +17,7 @@ class VisionBoard {
     required this.backgroundColor,
     required this.createdAt,
     required this.updatedAt,
+    this.thumbnailUrl,
   });
 
   factory VisionBoard.empty() {
@@ -49,6 +51,7 @@ class VisionBoard {
     Color? backgroundColor,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? thumbnailUrl,
   }) {
     return VisionBoard(
       id: id ?? this.id,
@@ -57,6 +60,7 @@ class VisionBoard {
       backgroundColor: backgroundColor ?? this.backgroundColor,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? DateTime.now(),
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
     );
   }
 
@@ -68,6 +72,7 @@ class VisionBoard {
       'backgroundColor': backgroundColor.value,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
     };
   }
 
@@ -81,6 +86,7 @@ class VisionBoard {
       backgroundColor: Color(json['backgroundColor']),
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
+      thumbnailUrl: json['thumbnailUrl'] as String?,
     );
   }
 }

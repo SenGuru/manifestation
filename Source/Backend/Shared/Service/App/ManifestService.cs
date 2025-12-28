@@ -24978,6 +24978,10 @@ namespace Manifest.Service.App
                     visionBoardPicture.UserId = await currentSessionService.GetCurrentUserIdAsync() ?? 0;
                 }
 
+                visionBoardPicture.ThumbnailFileName = existingVisionBoardPictureModel.Model.ThumbnailFileName;
+                visionBoardPicture.ThumbnailLocation = existingVisionBoardPictureModel.Model.ThumbnailLocation;
+                visionBoardPicture.ThumbnailFileSize = existingVisionBoardPictureModel.Model.ThumbnailFileSize;
+
                 visionBoardPicture.CreatedByUserId = existingVisionBoardPictureModel.Model.CreatedByUserId;
                 visionBoardPicture.CreatedDate = existingVisionBoardPictureModel.Model.CreatedDate;
                 visionBoardPicture.IsDeleted = existingVisionBoardPictureModel.Model.IsDeleted;
@@ -25176,6 +25180,26 @@ namespace Manifest.Service.App
             {
                 result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
                 return result;
+            }
+
+            if (visionBoardPictureModel.Title == null || visionBoardPictureModel.Title.Length > VisionBoardPictureModel.COLUMN_SIZE_Title)
+            {
+                result.Add(new ReturnErrorItem("Title", $"Title size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_Title}"));
+            }
+
+            if (visionBoardPictureModel.ThumbnailLocation != null && visionBoardPictureModel.ThumbnailLocation.Length > VisionBoardPictureModel.COLUMN_SIZE_ThumbnailLocation)
+            {
+                result.Add(new ReturnErrorItem("ThumbnailLocation", $"Thumbnail Location size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_ThumbnailLocation}"));
+            }
+
+            if (visionBoardPictureModel.ThumbnailFileName != null && visionBoardPictureModel.ThumbnailFileName.Length > VisionBoardPictureModel.COLUMN_SIZE_ThumbnailFileName)
+            {
+                result.Add(new ReturnErrorItem("ThumbnailFileName", $"Thumbnail FileName size should not exceed {VisionBoardPictureModel.COLUMN_SIZE_ThumbnailFileName}"));
+            }
+
+            if (visionBoardPictureModel.ThumbnailFileName == null)
+            {
+                result.Add(new ReturnErrorItem("ThumbnailFileName", "Thumbnail FileName is required "));
             }
 
             if (visionBoardPictureModel.Location != null && visionBoardPictureModel.Location.Length > VisionBoardPictureModel.COLUMN_SIZE_Location)
@@ -25582,7 +25606,7 @@ namespace Manifest.Service.App
                         var path = profileFileFileStorage.ProfileFilePathForHostBrand(visionBoardPicture.Model.UserId, visionBoardPicture.Model.VisionBoardPictureId, streamModel.FileName);
                         if (company.PredefinedCompanyTypeId == (int)PredefinedCompanyTypes.MarketPlace)
                             path = profileFileFileStorage.ProfileFilePathForMarketplaceBrand(visionBoardPicture.Model.UserId, visionBoardPicture.Model.VisionBoardPictureId, streamModel.FileName);
-                        await productRepository.UpdateVisionBoardPictureFilePathAsync(visionBoardPicture.Model.VisionBoardPictureId, path, streamModel.FileName, await currentSessionService.GetCurrentUserIdAsync());
+                        await manifestRepository.UpdateVisionBoardPictureFileLocationAsync(visionBoardPicture.Model.VisionBoardPictureId, path, streamModel.FileName, await currentSessionService.GetCurrentUserIdAsync());
                         await profileFileFileStorage.WriteAsync(visionBoardPicture.Model.UserId, path, streamModel.FileData);
                         await trx.CompleteAsync();
                     }
@@ -25612,7 +25636,7 @@ namespace Manifest.Service.App
 
                 using (var trx = await transactionManager.BeginTransactionAsync())
                 {
-                    await productRepository.ClearVisionBoardPictureFilePathAsync(visionBoardPicture.Model.VisionBoardPictureId, await currentSessionService.GetCurrentUserIdAsync());
+                    await manifestRepository.ClearVisionBoardPictureFileLocationAsync(visionBoardPicture.Model.VisionBoardPictureId, await currentSessionService.GetCurrentUserIdAsync());
                     await profileFileFileStorage.DeleteAsync(visionBoardPicture.Model.UserId, visionBoardPicture.Model.ProfileImageLocation);
                 }
 
@@ -25623,7 +25647,136 @@ namespace Manifest.Service.App
                 return log.ErrorAndReturnModel<bool>($"Unexpected error when clearing Vision Board Picture File", ex);
             }
         }
+        */
 
+        public async Task<ReturnModel<FileStreamModel>> GetVisionBoardPictureThumbnailAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var view = await GetVisionBoardPictureByIdForReadAsync(visionBoardPictureId);
+
+                if (!view.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"Unable to find the Vision Board Picture", new { visionBoardPictureId });
+                }
+
+                var fileName = view.Model.ThumbnailLocation;
+
+                if (fileName.IsTrimmedStringNullOrEmpty())
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: thumbnail is not available.");
+                }
+
+                if (!await fileAttachmentFileStorage.ExistsAsync(view.Model.UserId, fileName))
+                {
+                    return log.ErrorAndReturnModel<FileStreamModel>($"System error: thumbnail does not exist.");
+                }
+
+                var actualFileName = view.Model.ThumbnailFileName.IsTrimmedStringNullOrEmpty() ? $"VisionBoardPictureThumbnail" : view.Model.ThumbnailFileName;
+
+                var result = new FileStreamModel
+                {
+                    FileName = actualFileName,
+                    ContentType = FileUtils.GetMimeTypeFromFileName(actualFileName),
+                    FileData = await fileAttachmentFileStorage.OpenReadAsync(view.Model.UserId, fileName)
+                };
+
+                return ReturnModel<FileStreamModel>.Success(result);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<FileStreamModel>($"Unexpected error when getting Thumbnail for Vision Board Picture ", new { visionBoardPictureId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> IsVisionBoardPictureThumbnailValidAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var thumbnailModel = await GetVisionBoardPictureThumbnailAsync(visionBoardPictureId);
+                if (!thumbnailModel.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>($"Unexpected error when getting the Vision Board Picture thumbnail", thumbnailModel.ErrorHolder);
+                }
+
+                FileUtils.CloseSafely(thumbnailModel.Model.FileData);
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when validating Vision Board Picture Thumbnail", new { visionBoardPictureId }, ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> UploadVisionBoardPictureThumbnailAsync(long visionBoardPictureId, FileStreamModel streamModel)
+        {
+            try
+            {
+                var visionBoardPicture = await GetVisionBoardPictureByIdForWriteAsync(visionBoardPictureId);
+                if (!visionBoardPicture.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(visionBoardPicture);
+                }
+
+                if (streamModel == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("Thumbnail Content is not provided");
+                }
+
+                var company = await companyRepository.GetUserByIdAsync(visionBoardPicture.Model.UserId);
+                if (company == null)
+                {
+                    return log.ErrorAndReturnModel<bool>("Unable to find the Company Information");
+                }
+
+                try
+                {
+                    using (var trx = await transactionManager.BeginTransactionAsync())
+                    {
+                        var path = fileAttachmentFileStorage.VisionBoardThumbnailFilePath(visionBoardPicture.Model.UserId.ToString(), visionBoardPicture.Model.VisionBoardPictureId.ToString(), $"thumbnail_{streamModel.FileName}");
+                        await manifestRepository.UpdateVisionBoardPictureThumbnailLocationAsync(visionBoardPicture.Model.VisionBoardPictureId, path, streamModel.FileName, await currentSessionService.GetCurrentUserIdAsync());
+                        await fileAttachmentFileStorage.WriteAsync(visionBoardPicture.Model.UserId, path, streamModel.FileData);
+                        await trx.CompleteAsync();
+                    }
+                }
+                finally
+                {
+                    FileUtils.CloseSafely(streamModel.FileData);
+                }
+
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when Uploading Vision Board Picture Thumbnail", ex);
+            }
+        }
+
+        public async Task<ReturnModel<bool>> ClearVisionBoardPictureThumbnailAsync(long visionBoardPictureId)
+        {
+            try
+            {
+                var visionBoardPicture = await GetVisionBoardPictureByIdForWriteAsync(visionBoardPictureId);
+                if (!visionBoardPicture.IsSuccess)
+                {
+                    return log.ErrorAndReturnModel<bool>(visionBoardPicture);
+                }
+
+                using (var trx = await transactionManager.BeginTransactionAsync())
+                {
+                    await manifestRepository.ClearVisionBoardPictureThumbnailLocationAsync(visionBoardPicture.Model.VisionBoardPictureId, await currentSessionService.GetCurrentUserIdAsync());
+                    await fileAttachmentFileStorage.DeleteAsync(visionBoardPicture.Model.UserId, visionBoardPicture.Model.ThumbnailLocation);
+                }
+
+                return ReturnModel<bool>.Success(true);
+            }
+            catch (Exception ex)
+            {
+                return log.ErrorAndReturnModel<bool>($"Unexpected error when clearing Vision Board Picture Thumbnail", ex);
+            }
+        }
+
+        /*
         public async Task CreateOrUpdateVisionBoardPictureDependentsAsync(VisionBoardPictureUpdateModel model)
         {
             if (model.NewVisionBoardPictureXYZZYXModels == null)

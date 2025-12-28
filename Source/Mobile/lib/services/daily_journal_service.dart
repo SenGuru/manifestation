@@ -1,5 +1,5 @@
 import 'package:chopper/chopper.dart';
-import 'package:fun/services/unified_auth_service.dart';
+import 'package:mistel/services/unified_auth_service.dart';
 import 'dart:async';
 import '../api/generated/code/manifestation.swagger.dart';
 
@@ -13,7 +13,7 @@ class DailyJournalService {
 
   void initialize({String? baseUrl}) {
     _apiClient = Manifestation.create(
-      baseUrl: Uri.parse(baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'),
+      baseUrl: Uri.parse(baseUrl ?? 'https://manifestation-qa-1.senthilguru.net'),
       interceptors: [_AuthInterceptor()],
     );
   }

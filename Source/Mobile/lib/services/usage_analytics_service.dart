@@ -36,7 +36,7 @@ class UsageAnalyticsService {
   void _ensureInitialized() {
     if (!_isApiInitialized) {
       _apiClient = Manifestation.create(
-        baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+        baseUrl: Uri.parse('https://manifestation-qa-1.senthilguru.net'),
         interceptors: [_AuthInterceptor()],
       );
       _isApiInitialized = true;
@@ -386,11 +386,28 @@ class UsageAnalyticsService {
     Map<ActivityType, List<Map<String, dynamic>>> sessionsByActivity = {};
     for (final session in sessionHistory) {
       final activityTypeStr = session['activityType'] as String;
-      final activityType = ActivityType.values.firstWhere(
-        (type) => type.name == activityTypeStr,
-        orElse: () => ActivityType.dailyAffirmations,
-      );
+      print('📊 DEBUG: Processing session with activityType: "$activityTypeStr"');
+      
+      // Map string values to enum values
+      ActivityType activityType;
+      switch (activityTypeStr) {
+        case 'dailyAffirmations':
+          activityType = ActivityType.dailyAffirmations;
+          break;
+        case 'visionBoard':
+          activityType = ActivityType.visionBoard;
+          break;
+        case 'meditation':
+        case 'visualMeditation':
+          activityType = ActivityType.visualMeditation;
+          break;
+        default:
+          print('⚠️ Unknown activityType: "$activityTypeStr", defaulting to dailyAffirmations');
+          activityType = ActivityType.dailyAffirmations;
+      }
+      
       sessionsByActivity.putIfAbsent(activityType, () => []).add(session);
+      print('📊 DEBUG: Mapped "$activityTypeStr" to ${activityType.toString()}');
     }
     
     // Calculate activity-specific stats
@@ -420,6 +437,8 @@ class UsageAnalyticsService {
         lastSessionDate: lastSessionDate,
         weeklyActivity: _generateWeeklyActivityFromSessions(sessions, activityType),
       );
+      
+      print('📊 DEBUG: ${activityType.name}: ${sessions.length} sessions, ${activityTotalTime}s total time');
       
       if (sessions.length > maxSessions) {
         maxSessions = sessions.length;

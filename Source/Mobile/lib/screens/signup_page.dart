@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../models/auth_models.dart';
 import '../services/unified_auth_service.dart';
+import '../components/network_error_dialog.dart';
 import 'post_signup_onboarding.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
 import '../widgets/stylish_loading.dart';
 import '../widgets/keyboard_dismissal_wrapper.dart';
 import '../widgets/universal_back_button.dart';
+import '../widgets/account_creation_companion.dart';
 import '../components/error_popup.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -839,12 +841,12 @@ class _SignUpScreenState extends State<SignUpScreen>
 
   void _handleSignUp() async {
     print('📱=== SIGNUP UI DEBUG START ===');
-    
+
     // Clear previous validation error
     setState(() {
       _validationError = '';
     });
-    
+
     print('📱 Signup form validation:');
     print('📱   - Name: "${_nameController.text.trim()}"');
     print('📱   - Email: "${_emailController.text.trim()}"');
@@ -852,38 +854,67 @@ class _SignUpScreenState extends State<SignUpScreen>
     print('📱   - Confirm password matches: ${_passwordController.text == _confirmPasswordController.text}');
     print('📱   - Agree to terms: $_agreeToTerms');
     print('📱   - Subscribe to newsletter: $_subscribeToNewsletter');
-    
+
     // Custom validation since we disabled TextFormField's built-in validation
     bool hasErrors = false;
-    
+
     print('📱 Field validation errors:');
     print('📱   - Name error: $_nameError');
     print('📱   - Email error: $_emailError');
     print('📱   - Password error: $_passwordError');
     print('📱   - Confirm password error: $_confirmPasswordError');
-    
+
     if (_nameError != null) hasErrors = true;
     if (_emailError != null) hasErrors = true;
     if (_passwordError != null) hasErrors = true;
     if (_confirmPasswordError != null) hasErrors = true;
-    
+
     if (hasErrors) {
       print('📱 STOPPING: Form has validation errors');
       return;
     }
-    
-    if (!_agreeToTerms) {
-      print('📱 STOPPING: User did not agree to terms');
-      setState(() {
-        _validationError = 'Please agree to the Terms of Service and Privacy Policy';
-      });
-      return;
-    }
 
+    // Show loading state
     setState(() {
       _isLoading = true;
     });
 
+    // Create account FIRST and wait for response
+    final result = await _createAccount();
+
+    // Hide loading state
+    setState(() {
+      _isLoading = false;
+    });
+
+    // Only proceed if account creation was successful
+    if (result) {
+      // Extract first name for personalized greeting
+      String firstName = _nameController.text.trim().split(' ').first;
+
+      // Navigate to companion screen ONLY after successful account creation
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => AccountCreationCompanion(
+            userName: firstName,
+            onComplete: () {
+              // After animation completes, navigate to onboarding
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => PostSignupOnboardingScreen(),
+                ),
+                (route) => false,
+              );
+            },
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<bool> _createAccount() async {
     try {
       // Parse the full name into first and last name
       final nameParts = _nameController.text.trim().split(' ');
@@ -933,36 +964,18 @@ class _SignUpScreenState extends State<SignUpScreen>
       }
 
       if (result.isSuccess) {
-        print('📱 SUCCESS: Showing success popup and navigating');
-        // Show success popup before navigation
-        SuccessPopup.show(
-          context,
-          title: 'Account Created!',
-          message: 'Welcome to our manifestation community! Let\'s get you started on your journey.',
-          actionText: 'Begin Journey',
-          onAction: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
-            );
-          },
-          onDismiss: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => PostSignupOnboardingScreen()),
-            );
-          },
-        );
+        print('📱 SUCCESS: Account created successfully');
+        return true;
       } else {
         print('📱 FAILURE: Showing error popup');
         print('📱 Original error message: "${result.message}"');
         final friendlyMessage = _getSignupErrorMessage(result.message);
         print('📱 Friendly error message: "$friendlyMessage"');
-        
+
         // Extract just the friendly message from the error
         String debugMessage = result.message;
         String? serverFriendlyMessage;
-        
+
         try {
           // Try to extract friendlyMessage from JSON if it exists
           if (debugMessage.contains('"friendlyMessage"')) {
@@ -975,15 +988,15 @@ class _SignUpScreenState extends State<SignUpScreen>
         } catch (e) {
           print('📱 Error parsing server message: $e');
         }
-        
+
         final displayMessage = serverFriendlyMessage ?? friendlyMessage;
         final hasDebugInfo = result.message.length > 200;
-        
+
         // Show beautiful error popup instead of validation error
         ErrorPopup.show(
           context,
           title: 'Account Creation Failed',
-          message: hasDebugInfo 
+          message: hasDebugInfo
               ? '$displayMessage\n\n🔍 Server says: "${serverFriendlyMessage ?? "Server error occurred"}"\n\n💡 This appears to be a server-side issue. Please try again or contact support if the problem persists.'
               : displayMessage,
           actionText: 'Try Again',
@@ -994,6 +1007,7 @@ class _SignUpScreenState extends State<SignUpScreen>
             FocusScope.of(context).requestFocus(FocusNode());
           },
         );
+        return false;
       }
     } catch (e, stackTrace) {
       print('📱=== SIGNUP UI EXCEPTION ===');
@@ -1001,28 +1015,24 @@ class _SignUpScreenState extends State<SignUpScreen>
       print('📱 Exception message: $e');
       print('📱 Stack trace:');
       print(stackTrace);
-      
-      ErrorPopup.show(
+
+      // Show beautiful network error dialog
+      showNetworkErrorDialog(
         context,
-        title: 'Connection Error',
-        message: 'Unable to create your account right now. Please check your internet connection and try again.\n\nError: $e',
-        actionText: 'Retry',
-        onAction: () => _handleSignUp(),
+        message: 'We\'re having trouble creating your account. Please check your internet connection and try again in a moment.',
+        onRetry: () => _handleSignUp(),
       );
-    } finally {
-      print('📱 Setting loading to false');
-      setState(() {
-        _isLoading = false;
-      });
-      print('📱=== SIGNUP UI DEBUG END ===');
+      return false;
     }
   }
 
   String _getSignupErrorMessage(String apiMessage) {
     final message = apiMessage.toLowerCase();
-    
+
     if (message.contains('email already exists') || message.contains('email already registered') || message.contains('duplicate email')) {
       return 'This email is already registered. Please use a different email or sign in.';
+    } else if (message.contains('another user already exists') || message.contains('user already exists')) {
+      return 'An account with this email already exists. Please use a different email or try signing in instead.';
     } else if (message.contains('username already exists') || message.contains('username taken') || message.contains('duplicate username')) {
       return 'This username is already taken. Please choose a different username.';
     } else if (message.contains('invalid email') || message.contains('email format')) {

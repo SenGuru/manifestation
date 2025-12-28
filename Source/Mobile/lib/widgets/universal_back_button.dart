@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/colors.dart';
 import '../constants/app_theme.dart';
@@ -18,7 +19,14 @@ class UniversalBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed ?? () => Navigator.pop(context),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        if (onPressed != null) {
+          onPressed!();
+        } else {
+          Navigator.pop(context);
+        }
+      },
       child: Container(
         width: size ?? 44.w,
         height: size ?? 44.h,
