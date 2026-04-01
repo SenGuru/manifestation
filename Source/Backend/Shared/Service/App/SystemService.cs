@@ -374,8 +374,7 @@ namespace Manifest.Service.App
             }
             else
             {
-                var countryItem = await systemRepository.GetCountryByIdAsync(stateModel.CountryId);
-                if (countryItem == null)
+                if (!await systemRepository.DoesCountryByIdExistsAsync(stateModel.CountryId))
                 {
                     result.Add(new ReturnErrorItem("", $"Unable to Get the Country Information"));
                     return result;
@@ -671,8 +670,7 @@ namespace Manifest.Service.App
 
             if (auditOperationModel.UserId > 0)
             {
-                var userItem = await companyRepository.GetUserViewByIdAsync(auditOperationModel.UserId ?? 0);
-                if (userItem == null)
+                if (!await companyRepository.DoesUserByIdExistsAsync(auditOperationModel.UserId ?? 0, auditOperationModel.CompanyId))
                 {
                     result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                     return result;
@@ -1494,8 +1492,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var auditOperationItem = await systemRepository.GetAuditOperationViewByIdAsync(auditOperationDetailModel.AuditOperationId);
-            if (auditOperationItem == null)
+            if (!await systemRepository.DoesAuditOperationByIdExistsAsync(auditOperationDetailModel.AuditOperationId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the AuditOperation Information"));
                 return result;
@@ -1506,8 +1503,7 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("AuditOperationId", "AuditOperation cannot be empty"));
             }
 
-            var itemForAuditOperation = await systemRepository.GetAuditOperationByIdAsync(auditOperationDetailModel.AuditOperationId);
-            if (itemForAuditOperation == null)
+            if (!await systemRepository.DoesAuditOperationByIdExistsAsync(auditOperationDetailModel.AuditOperationId))
             {
                 result.Add(new ReturnErrorItem("AuditOperationId", "AuditOperation is not available"));
             }
@@ -2570,8 +2566,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var configurationGroupItem = await systemRepository.GetConfigurationGroupViewByIdAsync(configurationItemModel.ConfigurationGroupId);
-            if (configurationGroupItem == null)
+            if (!await systemRepository.DoesConfigurationGroupByIdExistsAsync(configurationItemModel.ConfigurationGroupId, configurationItemModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the ConfigurationGroup Information"));
                 return result;
@@ -4159,8 +4154,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var enumGroupItem = await systemRepository.GetEnumGroupViewByIdAsync(enumTypeModel.EnumGroupId);
-            if (enumGroupItem == null)
+            if (!await systemRepository.DoesEnumGroupByIdExistsAsync(enumTypeModel.EnumGroupId, enumTypeModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the EnumGroup Information"));
                 return result;
@@ -4948,8 +4942,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobTemplateItem = await systemRepository.GetJobTemplateViewByIdAsync(jobModel.JobTemplateId);
-            if (jobTemplateItem == null)
+            if (!await systemRepository.DoesJobTemplateByIdExistsAsync(jobModel.JobTemplateId, jobModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the JobTemplate Information"));
                 return result;
@@ -5842,8 +5835,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobItem = await systemRepository.GetJobViewByIdAsync(jobAttachmentModel.JobId);
-            if (jobItem == null)
+            if (!await systemRepository.DoesJobByIdExistsAsync(jobAttachmentModel.JobId, jobAttachmentModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the Job Information"));
                 return result;
@@ -6646,8 +6638,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobItem = await systemRepository.GetJobViewByIdAsync(jobNotificationEmailModel.JobId);
-            if (jobItem == null)
+            if (!await systemRepository.DoesJobByIdExistsAsync(jobNotificationEmailModel.JobId, jobNotificationEmailModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the Job Information"));
                 return result;
@@ -7450,8 +7441,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobTemplateCategoryItem = await systemRepository.GetJobTemplateCategoryViewByIdAsync(jobTemplateModel.JobTemplateCategoryId);
-            if (jobTemplateCategoryItem == null)
+            if (!await systemRepository.DoesJobTemplateCategoryByIdExistsAsync(jobTemplateModel.JobTemplateCategoryId, jobTemplateModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the JobTemplateCategory Information"));
                 return result;
@@ -9103,8 +9093,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobTemplateItem = await systemRepository.GetJobTemplateViewByIdAsync(jobTemplateParameterModel.JobTemplateId);
-            if (jobTemplateItem == null)
+            if (!await systemRepository.DoesJobTemplateByIdExistsAsync(jobTemplateParameterModel.JobTemplateId, jobTemplateParameterModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the JobTemplate Information"));
                 return result;
@@ -10627,8 +10616,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var userItem = await companyRepository.GetUserViewByIdAsync(realtimeMessageModel.UserId);
-            if (userItem == null)
+            if (!await companyRepository.DoesUserByIdExistsAsync(realtimeMessageModel.UserId, realtimeMessageModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -11491,8 +11479,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobTemplateItem = await systemRepository.GetJobTemplateViewByIdAsync(savedJobModel.JobTemplateId);
-            if (jobTemplateItem == null)
+            if (!await systemRepository.DoesJobTemplateByIdExistsAsync(savedJobModel.JobTemplateId, savedJobModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the JobTemplate Information"));
                 return result;
@@ -12365,8 +12352,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var jobTemplateItem = await systemRepository.GetJobTemplateViewByIdAsync(scheduledJobModel.JobTemplateId);
-            if (jobTemplateItem == null)
+            if (!await systemRepository.DoesJobTemplateByIdExistsAsync(scheduledJobModel.JobTemplateId, scheduledJobModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the JobTemplate Information"));
                 return result;
@@ -13244,8 +13230,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var savedJobItem = await systemRepository.GetSavedJobViewByIdAsync(savedJobNotificationEmailModel.SavedJobId);
-            if (savedJobItem == null)
+            if (!await systemRepository.DoesSavedJobByIdExistsAsync(savedJobNotificationEmailModel.SavedJobId, savedJobNotificationEmailModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the SavedJob Information"));
                 return result;
@@ -14043,8 +14028,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var scheduledJobItem = await systemRepository.GetScheduledJobViewByIdAsync(scheduledJobHistoryModel.ScheduledJobId);
-            if (scheduledJobItem == null)
+            if (!await systemRepository.DoesScheduledJobByIdExistsAsync(scheduledJobHistoryModel.ScheduledJobId, scheduledJobHistoryModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the ScheduledJob Information"));
                 return result;
@@ -14847,8 +14831,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var scheduledJobItem = await systemRepository.GetScheduledJobViewByIdAsync(scheduledJobNotificationEmailModel.ScheduledJobId);
-            if (scheduledJobItem == null)
+            if (!await systemRepository.DoesScheduledJobByIdExistsAsync(scheduledJobNotificationEmailModel.ScheduledJobId, scheduledJobNotificationEmailModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the ScheduledJob Information"));
                 return result;

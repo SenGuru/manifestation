@@ -265,13 +265,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsUserNameAlreadyExistsForOtherUserAsync(long userId, string userName)
         {
-            var sql = GetUsersViewAsIQueryable().Where(x => x.UserId != userId && x.UserName.ToLower().Trim() == userName.ToLower().Trim() && x.IsDeleted == false);
+            var sql = appDBManager.GetTable<User>().Where(x => x.UserId != userId && x.UserName.ToLower().Trim() == userName.ToLower().Trim() && x.IsDeleted == false).Select(x => x.UserId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsUserNameAlreadyExistsForOtherUserAsync(string userName)
         {
-            var sql = GetUsersViewAsIQueryable().Where(x => x.UserName.ToLower().Trim() == userName.ToLower().Trim() && x.IsDeleted == false);
+            var sql = appDBManager.GetTable<User>().Where(x => x.UserName.ToLower().Trim() == userName.ToLower().Trim() && x.IsDeleted == false).Select(x => x.UserId);
             return sql.AnyAsync();
         }
 
@@ -336,6 +336,11 @@ namespace Manifest.Repository.Common
         public async Task<bool> MarkUserAsDeletedByIdAsync(long userId, long? modifiedBy)
         {
             return await appDBManager.GetTable<User>().Where(x => x.UserId == userId).Set(x => x.IsDeleted, true).UpdateWithAuditAsync(modifiedBy) > 0;
+        }
+
+        public Task<bool> DoesUserByIdExistsAsync(long userId)
+        {
+            return appDBManager.GetTable<User>().Where(x => x.UserId == userId && x.IsDeleted == false).Select(x => x.UserId).AnyAsync();
         }
         #endregion User
 
@@ -496,13 +501,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsUserPermissionNameAlreadyExistsForOtherUserPermissionAsync(long userPermissionId, long userId, long predefinedUserPermissionTypeId)
         {
-            var sql = GetUserPermissionsViewAsIQueryable().Where(x => x.IsDeleted == false && x.UserPermissionId != userPermissionId && x.UserId == userId && x.PredefinedUserPermissionTypeId == predefinedUserPermissionTypeId);
+            var sql = appDBManager.GetTable<UserPermission>().Where(x => x.IsDeleted == false && x.UserPermissionId != userPermissionId && x.UserId == userId && x.PredefinedUserPermissionTypeId == predefinedUserPermissionTypeId).Select(x => x.UserPermissionId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsUserPermissionNameAlreadyExistsForOtherUserPermissionAsync(long userId, long predefinedUserPermissionTypeId)
         {
-            var sql = GetUserPermissionsViewAsIQueryable().Where(x => x.IsDeleted == false && x.UserId == userId && x.PredefinedUserPermissionTypeId == predefinedUserPermissionTypeId);
+            var sql = appDBManager.GetTable<UserPermission>().Where(x => x.IsDeleted == false && x.UserId == userId && x.PredefinedUserPermissionTypeId == predefinedUserPermissionTypeId).Select(x => x.UserPermissionId);
             return sql.AnyAsync();
         }
 

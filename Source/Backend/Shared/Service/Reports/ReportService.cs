@@ -201,8 +201,7 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobAttachmentCreateModelToJobAttachment(jobAttachment);
 
-                var jobItem = await reportRepository.GetJobViewByIdAsync(jobAttachment.JobId);
-                if (jobItem == null)
+                if (!await reportRepository.DoesJobByIdExistsAsync(jobAttachment.JobId, jobAttachment.CompanyId))
                 {
                     return log.ErrorAndReturnModel<JobAttachmentModel>($"Unable to Get the Job Information", new { jobAttachment.JobId });
                 }
@@ -275,8 +274,7 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobAttachmentUpdateModelToJobAttachment(jobAttachment);
 
-                var jobItem = await reportRepository.GetJobViewByIdAsync(jobAttachment.JobId);
-                if (jobItem == null)
+                if (!await reportRepository.DoesJobByIdExistsAsync(jobAttachment.JobId, jobAttachment.CompanyId))
                 {
                     return log.ErrorAndReturnModel<JobAttachmentModel>($"Unable to Get the Job Information", new { jobAttachment.JobId });
                 }
@@ -567,8 +565,7 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobNotificationEmailCreateModelToJobNotificationEmail(jobNotificationEmail);
 
-                var jobItem = await reportRepository.GetJobViewByIdAsync(jobNotificationEmail.JobId);
-                if (jobItem == null)
+                if (!await reportRepository.DoesJobByIdExistsAsync(jobNotificationEmail.JobId, jobNotificationEmail.CompanyId))
                 {
                     return log.ErrorAndReturnModel<JobNotificationEmailModel>($"Unable to Get the Job Information", new { jobNotificationEmail.JobId });
                 }
@@ -643,8 +640,7 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobNotificationEmailUpdateModelToJobNotificationEmail(jobNotificationEmail);
 
-                var jobItem = await reportRepository.GetJobViewByIdAsync(jobNotificationEmail.JobId);
-                if (jobItem == null)
+                if (!await reportRepository.DoesJobByIdExistsAsync(jobNotificationEmail.JobId, jobNotificationEmail.CompanyId))
                 {
                     return log.ErrorAndReturnModel<JobNotificationEmailModel>($"Unable to Get the Job Information", new { jobNotificationEmail.JobId });
                 }

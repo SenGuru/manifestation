@@ -1366,8 +1366,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var userItem = await companyRepository.GetUserViewByIdAsync(chatMessageModel.UserId);
-            if (userItem == null)
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageModel.UserId, chatMessageModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -1378,8 +1377,7 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("UserId", "User cannot be empty"));
             }
 
-            var itemForUser = await companyRepository.GetUserByIdAsync(chatMessageModel.UserId);
-            if (itemForUser == null)
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageModel.UserId, chatMessageModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("UserId", "User is not available"));
             }
@@ -2313,15 +2311,13 @@ namespace Manifest.Service.App
                 }
             }
 
-            var chatMessageItem = await chatRepository.GetChatMessageViewByIdAsync(chatMessageStatusModel.ChatMessageId);
-            if (chatMessageItem == null)
+            if (!await chatRepository.DoesChatMessageByIdExistsAsync(chatMessageStatusModel.ChatMessageId, chatMessageStatusModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the ChatMessage Information"));
                 return result;
             }
 
-            var userItem = await companyRepository.GetUserViewByIdAsync(chatMessageStatusModel.UserId);
-            if (userItem == null)
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageStatusModel.UserId, chatMessageStatusModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -3247,8 +3243,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var userItem = await companyRepository.GetUserViewByIdAsync(chatUserModel.UserId);
-            if (userItem == null)
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatUserModel.UserId, chatUserModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;

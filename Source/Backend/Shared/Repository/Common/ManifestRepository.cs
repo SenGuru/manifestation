@@ -450,13 +450,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsFileAttachmentFolderNameAlreadyExistsForOtherFileAttachmentFolderAsync(long fileAttachmentFolderId, string fileAttachmentFolderName, long userId)
         {
-            var sql = GetFileAttachmentFoldersViewAsIQueryable().Where(x => x.IsDeleted == false && x.FileAttachmentFolderId != fileAttachmentFolderId && x.FileAttachmentFolderName.ToLower().Trim() == fileAttachmentFolderName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<FileAttachmentFolder>().Where(x => x.IsDeleted == false && x.FileAttachmentFolderId != fileAttachmentFolderId && x.FileAttachmentFolderName.ToLower().Trim() == fileAttachmentFolderName.ToLower().Trim() && x.UserId == userId).Select(x => x.FileAttachmentFolderId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsFileAttachmentFolderNameAlreadyExistsForOtherFileAttachmentFolderAsync(string fileAttachmentFolderName, long userId)
         {
-            var sql = GetFileAttachmentFoldersViewAsIQueryable().Where(x => x.IsDeleted == false && x.FileAttachmentFolderName.ToLower().Trim() == fileAttachmentFolderName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<FileAttachmentFolder>().Where(x => x.IsDeleted == false && x.FileAttachmentFolderName.ToLower().Trim() == fileAttachmentFolderName.ToLower().Trim() && x.UserId == userId).Select(x => x.FileAttachmentFolderId);
             return sql.AnyAsync();
         }
 
@@ -1369,13 +1369,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsCategoryNameAlreadyExistsForOtherCategoryAsync(long categoryId, string categoryName, long userId)
         {
-            var sql = GetCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && x.CategoryId != categoryId && x.CategoryName.ToLower().Trim() == categoryName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && x.CategoryId != categoryId && x.CategoryName.ToLower().Trim() == categoryName.ToLower().Trim() && x.UserId == userId).Select(x => x.CategoryId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsCategoryNameAlreadyExistsForOtherCategoryAsync(string categoryName, long userId)
         {
-            var sql = GetCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && x.CategoryName.ToLower().Trim() == categoryName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<Category>().Where(x => x.IsDeleted == false && x.CategoryName.ToLower().Trim() == categoryName.ToLower().Trim() && x.UserId == userId).Select(x => x.CategoryId);
             return sql.AnyAsync();
         }
 
@@ -1542,6 +1542,17 @@ namespace Manifest.Repository.Common
             return GetActivitiesByExpressionAsync(srch, search);
         }
         */
+
+        public Task<bool> DoesCategoryByIdExistsAsync(long categoryId, long? userId = null)
+        {
+            if (userId == null)
+            {
+                return appDBManager.GetTable<Category>().Where(x => x.CategoryId == categoryId && x.IsDeleted == false).Select(x => x.CategoryId).AnyAsync();
+            }
+
+            return appDBManager.GetTable<Category>().Where(x => x.CategoryId == categoryId && x.UserId == userId && x.IsDeleted == false).Select(x => x.CategoryId).AnyAsync();
+        }
+
         #endregion
 
 #region DailyAffirmationSession
@@ -2050,13 +2061,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsDailyAffirmationTextNameAlreadyExistsForOtherDailyAffirmationTextAsync(long dailyAffirmationTextId, string dailyAffirmationTextName, long userId)
         {
-            var sql = GetDailyAffirmationTextsViewAsIQueryable().Where(x => x.IsDeleted == false && x.DailyAffirmationTextId != dailyAffirmationTextId && x.DailyAffirmationTextValue.ToLower().Trim() == dailyAffirmationTextName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<DailyAffirmationText>().Where(x => x.IsDeleted == false && x.DailyAffirmationTextId != dailyAffirmationTextId && x.DailyAffirmationTextValue.ToLower().Trim() == dailyAffirmationTextName.ToLower().Trim() && x.UserId == userId).Select(x => x.DailyAffirmationTextId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsDailyAffirmationTextNameAlreadyExistsForOtherDailyAffirmationTextAsync(string dailyAffirmationTextName, long userId)
         {
-            var sql = GetDailyAffirmationTextsViewAsIQueryable().Where(x => x.IsDeleted == false && x.DailyAffirmationTextValue.ToLower().Trim() == dailyAffirmationTextName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<DailyAffirmationText>().Where(x => x.IsDeleted == false && x.DailyAffirmationTextValue.ToLower().Trim() == dailyAffirmationTextName.ToLower().Trim() && x.UserId == userId).Select(x => x.DailyAffirmationTextId);
             return sql.AnyAsync();
         }
 
@@ -2829,13 +2840,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsDefaultCategoryNameAlreadyExistsForOtherDefaultCategoryAsync(long defaultCategoryId, string defaultCategoryName)
         {
-            var sql = GetDefaultCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultCategoryId != defaultCategoryId && x.DefaultCategoryName.ToLower().Trim() == defaultCategoryName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultCategory>().Where(x => x.IsDeleted == false && x.DefaultCategoryId != defaultCategoryId && x.DefaultCategoryName.ToLower().Trim() == defaultCategoryName.ToLower().Trim()).Select(x => x.DefaultCategoryId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsDefaultCategoryNameAlreadyExistsForOtherDefaultCategoryAsync(string defaultCategoryName)
         {
-            var sql = GetDefaultCategorysViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultCategoryName.ToLower().Trim() == defaultCategoryName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultCategory>().Where(x => x.IsDeleted == false && x.DefaultCategoryName.ToLower().Trim() == defaultCategoryName.ToLower().Trim()).Select(x => x.DefaultCategoryId);
             return sql.AnyAsync();
         }
 
@@ -3104,13 +3115,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsDefaultDailyAffirmationTextNameAlreadyExistsForOtherDefaultDailyAffirmationTextAsync(long defaultDailyAffirmationTextId, string defaultDailyAffirmationTextName)
         {
-            var sql = GetDefaultDailyAffirmationTextsViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultDailyAffirmationTextId != defaultDailyAffirmationTextId && x.DefaultDailyAffirmationTextName.ToLower().Trim() == defaultDailyAffirmationTextName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultDailyAffirmationText>().Where(x => x.IsDeleted == false && x.DefaultDailyAffirmationTextId != defaultDailyAffirmationTextId && x.DefaultDailyAffirmationTextName.ToLower().Trim() == defaultDailyAffirmationTextName.ToLower().Trim()).Select(x => x.DefaultDailyAffirmationTextId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsDefaultDailyAffirmationTextNameAlreadyExistsForOtherDefaultDailyAffirmationTextAsync(string defaultDailyAffirmationTextName)
         {
-            var sql = GetDefaultDailyAffirmationTextsViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultDailyAffirmationTextName.ToLower().Trim() == defaultDailyAffirmationTextName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultDailyAffirmationText>().Where(x => x.IsDeleted == false && x.DefaultDailyAffirmationTextName.ToLower().Trim() == defaultDailyAffirmationTextName.ToLower().Trim()).Select(x => x.DefaultDailyAffirmationTextId);
             return sql.AnyAsync();
         }
 
@@ -3775,13 +3786,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsDefaultGoalTrackerNameAlreadyExistsForOtherDefaultGoalTrackerAsync(long defaultGoalTrackerId, string defaultGoalTrackerName)
         {
-            var sql = GetDefaultGoalTrackersViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultGoalTrackerId != defaultGoalTrackerId && x.DefaultGoalTrackerText.ToLower().Trim() == defaultGoalTrackerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultGoalTracker>().Where(x => x.IsDeleted == false && x.DefaultGoalTrackerId != defaultGoalTrackerId && x.DefaultGoalTrackerText.ToLower().Trim() == defaultGoalTrackerName.ToLower().Trim()).Select(x => x.DefaultGoalTrackerId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsDefaultGoalTrackerNameAlreadyExistsForOtherDefaultGoalTrackerAsync(string defaultGoalTrackerName)
         {
-            var sql = GetDefaultGoalTrackersViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultGoalTrackerText.ToLower().Trim() == defaultGoalTrackerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultGoalTracker>().Where(x => x.IsDeleted == false && x.DefaultGoalTrackerText.ToLower().Trim() == defaultGoalTrackerName.ToLower().Trim()).Select(x => x.DefaultGoalTrackerId);
             return sql.AnyAsync();
         }
 
@@ -4055,13 +4066,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsDefaultMeditationFileNameAlreadyExistsForOtherDefaultMeditationFileAsync(long defaultMeditationFileId, string defaultMeditationFileName)
         {
-            var sql = GetDefaultMeditationFilesViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultMeditationFileId != defaultMeditationFileId && x.DefaultMeditationFileName.ToLower().Trim() == defaultMeditationFileName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultMeditationFile>().Where(x => x.IsDeleted == false && x.DefaultMeditationFileId != defaultMeditationFileId && x.DefaultMeditationFileName.ToLower().Trim() == defaultMeditationFileName.ToLower().Trim()).Select(x => x.DefaultMeditationFileId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsDefaultMeditationFileNameAlreadyExistsForOtherDefaultMeditationFileAsync(string defaultMeditationFileName)
         {
-            var sql = GetDefaultMeditationFilesViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultMeditationFileName.ToLower().Trim() == defaultMeditationFileName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultMeditationFile>().Where(x => x.IsDeleted == false && x.DefaultMeditationFileName.ToLower().Trim() == defaultMeditationFileName.ToLower().Trim()).Select(x => x.DefaultMeditationFileId);
             return sql.AnyAsync();
         }
 
@@ -4329,13 +4340,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsDefaultVisionBoardPictureNameAlreadyExistsForOtherDefaultVisionBoardPictureAsync(long defaultVisionBoardPictureId, string fileName)
         {
-            var sql = GetDefaultVisionBoardPicturesViewAsIQueryable().Where(x => x.IsDeleted == false && x.DefaultVisionBoardPictureId != defaultVisionBoardPictureId && x.FileName.ToLower().Trim() == fileName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultVisionBoardPicture>().Where(x => x.IsDeleted == false && x.DefaultVisionBoardPictureId != defaultVisionBoardPictureId && x.FileName.ToLower().Trim() == fileName.ToLower().Trim()).Select(x => x.DefaultVisionBoardPictureId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsDefaultVisionBoardPictureNameAlreadyExistsForOtherDefaultVisionBoardPictureAsync(string fileName)
         {
-            var sql = GetDefaultVisionBoardPicturesViewAsIQueryable().Where(x => x.IsDeleted == false && x.FileName.ToLower().Trim() == fileName.ToLower().Trim());
+            var sql = appDBManager.GetTable<DefaultVisionBoardPicture>().Where(x => x.IsDeleted == false && x.FileName.ToLower().Trim() == fileName.ToLower().Trim()).Select(x => x.DefaultVisionBoardPictureId);
             return sql.AnyAsync();
         }
 
@@ -5227,13 +5238,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsGoalTrackerNameAlreadyExistsForOtherGoalTrackerAsync(long goalTrackerId, string goalTrackerName, long userId)
         {
-            var sql = GetGoalTrackersViewAsIQueryable().Where(x => x.IsDeleted == false && x.GoalTrackerId != goalTrackerId && x.GoalTrackerName.ToLower().Trim() == goalTrackerName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<GoalTracker>().Where(x => x.IsDeleted == false && x.GoalTrackerId != goalTrackerId && x.GoalTrackerName.ToLower().Trim() == goalTrackerName.ToLower().Trim() && x.UserId == userId).Select(x => x.GoalTrackerId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsGoalTrackerNameAlreadyExistsForOtherGoalTrackerAsync(string goalTrackerName, long userId)
         {
-            var sql = GetGoalTrackersViewAsIQueryable().Where(x => x.IsDeleted == false && x.GoalTrackerName.ToLower().Trim() == goalTrackerName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<GoalTracker>().Where(x => x.IsDeleted == false && x.GoalTrackerName.ToLower().Trim() == goalTrackerName.ToLower().Trim() && x.UserId == userId).Select(x => x.GoalTrackerId);
             return sql.AnyAsync();
         }
 
@@ -5993,13 +6004,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsGoalTrackerMileStoneNameAlreadyExistsForOtherGoalTrackerMileStoneAsync(long goalTrackerMileStoneId, string goalTrackerMileStoneName, long userId)
         {
-            var sql = GetGoalTrackerMileStonesViewAsIQueryable().Where(x => x.IsDeleted == false && x.GoalTrackerMileStoneId != goalTrackerMileStoneId && x.GoalTrackerMileStoneName.ToLower().Trim() == goalTrackerMileStoneName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<GoalTrackerMileStone>().Where(x => x.IsDeleted == false && x.GoalTrackerMileStoneId != goalTrackerMileStoneId && x.GoalTrackerMileStoneName.ToLower().Trim() == goalTrackerMileStoneName.ToLower().Trim() && x.UserId == userId).Select(x => x.GoalTrackerMileStoneId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsGoalTrackerMileStoneNameAlreadyExistsForOtherGoalTrackerMileStoneAsync(string goalTrackerMileStoneName, long userId)
         {
-            var sql = GetGoalTrackerMileStonesViewAsIQueryable().Where(x => x.IsDeleted == false && x.GoalTrackerMileStoneName.ToLower().Trim() == goalTrackerMileStoneName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<GoalTrackerMileStone>().Where(x => x.IsDeleted == false && x.GoalTrackerMileStoneName.ToLower().Trim() == goalTrackerMileStoneName.ToLower().Trim() && x.UserId == userId).Select(x => x.GoalTrackerMileStoneId);
             return sql.AnyAsync();
         }
 
@@ -6370,13 +6381,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsMeditationFileNameAlreadyExistsForOtherMeditationFileAsync(long meditationFileId, string meditationFileName, long userId)
         {
-            var sql = GetMeditationFilesViewAsIQueryable().Where(x => x.IsDeleted == false && x.MeditationFileId != meditationFileId && x.MeditationFileName.ToLower().Trim() == meditationFileName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<MeditationFile>().Where(x => x.IsDeleted == false && x.MeditationFileId != meditationFileId && x.MeditationFileName.ToLower().Trim() == meditationFileName.ToLower().Trim() && x.UserId == userId).Select(x => x.MeditationFileId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsMeditationFileNameAlreadyExistsForOtherMeditationFileAsync(string meditationFileName, long userId)
         {
-            var sql = GetMeditationFilesViewAsIQueryable().Where(x => x.IsDeleted == false && x.MeditationFileName.ToLower().Trim() == meditationFileName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<MeditationFile>().Where(x => x.IsDeleted == false && x.MeditationFileName.ToLower().Trim() == meditationFileName.ToLower().Trim() && x.UserId == userId).Select(x => x.MeditationFileId);
             return sql.AnyAsync();
         }
 
@@ -7076,13 +7087,13 @@ ModifiedByUserId = item.ModifiedByUserId,
 
         public Task<bool> IsVisionBoardPictureNameAlreadyExistsForOtherVisionBoardPictureAsync(long visionBoardPictureId, string fileName, long userId)
         {
-            var sql = GetVisionBoardPicturesViewAsIQueryable().Where(x => x.IsDeleted == false && x.VisionBoardPictureId != visionBoardPictureId && x.FileName.ToLower().Trim() == fileName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<VisionBoardPicture>().Where(x => x.IsDeleted == false && x.VisionBoardPictureId != visionBoardPictureId && x.FileName.ToLower().Trim() == fileName.ToLower().Trim() && x.UserId == userId).Select(x => x.VisionBoardPictureId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsVisionBoardPictureNameAlreadyExistsForOtherVisionBoardPictureAsync(string fileName, long userId)
         {
-            var sql = GetVisionBoardPicturesViewAsIQueryable().Where(x => x.IsDeleted == false && x.FileName.ToLower().Trim() == fileName.ToLower().Trim() && x.UserId == userId);
+            var sql = appDBManager.GetTable<VisionBoardPicture>().Where(x => x.IsDeleted == false && x.FileName.ToLower().Trim() == fileName.ToLower().Trim() && x.UserId == userId).Select(x => x.VisionBoardPictureId);
             return sql.AnyAsync();
         }
 

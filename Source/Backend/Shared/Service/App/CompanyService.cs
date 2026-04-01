@@ -1408,8 +1408,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            var userItem = await companyRepository.GetUserViewByIdAsync(userPermissionModel.UserId);
-            if (userItem == null)
+            if (!await companyRepository.DoesUserByIdExistsAsync(userPermissionModel.UserId, userPermissionModel.CompanyId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;

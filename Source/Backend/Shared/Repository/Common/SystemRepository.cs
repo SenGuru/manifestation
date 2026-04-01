@@ -55,6 +55,11 @@ namespace Manifest.Repository.Common
             return sql.ToListAsync();
         }
 
+        public Task<bool> DoesCountryByIdExistsAsync(long countryId)
+        {
+            return appDBManager.GetTable<Country>().Where(x => x.CountryId == countryId && x.IsDeleted == false).Select(x => x.CountryId).AnyAsync();
+        }
+
         #endregion
 
         #region State
@@ -228,19 +233,25 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsStateNameAlreadyExistsForOtherStateAsync(long stateId, string stateName, long? countryId)
         {
-            var sql = GetStatesViewAsIQueryable().Where(x => x.IsDeleted == false && x.StateId != stateId && x.StateName.ToLower().Trim() == stateName.ToLower().Trim());
+            var sql = appDBManager.GetTable<State>().Where(x => x.IsDeleted == false && x.StateId != stateId && x.StateName.ToLower().Trim() == stateName.ToLower().Trim());
             if (countryId != null)
                 sql = sql.Where(x => x.CountryId == countryId.Value);
-            return sql.AnyAsync();
+            return sql.Select(x => x.StateId).AnyAsync();
         }
 
         public Task<bool> IsStateNameAlreadyExistsForOtherStateAsync(string stateName, long? countryId)
         {
-            var sql = GetStatesViewAsIQueryable().Where(x => x.IsDeleted == false && x.StateName.ToLower().Trim() == stateName.ToLower().Trim());
+            var sql = appDBManager.GetTable<State>().Where(x => x.IsDeleted == false && x.StateName.ToLower().Trim() == stateName.ToLower().Trim());
             if (countryId != null)
                 sql = sql.Where(x => x.CountryId == countryId.Value);
-            return sql.AnyAsync();
+            return sql.Select(x => x.StateId).AnyAsync();
         }
+
+        public Task<bool> DoesStateByIdExistsAsync(long stateId)
+        {
+            return appDBManager.GetTable<State>().Where(x => x.StateId == stateId && x.IsDeleted == false).Select(x => x.StateId).AnyAsync();
+        }
+
         #endregion
 
         #region AuditOperation
@@ -478,6 +489,17 @@ namespace Manifest.Repository.Common
             return GetActivitiesByExpressionAsync(srch, search);
         }
         */
+
+        public Task<bool> DoesAuditOperationByIdExistsAsync(long auditOperationId, long? userId = null)
+        {
+            if (userId == null)
+            {
+                return appDBManager.GetTable<AuditOperation>().Where(x => x.AuditOperationId == auditOperationId && x.IsDeleted == false).Select(x => x.AuditOperationId).AnyAsync();
+            }
+
+            return appDBManager.GetTable<AuditOperation>().Where(x => x.AuditOperationId == auditOperationId && x.UserId == userId && x.IsDeleted == false).Select(x => x.AuditOperationId).AnyAsync();
+        }
+
         #endregion
 
         #region AuditOperationDetail
@@ -692,6 +714,17 @@ namespace Manifest.Repository.Common
             return GetActivitiesByExpressionAsync(srch, search);
         }
         */
+
+        public Task<bool> DoesAuditOperationDetailByIdExistsAsync(long auditOperationDetailId, long? companyId = null)
+        {
+            if (companyId == null)
+            {
+                return appDBManager.GetTable<AuditOperationDetail>().Where(x => x.AuditOperationDetailId == auditOperationDetailId && x.IsDeleted == false).Select(x => x.AuditOperationDetailId).AnyAsync();
+            }
+
+            return appDBManager.GetTable<AuditOperationDetail>().Where(x => x.AuditOperationDetailId == auditOperationDetailId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.AuditOperationDetailId).AnyAsync();
+        }
+
         #endregion
 
         #region ConfigurationGroup
@@ -898,6 +931,17 @@ namespace Manifest.Repository.Common
             return GetActivitiesByExpressionAsync(srch, search);
         }
         */
+
+        public Task<bool> DoesConfigurationGroupByIdExistsAsync(long configurationGroupId, long? companyId = null)
+        {
+            if (companyId == null)
+            {
+                return appDBManager.GetTable<ConfigurationGroup>().Where(x => x.ConfigurationGroupId == configurationGroupId && x.IsDeleted == false).Select(x => x.ConfigurationGroupId).AnyAsync();
+            }
+
+            return appDBManager.GetTable<ConfigurationGroup>().Where(x => x.ConfigurationGroupId == configurationGroupId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.ConfigurationGroupId).AnyAsync();
+        }
+
         #endregion
 
         #region ConfigurationItem
@@ -1114,6 +1158,17 @@ namespace Manifest.Repository.Common
             return GetActivitiesByExpressionAsync(srch, search);
         }
         */
+
+        public Task<bool> DoesConfigurationItemByIdExistsAsync(long configurationItemId, long? companyId = null)
+        {
+            if (companyId == null)
+            {
+                return appDBManager.GetTable<ConfigurationItem>().Where(x => x.ConfigurationItemId == configurationItemId && x.IsDeleted == false).Select(x => x.ConfigurationItemId).AnyAsync();
+            }
+
+            return appDBManager.GetTable<ConfigurationItem>().Where(x => x.ConfigurationItemId == configurationItemId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.ConfigurationItemId).AnyAsync();
+        }
+
         #endregion
 
         #region EnumGroup
@@ -1321,6 +1376,17 @@ namespace Manifest.Repository.Common
             return GetActivitiesByExpressionAsync(srch, search);
         }
         */
+
+        public Task<bool> DoesEnumGroupByIdExistsAsync(long enumGroupId, long? companyId = null)
+        {
+            if (companyId == null)
+            {
+                return appDBManager.GetTable<EnumGroup>().Where(x => x.EnumGroupId == enumGroupId && x.IsDeleted == false).Select(x => x.EnumGroupId).AnyAsync();
+            }
+
+            return appDBManager.GetTable<EnumGroup>().Where(x => x.EnumGroupId == enumGroupId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.EnumGroupId).AnyAsync();
+        }
+
         #endregion
 
         #region EnumType
@@ -1480,13 +1546,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsEnumTypeNameAlreadyExistsForOtherEnumTypeAsync(long enumTypeId, string enumTypeName)
         {
-            var sql = GetEnumTypesViewAsIQueryable().Where(x => x.IsDeleted == false && x.EnumTypeId != enumTypeId && x.EnumTypeName.ToLower().Trim() == enumTypeName.ToLower().Trim());
+            var sql = appDBManager.GetTable<EnumType>().Where(x => x.IsDeleted == false && x.EnumTypeId != enumTypeId && x.EnumTypeName.ToLower().Trim() == enumTypeName.ToLower().Trim()).Select(x => x.EnumTypeId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsEnumTypeNameAlreadyExistsForOtherEnumTypeAsync(string enumTypeName)
         {
-            var sql = GetEnumTypesViewAsIQueryable().Where(x => x.IsDeleted == false && x.EnumTypeName.ToLower().Trim() == enumTypeName.ToLower().Trim());
+            var sql = appDBManager.GetTable<EnumType>().Where(x => x.IsDeleted == false && x.EnumTypeName.ToLower().Trim() == enumTypeName.ToLower().Trim()).Select(x => x.EnumTypeId);
             return sql.AnyAsync();
         }
 
@@ -4392,13 +4458,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsMessageTemplateNameAlreadyExistsForOtherMessageTemplateAsync(long messageTemplateId, long predefinedMessageTemplateTypeId)
         {
-            var sql = GetMessageTemplatesViewAsIQueryable().Where(x => x.IsDeleted == false && x.MessageTemplateId != messageTemplateId && x.PredefinedMessageTemplateTypeId == predefinedMessageTemplateTypeId);
+            var sql = appDBManager.GetTable<MessageTemplate>().Where(x => x.IsDeleted == false && x.MessageTemplateId != messageTemplateId && x.PredefinedMessageTemplateTypeId == predefinedMessageTemplateTypeId).Select(x => x.MessageTemplateId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsMessageTemplateNameAlreadyExistsForOtherMessageTemplateAsync(long predefinedMessageTemplateTypeId)
         {
-            var sql = GetMessageTemplatesViewAsIQueryable().Where(x => x.IsDeleted == false && x.PredefinedMessageTemplateTypeId == predefinedMessageTemplateTypeId);
+            var sql = appDBManager.GetTable<MessageTemplate>().Where(x => x.IsDeleted == false && x.PredefinedMessageTemplateTypeId == predefinedMessageTemplateTypeId).Select(x => x.MessageTemplateId);
             return sql.AnyAsync();
         }
 
@@ -5356,13 +5422,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsSingleSignOnServerNameAlreadyExistsForOtherSingleSignOnServerAsync(long singleSignOnServerId, string singleSignOnServerName)
         {
-            var sql = GetSingleSignOnServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.SingleSignOnServerId != singleSignOnServerId && x.SingleSignOnServerName.ToLower().Trim() == singleSignOnServerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<SingleSignOnServer>().Where(x => x.IsDeleted == false && x.SingleSignOnServerId != singleSignOnServerId && x.SingleSignOnServerName.ToLower().Trim() == singleSignOnServerName.ToLower().Trim()).Select(x => x.SingleSignOnServerId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsSingleSignOnServerNameAlreadyExistsForOtherSingleSignOnServerAsync(string singleSignOnServerName)
         {
-            var sql = GetSingleSignOnServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.SingleSignOnServerName.ToLower().Trim() == singleSignOnServerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<SingleSignOnServer>().Where(x => x.IsDeleted == false && x.SingleSignOnServerName.ToLower().Trim() == singleSignOnServerName.ToLower().Trim()).Select(x => x.SingleSignOnServerId);
             return sql.AnyAsync();
         }
 
@@ -5599,13 +5665,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsPushNotificationServerNameAlreadyExistsForOtherPushNotificationServerAsync(long pushNotificationConfigurationId, string pushNotificationConfigurationName)
         {
-            var sql = GetPushNotificationServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.PushNotificationServerId != pushNotificationConfigurationId && x.PushNotificationServerName.ToLower().Trim() == pushNotificationConfigurationName.ToLower().Trim());
+            var sql = appDBManager.GetTable<PushNotificationServer>().Where(x => x.IsDeleted == false && x.PushNotificationServerId != pushNotificationConfigurationId && x.PushNotificationServerName.ToLower().Trim() == pushNotificationConfigurationName.ToLower().Trim()).Select(x => x.PushNotificationServerId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsPushNotificationServerNameAlreadyExistsForOtherPushNotificationServerAsync(string pushNotificationConfigurationName)
         {
-            var sql = GetPushNotificationServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.PushNotificationServerName.ToLower().Trim() == pushNotificationConfigurationName.ToLower().Trim());
+            var sql = appDBManager.GetTable<PushNotificationServer>().Where(x => x.IsDeleted == false && x.PushNotificationServerName.ToLower().Trim() == pushNotificationConfigurationName.ToLower().Trim()).Select(x => x.PushNotificationServerId);
             return sql.AnyAsync();
         }
 
@@ -5857,13 +5923,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsVoiceNotificationServerNameAlreadyExistsForOtherVoiceNotificationServerAsync(long voiceNotificationServerId, string voiceNotificationServerName)
         {
-            var sql = GetVoiceNotificationServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.VoiceNotificationServerId != voiceNotificationServerId && x.VoiceNotificationServerName.ToLower().Trim() == voiceNotificationServerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<VoiceNotificationServer>().Where(x => x.IsDeleted == false && x.VoiceNotificationServerId != voiceNotificationServerId && x.VoiceNotificationServerName.ToLower().Trim() == voiceNotificationServerName.ToLower().Trim()).Select(x => x.VoiceNotificationServerId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsVoiceNotificationServerNameAlreadyExistsForOtherVoiceNotificationServerAsync(string voiceNotificationServerName)
         {
-            var sql = GetVoiceNotificationServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.VoiceNotificationServerName.ToLower().Trim() == voiceNotificationServerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<VoiceNotificationServer>().Where(x => x.IsDeleted == false && x.VoiceNotificationServerName.ToLower().Trim() == voiceNotificationServerName.ToLower().Trim()).Select(x => x.VoiceNotificationServerId);
             return sql.AnyAsync();
         }
 
@@ -6122,13 +6188,13 @@ namespace Manifest.Repository.Common
 
         public Task<bool> IsWhatsAppNotificationServerNameAlreadyExistsForOtherWhatsAppNotificationServerAsync(long whatsAppNotificationServerId, string whatsAppNotificationServerName)
         {
-            var sql = GetWhatsAppNotificationServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.WhatsAppNotificationServerId != whatsAppNotificationServerId && x.WhatsAppNotificationServerName.ToLower().Trim() == whatsAppNotificationServerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<WhatsAppNotificationServer>().Where(x => x.IsDeleted == false && x.WhatsAppNotificationServerId != whatsAppNotificationServerId && x.WhatsAppNotificationServerName.ToLower().Trim() == whatsAppNotificationServerName.ToLower().Trim()).Select(x => x.WhatsAppNotificationServerId);
             return sql.AnyAsync();
         }
 
         public Task<bool> IsWhatsAppNotificationServerNameAlreadyExistsForOtherWhatsAppNotificationServerAsync(string whatsAppNotificationServerName)
         {
-            var sql = GetWhatsAppNotificationServersViewAsIQueryable().Where(x => x.IsDeleted == false && x.WhatsAppNotificationServerName.ToLower().Trim() == whatsAppNotificationServerName.ToLower().Trim());
+            var sql = appDBManager.GetTable<WhatsAppNotificationServer>().Where(x => x.IsDeleted == false && x.WhatsAppNotificationServerName.ToLower().Trim() == whatsAppNotificationServerName.ToLower().Trim()).Select(x => x.WhatsAppNotificationServerId);
             return sql.AnyAsync();
         }
 
