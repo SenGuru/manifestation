@@ -6,7 +6,22 @@
       "Bash(grep:*)",
       "Bash(rm:*)",
       "Bash(awk:*)",
-      "Bash(find:*)"
+      "Bash(flutter pub:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter:*)",
+      "Bash(curl:*)",
+      "Bash(powershell:*)",
+      "Bash(wmic:*)",
+      "Bash(tasklist:*)",
+      "Bash(powershell.exe:*)",
+      "Bash(tasklist.exe)",
+      "Bash(findstr:*)",
+      "Read(//c/**)",
+      "Bash(taskkill.exe:*)",
+      "WebSearch",
+      "Bash(unzip:*)",
+      "Bash(cat:*)",
+      "WebFetch(domain:machinarl.ai)"
     ],
     "deny": []
   }

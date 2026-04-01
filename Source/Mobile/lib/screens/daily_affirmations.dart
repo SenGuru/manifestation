@@ -28,12 +28,15 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
   int currentAffirmationIndex = 0;
   bool isPlaying = false;
   bool isLoading = true;
-  
+  bool _hasError = false;
+  String? _errorMessage;
+
   List<AffirmationCategory> categories = [];
   List<AffirmationCategoryData> apiCategories = [];
-  
+
   // PageController for swipe functionality
   PageController? _pageController;
+  int? _lastCategoryIndex; // Track which category the PageController was created for
   late AnimationController _swipeAnimationController;
   late Animation<double> _swipeAnimation;
   
@@ -77,6 +80,33 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
     );
   }
 
+  void _initializePageController() {
+    _pageController?.dispose();
+    _pageController = PageController(
+      initialPage: currentAffirmationIndex,
+      viewportFraction: 0.95,
+    );
+    _lastCategoryIndex = selectedCategoryIndex;
+  }
+
+  void _changeCategory(int newCategoryIndex) async {
+    if (selectedCategoryIndex == newCategoryIndex) return;
+
+    await _voiceService.stop();
+
+    // Dispose old controller before creating new one
+    _pageController?.dispose();
+    _pageController = null;
+
+    // Update state
+    setState(() {
+      selectedCategoryIndex = newCategoryIndex;
+      currentAffirmationIndex = 0;
+      isPlaying = false;
+      _lastCategoryIndex = null; // Force recreation in build
+    });
+  }
+
   Future<void> _showGuidedTourIfNeeded() async {
     final tourService = GuidedTourService();
     await tourService.showTourIfNeeded(
@@ -87,7 +117,7 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
   }
   
   void _initializeService() {
-    _affirmationService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+    _affirmationService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
   }
 
   Future<void> _initializeVoiceService() async {
@@ -127,34 +157,45 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
   Future<void> _loadCategories() async {
     setState(() {
       isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
-    
+
     try {
       print('=== LOADING AFFIRMATIONS FROM API ===');
-      
+
       // Load from API first, fallback to mock if needed
       final result = await _affirmationService.getAllAffirmationCategories();
-      
-      if (result.isSuccess && result.data != null) {
+
+      if (result.isSuccess && result.data != null && result.data!.isNotEmpty) {
         print('✅ Loaded ${result.data!.length} categories from API');
         await _processApiData(result.data!);
       } else {
-        print('❌ API failed: ${result.message}');
-        print('📦 Falling back to mock data');
-        await _loadDefaultContent();
+        if (result.data != null && result.data!.isEmpty) {
+          print('⚠️ API returned 0 categories (new user) - loading defaults');
+          await _loadDefaultContent();
+        } else {
+          print('❌ API failed: ${result.message}');
+          setState(() {
+            _hasError = true;
+            _errorMessage = result.message ?? 'Failed to load affirmations from server';
+            categories = [];
+          });
+        }
       }
-      
+
       print('Total categories loaded: ${categories.length}');
       categories.forEach((category) {
         print('Category: ${category.name}, Affirmations: ${category.affirmations.length}');
       });
-      
+
     } catch (e) {
       print('❌ Error loading categories: $e');
-      print('📦 Falling back to mock data');
-      
-      // Fallback to default content
-      await _loadDefaultContent();
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        categories = [];
+      });
     } finally {
       setState(() {
         isLoading = false;
@@ -420,6 +461,21 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
       );
     }
 
+    // Show error screen if failed to load
+    if (_hasError) {
+      return Scaffold(
+        backgroundColor: AppTheme.backgroundPrimary,
+        body: SafeArea(
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(child: _buildErrorState()),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppTheme.backgroundPrimary,
       body: SafeArea(
@@ -514,14 +570,9 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
           final isSelected = selectedCategoryIndex == index;
           
           return GestureDetector(
-            onTap: () async {
+            onTap: () {
               HapticFeedback.selectionClick();
-              await _voiceService.stop();
-              setState(() {
-                selectedCategoryIndex = index;
-                currentAffirmationIndex = 0;
-                isPlaying = false;
-              });
+              _changeCategory(index);
             },
             onLongPress: () {
               HapticFeedback.heavyImpact();
@@ -590,19 +641,20 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
       );
     }
 
-    // Initialize PageController when category changes
-    if (_pageController == null || _pageController!.initialPage != currentAffirmationIndex) {
-      _pageController?.dispose();
+    // Create PageController if needed
+    if (_pageController == null || _lastCategoryIndex != selectedCategoryIndex) {
       _pageController = PageController(
-        initialPage: currentAffirmationIndex,
-        viewportFraction: 0.95, // Make cards wider, less padding between them
+        initialPage: 0, // Always start at 0 since currentAffirmationIndex is reset to 0
+        viewportFraction: 0.95,
       );
+      _lastCategoryIndex = selectedCategoryIndex;
     }
-    
+
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
         child: PageView.builder(
+          key: ValueKey('category_$selectedCategoryIndex'),
           controller: _pageController,
           itemCount: currentCategory.affirmations.length,
           // Enable physics for better swipe feel
@@ -1599,6 +1651,82 @@ class _DailyAffirmationsScreenState extends State<DailyAffirmationsScreen> with 
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Affirmations',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadCategories,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.affirmationGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

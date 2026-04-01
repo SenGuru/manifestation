@@ -24,6 +24,8 @@ class VisionBoardHome extends StatefulWidget {
 class _VisionBoardHomeState extends State<VisionBoardHome> {
   List<VisionBoard> visionBoards = [];
   bool isLoading = false;
+  bool _hasError = false;
+  String? _errorMessage;
   final GlobalKey _addButtonKey = GlobalKey();
 
   @override
@@ -54,27 +56,38 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
   Future<void> _loadVisionBoards() async {
     setState(() {
       isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
-    
+
     try {
       // Initialize service
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
-      
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
+
       // Load from server
       final result = await visionBoardService.getUserVisionBoards();
-      
+
       if (result.isSuccess) {
         visionBoards = result.data ?? [];
+        _hasError = false;
       } else {
         print('❌ Failed to load vision boards: ${result.message}');
-        visionBoards = [];
+        setState(() {
+          _hasError = true;
+          _errorMessage = result.message ?? 'Failed to load vision boards from server';
+          visionBoards = [];
+        });
       }
     } catch (e) {
       print('❌ Error loading vision boards: $e');
-      visionBoards = [];
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        visionBoards = [];
+      });
     }
-    
+
     setState(() {
       isLoading = false;
     });
@@ -101,9 +114,11 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
           children: [
             _buildHeader(),
             Expanded(
-              child: visionBoards.isEmpty
-                  ? _buildEmptyState()
-                  : _buildVisionBoardGrid(),
+              child: _hasError
+                  ? _buildErrorState()
+                  : visionBoards.isEmpty
+                      ? _buildEmptyState()
+                      : _buildVisionBoardGrid(),
             ),
           ],
         ),
@@ -292,6 +307,82 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     );
   }
 
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Vision Boards',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadVisionBoards,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.visionBoardGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(25.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildVisionBoardGrid() {
     // Show only first 4 vision boards for quick access
     final displayedBoards = visionBoards.take(4).toList();
@@ -324,9 +415,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
             SizedBox(height: 16.h),
             _buildViewAllButton(),
           ],
-          
-          SizedBox(height: 32.h),
-          _buildTemplatesSection(),
+
           SizedBox(height: 100.h), // Space for FAB
         ],
       ),
@@ -716,86 +805,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     return SizedBox.shrink();
   }
 
-
-  Widget _buildTemplatesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildSectionHeader('Templates', 'Browse all'),
-        SizedBox(height: 16.h),
-        Container(
-          height: 120.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: 5,
-            itemBuilder: (context, index) {
-              return Container(
-                width: 160.w,
-                margin: EdgeInsets.only(right: 16.w),
-                child: _buildTemplateCard(index),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTemplateCard(int index) {
-    final templates = [
-      {'name': 'Dream Home', 'icon': Icons.home, 'color': AppTheme.accentGold},
-      {'name': 'Career Goals', 'icon': Icons.work, 'color': AppTheme.visionBoardGradient[0]},
-      {'name': 'Travel Dreams', 'icon': Icons.flight, 'color': AppTheme.journalGradient[0]},
-      {'name': 'Relationships', 'icon': Icons.favorite, 'color': AppTheme.accentCoral},
-      {'name': 'Health & Fitness', 'icon': Icons.fitness_center, 'color': AppTheme.accentMint},
-    ];
-
-    final template = templates[index];
-    
-    return GestureDetector(
-      onTap: () => _createFromTemplate(template['name'] as String),
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppTheme.cardBackground,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: AppTheme.textSecondary.withValues(alpha: 0.1),
-          ),
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: (template['color'] as Color).withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-                ),
-                child: Icon(
-                  template['icon'] as IconData,
-                  color: template['color'] as Color,
-                  size: 32.sp,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Text(
-                template['name'] as String,
-                style: TextStyle(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildCreateButton() {
     return Container(
       width: 56.w,
@@ -969,12 +978,6 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
         });
       }
     });
-  }
-
-  void _createFromTemplate(String templateName) {
-    // TODO: Implement template creation
-    print('Creating from template: $templateName');
-    _createNewBoard();
   }
 
   void _showBoardOptions(VisionBoard board) {
@@ -1319,7 +1322,7 @@ class _VisionBoardHomeState extends State<VisionBoardHome> {
     try {
       // Initialize service
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       
       // Delete from server using vision board ID
       final result = await visionBoardService.deleteVisionBoard(board.id);

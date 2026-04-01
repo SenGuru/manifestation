@@ -13,7 +13,7 @@ class DailyJournalService {
 
   void initialize({String? baseUrl}) {
     _apiClient = Manifestation.create(
-      baseUrl: Uri.parse(baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'),
+      baseUrl: Uri.parse(baseUrl ?? 'https://manifestation-qa-1.senthilguru.net'),
       interceptors: [_AuthInterceptor()],
     );
   }

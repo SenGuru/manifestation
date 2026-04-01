@@ -90,7 +90,7 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
 
   void _initializeApiClient() {
     _apiClient = Manifestation.create(
-      baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+      baseUrl: Uri.parse('https://manifestation-qa-1.senthilguru.net'),
       interceptors: [_AuthInterceptor()],
     );
   }
@@ -499,8 +499,8 @@ class _SecuritySettingsScreenState extends State<SecuritySettingsScreen> {
       
       print('📤 === SENDING PASSWORD CHANGE REQUEST ===');
       print('   Endpoint: POST /api/v1/account/changecurrentpassword');
-      print('   Base URL: http://manifestation-qa-1.senthilguru.net');
-      print('   Full URL: http://manifestation-qa-1.senthilguru.net/api/v1/account/changecurrentpassword');
+      print('   Base URL: https://manifestation-qa-1.senthilguru.net');
+      print('   Full URL: https://manifestation-qa-1.senthilguru.net/api/v1/account/changecurrentpassword');
       
       // Show request payload (with passwords partially hidden for security)
       print('   📋 Request Body (JSON):');

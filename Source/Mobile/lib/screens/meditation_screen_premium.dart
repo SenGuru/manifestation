@@ -124,10 +124,30 @@ class _PremiumMeditationScreenState extends State<PremiumMeditationScreen>
 
   @override
   void dispose() {
-    _sessionController.dispose();
-    _breathingController.dispose();
-    _uiController.dispose();
-    _backgroundController.dispose();
+    try {
+      _sessionController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing session controller: $e');
+    }
+
+    try {
+      _breathingController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing breathing controller: $e');
+    }
+
+    try {
+      _uiController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing UI controller: $e');
+    }
+
+    try {
+      _backgroundController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing background controller: $e');
+    }
+
     super.dispose();
   }
 

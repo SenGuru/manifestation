@@ -687,7 +687,7 @@ Widget _buildPricingOption(
       
       // Initialize subscription service with API
       final subscriptionService = SubscriptionService();
-      await subscriptionService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await subscriptionService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       
       // For now, we'll use a mock password for development
       // In production, this would be replaced with actual payment processing

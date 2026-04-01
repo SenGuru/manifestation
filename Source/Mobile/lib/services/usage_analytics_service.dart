@@ -36,7 +36,7 @@ class UsageAnalyticsService {
   void _ensureInitialized() {
     if (!_isApiInitialized) {
       _apiClient = Manifestation.create(
-        baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+        baseUrl: Uri.parse('https://manifestation-qa-1.senthilguru.net'),
         interceptors: [_AuthInterceptor()],
       );
       _isApiInitialized = true;

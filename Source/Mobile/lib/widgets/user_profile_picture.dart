@@ -54,7 +54,7 @@ class _UserProfilePictureState extends State<UserProfilePicture> {
   // Helper method to determine if the image data is raw bytes
   bool _isRawImageData(String imageData) {
     // Check if it's not a URL and contains non-printable characters (typical of binary data)
-    if (imageData.startsWith('http://') || 
+    if (imageData.startsWith('https://') || 
         imageData.startsWith('https://') || 
         imageData.startsWith('data:')) {
       return false;

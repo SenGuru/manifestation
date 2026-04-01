@@ -34,6 +34,8 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
   bool hasMoreData = true;
   int currentPage = 0;
   final int itemsPerPage = 6; // Load 6 vision boards at a time
+  bool _hasError = false;
+  String? _errorMessage;
   
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -133,41 +135,41 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
   Future<void> _loadAllVisionBoards() async {
     setState(() {
       isLoading = true;
+      _hasError = false;
+      _errorMessage = null;
     });
 
     try {
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
-      
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
+
       final result = await visionBoardService.getUserVisionBoards();
-      
+
       if (result.isSuccess) {
         setState(() {
           _allAvailableBoards = result.data ?? [];
+          _hasError = false;
           _loadInitialBoards();
         });
-        
+
         print('✅ Loaded ${_allAvailableBoards.length} total vision boards');
       } else {
         print('❌ Failed to load vision boards: ${result.message}');
         setState(() {
-          hasMoreData = false;
+          _hasError = true;
+          _errorMessage = result.message ?? 'Failed to load vision boards from server';
+          _allAvailableBoards = [];
+          visionBoards = [];
         });
       }
     } catch (e) {
       print('❌ Error loading vision boards: $e');
       setState(() {
-        hasMoreData = false;
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        _allAvailableBoards = [];
+        visionBoards = [];
       });
-      
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to load vision boards'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
     }
 
     setState(() {
@@ -236,9 +238,11 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
             Expanded(
               child: isLoading && visionBoards.isEmpty
                   ? StylishLoading(message: 'Loading vision boards...')
-                  : _filteredBoards.isEmpty
-                      ? _buildEmptyState()
-                      : _buildVisionBoardsGrid(),
+                  : _hasError
+                      ? _buildErrorState()
+                      : _filteredBoards.isEmpty
+                          ? _buildEmptyState()
+                          : _buildVisionBoardsGrid(),
             ),
           ],
         ),
@@ -422,6 +426,91 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
     );
   }
 
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Vision Boards',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadAllVisionBoards,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.visionBoardGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -455,7 +544,7 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            _searchQuery.isNotEmpty 
+            _searchQuery.isNotEmpty
                 ? 'Try different search terms'
                 : 'Create your first vision board to get started',
             style: TextStyle(
@@ -1250,7 +1339,7 @@ class _VisionBoardGalleryScreenState extends State<VisionBoardGalleryScreen> {
   Future<void> _performDeleteVisionBoard(VisionBoard board) async {
     try {
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       
       final result = await visionBoardService.deleteVisionBoard(board.id);
       

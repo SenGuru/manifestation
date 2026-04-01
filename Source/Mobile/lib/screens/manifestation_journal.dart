@@ -1147,33 +1147,33 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
     try {
       final today = DateTime.now();
       print('📖 Checking for existing journal entry for today: ${today.toString()}');
-      
+
       // Check for existing journal entry for today
       final result = await _journalService.getDailyJournalForDate(today);
-      
+
       if (result.isSuccess && result.data != null) {
         // Found existing entry - load it for editing
         print('📖 Found existing journal entry for today');
-        
+
         final apiEntry = result.data!;
         final journalEntry = JournalEntry.fromApiModel(apiEntry);
-        
+
         setState(() {
           existingEntry = journalEntry;
           isEditingExistingEntry = true;
           selectedMood = journalEntry.mood;
-          
+
           // Load gratitudes (expand to 5 entries)
           gratitudeItems = List<String>.filled(5, '');
           for (int i = 0; i < journalEntry.gratitudes.length && i < 5; i++) {
             gratitudeItems[i] = journalEntry.gratitudes[i];
           }
-          
+
           reflection = journalEntry.reflection;
           intention = journalEntry.intention;
           _reflectionController.text = reflection;
           _intentionController.text = intention;
-          
+
           // Reset interaction flags when loading existing entry
           _userHasInteracted = false;
           _moodChanged = false;
@@ -1181,15 +1181,47 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
           _reflectionChanged = false;
           _intentionChanged = false;
         });
-        
+
         print('📖 Loaded existing entry: ${journalEntry.gratitudes.length} gratitudes, mood: ${journalEntry.mood.displayName}');
-      } else {
-        // No existing entry found - start with new entry
+      } else if (result.isSuccess && result.data == null) {
+        // No existing entry found (404 or null) - start with new entry
         print('📖 No existing journal entry found for today - starting new entry');
         setState(() {
           isEditingExistingEntry = false;
           existingEntry = null;
         });
+      } else {
+        // API call failed - show error
+        print('📖 API failed to check for existing entry: ${result.message}');
+        setState(() {
+          isEditingExistingEntry = false;
+          existingEntry = null;
+        });
+
+        // Show error to user
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.warning_amber_rounded, color: Colors.white, size: 20.sp),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Text('Failed to check for existing journal: ${result.message ?? 'Server error'}'),
+                  ),
+                ],
+              ),
+              backgroundColor: Colors.orange,
+              behavior: SnackBarBehavior.floating,
+              duration: Duration(seconds: 4),
+              action: SnackBarAction(
+                label: 'Retry',
+                textColor: Colors.white,
+                onPressed: _checkForExistingEntry,
+              ),
+            ),
+          );
+        }
       }
     } catch (e) {
       print('📖 Error checking for existing entry: $e');
@@ -1198,15 +1230,31 @@ class _ManifestationJournalScreenState extends State<ManifestationJournalScreen>
         isEditingExistingEntry = false;
         existingEntry = null;
       });
-      
+
       // Show error to user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Unable to load existing journal entry'),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.white, size: 20.sp),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Text('Network error checking for existing journal'),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+            duration: Duration(seconds: 4),
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: _checkForExistingEntry,
+            ),
+          ),
+        );
+      }
     } finally {
       setState(() {
         isLoading = false;

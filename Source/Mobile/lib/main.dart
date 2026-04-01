@@ -22,10 +22,10 @@ void main() async {
   ]);
   
   // Initialize unified auth service first and wait for it to complete
-  await UnifiedAuthService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  await UnifiedAuthService().initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
   
   // Initialize VisionBoardService (this depends on auth being ready)
-  await VisionBoardService().initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+  await VisionBoardService().initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
   
   // Initialize theme service
   await ThemeService().initialize();

@@ -37,12 +37,12 @@ class UserProfileService {
     
     // Create the Swagger client with interceptors like other services
     _apiClient = Manifestation.create(
-      baseUrl: Uri.parse(baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'),
+      baseUrl: Uri.parse(baseUrl ?? 'https://manifestation-qa-1.senthilguru.net'),
       interceptors: [_AuthInterceptor()],
     );
     
     _isInitialized = true;
-    print('✅ UserProfileService initialized with base URL: ${baseUrl ?? 'http://manifestation-qa-1.senthilguru.net'}');
+    print('✅ UserProfileService initialized with base URL: ${baseUrl ?? 'https://manifestation-qa-1.senthilguru.net'}');
   }
 
   /// Upload a user profile picture
@@ -77,7 +77,7 @@ class UserProfileService {
       }
       
       // Create multipart request
-      final uri = Uri.parse('http://manifestation-qa-1.senthilguru.net/api/v1/company/uploaduserpicture');
+      final uri = Uri.parse('https://manifestation-qa-1.senthilguru.net/api/v1/company/uploaduserpicture');
       final request = http.MultipartRequest('POST', uri);
       
       // Add auth header
@@ -179,7 +179,7 @@ class UserProfileService {
       }
       
       // Create multipart request
-      final uri = Uri.parse('http://manifestation-qa-1.senthilguru.net/api/v1/company/uploaduserpicture');
+      final uri = Uri.parse('https://manifestation-qa-1.senthilguru.net/api/v1/company/uploaduserpicture');
       final request = http.MultipartRequest('POST', uri);
       
       // Add auth header
@@ -418,7 +418,7 @@ class UserProfileService {
     try {
       // Create a temporary API client without authentication for login verification
       final tempClient = Manifestation.create(
-        baseUrl: Uri.parse('http://manifestation-qa-1.senthilguru.net'),
+        baseUrl: Uri.parse('https://manifestation-qa-1.senthilguru.net'),
       );
 
       print('🔐 Verifying password...');

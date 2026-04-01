@@ -93,7 +93,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Future<void> _loadPremiumStatusInternal() async {
     try {
       final subscriptionService = SubscriptionService();
-      await subscriptionService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await subscriptionService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       _isPremium = subscriptionService.isPremium;
     } catch (e) {
       debugPrint('Error loading premium status: $e');

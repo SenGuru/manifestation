@@ -138,7 +138,12 @@ class _AnimatedThemeTransitionState extends State<AnimatedThemeTransition>
 
   @override
   void dispose() {
+    try {
     _controller.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing controller: $e');
+    }
+
     _bubbleController.dispose();
     super.dispose();
   }

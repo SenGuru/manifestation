@@ -23,6 +23,8 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
   bool isLoadingMore = false;
   String searchQuery = '';
   String sortBy = 'recent'; // recent, name, oldest
+  bool _hasError = false;
+  String? _errorMessage;
   
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
@@ -59,28 +61,41 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
       isLoading = true;
       currentPage = 0;
       hasMoreItems = true;
+      _hasError = false;
+      _errorMessage = null;
     });
-    
+
     try {
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
-      
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
+
       final result = await visionBoardService.getUserVisionBoards();
-      
+
       if (result.isSuccess) {
-        visionBoards = result.data ?? [];
+        setState(() {
+          visionBoards = result.data ?? [];
+          _hasError = false;
+        });
         _applyFilters();
       } else {
         print('❌ Failed to load vision boards: ${result.message}');
-        visionBoards = [];
-        filteredBoards = [];
+        setState(() {
+          _hasError = true;
+          _errorMessage = result.message ?? 'Failed to load vision boards from server';
+          visionBoards = [];
+          filteredBoards = [];
+        });
       }
     } catch (e) {
       print('❌ Error loading vision boards: $e');
-      visionBoards = [];
-      filteredBoards = [];
+      setState(() {
+        _hasError = true;
+        _errorMessage = 'Network error: ${e.toString()}';
+        visionBoards = [];
+        filteredBoards = [];
+      });
     }
-    
+
     setState(() {
       isLoading = false;
     });
@@ -162,9 +177,11 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
             _buildHeader(),
             _buildSearchAndFilter(),
             Expanded(
-              child: filteredBoards.isEmpty
-                  ? _buildEmptyState()
-                  : _buildBoardsList(),
+              child: _hasError
+                  ? _buildErrorState()
+                  : filteredBoards.isEmpty
+                      ? _buildEmptyState()
+                      : _buildBoardsList(),
             ),
           ],
         ),
@@ -445,6 +462,91 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
     );
   }
 
+  Widget _buildErrorState() {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(40.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 120.w,
+              height: 120.h,
+              decoration: BoxDecoration(
+                color: Colors.red.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.error_outline,
+                color: Colors.red,
+                size: 60.sp,
+              ),
+            ),
+            SizedBox(height: 24.h),
+            Text(
+              'Failed to Load Vision Boards',
+              style: TextStyle(
+                fontSize: 24.sp,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.textPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 12.h),
+            Text(
+              _errorMessage ?? 'Unable to connect to server',
+              style: TextStyle(
+                fontSize: 16.sp,
+                color: AppTheme.textSecondary,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 32.h),
+            GestureDetector(
+              onTap: _loadVisionBoards,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.h),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: AppTheme.visionBoardGradient,
+                  ),
+                  borderRadius: BorderRadius.circular(16.r),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.visionBoardGradient[0].withValues(alpha: 0.3),
+                      blurRadius: 8.r,
+                      offset: Offset(0, 4.h),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.refresh,
+                      color: AppTheme.white,
+                      size: 20.sp,
+                    ),
+                    SizedBox(width: 8.w),
+                    Text(
+                      'Try Again',
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -466,7 +568,7 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
           ),
           SizedBox(height: 8.h),
           Text(
-            searchQuery.isEmpty 
+            searchQuery.isEmpty
               ? 'Create your first vision board to get started'
               : 'Try adjusting your search or filters',
             style: TextStyle(
@@ -645,7 +747,7 @@ class _VisionBoardsListScreenState extends State<VisionBoardsListScreen> {
   Future<void> _performDelete(VisionBoard board) async {
     try {
       final visionBoardService = VisionBoardService();
-      await visionBoardService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await visionBoardService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       
       final result = await visionBoardService.deleteVisionBoard(board.id);
       

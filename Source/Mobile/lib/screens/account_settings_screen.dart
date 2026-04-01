@@ -1088,7 +1088,7 @@ class _AccountSettingsScreenState extends State<AccountSettingsScreen> with Tick
     
     try {
       // Initialize profile service
-      await _profileService.initialize(baseUrl: 'http://manifestation-qa-1.senthilguru.net');
+      await _profileService.initialize(baseUrl: 'https://manifestation-qa-1.senthilguru.net');
       
       // Skip password verification since user is already authenticated with Bearer token
       // The API should trust the authenticated user to update their profile

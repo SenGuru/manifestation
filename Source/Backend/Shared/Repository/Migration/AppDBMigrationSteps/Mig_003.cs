@@ -711,7 +711,7 @@ namespace Manifest.Repository.Migration.Application
 
             dynamic[] companyStorageConfigurationParams = new dynamic[]
             {
-                new  { CompanyStorageConfigurationGuid = Guid.NewGuid(), CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, IsDeleted = false, FileAttachmentFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/FileAttachments", ProfilePictureFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/ProfileFiles", ReportServerFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/ReportFiles" }
+                new { CompanyStorageConfigurationGuid = Guid.NewGuid(), CreatedDate = DateTime.UtcNow, ModifiedDate = DateTime.UtcNow, IsDeleted = false, FileAttachmentFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/FileAttachments", ProfilePictureFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/ProfileFiles", ReportServerFileStorageConnectionString = "disk://path=|ConfigPath|/../Data/FileStorage/ReportFiles" }
             };
 
             InsertData("CompanyStorageConfiguration", companyStorageConfigurationParams);

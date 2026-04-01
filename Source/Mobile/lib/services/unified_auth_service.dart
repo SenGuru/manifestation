@@ -4,6 +4,7 @@ import 'package:chopper/chopper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../api/generated/code/manifestation.swagger.dart';
 import '../services/daily_affirmations_service.dart';
+import '../services/subscription_service.dart';
 
 /// Unified authentication service that combines login, session management, and user data
 class UnifiedAuthService {
@@ -52,8 +53,8 @@ class UnifiedAuthService {
       // Try multiple API URLs in order of preference
       final apiUrls = [
         baseUrl,
-        'http://manifestation-qa-1.senthilguru.net',
-        'http://24.199.119.33',
+        'https://manifestation-qa-1.senthilguru.net',
+        'https://24.199.119.33',
         'https://manifestation-qa-1.senthilguru.net',
         'https://24.199.119.33'
       ].where((url) => url != null).cast<String>().toList();
@@ -131,6 +132,15 @@ class UnifiedAuthService {
             userData: userData,
             rememberMe: rememberMe,
           );
+          
+          // Refresh premium status for the newly logged in user
+          try {
+            print('🔄 Refreshing premium status for logged in user...');
+            final subscriptionService = SubscriptionService();
+            await subscriptionService.refreshForNewUser();
+          } catch (e) {
+            print('⚠️ Error refreshing premium status: $e');
+          }
           
           print('✅ Login successful for: ${_currentUser!.userName}');
           return AuthResult.success(
@@ -274,6 +284,15 @@ class UnifiedAuthService {
           
           print('✅ Account creation successful for: ${_currentUser!.userName}');
           
+          // Initialize premium status for the newly created account
+          try {
+            print('🔄 Initializing premium status for new account...');
+            final subscriptionService = SubscriptionService();
+            await subscriptionService.refreshForNewUser();
+          } catch (e) {
+            print('⚠️ Error initializing premium status: $e');
+          }
+          
           // Create hidden categories in background (don't await to avoid blocking)
           _createHiddenCategoriesForNewUser().then((_) {
             print('✅ Hidden categories created in background');
@@ -335,6 +354,17 @@ class UnifiedAuthService {
       
       // Clear stored session
       await _clearStoredSession();
+      
+      // IMPORTANT: Clear premium subscription status on logout
+      // This ensures the next user doesn't inherit premium status
+      try {
+        print('🔥 LOGOUT: Clearing premium subscription status...');
+        final subscriptionService = SubscriptionService();
+        await subscriptionService.clearPremiumStatus();
+        print('✅ Premium status cleared');
+      } catch (e) {
+        print('⚠️ Error clearing premium status: $e');
+      }
       
       // Cache clearing removed - now using direct API calls
       
@@ -667,6 +697,7 @@ class UnifiedAuthService {
   LoggedInUserModel? get currentUser => _currentUser;
   String? get authToken => _authToken;
   bool get isLoggedIn => _currentState == SessionState.loggedIn;
+  int? get userId => _currentUser?.userId ?? _cachedUserId;
   SessionState get sessionState => _currentState;
   
   /// Get current user ID

@@ -64,7 +64,11 @@ class _MeditationTimerState extends State<MeditationTimer>
 
   @override
   void dispose() {
-    _pulseController.dispose();
+    try {
+      _pulseController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing pulse controller: $e');
+    }
     super.dispose();
   }
 
@@ -284,7 +288,11 @@ class _SessionTimerState extends State<SessionTimer>
 
   @override
   void dispose() {
-    _phaseController.dispose();
+    try {
+      _phaseController.dispose();
+    } catch (e) {
+      debugPrint('❌ Error disposing phase controller: $e');
+    }
     super.dispose();
   }
 
