@@ -18,6 +18,7 @@ string sshKeyFile = "";
 string sshUser = "";
 string sshMachine = "";
 string configFilePath = "";
+string nginxDefaultConfigPath = "";
 
 const string uiDirStr = "..";
 const string uiReactDirStr = "../Source/Web/Web";
@@ -41,6 +42,7 @@ var remotePath = "/app-files/apps/web/";
 var zipFolderPath = "/app-files/deployments/zips/";
 var remoteConfigFolderPath = "/app-files/Configuration/";
 var remoteSupervisordConfigFolderPath = "/etc/supervisor/";
+var remoteNginxConfDFolderPath = "/etc/nginx/conf.d/";
 
 const string appApiIntermediatePath = "../Build/app-intermediate/apps/api";
 const string uiAllIntermediatePath = "../Build/app-intermediate/ui/ui-all";
@@ -109,9 +111,12 @@ const string terminalProdDb = "terminal-prod-db";
 const string terminalDemo = "terminal-demo";
 const string terminalDemoDb = "terminal-demo-db";
 
-const string qaServerIp = "24.199.119.33";
-const string prodServerIp = "24.199.119.33";
-const string demoServerIp = "24.199.119.33";
+const string installNginxQA = "install-nginx-qa";
+const string installNginx = "install-nginx";
+
+const string qaServerIp = "159.89.151.159";
+const string prodServerIp = "159.89.151.159";
+const string demoServerIp = "159.89.151.159";
 
 const string qaDbServerIp = "159.65.153.42";
 const string prodDbServerIp = "159.65.153.42";
@@ -591,6 +596,7 @@ Task(xdeployQAOnly)
     sshUser = "root";
     sshMachine = qaServerIp;
     configFilePath = appConfigFileNameForQA;
+    nginxDefaultConfigPath = "qa.default.conf";
     RunTarget (xdeployOnly);
 });
 
@@ -602,6 +608,7 @@ Task(xdeployQA)
     sshUser = "root";
     sshMachine = qaServerIp;
     configFilePath = appConfigFileNameForQA;
+    nginxDefaultConfigPath = "qa.default.conf";
     RunTarget (xdeploy);
 });
 
@@ -674,6 +681,12 @@ Task(xdeployOnly)
                 RenciRunSCPCopyFile(sftpClient, workingDirectory+"/Build/configs/supervisord/supervisord.conf", zipFolderPath + "supervisord.conf");
                 RenciRunSCPCopyFile(sftpClient, appApiPublishedPath +"/app-api-all.zip", zipFolderPath + "app-api-all.zip");
                 RenciRunSCPCopyFile(sftpClient, uiAllPublishedPath + "/ui-all.zip", zipFolderPath + "ui-all.zip");
+
+                if (!string.IsNullOrEmpty(nginxDefaultConfigPath))
+                {
+                    RenciRunSCPCopyFile(sftpClient, workingDirectory+"/Build/configs/ngnix/" + nginxDefaultConfigPath, zipFolderPath + "nginx-default.conf");
+                }
+
                 sftpClient.Disconnect();
             }
             Warning($"Completed Uploading files...");
@@ -695,9 +708,44 @@ Task(xdeployOnly)
             RenciRunCommand(sshClient,$"unzip -o {zipFolderPath}/ui-all.zip -d {remotePath}wwwroot/");
             RenciRunCommand(sshClient,$"sudo service supervisor start"); // Clean the zip folder directory
 
+            if (!string.IsNullOrEmpty(nginxDefaultConfigPath))
+            {
+                RenciRunCommand(sshClient,$"sudo mkdir -p {remoteNginxConfDFolderPath}");
+                RenciRunCommand(sshClient,$"cp -f {zipFolderPath}nginx-default.conf {remoteNginxConfDFolderPath}default.conf");
+                RenciRunCommand(sshClient,$"sudo nginx -t");
+                RenciRunCommand(sshClient,$"sudo service nginx restart");
+            }
+
             sshClient.Disconnect();
         }
     });
+
+Task(installNginxQA)
+    .Does(() =>
+{
+    sshKeyFile = "google_compute_engine";
+    sshUser = "root";
+    sshMachine = qaServerIp;
+    RunTarget(installNginx);
+});
+
+Task(installNginx)
+    .IsDependentOn(init)
+    .Does(() =>
+{
+    var pKeyfile = new Renci.SshNet.PrivateKeyFile(sshKeyFile);
+    using (var sshClient = new Renci.SshNet.SshClient(sshMachine, sshUser, new Renci.SshNet.PrivateKeyFile[] { pKeyfile }))
+    {
+        sshClient.Connect();
+        RenciRunCommand(sshClient, "sudo apt-get update");
+        RenciRunCommand(sshClient, "sudo apt-get install -y nginx");
+        RenciRunCommand(sshClient, "sudo rm -f /etc/nginx/sites-enabled/default");
+        RenciRunCommand(sshClient, "sudo ufw allow 'Nginx HTTP'");
+        RenciRunCommand(sshClient, "sudo systemctl enable nginx");
+        RenciRunCommand(sshClient, "sudo systemctl start nginx");
+        sshClient.Disconnect();
+    }
+});
 
 Task(terminal)
 .IsDependentOn(preInit)
@@ -775,7 +823,9 @@ List<CommandProcess> commandList = new List<CommandProcess> () {
     new CommandProcess (terminalProdDb , "term-prod-db", "tproddb", "", "Terminal Prod DB"),
 
     new CommandProcess (terminalDemo, "term-demo", "tdemo", "", "Terminal Demo"),
-    new CommandProcess (terminalDemoDb , "term-demo-db", "tdemodb", "", "Terminal Demo DB"),    
+    new CommandProcess (terminalDemoDb , "term-demo-db", "tdemodb", "", "Terminal Demo DB"),
+
+    new CommandProcess (installNginxQA, "inst-nginx-qa", "", "", "Install Nginx on QA"),
 
     new CommandProcess ("test", "test", "", "", "test command"),
 };
