@@ -37,7 +37,7 @@ namespace Manifest.Service.App
         #region Job
         public async Task<ReturnModel<bool>> IsJobParameterValidAsync(Job job)
         {
-            if (!await reportRepository.DoesJobTemplateByIdExistsAsync(job.JobTemplateId, job.CompanyId))
+            if (await reportRepository.GetJobTemplateByIdAsync(job.JobTemplateId) == null)
             {
                 return log.ErrorAndReturnModel<bool>($"Unable to Get the JobTemplate Information", new { job.JobTemplateId });
             }

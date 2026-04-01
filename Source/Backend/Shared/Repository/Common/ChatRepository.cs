@@ -663,12 +663,7 @@ namespace Manifest.Repository.Common
 
         public Task<bool> DoesChatMessageStatusByIdExistsAsync(long chatMessageStatusId, long? companyId = null)
         {
-            if (companyId == null)
-            {
-                return appDBManager.GetTable<ChatMessageStatus>().Where(x => x.ChatMessageStatusId == chatMessageStatusId && x.IsDeleted == false).Select(x => x.ChatMessageStatusId).AnyAsync();
-            }
-
-            return appDBManager.GetTable<ChatMessageStatus>().Where(x => x.ChatMessageStatusId == chatMessageStatusId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.ChatMessageStatusId).AnyAsync();
+            return appDBManager.GetTable<ChatMessageStatus>().Where(x => x.ChatMessageStatusId == chatMessageStatusId && x.IsDeleted == false).Select(x => x.ChatMessageStatusId).AnyAsync();
         }
 
         /*
@@ -914,12 +909,7 @@ namespace Manifest.Repository.Common
 
         public Task<bool> DoesChatUserByIdExistsAsync(long chatUserId, long? companyId = null)
         {
-            if (companyId == null)
-            {
-                return appDBManager.GetTable<ChatUser>().Where(x => x.ChatUserId == chatUserId && x.IsDeleted == false).Select(x => x.ChatUserId).AnyAsync();
-            }
-
-            return appDBManager.GetTable<ChatUser>().Where(x => x.ChatUserId == chatUserId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.ChatUserId).AnyAsync();
+            return appDBManager.GetTable<ChatUser>().Where(x => x.ChatUserId == chatUserId && x.IsDeleted == false).Select(x => x.ChatUserId).AnyAsync();
         }
 
         /*

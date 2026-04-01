@@ -380,7 +380,7 @@ namespace Manifest.Service.App
             }
             */
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(noteAttachmentModel.UserId, noteAttachmentModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(noteAttachmentModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -1268,7 +1268,7 @@ namespace Manifest.Service.App
 
             if (fileAttachmentFolderModel.ParentFileAttachmentFolderId > 0)
             {
-                if (!await manifestRepository.DoesFileAttachmentFolderByIdExistsAsync(fileAttachmentFolderModel.ParentFileAttachmentFolderId ?? 0, fileAttachmentFolderModel.CompanyId))
+                if (await manifestRepository.GetFileAttachmentFolderByIdAsync(fileAttachmentFolderModel.ParentFileAttachmentFolderId ?? 0) == null)
                 {
                     result.Add(new ReturnErrorItem("", $"Unable to Get the ParentFileAttachmentFolder Information"));
                     return result;
@@ -1292,7 +1292,7 @@ namespace Manifest.Service.App
                 }
             }*/
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(fileAttachmentFolderModel.UserId, fileAttachmentFolderModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(fileAttachmentFolderModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -2203,7 +2203,7 @@ namespace Manifest.Service.App
                 }
             }*/
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(fileAttachmentModel.UserId, fileAttachmentModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(fileAttachmentModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -3089,7 +3089,8 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await manifestRepository.DoesVisionBoardSessionByIdExistsAsync(visionBoardSessionPictureModel.VisionBoardSessionId, visionBoardSessionPictureModel.CompanyId))
+            var visionBoardSessionItem = await manifestRepository.GetVisionBoardSessionByIdAsync(visionBoardSessionPictureModel.VisionBoardSessionId);
+            if (visionBoardSessionItem == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the VisionBoardSession Information"));
                 return result;
@@ -3101,8 +3102,9 @@ namespace Manifest.Service.App
                 return result;
             }
 
+            var visionBoardPictureItem = await manifestRepository.GetVisionBoardPictureByIdAsync(visionBoardSessionPictureModel.VisionBoardPictureId);
 
-            if (!await manifestRepository.DoesVisionBoardPictureByIdExistsAsync(visionBoardSessionPictureModel.VisionBoardPictureId, visionBoardSessionPictureModel.CompanyId))
+            if (visionBoardPictureItem == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the VisionBoardPicture Information"));
                 return result;
@@ -3115,20 +3117,11 @@ namespace Manifest.Service.App
             }
 
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(visionBoardSessionPictureModel.UserId, visionBoardSessionPictureModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(visionBoardSessionPictureModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
             }
-
-            if (userItem.UserId != visionBoardSessionPictureModel.UserId)
-            {
-                result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
-                return result;
-            }
-
-
-
 
             if (!ValidationUtils.IsLongValid(visionBoardSessionPictureModel.VisionBoardSessionId))
             {
@@ -4650,27 +4643,18 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await manifestRepository.DoesDefaultCategoryByIdExistsAsync(categoryModel.DefaultCategoryId, categoryModel.CompanyId))
+            if (await manifestRepository.GetDefaultCategoryByIdAsync(categoryModel.DefaultCategoryId) == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the DefaultCategory Information"));
                 return result;
             }
 
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(categoryModel.UserId, categoryModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(categoryModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
             }
-
-            if (userItem.UserId != categoryModel.UserId)
-            {
-                result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
-                return result;
-            }
-
-
-
 
             if (!ValidationUtils.IsLongValid(categoryModel.DefaultCategoryId))
             {
@@ -6005,20 +5989,11 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(dailyAffirmationSessionModel.UserId, dailyAffirmationSessionModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(dailyAffirmationSessionModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
             }
-
-            if (userItem.UserId != dailyAffirmationSessionModel.UserId)
-            {
-                result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
-                return result;
-            }
-
-
-
 
             if (!DateUtils.IsValidDate(dailyAffirmationSessionModel.DailyAffirmationSessionDate))
             {
@@ -6030,7 +6005,7 @@ namespace Manifest.Service.App
             }
             else
             {
-                if (!await companyRepository.DoesUserByIdExistsAsync(dailyAffirmationSessionModel.UserId, dailyAffirmationSessionModel.CompanyId))
+                if (!await companyRepository.DoesUserByIdExistsAsync(dailyAffirmationSessionModel.UserId))
                 {
                     result.Add(new ReturnErrorItem("UserId", "User is not available"));
                 }
@@ -7168,20 +7143,15 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await manifestRepository.DoesCategoryByIdExistsAsync(dailyAffirmationSessionCategoryModel.CategoryId, dailyAffirmationSessionCategoryModel.CompanyId))
+            if (!await manifestRepository.DoesCategoryByIdExistsAsync(dailyAffirmationSessionCategoryModel.CategoryId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the Category Information"));
                 return result;
             }
 
-            if (categoryItem.UserId != dailyAffirmationSessionCategoryModel.UserId)
-            {
-                result.Add(new ReturnErrorItem("", $"You dont have access to this Category Information"));
-                return result;
-            }
+            var dailyAffirmationSessionItem = await manifestRepository.GetDailyAffirmationSessionByIdAsync(dailyAffirmationSessionCategoryModel.DailyAffirmationSessionId);
 
-
-            if (!await manifestRepository.DoesDailyAffirmationSessionByIdExistsAsync(dailyAffirmationSessionCategoryModel.DailyAffirmationSessionId, dailyAffirmationSessionCategoryModel.CompanyId))
+            if (dailyAffirmationSessionItem == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the DailyAffirmationSession Information"));
                 return result;
@@ -7194,20 +7164,11 @@ namespace Manifest.Service.App
             }
 
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(dailyAffirmationSessionCategoryModel.UserId, dailyAffirmationSessionCategoryModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(dailyAffirmationSessionCategoryModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
             }
-
-            if (userItem.UserId != dailyAffirmationSessionCategoryModel.UserId)
-            {
-                result.Add(new ReturnErrorItem("", $"You dont have access to this User Information"));
-                return result;
-            }
-
-
-
 
             if (!ValidationUtils.IsLongValid(dailyAffirmationSessionCategoryModel.CategoryId))
             {
@@ -10988,7 +10949,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await manifestRepository.DoesDefaultCategoryByIdExistsAsync(defaultDailyAffirmationTextModel.DefaultCategoryId, defaultDailyAffirmationTextModel.CompanyId))
+            if (await manifestRepository.GetDefaultCategoryByIdAsync(defaultDailyAffirmationTextModel.DefaultCategoryId) == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the DefaultCategory Information"));
                 return result;
@@ -13020,13 +12981,13 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await manifestRepository.DoesDefaultCategoryByIdExistsAsync(defaultGoalTrackerCategoryModel.DefaultCategoryId, defaultGoalTrackerCategoryModel.CompanyId))
+            if (await manifestRepository.GetDefaultCategoryByIdAsync(defaultGoalTrackerCategoryModel.DefaultCategoryId) == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the DefaultCategory Information"));
                 return result;
             }
 
-            if (!await manifestRepository.DoesDefaultGoalTrackerByIdExistsAsync(defaultGoalTrackerCategoryModel.DefaultGoalTrackerId, defaultGoalTrackerCategoryModel.CompanyId))
+            if (await manifestRepository.GetDefaultGoalTrackerByIdAsync(defaultGoalTrackerCategoryModel.DefaultGoalTrackerId) == null)
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the DefaultGoalTracker Information"));
                 return result;

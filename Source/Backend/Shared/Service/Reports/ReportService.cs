@@ -1,6 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Framework.Infrastructure.Exceptions;
+using Framework.Infrastructure.Interfaces.DbAccess;
+using Framework.Infrastructure.Logging;
+using Framework.Infrastructure.Models.Result;
+using Framework.Infrastructure.Utils;
 using Manifest.Common.Enums;
 using Manifest.Common.Interfaces.Service.App;
 using Manifest.Common.Models.DB;
@@ -10,11 +12,10 @@ using Manifest.Common.Models.ViewModels;
 using Manifest.Repository.Common;
 using Manifest.Service.JobServer;
 using Manifest.Service.ObjectMapping;
-using Framework.Infrastructure.Exceptions;
-using Framework.Infrastructure.Interfaces.DbAccess;
-using Framework.Infrastructure.Logging;
-using Framework.Infrastructure.Models.Result;
-using Framework.Infrastructure.Utils;
+using Stowage.Impl.Databricks;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Manifest.Service.App
 {
@@ -79,7 +80,7 @@ namespace Manifest.Service.App
             return result;
         }
 
-        public Task<ReturnModel<bool>> IsJobParameterValidAsync(Job job)
+        public Task<ReturnModel<bool>> IsJobParameterValidAsync(Common.Models.DB.Job job)
         {
             return jobCreationService.IsJobParameterValidAsync(job);
         }
@@ -201,7 +202,7 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobAttachmentCreateModelToJobAttachment(jobAttachment);
 
-                if (!await reportRepository.DoesJobByIdExistsAsync(jobAttachment.JobId, jobAttachment.CompanyId))
+                if (await reportRepository.GetJobTemplateByIdAsync(jobAttachment.JobId) == null)
                 {
                     return log.ErrorAndReturnModel<JobAttachmentModel>($"Unable to Get the Job Information", new { jobAttachment.JobId });
                 }
@@ -274,12 +275,12 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobAttachmentUpdateModelToJobAttachment(jobAttachment);
 
-                if (!await reportRepository.DoesJobByIdExistsAsync(jobAttachment.JobId, jobAttachment.CompanyId))
+                if (await reportRepository.GetJobTemplateByIdAsync(jobAttachment.JobId) == null)
                 {
                     return log.ErrorAndReturnModel<JobAttachmentModel>($"Unable to Get the Job Information", new { jobAttachment.JobId });
                 }
 
-                item.JobId = jobItem.JobId;
+                item.JobId = jobAttachment.JobId;
 
                 bool result;
                 using (var trx = await transactionManager.BeginTransactionAsync())
@@ -565,12 +566,12 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobNotificationEmailCreateModelToJobNotificationEmail(jobNotificationEmail);
 
-                if (!await reportRepository.DoesJobByIdExistsAsync(jobNotificationEmail.JobId, jobNotificationEmail.CompanyId))
+                if (await reportRepository.GetJobByIdAsync(jobNotificationEmail.JobId) == null)
                 {
                     return log.ErrorAndReturnModel<JobNotificationEmailModel>($"Unable to Get the Job Information", new { jobNotificationEmail.JobId });
                 }
 
-                item.JobId = jobItem.JobId;
+                item.JobId = jobNotificationEmail.JobId;
 
                 using (var trx = await transactionManager.BeginTransactionAsync())
                 {
@@ -640,12 +641,12 @@ namespace Manifest.Service.App
 
                 var item = objectMapperService.JobNotificationEmailUpdateModelToJobNotificationEmail(jobNotificationEmail);
 
-                if (!await reportRepository.DoesJobByIdExistsAsync(jobNotificationEmail.JobId, jobNotificationEmail.CompanyId))
+                if (await reportRepository.GetJobByIdAsync(jobNotificationEmail.JobId) == null)
                 {
                     return log.ErrorAndReturnModel<JobNotificationEmailModel>($"Unable to Get the Job Information", new { jobNotificationEmail.JobId });
                 }
 
-                item.JobId = jobItem.JobId;
+                item.JobId = jobNotificationEmail.JobId;
 
                 bool result;
                 using (var trx = await transactionManager.BeginTransactionAsync())

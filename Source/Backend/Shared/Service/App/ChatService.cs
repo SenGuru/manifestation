@@ -1366,7 +1366,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageModel.UserId, chatMessageModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -1377,7 +1377,7 @@ namespace Manifest.Service.App
                 result.Add(new ReturnErrorItem("UserId", "User cannot be empty"));
             }
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageModel.UserId, chatMessageModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageModel.UserId))
             {
                 result.Add(new ReturnErrorItem("UserId", "User is not available"));
             }
@@ -2311,13 +2311,13 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await chatRepository.DoesChatMessageByIdExistsAsync(chatMessageStatusModel.ChatMessageId, chatMessageStatusModel.CompanyId))
+            if (!await chatRepository.DoesChatMessageByIdExistsAsync(chatMessageStatusModel.ChatMessageId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the ChatMessage Information"));
                 return result;
             }
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageStatusModel.UserId, chatMessageStatusModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatMessageStatusModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;
@@ -3243,7 +3243,7 @@ namespace Manifest.Service.App
                 }
             }
 
-            if (!await companyRepository.DoesUserByIdExistsAsync(chatUserModel.UserId, chatUserModel.CompanyId))
+            if (!await companyRepository.DoesUserByIdExistsAsync(chatUserModel.UserId))
             {
                 result.Add(new ReturnErrorItem("", $"Unable to Get the User Information"));
                 return result;

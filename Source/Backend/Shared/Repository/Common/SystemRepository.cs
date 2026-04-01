@@ -717,12 +717,7 @@ namespace Manifest.Repository.Common
 
         public Task<bool> DoesAuditOperationDetailByIdExistsAsync(long auditOperationDetailId, long? companyId = null)
         {
-            if (companyId == null)
-            {
-                return appDBManager.GetTable<AuditOperationDetail>().Where(x => x.AuditOperationDetailId == auditOperationDetailId && x.IsDeleted == false).Select(x => x.AuditOperationDetailId).AnyAsync();
-            }
-
-            return appDBManager.GetTable<AuditOperationDetail>().Where(x => x.AuditOperationDetailId == auditOperationDetailId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.AuditOperationDetailId).AnyAsync();
+            return appDBManager.GetTable<AuditOperationDetail>().Where(x => x.AuditOperationDetailId == auditOperationDetailId && x.IsDeleted == false).Select(x => x.AuditOperationDetailId).AnyAsync();
         }
 
         #endregion
@@ -934,12 +929,7 @@ namespace Manifest.Repository.Common
 
         public Task<bool> DoesConfigurationGroupByIdExistsAsync(long configurationGroupId, long? companyId = null)
         {
-            if (companyId == null)
-            {
-                return appDBManager.GetTable<ConfigurationGroup>().Where(x => x.ConfigurationGroupId == configurationGroupId && x.IsDeleted == false).Select(x => x.ConfigurationGroupId).AnyAsync();
-            }
-
-            return appDBManager.GetTable<ConfigurationGroup>().Where(x => x.ConfigurationGroupId == configurationGroupId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.ConfigurationGroupId).AnyAsync();
+            return appDBManager.GetTable<ConfigurationGroup>().Where(x => x.ConfigurationGroupId == configurationGroupId && x.IsDeleted == false).Select(x => x.ConfigurationGroupId).AnyAsync();
         }
 
         #endregion
@@ -1161,12 +1151,7 @@ namespace Manifest.Repository.Common
 
         public Task<bool> DoesConfigurationItemByIdExistsAsync(long configurationItemId, long? companyId = null)
         {
-            if (companyId == null)
-            {
-                return appDBManager.GetTable<ConfigurationItem>().Where(x => x.ConfigurationItemId == configurationItemId && x.IsDeleted == false).Select(x => x.ConfigurationItemId).AnyAsync();
-            }
-
-            return appDBManager.GetTable<ConfigurationItem>().Where(x => x.ConfigurationItemId == configurationItemId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.ConfigurationItemId).AnyAsync();
+            return appDBManager.GetTable<ConfigurationItem>().Where(x => x.ConfigurationItemId == configurationItemId && x.IsDeleted == false).Select(x => x.ConfigurationItemId).AnyAsync();
         }
 
         #endregion
@@ -1379,12 +1364,7 @@ namespace Manifest.Repository.Common
 
         public Task<bool> DoesEnumGroupByIdExistsAsync(long enumGroupId, long? companyId = null)
         {
-            if (companyId == null)
-            {
-                return appDBManager.GetTable<EnumGroup>().Where(x => x.EnumGroupId == enumGroupId && x.IsDeleted == false).Select(x => x.EnumGroupId).AnyAsync();
-            }
-
-            return appDBManager.GetTable<EnumGroup>().Where(x => x.EnumGroupId == enumGroupId && x.CompanyId == companyId && x.IsDeleted == false).Select(x => x.EnumGroupId).AnyAsync();
+            return appDBManager.GetTable<EnumGroup>().Where(x => x.EnumGroupId == enumGroupId && x.IsDeleted == false).Select(x => x.EnumGroupId).AnyAsync();
         }
 
         #endregion
